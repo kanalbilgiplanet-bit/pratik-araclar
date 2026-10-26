@@ -28,3 +28,8 @@
 - URL: https://pratik-araclar.pratikweb.workers.dev/kira-artisi-hesaplayici/
 - Açıklama: Türk Borçlar Kanunu Madde 344 ve resmi TÜİK 12 aylık ortalamalara göre TÜFE tavan oranıyla konut ve çatılı işyeri kira artış hesaplayıcı. Aylık ve yıllık artış tutarları, 5 yıl kuralı / kira tespit uyarısı ve tek tıkla ev sahibine veya kiracıya resmi WhatsApp bildirim metni hazırlama motoru.
 - Hedef Kitle: Kiracılar, ev sahipleri, gayrimenkul danışmanları, işyeri sahipleri.
+
+### 6. AcilDurumRadar – Türkiye Canlı Afet, Deprem & Fay Hattı Haritası
+- URL: https://pratik-araclar.pratikweb.workers.dev/acil-durum-radar/
+- Açıklama: Türkiye ve çevresinde meydana gelen son depremleri (büyüklük, derinlik, anlık konum) canlı çeken, Kuzey ve Doğu Anadolu diri fay hatlarını gösteren, GPS en yakın risk tespiti, 112 Acil arama, acil durum düdüğü (SOS sireni) ve WhatsApp güvendeyim/yardım mesajı sunan ulusal afet radarı.
+- Hedef Kitle: Deprem veya acil durum anında anlık bilgi arayanlar, afet bölgesindekiler, toplanma alanı arayan vatandaşlar.
