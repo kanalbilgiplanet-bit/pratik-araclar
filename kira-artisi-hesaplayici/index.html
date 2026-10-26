@@ -141,15 +141,15 @@
     
     <!-- Hero / Headline -->
     <div class="text-center max-w-3xl mx-auto mb-8">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 text-xs font-medium mb-3">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 text-xs font-semibold mb-3 shadow-sm">
         <i class="fa-solid fa-scale-balanced"></i>
-        <span>Resmi TÜİK 12 Aylık TÜFE Tavan Artış Oranı</span>
+        <span>TÜİK Ekim 2026 Resmi 12 Aylık TÜFE Kira Artış Tavanı: %31,49</span>
       </div>
       <h1 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight mb-2">
         Kira Artış Oranı Hesaplayıcı
       </h1>
       <p class="text-slate-400 text-sm sm:text-base leading-relaxed">
-        %25 yasal sınırın kalkmasının ardından yürürlükte olan <strong>Türk Borçlar Kanunu Madde 344</strong> uyarınca güncel TÜİK enflasyon tavanına göre yeni kiranızı hesaplayın ve tek tıkla resmi bildirim metni hazırlayın.
+        %25 yasal sınırın kalkmasının ardından yürürlükte olan <strong>Türk Borçlar Kanunu Madde 344</strong> uyarınca sözleşme yenileme ayınıza ait resmi TÜİK enflasyon tavanına göre yeni kiranızı hesaplayın ve tek tıkla bildirim metni hazırlayın.
       </p>
     </div>
 
@@ -236,27 +236,61 @@
           <div>
             <div class="flex items-center justify-between mb-2">
               <label for="rateSelect" class="text-xs font-bold uppercase tracking-wider text-slate-300">
-                Uygulanacak Kira Artış Oranı
+                Sözleşme Yenileme Ayı & TÜİK Oranı
               </label>
               <span class="text-xs text-emerald-400 font-medium flex items-center gap-1">
                 <i class="fa-solid fa-circle-check text-xs"></i>
-                <span id="rateLabelInfo">Resmi 12 Aylık TÜFE</span>
+                <span id="rateLabelInfo">Ekim 2026 TÜİK Tavanı</span>
               </span>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div class="sm:col-span-2">
                 <select id="rateSelect" class="w-full py-3 px-3 bg-slate-900 border border-slate-700/80 rounded-xl text-white text-xs sm:text-sm font-semibold focus:outline-none focus:border-emerald-500 transition">
-                  <!-- Recent TÜİK 12 Aylık Ortalama TÜFE Oranları -->
-                  <optgroup label="2025 - 2026 Güncel TÜİK 12 Aylık Ortalaması">
-                    <option value="60.45" selected>Son Açıklanan TÜİK TÜFE: %60.45 (Yasal Tavan)</option>
-                    <option value="58.20">Önceki Dönem TÜFE: %58.20</option>
-                    <option value="55.80">Alternatif / Tahmini TÜFE: %55.80</option>
-                    <option value="50.00">Özel Yuvarlama: %50.00</option>
+                  <!-- 2026 Yılı TÜİK 12 Aylık Ortalama TÜFE Oranları -->
+                  <optgroup label="2026 Yılı TÜİK Kira Artış Tavanları (12 Aylık TÜFE)">
+                    <option value="31.49" data-month="Ekim 2026" selected>Ekim 2026: %31,49 (Son Açıklanan Yasal Tavan)</option>
+                    <option value="31.79" data-month="Eylül 2026">Eylül 2026: %31,79</option>
+                    <option value="31.90" data-month="Ağustos 2026">Ağustos 2026: %31,90</option>
+                    <option value="32.03" data-month="Temmuz 2026">Temmuz 2026: %32,03</option>
+                    <option value="32.24" data-month="Haziran 2026">Haziran 2026: %32,24</option>
+                    <option value="32.43" data-month="Mayıs 2026">Mayıs 2026: %32,43</option>
+                    <option value="32.82" data-month="Nisan 2026">Nisan 2026: %32,82</option>
+                    <option value="33.39" data-month="Mart 2026">Mart 2026: %33,39</option>
+                    <option value="33.98" data-month="Şubat 2026">Şubat 2026: %33,98</option>
+                    <option value="34.88" data-month="Ocak 2026">Ocak 2026: %34,88</option>
                   </optgroup>
-                  <optgroup label="Önceki Yıl ve Özel Oranlar">
-                    <option value="custom">Özel Bir Oran Gireceğim (%)</option>
-                    <option value="25.00">Eski %25 Sınırı (Bilgi Amaçlı: %25.00)</option>
+                  
+                  <!-- 2025 Yılı TÜİK 12 Aylık Ortalama TÜFE Oranları -->
+                  <optgroup label="2025 Yılı TÜİK Kira Artış Tavanları">
+                    <option value="35.91" data-month="Aralık 2025">Aralık 2025: %35,91</option>
+                    <option value="37.15" data-month="Kasım 2025">Kasım 2025: %37,15</option>
+                    <option value="38.30" data-month="Ekim 2025">Ekim 2025: %38,30</option>
+                    <option value="39.60" data-month="Eylül 2025">Eylül 2025: %39,60</option>
+                    <option value="41.50" data-month="Ağustos 2025">Ağustos 2025: %41,50</option>
+                    <option value="43.50" data-month="Temmuz 2025">Temmuz 2025: %43,50</option>
+                    <option value="46.15" data-month="Haziran 2025">Haziran 2025: %46,15</option>
+                    <option value="48.70" data-month="Mayıs 2025">Mayıs 2025: %48,70</option>
+                    <option value="51.26" data-month="Nisan 2025">Nisan 2025: %51,26</option>
+                    <option value="53.85" data-month="Mart 2025">Mart 2025: %53,85</option>
+                    <option value="56.35" data-month="Şubat 2025">Şubat 2025: %56,35</option>
+                    <option value="58.20" data-month="Ocak 2025">Ocak 2025: %58,20</option>
+                  </optgroup>
+
+                  <!-- 2024 Yılı (%25 Sınırının Kalktığı Dönem) -->
+                  <optgroup label="2024 Yılı (%25 Sınırının Kalktığı Dönem)">
+                    <option value="58.91" data-month="Aralık 2024">Aralık 2024: %58,91</option>
+                    <option value="60.45" data-month="Kasım 2024">Kasım 2024: %60,45</option>
+                    <option value="62.02" data-month="Ekim 2024">Ekim 2024: %62,02</option>
+                    <option value="63.47" data-month="Eylül 2024">Eylül 2024: %63,47</option>
+                    <option value="65.93" data-month="Ağustos 2024">Ağustos 2024: %65,93</option>
+                    <option value="65.93" data-month="Temmuz 2024">Temmuz 2024: %65,93 (%25 Sınırının Kalktığı İlk Ay)</option>
+                  </optgroup>
+
+                  <!-- Özel Oranlar -->
+                  <optgroup label="Özel / Serbest Oran Girişi">
+                    <option value="custom" data-month="Özel Oran">Özel Bir Oran Gireceğim (%)</option>
+                    <option value="25.00" data-month="Eski %25 Sınırı">Eski %25 Sınırı (Bilgi Amaçlı: %25,00)</option>
                   </optgroup>
                 </select>
               </div>
@@ -270,7 +304,7 @@
                     min="0" 
                     max="300" 
                     step="0.01" 
-                    value="60.45" 
+                    value="31.49" 
                     class="w-full pl-3 pr-8 py-3 bg-slate-900 border border-slate-700/80 rounded-xl text-white font-bold text-sm focus:outline-none focus:border-emerald-500 transition disabled:opacity-50 disabled:bg-slate-950"
                     disabled
                   >
@@ -283,7 +317,7 @@
             
             <p class="text-[11px] text-slate-500 mt-2">
               <i class="fa-solid fa-circle-info text-slate-400 mr-1"></i>
-              Ev sahibi yasal olarak TÜİK 12 aylık ortalama TÜFE oranının üzerinde zam talep edemez; ancak taraflar anlaşarak daha düşük bir oranda mutabık kalabilir.
+              Kira artışı, sözleşmenin yenilendiği ay TÜİK tarafından açıklanan 12 aylık ortalama TÜFE tavanına göre belirlenir. Ev sahibi bu oranın üzerinde artış yapamaz.
             </p>
           </div>
 
@@ -585,17 +619,21 @@
     // Main Calculator Function
     function calculateRent() {
       const oldRent = parseFloat(currentRentInput.value) || 0;
+      const selectedOption = rateSelect.options[rateSelect.selectedIndex];
+      const monthName = selectedOption ? (selectedOption.getAttribute('data-month') || selectedOption.textContent.split(':')[0].trim()) : 'Ekim 2026';
       
       let rate = 0;
       if (rateSelect.value === 'custom') {
         customRateInput.disabled = false;
         rate = parseFloat(customRateInput.value) || 0;
-        rateLabelInfo.textContent = 'Özel Belirlenen Oran';
+        rateLabelInfo.textContent = 'Özel Anlaşılan Oran';
+        summaryRateDisplay.textContent = '%' + rate.toFixed(2) + ' (Özel Anlaşma)';
       } else {
         customRateInput.disabled = true;
         rate = parseFloat(rateSelect.value) || 0;
         customRateInput.value = rate.toFixed(2);
-        rateLabelInfo.textContent = 'Resmi 12 Aylık TÜFE';
+        rateLabelInfo.textContent = monthName + ' TÜİK Tavanı';
+        summaryRateDisplay.textContent = '%' + rate.toFixed(2) + ' (' + monthName + ')';
       }
 
       // Calculations
@@ -606,7 +644,6 @@
 
       // Update Displays
       newRentDisplay.textContent = fmtTRY(newRent);
-      summaryRateDisplay.textContent = '%' + rate.toFixed(2);
       summaryOldRent.textContent = fmtTRY(oldRent);
       summaryMonthlyIncrease.textContent = '+' + fmtTRY(monthlyIncrease);
       summaryYearlyIncrease.textContent = '+' + fmtTRY(yearlyIncrease);
@@ -620,24 +657,26 @@
       }
 
       // Generate Notification Message
-      updateNotificationMessage(oldRent, newRent, rate, monthlyIncrease);
+      updateNotificationMessage(oldRent, newRent, rate, monthlyIncrease, monthName);
     }
 
     // Message Generator
-    function updateNotificationMessage(oldRent, newRent, rate, monthlyIncrease) {
+    function updateNotificationMessage(oldRent, newRent, rate, monthlyIncrease, monthName) {
       const propTypeName = (currentPropType === 'konut') ? 'konutumuzun' : 'işyerimizin';
       
       let msg = '';
       if (currentRole === 'kiraci') {
-        msg = `Merhaba, kira sözleşmemizin yenilenme dönemi kapsamında Türk Borçlar Kanunu Madde 344 uyarınca resmi TÜİK 12 aylık ortalama TÜFE tavan oranı (%${rate.toFixed(2)}) doğrultusunda yeni dönem kiramız hesaplanmıştır:\n\n` +
-              `• Önceki Kira: ${fmtTRY(oldRent)}\n` +
+        msg = `Merhaba, kira sözleşmemizin ${monthName} yenilenme dönemi kapsamında Türk Borçlar Kanunu Madde 344 uyarınca resmi TÜİK 12 aylık ortalama TÜFE tavan oranı (%${rate.toFixed(2)}) doğrultusunda yeni dönem kiramız hesaplanmıştır:\n\n` +
+              `• Yenileme Dönemi: ${monthName}\n` +
+              `• Önceki Aylık Kira: ${fmtTRY(oldRent)}\n` +
               `• Yasal TÜFE Oranı: %${rate.toFixed(2)}\n` +
               `• Aylık Artış Tutarı: +${fmtTRY(monthlyIncrease)}\n` +
               `• YENİ DÖNEM AYLIK KİRA: ${fmtTRY(newRent)}\n\n` +
               `Ödemeler bu tutar üzerinden hesabınıza iletilecektir. Bilgilerinize sunar, hayırlı günler dilerim.\n` +
               `Hesaplama detayları: https://pratik-araclar.pratikweb.workers.dev/kira-artisi-hesaplayici/`;
       } else {
-        msg = `Sayın Kiracımız, ${propTypeName} kira sözleşmesinin yenilenme dönemi dolayısıyla Türk Borçlar Kanunu Madde 344 gereğince TÜİK tarafından açıklanan resmi 12 aylık TÜFE tavan oranı (%${rate.toFixed(2)}) uygulanarak yeni dönem kira bedeli belirlenmiştir:\n\n` +
+        msg = `Sayın Kiracımız, ${propTypeName} kira sözleşmesinin ${monthName} yenilenme dönemi dolayısıyla Türk Borçlar Kanunu Madde 344 gereğince TÜİK tarafından açıklanan resmi 12 aylık TÜFE tavan oranı (%${rate.toFixed(2)}) uygulanarak yeni dönem kira bedeli belirlenmiştir:\n\n` +
+              `• Yenileme Dönemi: ${monthName}\n` +
               `• Mevcut Kira Bedeli: ${fmtTRY(oldRent)}\n` +
               `• Yasal Artış Oranı: %${rate.toFixed(2)}\n` +
               `• Yeni Dönem Kira Bedeli: ${fmtTRY(newRent)}\n\n` +
