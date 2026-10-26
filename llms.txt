@@ -8,3 +8,8 @@
 - URL: https://pratik-araclar.pratikweb.workers.dev/sel-haritasi/
 - Açıklama: İstanbul'un 39 ilçesinde kritik dere yatakları (Haramidere, Ayamama, Kurbağalıdere, Cendere, Alibeyköy vb.), kot farkları ve tarihsel su baskınlarına dayalı interaktif afet risk analizi haritası.
 - Hedef Kitle: İstanbul'da yaşayanlar, ev/işyeri kiralayacaklar, şiddetli yağış anında güvenli bölge arayanlar.
+
+### 2. Net-Brüt Maaş & Vergi Dilimi Hesaplayıcı (2026 - 2027)
+- URL: https://pratik-araclar.pratikweb.workers.dev/maas-hesaplayici/
+- Açıklama: 2026, 2025, 2024 ve 2027 taslak tarifelerine göre brüt'ten net'e ve net'ten brüt'e maaş hesaplama. 12 aylık kümülatif vergi bordrosu simülasyonu, asgari ücret vergi istisnası, SGK kesintileri ve işveren toplam maliyeti.
+- Hedef Kitle: Çalışanlar, maaş zammı hesaplayanlar, insan kaynakları uzmanları, işverenler.

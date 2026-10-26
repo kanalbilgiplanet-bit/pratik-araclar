@@ -242,37 +242,46 @@
         </button>
       </article>
 
-      <!-- TOOL 3 (Yakında): Net-Brüt Maaş & Vergi Dilimi Hesaplayıcı -->
-      <article class="tool-card group relative flex flex-col justify-between bg-slate-900/40 border border-slate-800/70 rounded-3xl p-6 opacity-85 hover:opacity-100 hover:border-slate-700 transition-all duration-300"
+      <!-- TOOL 2: Net-Brüt Maaş & Vergi Dilimi Hesaplayıcı (AKTİF) -->
+      <article class="tool-card group relative flex flex-col justify-between bg-gradient-to-b from-slate-900/90 to-slate-900/50 border border-slate-800 rounded-3xl p-6 hover:border-sky-500/50 transition-all duration-300 hover:shadow-2xl hover:shadow-sky-500/10 hover:-translate-y-1"
                data-category="hesaplama" 
-               data-keywords="maaş vergi dilimi net brüt hesaplama sgk agi bordro asgari ücret gelir vergisi">
-        <div>
+               data-keywords="maaş vergi dilimi net brüt hesaplama sgk agi bordro asgari ücret gelir vergisi 2026 2027 işveren maliyeti">
+        <div class="relative">
           <div class="flex items-start justify-between mb-4">
-            <div class="w-12 h-12 rounded-2xl bg-sky-500/10 border border-sky-500/20 text-sky-400 flex items-center justify-center text-xl">
+            <div class="w-12 h-12 rounded-2xl bg-sky-500/10 border border-sky-500/20 text-sky-400 flex items-center justify-center text-xl group-hover:scale-110 group-hover:bg-sky-500 group-hover:text-slate-950 transition-all duration-300">
               <i class="fa-solid fa-calculator"></i>
             </div>
-            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-medium bg-slate-800 text-slate-400 border border-slate-700">
-              <i class="fa-regular fa-clock mr-1 text-xs"></i>Yakında
+            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+              Aktif & Canlı
             </span>
           </div>
 
-          <h2 class="text-xl font-bold text-white mb-2">
+          <h2 class="text-xl font-bold text-white group-hover:text-sky-300 transition-colors mb-2">
             Net-Brüt Maaş & Vergi Dilimi
           </h2>
           
           <p class="text-slate-400 text-sm leading-relaxed mb-6">
-            2026 güncel gelir vergisi dilimleri ve SGK kesintileriyle aylık elinize geçecek net maaşınızı veya işverene toplam maliyetinizi hesaplayın.
+            2026 ve 2027 gelir vergisi tarifeleriyle 12 aylık kümülatif bordro simülasyonu. Maaşınızın hangi ayda neden düştüğünü ve işveren maliyetini anında hesaplayın.
           </p>
 
           <div class="flex flex-wrap gap-2 mb-6">
-            <span class="px-2.5 py-1 text-xs rounded-lg bg-slate-800/60 text-slate-400">2026 Tarifeleri</span>
-            <span class="px-2.5 py-1 text-xs rounded-lg bg-slate-800/60 text-slate-400">Grafik Döküm</span>
+            <span class="px-2.5 py-1 text-xs rounded-lg bg-slate-800/80 text-slate-300 border border-slate-700/50">
+              <i class="fa-solid fa-calendar-days text-sky-400 mr-1"></i>12 Aylık Döküm
+            </span>
+            <span class="px-2.5 py-1 text-xs rounded-lg bg-slate-800/80 text-slate-300 border border-slate-700/50">
+              <i class="fa-solid fa-shield-check text-emerald-400 mr-1"></i>Asgari Ücret İstisnası
+            </span>
+            <span class="px-2.5 py-1 text-xs rounded-lg bg-slate-800/80 text-slate-300 border border-slate-700/50">
+              <i class="fa-solid fa-print text-indigo-400 mr-1"></i>PDF / Yazdır
+            </span>
           </div>
         </div>
 
-        <button disabled class="w-full py-3 px-4 rounded-xl bg-slate-800/80 text-slate-500 font-medium text-sm cursor-not-allowed">
-          Geliştirme Aşamasında
-        </button>
+        <a href="maas-hesaplayici/" class="inline-flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-medium text-sm transition-colors shadow-lg shadow-sky-600/20 group-hover:shadow-sky-600/40">
+          <span>Hesaplamayı Başlat</span>
+          <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
+        </a>
       </article>
 
       <!-- TOOL 4 (Yakında): Güvenli Şifre Üreteci & Sızıntı Testi -->
