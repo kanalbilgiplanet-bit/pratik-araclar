@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="tr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kira Artış Oranı Hesaplayıcı (2025 - 2026 TÜİK TÜFE) | Pratik Araçlar</title>
+  <meta name="description" content="TÜİK 12 aylık ortalama TÜFE oranlarına göre yasal konut ve işyeri kira artış oranını anında hesaplayın. Türk Borçlar Kanunu Madde 344'e uygun, tek tıkla WhatsApp bildirim mesajı oluşturun.">
+  <meta name="keywords" content="kira artış oranı hesaplama, kira zammı hesaplayıcı, tüik tüfe kira artışı, konut kira artış tavanı 2025 2026, yüzde 25 sınırı kalktı mı, ev kirası ne kadar artar, işyeri kira artış oranı, kira tespit davası 5 yıl kuralı">
+  <link rel="canonical" href="https://pratik-araclar.pratikweb.workers.dev/kira-artisi-hesaplayici/">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2310b981'/%3E%3Cstop offset='100%25' stop-color='%2306b6d4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23bg)'/%3E%3Cpath d='M32 12 L12 28 L18 28 L18 52 L46 52 L46 28 L52 28 Z' fill='%23ffffff'/%3E%3Crect x='26' y='34' width='12' height='18' rx='2' fill='url(%23bg)'/%3E%3C/svg%3E">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://pratik-araclar.pratikweb.workers.dev/kira-artisi-hesaplayici/">
+  <meta property="og:title" content="Kira Artış Oranı Hesaplayıcı - Resmi TÜİK TÜFE Tavanı">
+  <meta property="og:description" content="Konut ve işyeri için resmi yasal kira zammını anında hesaplayın, yasal maddeli hazır WhatsApp bildirim metni oluşturun.">
+  <meta property="og:locale" content="tr_TR">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: { 500: '#10b981', 600: '#059669' }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "name": "Kira Artış Oranı Hesaplayıcı",
+        "url": "https://pratik-araclar.pratikweb.workers.dev/kira-artisi-hesaplayici/",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "All",
+        "description": "Türk Borçlar Kanunu Madde 344 ve TÜİK 12 aylık ortalamalara göre TÜFE verilerine dayalı yasal kira artış oranı hesaplama ve bildirim aracı.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "TRY"
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Konut kiralarında %25 zam sınırı devam ediyor mu?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Hayır. 11 Haziran 2022'de yürürlüğe giren geçici %25 kira artış tavanı uygulaması 1 Temmuz 2024 tarihi itibarıyla resmen sona ermiştir. Artık konut kiralarında da Türk Borçlar Kanunu'nun 344. maddesi gereğince TÜİK tarafından açıklanan 12 aylık ortalama TÜFE oranı tavan zam sınırıdır."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Ev sahibi yasal TÜİK TÜFE oranının üzerinde artış yapabilir mi?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Hayır! Sözleşme süresi 5 yılı doldurmamış kiracılarda ev sahibi, TÜİK'in açıkladığı 12 aylık ortalama TÜFE oranının üzerinde tek taraflı zam yapamaz. Bu oranın üzerindeki kira artış talepleri yasal olarak geçersizdir."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "5 yılı dolduran kiracılarda kira artışı nasıl belirlenir?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "5 yıllık sözleşme süresi dolduktan sonra taraflar yeni kira bedelinde anlaşamazsa, ev sahibi Sulh Hukuk Mahkemesi'nde 'Kira Tespit Davası' açabilir. Mahkeme, TÜFE oranı, evin durumu ve bölgedeki emsal rayiç bedelleri gözeterek hakkaniyete uygun yeni bir kira bedeli belirler."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "İşyeri kira artış oranı konutlardan farklı mıdır?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "İşyeri kiralarında da üst sınır Türk Borçlar Kanunu 344 uyarınca 12 aylık ortalama TÜFE oranıdır. Sözleşmede daha düşük bir oran kararlaştırılmışsa geçerlidir, ancak TÜFE'den daha yüksek bir artış şartı yasal olarak tavan oranla sınırlandırılır."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type=number] { -moz-appearance: textfield; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+  </style>
+</head>
+<body class="bg-[#0b0f19] text-slate-300 min-h-screen flex flex-col font-sans selection:bg-emerald-500 selection:text-white">
+
+  <!-- Header -->
+  <header class="border-b border-slate-800/90 bg-[#0f172a]/90 backdrop-blur-md sticky top-0 z-40 h-16 flex items-center shrink-0">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="../index.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold transition border border-slate-700/80 shadow-sm" title="Ana Portala Dön">
+          <i class="fa-solid fa-arrow-left text-xs"></i>
+          <span>Vitrin</span>
+        </a>
+        <div class="h-4 w-px bg-slate-800"></div>
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 flex items-center justify-center text-sm shadow-sm">
+            <i class="fa-solid fa-house-chimney"></i>
+          </div>
+          <div>
+            <span class="text-sm font-bold text-white tracking-tight">Kira Artış Oranı</span>
+            <span class="hidden sm:inline-block ml-1.5 text-[11px] font-medium text-emerald-400 bg-emerald-500/10 border border-emerald-500/25 px-2 py-0.5 rounded-full">TBK Md. 344 & TÜFE</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button id="copySummaryBtn" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium border border-slate-700 transition">
+          <i class="fa-regular fa-copy text-xs text-emerald-400"></i>
+          <span class="hidden sm:inline">Hesabı Kopyala</span>
+        </button>
+        <button id="whatsappShareBtn" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold shadow-md shadow-emerald-600/20 transition">
+          <i class="fa-brands fa-whatsapp text-sm"></i>
+          <span>WhatsApp Mesajı</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+    
+    <!-- Hero / Headline -->
+    <div class="text-center max-w-3xl mx-auto mb-8">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 text-xs font-medium mb-3">
+        <i class="fa-solid fa-scale-balanced"></i>
+        <span>Resmi TÜİK 12 Aylık TÜFE Tavan Artış Oranı</span>
+      </div>
+      <h1 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight mb-2">
+        Kira Artış Oranı Hesaplayıcı
+      </h1>
+      <p class="text-slate-400 text-sm sm:text-base leading-relaxed">
+        %25 yasal sınırın kalkmasının ardından yürürlükte olan <strong>Türk Borçlar Kanunu Madde 344</strong> uyarınca güncel TÜİK enflasyon tavanına göre yeni kiranızı hesaplayın ve tek tıkla resmi bildirim metni hazırlayın.
+      </p>
+    </div>
+
+    <!-- Grid: Form + Result Card -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-12">
+      
+      <!-- LEFT: Calculation Form (7 cols) -->
+      <section class="lg:col-span-7 bg-[#0f172a] border border-slate-800/90 rounded-3xl p-6 sm:p-8 shadow-xl relative">
+        <h2 class="text-base font-bold text-white mb-6 flex items-center gap-2">
+          <i class="fa-solid fa-sliders text-emerald-400"></i>
+          <span>Kira ve Sözleşme Bilgileri</span>
+        </h2>
+
+        <div class="space-y-6">
+          
+          <!-- 1. Mevcut Kira Tutarı -->
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <label for="currentRent" class="text-xs font-bold uppercase tracking-wider text-slate-300">
+                Mevcut Aylık Kira Tutarı
+              </label>
+              <span class="text-xs text-slate-500">Yenileme öncesi ödenen</span>
+            </div>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-emerald-400 font-bold text-lg">
+                ₺
+              </div>
+              <input 
+                id="currentRent" 
+                type="number" 
+                min="500" 
+                max="5000000" 
+                step="100" 
+                value="18500" 
+                class="w-full pl-10 pr-16 py-3.5 bg-slate-900 border border-slate-700/80 rounded-2xl text-white font-bold text-lg sm:text-xl focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 shadow-inner transition"
+                placeholder="Örn: 18500"
+              >
+              <span class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-500 text-xs font-semibold">
+                TL / Ay
+              </span>
+            </div>
+
+            <!-- Quick Pill Buttons -->
+            <div class="flex flex-wrap items-center gap-1.5 mt-2.5">
+              <span class="text-[11px] text-slate-500 mr-1">Hızlı Seçim:</span>
+              <button type="button" class="quick-rent-btn px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs font-medium border border-slate-700/50 transition" data-val="10000">10.000 ₺</button>
+              <button type="button" class="quick-rent-btn px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs font-medium border border-slate-700/50 transition" data-val="15000">15.000 ₺</button>
+              <button type="button" class="quick-rent-btn px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs font-medium border border-slate-700/50 transition" data-val="20000">20.000 ₺</button>
+              <button type="button" class="quick-rent-btn px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs font-medium border border-slate-700/50 transition" data-val="25000">25.000 ₺</button>
+              <button type="button" class="quick-rent-btn px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs font-medium border border-slate-700/50 transition" data-val="35000">35.000 ₺</button>
+            </div>
+          </div>
+
+          <!-- 2. Gayrimenkul Tipi & Sözleşme Süresi -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
+                Taşınmaz Türü
+              </label>
+              <div class="grid grid-cols-2 gap-2">
+                <button type="button" id="propTypeHome" class="prop-type-btn active py-2.5 px-3 rounded-xl border border-emerald-500 bg-emerald-500/15 text-emerald-300 font-semibold text-xs flex items-center justify-center gap-2 transition" data-type="konut">
+                  <i class="fa-solid fa-house"></i>
+                  <span>Konut (Ev)</span>
+                </button>
+                <button type="button" id="propTypeWork" class="prop-type-btn py-2.5 px-3 rounded-xl border border-slate-800 bg-slate-900 text-slate-400 font-medium text-xs flex items-center justify-center gap-2 hover:bg-slate-800 hover:text-white transition" data-type="isyeri">
+                  <i class="fa-solid fa-shop"></i>
+                  <span>Çatılı İşyeri</span>
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
+                Sözleşme Yaşı (5 Yıl Kuralı)
+              </label>
+              <select id="contractAge" class="w-full py-2.5 px-3 bg-slate-900 border border-slate-700/80 rounded-xl text-slate-200 text-xs font-medium focus:outline-none focus:border-emerald-500 transition">
+                <option value="under5" selected>1 - 4 Yıllık Kiracı (TÜİK Tavanı Zorunlu)</option>
+                <option value="over5">5 Yılı Doldurdu (Kira Tespit / Emsal Rayiç)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- 3. TÜİK Enflasyon Ayı / Oranı Seçimi -->
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <label for="rateSelect" class="text-xs font-bold uppercase tracking-wider text-slate-300">
+                Uygulanacak Kira Artış Oranı
+              </label>
+              <span class="text-xs text-emerald-400 font-medium flex items-center gap-1">
+                <i class="fa-solid fa-circle-check text-xs"></i>
+                <span id="rateLabelInfo">Resmi 12 Aylık TÜFE</span>
+              </span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div class="sm:col-span-2">
+                <select id="rateSelect" class="w-full py-3 px-3 bg-slate-900 border border-slate-700/80 rounded-xl text-white text-xs sm:text-sm font-semibold focus:outline-none focus:border-emerald-500 transition">
+                  <!-- Recent TÜİK 12 Aylık Ortalama TÜFE Oranları -->
+                  <optgroup label="2025 - 2026 Güncel TÜİK 12 Aylık Ortalaması">
+                    <option value="60.45" selected>Son Açıklanan TÜİK TÜFE: %60.45 (Yasal Tavan)</option>
+                    <option value="58.20">Önceki Dönem TÜFE: %58.20</option>
+                    <option value="55.80">Alternatif / Tahmini TÜFE: %55.80</option>
+                    <option value="50.00">Özel Yuvarlama: %50.00</option>
+                  </optgroup>
+                  <optgroup label="Önceki Yıl ve Özel Oranlar">
+                    <option value="custom">Özel Bir Oran Gireceğim (%)</option>
+                    <option value="25.00">Eski %25 Sınırı (Bilgi Amaçlı: %25.00)</option>
+                  </optgroup>
+                </select>
+              </div>
+
+              <!-- Custom Rate Input (Hidden unless "custom" is selected) -->
+              <div>
+                <div class="relative">
+                  <input 
+                    id="customRateInput" 
+                    type="number" 
+                    min="0" 
+                    max="300" 
+                    step="0.01" 
+                    value="60.45" 
+                    class="w-full pl-3 pr-8 py-3 bg-slate-900 border border-slate-700/80 rounded-xl text-white font-bold text-sm focus:outline-none focus:border-emerald-500 transition disabled:opacity-50 disabled:bg-slate-950"
+                    disabled
+                  >
+                  <span class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-slate-400 font-bold text-sm">
+                    %
+                  </span>
+                </div>
+              </div>
+            </div>
+            
+            <p class="text-[11px] text-slate-500 mt-2">
+              <i class="fa-solid fa-circle-info text-slate-400 mr-1"></i>
+              Ev sahibi yasal olarak TÜİK 12 aylık ortalama TÜFE oranının üzerinde zam talep edemez; ancak taraflar anlaşarak daha düşük bir oranda mutabık kalabilir.
+            </p>
+          </div>
+
+          <!-- 5 Yıl Kuralı İnteraktif Bilgilendirme Kartı -->
+          <div id="rule5Notice" class="hidden rounded-2xl p-4 bg-amber-500/10 border border-amber-500/25 text-amber-200 text-xs leading-relaxed space-y-1.5 transition-all">
+            <div class="font-bold flex items-center gap-1.5 text-amber-300">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+              <span>5 Yılını Doldurmuş Kiracılar İçin Özel Hüküm (TBK Md. 344/3)</span>
+            </div>
+            <p class="text-amber-200/90 text-[11px]">
+              Kiracılık süresi 5 yılı aştıysa, ev sahibi yalnızca TÜFE ile bağlı kalmak zorunda değildir. Taraflar anlaşamazsa Sulh Hukuk Mahkemesi'nde <strong>Kira Tespit Davası</strong> açılarak bölgedeki emsal rayiç bedel ve hakkaniyet indirimi (%10-20) uygulanarak yeni kira hakim tarafından belirlenir.
+            </p>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- RIGHT: Result Summary Card (5 cols) -->
+      <section class="lg:col-span-5 bg-gradient-to-b from-[#0f172a] to-[#0b1329] border border-slate-800/90 rounded-3xl p-6 sm:p-8 shadow-2xl relative sticky top-24">
+        
+        <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+          <div class="flex items-center gap-2">
+            <div class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></div>
+            <h2 class="text-sm font-bold uppercase tracking-wider text-slate-300">Hesaplama Özeti</h2>
+          </div>
+          <span id="badgeProperty" class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+            Konut Kirası
+          </span>
+        </div>
+
+        <!-- NEW RENT HERO DISPLAY -->
+        <div class="py-6 text-center border-b border-slate-800/80">
+          <span class="text-xs uppercase tracking-wider font-semibold text-slate-400 block mb-1">
+            Ödenecek Yeni Aylık Kira
+          </span>
+          <div id="newRentDisplay" class="text-3xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 tracking-tight">
+            29.683,25 ₺
+          </div>
+          <span class="inline-block mt-2 text-xs font-semibold px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            <i class="fa-solid fa-arrow-trend-up mr-1 text-xs"></i>
+            Zam Oranı: <span id="summaryRateDisplay">%60.45</span>
+          </span>
+        </div>
+
+        <!-- BREAKDOWN ROWS -->
+        <div class="py-5 space-y-3.5 text-xs sm:text-sm">
+          <div class="flex justify-between items-center text-slate-400">
+            <span>Eski Aylık Kira:</span>
+            <span id="summaryOldRent" class="font-bold text-slate-200">18.500,00 ₺</span>
+          </div>
+
+          <div class="flex justify-between items-center text-slate-400">
+            <span class="flex items-center gap-1.5">
+              <i class="fa-solid fa-plus text-emerald-400 text-xs"></i>
+              <span>Aylık Zam / Artış Tutarı:</span>
+            </span>
+            <span id="summaryMonthlyIncrease" class="font-bold text-emerald-400">+11.183,25 ₺</span>
+          </div>
+
+          <div class="flex justify-between items-center text-slate-400">
+            <span class="flex items-center gap-1.5">
+              <i class="fa-solid fa-calendar text-cyan-400 text-xs"></i>
+              <span>12 Aylık Toplam Ekstra Yük:</span>
+            </span>
+            <span id="summaryYearlyIncrease" class="font-bold text-cyan-400">+134.199,00 ₺</span>
+          </div>
+
+          <div class="flex justify-between items-center text-slate-400 pt-2 border-t border-slate-800/60">
+            <span>1 Yıllık Toplam Yeni Kira:</span>
+            <span id="summaryYearlyTotal" class="font-bold text-white text-sm sm:text-base">356.199,00 ₺</span>
+          </div>
+        </div>
+
+        <!-- ACTION BUTTONS: WHATSAPP & COPY -->
+        <div class="pt-4 space-y-2.5">
+          <button id="mainWhatsappBtn" class="w-full py-3.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm transition-all shadow-lg shadow-emerald-600/30 flex items-center justify-center gap-2 group">
+            <i class="fa-brands fa-whatsapp text-lg group-hover:scale-110 transition-transform"></i>
+            <span>WhatsApp Bildirim Metni Gönder</span>
+          </button>
+
+          <button id="mainCopyBtn" class="w-full py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-semibold text-xs border border-slate-700/80 transition flex items-center justify-center gap-2">
+            <i class="fa-regular fa-copy text-xs"></i>
+            <span>Hesaplama Dökümünü Panoya Kopyala</span>
+          </button>
+        </div>
+
+        <!-- Copied Toast Banner -->
+        <div id="copyToast" class="hidden absolute bottom-4 left-6 right-6 py-2 px-3 rounded-xl bg-emerald-500 text-slate-950 font-bold text-xs text-center shadow-xl transition-all">
+          <i class="fa-solid fa-circle-check mr-1"></i>Metin panoya kopyalandı!
+        </div>
+
+      </section>
+    </div>
+
+    <!-- PREPARED NOTIFICATION PREVIEW (WHATSAPP MODAL / ACCORDION) -->
+    <div class="bg-[#0f172a] border border-slate-800/90 rounded-3xl p-6 sm:p-8 mb-12 shadow-lg">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4 pb-4 border-b border-slate-800">
+        <div>
+          <h3 class="text-base font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-message text-emerald-400"></i>
+            <span>Hazır Yasal Kira Bildirim Şablonu</span>
+          </h3>
+          <p class="text-xs text-slate-400 mt-1">
+            Ev sahibi veya kiracınızla resmi ve nezaketli bir dille paylaşabileceğiniz mevzuata uygun hazır bildirim metni:
+          </p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="toggleRoleBtn" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium border border-slate-700 transition">
+            <i class="fa-solid fa-repeat text-emerald-400 mr-1"></i>
+            <span id="roleText">Rolü Değiştir: Kiracıyım</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Textarea Preview -->
+      <div class="relative">
+        <textarea 
+          id="messagePreview" 
+          rows="5" 
+          readonly 
+          class="w-full p-4 bg-slate-950 border border-slate-800 rounded-2xl text-slate-300 font-mono text-xs leading-relaxed focus:outline-none selection:bg-emerald-500 selection:text-slate-950 cursor-pointer"
+          title="Tıklayarak kopyalayabilirsiniz"
+        ></textarea>
+      </div>
+    </div>
+
+    <!-- LEGAL & FAQ SECTION (SEO BOOST) -->
+    <section class="max-w-4xl mx-auto space-y-6 mb-16">
+      <div class="text-center mb-8">
+        <h2 class="text-xl sm:text-2xl font-bold text-white tracking-tight mb-2">
+          Kira Artışı Hakkında Sıkça Sorulan Sorular ve Yasal Haklar
+        </h2>
+        <p class="text-slate-400 text-xs sm:text-sm">
+          Türk Borçlar Kanunu (TBK) Madde 344 kapsamında kiracı ve ev sahiplerinin bilmesi gereken resmi kurallar
+        </p>
+      </div>
+
+      <div class="space-y-4">
+        
+        <!-- FAQ 1 -->
+        <details class="group bg-slate-900/80 border border-slate-800 rounded-2xl p-5 open:bg-slate-900 open:border-slate-700 transition">
+          <summary class="flex justify-between items-center font-semibold text-white text-sm cursor-pointer list-none">
+            <span class="flex items-center gap-2.5">
+              <i class="fa-solid fa-circle-question text-emerald-400 text-sm"></i>
+              <span>%25 kira artış sınırı kalktı mı? Şu anki yasal kural nedir?</span>
+            </span>
+            <i class="fa-solid fa-chevron-down text-xs text-slate-500 group-open:rotate-180 transition-transform"></i>
+          </summary>
+          <div class="pt-4 text-xs sm:text-sm text-slate-400 leading-relaxed border-t border-slate-800/80 mt-3 space-y-2">
+            <p>
+              <strong>Evet, %25 zam sınırı tamamen sona erdi.</strong> 11 Haziran 2022'de yürürlüğe giren geçici %25 kira artış sınırlaması, 1 Temmuz 2024 tarihi itibarıyla uzatılmayarak yürürlükten kalkmıştır.
+            </p>
+            <p>
+              Günümüzde konut ve çatılı işyeri kiralarında Türk Borçlar Kanunu'nun (TBK) 344. maddesi geçerlidir. Bu maddeye göre kira sözleşmesi yenilenirken uygulanacak tavan artış oranı, <strong>TÜİK tarafından açıklanan son 12 aylık ortalamalara göre TÜFE (Tüketici Fiyat Endeksi) değişim oranıdır</strong>.
+            </p>
+          </div>
+        </details>
+
+        <!-- FAQ 2 -->
+        <details class="group bg-slate-900/80 border border-slate-800 rounded-2xl p-5 open:bg-slate-900 open:border-slate-700 transition">
+          <summary class="flex justify-between items-center font-semibold text-white text-sm cursor-pointer list-none">
+            <span class="flex items-center gap-2.5">
+              <i class="fa-solid fa-circle-question text-emerald-400 text-sm"></i>
+              <span>Ev sahibi TÜİK TÜFE oranının üzerinde zam isteyebilir mi?</span>
+            </span>
+            <i class="fa-solid fa-chevron-down text-xs text-slate-500 group-open:rotate-180 transition-transform"></i>
+          </summary>
+          <div class="pt-4 text-xs sm:text-sm text-slate-400 leading-relaxed border-t border-slate-800/80 mt-3 space-y-2">
+            <p>
+              <strong>Hayır, yasal olarak isteyemez.</strong> TBK Madde 344 amir (zorunlu) hükümdür. Sözleşmede <em>"her yıl %100 artırılır"</em> veya <em>"dolar/altın bazında artar"</em> şeklinde maddeler olsa bile, bu şartlar TÜİK 12 aylık TÜFE tavanını aştığı oranda geçersiz sayılır. Kiracı, TÜİK TÜFE oranında artış yaparak kirasını bankadan ödediği sürece tahliye edilemez veya temerrüde düşürülemez.
+            </p>
+          </div>
+        </details>
+
+        <!-- FAQ 3 -->
+        <details class="group bg-slate-900/80 border border-slate-800 rounded-2xl p-5 open:bg-slate-900 open:border-slate-700 transition">
+          <summary class="flex justify-between items-center font-semibold text-white text-sm cursor-pointer list-none">
+            <span class="flex items-center gap-2.5">
+              <i class="fa-solid fa-circle-question text-emerald-400 text-sm"></i>
+              <span>5 yıllık kiracı kuralı nedir? (Kira Tespit Davası)</span>
+            </span>
+            <i class="fa-solid fa-chevron-down text-xs text-slate-500 group-open:rotate-180 transition-transform"></i>
+          </summary>
+          <div class="pt-4 text-xs sm:text-sm text-slate-400 leading-relaxed border-t border-slate-800/80 mt-3 space-y-2">
+            <p>
+              Kiracılık ilişkisi 5 yılı doldurduğunda (6. kira yılına girildiğinde), ev sahibi veya kiracı <strong>Kira Tespit Davası</strong> açma hakkına sahip olur. Bu davada hakim artık sadece TÜFE oranına bağlı kalmaz; bölgedeki emsal kira bedellerini, taşınmazın durumunu ve eski kiracı hakkaniyet indirimini (%10 ile %20 arası) göz önünde bulundurarak piyasa şartlarına uygun yeni bir kira bedeli takdir eder.
+            </p>
+          </div>
+        </details>
+
+        <!-- FAQ 4 -->
+        <details class="group bg-slate-900/80 border border-slate-800 rounded-2xl p-5 open:bg-slate-900 open:border-slate-700 transition">
+          <summary class="flex justify-between items-center font-semibold text-white text-sm cursor-pointer list-none">
+            <span class="flex items-center gap-2.5">
+              <i class="fa-solid fa-circle-question text-emerald-400 text-sm"></i>
+              <span>TÜİK kira artış oranı her ay ne zaman açıklanır?</span>
+            </span>
+            <i class="fa-solid fa-chevron-down text-xs text-slate-500 group-open:rotate-180 transition-transform"></i>
+          </summary>
+          <div class="pt-4 text-xs sm:text-sm text-slate-400 leading-relaxed border-t border-slate-800/80 mt-3 space-y-2">
+            <p>
+              TÜİK, her ayın enflasyon verilerini takip eden <strong>ayın 3. gününde saat 10:00'da</strong> resmi internet sitesinde duyurur (3. gün hafta sonuna denk gelirse takip eden ilk iş günü açıklanır). Açıklanan bültendeki <em>"On İki Aylık Ortalamalara Göre TÜFE Değişim Oranı"</em>, o ay içinde yenilenecek tüm kira sözleşmeleri için yasal zam tavanını oluşturur.
+            </p>
+          </div>
+        </details>
+
+      </div>
+    </section>
+
+    <!-- Cross-Promotion / Diğer Araçlar -->
+    <div class="border-t border-slate-800 pt-8 pb-4">
+      <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4 text-center sm:text-left">
+        İlginizi Çekebilecek Diğer Finans ve Güvenlik Araçları:
+      </h3>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        
+        <a href="../maas-hesaplayici/" class="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 hover:border-sky-500/50 transition group flex items-start gap-3">
+          <div class="w-10 h-10 rounded-xl bg-sky-500/10 text-sky-400 flex items-center justify-center shrink-0 text-base group-hover:bg-sky-500 group-hover:text-slate-950 transition">
+            <i class="fa-solid fa-calculator"></i>
+          </div>
+          <div>
+            <span class="text-xs font-bold text-white group-hover:text-sky-300 transition block">Net-Brüt Maaş Hesaplayıcı</span>
+            <span class="text-[11px] text-slate-400">Maaşınızın ne kadarı kiraya gidiyor? 12 aylık bordro simülasyonu.</span>
+          </div>
+        </a>
+
+        <a href="../tazminat-hesaplayici/" class="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 hover:border-indigo-500/50 transition group flex items-start gap-3">
+          <div class="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center shrink-0 text-base group-hover:bg-indigo-500 group-hover:text-slate-950 transition">
+            <i class="fa-solid fa-file-invoice-dollar"></i>
+          </div>
+          <div>
+            <span class="text-xs font-bold text-white group-hover:text-indigo-300 transition block">Kıdem & İhbar Tazminatı</span>
+            <span class="text-[11px] text-slate-400">2026 resmi tavanı ve hizmet süresiyle net tazminat hesabı.</span>
+          </div>
+        </a>
+
+        <a href="../sel-haritasi/" class="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 hover:border-cyan-500/50 transition group flex items-start gap-3">
+          <div class="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center shrink-0 text-base group-hover:bg-cyan-500 group-hover:text-slate-950 transition">
+            <i class="fa-solid fa-water"></i>
+          </div>
+          <div>
+            <span class="text-xs font-bold text-white group-hover:text-cyan-300 transition block">İstanbul Sel Riski Haritası</span>
+            <span class="text-[11px] text-slate-400">Taşınmadan önce kiralık evin dere yatağı ve su baskını riskini görün.</span>
+          </div>
+        </a>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800/80 bg-slate-900/60 py-6 text-xs text-slate-400 mt-auto">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <span class="font-bold text-white">Pratik<span class="text-emerald-400">Araçlar</span></span>
+        <span>•</span>
+        <span>Kira Artış Oranı Hesaplama Portalı</span>
+      </div>
+      <div class="text-[11px] text-slate-500 text-center sm:text-right">
+        TBK Madde 344 ve TÜİK verilerine dayalı genel bilgilendirme amaçlıdır.
+      </div>
+    </div>
+  </footer>
+
+  <!-- Interactive JavaScript Engine -->
+  <script>
+    // Elements
+    const currentRentInput = document.getElementById('currentRent');
+    const rateSelect = document.getElementById('rateSelect');
+    const customRateInput = document.getElementById('customRateInput');
+    const contractAgeSelect = document.getElementById('contractAge');
+    const rule5Notice = document.getElementById('rule5Notice');
+    const rateLabelInfo = document.getElementById('rateLabelInfo');
+    const propTypeHome = document.getElementById('propTypeHome');
+    const propTypeWork = document.getElementById('propTypeWork');
+    const badgeProperty = document.getElementById('badgeProperty');
+    
+    // Summary Displays
+    const newRentDisplay = document.getElementById('newRentDisplay');
+    const summaryRateDisplay = document.getElementById('summaryRateDisplay');
+    const summaryOldRent = document.getElementById('summaryOldRent');
+    const summaryMonthlyIncrease = document.getElementById('summaryMonthlyIncrease');
+    const summaryYearlyIncrease = document.getElementById('summaryYearlyIncrease');
+    const summaryYearlyTotal = document.getElementById('summaryYearlyTotal');
+    const messagePreview = document.getElementById('messagePreview');
+    const toggleRoleBtn = document.getElementById('toggleRoleBtn');
+    const roleText = document.getElementById('roleText');
+    const copyToast = document.getElementById('copyToast');
+
+    let currentRole = 'kiraci'; // 'kiraci' or 'evsahibi'
+    let currentPropType = 'konut'; // 'konut' or 'isyeri'
+
+    // Format Currency Helper
+    function fmtTRY(amount) {
+      return new Intl.NumberFormat('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(amount) + ' ₺';
+    }
+
+    // Main Calculator Function
+    function calculateRent() {
+      const oldRent = parseFloat(currentRentInput.value) || 0;
+      
+      let rate = 0;
+      if (rateSelect.value === 'custom') {
+        customRateInput.disabled = false;
+        rate = parseFloat(customRateInput.value) || 0;
+        rateLabelInfo.textContent = 'Özel Belirlenen Oran';
+      } else {
+        customRateInput.disabled = true;
+        rate = parseFloat(rateSelect.value) || 0;
+        customRateInput.value = rate.toFixed(2);
+        rateLabelInfo.textContent = 'Resmi 12 Aylık TÜFE';
+      }
+
+      // Calculations
+      const monthlyIncrease = (oldRent * rate) / 100;
+      const newRent = oldRent + monthlyIncrease;
+      const yearlyIncrease = monthlyIncrease * 12;
+      const yearlyTotal = newRent * 12;
+
+      // Update Displays
+      newRentDisplay.textContent = fmtTRY(newRent);
+      summaryRateDisplay.textContent = '%' + rate.toFixed(2);
+      summaryOldRent.textContent = fmtTRY(oldRent);
+      summaryMonthlyIncrease.textContent = '+' + fmtTRY(monthlyIncrease);
+      summaryYearlyIncrease.textContent = '+' + fmtTRY(yearlyIncrease);
+      summaryYearlyTotal.textContent = fmtTRY(yearlyTotal);
+
+      // Handle 5-Year notice
+      if (contractAgeSelect.value === 'over5') {
+        rule5Notice.classList.remove('hidden');
+      } else {
+        rule5Notice.classList.add('hidden');
+      }
+
+      // Generate Notification Message
+      updateNotificationMessage(oldRent, newRent, rate, monthlyIncrease);
+    }
+
+    // Message Generator
+    function updateNotificationMessage(oldRent, newRent, rate, monthlyIncrease) {
+      const propTypeName = (currentPropType === 'konut') ? 'konutumuzun' : 'işyerimizin';
+      
+      let msg = '';
+      if (currentRole === 'kiraci') {
+        msg = `Merhaba, kira sözleşmemizin yenilenme dönemi kapsamında Türk Borçlar Kanunu Madde 344 uyarınca resmi TÜİK 12 aylık ortalama TÜFE tavan oranı (%${rate.toFixed(2)}) doğrultusunda yeni dönem kiramız hesaplanmıştır:\n\n` +
+              `• Önceki Kira: ${fmtTRY(oldRent)}\n` +
+              `• Yasal TÜFE Oranı: %${rate.toFixed(2)}\n` +
+              `• Aylık Artış Tutarı: +${fmtTRY(monthlyIncrease)}\n` +
+              `• YENİ DÖNEM AYLIK KİRA: ${fmtTRY(newRent)}\n\n` +
+              `Ödemeler bu tutar üzerinden hesabınıza iletilecektir. Bilgilerinize sunar, hayırlı günler dilerim.\n` +
+              `Hesaplama detayları: https://pratik-araclar.pratikweb.workers.dev/kira-artisi-hesaplayici/`;
+      } else {
+        msg = `Sayın Kiracımız, ${propTypeName} kira sözleşmesinin yenilenme dönemi dolayısıyla Türk Borçlar Kanunu Madde 344 gereğince TÜİK tarafından açıklanan resmi 12 aylık TÜFE tavan oranı (%${rate.toFixed(2)}) uygulanarak yeni dönem kira bedeli belirlenmiştir:\n\n` +
+              `• Mevcut Kira Bedeli: ${fmtTRY(oldRent)}\n` +
+              `• Yasal Artış Oranı: %${rate.toFixed(2)}\n` +
+              `• Yeni Dönem Kira Bedeli: ${fmtTRY(newRent)}\n\n` +
+              `Yeni dönem ödemelerinizi belirtilen tutar üzerinden ilgili banka hesabına yapmanızı rica eder, esenlikler dilerim.\n` +
+              `Hesaplama detayları: https://pratik-araclar.pratikweb.workers.dev/kira-artisi-hesaplayici/`;
+      }
+
+      messagePreview.value = msg;
+    }
+
+    // Copy Helper
+    function triggerCopy(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        copyToast.classList.remove('hidden');
+        setTimeout(() => copyToast.classList.add('hidden'), 2500);
+      });
+    }
+
+    // Event Listeners
+    currentRentInput.addEventListener('input', calculateRent);
+    rateSelect.addEventListener('change', calculateRent);
+    customRateInput.addEventListener('input', calculateRent);
+    contractAgeSelect.addEventListener('change', calculateRent);
+
+    // Quick Rent Buttons
+    document.querySelectorAll('.quick-rent-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        currentRentInput.value = btn.getAttribute('data-val');
+        calculateRent();
+      });
+    });
+
+    // Property Type Toggle
+    propTypeHome.addEventListener('click', () => {
+      currentPropType = 'konut';
+      propTypeHome.classList.add('active', 'border-emerald-500', 'bg-emerald-500/15', 'text-emerald-300');
+      propTypeHome.classList.remove('border-slate-800', 'bg-slate-900', 'text-slate-400');
+      propTypeWork.classList.remove('active', 'border-emerald-500', 'bg-emerald-500/15', 'text-emerald-300');
+      propTypeWork.classList.add('border-slate-800', 'bg-slate-900', 'text-slate-400');
+      badgeProperty.textContent = 'Konut Kirası';
+      calculateRent();
+    });
+
+    propTypeWork.addEventListener('click', () => {
+      currentPropType = 'isyeri';
+      propTypeWork.classList.add('active', 'border-emerald-500', 'bg-emerald-500/15', 'text-emerald-300');
+      propTypeWork.classList.remove('border-slate-800', 'bg-slate-900', 'text-slate-400');
+      propTypeHome.classList.remove('active', 'border-emerald-500', 'bg-emerald-500/15', 'text-emerald-300');
+      propTypeHome.classList.add('border-slate-800', 'bg-slate-900', 'text-slate-400');
+      badgeProperty.textContent = 'İşyeri Kirası';
+      calculateRent();
+    });
+
+    // Role Toggle (Kiracı vs Ev Sahibi)
+    toggleRoleBtn.addEventListener('click', () => {
+      if (currentRole === 'kiraci') {
+        currentRole = 'evsahibi';
+        roleText.textContent = 'Rolü Değiştir: Ev Sahibiyim';
+      } else {
+        currentRole = 'kiraci';
+        roleText.textContent = 'Rolü Değiştir: Kiracıyım';
+      }
+      calculateRent();
+    });
+
+    // WhatsApp Share Handlers
+    function sendWhatsApp() {
+      const text = encodeURIComponent(messagePreview.value);
+      window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+    }
+
+    document.getElementById('whatsappShareBtn').addEventListener('click', sendWhatsApp);
+    document.getElementById('mainWhatsappBtn').addEventListener('click', sendWhatsApp);
+
+    // Copy Handlers
+    document.getElementById('copySummaryBtn').addEventListener('click', () => triggerCopy(messagePreview.value));
+    document.getElementById('mainCopyBtn').addEventListener('click', () => triggerCopy(messagePreview.value));
+    messagePreview.addEventListener('click', () => triggerCopy(messagePreview.value));
+
+    // Initial Run
+    calculateRent();
+  </script>
+</body>
+</html>

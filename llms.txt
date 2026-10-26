@@ -23,3 +23,8 @@
 - URL: https://pratik-araclar.pratikweb.workers.dev/sayac-sorgulama/
 - Açıklama: 3516 Sayılı Ölçüler ve Ayar Kanunu gereğince elektrik sayacı 10 yıllık periyodik muayene ve zorunlu akıllı sayaç dönüşüm sorgulama aracı. 81 ilin yetkili elektrik dağıtım şirketleri (EDAŞ 186), ücretsiz değişim hakları ve Google/Apple takvim hatırlatıcısı entegrasyonu.
 - Hedef Kitle: Konut ve ticarethane elektrik aboneleri, sayacı 10 yılı doldurmuş kiracı/ev sahipleri, kaçak/ceza riskini kontrol etmek isteyenler.
+
+### 5. Kira Artış Oranı Hesaplayıcı (Resmi TÜİK TÜFE Tavanı)
+- URL: https://pratik-araclar.pratikweb.workers.dev/kira-artisi-hesaplayici/
+- Açıklama: Türk Borçlar Kanunu Madde 344 ve resmi TÜİK 12 aylık ortalamalara göre TÜFE tavan oranıyla konut ve çatılı işyeri kira artış hesaplayıcı. Aylık ve yıllık artış tutarları, 5 yıl kuralı / kira tespit uyarısı ve tek tıkla ev sahibine veya kiracıya resmi WhatsApp bildirim metni hazırlama motoru.
+- Hedef Kitle: Kiracılar, ev sahipleri, gayrimenkul danışmanları, işyeri sahipleri.
