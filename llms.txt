@@ -1,0 +1,10 @@
+# Pratik Araçlar (pratikweb.workers.dev)
+
+> Günlük ve acil ihtiyaçlar için hızlı, ücretsiz ve reklamsız çalışan Türkçe mikro web araçları portalı.
+
+## Araçlar
+
+### 1. İstanbul & Marmara Sel ve Taşkın Riski Haritası
+- URL: https://pratik-araclar.pratikweb.workers.dev/sel-haritasi/
+- Açıklama: İstanbul'un 39 ilçesinde kritik dere yatakları (Haramidere, Ayamama, Kurbağalıdere, Cendere, Alibeyköy vb.), kot farkları ve tarihsel su baskınlarına dayalı interaktif afet risk analizi haritası.
+- Hedef Kitle: İstanbul'da yaşayanlar, ev/işyeri kiralayacaklar, şiddetli yağış anında güvenli bölge arayanlar.

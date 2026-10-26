@@ -3,8 +3,55 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pratik Araçlar | Hızlı & Ücretsiz Mikro Web Araçları</title>
-  <meta name="description" content="Günlük ve acil ihtiyaçlar için hızlı, ücretsiz ve reklamsız mikro web araçları koleksiyonu.">
+  <title>Pratik Araçlar | Günlük & Acil İhtiyaçlar İçin Hızlı Mikro Araçlar</title>
+  <meta name="description" content="İstanbul sel ve taşkın riski haritası, acil durum analizleri, hesaplama ve güvenlik araçları. Ücretsiz, reklamsız ve kurulumsuz doğrudan tarayıcınızda çalışan mikro araçlar.">
+  <meta name="keywords" content="pratik araçlar, istanbul sel haritası, sel riski haritası, marmara taşkın haritası, dere yatakları, mikro araçlar, ücretsiz web araçları">
+  <link rel="canonical" href="https://pratik-araclar.pratikweb.workers.dev/">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://pratik-araclar.pratikweb.workers.dev/">
+  <meta property="og:title" content="Pratik Araçlar | Hızlı & Ücretsiz Mikro Web Portalı">
+  <meta property="og:description" content="İstanbul sel ve taşkın riski haritası ve günlük pratik mikro araçlar koleksiyonu. %100 ücretsiz ve anında erişilebilir.">
+  <meta property="og:locale" content="tr_TR">
+  <meta property="og:site_name" content="Pratik Araçlar">
+
+  <!-- Twitter / X Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://pratik-araclar.pratikweb.workers.dev/">
+  <meta name="twitter:title" content="Pratik Araçlar | Hızlı & Ücretsiz Mikro Web Portalı">
+  <meta name="twitter:description" content="İstanbul sel ve taşkın riski haritası ve günlük pratik mikro araçlar koleksiyonu.">
+
+  <!-- Schema.org JSON-LD (Google & AI Search Engine Structured Data) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://pratik-araclar.pratikweb.workers.dev/#website",
+        "url": "https://pratik-araclar.pratikweb.workers.dev/",
+        "name": "Pratik Araçlar",
+        "description": "Günlük ve acil ihtiyaçlar için hızlı, ücretsiz ve reklamsız mikro web araçları portalı.",
+        "inLanguage": "tr-TR"
+      },
+      {
+        "@type": "WebApplication",
+        "@id": "https://pratik-araclar.pratikweb.workers.dev/#webapp",
+        "url": "https://pratik-araclar.pratikweb.workers.dev/",
+        "name": "Pratik Araçlar Portalı",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "All",
+        "browserRequirements": "Requires JavaScript. Requires HTML5.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "TRY"
+        }
+      }
+    ]
+  }
+  </script>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -340,7 +387,7 @@
     </div>
   </footer>
 
-  <!-- Search & Filter Logic -->
+  <!-- Search & Filter Logic (Akıllı Türkçe Token Tabanlı Arama) -->
   <script>
     const searchInput = document.getElementById('searchInput');
     const clearSearch = document.getElementById('clearSearch');
@@ -355,23 +402,38 @@
 
     let activeCategory = 'all';
 
+    // Türkçe karakterleri normalize eden akıllı arama fonksiyonu
+    function normalizeTr(str) {
+      return (str || '')
+        .toLocaleLowerCase('tr')
+        .replace(/ı/g, 'i')
+        .replace(/ğ/g, 'g')
+        .replace(/ü/g, 'u')
+        .replace(/ş/g, 's')
+        .replace(/ö/g, 'o')
+        .replace(/ç/g, 'c')
+        .trim();
+    }
+
     function filterTools() {
-      const query = searchInput.value.toLowerCase().trim();
+      const rawQuery = searchInput.value.trim();
+      const queryNormalized = normalizeTr(rawQuery);
+      const queryTokens = queryNormalized.split(/\s+/).filter(Boolean);
       let visibleCount = 0;
 
-      clearSearch.classList.toggle('hidden', query.length === 0);
+      clearSearch.classList.toggle('hidden', rawQuery.length === 0);
 
       toolCards.forEach(card => {
         const category = card.getAttribute('data-category');
-        const keywords = card.getAttribute('data-keywords') || '';
-        const title = card.querySelector('h2')?.textContent.toLowerCase() || '';
-        const desc = card.querySelector('p')?.textContent.toLowerCase() || '';
+        const keywords = normalizeTr(card.getAttribute('data-keywords') || '');
+        const title = normalizeTr(card.querySelector('h2')?.textContent || '');
+        const desc = normalizeTr(card.querySelector('p')?.textContent || '');
+        const searchableContent = `${title} ${keywords} ${desc}`;
 
         const matchesCategory = (activeCategory === 'all' || category === activeCategory);
-        const matchesQuery = query === '' || 
-          keywords.toLowerCase().includes(query) || 
-          title.includes(query) || 
-          desc.includes(query);
+        
+        // Çoklu kelime desteği: kullanıcının yazdığı her kelime kartta geçiyor mu?
+        const matchesQuery = queryTokens.length === 0 || queryTokens.every(token => searchableContent.includes(token));
 
         if (matchesCategory && matchesQuery) {
           card.classList.remove('hidden');
