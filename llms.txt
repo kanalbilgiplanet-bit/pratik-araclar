@@ -13,3 +13,8 @@
 - URL: https://pratik-araclar.pratikweb.workers.dev/maas-hesaplayici/
 - Açıklama: 2026, 2025, 2024 ve 2027 taslak tarifelerine göre brüt'ten net'e ve net'ten brüt'e maaş hesaplama. 12 aylık kümülatif vergi bordrosu simülasyonu, asgari ücret vergi istisnası, SGK kesintileri ve işveren toplam maliyeti.
 - Hedef Kitle: Çalışanlar, maaş zammı hesaplayanlar, insan kaynakları uzmanları, işverenler.
+
+### 3. Kıdem ve İhbar Tazminatı Hesaplayıcı (2026)
+- URL: https://pratik-araclar.pratikweb.workers.dev/tazminat-hesaplayici/
+- Açıklama: 4857 Sayılı İş Kanunu'na göre son brüt maaş, yan haklar (yol, yemek, prim), 2026 kıdem tazminatı tavanı, hizmet süresi (yıl, ay, gün) ve yasal bildirim önelleriyle net kıdem ve ihbar tazminatı hesaplama aracı.
+- Hedef Kitle: İşten ayrılanlar, istifa veya fesih sürecindekiler, muhasebeciler, İK yöneticileri.
