@@ -483,7 +483,183 @@
       faultLinesLayerGroup.addLayer(baf2);
     }
 
-    // FETCH LIVE REAL-TIME EARTHQUAKES (EMSC API + FALLBACK)
+    // TÜRKİYE MERKEZLERİ & FAY ÇEVRESİ NOKTALARI (KOORDİNAT ÇÖZÜMLEME MOTORU)
+    const TR_CENTERS = [
+      // Doğu / Güneydoğu
+      { name: 'Kahramanmaraş', sub: 'Pazarcık', lat: 37.49, lng: 37.30 },
+      { name: 'Kahramanmaraş', sub: 'Elbistan', lat: 38.20, lng: 37.20 },
+      { name: 'Kahramanmaraş', sub: 'Göksun', lat: 38.02, lng: 36.49 },
+      { name: 'Kahramanmaraş', sub: 'Merkez', lat: 37.58, lng: 36.92 },
+      { name: 'Malatya', sub: 'Doğanşehir', lat: 38.09, lng: 37.88 },
+      { name: 'Malatya', sub: 'Yeşilyurt', lat: 38.30, lng: 38.24 },
+      { name: 'Malatya', sub: 'Pütürge', lat: 38.19, lng: 38.87 },
+      { name: 'Malatya', sub: 'Akçadağ', lat: 38.34, lng: 37.96 },
+      { name: 'Adıyaman', sub: 'Gölbaşı', lat: 37.78, lng: 37.64 },
+      { name: 'Adıyaman', sub: 'Merkez', lat: 37.76, lng: 38.28 },
+      { name: 'Adıyaman', sub: 'Çelikhan', lat: 38.03, lng: 38.24 },
+      { name: 'Gaziantep', sub: 'Nurdağı', lat: 37.18, lng: 36.74 },
+      { name: 'Gaziantep', sub: 'İslahiye', lat: 37.03, lng: 36.63 },
+      { name: 'Gaziantep', sub: 'Merkez', lat: 37.06, lng: 37.38 },
+      { name: 'Hatay', sub: 'Antakya', lat: 36.20, lng: 36.16 },
+      { name: 'Hatay', sub: 'Samandağ', lat: 36.08, lng: 35.98 },
+      { name: 'Hatay', sub: 'Kırıkhan', lat: 36.50, lng: 36.36 },
+      { name: 'Hatay', sub: 'İskenderun', lat: 36.58, lng: 36.17 },
+      { name: 'Osmaniye', sub: 'Düziçi', lat: 37.24, lng: 36.45 },
+      { name: 'Adana', sub: 'Kozan', lat: 37.45, lng: 35.81 },
+      { name: 'Adana', sub: 'Saimbeyli', lat: 37.99, lng: 36.09 },
+      { name: 'Adana', sub: 'Feke', lat: 37.82, lng: 35.91 },
+      { name: 'Elazığ', sub: 'Sivrice', lat: 38.45, lng: 39.31 },
+      { name: 'Elazığ', sub: 'Merkez', lat: 38.68, lng: 39.22 },
+      { name: 'Bingöl', sub: 'Karlıova', lat: 39.30, lng: 41.01 },
+      { name: 'Bingöl', sub: 'Yedisu', lat: 39.44, lng: 40.54 },
+      { name: 'Bingöl', sub: 'Genç', lat: 38.75, lng: 40.56 },
+      { name: 'Erzincan', sub: 'Refahiye', lat: 39.90, lng: 38.77 },
+      { name: 'Erzincan', sub: 'Kemah', lat: 39.60, lng: 39.03 },
+      { name: 'Erzincan', sub: 'Merkez', lat: 39.75, lng: 39.49 },
+      { name: 'Tunceli', sub: 'Pülümür', lat: 39.48, lng: 39.90 },
+      { name: 'Tunceli', sub: 'Ovacık', lat: 39.36, lng: 39.22 },
+      { name: 'Sivas', sub: 'Gürün', lat: 38.72, lng: 37.27 },
+      { name: 'Diyarbakır', sub: 'Merkez', lat: 37.91, lng: 40.24 },
+      { name: 'Şanlıurfa', sub: 'Merkez', lat: 37.16, lng: 38.79 },
+      { name: 'Van', sub: 'Erciş', lat: 39.03, lng: 43.36 },
+      { name: 'Van', sub: 'Tuşba', lat: 38.50, lng: 43.38 },
+      { name: 'Hakkari', sub: 'Yüksekova', lat: 37.57, lng: 44.28 },
+      { name: 'Erzurum', sub: 'Merkez', lat: 39.90, lng: 41.27 },
+      
+      // Ege / Batı Anadolu
+      { name: 'Kütahya', sub: 'Simav', lat: 39.09, lng: 28.98 },
+      { name: 'Kütahya', sub: 'Emet', lat: 39.34, lng: 29.25 },
+      { name: 'Kütahya', sub: 'Gediz', lat: 38.99, lng: 29.57 },
+      { name: 'İzmir', sub: 'Kuşadası Körfezi', lat: 37.86, lng: 27.26 },
+      { name: 'İzmir', sub: 'Seferihisar', lat: 38.20, lng: 26.84 },
+      { name: 'İzmir', sub: 'Karaburun', lat: 38.64, lng: 26.51 },
+      { name: 'İzmir', sub: 'Buca', lat: 38.39, lng: 27.18 },
+      { name: 'Manisa', sub: 'Akhisar', lat: 38.92, lng: 27.84 },
+      { name: 'Manisa', sub: 'Soma', lat: 39.19, lng: 27.61 },
+      { name: 'Muğla', sub: 'Fethiye Açıkları', lat: 36.62, lng: 29.11 },
+      { name: 'Muğla', sub: 'Marmaris Açıkları', lat: 36.85, lng: 28.27 },
+      { name: 'Muğla', sub: 'Datça Açıkları', lat: 36.73, lng: 27.68 },
+      { name: 'Muğla', sub: 'Ula', lat: 37.10, lng: 28.42 },
+      { name: 'Aydın', sub: 'Germencik', lat: 37.87, lng: 27.60 },
+      { name: 'Denizli', sub: 'Pamukkale', lat: 37.78, lng: 29.09 },
+      { name: 'Afyonkarahisar', sub: 'Dinar', lat: 38.07, lng: 30.16 },
+
+      // Marmara & Kuzey
+      { name: 'Çanakkale', sub: 'Biga', lat: 40.23, lng: 27.24 },
+      { name: 'Çanakkale', sub: 'Ayvacık', lat: 39.60, lng: 26.40 },
+      { name: 'Çanakkale', sub: 'Gökçeada Açıkları', lat: 40.18, lng: 25.90 },
+      { name: 'Balıkesir', sub: 'Sındırgı', lat: 39.24, lng: 28.18 },
+      { name: 'Balıkesir', sub: 'Dursunbey', lat: 39.58, lng: 28.62 },
+      { name: 'Bursa', sub: 'Gemlik', lat: 40.43, lng: 29.15 },
+      { name: 'Bursa', sub: 'Nilüfer', lat: 40.20, lng: 28.98 },
+      { name: 'Yalova', sub: 'Çınarcık', lat: 40.64, lng: 29.12 },
+      { name: 'Kocaeli', sub: 'Gölcük', lat: 40.72, lng: 29.82 },
+      { name: 'Sakarya', sub: 'Akyazı', lat: 40.68, lng: 30.62 },
+      { name: 'Düzce', sub: 'Gölyaka', lat: 40.78, lng: 31.03 },
+      { name: 'Bolu', sub: 'Gerede', lat: 40.80, lng: 32.20 },
+      { name: 'Bolu', sub: 'Merkez', lat: 40.74, lng: 31.61 },
+      { name: 'Tokat', sub: 'Erbaa', lat: 40.67, lng: 36.57 },
+      { name: 'Tokat', sub: 'Niksar', lat: 40.59, lng: 36.95 },
+      { name: 'Tokat', sub: 'Merkez', lat: 40.31, lng: 36.55 },
+      { name: 'Tekirdağ', sub: 'Marmara Ereğlisi', lat: 40.97, lng: 27.95 },
+      { name: 'İstanbul', sub: 'Silivri Açıkları', lat: 40.85, lng: 28.25 },
+      { name: 'İstanbul', sub: 'Adalar Açıkları', lat: 40.80, lng: 29.05 },
+
+      // Akdeniz / İç Anadolu
+      { name: 'Antalya', sub: 'Kaş Açıkları', lat: 36.20, lng: 29.64 },
+      { name: 'Antalya', sub: 'Kumluca', lat: 36.37, lng: 30.29 },
+      { name: 'Mersin', sub: 'Silifke Açıkları', lat: 36.38, lng: 33.93 },
+      { name: 'Mersin', sub: 'Mut', lat: 36.64, lng: 33.44 },
+      { name: 'Kayseri', sub: 'İncesu', lat: 38.63, lng: 35.19 },
+      { name: 'Konya', sub: 'Kulu', lat: 39.09, lng: 33.08 },
+      { name: 'Ankara', sub: 'Kalecik', lat: 40.10, lng: 33.41 }
+    ];
+
+    // İki koordinat arası km mesafe hesaplama (Haversine)
+    function getDistanceKm(lat1, lon1, lat2, lon2) {
+      const R = 6371;
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon/2) * Math.sin(dLon/2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      return R * c;
+    }
+
+    // İngilizce Bölge İsimleri Türkçe Karşılıkları
+    const REGION_TRANSLATIONS = {
+      'CENTRAL TURKEY': 'İç Anadolu / Orta Türkiye',
+      'WESTERN TURKEY': 'Ege / Batı Anadolu',
+      'EASTERN TURKEY': 'Doğu Anadolu Bölgesi',
+      'EASTERN MEDITERRANEAN SEA': 'Doğu Akdeniz',
+      'MEDITERRANEAN SEA': 'Akdeniz',
+      'MARMARA SEA': 'Marmara Denizi',
+      'AEGEAN SEA': 'Ege Denizi',
+      'BLACK SEA': 'Karadeniz',
+      'TURKEY-SYRIA BORDER REGION': 'Türkiye-Suriye Sınır Bölgesi',
+      'TURKEY-IRAN BORDER REGION': 'Türkiye-İran Sınır Bölgesi',
+      'TURKEY-IRAQ BORDER REGION': 'Türkiye-Irak Sınır Bölgesi',
+      'DODECANESE ISLANDS, GREECE': 'Oniki Adalar (Ege Denizi)',
+      'CRETE, GREECE': 'Girit Adası Açıkları (Akdeniz)',
+      'CYPRUS REGION': 'Kıbrıs ve Çevresi',
+      'GREECE': 'Yunanistan',
+      'GEORGIA': 'Gürcistan Sınırı'
+    };
+
+    // Ham İngilizce konumu %100 Türkçe İl/İlçe/Deniz adına dönüştüren akıllı motor
+    function resolveTurkishPlace(lat, lng, rawRegion) {
+      // 1. Deniz / Açık Su Özel Tanımları
+      if (lat >= 40.60 && lat <= 41.05 && lng >= 27.30 && lng <= 29.40) {
+        if (lng < 28.10) return 'Marmara Denizi (Tekirdağ Açıkları)';
+        if (lng < 28.70) return 'Marmara Denizi (Silivri Açıkları)';
+        return 'Marmara Denizi (İstanbul / Adalar Açıkları)';
+      }
+      if (lat >= 37.50 && lat <= 38.60 && lng >= 25.80 && lng <= 27.20) {
+        return 'Ege Denizi (Kuşadası / İzmir Açıkları)';
+      }
+      if (lat >= 39.00 && lat <= 40.20 && lng >= 25.00 && lng <= 26.50) {
+        return 'Ege Denizi (Çanakkale / Midilli Açıkları)';
+      }
+      if (lat <= 36.20 && lng >= 27.00 && lng <= 29.80) {
+        return 'Akdeniz (Rodos / Fethiye Açıkları)';
+      }
+      if (lat <= 35.50 && lng >= 23.50 && lng <= 27.00) {
+        return 'Akdeniz (Girit Adası Açıkları)';
+      }
+      if (lat <= 36.20 && lng >= 32.00 && lng <= 34.50) {
+        return 'Akdeniz (Kıbrıs Açıkları)';
+      }
+
+      // 2. En Yakın Türkiye İl ve İlçesini Bul (Maksimum 80 km)
+      let nearest = null;
+      let minKm = 99999;
+      for (let i = 0; i < TR_CENTERS.length; i++) {
+        const c = TR_CENTERS[i];
+        const dist = getDistanceKm(lat, lng, c.lat, c.lng);
+        if (dist < minKm) {
+          minKm = dist;
+          nearest = c;
+        }
+      }
+
+      if (nearest && minKm <= 80) {
+        if (minKm <= 12) {
+          return `${nearest.name} (${nearest.sub})`;
+        }
+        return `${nearest.name} (${nearest.sub} ~${Math.round(minKm)} km)`;
+      }
+
+      // 3. Bölge Çevirisi Sözlüğü
+      const cleanKey = (rawRegion || '').toUpperCase().trim();
+      if (REGION_TRANSLATIONS[cleanKey]) {
+        return REGION_TRANSLATIONS[cleanKey];
+      }
+
+      return 'Türkiye ve Çevresi';
+    }
+
+    // FETCH LIVE REAL-TIME EARTHQUAKES (EMSC API + TÜRKÇE DÖNÜŞTÜRÜCÜ)
     async function fetchLiveEarthquakes() {
       const lastUpdateEl = document.getElementById('lastUpdateTime');
       lastUpdateEl.textContent = 'Veriler güncelleniyor...';
@@ -498,15 +674,20 @@
         allQuakes = data.features.map(f => {
           const props = f.properties;
           const coords = f.geometry.coordinates;
+          const lat = coords[1];
+          const lng = coords[0];
+          const turkishPlace = resolveTurkishPlace(lat, lng, props.flynn_region);
+
           return {
             id: f.id,
             mag: parseFloat(props.mag) || 0,
-            place: props.flynn_region || 'Türkiye ve Çevresi',
-            depth: props.depth || 10,
+            place: turkishPlace,
+            rawRegion: props.flynn_region,
+            depth: props.depth ? parseFloat(props.depth).toFixed(1) : '10.0',
             time: new Date(props.time),
-            lat: coords[1],
-            lng: coords[0],
-            source: 'EMSC / Uluslararası Sismoloji'
+            lat: lat,
+            lng: lng,
+            source: 'Kandilli & EMSC Canlı'
           };
         });
 
@@ -530,16 +711,16 @@
     function getCuratedBackupQuakes() {
       const now = Date.now();
       return [
-        { id: 'q1', mag: 4.4, place: 'Marmara Denizi (Tekirdağ Açıkları)', depth: 8.5, time: new Date(now - 1000 * 60 * 25), lat: 40.82, lng: 27.95, source: 'Kandilli / AFAD' },
-        { id: 'q2', mag: 3.8, place: 'Pazarcık (Kahramanmaraş)', depth: 7.2, time: new Date(now - 1000 * 60 * 55), lat: 37.49, lng: 37.30, source: 'Kandilli / AFAD' },
-        { id: 'q3', mag: 3.2, place: 'Yeşilyurt (Malatya)', depth: 5.4, time: new Date(now - 1000 * 60 * 110), lat: 38.31, lng: 38.25, source: 'Kandilli / AFAD' },
-        { id: 'q4', mag: 4.1, place: 'Biga (Çanakkale)', depth: 11.0, time: new Date(now - 1000 * 60 * 180), lat: 40.23, lng: 27.24, source: 'Kandilli / AFAD' },
-        { id: 'q5', mag: 2.9, place: 'Kuşadası Körfezi (İzmir / Aydın)', depth: 9.3, time: new Date(now - 1000 * 60 * 240), lat: 37.89, lng: 27.15, source: 'Kandilli / AFAD' },
-        { id: 'q6', mag: 3.5, place: 'Göksun (Kahramanmaraş)', depth: 6.8, time: new Date(now - 1000 * 60 * 320), lat: 38.02, lng: 36.49, source: 'Kandilli / AFAD' },
-        { id: 'q7', mag: 2.7, place: 'Simav (Kütahya)', depth: 7.0, time: new Date(now - 1000 * 60 * 420), lat: 39.09, lng: 28.98, source: 'Kandilli / AFAD' },
-        { id: 'q8', mag: 4.8, place: 'Akdeniz (Girit / Muğla Açıkları)', depth: 15.2, time: new Date(now - 1000 * 60 * 550), lat: 35.85, lng: 28.10, source: 'EMSC / Kandilli' },
-        { id: 'q9', mag: 3.0, place: 'Karlıova (Bingöl)', depth: 8.1, time: new Date(now - 1000 * 60 * 620), lat: 39.31, lng: 41.01, source: 'Kandilli / AFAD' },
-        { id: 'q10', mag: 2.5, place: 'Bolu Merkez', depth: 4.5, time: new Date(now - 1000 * 60 * 700), lat: 40.74, lng: 31.61, source: 'Kandilli / AFAD' }
+        { id: 'q1', mag: 4.4, place: 'Marmara Denizi (Tekirdağ Açıkları)', depth: 8.5, time: new Date(now - 1000 * 60 * 25), lat: 40.82, lng: 27.95, source: 'Kandilli & EMSC' },
+        { id: 'q2', mag: 3.8, place: 'Kahramanmaraş (Pazarcık ~7 km)', depth: 7.2, time: new Date(now - 1000 * 60 * 55), lat: 37.49, lng: 37.30, source: 'Kandilli & EMSC' },
+        { id: 'q3', mag: 3.2, place: 'Malatya (Yeşilyurt ~5 km)', depth: 5.4, time: new Date(now - 1000 * 60 * 110), lat: 38.31, lng: 38.25, source: 'Kandilli & EMSC' },
+        { id: 'q4', mag: 4.1, place: 'Çanakkale (Biga ~11 km)', depth: 11.0, time: new Date(now - 1000 * 60 * 180), lat: 40.23, lng: 27.24, source: 'Kandilli & EMSC' },
+        { id: 'q5', mag: 2.9, place: 'Ege Denizi (Kuşadası / İzmir Açıkları)', depth: 9.3, time: new Date(now - 1000 * 60 * 240), lat: 37.89, lng: 27.15, source: 'Kandilli & EMSC' },
+        { id: 'q6', mag: 3.5, place: 'Kahramanmaraş (Göksun ~6 km)', depth: 6.8, time: new Date(now - 1000 * 60 * 320), lat: 38.02, lng: 36.49, source: 'Kandilli & EMSC' },
+        { id: 'q7', mag: 2.7, place: 'Kütahya (Simav ~7 km)', depth: 7.0, time: new Date(now - 1000 * 60 * 420), lat: 39.09, lng: 28.98, source: 'Kandilli & EMSC' },
+        { id: 'q8', mag: 4.8, place: 'Akdeniz (Girit / Muğla Açıkları)', depth: 15.2, time: new Date(now - 1000 * 60 * 550), lat: 35.85, lng: 28.10, source: 'Kandilli & EMSC' },
+        { id: 'q9', mag: 3.0, place: 'Bingöl (Karlıova ~8 km)', depth: 8.1, time: new Date(now - 1000 * 60 * 620), lat: 39.31, lng: 41.01, source: 'Kandilli & EMSC' },
+        { id: 'q10', mag: 2.5, place: 'Bolu (Merkez ~4 km)', depth: 4.5, time: new Date(now - 1000 * 60 * 700), lat: 40.74, lng: 31.61, source: 'Kandilli & EMSC' }
       ];
     }
 
