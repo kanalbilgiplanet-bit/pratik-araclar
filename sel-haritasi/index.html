@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="tr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>İstanbul & Marmara Sel Riski Haritası | Pratik Araçlar</title>
+  <meta name="description" content="İstanbul ilçeleri için dere yatakları, su baskını riski ve afet uyarılarını içeren interaktif sel riski haritası.">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: { 500: '#6366f1', 600: '#4f46e5' }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Leaflet CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    /* Full height map container */
+    #map {
+      height: calc(100vh - 4rem);
+      width: 100%;
+      background: #1e293b;
+    }
+    @media (max-width: 640px) {
+      #map {
+        height: calc(100vh - 7.5rem);
+      }
+    }
+
+    /* Leaflet popup styling */
+    .leaflet-popup-content-wrapper {
+      background: #0f172a !important;
+      color: #f8fafc !important;
+      border: 1px solid #334155 !important;
+      border-radius: 0.75rem !important;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.6) !important;
+    }
+    .leaflet-popup-tip {
+      background: #0f172a !important;
+      border: 1px solid #334155 !important;
+    }
+
+    /* Leaflet Tooltip Dark High-Contrast Styling */
+    .leaflet-tooltip {
+      background: #0f172a !important;
+      color: #ffffff !important;
+      border: 1px solid #475569 !important;
+      border-radius: 8px !important;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5) !important;
+      padding: 6px 10px !important;
+    }
+    .leaflet-tooltip-top:before {
+      border-top-color: #0f172a !important;
+    }
+    .leaflet-tooltip-bottom:before {
+      border-bottom-color: #0f172a !important;
+    }
+    .leaflet-tooltip-left:before {
+      border-left-color: #0f172a !important;
+    }
+    .leaflet-tooltip-right:before {
+      border-right-color: #0f172a !important;
+    }
+
+    /* Custom Risk Pins on Map */
+    .risk-pin {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+      border: 2.5px solid #ffffff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.7);
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+    .risk-pin:hover {
+      transform: scale(1.3);
+      z-index: 1000 !important;
+    }
+    .pulse-high {
+      animation: pulse-red 2s infinite;
+    }
+    @keyframes pulse-red {
+      0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.8); }
+      70% { box-shadow: 0 0 0 14px rgba(239, 68, 68, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+
+    /* User GPS Blue Pulse */
+    .user-location-pin {
+      width: 22px;
+      height: 22px;
+      background: #3b82f6;
+      border: 3px solid #ffffff;
+      border-radius: 50%;
+      box-shadow: 0 0 12px rgba(59, 130, 246, 0.8);
+      animation: pulse-blue 1.8s infinite;
+    }
+    @keyframes pulse-blue {
+      0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); }
+      70% { box-shadow: 0 0 0 16px rgba(59, 130, 246, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+    }
+
+    /* High-contrast Drawer specific styles */
+    #districtDetailDrawer {
+      background-color: #0b0f19 !important; /* Pure solid dark background */
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
+    ::-webkit-scrollbar-track { background: #0b0f19; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans overflow-hidden">
+
+  <!-- Top Navigation & Utility Bar -->
+  <header class="h-14 sm:h-16 border-b border-slate-800 bg-slate-900 px-3 sm:px-6 flex items-center justify-between z-30 shrink-0">
+    <div class="flex items-center gap-2 sm:gap-4 overflow-hidden">
+      <!-- Back to Portal Button -->
+      <a href="../index.html" class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white text-xs font-medium transition border border-slate-700 shadow-sm shrink-0" title="Ana Portala Geri Dön">
+        <i class="fa-solid fa-arrow-left text-xs"></i>
+        <span>Vitrin</span>
+      </a>
+
+      <div class="h-4 w-px bg-slate-800 shrink-0"></div>
+
+      <!-- App Title -->
+      <div class="flex items-center gap-2 truncate">
+        <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-cyan-500/20 border border-cyan-500/40 text-cyan-400 flex items-center justify-center text-xs sm:text-sm shadow-sm shrink-0">
+          <i class="fa-solid fa-water"></i>
+        </div>
+        <div class="truncate">
+          <h1 class="text-xs sm:text-sm font-bold text-white flex items-center gap-1.5 truncate">
+            <span class="sm:hidden truncate">Sel Riski Haritası</span>
+            <span class="hidden sm:inline">İstanbul Sel & Taşkın Riski Haritası</span>
+            <span class="hidden md:inline-block px-2 py-0.5 text-[10px] font-semibold bg-red-500/20 text-red-300 border border-red-500/40 rounded-full">
+              Afet Analizi
+            </span>
+          </h1>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Header Action -->
+    <div class="flex items-center gap-2 shrink-0">
+      <button id="emergencyHelpBtn" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-semibold shadow-lg shadow-red-600/30 transition flex items-center gap-1.5">
+        <i class="fa-solid fa-triangle-exclamation animate-bounce text-xs"></i>
+        <span class="hidden sm:inline">Acil Rehber (112)</span>
+        <span class="sm:hidden font-bold">112 Acil</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile Sub-bar for Filter and Quick Search -->
+  <div class="sm:hidden bg-slate-900 border-b border-slate-800 px-3 py-2 flex items-center gap-2 z-20">
+    <div class="relative flex-1">
+      <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i>
+      <input type="text" id="mobileSearchInput" placeholder="İlçe ara... (Örn: Esenyurt)" class="w-full pl-8 pr-3 py-1.5 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white placeholder-slate-400 focus:outline-none focus:border-indigo-500">
+    </div>
+    <select id="mobileFilterSelect" class="bg-slate-950 border border-slate-700 text-xs text-slate-200 rounded-lg px-2 py-1.5 focus:outline-none">
+      <option value="all">Tüm Riskler</option>
+      <option value="high">🔴 Yüksek</option>
+      <option value="medium">🟡 Orta</option>
+      <option value="low">🟢 Düşük</option>
+    </select>
+  </div>
+
+  <!-- Map Workspace & Controls Container -->
+  <div class="relative flex-1 w-full overflow-hidden">
+    
+    <!-- Map Element -->
+    <div id="map"></div>
+
+    <!-- Thumb-Friendly Floating Action Stack (Mobile & Desktop) -->
+    <div class="absolute top-3 right-3 sm:top-4 sm:right-4 z-[1000] flex flex-col gap-2 pointer-events-auto">
+      
+      <!-- GPS Locate Button -->
+      <button id="locateUserFab" class="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-slate-900/95 hover:bg-slate-800 text-slate-200 hover:text-white border border-slate-700 shadow-xl flex items-center justify-center transition active:scale-95 group" title="Bulunduğum Konumu Göster">
+        <i class="fa-solid fa-location-crosshairs text-indigo-400 group-hover:text-indigo-300 text-base"></i>
+      </button>
+
+      <!-- Center Map Button -->
+      <button id="resetMapFab" class="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-slate-900/95 hover:bg-slate-800 text-slate-200 hover:text-white border border-slate-700 shadow-xl flex items-center justify-center transition active:scale-95 group" title="İstanbul Merkezine Odakla">
+        <i class="fa-solid fa-crosshairs text-cyan-400 group-hover:text-cyan-300 text-base"></i>
+      </button>
+
+      <!-- Satellite / Street Layer Toggle FAB -->
+      <button id="toggleLayerFab" class="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-slate-900/95 hover:bg-slate-800 text-slate-200 hover:text-white border border-slate-700 shadow-xl flex items-center justify-center transition active:scale-95 group" title="Sokak / Uydu Görünümünü Değiştir">
+        <i class="fa-solid fa-layer-group text-amber-400 group-hover:text-amber-300 text-base"></i>
+      </button>
+    </div>
+
+    <!-- Floating Top-Left Control Card (Desktop Search & Filters) -->
+    <div class="hidden sm:block absolute top-4 left-4 z-[1000] w-80 bg-slate-900 border border-slate-700 rounded-2xl p-4 shadow-2xl">
+      <div class="relative mb-3">
+        <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-sm"></i>
+        <input 
+          type="text" 
+          id="desktopSearchInput" 
+          placeholder="İlçe veya dere ara (Kadıköy, Ayamama...)" 
+          class="w-full pl-9 pr-3 py-2 bg-slate-950 border border-slate-700 rounded-xl text-xs text-white placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+        >
+      </div>
+
+      <!-- Risk Filter Buttons -->
+      <div class="flex items-center gap-1.5 mb-2 text-xs">
+        <button data-level="all" class="risk-filter-btn flex-1 py-1.5 rounded-lg bg-indigo-600 text-white font-medium text-center transition">
+          Tümü (<span id="totalDistrictsCount">39</span>)
+        </button>
+        <button data-level="high" class="risk-filter-btn flex-1 py-1.5 rounded-lg bg-slate-800 text-red-300 hover:bg-slate-700 font-medium text-center transition border border-red-500/30">
+          Yüksek (<span id="highRiskCount">0</span>)
+        </button>
+        <button data-level="medium" class="risk-filter-btn flex-1 py-1.5 rounded-lg bg-slate-800 text-amber-300 hover:bg-slate-700 font-medium text-center transition border border-amber-500/30">
+          Orta (<span id="medRiskCount">0</span>)
+        </button>
+        <button data-level="low" class="risk-filter-btn flex-1 py-1.5 rounded-lg bg-slate-800 text-emerald-300 hover:bg-slate-700 font-medium text-center transition border border-emerald-500/30">
+          Düşük (<span id="lowRiskCount">0</span>)
+        </button>
+      </div>
+
+      <div class="text-[11px] text-slate-300 flex items-center justify-between pt-2 border-t border-slate-800">
+        <span>İlçeye tıklayarak detaylı raporu açın.</span>
+        <i class="fa-solid fa-circle-info text-slate-400"></i>
+      </div>
+    </div>
+
+    <!-- Floating Legend (Lejant) at Bottom Left -->
+    <div class="absolute bottom-4 left-4 z-[1000] bg-slate-900 border border-slate-700 rounded-xl p-3.5 shadow-2xl text-xs space-y-2 hidden md:block">
+      <div class="font-bold text-white text-[11px] uppercase tracking-wider flex items-center gap-1.5">
+        <i class="fa-solid fa-layer-group text-indigo-400"></i> Risk Lejantı
+      </div>
+      <div class="flex items-center gap-2 text-slate-200">
+        <span class="w-3.5 h-3.5 rounded-full bg-red-600 border border-white shadow-sm"></span>
+        <span>Yüksek Risk (Vadi Tabanı / Dere Yatağı)</span>
+      </div>
+      <div class="flex items-center gap-2 text-slate-200">
+        <span class="w-3.5 h-3.5 rounded-full bg-amber-500 border border-white shadow-sm"></span>
+        <span>Orta Risk (Yüksek Betonlaşma / Eğim)</span>
+      </div>
+      <div class="flex items-center gap-2 text-slate-200">
+        <span class="w-3.5 h-3.5 rounded-full bg-emerald-600 border border-white shadow-sm"></span>
+        <span>Düşük Risk (Yüksek Sırt / Güvenli Kot)</span>
+      </div>
+    </div>
+
+    <!-- Floating Disclaimer Pill at Bottom Center with Close Button -->
+    <div id="disclaimerPill" class="absolute bottom-3 left-1/2 -translate-x-1/2 z-[1000] max-w-xl w-[94%] sm:w-auto bg-slate-900/95 backdrop-blur-md border border-slate-700/90 rounded-2xl px-3.5 py-2 shadow-2xl text-[11px] text-slate-300 flex items-center justify-between gap-2.5 text-left pointer-events-auto transition-all duration-300">
+      <div class="flex items-center gap-2 truncate">
+        <i class="fa-solid fa-scale-balanced text-amber-400 text-xs shrink-0"></i>
+        <span class="truncate sm:whitespace-normal">
+          <strong class="text-white">Bilgilendirme:</strong> Veriler simülasyondur. Resmi uyarılar için <span class="text-amber-300 font-semibold">AFAD & MGM</span> duyurularını esas alınız.
+        </span>
+      </div>
+      <div class="flex items-center gap-2 shrink-0">
+        <button id="openLegalModalBtn" class="text-indigo-400 hover:text-indigo-300 underline font-bold cursor-pointer text-xs">
+          Detay
+        </button>
+        <button id="closeDisclaimerPill" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition" title="Kapat">
+          <i class="fa-solid fa-xmark text-xs"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Slide-over Drawer / District Info Panel (100% Solid Dark & High Contrast) -->
+    <div id="districtDetailDrawer" class="absolute top-0 right-0 bottom-0 z-[1001] w-full sm:w-[440px] border-l-2 border-slate-700 shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
+      
+      <!-- Drawer Header (Solid Dark) -->
+      <div class="p-5 border-b border-slate-800 flex items-start justify-between bg-slate-900">
+        <div>
+          <div id="drawerRiskBadge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold mb-2">
+            <!-- Dynamic Risk Badge -->
+          </div>
+          <h2 id="drawerDistrictName" class="text-2xl font-black text-white tracking-tight">İlçe Adı</h2>
+          <p id="drawerRegionInfo" class="text-xs font-semibold text-slate-300 mt-0.5">İstanbul • Avrupa Yakası</p>
+        </div>
+        <button id="closeDrawerBtn" class="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white transition border border-slate-700" title="Kapat">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Drawer Content (Scrollable with solid cards) -->
+      <div class="p-5 flex-1 overflow-y-auto space-y-4 text-sm bg-slate-950">
+        
+        <!-- Key Alert Box (Dynamic Color Solid) -->
+        <div id="drawerAlertBox" class="p-4 rounded-2xl border-2 text-xs leading-relaxed font-medium">
+          <!-- Dynamic Alert -->
+        </div>
+
+        <!-- Critical Streams / Dere Yatakları -->
+        <div class="bg-slate-900 p-4 rounded-2xl border border-slate-800">
+          <h4 class="text-xs font-bold text-cyan-400 uppercase tracking-wider mb-2.5 flex items-center gap-2">
+            <i class="fa-solid fa-water"></i> Kritik Dere Yatakları & Taşkın Koridorları
+          </h4>
+          <div id="drawerStreamsList" class="flex flex-wrap gap-2">
+            <!-- Dynamic Stream Badges -->
+          </div>
+        </div>
+
+        <!-- Vulnerable Spots & Historical Notes -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-2">
+          <h4 class="text-xs font-bold text-amber-300 uppercase tracking-wider flex items-center gap-2">
+            <i class="fa-solid fa-clock-rotate-left"></i> Geçmiş Olaylar ve Risk Sebepleri
+          </h4>
+          <p id="drawerHistoryNote" class="text-xs text-slate-200 leading-relaxed font-normal">
+            Bilgi yükleniyor...
+          </p>
+        </div>
+
+        <!-- Actionable Recommendations (High-Contrast Indigo Solid Box) -->
+        <div class="bg-[#171c38] border-2 border-indigo-500/50 rounded-2xl p-4 space-y-2.5 shadow-lg">
+          <h4 class="text-xs font-bold text-indigo-200 uppercase tracking-wider flex items-center gap-2">
+            <i class="fa-solid fa-shield-halved text-indigo-400 text-sm"></i> Bu Bölgede Yaşayanlar İçin Önlemler
+          </h4>
+          <div id="drawerSafetyTipsContainer">
+            <ul id="drawerSafetyTips" class="text-xs text-white space-y-2 list-disc pl-4 font-normal leading-relaxed">
+              <li>Bodrum ve zemin katlarda su sızdırmazlık kontrolleri yapılmalı.</li>
+              <li>Şiddetli yağış uyarısında araçlar dere yatağı otoparklarından çıkarılmalı.</li>
+              <li>Elektrik panosu ve prizler taban seviyesinden yüksekte tutulmalı.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Legal & Ethical Disclaimer Notice Inside Drawer -->
+        <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 text-[11px] text-slate-400 leading-relaxed flex items-start gap-2.5">
+          <i class="fa-solid fa-scale-balanced text-amber-400 text-sm shrink-0 mt-0.5"></i>
+          <div>
+            <strong class="text-slate-200 block mb-0.5">Sorumluluk Reddi ve Resmi Bildirim:</strong>
+            Bu harita ve ilçe analizleri yalnızca genel farkındalık amaçlı açık kaynaklı simülasyondur; hukuki bağlayıcılığı yoktur. Acil durumlarda daima AFAD (112), Valilik ve Meteoroloji Genel Müdürlüğü (MGM) resmi talimatlarına uyunuz.
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Drawer Sticky Footer (Her Zaman Görünür Sabit Paylaşım & Acil Barı) -->
+      <div class="p-3.5 border-t border-slate-800 bg-slate-900 space-y-2.5 shrink-0 shadow-2xl z-20">
+        
+        <!-- Sabit Paylaşım Butonları (Aşağı kaydırmaya gerek yok!) -->
+        <div class="grid grid-cols-2 gap-2">
+          <a id="shareWhatsappBtn" href="#" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition shadow-lg shadow-emerald-600/30 active:scale-95">
+            <i class="fa-brands fa-whatsapp text-sm"></i>
+            <span>WhatsApp'ta İlet</span>
+          </a>
+          <a id="shareTwitterBtn" href="#" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-black hover:bg-slate-800 text-white font-bold text-xs border border-slate-700 transition active:scale-95">
+            <i class="fa-brands fa-x-twitter text-sm"></i>
+            <span>X'te Paylaş</span>
+          </a>
+        </div>
+
+        <div class="flex items-center justify-between text-[11px] text-slate-400 pt-0.5">
+          <span>AFAD Acil: <strong class="text-red-400 font-bold text-xs">112</strong></span>
+          <button id="zoomToDistrictBtn" class="text-indigo-400 hover:text-indigo-300 flex items-center gap-1 font-bold">
+            <i class="fa-solid fa-magnifying-glass-location"></i> Haritada Yakınlaştır
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Legal Disclaimer Full Modal -->
+    <div id="legalModal" class="fixed inset-0 z-[2050] bg-slate-950/85 backdrop-blur-sm hidden flex items-center justify-center p-4">
+      <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-lg w-full p-6 shadow-2xl relative">
+        <button id="closeLegalModal" class="absolute top-4 right-4 text-slate-300 hover:text-white p-2">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+        <div class="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-500/40 text-amber-400 flex items-center justify-center text-xl mb-4">
+          <i class="fa-solid fa-scale-balanced"></i>
+        </div>
+        <h3 class="text-xl font-bold text-white mb-2">Yasal Uyarı & Sorumluluk Reddi Beyanı</h3>
+        
+        <div class="space-y-3 text-xs text-slate-300 leading-relaxed mb-6">
+          <p>
+            Bu platform (<strong class="text-white">Pratik Araçlar - Sel ve Taşkın Riski Haritası</strong>), kamuya açık coğrafi veriler, geçmiş su baskını kayıtları ve topografik eğim modelleri kullanılarak <em>yalnızca kamuoyunu bilgilendirme ve farkındalık yaratma amacıyla</em> hazırlanmıştır.
+          </p>
+          <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+            <div class="flex items-start gap-2">
+              <i class="fa-solid fa-circle-exclamation text-amber-400 mt-0.5"></i>
+              <span><strong>Resmi Afet Belgesi Değildir:</strong> Buradaki veriler imar, sigorta ekspertizi, hukuki ihtilaf veya resmi tahliye emri yerine geçmez.</span>
+            </div>
+            <div class="flex items-start gap-2">
+              <i class="fa-solid fa-tower-broadcast text-cyan-400 mt-0.5"></i>
+              <span><strong>Yetkili Kamu Kurumları:</strong> Sel, su baskını, fırtına ve acil tahliye durumlarında daima <strong>T.C. İçişleri Bakanlığı AFAD, Meteoroloji Genel Müdürlüğü (MGM), İstanbul Valiliği ve AKOM</strong> resmi duyurularını takip ediniz.</span>
+            </div>
+            <div class="flex items-start gap-2">
+              <i class="fa-solid fa-phone text-red-400 mt-0.5"></i>
+              <span><strong>Acil Çağrı:</strong> Can ve mal güvenliğini tehdit eden durumlarda tek numara <strong>112 Acil Çağrı Merkezi</strong>'dir.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-end pt-3 border-t border-slate-800">
+          <button id="dismissLegalBtn" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-lg shadow-indigo-600/30">
+            Okudum, Anladım
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Emergency Modal -->
+    <div id="emergencyModal" class="fixed inset-0 z-[2000] bg-slate-950/85 backdrop-blur-sm hidden flex items-center justify-center p-4">
+      <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-lg w-full p-6 shadow-2xl relative">
+        <button id="closeEmergencyModal" class="absolute top-4 right-4 text-slate-300 hover:text-white p-2">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+        <div class="w-12 h-12 rounded-2xl bg-red-500/20 border border-red-500/40 text-red-400 flex items-center justify-center text-xl mb-4">
+          <i class="fa-solid fa-life-ring"></i>
+        </div>
+        <h3 class="text-xl font-bold text-white mb-2">Sel ve Su Baskını Acil Durum Rehberi</h3>
+        <p class="text-slate-300 text-xs mb-4">Ani sağanak yağış ve sel anında hayat kurtaran temel kurallar:</p>
+
+        <div class="space-y-3 text-xs text-slate-200 mb-6">
+          <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800">
+            <strong class="text-red-400 block mb-1 text-sm">1. Bodrum ve Zemin Katları Terk Edin:</strong>
+            Su seviyesi kapı eşiğini aşmadan derhal üst katlara veya güvenli yüksek binalara geçin. Asansör kesinlikle kullanmayın.
+          </div>
+          <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800">
+            <strong class="text-amber-400 block mb-1 text-sm">2. Elektrik ve Doğalgazı Kapatın:</strong>
+            Su basma ihtimali olan yerlerde ana şartel ve doğalgaz vanalarını hemen kapatın.
+          </div>
+          <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800">
+            <strong class="text-cyan-400 block mb-1 text-sm">3. Araçla Sel Suyuna Girmeyin:</strong>
+            30 cm derinliğindeki hareketli sel suyu bir binek otomobili sürükleyebilir. Alt geçitlere girmeyin.
+          </div>
+        </div>
+
+        <!-- Official Links in Modal -->
+        <div class="mb-6 pt-3 border-t border-slate-800">
+          <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
+            <i class="fa-solid fa-arrow-up-right-from-square text-cyan-400"></i> Resmi Canlı Takip Kaynakları
+          </h4>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <a href="https://www.mgm.gov.tr/sondurum/radar.aspx?rG=img&rR=34&rS=ist#sfB" target="_blank" rel="noopener noreferrer" class="p-2.5 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 text-center transition block">
+              <span class="block text-xs font-bold text-white mb-0.5">MGM Canlı Radar</span>
+              <span class="text-[10px] text-cyan-400">İstanbul Yağış Takibi →</span>
+            </a>
+            <a href="https://www.afad.gov.tr/duyurular" target="_blank" rel="noopener noreferrer" class="p-2.5 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 text-center transition block">
+              <span class="block text-xs font-bold text-white mb-0.5">AFAD Duyurular</span>
+              <span class="text-[10px] text-red-400">Son Acil Uyarılar →</span>
+            </a>
+            <a href="https://akom.ibb.istanbul/" target="_blank" rel="noopener noreferrer" class="p-2.5 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 text-center transition block">
+              <span class="block text-xs font-bold text-white mb-0.5">İBB AKOM</span>
+              <span class="text-[10px] text-amber-400">Meteorolojik Uyarı →</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between pt-3 border-t border-slate-800">
+          <span class="text-slate-300 text-xs">Acil Çağrı Merkezi: <strong class="text-red-400 font-bold text-sm">112</strong></span>
+          <button id="dismissModalBtn" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-lg shadow-indigo-600/30">
+            Anladım, Kapat
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- JavaScript Application Logic -->
+  <script>
+    // 39 Istanbul Districts Comprehensive Flood Data
+    const districtsData = [
+      {
+        id: "esenyurt",
+        name: "Esenyurt",
+        side: "Avrupa",
+        coords: [41.0343, 28.6801],
+        risk: "high",
+        streams: ["Haramidere", "Pınar Mahallesi Deresi", "Akçaburgaz Yan Kolları"],
+        history: "İstanbul'un en yoğun su baskını yaşayan bölgelerinden biri. Haramidere havzasının vadi tabanındaki bodrum yapılaşmaları ve yoğun betonlaşma nedeniyle her aşırı yağışta kritik tahliye ihtiyacı doğar.",
+        advice: "Pınar ve Yeşilkent mahallelerinde bodrum katlarda uyumayın; yağış uyarılarında araçlarınızı açık yüksek otoparklara park edin."
+      },
+      {
+        id: "kucukcekmece",
+        name: "Küçükçekmece",
+        side: "Avrupa",
+        coords: [40.9996, 28.7758],
+        risk: "high",
+        streams: ["Ayamama Deresi Alt Havzası", "Menekşe Deresi", "Göl Kıyı Şeridi"],
+        history: "Ayamama ve Menekşe derelerinin Marmara Denizi ve Göle kavuştuğu alçak kotlarda yer alması, geri tepme ve ani göllenmelere neden olmaktadır.",
+        advice: "İnönü, Kanarya ve Fevzi Çakmak mahallelerindeki alçak kotlarda taşkın bariyerleri hazır bulundurulmalıdır."
+      },
+      {
+        id: "bakirkoy",
+        name: "Bakırköy",
+        side: "Avrupa",
+        coords: [40.9833, 28.8719],
+        risk: "high",
+        streams: ["Ayamama Deresi", "Çırpıcı Deresi Girişi"],
+        history: "E-5 karayolu Ayamama kavşağı, Dünya Ticaret Merkezi çevresi ve sahil hattı geçmişte büyük sel felaketlerine sahne olmuştur.",
+        advice: "Ayamama çevresindeki iş merkezleri ve otoparklar yağmur suyuna karşı otomatik pompa ve tahliye sistemlerine sahip olmalıdır."
+      },
+      {
+        id: "kadikoy",
+        name: "Kadıköy",
+        side: "Anadolu",
+        coords: [40.9927, 29.0277],
+        risk: "high",
+        streams: ["Kurbağalıdere", "Seyitahmet Deresi", "Fikirtepe Vadisi"],
+        history: "Kurbağalıdere ıslah çalışmalarına rağmen Marmara fırtınalarında deniz suyu yükselmesi ve rıhtım bölgesindeki alçak kot nedeniyle taşkın tehlikesi sürmektedir.",
+        advice: "Rıhtım ve Hasanpaşa civarındaki bodrum dükkanlar su tahliye kapaklarını kontrol etmelidir."
+      },
+      {
+        id: "uskudar",
+        name: "Üsküdar",
+        side: "Anadolu",
+        coords: [41.0267, 29.0153],
+        risk: "high",
+        streams: ["Çavuşdere", "Bülbülderesi", "Bekar Deresi"],
+        history: "Üsküdar Meydanı'nda deniz ile caddelerin birleştiği tarihi Çavuşdere ve Bülbülderesi menfez baskıları yoğun yağış anında kritik seviyeye ulaşır.",
+        advice: "Meydan alt geçitleri ve sahil şeridinde ani su birikmelerine karşı yaya geçişlerinde son derece dikkatli olunmalıdır."
+      },
+      {
+        id: "kagithane",
+        name: "Kağıthane",
+        side: "Avrupa",
+        coords: [41.0811, 28.9734],
+        risk: "high",
+        streams: ["Cendere Deresi", "Kağıthane Deresi"],
+        history: "Haliç'e dökülen geniş vadi tabanı, dik yamaçlardan inen yüzey akışlarıyla hızla dolar. Cendere vadisi boyunca ofis ve ticaret alanları taşkın riski altındadır.",
+        advice: "Cendere aksındaki tesisler dere debisini izlemeli, acil tahliye kapılarını açık tutmalıdır."
+      },
+      {
+        id: "eyupsultan",
+        name: "Eyüpsultan",
+        side: "Avrupa",
+        coords: [41.0475, 28.9342],
+        risk: "high",
+        streams: ["Alibeyköy Deresi", "Haliç Kıyı Havzası"],
+        history: "Alibeyköy Barajı mansabında kalan vadi boyunca geçmişte çok sayıda ev ve işyeri su altında kalmıştır.",
+        advice: "Alibeyköy merkez mahallelerinde zemin kat sakinleri AFAD uyarılarını anlık takip etmelidir."
+      },
+      {
+        id: "besiktas",
+        name: "Beşiktaş",
+        side: "Avrupa",
+        coords: [41.0428, 29.0077],
+        risk: "high",
+        streams: ["Ihlamur Deresi", "Ortaköy Deresi"],
+        history: "Ihlamurdere Caddesi ve Ortaköy dere yatakları tamamen yapılaşmış durumdadır; dik tepelerden gelen sel suları caddeyi nehre dönüştürebilmektedir.",
+        advice: "Ihlamurdere esnafı taşkın bariyerleri kullanmalı, zemin katlarda mal stoğu bulundurmamalıdır."
+      },
+      {
+        id: "beykoz",
+        name: "Beykoz",
+        side: "Anadolu",
+        coords: [41.1176, 29.0988],
+        risk: "high",
+        streams: ["Göksu Deresi", "Küçüksu Deresi", "Riva Deresi"],
+        history: "Riva ve Göksu dereleri yağış mevsimlerinde geniş tarım ve yerleşim alanlarını su altında bırakır.",
+        advice: "Dere kenarındaki mesire, restoran ve seralar taşkın alarmlarına karşı hazırlıklı olmalıdır."
+      },
+      {
+        id: "sariyer",
+        name: "Sarıyer",
+        side: "Avrupa",
+        coords: [41.1664, 29.0504],
+        risk: "high",
+        streams: ["İstinye Deresi", "Çayırbaşı Deresi", "Sarıyer Deresi"],
+        history: "Boğaz kıyısındaki dik yamaçlardan dökülen derelerin ağızlarında deniz taşkını ve rüzgar kabarması ile su seviyesi hızla yükselir.",
+        advice: "Çayırbaşı ve İstinye tünel/alt geçit noktalarında su derinliği kontrol edilmeden araçla geçilmemelidir."
+      },
+      {
+        id: "silivri",
+        name: "Silivri",
+        side: "Avrupa",
+        coords: [41.0734, 28.2464],
+        risk: "high",
+        streams: ["Boğluca Deresi", "Tuzla Deresi"],
+        history: "Boğluca Deresi'nin taşması sonucu geçmişte ilçe merkezi metrelerce su altında kalmıştır.",
+        advice: "Dere yatağı çevresindeki konutlarda su tahliye motorları periyodik olarak test edilmelidir."
+      },
+      {
+        id: "catalca",
+        name: "Çatalca",
+        side: "Avrupa",
+        coords: [41.1436, 28.4608],
+        risk: "high",
+        streams: ["Karasu Deresi", "Çanakça Deresi"],
+        history: "Geniş tarım havzaları ve dere taşkın ovaları, Marmara fırtınalarında karayolu ulaşımını kesintiye uğratacak seviyede su baskınlarına maruz kalır.",
+        advice: "Karasu köprüsü civarındaki alçak tarım arazilerinde hayvan ve ekipman güvenliği sağlanmalıdır."
+      },
+      {
+        id: "tuzla",
+        name: "Tuzla",
+        side: "Anadolu",
+        coords: [40.8164, 29.3034],
+        risk: "high",
+        streams: ["Kemiklidere", "Deri OSB Kanalı", "Sahil Lagünü"],
+        history: "Kemiklidere boyunca yer alan sanayi siteleri ve sahil yerleşimleri deniz ve dere taşkınlarının kesişim noktasındadır.",
+        advice: "Sanayi depolarındaki kimyasal ve elektrikli ürünler zemin kotundan yukarıda istiflenmelidir."
+      },
+      {
+        id: "avcilar",
+        name: "Avcılar",
+        side: "Avrupa",
+        coords: [40.9799, 28.7217],
+        risk: "medium",
+        streams: ["Ambarlı Deresi", "Göl Yan Kolları"],
+        history: "Ambarlı liman yolu ve sahil çukurlarında biriken yüzey suları trafik kilitlenmesine ve alt kat su baskınlarına yol açar.",
+        advice: "E-5 yan yol ve Ambarlı bağlantılarında su birikintisi olan bölgelere hızla girilmemelidir."
+      },
+      {
+        id: "bagcilar",
+        name: "Bağcılar",
+        side: "Avrupa",
+        coords: [41.0344, 28.8572],
+        risk: "medium",
+        streams: ["Tavukçu Deresi Kolları"],
+        history: "Yüksek betonlaşma ve geçirimsiz yüzey oranı nedeniyle yağışın tamamı yüzey akışına geçerek bodrum katlara dolar.",
+        advice: "Apartman sığınak ve bodrumlarında geri tepme önleyici çekvalf montajı yapılmalıdır."
+      },
+      {
+        id: "bahcelievler",
+        name: "Bahçelievler",
+        side: "Avrupa",
+        coords: [41.0003, 28.8638],
+        risk: "medium",
+        streams: ["Ayamama Üst Kolları", "Çobançeşme Hattı"],
+        history: "Basın Ekspres yolu ile temas eden batı kesimlerde şiddetli yağışlarda hızlı debi artışı görülür.",
+        advice: "Basın Ekspres güzergahı üzerindeki alt geçitlerde su ikaz lambalarına dikkat edilmelidir."
+      },
+      {
+        id: "gungoren",
+        name: "Güngören",
+        side: "Avrupa",
+        coords: [41.0253, 28.8727],
+        risk: "medium",
+        streams: ["Çırpıcı Deresi Havzası"],
+        history: "Eski dere yatağı güzergahındaki sokaklarda yoğun yapılaşma kaynaklı kanalizasyon taşmaları görülmektedir.",
+        advice: "Bodrum kat tekstil atölyeleri elektrik sistemlerini tabandan yüksekte tutmalıdır."
+      },
+      {
+        id: "zeytinburnu",
+        name: "Zeytinburnu",
+        side: "Avrupa",
+        coords: [40.9931, 28.9042],
+        risk: "medium",
+        streams: ["Çırpıcı Deresi Ağzı", "Sahil Hattı"],
+        history: "Marmara sahilindeki fırtına kabarmaları ile Çırpıcı deresinin birleştiği noktalarda alt geçit tıkanmaları yaşanır.",
+        advice: "Kazlıçeşme ve tramvay hattı çevresinde yağış anında dikkatli olunmalıdır."
+      },
+      {
+        id: "fatih",
+        name: "Fatih",
+        side: "Avrupa",
+        coords: [41.0166, 28.9497],
+        risk: "medium",
+        streams: ["Bayrampaşa Deresi (Eski Vadi)", "Aksaray Alt Geçitleri"],
+        history: "Tarihi Yarımada'da Aksaray ve Yenikapı alt geçitleri, Unkapanı köprüsü altı su birikmeleriyle öne çıkar.",
+        advice: "Aksaray ve Vatan Caddesi alt geçitlerinde göllenme anında araçla ilerlenmemelidir."
+      },
+      {
+        id: "beylikduzu",
+        name: "Beylikdüzü",
+        side: "Avrupa",
+        coords: [41.0039, 28.6416],
+        risk: "medium",
+        streams: ["Kavaklı Deresi", "Yakuplu Vadisi"],
+        history: "Yüksek tepe sırtları güvenli olmakla beraber, Kavaklı ve Yakuplu vadilerinde lokal taşkın riski bulunmaktadır.",
+        advice: "Vadi tabanında yer alan sitelerin drenaj hatları temiz tutulmalıdır."
+      },
+      {
+        id: "pendik",
+        name: "Pendik",
+        side: "Anadolu",
+        coords: [40.8767, 29.2343],
+        risk: "medium",
+        streams: ["Kaynarca Deresi", "Güllübağlar Deresi"],
+        history: "Kaynarca alt geçidi ve sahil dolgu alanlarında şiddetli sağanaklarda su birikintileri oluşur.",
+        advice: "Sahil yolu ve E-5 yan yollarda ani sağanak esnasında hız düşürülmelidir."
+      },
+      {
+        id: "maltepe",
+        name: "Maltepe",
+        side: "Anadolu",
+        coords: [40.9333, 29.1333],
+        risk: "medium",
+        streams: ["Büyükyalı Deresi", "Bağlarbaşı Kolları"],
+        history: "Sahil dolgu parkı çevresi ve demiryolu alt geçitlerinde yüzey suyunun denize deşarjında geçici yavaşlama yaşanır.",
+        advice: "Marmaray alt geçitlerinde su seviyesi dikkatle izlenmelidir."
+      },
+      {
+        id: "kartal",
+        name: "Kartal",
+        side: "Anadolu",
+        coords: [40.8900, 29.1866],
+        risk: "medium",
+        streams: ["Balıklar Deresi", "Soğanlık Vadisi"],
+        history: "Aydos yamaçlarından inen ani suların sahil bandında birikmesi orta dereceli su baskınlarına yol açar.",
+        advice: "Dere ıslah kanallarının etrafında taşkın anında güvenlik mesafesi korunmalıdır."
+      },
+      {
+        id: "atasehir",
+        name: "Ataşehir",
+        side: "Anadolu",
+        coords: [40.9839, 29.1105],
+        risk: "medium",
+        streams: ["Kurbağalıdere Üst Kolları", "İçerenköy Deresi"],
+        history: "Finans merkezinin güneyindeki vadi tabanları ve İçerenköy alt geçitleri sağanaklarda risk altındadır.",
+        advice: "Oto sanayi ve alçak depolarda tahliye pompaları çalışır durumda tutulmalıdır."
+      },
+      {
+        id: "gaziosmanpasa",
+        name: "Gaziosmanpaşa",
+        side: "Avrupa",
+        coords: [41.0667, 28.9167],
+        risk: "medium",
+        streams: ["Cebeci Vadisi Kolları"],
+        history: "Eğimli sokaklardan inen yüksek hızlı yüzey akışı rögar kapaklarını yerinden oynatabilmektedir.",
+        advice: "Yokuş aşağı akan sel sularında yürümek tehlikelidir; kaldırım kenarlarından uzak durun."
+      },
+      {
+        id: "sultangazi",
+        name: "Sultangazi",
+        side: "Avrupa",
+        coords: [41.1044, 28.8702],
+        risk: "medium",
+        streams: ["Alibeyköy Barajı Besleme Kolları"],
+        history: "Taş ocakları ve baraj havzası çevresindeki kontrolsüz yüzey suları mahalle yollarını etkiler.",
+        advice: "Baraj yakınındaki çukur alanlarda inşaat çalışmalarından uzak durulmalıdır."
+      },
+      {
+        id: "bayrampasa",
+        name: "Bayrampaşa",
+        side: "Avrupa",
+        coords: [41.0353, 28.9126],
+        risk: "medium",
+        streams: ["Mega Center Drenaj Hattı"],
+        history: "Otogar bağlantı yolları ve hal çevresindeki alçak kavşaklar yoğun yağışta göllenme yaşar.",
+        advice: "Hal ve Mega Center depolarında ürün paletleri en az 25 cm yüksekte tutulmalıdır."
+      },
+      {
+        id: "esenler",
+        name: "Esenler",
+        side: "Avrupa",
+        coords: [41.0392, 28.8911],
+        risk: "medium",
+        streams: ["Litros Deresi Eski Yatağı"],
+        history: "Dar sokaklar ve yüksek yoğunluklu konut dokusu sebebiyle lokal su baskınları meydana gelebilmektedir.",
+        advice: "Apartman boşluklarındaki ızgaraların düzenli temizliği yapılmalıdır."
+      },
+      {
+        id: "sisli",
+        name: "Şişli",
+        side: "Avrupa",
+        coords: [41.0602, 28.9877],
+        risk: "medium",
+        streams: ["Dolapdere Vadisi", "Mecidiyeköy Çukuru"],
+        history: "Dolapdere'ye inen vadi tabanındaki sokaklarda ve viyadük altlarında su birikmesi olur.",
+        advice: "Dolapdere ve Kasımpaşa yönüne inen dik yollarda aşırı yağışta araç kullanmaktan kaçının."
+      },
+      {
+        id: "arnavutkoy",
+        name: "Arnavutköy",
+        side: "Avrupa",
+        coords: [41.1852, 28.7414],
+        risk: "medium",
+        streams: ["Sazlıdere Besleme Hatları", "Terkos Kolları"],
+        history: "Köy yerleşimleri ve doğal dere yataklarında şiddetli fırtınada taşkın riski mevcuttur.",
+        advice: "Köy içi menfez ve köprülerin tıkalı olmaması için muhtarlıklarla koordineli olunmalıdır."
+      },
+      {
+        id: "sile",
+        name: "Şile",
+        side: "Anadolu",
+        coords: [41.1764, 29.6133],
+        risk: "medium",
+        streams: ["Karasu", "Çanak Dere", "Göksu Kıyı Hatları"],
+        history: "Karadeniz kıyısındaki dere ağızlarında dalga kabarması ve fırtına taşkınları gözlenir.",
+        advice: "Kıyı balıkçı barınakları ve işletmeleri fırtına uyarılarını dikkate almalıdır."
+      },
+      {
+        id: "sancaktepe",
+        name: "Sancaktepe",
+        side: "Anadolu",
+        coords: [40.9903, 29.2291],
+        risk: "medium",
+        streams: ["Riva Deresi Başlangıç Hatları"],
+        history: "Samandıra ve Sarıgazi kesimlerinde hızlı kentleşmeye paralel drenaj altyapısı orta risk oluşturur.",
+        advice: "Bodrum kat depo alanlarında nem ve su alarmları yerleştirilmelidir."
+      },
+      {
+        id: "sultanbeyli",
+        name: "Sultanbeyli",
+        side: "Anadolu",
+        coords: [40.9667, 29.2667],
+        risk: "medium",
+        streams: ["Yenidoğan Dere Kolları"],
+        history: "Aydos eteklerindeki çanak yerleşimlerde yüzey suları ana caddelerde birikme eğilimindedir.",
+        advice: "TEM otoyolu bağlantı noktalarında su birikintisi geçişlerinde dikkat edilmelidir."
+      },
+      {
+        id: "umraniye",
+        name: "Ümraniye",
+        side: "Anadolu",
+        coords: [41.0256, 29.1172],
+        risk: "low",
+        streams: ["Çamlıca Etek Drenaj Hatları"],
+        history: "İstanbul'un yüksek kotlu sırtlarında yer alır. Doğal su deşarjı vadilere aktığı için genel risk düşüktür.",
+        advice: "Sadece lokal çukur sokaklar ve inşaat alanlarında dikkatli olunması yeterlidir."
+      },
+      {
+        id: "cekmekoy",
+        name: "Çekmeköy",
+        side: "Anadolu",
+        coords: [41.0353, 29.1739],
+        risk: "low",
+        streams: ["Ömerli Baraj Havzası Sırtları"],
+        history: "Orman varlığının yüksek olması ve tepe sırtlarında bulunması suyun emilimini kolaylaştırır; taşkın riski düşüktür.",
+        advice: "Orman içi yollarda şiddetli yağışta çamur akıntısına karşı temkinli olun."
+      },
+      {
+        id: "basaksehir",
+        name: "Başakşehir",
+        side: "Avrupa",
+        coords: [41.0967, 28.8028],
+        risk: "low",
+        streams: ["Sular Vadisi Düzenlemesi"],
+        history: "Planlı kentsel gelişim ve modern Sular Vadisi yağmur suyu drenaj tünelleri sayesinde taşkın kontrol altındadır.",
+        advice: "Eski İkitelli Sanayi alt kotları haricinde ilçe geneli güvenli seviyededir."
+      },
+      {
+        id: "beyoglu",
+        name: "Beyoğlu",
+        side: "Avrupa",
+        coords: [41.0369, 28.9774],
+        risk: "low",
+        streams: ["Kasımpaşa Vadi Tabanı (Sırtlar Güvenli)"],
+        history: "İstiklal, Cihangir ve Gümüşsuyu yüksek tepe sırtında kuruludur. Sular hızla aşağı kotlara akar.",
+        advice: "Kasımpaşa vadi tabanı dışında ilçe geneli su baskınlarına karşı topoğrafik avantaja sahiptir."
+      },
+      {
+        id: "adalar",
+        name: "Adalar",
+        side: "Anadolu",
+        coords: [40.8753, 29.1292],
+        risk: "low",
+        streams: ["Doğal Eğimli Kıyı Yatakları"],
+        history: "Adaların eğimli yapısı sebebiyle yağmur suyu hızla denize deşarj olur; göllenme oluşmaz.",
+        advice: "Fırtına günlerinde deniz iskeleleri ve sahil kordonunda dalga taşmalarına karşı dikkat edilmelidir."
+      }
+    ];
+
+    // Initialize Leaflet Map
+    const map = L.map('map', {
+      zoomControl: false,
+      attributionControl: true
+    }).setView([41.035, 28.98], 11);
+
+    // Zoom controls at bottom-right
+    L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+    // High Reliability Tile Layers (ArcGIS World Street Map - %100 Free, No API key, NEVER blocked on file://)
+    const streetTileLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+      attribution: 'Tiles &copy; Esri &mdash; Marmara Afet Analiz',
+      maxZoom: 18,
+      minZoom: 7
+    }).addTo(map);
+
+    const satTileLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      attribution: 'Tiles &copy; Esri &mdash; Uydu Görüntüsü',
+      maxZoom: 18,
+      minZoom: 7
+    });
+
+    // Layer Management
+    let isSatellite = false;
+    const toggleLayerFab = document.getElementById('toggleLayerFab');
+
+    function setLayer(toSatellite) {
+      isSatellite = toSatellite;
+      if (isSatellite) {
+        map.removeLayer(streetTileLayer);
+        map.addLayer(satTileLayer);
+        if (toggleLayerFab) toggleLayerFab.classList.add('border-amber-400');
+      } else {
+        map.removeLayer(satTileLayer);
+        map.addLayer(streetTileLayer);
+        if (toggleLayerFab) toggleLayerFab.classList.remove('border-amber-400');
+      }
+    }
+
+    if (toggleLayerFab) {
+      toggleLayerFab.addEventListener('click', () => {
+        setLayer(!isSatellite);
+      });
+    }
+
+    // Dismiss Disclaimer Pill
+    const disclaimerPill = document.getElementById('disclaimerPill');
+    const closeDisclaimerPill = document.getElementById('closeDisclaimerPill');
+    if (closeDisclaimerPill && disclaimerPill) {
+      closeDisclaimerPill.addEventListener('click', () => {
+        disclaimerPill.classList.add('opacity-0', 'pointer-events-none', 'scale-90');
+        setTimeout(() => disclaimerPill.remove(), 300);
+      });
+    }
+
+    // State
+    let activeFilter = 'all';
+    let markersLayer = L.layerGroup().addTo(map);
+    let selectedDistrict = null;
+
+    // Elements
+    const desktopSearchInput = document.getElementById('desktopSearchInput');
+    const mobileSearchInput = document.getElementById('mobileSearchInput');
+    const mobileFilterSelect = document.getElementById('mobileFilterSelect');
+    const riskFilterBtns = document.querySelectorAll('.risk-filter-btn');
+    const resetMapBtn = document.getElementById('resetMapBtn');
+    const emergencyHelpBtn = document.getElementById('emergencyHelpBtn');
+    const emergencyModal = document.getElementById('emergencyModal');
+    const closeEmergencyModal = document.getElementById('closeEmergencyModal');
+    const dismissModalBtn = document.getElementById('dismissModalBtn');
+    const drawer = document.getElementById('districtDetailDrawer');
+    const closeDrawerBtn = document.getElementById('closeDrawerBtn');
+    const zoomToDistrictBtn = document.getElementById('zoomToDistrictBtn');
+
+    // Risk counts
+    const highCount = districtsData.filter(d => d.risk === 'high').length;
+    const medCount = districtsData.filter(d => d.risk === 'medium').length;
+    const lowCount = districtsData.filter(d => d.risk === 'low').length;
+
+    document.getElementById('highRiskCount').textContent = highCount;
+    document.getElementById('medRiskCount').textContent = medCount;
+    document.getElementById('lowRiskCount').textContent = lowCount;
+    document.getElementById('totalDistrictsCount').textContent = districtsData.length;
+
+    // Helper: Risk details
+    function getRiskMeta(risk) {
+      if (risk === 'high') {
+        return {
+          label: 'Yüksek Risk',
+          color: '#ef4444',
+          bgClass: 'bg-red-600 text-white border border-red-400',
+          pinClass: 'bg-red-600 pulse-high',
+          alertClass: 'bg-red-950 border-red-600 text-red-100',
+          icon: 'fa-solid fa-triangle-exclamation'
+        };
+      } else if (risk === 'medium') {
+        return {
+          label: 'Orta Risk',
+          color: '#f59e0b',
+          bgClass: 'bg-amber-600 text-white border border-amber-400',
+          pinClass: 'bg-amber-500',
+          alertClass: 'bg-amber-950 border-amber-500 text-amber-100',
+          icon: 'fa-solid fa-circle-exclamation'
+        };
+      } else {
+        return {
+          label: 'Düşük Risk',
+          color: '#10b981',
+          bgClass: 'bg-emerald-600 text-white border border-emerald-400',
+          pinClass: 'bg-emerald-600',
+          alertClass: 'bg-emerald-950 border-emerald-500 text-emerald-100',
+          icon: 'fa-solid fa-circle-check'
+        };
+      }
+    }
+
+    // Render Markers on Map
+    function renderMarkers() {
+      markersLayer.clearLayers();
+
+      const query = (desktopSearchInput.value || mobileSearchInput.value || '').toLowerCase().trim();
+
+      districtsData.forEach(district => {
+        if (activeFilter !== 'all' && district.risk !== activeFilter) {
+          return;
+        }
+
+        const matchName = district.name.toLowerCase().includes(query);
+        const matchStream = district.streams.some(s => s.toLowerCase().includes(query));
+        if (query && !matchName && !matchStream) {
+          return;
+        }
+
+        const meta = getRiskMeta(district.risk);
+
+        const icon = L.divIcon({
+          className: 'custom-pin-container',
+          html: `
+            <div class="risk-pin ${meta.pinClass}" style="width: 28px; height: 28px;">
+              <i class="${meta.icon}" style="font-size: 11px;"></i>
+            </div>
+          `,
+          iconSize: [28, 28],
+          iconAnchor: [14, 14]
+        });
+
+        const marker = L.marker(district.coords, { icon: icon }).addTo(markersLayer);
+
+        const badgeColor = district.risk === 'high' ? '#f87171' : (district.risk === 'medium' ? '#fbbf24' : '#34d399');
+
+        marker.bindTooltip(`
+          <div style="font-weight: 800; font-size: 13px; color: #ffffff; text-align: center; line-height: 1.2;">${district.name}</div>
+          <div style="font-size: 11px; font-weight: 700; color: ${badgeColor}; text-align: center; margin-top: 3px;">${meta.label}</div>
+        `, {
+          direction: 'top',
+          offset: [0, -12],
+          opacity: 1
+        });
+
+        marker.on('click', () => {
+          openDistrictDetail(district);
+        });
+      });
+    }
+
+    // Open District Detail Drawer
+    function openDistrictDetail(district) {
+      selectedDistrict = district;
+      const meta = getRiskMeta(district.risk);
+
+      // Populate Drawer Header
+      const badge = document.getElementById('drawerRiskBadge');
+      badge.className = `inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold mb-2 ${meta.bgClass}`;
+      badge.innerHTML = `<i class="${meta.icon}"></i> ${meta.label}`;
+
+      document.getElementById('drawerDistrictName').textContent = district.name;
+      document.getElementById('drawerRegionInfo').textContent = `İstanbul • ${district.side} Yakası`;
+
+      // Alert Box
+      const alertBox = document.getElementById('drawerAlertBox');
+      alertBox.className = `p-4 rounded-2xl border-2 text-xs leading-relaxed font-medium ${meta.alertClass}`;
+      alertBox.innerHTML = `<strong class="text-white block mb-1">Kritik Uyarı:</strong> ${district.advice}`;
+
+      // Streams List
+      const streamsContainer = document.getElementById('drawerStreamsList');
+      streamsContainer.innerHTML = '';
+      district.streams.forEach(stream => {
+        const span = document.createElement('span');
+        span.className = 'px-3 py-1.5 text-xs rounded-xl bg-slate-800 text-cyan-300 border border-slate-700 font-bold';
+        span.textContent = stream;
+        streamsContainer.appendChild(span);
+      });
+
+      // History & Causes
+      document.getElementById('drawerHistoryNote').textContent = district.history;
+
+      // WhatsApp Share Link
+      const shareText = `⚠️ İstanbul ${district.name} Sel & Taşkın Riski Durumu:\n- Risk Seviyesi: ${meta.label}\n- Kritik Havzalar: ${district.streams.join(', ')}\n- Önlem: ${district.advice}\n\nHaritayı incele: ${window.location.href}`;
+      const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
+      document.getElementById('shareWhatsappBtn').href = whatsappUrl;
+
+      // Twitter / X Share Link
+      const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(`İstanbul ${district.name} ilçesi sel ve dere taşkını risk analizi: ${meta.label} seviyesinde.`)}&url=${encodeURIComponent(window.location.href)}`;
+      document.getElementById('shareTwitterBtn').href = twitterUrl;
+
+      // Show drawer
+      drawer.classList.remove('translate-x-full');
+
+      // Pan to district smoothly
+      map.flyTo(district.coords, 13, { duration: 1.2 });
+    }
+
+    // Close Drawer
+    closeDrawerBtn.addEventListener('click', () => {
+      drawer.classList.add('translate-x-full');
+    });
+
+    // Zoom to District Button inside Drawer
+    zoomToDistrictBtn.addEventListener('click', () => {
+      if (selectedDistrict) {
+        // Çekmeceyi kapat ki kullanıcı haritayı ve yakınlaşmayı görebilsin
+        drawer.classList.add('translate-x-full');
+        map.flyTo(selectedDistrict.coords, 15, { duration: 1 });
+      }
+    });
+
+    // Reset Map View
+    const resetMapFab = document.getElementById('resetMapFab');
+    function resetToCenter() {
+      map.flyTo([41.035, 28.98], 11, { duration: 1 });
+      drawer.classList.add('translate-x-full');
+    }
+
+    if (resetMapFab) {
+      resetMapFab.addEventListener('click', resetToCenter);
+    }
+
+    // Filter Buttons (Desktop)
+    riskFilterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        riskFilterBtns.forEach(b => {
+          b.classList.remove('bg-indigo-600', 'text-white');
+          b.classList.add('bg-slate-800', 'text-slate-300');
+        });
+        btn.classList.add('bg-indigo-600', 'text-white');
+        btn.classList.remove('bg-slate-800');
+
+        activeFilter = btn.getAttribute('data-level');
+        if (mobileFilterSelect) {
+          mobileFilterSelect.value = activeFilter;
+        }
+        renderMarkers();
+      });
+    });
+
+    // Filter Select (Mobile)
+    mobileFilterSelect.addEventListener('change', (e) => {
+      activeFilter = e.target.value;
+      renderMarkers();
+    });
+
+    // Search input handlers
+    desktopSearchInput.addEventListener('input', (e) => {
+      if (mobileSearchInput) mobileSearchInput.value = e.target.value;
+      renderMarkers();
+    });
+    mobileSearchInput.addEventListener('input', (e) => {
+      if (desktopSearchInput) desktopSearchInput.value = e.target.value;
+      renderMarkers();
+    });
+
+    // Emergency Modal Controls
+    emergencyHelpBtn.addEventListener('click', () => {
+      emergencyModal.classList.remove('hidden');
+    });
+    closeEmergencyModal.addEventListener('click', () => {
+      emergencyModal.classList.add('hidden');
+    });
+    dismissModalBtn.addEventListener('click', () => {
+      emergencyModal.classList.add('hidden');
+    });
+
+    // Legal Modal Controls
+    const legalModal = document.getElementById('legalModal');
+    const openLegalModalBtn = document.getElementById('openLegalModalBtn');
+    const closeLegalModal = document.getElementById('closeLegalModal');
+    const dismissLegalBtn = document.getElementById('dismissLegalBtn');
+
+    if (openLegalModalBtn) {
+      openLegalModalBtn.addEventListener('click', () => {
+        legalModal.classList.remove('hidden');
+      });
+    }
+    if (closeLegalModal) {
+      closeLegalModal.addEventListener('click', () => {
+        legalModal.classList.add('hidden');
+      });
+    }
+    if (dismissLegalBtn) {
+      dismissLegalBtn.addEventListener('click', () => {
+        legalModal.classList.add('hidden');
+      });
+    }
+
+    // Geolocation / Konumumu Bul
+    const locateUserFab = document.getElementById('locateUserFab');
+    let userMarker = null;
+
+    function getDistanceKm(lat1, lon1, lat2, lon2) {
+      const R = 6371; // km
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon/2) * Math.sin(dLon/2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      return R * c;
+    }
+
+    function locateUser() {
+      if (!navigator.geolocation) {
+        alert('Tarayıcınız konum servisini desteklemiyor.');
+        return;
+      }
+
+      if (locateUserFab) {
+        locateUserFab.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-indigo-400 text-base"></i>';
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          if (locateUserFab) {
+            locateUserFab.innerHTML = '<i class="fa-solid fa-location-crosshairs text-indigo-400 text-base"></i>';
+          }
+          const userLat = position.coords.latitude;
+          const userLng = position.coords.longitude;
+
+          if (userMarker) {
+            map.removeLayer(userMarker);
+          }
+
+          const userIcon = L.divIcon({
+            className: 'user-pin-wrap',
+            html: '<div class="user-location-pin"></div>',
+            iconSize: [22, 22],
+            iconAnchor: [11, 11]
+          });
+
+          userMarker = L.marker([userLat, userLng], { icon: userIcon }).addTo(map);
+          userMarker.bindPopup('<strong style="color:#0f172a;">Bulunduğunuz Konum</strong>').openPopup();
+
+          map.flyTo([userLat, userLng], 14, { duration: 1.2 });
+
+          // Find nearest district
+          let nearestDistrict = null;
+          let minDistance = Infinity;
+
+          districtsData.forEach(d => {
+            const dist = getDistanceKm(userLat, userLng, d.coords[0], d.coords[1]);
+            if (dist < minDistance) {
+              minDistance = dist;
+              nearestDistrict = d;
+            }
+          });
+
+          if (nearestDistrict && minDistance < 15) {
+            setTimeout(() => {
+              openDistrictDetail(nearestDistrict);
+            }, 1200);
+          }
+        },
+        (error) => {
+          if (locateUserFab) {
+            locateUserFab.innerHTML = '<i class="fa-solid fa-location-crosshairs text-indigo-400 text-base"></i>';
+          }
+          alert('Konumunuza ulaşılamadı. Lütfen tarayıcınızın konum iznini kontrol edin.');
+        },
+        { enableHighAccuracy: true, timeout: 8000 }
+      );
+    }
+
+    if (locateUserFab) {
+      locateUserFab.addEventListener('click', locateUser);
+    }
+
+    // Initial render
+    renderMarkers();
+  </script>
+</body>
+</html>

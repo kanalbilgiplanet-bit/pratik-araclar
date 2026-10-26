@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="tr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pratik Araçlar | Hızlı & Ücretsiz Mikro Web Araçları</title>
+  <meta name="description" content="Günlük ve acil ihtiyaçlar için hızlı, ücretsiz ve reklamsız mikro web araçları koleksiyonu.">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-indigo-500 selection:text-white">
+
+  <!-- Glow Background Effect -->
+  <div class="fixed inset-0 overflow-hidden pointer-events-none -z-10">
+    <div class="absolute -top-40 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-indigo-600/15 blur-[120px] rounded-full"></div>
+    <div class="absolute top-1/2 -right-40 w-[400px] h-[400px] bg-blue-600/10 blur-[140px] rounded-full"></div>
+  </div>
+
+  <!-- Header / Navbar -->
+  <header class="border-b border-slate-800/80 bg-slate-900/60 backdrop-blur-md sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-cyan-400 flex items-center justify-center shadow-lg shadow-indigo-500/25">
+          <i class="fa-solid fa-bolt text-white text-lg"></i>
+        </div>
+        <div>
+          <a href="/" class="text-xl font-bold tracking-tight text-white hover:text-indigo-300 transition-colors">
+            Pratik<span class="text-indigo-400">Araçlar</span>
+          </a>
+          <span class="hidden sm:inline-block ml-2 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded-full">
+            v1.0 Canlı
+          </span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          %100 Ücretsiz & Hızlı
+        </span>
+        <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800 transition">
+          <i class="fa-brands fa-github text-lg"></i>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="relative pt-12 pb-8 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center">
+    <div class="inline-flex items-center gap-2 px-3 py-1.5 mb-6 text-xs font-medium rounded-full bg-slate-800/80 border border-slate-700/80 text-slate-300 backdrop-blur-sm">
+      <i class="fa-solid fa-radar text-indigo-400"></i>
+      <span>TrendRadar ile Keşfedilen İhtiyaç Odaklı Mikro Çözümler</span>
+    </div>
+
+    <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white mb-4">
+      Günlük & Acil İhtiyaçlar İçin <br>
+      <span class="bg-gradient-to-r from-indigo-400 via-sky-300 to-emerald-400 bg-clip-text text-transparent">
+        Hızlı Mikro Araçlar
+      </span>
+    </h1>
+
+    <p class="text-slate-400 text-base sm:text-lg max-w-2xl mx-auto mb-8">
+      Karmaşık uygulamalar indirmeden, üyelik veya ücret gerekmeden tarayıcınızda doğrudan çalışan yüksek performanslı araç vitrini.
+    </p>
+
+    <!-- Search Bar -->
+    <div class="max-w-xl mx-auto relative mb-8">
+      <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </div>
+      <input 
+        id="searchInput" 
+        type="text" 
+        placeholder="Araç ara... (Örn: Sel haritası, hesaplayıcı, güvenlik)"
+        class="w-full pl-11 pr-4 py-3.5 bg-slate-900/90 border border-slate-700/80 rounded-2xl text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 shadow-xl transition-all text-sm sm:text-base"
+      >
+      <div id="clearSearch" class="hidden absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer text-slate-400 hover:text-white">
+        <i class="fa-solid fa-xmark text-sm"></i>
+      </div>
+    </div>
+
+    <!-- Category Filter Pills -->
+    <div class="flex flex-wrap items-center justify-center gap-2 text-xs sm:text-sm" id="categoryFilters">
+      <button data-cat="all" class="category-btn active px-4 py-2 rounded-xl font-medium bg-indigo-600 text-white shadow-lg shadow-indigo-600/30 transition-all">
+        Tümü (<span id="count-all">0</span>)
+      </button>
+      <button data-cat="harita" class="category-btn px-4 py-2 rounded-xl font-medium bg-slate-900/80 border border-slate-800 text-slate-300 hover:bg-slate-800 hover:text-white transition-all">
+        <i class="fa-solid fa-map-location-dot mr-1.5 text-indigo-400"></i>Harita & Afet
+      </button>
+      <button data-cat="hesaplama" class="category-btn px-4 py-2 rounded-xl font-medium bg-slate-900/80 border border-slate-800 text-slate-300 hover:bg-slate-800 hover:text-white transition-all">
+        <i class="fa-solid fa-calculator mr-1.5 text-sky-400"></i>Hesaplama
+      </button>
+      <button data-cat="guvenlik" class="category-btn px-4 py-2 rounded-xl font-medium bg-slate-900/80 border border-slate-800 text-slate-300 hover:bg-slate-800 hover:text-white transition-all">
+        <i class="fa-solid fa-shield-halved mr-1.5 text-emerald-400"></i>Güvenlik & Gizlilik
+      </button>
+      <button data-cat="finans" class="category-btn px-4 py-2 rounded-xl font-medium bg-slate-900/80 border border-slate-800 text-slate-300 hover:bg-slate-800 hover:text-white transition-all">
+        <i class="fa-solid fa-coins mr-1.5 text-amber-400"></i>Finans & Ticaret
+      </button>
+    </div>
+  </section>
+
+  <!-- Tools Grid -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
+    <div id="toolsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <!-- TOOL 1: Sel Haritası (Aktif) -->
+      <article class="tool-card group relative flex flex-col justify-between bg-gradient-to-b from-slate-900/90 to-slate-900/50 border border-slate-800 rounded-3xl p-6 hover:border-indigo-500/50 transition-all duration-300 hover:shadow-2xl hover:shadow-indigo-500/10 hover:-translate-y-1"
+               data-category="harita" 
+               data-keywords="istanbul marmara sel baskını su taşkın harita dere yatağı afad afet risk ilçe">
+        <div class="relative">
+          <div class="flex items-start justify-between mb-4">
+            <div class="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center text-xl group-hover:scale-110 group-hover:bg-cyan-500 group-hover:text-slate-950 transition-all duration-300">
+              <i class="fa-solid fa-water"></i>
+            </div>
+            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+              Aktif & Canlı
+            </span>
+          </div>
+
+          <h2 class="text-xl font-bold text-white group-hover:text-indigo-300 transition-colors mb-2">
+            İstanbul & Marmara Sel Riski Haritası
+          </h2>
+          
+          <p class="text-slate-400 text-sm leading-relaxed mb-6">
+            İstanbul ve çevre ilçelerdeki kritik dere yatakları, kot farkları ve tarihsel su baskını verilerine dayalı interaktif sel ve taşkın risk haritası.
+          </p>
+
+          <div class="flex flex-wrap gap-2 mb-6">
+            <span class="px-2.5 py-1 text-xs rounded-lg bg-slate-800/80 text-slate-300 border border-slate-700/50">
+              <i class="fa-solid fa-map-pin text-cyan-400 mr-1"></i>39 İlçe Analizi
+            </span>
+            <span class="px-2.5 py-1 text-xs rounded-lg bg-slate-800/80 text-slate-300 border border-slate-700/50">
+              <i class="fa-solid fa-share-nodes text-indigo-400 mr-1"></i>Sosyal Paylaşım
+            </span>
+            <span class="px-2.5 py-1 text-xs rounded-lg bg-slate-800/80 text-slate-300 border border-slate-700/50">
+              <i class="fa-solid fa-bolt text-amber-400 mr-1"></i>Anlık Bildirim
+            </span>
+          </div>
+        </div>
+
+        <a href="sel-haritasi/" class="inline-flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-sm transition-colors shadow-lg shadow-indigo-600/20 group-hover:shadow-indigo-600/40">
+          <span>Haritayı Başlat</span>
+          <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
+        </a>
+      </article>
+
+      <!-- TOOL 2 (Yakında): IBAN Doğrulayıcı & Banka Bulucu -->
+      <article class="tool-card group relative flex flex-col justify-between bg-slate-900/40 border border-slate-800/70 rounded-3xl p-6 opacity-85 hover:opacity-100 hover:border-slate-700 transition-all duration-300"
+               data-category="finans" 
+               data-keywords="iban hesap doğrulama banka şube kod eft fast para transferi">
+        <div>
+          <div class="flex items-start justify-between mb-4">
+            <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center text-xl">
+              <i class="fa-solid fa-money-check-dollar"></i>
+            </div>
+            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-medium bg-slate-800 text-slate-400 border border-slate-700">
+              <i class="fa-regular fa-clock mr-1 text-xs"></i>Yakında
+            </span>
+          </div>
+
+          <h2 class="text-xl font-bold text-white mb-2">
+            IBAN & Banka Doğrulayıcı
+          </h2>
+          
+          <p class="text-slate-400 text-sm leading-relaxed mb-6">
+            TR IBAN numaralarının algoritma kontrolünü yapın, ait olduğu banka ve şube bilgisini anında tespit edin. Hatalı transferleri önleyin.
+          </p>
+
+          <div class="flex flex-wrap gap-2 mb-6">
+            <span class="px-2.5 py-1 text-xs rounded-lg bg-slate-800/60 text-slate-400">TR Standart</span>
+            <span class="px-2.5 py-1 text-xs rounded-lg bg-slate-800/60 text-slate-400">Hızlı Çözücü</span>
+          </div>
+        </div>
+
+        <button disabled class="w-full py-3 px-4 rounded-xl bg-slate-800/80 text-slate-500 font-medium text-sm cursor-not-allowed">
+          Geliştirme Aşamasında
+        </button>
+      </article>
+
+      <!-- TOOL 3 (Yakında): Net-Brüt Maaş & Vergi Dilimi Hesaplayıcı -->
+      <article class="tool-card group relative flex flex-col justify-between bg-slate-900/40 border border-slate-800/70 rounded-3xl p-6 opacity-85 hover:opacity-100 hover:border-slate-700 transition-all duration-300"
+               data-category="hesaplama" 
+               data-keywords="maaş vergi dilimi net brüt hesaplama sgk agi bordro asgari ücret gelir vergisi">
+        <div>
+          <div class="flex items-start justify-between mb-4">
+            <div class="w-12 h-12 rounded-2xl bg-sky-500/10 border border-sky-500/20 text-sky-400 flex items-center justify-center text-xl">
+              <i class="fa-solid fa-calculator"></i>
+            </div>
+            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-medium bg-slate-800 text-slate-400 border border-slate-700">
+              <i class="fa-regular fa-clock mr-1 text-xs"></i>Yakında
+            </span>
+          </div>
+
+          <h2 class="text-xl font-bold text-white mb-2">
+            Net-Brüt Maaş & Vergi Dilimi
+          </h2>
+          
+          <p class="text-slate-400 text-sm leading-relaxed mb-6">
+            2026 güncel gelir vergisi dilimleri ve SGK kesintileriyle aylık elinize geçecek net maaşınızı veya işverene toplam maliyetinizi hesaplayın.
+          </p>
+
+          <div class="flex flex-wrap gap-2 mb-6">
+            <span class="px-2.5 py-1 text-xs rounded-lg bg-slate-800/60 text-slate-400">2026 Tarifeleri</span>
+            <span class="px-2.5 py-1 text-xs rounded-lg bg-slate-800/60 text-slate-400">Grafik Döküm</span>
+          </div>
+        </div>
+
+        <button disabled class="w-full py-3 px-4 rounded-xl bg-slate-800/80 text-slate-500 font-medium text-sm cursor-not-allowed">
+          Geliştirme Aşamasında
+        </button>
+      </article>
+
+      <!-- TOOL 4 (Yakında): Güvenli Şifre Üreteci & Sızıntı Testi -->
+      <article class="tool-card group relative flex flex-col justify-between bg-slate-900/40 border border-slate-800/70 rounded-3xl p-6 opacity-85 hover:opacity-100 hover:border-slate-700 transition-all duration-300"
+               data-category="guvenlik" 
+               data-keywords="şifre parola güvenlik hacker sızıntı leak generator password kripto">
+        <div>
+          <div class="flex items-start justify-between mb-4">
+            <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl">
+              <i class="fa-solid fa-key"></i>
+            </div>
+            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-medium bg-slate-800 text-slate-400 border border-slate-700">
+              <i class="fa-regular fa-clock mr-1 text-xs"></i>Yakında
+            </span>
+          </div>
+
+          <h2 class="text-xl font-bold text-white mb-2">
+            Güçlü Parola & Entropi Ölçer
+          </h2>
+          
+          <p class="text-slate-400 text-sm leading-relaxed mb-6">
+            Sunucuya hiçbir veri göndermeden, tarayıcınızın kriptografik motoruyla kırılması imkansız şifreler üretin ve dayanıklılık süresini test edin.
+          </p>
+
+          <div class="flex flex-wrap gap-2 mb-6">
+            <span class="px-2.5 py-1 text-xs rounded-lg bg-slate-800/60 text-slate-400">Sıfır Günlük</span>
+            <span class="px-2.5 py-1 text-xs rounded-lg bg-slate-800/60 text-slate-400">İstemci Taraflı</span>
+          </div>
+        </div>
+
+        <button disabled class="w-full py-3 px-4 rounded-xl bg-slate-800/80 text-slate-500 font-medium text-sm cursor-not-allowed">
+          Geliştirme Aşamasında
+        </button>
+      </article>
+
+      <!-- TOOL 5 (Yakında): WebP Görsel Sıkıştırıcı -->
+      <article class="tool-card group relative flex flex-col justify-between bg-slate-900/40 border border-slate-800/70 rounded-3xl p-6 opacity-85 hover:opacity-100 hover:border-slate-700 transition-all duration-300"
+               data-category="hesaplama" 
+               data-keywords="resim görsel sıkıştırma convert webp jpeg png boyut küçültme">
+        <div>
+          <div class="flex items-start justify-between mb-4">
+            <div class="w-12 h-12 rounded-2xl bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center text-xl">
+              <i class="fa-solid fa-file-image"></i>
+            </div>
+            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-medium bg-slate-800 text-slate-400 border border-slate-700">
+              <i class="fa-regular fa-clock mr-1 text-xs"></i>Yakında
+            </span>
+          </div>
+
+          <h2 class="text-xl font-bold text-white mb-2">
+            Tarayıcı İçi Görsel Sıkıştırıcı
+          </h2>
+          
+          <p class="text-slate-400 text-sm leading-relaxed mb-6">
+            Fotoğraflarınızı kalite kaybetmeden %80'e kadar küçültün veya anında WebP formatına dönüştürün. Görselleriniz cihazınızdan asla dışarı çıkmaz.
+          </p>
+
+          <div class="flex flex-wrap gap-2 mb-6">
+            <span class="px-2.5 py-1 text-xs rounded-lg bg-slate-800/60 text-slate-400">WebAssembly</span>
+            <span class="px-2.5 py-1 text-xs rounded-lg bg-slate-800/60 text-slate-400">Gizlilik Dostu</span>
+          </div>
+        </div>
+
+        <button disabled class="w-full py-3 px-4 rounded-xl bg-slate-800/80 text-slate-500 font-medium text-sm cursor-not-allowed">
+          Geliştirme Aşamasında
+        </button>
+      </article>
+
+      <!-- YENİ ARAÇ ÖNER KARTI -->
+      <article class="border border-dashed border-slate-800 rounded-3xl p-6 flex flex-col items-center justify-center text-center hover:border-indigo-500/40 hover:bg-slate-900/30 transition-all duration-300">
+        <div class="w-12 h-12 rounded-2xl bg-slate-800 text-slate-400 flex items-center justify-center text-xl mb-4">
+          <i class="fa-solid fa-lightbulb"></i>
+        </div>
+        <h3 class="text-lg font-semibold text-white mb-2">Yeni Bir Araç mı Lazım?</h3>
+        <p class="text-slate-400 text-xs leading-relaxed max-w-xs mb-4">
+          Portalımız TrendRadar analizleriyle sürekli yeni araçlar eklenerek büyüyor. İhtiyacınız olan bir fayda varsa bize iletin.
+        </p>
+        <span class="text-xs font-medium text-indigo-400 bg-indigo-500/10 px-3 py-1.5 rounded-lg border border-indigo-500/20">
+          Modüler Genişleme Mimarisi
+        </span>
+      </article>
+
+    </div>
+
+    <!-- No Results Placeholder -->
+    <div id="noResults" class="hidden text-center py-16">
+      <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-slate-900 flex items-center justify-center text-slate-500 text-2xl border border-slate-800">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </div>
+      <h3 class="text-lg font-semibold text-white mb-1">Aramanıza uygun araç bulunamadı</h3>
+      <p class="text-slate-400 text-sm">Farklı anahtar kelimeler deneyebilir veya filtreyi temizleyebilirsiniz.</p>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800/80 bg-slate-900/60 mt-12 py-8 text-xs text-slate-400">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-2">
+          <span class="font-bold text-white tracking-tight">Pratik<span class="text-indigo-400">Araçlar</span></span>
+          <span>•</span>
+          <span>Cloudflare Pages & Edge CDN ile barındırılmaktadır.</span>
+        </div>
+        <div class="flex items-center gap-6">
+          <span class="text-slate-500">Sıfır Maliyet • Sınırsız Hız</span>
+          <a href="sel-haritasi/" class="hover:text-indigo-300 transition">Sel Haritası</a>
+        </div>
+      </div>
+      
+      <!-- Legal Notice -->
+      <div class="pt-4 border-t border-slate-800/60 text-[11px] text-slate-300 leading-relaxed text-center sm:text-left flex flex-col sm:flex-row items-center gap-2">
+        <i class="fa-solid fa-scale-balanced text-amber-400 text-xs shrink-0"></i>
+        <span><strong>Yasal Uyarı & Sorumluluk Reddi:</strong> Bu platformdaki tüm mikro araçlar, coğrafi haritalar ve hesaplamalar yalnızca genel bilgilendirme amacıyla sunulmaktadır; resmi veya hukuki bağlayıcılığı yoktur. Acil ve resmi durumlarda yetkili kamu kurumlarının (AFAD, Valilik, MGM) duyurularını dikkate alınız.</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Search & Filter Logic -->
+  <script>
+    const searchInput = document.getElementById('searchInput');
+    const clearSearch = document.getElementById('clearSearch');
+    const categoryBtns = document.querySelectorAll('.category-btn');
+    const toolCards = document.querySelectorAll('.tool-card');
+    const noResults = document.getElementById('noResults');
+    const countAll = document.getElementById('count-all');
+
+    if (countAll) {
+      countAll.textContent = toolCards.length;
+    }
+
+    let activeCategory = 'all';
+
+    function filterTools() {
+      const query = searchInput.value.toLowerCase().trim();
+      let visibleCount = 0;
+
+      clearSearch.classList.toggle('hidden', query.length === 0);
+
+      toolCards.forEach(card => {
+        const category = card.getAttribute('data-category');
+        const keywords = card.getAttribute('data-keywords') || '';
+        const title = card.querySelector('h2')?.textContent.toLowerCase() || '';
+        const desc = card.querySelector('p')?.textContent.toLowerCase() || '';
+
+        const matchesCategory = (activeCategory === 'all' || category === activeCategory);
+        const matchesQuery = query === '' || 
+          keywords.toLowerCase().includes(query) || 
+          title.includes(query) || 
+          desc.includes(query);
+
+        if (matchesCategory && matchesQuery) {
+          card.classList.remove('hidden');
+          visibleCount++;
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+
+      if (noResults) {
+        noResults.classList.toggle('hidden', visibleCount > 0);
+      }
+    }
+
+    categoryBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        categoryBtns.forEach(b => {
+          b.classList.remove('active', 'bg-indigo-600', 'text-white', 'shadow-lg', 'shadow-indigo-600/30');
+          b.classList.add('bg-slate-900/80', 'text-slate-300', 'border-slate-800');
+        });
+
+        btn.classList.add('active', 'bg-indigo-600', 'text-white', 'shadow-lg', 'shadow-indigo-600/30');
+        btn.classList.remove('bg-slate-900/80', 'text-slate-300', 'border-slate-800');
+
+        activeCategory = btn.getAttribute('data-cat');
+        filterTools();
+      });
+    });
+
+    searchInput.addEventListener('input', filterTools);
+
+    clearSearch.addEventListener('click', () => {
+      searchInput.value = '';
+      filterTools();
+      searchInput.focus();
+    });
+  </script>
+</body>
+</html>
