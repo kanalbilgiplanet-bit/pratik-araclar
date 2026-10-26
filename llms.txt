@@ -18,3 +18,8 @@
 - URL: https://pratik-araclar.pratikweb.workers.dev/tazminat-hesaplayici/
 - Açıklama: 4857 Sayılı İş Kanunu'na göre son brüt maaş, yan haklar (yol, yemek, prim), 2026 kıdem tazminatı tavanı, hizmet süresi (yıl, ay, gün) ve yasal bildirim önelleriyle net kıdem ve ihbar tazminatı hesaplama aracı.
 - Hedef Kitle: İşten ayrılanlar, istifa veya fesih sürecindekiler, muhasebeciler, İK yöneticileri.
+
+### 4. Elektrik Sayacı Değişim & 10 Yıl Muayene Sorgulama
+- URL: https://pratik-araclar.pratikweb.workers.dev/sayac-sorgulama/
+- Açıklama: 3516 Sayılı Ölçüler ve Ayar Kanunu gereğince elektrik sayacı 10 yıllık periyodik muayene ve zorunlu akıllı sayaç dönüşüm sorgulama aracı. 81 ilin yetkili elektrik dağıtım şirketleri (EDAŞ 186), ücretsiz değişim hakları ve Google/Apple takvim hatırlatıcısı entegrasyonu.
+- Hedef Kitle: Konut ve ticarethane elektrik aboneleri, sayacı 10 yılı doldurmuş kiracı/ev sahipleri, kaçak/ceza riskini kontrol etmek isteyenler.
