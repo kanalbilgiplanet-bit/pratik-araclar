@@ -33,3 +33,8 @@
 - URL: https://pratik-araclar.pratikweb.workers.dev/acil-durum-radar/
 - Açıklama: Türkiye ve çevresinde meydana gelen son depremleri (büyüklük, derinlik, anlık konum) canlı çeken, Kuzey ve Doğu Anadolu diri fay hatlarını gösteren, GPS en yakın risk tespiti, 112 Acil arama, acil durum düdüğü (SOS sireni) ve WhatsApp güvendeyim/yardım mesajı sunan ulusal afet radarı.
 - Hedef Kitle: Deprem veya acil durum anında anlık bilgi arayanlar, afet bölgesindekiler, toplanma alanı arayan vatandaşlar.
+
+### 7. Boru Bükme & Offset Büküm Hesaplayıcı
+- URL: https://pratik-araclar.pratikweb.workers.dev/boru-bukme-hesaplayici/
+- Açıklama: Metal, elektrik (EMT) ve tesisat boruları için hassas büküm hesaplama aracı. Trigonometrik offset (engel aşma), 90 derece dirsek ve 3 noktalı eyer bükümü hesapları. İki işaret arası mesafe, kısalma (shrink) payı, açınım yay boyu, canlı ölçekli SVG şematik çizim ve standart büküm çarpanları cetveli.
+- Hedef Kitle: Elektrik teknisyenleri, tesisatçılar, boru büküm atölyeleri, CNC büküm operatörleri, şantiye ustaları ve makine mühendisliği öğrencileri.
