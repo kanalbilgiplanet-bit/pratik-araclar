@@ -357,14 +357,14 @@
               <div>
                 <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">HESAPLANAN YENİ POMPA FİYATI</span>
                 <div class="flex items-baseline gap-2 mt-0.5">
-                  <span id="resultNewPrice" class="text-3xl sm:text-4xl font-extrabold text-white font-mono">₺44.39</span>
-                  <span id="resultDiffBadge" class="px-2 py-0.5 rounded text-xs font-bold font-mono bg-rose-500/20 text-rose-400 border border-rose-500/30">+₺1.50 (+3.5%)</span>
+                  <span id="resultNewPrice" class="text-3xl sm:text-4xl font-extrabold text-white font-mono">₺77.80</span>
+                  <span id="resultDiffBadge" class="px-2 py-0.5 rounded text-xs font-bold font-mono bg-rose-500/20 text-rose-400 border border-rose-500/30">+₺1.50 (+2.0%)</span>
                 </div>
               </div>
               
               <div class="text-right">
                 <div class="text-[10px] text-slate-400">Önceki Fiyat</div>
-                <div id="resultOldPrice" class="text-sm font-mono text-slate-300 font-semibold">₺42.89 / Litre</div>
+                <div id="resultOldPrice" class="text-sm font-mono text-slate-300 font-semibold">₺76.30 / Litre</div>
               </div>
             </div>
 
@@ -393,13 +393,13 @@
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-4 text-xs">
               <div class="bg-slate-950/60 border border-slate-800 p-3 rounded-xl">
                 <div class="text-[10px] text-slate-400 mb-1">Depo Fulletme (Eski)</div>
-                <div id="resultOldTankCost" class="text-base font-bold text-slate-300 font-mono">₺2,257.50</div>
+                <div id="resultOldTankCost" class="text-base font-bold text-slate-300 font-mono">₺3,815.00</div>
                 <div class="text-[10px] text-slate-500 mt-0.5">Mevcut fiyattan</div>
               </div>
 
               <div class="bg-slate-950/60 border border-slate-800 p-3 rounded-xl">
                 <div class="text-[10px] text-slate-400 mb-1">Depo Fulletme (Yeni)</div>
-                <div id="resultNewTankCost" class="text-base font-bold text-amber-300 font-mono">₺2,332.50</div>
+                <div id="resultNewTankCost" class="text-base font-bold text-amber-300 font-mono">₺3,890.00</div>
                 <div class="text-[10px] text-slate-500 mt-0.5">Zamlı fiyattan</div>
               </div>
 
@@ -482,7 +482,7 @@
           <div>
             <label class="block text-xs font-semibold text-slate-300 mb-1">Mevcut LPG Litre Fiyatı (TL):</label>
             <div class="relative">
-              <input type="number" step="0.01" id="lpgCurrentPrice" value="25.13" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-white font-mono font-bold text-sm focus:outline-none focus:border-sky-500 transition" oninput="calculateLpg()">
+              <input type="number" step="0.01" id="lpgCurrentPrice" value="41.20" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-white font-mono font-bold text-sm focus:outline-none focus:border-sky-500 transition" oninput="calculateLpg()">
               <span class="absolute right-4 top-2.5 text-xs text-slate-400">₺/L</span>
             </div>
           </div>
@@ -572,7 +572,7 @@
           <div>
             <label class="block text-xs font-semibold text-slate-300 mb-1">Mevcut Tüp Satış Fiyatı (TL):</label>
             <div class="relative">
-              <input type="number" step="1" id="tubeCurrentPrice" value="875" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-white font-mono font-bold text-sm focus:outline-none focus:border-teal-500 transition" oninput="calculateTube()">
+              <input type="number" step="1" id="tubeCurrentPrice" value="1550" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-white font-mono font-bold text-sm focus:outline-none focus:border-teal-500 transition" oninput="calculateTube()">
               <span class="absolute right-4 top-2.5 text-xs text-slate-400">₺</span>
             </div>
           </div>
@@ -581,7 +581,7 @@
             <label class="block text-xs font-semibold text-slate-300 mb-1">Tüp Zammı Tutarı (TL) veya Oranı (%):</label>
             <div class="grid grid-cols-2 gap-2 mb-2">
               <div class="relative">
-                <input type="number" step="1" id="tubeChangeTL" value="40" placeholder="TL Fark" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-mono text-xs focus:outline-none focus:border-teal-500" oninput="onTubeTLInput(this.value)">
+                <input type="number" step="1" id="tubeChangeTL" value="75" placeholder="TL Fark" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-mono text-xs focus:outline-none focus:border-teal-500" oninput="onTubeTLInput(this.value)">
                 <span class="absolute right-3 top-2 text-[10px] text-slate-400">₺</span>
               </div>
               <div class="relative">
@@ -601,19 +601,19 @@
           <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl">
             <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">YENİ TÜP FİYATI</span>
             <div class="flex items-baseline gap-3 mt-1">
-              <span id="resultTubeNewPrice" class="text-3xl font-extrabold text-white font-mono">₺880.00</span>
-              <span id="resultTubeDiffBadge" class="text-xs text-teal-400 font-bold font-mono">+₺40.00 (+4.8%)</span>
+              <span id="resultTubeNewPrice" class="text-3xl font-extrabold text-white font-mono">₺1,625.00</span>
+              <span id="resultTubeDiffBadge" class="text-xs text-teal-400 font-bold font-mono">+₺75.00 (+4.8%)</span>
             </div>
 
             <div class="grid grid-cols-2 gap-3 mt-5 text-xs">
               <div class="bg-slate-950/60 p-3.5 rounded-xl border border-slate-800">
                 <div class="text-[10px] text-slate-400">Günlük Pişirme Maliyeti</div>
-                <div id="resultTubeDailyCost" class="text-lg font-bold text-teal-300 font-mono">₺17.60 / gün</div>
+                <div id="resultTubeDailyCost" class="text-lg font-bold text-teal-300 font-mono">₺32.50 / gün</div>
                 <div class="text-[10px] text-slate-500 mt-0.5">50 günlük ortalama ömür</div>
               </div>
               <div class="bg-slate-950/60 p-3.5 rounded-xl border border-slate-800">
                 <div class="text-[10px] text-slate-400">Kilogram Başına Maliyet</div>
-                <div id="resultTubeKgPrice" class="text-lg font-bold text-slate-200 font-mono">₺73.33 / kg</div>
+                <div id="resultTubeKgPrice" class="text-lg font-bold text-slate-200 font-mono">₺135.42 / kg</div>
                 <div class="text-[10px] text-slate-500 mt-0.5">Gaz birim fiyatı</div>
               </div>
             </div>
@@ -639,7 +639,7 @@
           <div>
             <label class="block text-xs font-semibold text-slate-300 mb-1">Doğalgaz Dağıtım Şirketi / m³ Birim Fiyatı (TL):</label>
             <div class="relative">
-              <input type="number" step="0.01" id="gasUnitPrice" value="9.25" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-white font-mono font-bold text-sm focus:outline-none focus:border-orange-500 transition" oninput="calculateGas()">
+              <input type="number" step="0.01" id="gasUnitPrice" value="17.88" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-white font-mono font-bold text-sm focus:outline-none focus:border-orange-500 transition" oninput="calculateGas()">
               <span class="absolute right-4 top-2.5 text-xs text-slate-400">₺/m³</span>
             </div>
             <div class="text-[10px] text-slate-500 mt-1">İGDAŞ, BAŞKENTGAZ, İZMİRGAZ konut sübvansiyonlu tarifesi</div>
@@ -862,26 +862,26 @@
 
     // Base Regional Prices Database (Güncel EPDK & Dağıtım Şirketleri Ortalama Pompa Fiyatları)
     const cityPrices = {
-      istanbul_avrupa: { benzin: 42.89, motorin: 42.77, lpg: 25.13, tube: 875, gas: 9.25, name: 'İstanbul (Avrupa)' },
-      istanbul_anadolu: { benzin: 42.77, motorin: 42.71, lpg: 24.59, tube: 875, gas: 9.25, name: 'İstanbul (Anadolu)' },
-      ankara: { benzin: 43.30, motorin: 43.31, lpg: 25.14, tube: 885, gas: 9.35, name: 'Ankara' },
-      izmir: { benzin: 43.75, motorin: 43.83, lpg: 25.04, tube: 890, gas: 9.30, name: 'İzmir' },
-      bursa: { benzin: 43.40, motorin: 43.35, lpg: 24.95, tube: 880, gas: 9.25, name: 'Bursa' },
-      antalya: { benzin: 44.20, motorin: 44.35, lpg: 25.40, tube: 895, gas: 9.40, name: 'Antalya' },
-      adana: { benzin: 43.80, motorin: 43.90, lpg: 25.20, tube: 885, gas: 9.35, name: 'Adana' },
-      konya: { benzin: 44.15, motorin: 44.10, lpg: 25.35, tube: 890, gas: 9.35, name: 'Konya' },
-      gaziantep: { benzin: 44.05, motorin: 44.15, lpg: 25.30, tube: 885, gas: 9.35, name: 'Gaziantep' },
-      trabzon: { benzin: 44.10, motorin: 44.15, lpg: 25.30, tube: 890, gas: 9.35, name: 'Trabzon' },
-      diyarbakir: { benzin: 44.60, motorin: 44.75, lpg: 25.55, tube: 900, gas: 9.45, name: 'Diyarbakır' }
+      istanbul_avrupa: { benzin: 76.30, motorin: 96.80, lpg: 41.20, tube: 1550, gas: 17.88, name: 'İstanbul (Avrupa)' },
+      istanbul_anadolu: { benzin: 76.10, motorin: 96.60, lpg: 40.60, tube: 1550, gas: 17.88, name: 'İstanbul (Anadolu)' },
+      ankara: { benzin: 77.30, motorin: 97.90, lpg: 41.29, tube: 1560, gas: 18.10, name: 'Ankara' },
+      izmir: { benzin: 77.50, motorin: 98.10, lpg: 41.20, tube: 1565, gas: 18.00, name: 'İzmir' },
+      bursa: { benzin: 77.10, motorin: 97.50, lpg: 41.00, tube: 1550, gas: 17.95, name: 'Bursa' },
+      antalya: { benzin: 78.60, motorin: 98.80, lpg: 41.80, tube: 1580, gas: 18.40, name: 'Antalya' },
+      adana: { benzin: 77.90, motorin: 98.20, lpg: 41.50, tube: 1570, gas: 18.20, name: 'Adana' },
+      konya: { benzin: 78.22, motorin: 97.80, lpg: 41.35, tube: 1575, gas: 18.15, name: 'Konya' },
+      gaziantep: { benzin: 78.10, motorin: 98.40, lpg: 41.60, tube: 1570, gas: 18.25, name: 'Gaziantep' },
+      trabzon: { benzin: 78.30, motorin: 98.50, lpg: 41.70, tube: 1580, gas: 18.30, name: 'Trabzon' },
+      diyarbakir: { benzin: 78.90, motorin: 99.20, lpg: 41.90, tube: 1590, gas: 18.50, name: 'Diyarbakır' }
     };
 
     // Tube Database (12 kg Ev ve Piknik Tüpü Güncel Fiyatları)
     const tubeBasePrices = {
-      tombul_12kg: { name: "12 kg Tombul Ev Tüpü", kg: 12, price: 875, days: 50 },
-      uzun_12kg: { name: "12 kg Uzun Ev Tüpü", kg: 12, price: 875, days: 50 },
-      piknik_2kg: { name: "2 kg Küçük Piknik Tüpü", kg: 2, price: 175, days: 20 },
-      ticari_24kg: { name: "24 kg Ticari Tüp", kg: 24, price: 1750, days: 40 },
-      sanayi_45kg: { name: "45 kg Sanayi Tüpü", kg: 45, price: 3280, days: 30 }
+      tombul_12kg: { name: "12 kg Tombul Ev Tüpü", kg: 12, price: 1550, days: 50 },
+      uzun_12kg: { name: "12 kg Uzun Ev Tüpü", kg: 12, price: 1550, days: 50 },
+      piknik_2kg: { name: "2 kg Küçük Piknik Tüpü", kg: 2, price: 295, days: 20 },
+      ticari_24kg: { name: "24 kg Ticari Tüp", kg: 24, price: 3100, days: 40 },
+      sanayi_45kg: { name: "45 kg Sanayi Tüpü", kg: 45, price: 5850, days: 30 }
     };
 
     // Initialize
@@ -1077,11 +1077,11 @@
     // Tax Distribution Engine
     function updateTaxBreakdown(price) {
       if (price <= 0) return;
-      // Fixed approximate Turkish fuel taxes
-      const otv = 11.29; // Maktu ÖTV
-      const kdv = price * (20 / 120); // 20% KDV included in total
-      const distributorBayi = price * 0.085; // ~8.5%
-      const rafineri = Math.max(0, price - otv - kdv - distributorBayi);
+      // Realistic Turkish fuel tax breakdown
+      const otv = price * 0.235; // Maktu ÖTV payı (~%23.5)
+      const kdv = price * (20 / 120); // %20 KDV payı (~%16.7)
+      const distributorBayi = price * 0.085; // Dağıtıcı & Bayi marjı (~%8.5)
+      const rafineri = Math.max(0, price - otv - kdv - distributorBayi); // Ham petrol & rafineri (~%51.3)
 
       document.getElementById('taxRafineri').textContent = `₺${rafineri.toFixed(2)} (%${((rafineri / price) * 100).toFixed(0)})`;
       document.getElementById('taxOTV').textContent = `₺${otv.toFixed(2)} (%${((otv / price) * 100).toFixed(0)})`;
