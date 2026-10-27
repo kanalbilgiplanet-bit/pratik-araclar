@@ -101,6 +101,17 @@
   </script>
 
   <style>
+    /* Hide native number input spinners across all browsers */
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none !important;
+      margin: 0 !important;
+      display: none !important;
+    }
+    input[type="number"] {
+      -moz-appearance: textfield !important;
+      appearance: textfield !important;
+    }
     .custom-scrollbar::-webkit-scrollbar {
       width: 5px;
     }
@@ -277,8 +288,8 @@
               <span id="labelCurrentCity" class="text-[10px] text-slate-400 font-mono">İstanbul</span>
             </div>
             <div class="relative">
-              <input type="number" step="0.01" id="fuelCurrentPrice" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-white font-mono font-bold text-sm focus:outline-none focus:border-amber-500 transition" oninput="calculateFuel()">
-              <span class="absolute right-4 top-2.5 text-xs text-slate-400">₺/L</span>
+              <input type="text" inputmode="decimal" id="fuelCurrentPrice" class="w-full bg-slate-950 border border-slate-700 rounded-xl pl-4 pr-14 py-2.5 text-white font-mono font-bold text-sm focus:outline-none focus:border-amber-500 transition" oninput="calculateFuel()">
+              <span class="absolute right-4 top-2.5 text-xs text-slate-400 font-semibold pointer-events-none select-none">₺/L</span>
             </div>
           </div>
 
@@ -303,13 +314,19 @@
               <span id="labelChangeAmount">Zam Tutarı (Litre Başına TL):</span>
             </label>
             <div class="grid grid-cols-3 gap-2 mb-2">
-              <button type="button" onclick="setQuickFuelChange(1.00)" class="py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-mono text-slate-300">+1.00 ₺</button>
-              <button type="button" onclick="setQuickFuelChange(1.50)" class="py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-mono text-slate-300">+1.50 ₺</button>
-              <button type="button" onclick="setQuickFuelChange(2.25)" class="py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-mono text-slate-300">+2.25 ₺</button>
+              <button type="button" onclick="setQuickFuelChange(1.00)" id="quickFuelBtn1" class="py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-mono text-slate-300 transition active:scale-95">+1.00 ₺</button>
+              <button type="button" onclick="setQuickFuelChange(1.50)" id="quickFuelBtn2" class="py-1.5 rounded-lg bg-amber-500/20 border border-amber-500/40 text-amber-300 text-xs font-mono font-bold transition active:scale-95">+1.50 ₺</button>
+              <button type="button" onclick="setQuickFuelChange(2.25)" id="quickFuelBtn3" class="py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-mono text-slate-300 transition active:scale-95">+2.25 ₺</button>
             </div>
-            <div class="relative">
-              <input type="number" step="0.01" id="fuelChangeInput" value="1.50" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-white font-mono font-bold text-sm focus:outline-none focus:border-amber-500 transition" oninput="calculateFuel()">
-              <span class="absolute right-4 top-2.5 text-xs text-slate-400">₺/L</span>
+            <div class="relative flex items-center">
+              <button type="button" onclick="stepFuelChange(-0.10)" class="absolute left-2 z-10 w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center text-xs font-bold transition border border-slate-700/60 active:scale-95" title="0.10 ₺ Azalt">
+                <i class="fa-solid fa-minus"></i>
+              </button>
+              <input type="text" inputmode="decimal" id="fuelChangeInput" value="1.50" placeholder="0.00" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-12 py-2.5 text-center text-white font-mono font-bold text-base focus:outline-none focus:border-amber-500 transition" oninput="calculateFuel()">
+              <button type="button" onclick="stepFuelChange(0.10)" class="absolute right-14 z-10 w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center text-xs font-bold transition border border-slate-700/60 active:scale-95" title="0.10 ₺ Artır">
+                <i class="fa-solid fa-plus"></i>
+              </button>
+              <span class="absolute right-4 text-xs font-semibold text-slate-400 pointer-events-none select-none">₺/L</span>
             </div>
           </div>
 
@@ -482,16 +499,16 @@
           <div>
             <label class="block text-xs font-semibold text-slate-300 mb-1">Mevcut LPG Litre Fiyatı (TL):</label>
             <div class="relative">
-              <input type="number" step="0.01" id="lpgCurrentPrice" value="41.20" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-white font-mono font-bold text-sm focus:outline-none focus:border-sky-500 transition" oninput="calculateLpg()">
-              <span class="absolute right-4 top-2.5 text-xs text-slate-400">₺/L</span>
+              <input type="text" inputmode="decimal" id="lpgCurrentPrice" value="41.20" class="w-full bg-slate-950 border border-slate-700 rounded-xl pl-4 pr-14 py-2.5 text-white font-mono font-bold text-sm focus:outline-none focus:border-sky-500 transition" oninput="calculateLpg()">
+              <span class="absolute right-4 top-2.5 text-xs text-slate-400 font-semibold pointer-events-none select-none">₺/L</span>
             </div>
           </div>
 
           <div>
             <label class="block text-xs font-semibold text-slate-300 mb-1">LPG Zam (+) / İndirim (-) Tutarı (TL):</label>
             <div class="relative">
-              <input type="number" step="0.01" id="lpgChangeInput" value="0.95" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-white font-mono font-bold text-sm focus:outline-none focus:border-sky-500 transition" oninput="calculateLpg()">
-              <span class="absolute right-4 top-2.5 text-xs text-slate-400">₺/L</span>
+              <input type="text" inputmode="decimal" id="lpgChangeInput" value="0.95" class="w-full bg-slate-950 border border-slate-700 rounded-xl pl-4 pr-14 py-2.5 text-white font-mono font-bold text-sm focus:outline-none focus:border-sky-500 transition" oninput="calculateLpg()">
+              <span class="absolute right-4 top-2.5 text-xs text-slate-400 font-semibold pointer-events-none select-none">₺/L</span>
             </div>
           </div>
 
@@ -514,7 +531,7 @@
           <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl">
             <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">HESAPLANAN YENİ LPG FİYATI</span>
             <div class="flex items-baseline gap-3 mt-1">
-              <span id="resultLpgNewPrice" class="text-3xl font-extrabold text-white font-mono">₺26.40</span>
+              <span id="resultLpgNewPrice" class="text-3xl font-extrabold text-white font-mono">₺42.15</span>
               <span class="text-xs text-sky-400 font-bold font-mono">+₺0.95 / Litre</span>
             </div>
 
@@ -572,8 +589,8 @@
           <div>
             <label class="block text-xs font-semibold text-slate-300 mb-1">Mevcut Tüp Satış Fiyatı (TL):</label>
             <div class="relative">
-              <input type="number" step="1" id="tubeCurrentPrice" value="1550" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-white font-mono font-bold text-sm focus:outline-none focus:border-teal-500 transition" oninput="calculateTube()">
-              <span class="absolute right-4 top-2.5 text-xs text-slate-400">₺</span>
+              <input type="number" step="1" id="tubeCurrentPrice" value="1550" class="w-full bg-slate-950 border border-slate-700 rounded-xl pl-4 pr-10 py-2.5 text-white font-mono font-bold text-sm focus:outline-none focus:border-teal-500 transition" oninput="calculateTube()">
+              <span class="absolute right-4 top-2.5 text-xs text-slate-400 font-semibold pointer-events-none select-none">₺</span>
             </div>
           </div>
 
@@ -581,12 +598,12 @@
             <label class="block text-xs font-semibold text-slate-300 mb-1">Tüp Zammı Tutarı (TL) veya Oranı (%):</label>
             <div class="grid grid-cols-2 gap-2 mb-2">
               <div class="relative">
-                <input type="number" step="1" id="tubeChangeTL" value="75" placeholder="TL Fark" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-mono text-xs focus:outline-none focus:border-teal-500" oninput="onTubeTLInput(this.value)">
-                <span class="absolute right-3 top-2 text-[10px] text-slate-400">₺</span>
+                <input type="number" step="1" id="tubeChangeTL" value="75" placeholder="TL Fark" class="w-full bg-slate-950 border border-slate-700 rounded-xl pl-3 pr-8 py-2 text-white font-mono text-xs focus:outline-none focus:border-teal-500" oninput="onTubeTLInput(this.value)">
+                <span class="absolute right-3 top-2 text-[10px] text-slate-400 pointer-events-none select-none">₺</span>
               </div>
               <div class="relative">
-                <input type="number" step="0.5" id="tubeChangePercent" value="4.8" placeholder="% Oran" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-mono text-xs focus:outline-none focus:border-teal-500" oninput="onTubePercentInput(this.value)">
-                <span class="absolute right-3 top-2 text-[10px] text-slate-400">%</span>
+                <input type="number" step="0.5" id="tubeChangePercent" value="4.8" placeholder="% Oran" class="w-full bg-slate-950 border border-slate-700 rounded-xl pl-3 pr-8 py-2 text-white font-mono text-xs focus:outline-none focus:border-teal-500" oninput="onTubePercentInput(this.value)">
+                <span class="absolute right-3 top-2 text-[10px] text-slate-400 pointer-events-none select-none">%</span>
               </div>
             </div>
           </div>
@@ -639,8 +656,8 @@
           <div>
             <label class="block text-xs font-semibold text-slate-300 mb-1">Doğalgaz Dağıtım Şirketi / m³ Birim Fiyatı (TL):</label>
             <div class="relative">
-              <input type="number" step="0.01" id="gasUnitPrice" value="17.88" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-white font-mono font-bold text-sm focus:outline-none focus:border-orange-500 transition" oninput="calculateGas()">
-              <span class="absolute right-4 top-2.5 text-xs text-slate-400">₺/m³</span>
+              <input type="number" step="0.01" id="gasUnitPrice" value="17.88" class="w-full bg-slate-950 border border-slate-700 rounded-xl pl-4 pr-14 py-2.5 text-white font-mono font-bold text-sm focus:outline-none focus:border-orange-500 transition" oninput="calculateGas()">
+              <span class="absolute right-4 top-2.5 text-xs text-slate-400 font-semibold pointer-events-none select-none">₺/m³</span>
             </div>
             <div class="text-[10px] text-slate-500 mt-1">İGDAŞ, BAŞKENTGAZ, İZMİRGAZ konut sübvansiyonlu tarifesi</div>
           </div>
@@ -962,11 +979,21 @@
       calculateFuel();
     }
 
+    // Safe float parser with comma support (TR locale friendly)
+    function parseAmount(val) {
+      if (val === null || val === undefined) return 0;
+      if (typeof val === 'number') return isNaN(val) ? 0 : val;
+      const cleaned = String(val).replace(',', '.').trim();
+      const num = parseFloat(cleaned);
+      return isNaN(num) ? 0 : num;
+    }
+
     // Set Change Mode (Zam / İndirim)
     function setFuelChangeMode(mode) {
       fuelChangeMode = mode;
       const btnZ = document.getElementById('btnModeZam');
       const btnI = document.getElementById('btnModeIndirim');
+      const sign = mode === 'zam' ? '+' : '-';
 
       if (mode === 'zam') {
         btnZ.className = "py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 bg-rose-600 text-white shadow-md";
@@ -977,12 +1004,37 @@
         btnZ.className = "py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 bg-slate-800 text-slate-300 hover:text-white";
         document.getElementById('labelChangeAmount').textContent = "İndirim Tutarı (Litre Başına TL):";
       }
+
+      const b1 = document.getElementById('quickFuelBtn1');
+      const b2 = document.getElementById('quickFuelBtn2');
+      const b3 = document.getElementById('quickFuelBtn3');
+      if (b1) b1.textContent = `${sign}1.00 ₺`;
+      if (b2) b2.textContent = `${sign}1.50 ₺`;
+      if (b3) b3.textContent = `${sign}2.25 ₺`;
+
       calculateFuel();
     }
 
     // Set Quick Change
     function setQuickFuelChange(amount) {
       document.getElementById('fuelChangeInput').value = amount.toFixed(2);
+      [1.00, 1.50, 2.25].forEach((val, idx) => {
+        const btn = document.getElementById(`quickFuelBtn${idx + 1}`);
+        if (!btn) return;
+        if (Math.abs(val - amount) < 0.01) {
+          btn.className = "py-1.5 rounded-lg bg-amber-500/20 border border-amber-500/40 text-amber-300 text-xs font-mono font-bold transition active:scale-95";
+        } else {
+          btn.className = "py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-mono text-slate-300 transition active:scale-95";
+        }
+      });
+      calculateFuel();
+    }
+
+    // Step change (+0.10 / -0.10)
+    function stepFuelChange(delta) {
+      const current = parseAmount(document.getElementById('fuelChangeInput').value);
+      const next = Math.max(0, parseFloat((current + delta).toFixed(2)));
+      document.getElementById('fuelChangeInput').value = next.toFixed(2);
       calculateFuel();
     }
 
@@ -1020,8 +1072,8 @@
 
     // Primary Fuel Calculation
     function calculateFuel() {
-      const p = parseFloat(document.getElementById('fuelCurrentPrice').value) || 0;
-      let change = parseFloat(document.getElementById('fuelChangeInput').value) || 0;
+      const p = parseAmount(document.getElementById('fuelCurrentPrice').value);
+      let change = parseAmount(document.getElementById('fuelChangeInput').value);
       if (fuelChangeMode === 'indirim') change = -change;
 
       const newPrice = Math.max(0, p + change);
@@ -1032,7 +1084,10 @@
       document.getElementById('resultOldPrice').textContent = `₺${p.toFixed(2)} / Litre`;
 
       const diffBadge = document.getElementById('resultDiffBadge');
-      if (change >= 0) {
+      if (Math.abs(change) < 0.001) {
+        diffBadge.textContent = "Fark Yok (₺0.00)";
+        diffBadge.className = "px-2 py-0.5 rounded text-xs font-bold font-mono bg-slate-800 text-slate-400 border border-slate-700";
+      } else if (change > 0) {
         diffBadge.textContent = `+₺${change.toFixed(2)} (+${diffPercent}%)`;
         diffBadge.className = "px-2 py-0.5 rounded text-xs font-bold font-mono bg-rose-500/20 text-rose-400 border border-rose-500/30";
       } else {
@@ -1159,8 +1214,8 @@
     }
 
     function calculateLpg() {
-      const current = parseFloat(document.getElementById('lpgCurrentPrice').value) || 0;
-      const change = parseFloat(document.getElementById('lpgChangeInput').value) || 0;
+      const current = parseAmount(document.getElementById('lpgCurrentPrice').value);
+      const change = parseAmount(document.getElementById('lpgChangeInput').value);
       const newPrice = current + change;
 
       document.getElementById('resultLpgNewPrice').textContent = `₺${newPrice.toFixed(2)}`;
@@ -1168,7 +1223,7 @@
       document.getElementById('resultLpgTankSavings').textContent = `+₺${savings.toFixed(2)}`;
 
       // Benzin vs LPG Saving percentage
-      const benzinPrice = parseFloat(document.getElementById('fuelCurrentPrice').value) || 42.89;
+      const benzinPrice = parseAmount(document.getElementById('fuelCurrentPrice').value) || 76.30;
       const lpgEquivalentPrice = newPrice * 1.18; // 18% higher consumption
       const savingPercent = ((1 - (lpgEquivalentPrice / benzinPrice)) * 100).toFixed(1);
       document.getElementById('resultLpgSavingPercent').textContent = `%${Math.max(0, savingPercent)}`;
@@ -1187,24 +1242,24 @@
     }
 
     function onTubeTLInput(val) {
-      const current = parseFloat(document.getElementById('tubeCurrentPrice').value) || 1;
-      const diff = parseFloat(val) || 0;
+      const current = parseAmount(document.getElementById('tubeCurrentPrice').value) || 1;
+      const diff = parseAmount(val);
       const pct = ((diff / current) * 100).toFixed(1);
       document.getElementById('tubeChangePercent').value = pct;
       calculateTube();
     }
 
     function onTubePercentInput(val) {
-      const current = parseFloat(document.getElementById('tubeCurrentPrice').value) || 1;
-      const pct = parseFloat(val) || 0;
+      const current = parseAmount(document.getElementById('tubeCurrentPrice').value) || 1;
+      const pct = parseAmount(val);
       const diff = ((current * pct) / 100).toFixed(0);
       document.getElementById('tubeChangeTL').value = diff;
       calculateTube();
     }
 
     function calculateTube() {
-      const current = parseFloat(document.getElementById('tubeCurrentPrice').value) || 0;
-      const diff = parseFloat(document.getElementById('tubeChangeTL').value) || 0;
+      const current = parseAmount(document.getElementById('tubeCurrentPrice').value);
+      const diff = parseAmount(document.getElementById('tubeChangeTL').value);
       const newPrice = current + diff;
       const pct = current > 0 ? ((diff / current) * 100).toFixed(1) : 0;
 
@@ -1239,8 +1294,8 @@
     }
 
     function calculateGas(forcedZamPct = null) {
-      const baseM3 = parseFloat(document.getElementById('gasUnitPrice').value) || 0;
-      const m3Amount = parseFloat(document.getElementById('sliderGasM3').value) || 220;
+      const baseM3 = parseAmount(document.getElementById('gasUnitPrice').value);
+      const m3Amount = parseAmount(document.getElementById('sliderGasM3').value) || 220;
       
       let zamPct = 20; // default 20%
       if (forcedZamPct !== null) zamPct = forcedZamPct;
@@ -1259,9 +1314,9 @@
 
     // INTERCITY ROUTE CALCULATOR
     function calculateRoute(km, name) {
-      const consumption = parseFloat(document.getElementById('sliderConsumption').value) || 6.5;
-      const p = parseFloat(document.getElementById('fuelCurrentPrice').value) || 42.89;
-      let change = parseFloat(document.getElementById('fuelChangeInput').value) || 1.50;
+      const consumption = parseAmount(document.getElementById('sliderConsumption').value) || 6.5;
+      const p = parseAmount(document.getElementById('fuelCurrentPrice').value) || 76.30;
+      let change = parseAmount(document.getElementById('fuelChangeInput').value);
       if (fuelChangeMode === 'indirim') change = -change;
       const newPrice = p + change;
 
