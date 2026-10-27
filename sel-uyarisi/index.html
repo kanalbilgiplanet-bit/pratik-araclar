@@ -691,10 +691,12 @@
         radarTimestamps = data.radar.past;
         currentRadarIndex = radarTimestamps.length - 1;
 
-        // Create tile layers for each timestamp
+        // Create tile layers for each timestamp (RainViewer free radar tiles max out at zoom 7, maxNativeZoom enables smooth client-side upscaling without "Zoom Level Not Supported" tiles)
         radarLayers = radarTimestamps.map((item) => {
           const tileUrl = `${host}${item.path}/256/{z}/{x}/{y}/2/1_1.png`;
           return L.tileLayer(tileUrl, {
+            maxNativeZoom: 7,
+            maxZoom: 18,
             opacity: 0,
             zIndex: 100
           });
@@ -974,10 +976,12 @@
       window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
     }
 
-    // Initialize on page load
-    window.addEventListener('DOMContentLoaded', () => {
+    // Initialize on page load (robust against readyState)
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initMap);
+    } else {
       initMap();
-    });
+    }
   </script>
 </body>
 </html>

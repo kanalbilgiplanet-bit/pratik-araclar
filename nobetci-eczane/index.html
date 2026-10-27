@@ -566,8 +566,6 @@
         });
         pharmacyMarkers.push(marker);
       });
-        pharmacyMarkers.push(marker);
-      });
 
       // Render Cards into Container
       renderCards(currentPharmacies);
@@ -777,10 +775,12 @@
       window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
     }
 
-    // Initialize on page load
-    window.addEventListener('DOMContentLoaded', () => {
+    // Initialize on page load (robust against readyState)
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initMap);
+    } else {
       initMap();
-    });
+    }
   </script>
 </body>
 </html>
