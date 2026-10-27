@@ -3,6 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Speed & Preconnect Resource Hints -->
+  <link rel="preconnect" href="https://cdn.tailwindcss.com">
+  <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+  <link rel="preconnect" href="https://unpkg.com" crossorigin>
+  <link rel="dns-prefetch" href="https://unpkg.com">
+
   <title>Canlı Sel Uyarı Haritası & Yağış Radarı | Pratik Araçlar</title>
   <meta name="description" content="Türkiye geneli anlık yağış, canlı meteorolojik Doppler radarı, sel riski ve ani su baskını alarm haritası. İstanbul, Antalya, İzmir ve 81 il için canlı yağış takibi.">
   <meta name="keywords" content="sel uyarı haritası, anlık yağış haritası, canlı yağış radarı, sel riski, istanbul sel haritası, yağış uyarısı, meteoroloji radarı, su baskını alarmı">
@@ -678,7 +686,10 @@
     // Fetch RainViewer Doppler Radar Tiles
     async function loadRainViewerRadar() {
       try {
-        const res = await fetch('https://api.rainviewer.com/public/weather-maps.json');
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000);
+        const res = await fetch('https://api.rainviewer.com/public/weather-maps.json', { signal: controller.signal });
+        clearTimeout(timeoutId);
         if (!res.ok) throw new Error('Radar API erişilemedi');
         const data = await res.json();
 

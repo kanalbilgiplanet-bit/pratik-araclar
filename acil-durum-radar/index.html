@@ -3,6 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <!-- Speed & Preconnect Resource Hints -->
+  <link rel="preconnect" href="https://cdn.tailwindcss.com">
+  <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+  <link rel="preconnect" href="https://unpkg.com" crossorigin>
+  <link rel="dns-prefetch" href="https://unpkg.com">
+
   <title>AcilDurumRadar | Türkiye Canlı Afet, Deprem & Fay Hattı Haritası</title>
   <meta name="description" content="Türkiye genelinde son depremler, aktif diri fay hatları ve acil durum toplanma alanlarını canlı haritada anında izleyin. 112 Acil hızlı arama, acil durum düdüğü ve GPS konum analizi.">
   <meta name="keywords" content="acil durum radar, canlı deprem haritası, son depremler türkiye, kandilli son depremler, afad deprem haritası, diri fay hatları haritası, toplanma alanı nerede, 112 acil, deprem düdüğü çal">
@@ -676,7 +684,10 @@
       const emscUrl = 'https://www.seismicportal.eu/fdsnws/event/1/query?format=json&limit=50&minlat=35&maxlat=43&minlon=25&maxlon=45';
 
       try {
-        const res = await fetch(emscUrl);
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000);
+        const res = await fetch(emscUrl, { signal: controller.signal });
+        clearTimeout(timeoutId);
         if (!res.ok) throw new Error('EMSC API Response Error');
         const data = await res.json();
         

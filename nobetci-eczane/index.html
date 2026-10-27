@@ -3,6 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Speed & Preconnect Resource Hints -->
+  <link rel="preconnect" href="https://cdn.tailwindcss.com">
+  <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+  <link rel="preconnect" href="https://unpkg.com" crossorigin>
+  <link rel="dns-prefetch" href="https://unpkg.com">
+
   <title>En Yakın Nöbetçi Eczane Haritası | Pratik Araçlar</title>
   <meta name="description" content="Konumunuza en yakın nöbetçi eczaneleri haritada anında bulun. Mesafe, telefon numarası, adres, canlı yol tarifi ve 81 il nöbetçi eczane listesi.">
   <meta name="keywords" content="nöbetçi eczane, en yakın nöbetçi eczane, nöbetçi eczane harita, bugün nöbetçi eczane, nöbetçi eczane telefon, istanbul nöbetçi eczane, ankara nöbetçi eczane, izmir nöbetçi eczane">
@@ -707,11 +715,16 @@
       );
     }
 
-    // Live Overpass API for real local pharmacies
+    // Live Overpass API for real local pharmacies (hızlı yanıt için 4.5s AbortController korumalı)
     async function fetchNearbyOverpass(lat, lng) {
       try {
-        const query = `[out:json][timeout:10];node["amenity"="pharmacy"](around:4000,${lat},${lng});out 15;`;
-        const res = await fetch(`https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`);
+        const query = `[out:json][timeout:5];node["amenity"="pharmacy"](around:4000,${lat},${lng});out 15;`;
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 4500);
+        const res = await fetch(`https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`, {
+          signal: controller.signal
+        });
+        clearTimeout(timeoutId);
         if (!res.ok) throw new Error('Overpass yanıt vermedi');
         const data = await res.json();
 
