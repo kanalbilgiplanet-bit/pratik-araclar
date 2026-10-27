@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html lang="tr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Akaryakıt Zam Hesaplayıcı | Benzin, Motorin, LPG, Tüp Gaz & Doğalgaz</title>
+  <meta name="description" content="Benzin, motorin (mazot), LPG otogaz, mutfak tüpü ve doğalgaz zam ve indirimlerini anında hesaplayın. Depo fulleme kârı, aylık bütçe farkı ve şehirlerarası yol maliyeti simülatörü.">
+  <meta name="keywords" content="benzin zam hesaplayıcı, motorin zam hesapla, mazot zam oranı, benzin litre fiyatı, lpg zam, 12 kg tüp fiyatı, doğalgaz zam hesaplama, depo fulleme maliyeti, akaryakıt zam takvimi, epdk benzin fiyatı">
+  <link rel="canonical" href="https://pratik-araclar.pratikweb.workers.dev/akaryakit-zam-hesaplayici/">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23ea580c'/%3E%3Cstop offset='100%25' stop-color='%23dc2626'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23bg)'/%3E%3Cpath d='M22 18 H36 V30 H22 Z M36 22 H42 L46 26 V44 H42 M20 46 H38 V48 H20 Z' fill='%23ffffff'/%3E%3C/svg%3E">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://pratik-araclar.pratikweb.workers.dev/akaryakit-zam-hesaplayici/">
+  <meta property="og:title" content="Akaryakıt Zam & Depo Fulletme Kâr Hesaplayıcı">
+  <meta property="og:description" content="Benzin, motorin, LPG, mutfak tüpü ve doğalgaz zammını anında hesapla. Depoyu zamdan önce fullersen kaç TL kâr edersin?">
+  <meta property="og:locale" content="tr_TR">
+
+  <!-- Twitter / X Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://pratik-araclar.pratikweb.workers.dev/akaryakit-zam-hesaplayici/">
+  <meta name="twitter:title" content="Akaryakıt Zam & Depo Fulletme Kâr Hesaplayıcı">
+  <meta name="twitter:description" content="Benzin, motorin, LPG, mutfak tüpü ve doğalgaz zammını hesaplayın. Depoyu zamdan önce fullersen kaç TL kâr edersin?">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            midnight: '#0b0f19',
+            surface: '#111827',
+            surfaceCard: '#1a2234',
+            surfaceBorder: '#28354d'
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- FontAwesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "name": "Akaryakıt ve Enerji Zam Hesaplayıcı",
+        "url": "https://pratik-araclar.pratikweb.workers.dev/akaryakit-zam-hesaplayici/",
+        "applicationCategory": "UtilityApplication",
+        "operatingSystem": "All",
+        "description": "Benzin, motorin, LPG otogaz, mutfak tüpü ve doğalgaz zam/indirim tutarlarını, depo fulleme kârını ve aylık bütçe etkisini hesaplayan ücretsiz simülatör.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "TRY"
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Akaryakıt zammı bu gece saat kaçta geçerli olur?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "EPDK ve dağıtım şirketleri tarafından açıklanan akaryakıt zam veya indirimleri, belirtilen tarihin gece yarısı saat 00:01 itibarıyla pompa fiyatlarına yansıtılır."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Zam gelmeden önce depoyu doldurmak ne kadar kâr sağlar?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Örneğin litreye 1.50 TL zam geleceği duyurulduğunda, 50 litrelik bir depoyu zam yürürlüğe girmeden önce tamamen doldurmak net 75 TL tasarruf sağlar."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Benzin ve motorin fiyatları nasıl belirlenir?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Türkiye'de pompa fiyatları; Akdeniz piyasasındaki işlenmiş ürün fiyatları (CIF Cenova Platts), döviz kuru (USD/TRY), ÖTV (Özel Tüketim Vergisi), EPDK payı, dağıtıcı ve bayi marjı ile %20 KDV eklenerek hesaplanır."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 5px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.6);
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(100, 116, 139, 0.4);
+      border-radius: 4px;
+    }
+    @media print {
+      body { background: white !important; color: black !important; }
+      header, footer, .no-print { display: none !important; }
+    }
+  </style>
+</head>
+<body class="bg-[#0b0f19] text-slate-100 min-h-screen flex flex-col font-sans antialiased overflow-x-hidden selection:bg-amber-500 selection:text-slate-950">
+
+  <!-- Header -->
+  <header class="border-b border-slate-800/80 bg-slate-900/80 backdrop-blur-md sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      
+      <div class="flex items-center gap-3">
+        <a href="../" class="flex items-center gap-2 group transition" title="Pratik Araçlar Vitrinine Dön">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 to-red-600 flex items-center justify-center text-white shadow-lg shadow-amber-900/30 group-hover:scale-105 transition">
+            <i class="fa-solid fa-gas-pump text-sm"></i>
+          </div>
+          <div class="flex flex-col">
+            <span class="font-bold text-white text-base tracking-tight leading-none group-hover:text-amber-300 transition">
+              Pratik<span class="text-amber-400">Araçlar</span>
+            </span>
+            <span class="text-[10px] text-slate-400 tracking-wider">AKARYAKIT & ENERJİ</span>
+          </div>
+        </a>
+
+        <div class="hidden sm:flex items-center gap-2 ml-3 pl-3 border-l border-slate-700/60">
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
+            <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+            Canlı Pompa & Enerji Takibi
+          </span>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="flex items-center gap-2.5">
+        <a href="#karsilastir" class="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700/60 transition">
+          <i class="fa-solid fa-route text-amber-400"></i> Yol Masrafı
+        </a>
+        <a href="../" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-slate-700/60 transition">
+          <i class="fa-solid fa-arrow-left"></i>
+          <span class="hidden sm:inline">Vitrin</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <!-- Hero Title & Midnight Countdown Banner -->
+    <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-2 border-b border-slate-800/80">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-medium mb-2">
+          <i class="fa-solid fa-bell animate-bounce text-[11px]"></i>
+          <span>Flaş Zam / İndirim Hesaplayıcı & Depo Kâr Radarı</span>
+        </div>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+          Akaryakıt & Enerji Zam Hesaplayıcı
+        </h1>
+        <p class="text-xs sm:text-sm text-slate-400 mt-1 max-w-2xl leading-relaxed">
+          Benzin, motorin, LPG otogaz, mutfak tüpü ve doğalgaz zamlarını anında hesaplayın; gece yarısından önce depoyu doldurarak ne kadar kâr edeceğinizi görün.
+        </p>
+      </div>
+
+      <!-- Live Countdown Card -->
+      <div class="shrink-0 w-full md:w-auto bg-gradient-to-br from-slate-900 to-slate-950 border border-amber-500/30 p-3.5 rounded-2xl shadow-xl flex items-center justify-between md:justify-start gap-4">
+        <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-lg shrink-0">
+          <i class="fa-solid fa-stopwatch"></i>
+        </div>
+        <div>
+          <div class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">GECE YARISI (00:01) SAYACI</div>
+          <div id="midnightTimerText" class="text-sm sm:text-base font-extrabold text-amber-300 font-mono">
+            00s 00dk 00sn kaldı
+          </div>
+          <div class="text-[10px] text-slate-400 mt-0.5">Zamlar 00:01'de pompaya yansır</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- City & Province Baseline Selector Bar -->
+    <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-lg flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+      <div class="flex items-center gap-2 text-xs text-slate-300">
+        <i class="fa-solid fa-map-location-dot text-amber-400 text-sm"></i>
+        <span class="font-semibold">Bölge & İl Seçimi:</span>
+        <span class="text-slate-400 text-[11px] hidden md:inline">(İllere göre dağıtıcı tavan fiyatları otomatik güncellenir)</span>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <select id="citySelect" onchange="onCityChange(this.value)" class="w-full sm:w-auto bg-slate-950 border border-slate-700/80 rounded-xl px-4 py-2 text-xs font-semibold text-slate-100 focus:outline-none focus:border-amber-500 transition">
+          <option value="istanbul_avrupa">İstanbul (Avrupa)</option>
+          <option value="istanbul_anadolu">İstanbul (Anadolu)</option>
+          <option value="ankara">Ankara</option>
+          <option value="izmir">İzmir</option>
+          <option value="bursa">Bursa</option>
+          <option value="antalya">Antalya</option>
+          <option value="adana">Adana</option>
+          <option value="konya">Konya</option>
+          <option value="gaziantep">Gaziantep</option>
+          <option value="trabzon">Trabzon</option>
+          <option value="diyarbakir">Diyarbakır</option>
+        </select>
+        <span class="px-3 py-2 rounded-xl bg-slate-800 text-[11px] font-mono text-emerald-400 border border-slate-700 font-bold whitespace-nowrap">
+          EPDK Tavan
+        </span>
+      </div>
+    </div>
+
+    <!-- Modular Energy Tabs -->
+    <div class="flex flex-wrap items-center gap-2 border-b border-slate-800 pb-2">
+      <button onclick="switchTab('fuel')" id="tabBtnFuel" class="px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 bg-amber-500 text-slate-950 shadow-lg shadow-amber-900/30">
+        <i class="fa-solid fa-gas-pump"></i>
+        <span>Benzin & Motorin</span>
+      </button>
+
+      <button onclick="switchTab('lpg')" id="tabBtnLpg" class="px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 text-slate-300 hover:text-white hover:bg-slate-800">
+        <i class="fa-solid fa-fire-burner"></i>
+        <span>LPG / Otogaz</span>
+      </button>
+
+      <button onclick="switchTab('tube')" id="tabBtnTube" class="px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 text-slate-300 hover:text-white hover:bg-slate-800">
+        <i class="fa-solid fa-flask-vial"></i>
+        <span>Mutfak & Piknik Tüpü</span>
+      </button>
+
+      <button onclick="switchTab('gas')" id="tabBtnGas" class="px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 text-slate-300 hover:text-white hover:bg-slate-800">
+        <i class="fa-solid fa-fire-flame-simple"></i>
+        <span>Doğalgaz & Kış Faturası</span>
+      </button>
+    </div>
+
+    <!-- TAB 1: BENZIN & MOTORIN (AKARYAKIT) -->
+    <div id="tabContentFuel" class="space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        <!-- Input Form (5 Cols) -->
+        <div class="lg:col-span-5 bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+            <h2 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+              <i class="fa-solid fa-sliders text-amber-400"></i>
+              <span>Akaryakıt Parametreleri</span>
+            </h2>
+            <span class="text-[10px] text-slate-400">Litre Bazlı</span>
+          </div>
+
+          <!-- Fuel Type Selector -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Yakıt Türü Seçin:</label>
+            <div class="grid grid-cols-2 gap-2">
+              <button type="button" id="btnSelectBenzin" onclick="selectFuelType('benzin')" class="py-2.5 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 bg-amber-500 text-slate-950 shadow-md">
+                <i class="fa-solid fa-oil-can"></i>
+                <span>Benzin (95 Oktan)</span>
+              </button>
+              <button type="button" id="btnSelectMotorin" onclick="selectFuelType('motorin')" class="py-2.5 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 bg-slate-800 text-slate-300 hover:text-white">
+                <i class="fa-solid fa-truck-monster"></i>
+                <span>Motorin (Dizel)</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Current Litre Price -->
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <label class="text-xs font-semibold text-slate-300">Mevcut Litre Fiyatı (TL):</label>
+              <span id="labelCurrentCity" class="text-[10px] text-slate-400 font-mono">İstanbul</span>
+            </div>
+            <div class="relative">
+              <input type="number" step="0.01" id="fuelCurrentPrice" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-white font-mono font-bold text-sm focus:outline-none focus:border-amber-500 transition" oninput="calculateFuel()">
+              <span class="absolute right-4 top-2.5 text-xs text-slate-400">₺/L</span>
+            </div>
+          </div>
+
+          <!-- Zam / İndirim Yönü -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1.5">İşlem Türü:</label>
+            <div class="grid grid-cols-2 gap-2">
+              <button type="button" id="btnModeZam" onclick="setFuelChangeMode('zam')" class="py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 bg-rose-600 text-white shadow-md">
+                <i class="fa-solid fa-arrow-trend-up"></i>
+                <span>Zam (+)</span>
+              </button>
+              <button type="button" id="btnModeIndirim" onclick="setFuelChangeMode('indirim')" class="py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 bg-slate-800 text-slate-300 hover:text-white">
+                <i class="fa-solid fa-arrow-trend-down text-emerald-400"></i>
+                <span>İndirim (-)</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Change Amount or Percentage -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">
+              <span id="labelChangeAmount">Zam Tutarı (Litre Başına TL):</span>
+            </label>
+            <div class="grid grid-cols-3 gap-2 mb-2">
+              <button type="button" onclick="setQuickFuelChange(1.00)" class="py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-mono text-slate-300">+1.00 ₺</button>
+              <button type="button" onclick="setQuickFuelChange(1.50)" class="py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-mono text-slate-300">+1.50 ₺</button>
+              <button type="button" onclick="setQuickFuelChange(2.25)" class="py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-mono text-slate-300">+2.25 ₺</button>
+            </div>
+            <div class="relative">
+              <input type="number" step="0.01" id="fuelChangeInput" value="1.50" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-white font-mono font-bold text-sm focus:outline-none focus:border-amber-500 transition" oninput="calculateFuel()">
+              <span class="absolute right-4 top-2.5 text-xs text-slate-400">₺/L</span>
+            </div>
+          </div>
+
+          <!-- Tank Capacity Selector -->
+          <div class="pt-2 border-t border-slate-800/80">
+            <div class="flex justify-between items-center mb-1.5">
+              <label class="text-xs font-semibold text-slate-300">Araç Depo Kapasitesi:</label>
+              <span id="labelTankSize" class="text-xs font-mono font-bold text-amber-400">50 Litre</span>
+            </div>
+            <div class="grid grid-cols-4 gap-2">
+              <button type="button" onclick="setTankSize(40)" class="btn-tank py-1.5 rounded-lg bg-slate-800 text-slate-300 text-xs font-mono font-semibold hover:bg-slate-700">40 L</button>
+              <button type="button" onclick="setTankSize(45)" class="btn-tank py-1.5 rounded-lg bg-slate-800 text-slate-300 text-xs font-mono font-semibold hover:bg-slate-700">45 L</button>
+              <button type="button" onclick="setTankSize(50)" class="btn-tank py-1.5 rounded-lg bg-amber-500 text-slate-950 text-xs font-mono font-bold">50 L</button>
+              <button type="button" onclick="setTankSize(60)" class="btn-tank py-1.5 rounded-lg bg-slate-800 text-slate-300 text-xs font-mono font-semibold hover:bg-slate-700">60 L</button>
+            </div>
+          </div>
+
+          <!-- Monthly Driving Simulator (KM & Consumption) -->
+          <div class="pt-2 border-t border-slate-800/80 space-y-3">
+            <div>
+              <div class="flex justify-between items-center text-xs mb-1">
+                <span class="text-slate-400">Aylık Yapılan Yol:</span>
+                <span id="monthlyKmDisplay" class="font-mono font-bold text-slate-200">1,000 km</span>
+              </div>
+              <input type="range" id="sliderMonthlyKm" min="200" max="4000" step="100" value="1000" oninput="onKmSliderChange(this.value)" class="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-amber-500">
+            </div>
+
+            <div>
+              <div class="flex justify-between items-center text-xs mb-1">
+                <span class="text-slate-400">100 km Ortalama Tüketim:</span>
+                <span id="consumptionDisplay" class="font-mono font-bold text-slate-200">6.5 L / 100km</span>
+              </div>
+              <input type="range" id="sliderConsumption" min="4.0" max="14.0" step="0.5" value="6.5" oninput="onConsumptionSliderChange(this.value)" class="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-amber-500">
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Output Cards & Visuals (7 Cols) -->
+        <div class="lg:col-span-7 flex flex-col gap-4">
+          
+          <!-- Primary Hero Result Box -->
+          <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl relative overflow-hidden">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800">
+              <div>
+                <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">HESAPLANAN YENİ POMPA FİYATI</span>
+                <div class="flex items-baseline gap-2 mt-0.5">
+                  <span id="resultNewPrice" class="text-3xl sm:text-4xl font-extrabold text-white font-mono">₺46.65</span>
+                  <span id="resultDiffBadge" class="px-2 py-0.5 rounded text-xs font-bold font-mono bg-rose-500/20 text-rose-400 border border-rose-500/30">+₺1.50 (+3.3%)</span>
+                </div>
+              </div>
+              
+              <div class="text-right">
+                <div class="text-[10px] text-slate-400">Önceki Fiyat</div>
+                <div id="resultOldPrice" class="text-sm font-mono text-slate-300 font-semibold">₺45.15 / Litre</div>
+              </div>
+            </div>
+
+            <!-- Depo Fulletme Kâr / Zarar Sayacı (KILLER FEATURE) -->
+            <div class="mt-4 p-4 rounded-xl bg-gradient-to-r from-emerald-950/40 to-slate-900 border border-emerald-500/30 flex items-center justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl shrink-0">
+                  <i class="fa-solid fa-piggy-bank"></i>
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-emerald-300 flex items-center gap-1.5">
+                    <span>Zamdan Önce Depoyu Fullersen Cebinde Kalan:</span>
+                  </div>
+                  <div class="text-[11px] text-slate-400 mt-0.5">
+                    <span id="tankSizeLabelResult">50</span> litrelik depo için zam öncesi kâr
+                  </div>
+                </div>
+              </div>
+              <div class="text-right shrink-0">
+                <div id="resultTankSavings" class="text-2xl font-extrabold text-emerald-400 font-mono">+₺75.00</div>
+                <div class="text-[10px] text-emerald-300/80 font-medium">Net Cebinizde Kalır</div>
+              </div>
+            </div>
+
+            <!-- 3 Grid Metrics -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-4 text-xs">
+              <div class="bg-slate-950/60 border border-slate-800 p-3 rounded-xl">
+                <div class="text-[10px] text-slate-400 mb-1">Depo Fulletme (Eski)</div>
+                <div id="resultOldTankCost" class="text-base font-bold text-slate-300 font-mono">₺2,257.50</div>
+                <div class="text-[10px] text-slate-500 mt-0.5">Mevcut fiyattan</div>
+              </div>
+
+              <div class="bg-slate-950/60 border border-slate-800 p-3 rounded-xl">
+                <div class="text-[10px] text-slate-400 mb-1">Depo Fulletme (Yeni)</div>
+                <div id="resultNewTankCost" class="text-base font-bold text-amber-300 font-mono">₺2,332.50</div>
+                <div class="text-[10px] text-slate-500 mt-0.5">Zamlı fiyattan</div>
+              </div>
+
+              <div class="bg-slate-950/60 border border-slate-800 p-3 rounded-xl">
+                <div class="text-[10px] text-slate-400 mb-1">Aylık Bütçeye Ek Yük</div>
+                <div id="resultMonthlyExtra" class="text-base font-bold text-rose-400 font-mono">+₺97.50</div>
+                <div id="resultMonthlyExtraDesc" class="text-[10px] text-slate-500 mt-0.5">1,000 km için / ay</div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Tax Distribution & Share Card -->
+          <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl grid grid-cols-1 sm:grid-cols-12 gap-4 items-center">
+            
+            <div class="sm:col-span-6 flex flex-col gap-2">
+              <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+                <i class="fa-solid fa-chart-pie text-amber-400"></i>
+                <span>1 Litre Benzinde Vergi Dağılımı</span>
+              </h3>
+              <p class="text-[11px] text-slate-400 leading-relaxed">
+                Pompa fiyatının yaklaşık <strong class="text-amber-300">%38 - %42'si</strong> Özel Tüketim Vergisi (ÖTV) ve Katma Değer Vergisinden (%20 KDV) oluşmaktadır.
+              </p>
+              <div class="text-[11px] text-slate-300 space-y-1 mt-1">
+                <div class="flex justify-between border-b border-slate-800 py-0.5">
+                  <span class="text-slate-400">Ham Petrol & Rafineri:</span>
+                  <span id="taxRafineri" class="font-mono font-semibold">₺23.50 (%51)</span>
+                </div>
+                <div class="flex justify-between border-b border-slate-800 py-0.5">
+                  <span class="text-slate-400">ÖTV (Maktu):</span>
+                  <span id="taxOTV" class="font-mono font-semibold">₺11.29 (%24)</span>
+                </div>
+                <div class="flex justify-between border-b border-slate-800 py-0.5">
+                  <span class="text-slate-400">KDV (%20):</span>
+                  <span id="taxKDV" class="font-mono font-semibold">₺7.75 (%17)</span>
+                </div>
+                <div class="flex justify-between py-0.5 text-amber-400 font-bold">
+                  <span>Dağıtıcı & Bayi Kârı:</span>
+                  <span id="taxBayi" class="font-mono">₺4.11 (%8)</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="sm:col-span-6 flex items-center justify-center h-44">
+              <canvas id="fuelTaxChart"></canvas>
+            </div>
+
+          </div>
+
+          <!-- Share Actions -->
+          <div class="flex flex-col sm:flex-row gap-2">
+            <button onclick="shareFuelWarning()" class="flex-1 py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-900/30 transition">
+              <i class="fa-brands fa-whatsapp text-sm"></i>
+              <span>Bu Geceki Zam Raporunu WhatsApp'ta Paylaş</span>
+            </button>
+            <button onclick="copyFuelSummary()" id="btnCopyFuel" class="py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs flex items-center justify-center gap-2 border border-slate-700 transition">
+              <i class="fa-solid fa-copy"></i>
+              <span>Özeti Kopyala</span>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TAB 2: LPG / OTOGAZ & TASARRUF -->
+    <div id="tabContentLpg" class="hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        <div class="lg:col-span-5 bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+            <h2 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+              <i class="fa-solid fa-fire-burner text-sky-400"></i>
+              <span>LPG / Otogaz Hesaplama</span>
+            </h2>
+            <span class="text-[10px] text-slate-400">Litre Bazlı</span>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Mevcut LPG Litre Fiyatı (TL):</label>
+            <div class="relative">
+              <input type="number" step="0.01" id="lpgCurrentPrice" value="25.45" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-white font-mono font-bold text-sm focus:outline-none focus:border-sky-500 transition" oninput="calculateLpg()">
+              <span class="absolute right-4 top-2.5 text-xs text-slate-400">₺/L</span>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">LPG Zam (+) / İndirim (-) Tutarı (TL):</label>
+            <div class="relative">
+              <input type="number" step="0.01" id="lpgChangeInput" value="0.95" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-white font-mono font-bold text-sm focus:outline-none focus:border-sky-500 transition" oninput="calculateLpg()">
+              <span class="absolute right-4 top-2.5 text-xs text-slate-400">₺/L</span>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">LPG Tank Hacmi (Simit/Silindir):</label>
+            <div class="grid grid-cols-3 gap-2">
+              <button type="button" onclick="setLpgTank(35)" class="py-1.5 rounded-lg bg-slate-800 text-xs font-mono text-slate-300 hover:bg-slate-700">35 Litre</button>
+              <button type="button" onclick="setLpgTank(42)" class="py-1.5 rounded-lg bg-sky-600 text-xs font-mono text-white font-bold">42 Litre</button>
+              <button type="button" onclick="setLpgTank(50)" class="py-1.5 rounded-lg bg-slate-800 text-xs font-mono text-slate-300 hover:bg-slate-700">50 Litre</button>
+            </div>
+          </div>
+
+          <div class="p-3 rounded-xl bg-sky-500/10 border border-sky-500/20 text-xs text-sky-200">
+            <i class="fa-solid fa-circle-info mr-1"></i>
+            <strong>Otogaz Gerçeği:</strong> LPG araçlar benzine oranla yaklaşık <strong>%15-20 daha fazla litre</strong> tüketir. Hesaplamada bu oran dikkate alınır.
+          </div>
+        </div>
+
+        <div class="lg:col-span-7 space-y-4">
+          <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl">
+            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">HESAPLANAN YENİ LPG FİYATI</span>
+            <div class="flex items-baseline gap-3 mt-1">
+              <span id="resultLpgNewPrice" class="text-3xl font-extrabold text-white font-mono">₺26.40</span>
+              <span class="text-xs text-sky-400 font-bold font-mono">+₺0.95 / Litre</span>
+            </div>
+
+            <div class="mt-4 p-4 rounded-xl bg-gradient-to-r from-sky-950/40 to-slate-900 border border-sky-500/30 flex items-center justify-between">
+              <div>
+                <div class="text-xs font-bold text-sky-300">LPG Tankı Doldurma Farkı:</div>
+                <div class="text-[11px] text-slate-400 mt-0.5"><span id="lpgTankSizeDisplay">42</span>L tank zamdan önce dolarsa kâr:</div>
+              </div>
+              <div id="resultLpgTankSavings" class="text-2xl font-extrabold text-sky-400 font-mono">+₺39.90</div>
+            </div>
+
+            <!-- Benzin vs LPG Kıyaslaması -->
+            <div class="mt-4 pt-4 border-t border-slate-800 grid grid-cols-2 gap-3 text-xs">
+              <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800">
+                <div class="text-slate-400 text-[10px]">Benzine Kıyasla Tasarruf Oranı</div>
+                <div id="resultLpgSavingPercent" class="text-lg font-bold text-emerald-400 font-mono">%39.4</div>
+                <div class="text-[10px] text-slate-500 mt-0.5">Tüketim farkı düşülmüştür</div>
+              </div>
+              <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800">
+                <div class="text-slate-400 text-[10px]">100 km Yol Masrafı (LPG)</div>
+                <div id="resultLpg100KmCost" class="text-lg font-bold text-sky-300 font-mono">₺205.90</div>
+                <div class="text-[10px] text-slate-500 mt-0.5">Ort. 7.8L LPG tüketimiyle</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TAB 3: MUTFAK & PİKNİK TÜPÜ -->
+    <div id="tabContentTube" class="hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        <div class="lg:col-span-5 bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+            <h2 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+              <i class="fa-solid fa-flask-vial text-teal-400"></i>
+              <span>Mutfak & Piknik Tüpü</span>
+            </h2>
+            <span class="text-[10px] text-slate-400">LPG Tüp Fiyatları</span>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Tüp Çeşidi Seçin:</label>
+            <select id="tubeTypeSelect" onchange="onTubeTypeChange(this.value)" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-100 focus:outline-none focus:border-teal-500 transition">
+              <option value="tombul_12kg">12 kg Tombul Ev Tüpü</option>
+              <option value="uzun_12kg">12 kg Uzun Ev Tüpü</option>
+              <option value="piknik_2kg">2 kg Küçük Piknik Tüpü</option>
+              <option value="ticari_24kg">24 kg Ticari Tüp</option>
+              <option value="sanayi_45kg">45 kg Sanayi Tüpü</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Mevcut Tüp Satış Fiyatı (TL):</label>
+            <div class="relative">
+              <input type="number" step="1" id="tubeCurrentPrice" value="840" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-white font-mono font-bold text-sm focus:outline-none focus:border-teal-500 transition" oninput="calculateTube()">
+              <span class="absolute right-4 top-2.5 text-xs text-slate-400">₺</span>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Tüp Zammı Tutarı (TL) veya Oranı (%):</label>
+            <div class="grid grid-cols-2 gap-2 mb-2">
+              <div class="relative">
+                <input type="number" step="1" id="tubeChangeTL" value="40" placeholder="TL Fark" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-mono text-xs focus:outline-none focus:border-teal-500" oninput="onTubeTLInput(this.value)">
+                <span class="absolute right-3 top-2 text-[10px] text-slate-400">₺</span>
+              </div>
+              <div class="relative">
+                <input type="number" step="0.5" id="tubeChangePercent" value="4.8" placeholder="% Oran" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-mono text-xs focus:outline-none focus:border-teal-500" oninput="onTubePercentInput(this.value)">
+                <span class="absolute right-3 top-2 text-[10px] text-slate-400">%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-3 rounded-xl bg-teal-500/10 border border-teal-500/20 text-xs text-teal-200">
+            <i class="fa-solid fa-clock-rotate-left mr-1"></i>
+            Ortalama 4 kişilik bir ailenin 12 kg ev tüpü kullanım ömrü <strong>45 ila 60 gün</strong> sürmektedir.
+          </div>
+        </div>
+
+        <div class="lg:col-span-7 space-y-4">
+          <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl">
+            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">YENİ TÜP FİYATI</span>
+            <div class="flex items-baseline gap-3 mt-1">
+              <span id="resultTubeNewPrice" class="text-3xl font-extrabold text-white font-mono">₺880.00</span>
+              <span id="resultTubeDiffBadge" class="text-xs text-teal-400 font-bold font-mono">+₺40.00 (+4.8%)</span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 mt-5 text-xs">
+              <div class="bg-slate-950/60 p-3.5 rounded-xl border border-slate-800">
+                <div class="text-[10px] text-slate-400">Günlük Pişirme Maliyeti</div>
+                <div id="resultTubeDailyCost" class="text-lg font-bold text-teal-300 font-mono">₺17.60 / gün</div>
+                <div class="text-[10px] text-slate-500 mt-0.5">50 günlük ortalama ömür</div>
+              </div>
+              <div class="bg-slate-950/60 p-3.5 rounded-xl border border-slate-800">
+                <div class="text-[10px] text-slate-400">Kilogram Başına Maliyet</div>
+                <div id="resultTubeKgPrice" class="text-lg font-bold text-slate-200 font-mono">₺73.33 / kg</div>
+                <div class="text-[10px] text-slate-500 mt-0.5">Gaz birim fiyatı</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TAB 4: DOĞALGAZ & KIŞ FATURASI SİMÜLATÖRÜ -->
+    <div id="tabContentGas" class="hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        <div class="lg:col-span-5 bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+            <h2 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+              <i class="fa-solid fa-fire-flame-simple text-orange-400"></i>
+              <span>Doğalgaz & Kış Faturası</span>
+            </h2>
+            <span class="text-[10px] text-slate-400">m³ Tüketim</span>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Doğalgaz Dağıtım Şirketi / m³ Birim Fiyatı (TL):</label>
+            <div class="relative">
+              <input type="number" step="0.01" id="gasUnitPrice" value="8.15" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-white font-mono font-bold text-sm focus:outline-none focus:border-orange-500 transition" oninput="calculateGas()">
+              <span class="absolute right-4 top-2.5 text-xs text-slate-400">₺/m³</span>
+            </div>
+            <div class="text-[10px] text-slate-500 mt-1">İGDAŞ, BAŞKENTGAZ, İZMİRGAZ konut sübvansiyonlu tarifesi</div>
+          </div>
+
+          <div>
+            <div class="flex justify-between items-center text-xs mb-1">
+              <span class="font-semibold text-slate-300">Aylık Kış Tüketimi (m³):</span>
+              <span id="gasM3Display" class="font-mono font-bold text-orange-400">220 m³</span>
+            </div>
+            <input type="range" id="sliderGasM3" min="50" max="600" step="10" value="220" oninput="onGasM3SliderChange(this.value)" class="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-orange-500">
+            <div class="flex justify-between text-[10px] text-slate-500 mt-1">
+              <span>80 m² (120 m³)</span>
+              <span>120 m² (220 m³)</span>
+              <span>160 m² (340 m³)</span>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Olası Zam Oranı (%):</label>
+            <div class="grid grid-cols-4 gap-2">
+              <button type="button" onclick="setGasZam(0)" class="py-1.5 rounded-lg bg-slate-800 text-xs font-mono text-slate-300 hover:bg-slate-700">%0 (Mevcut)</button>
+              <button type="button" onclick="setGasZam(10)" class="py-1.5 rounded-lg bg-slate-800 text-xs font-mono text-slate-300 hover:bg-slate-700">%10</button>
+              <button type="button" onclick="setGasZam(20)" class="py-1.5 rounded-lg bg-orange-600 text-xs font-mono text-white font-bold">%20</button>
+              <button type="button" onclick="setGasZam(30)" class="py-1.5 rounded-lg bg-slate-800 text-xs font-mono text-slate-300 hover:bg-slate-700">%30</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-7 space-y-4">
+          <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl">
+            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">TAHMİNİ AYLIK KIŞ FATURASI</span>
+            <div class="flex items-baseline gap-3 mt-1">
+              <span id="resultGasBill" class="text-3xl font-extrabold text-white font-mono">₺2,151.60</span>
+              <span id="resultGasDiffBadge" class="text-xs text-orange-400 font-bold font-mono">+₺358.60 (%20 zamla)</span>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-5 text-xs">
+              <div class="bg-slate-950/60 p-3.5 rounded-xl border border-slate-800">
+                <div class="text-[10px] text-slate-400">Yeni Birim m³ Fiyatı</div>
+                <div id="resultGasNewM3" class="text-base font-bold text-orange-300 font-mono">₺9.78 / m³</div>
+                <div class="text-[10px] text-slate-500 mt-0.5">KDV dahil</div>
+              </div>
+              <div class="bg-slate-950/60 p-3.5 rounded-xl border border-slate-800">
+                <div class="text-[10px] text-slate-400">Kombinin Günlük Tüketimi</div>
+                <div id="resultGasDailyCost" class="text-base font-bold text-slate-200 font-mono">₺71.72 / gün</div>
+                <div class="text-[10px] text-slate-500 mt-0.5">Günde ort. 7.3 m³</div>
+              </div>
+              <div class="bg-slate-950/60 p-3.5 rounded-xl border border-slate-800 col-span-2 sm:col-span-1">
+                <div class="text-[10px] text-slate-400">4 Aylık Kış Toplamı</div>
+                <div id="resultGasSeasonTotal" class="text-base font-bold text-amber-300 font-mono">₺8,606.40</div>
+                <div class="text-[10px] text-slate-500 mt-0.5">Kasım-Şubat arası</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- POPULAR INTERCITY ROUTE CALCULATOR (YOL MASRAFI KARSILASTIRMA) -->
+    <section id="karsilastir" class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-800">
+        <div>
+          <h3 class="text-base font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-route text-amber-400"></i>
+            <span>Popüler Şehirlerarası Güzergâh Yakıt Masrafı</span>
+          </h3>
+          <p class="text-xs text-slate-400 mt-0.5">Yeni zam sonrasında şehirlerarası seyahatinizde cebinizden çıkacak ek farkı anında görün.</p>
+        </div>
+        <span class="text-xs font-mono font-bold text-amber-400 bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20">
+          Gidiş - Dönüş Simülasyonu
+        </span>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <button type="button" onclick="calculateRoute(450, 'İstanbul - Ankara')" class="p-3 rounded-xl bg-slate-950/80 hover:bg-slate-800 border border-slate-800 text-left transition group">
+          <div class="text-xs font-bold text-white group-hover:text-amber-300">İstanbul ↔ Ankara</div>
+          <div class="text-[11px] text-slate-400 mt-0.5">450 km (Tek yön)</div>
+          <div class="text-xs font-mono font-bold text-amber-400 mt-2" id="routeCost_ist_ank">₺--</div>
+        </button>
+
+        <button type="button" onclick="calculateRoute(480, 'İstanbul - İzmir')" class="p-3 rounded-xl bg-slate-950/80 hover:bg-slate-800 border border-slate-800 text-left transition group">
+          <div class="text-xs font-bold text-white group-hover:text-amber-300">İstanbul ↔ İzmir</div>
+          <div class="text-[11px] text-slate-400 mt-0.5">480 km (Otoyol)</div>
+          <div class="text-xs font-mono font-bold text-amber-400 mt-2" id="routeCost_ist_izm">₺--</div>
+        </button>
+
+        <button type="button" onclick="calculateRoute(485, 'Ankara - Antalya')" class="p-3 rounded-xl bg-slate-950/80 hover:bg-slate-800 border border-slate-800 text-left transition group">
+          <div class="text-xs font-bold text-white group-hover:text-amber-300">Ankara ↔ Antalya</div>
+          <div class="text-[11px] text-slate-400 mt-0.5">485 km (Tek yön)</div>
+          <div class="text-xs font-mono font-bold text-amber-400 mt-2" id="routeCost_ank_ant">₺--</div>
+        </button>
+
+        <button type="button" onclick="calculateRoute(155, 'İstanbul - Bursa')" class="p-3 rounded-xl bg-slate-950/80 hover:bg-slate-800 border border-slate-800 text-left transition group">
+          <div class="text-xs font-bold text-white group-hover:text-amber-300">İstanbul ↔ Bursa</div>
+          <div class="text-[11px] text-slate-400 mt-0.5">155 km (Köprü hariç)</div>
+          <div class="text-xs font-mono font-bold text-amber-400 mt-2" id="routeCost_ist_bur">₺--</div>
+        </button>
+      </div>
+
+      <div id="routeResultBox" class="p-4 rounded-xl bg-slate-950/90 border border-slate-800 text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div class="space-y-1">
+          <div class="font-bold text-white text-sm" id="routeTitleText">İstanbul ↔ Ankara Gidiş Dönüş Raporu</div>
+          <div class="text-slate-400" id="routeDetailText">900 km toplam mesafe, ortalama 6.5L/100km tüketimle hesaplanmıştır.</div>
+        </div>
+        <div class="text-right shrink-0">
+          <div class="text-lg font-extrabold text-white font-mono" id="routeTotalNewCost">₺2,729.00</div>
+          <div class="text-rose-400 font-bold font-mono text-[11px]" id="routeDiffCost">+₺87.75 Zam Farkı</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cross Promotion Banner to Other Tools -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+      <a href="../nobetci-eczane/" class="p-4 rounded-2xl bg-slate-900/70 border border-slate-800 hover:border-red-500/40 transition group flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-red-600/20 text-red-400 flex items-center justify-center text-lg shrink-0 group-hover:scale-105 transition">
+          <i class="fa-solid fa-notes-medical"></i>
+        </div>
+        <div>
+          <div class="text-xs font-bold text-white group-hover:text-red-300 transition">Nöbetçi Eczane Haritası</div>
+          <div class="text-[11px] text-slate-400 mt-0.5">En yakın nöbetçi eczaneyi haritada bul</div>
+        </div>
+      </a>
+
+      <a href="../sel-uyarisi/" class="p-4 rounded-2xl bg-slate-900/70 border border-slate-800 hover:border-sky-500/40 transition group flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-sky-600/20 text-sky-400 flex items-center justify-center text-lg shrink-0 group-hover:scale-105 transition">
+          <i class="fa-solid fa-cloud-bolt"></i>
+        </div>
+        <div>
+          <div class="text-xs font-bold text-white group-hover:text-sky-300 transition">Canlı Sel & Yağış Radarı</div>
+          <div class="text-[11px] text-slate-400 mt-0.5">Doppler bulut ve anlık sel tehlikesi</div>
+        </div>
+      </a>
+
+      <a href="../maas-hesaplayici/" class="p-4 rounded-2xl bg-slate-900/70 border border-slate-800 hover:border-emerald-500/40 transition group flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-emerald-600/20 text-emerald-400 flex items-center justify-center text-lg shrink-0 group-hover:scale-105 transition">
+          <i class="fa-solid fa-calculator"></i>
+        </div>
+        <div>
+          <div class="text-xs font-bold text-white group-hover:text-emerald-300 transition">Maaş & Gelir Vergisi</div>
+          <div class="text-[11px] text-slate-400 mt-0.5">Brüt/Net maaş ve vergi dilimi simülatörü</div>
+        </div>
+      </a>
+    </div>
+
+    <!-- Educational & SEO FAQ Section -->
+    <section class="mt-8 pt-8 border-t border-slate-800/80">
+      <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+        <i class="fa-solid fa-circle-question text-amber-400"></i>
+        <span>Akaryakıt & Enerji Fiyatları Hakkında Sıkça Sorulanlar</span>
+      </h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+        <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl space-y-1.5">
+          <h4 class="font-semibold text-slate-200">Akaryakıt zamları saat kaçta pompaya yansır?</h4>
+          <p class="text-slate-400 leading-relaxed">
+            EPDK kurallarına göre akaryakıt zam veya indirimleri, yürürlük tarihinin gece yarısı saat <strong>00:01</strong> itibarıyla istasyonlardaki otomasyon sistemleri tarafından pompaya yansıtılır. Bu saatten önce alınan akaryakıt eski fiyattan ücretlendirilir.
+          </p>
+        </div>
+        <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl space-y-1.5">
+          <h4 class="font-semibold text-slate-200">Benzin ve motorin fiyatı neden şehirden şehre değişir?</h4>
+          <p class="text-slate-400 leading-relaxed">
+            Rafinerilere olan coğrafi uzaklık, navlun (nakliye) giderleri ve dağıtım firmalarının bayilere tanıdığı iskonto/kâr marjları illere göre farklılık gösterir. Genellikle deniz yolu ve rafineriye yakın sahil kentlerinde fiyatlar daha düşüktür.
+          </p>
+        </div>
+        <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl space-y-1.5">
+          <h4 class="font-semibold text-slate-200">Akaryakıt fiyatının ne kadarı vergidir?</h4>
+          <p class="text-slate-400 leading-relaxed">
+            1 litre akaryakıtın nihai pompa fiyatı içinde maktu Özel Tüketim Vergisi (ÖTV) ile toplam tutar üzerinden alınan %20 KDV bulunur. Fiyat seviyesine göre toplam vergi oranı %38 ile %44 arasında değişir.
+          </p>
+        </div>
+        <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl space-y-1.5">
+          <h4 class="font-semibold text-slate-200">Doğalgazda kademeli tarife ne anlama gelir?</h4>
+          <p class="text-slate-400 leading-relaxed">
+            BOTAŞ ve dağıtım şirketleri belirli bir tüketim sınırına (örneğin aylık 250 m³) kadar sübvansiyonlu düşük tarife, bu sınır aşıldığında ise maliyete dayalı gerçek birim fiyat uygulamaktadır. Kış aylarında tasarruf bu baremin altında kalmakla sağlanır.
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800/80 bg-slate-900/60 mt-12 py-8 text-xs text-slate-400">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-2">
+          <span class="font-bold text-white tracking-tight">Pratik<span class="text-amber-400">Araçlar</span></span>
+          <span>•</span>
+          <span class="text-slate-400">Akaryakıt, Zam & Enerji Hesaplayıcı</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-3 sm:gap-4 text-[11px] sm:text-xs">
+          <a href="../" class="hover:text-amber-300 transition text-slate-300">Ana Vitrin</a>
+          <a href="../nobetci-eczane/" class="hover:text-red-400 transition text-slate-300">Nöbetçi Eczane</a>
+          <a href="../sel-uyarisi/" class="hover:text-sky-300 transition text-slate-300">Sel & Yağış Radarı</a>
+          <a href="../fon-tasfiye-hesapla/" class="hover:text-emerald-300 transition text-slate-300">Fon Tasfiye</a>
+        </div>
+      </div>
+      
+      <!-- Legal Notice -->
+      <div class="pt-4 border-t border-slate-800/60 text-[11px] text-slate-400 leading-relaxed text-center sm:text-left flex flex-col sm:flex-row items-center gap-2">
+        <i class="fa-solid fa-scale-balanced text-amber-400 text-xs shrink-0"></i>
+        <span><strong>Yasal Bilgilendirme:</strong> Bu platformdaki akaryakıt, LPG, tüp gaz ve doğalgaz fiyatları EPDK tavan fiyatları ve serbest piyasa dağıtıcı verileri baz alınarak simülasyon amacıyla sunulmaktadır. Bayi ve ilçe bazında küçük fiyat farkları oluşabilir.</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Application Logic -->
+  <script>
+    // State
+    let activeCityKey = 'istanbul_avrupa';
+    let activeFuelType = 'benzin';
+    let fuelChangeMode = 'zam'; // 'zam' or 'indirim'
+    let selectedTankSize = 50;
+    let selectedMonthlyKm = 1000;
+    let selectedConsumption = 6.5;
+    let selectedLpgTank = 42;
+    let activeTab = 'fuel';
+    let taxChartInstance = null;
+
+    // Base Regional Prices Database
+    const cityPrices = {
+      istanbul_avrupa: { benzin: 45.15, motorin: 44.85, lpg: 25.45, tube: 840, gas: 8.15, name: 'İstanbul (Avrupa)' },
+      istanbul_anadolu: { benzin: 45.05, motorin: 44.75, lpg: 25.35, tube: 840, gas: 8.15, name: 'İstanbul (Anadolu)' },
+      ankara: { benzin: 45.85, motorin: 45.70, lpg: 25.80, tube: 850, gas: 8.25, name: 'Ankara' },
+      izmir: { benzin: 46.10, motorin: 45.95, lpg: 25.75, tube: 855, gas: 8.20, name: 'İzmir' },
+      bursa: { benzin: 45.70, motorin: 45.45, lpg: 25.50, tube: 845, gas: 8.18, name: 'Bursa' },
+      antalya: { benzin: 46.80, motorin: 46.65, lpg: 26.15, tube: 865, gas: 8.35, name: 'Antalya' },
+      adana: { benzin: 46.35, motorin: 46.20, lpg: 25.90, tube: 850, gas: 8.25, name: 'Adana' },
+      konya: { benzin: 46.60, motorin: 46.45, lpg: 26.00, tube: 860, gas: 8.30, name: 'Konya' },
+      gaziantep: { benzin: 46.50, motorin: 46.35, lpg: 25.95, tube: 855, gas: 8.28, name: 'Gaziantep' },
+      trabzon: { benzin: 46.75, motorin: 46.55, lpg: 26.10, tube: 860, gas: 8.32, name: 'Trabzon' },
+      diyarbakir: { benzin: 47.10, motorin: 46.90, lpg: 26.35, tube: 870, gas: 8.40, name: 'Diyarbakır' }
+    };
+
+    // Tube Database
+    const tubeBasePrices = {
+      tombul_12kg: { name: "12 kg Tombul Ev Tüpü", kg: 12, price: 840, days: 50 },
+      uzun_12kg: { name: "12 kg Uzun Ev Tüpü", kg: 12, price: 840, days: 50 },
+      piknik_2kg: { name: "2 kg Küçük Piknik Tüpü", kg: 2, price: 165, days: 20 },
+      ticari_24kg: { name: "24 kg Ticari Tüp", kg: 24, price: 1680, days: 40 },
+      sanayi_45kg: { name: "45 kg Sanayi Tüpü", kg: 45, price: 3150, days: 30 }
+    };
+
+    // Initialize
+    window.addEventListener('DOMContentLoaded', () => {
+      initMidnightCountdown();
+      onCityChange(activeCityKey);
+      initTaxChart();
+      calculateFuel();
+      calculateLpg();
+      calculateTube();
+      calculateGas();
+      calculateRoute(450, 'İstanbul - Ankara');
+    });
+
+    // Countdown to Midnight 00:01
+    function initMidnightCountdown() {
+      function updateTimer() {
+        const now = new Date();
+        const midnight = new Date();
+        midnight.setHours(24, 1, 0, 0); // 00:01 of next day
+        
+        const diffMs = midnight - now;
+        if (diffMs <= 0) {
+          document.getElementById('midnightTimerText').textContent = "00s 00dk 00sn (Zam Aktif)";
+          return;
+        }
+
+        const hours = Math.floor(diffMs / (1000 * 60 * 60));
+        const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
+
+        const pad = (n) => String(n).padStart(2, '0');
+        document.getElementById('midnightTimerText').textContent = `${pad(hours)}s ${pad(minutes)}dk ${pad(seconds)}sn kaldı`;
+      }
+      updateTimer();
+      setInterval(updateTimer, 1000);
+    }
+
+    // City Change
+    function onCityChange(cityKey) {
+      activeCityKey = cityKey;
+      const data = cityPrices[cityKey] || cityPrices.istanbul_avrupa;
+      document.getElementById('labelCurrentCity').textContent = data.name;
+
+      // Update current price input
+      const currentPrice = activeFuelType === 'benzin' ? data.benzin : data.motorin;
+      document.getElementById('fuelCurrentPrice').value = currentPrice.toFixed(2);
+      
+      // Update other tabs
+      document.getElementById('lpgCurrentPrice').value = data.lpg.toFixed(2);
+      document.getElementById('tubeCurrentPrice').value = data.tube;
+      document.getElementById('gasUnitPrice').value = data.gas.toFixed(2);
+
+      calculateFuel();
+      calculateLpg();
+      calculateTube();
+      calculateGas();
+    }
+
+    // Fuel Type Selection (Benzin / Motorin)
+    function selectFuelType(type) {
+      activeFuelType = type;
+      const btnB = document.getElementById('btnSelectBenzin');
+      const btnM = document.getElementById('btnSelectMotorin');
+
+      if (type === 'benzin') {
+        btnB.className = "py-2.5 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 bg-amber-500 text-slate-950 shadow-md";
+        btnM.className = "py-2.5 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 bg-slate-800 text-slate-300 hover:text-white";
+      } else {
+        btnM.className = "py-2.5 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 bg-amber-500 text-slate-950 shadow-md";
+        btnB.className = "py-2.5 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 bg-slate-800 text-slate-300 hover:text-white";
+      }
+
+      const cityData = cityPrices[activeCityKey] || cityPrices.istanbul_avrupa;
+      const currentPrice = type === 'benzin' ? cityData.benzin : cityData.motorin;
+      document.getElementById('fuelCurrentPrice').value = currentPrice.toFixed(2);
+
+      calculateFuel();
+    }
+
+    // Set Change Mode (Zam / İndirim)
+    function setFuelChangeMode(mode) {
+      fuelChangeMode = mode;
+      const btnZ = document.getElementById('btnModeZam');
+      const btnI = document.getElementById('btnModeIndirim');
+
+      if (mode === 'zam') {
+        btnZ.className = "py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 bg-rose-600 text-white shadow-md";
+        btnI.className = "py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 bg-slate-800 text-slate-300 hover:text-white";
+        document.getElementById('labelChangeAmount').textContent = "Zam Tutarı (Litre Başına TL):";
+      } else {
+        btnI.className = "py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 bg-emerald-600 text-white shadow-md";
+        btnZ.className = "py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 bg-slate-800 text-slate-300 hover:text-white";
+        document.getElementById('labelChangeAmount').textContent = "İndirim Tutarı (Litre Başına TL):";
+      }
+      calculateFuel();
+    }
+
+    // Set Quick Change
+    function setQuickFuelChange(amount) {
+      document.getElementById('fuelChangeInput').value = amount.toFixed(2);
+      calculateFuel();
+    }
+
+    // Tank Size
+    function setTankSize(liters) {
+      selectedTankSize = liters;
+      document.getElementById('labelTankSize').textContent = `${liters} Litre`;
+      document.getElementById('tankSizeLabelResult').textContent = liters;
+
+      // Update button styling
+      const buttons = document.querySelectorAll('.btn-tank');
+      buttons.forEach(btn => {
+        if (btn.textContent.includes(String(liters))) {
+          btn.className = "btn-tank py-1.5 rounded-lg bg-amber-500 text-slate-950 text-xs font-mono font-bold";
+        } else {
+          btn.className = "btn-tank py-1.5 rounded-lg bg-slate-800 text-slate-300 text-xs font-mono font-semibold hover:bg-slate-700";
+        }
+      });
+
+      calculateFuel();
+    }
+
+    // Slider Changes
+    function onKmSliderChange(val) {
+      selectedMonthlyKm = parseInt(val, 10);
+      document.getElementById('monthlyKmDisplay').textContent = `${selectedMonthlyKm.toLocaleString('tr-TR')} km`;
+      calculateFuel();
+    }
+
+    function onConsumptionSliderChange(val) {
+      selectedConsumption = parseFloat(val);
+      document.getElementById('consumptionDisplay').textContent = `${selectedConsumption.toFixed(1)} L / 100km`;
+      calculateFuel();
+    }
+
+    // Primary Fuel Calculation
+    function calculateFuel() {
+      const p = parseFloat(document.getElementById('fuelCurrentPrice').value) || 0;
+      let change = parseFloat(document.getElementById('fuelChangeInput').value) || 0;
+      if (fuelChangeMode === 'indirim') change = -change;
+
+      const newPrice = Math.max(0, p + change);
+      const diffPercent = p > 0 ? ((change / p) * 100).toFixed(1) : 0;
+
+      // New price UI
+      document.getElementById('resultNewPrice').textContent = `₺${newPrice.toFixed(2)}`;
+      document.getElementById('resultOldPrice').textContent = `₺${p.toFixed(2)} / Litre`;
+
+      const diffBadge = document.getElementById('resultDiffBadge');
+      if (change >= 0) {
+        diffBadge.textContent = `+₺${change.toFixed(2)} (+${diffPercent}%)`;
+        diffBadge.className = "px-2 py-0.5 rounded text-xs font-bold font-mono bg-rose-500/20 text-rose-400 border border-rose-500/30";
+      } else {
+        diffBadge.textContent = `-₺${Math.abs(change).toFixed(2)} (${diffPercent}%)`;
+        diffBadge.className = "px-2 py-0.5 rounded text-xs font-bold font-mono bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
+      }
+
+      // Tank Calculations
+      const oldTank = p * selectedTankSize;
+      const newTank = newPrice * selectedTankSize;
+      const tankSavings = Math.abs(change) * selectedTankSize;
+
+      document.getElementById('resultOldTankCost').textContent = `₺${oldTank.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      document.getElementById('resultNewTankCost').textContent = `₺${newTank.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      
+      const savingsElem = document.getElementById('resultTankSavings');
+      if (fuelChangeMode === 'zam') {
+        savingsElem.textContent = `+₺${tankSavings.toFixed(2)}`;
+        savingsElem.className = "text-2xl font-extrabold text-emerald-400 font-mono";
+      } else {
+        savingsElem.textContent = `-₺${tankSavings.toFixed(2)}`;
+        savingsElem.className = "text-2xl font-extrabold text-sky-400 font-mono";
+      }
+
+      // Monthly Driving Extra
+      const monthlyLiters = (selectedMonthlyKm / 100) * selectedConsumption;
+      const monthlyExtra = monthlyLiters * change;
+      const monthlyElem = document.getElementById('resultMonthlyExtra');
+      if (monthlyExtra >= 0) {
+        monthlyElem.textContent = `+₺${monthlyExtra.toFixed(2)}`;
+        monthlyElem.className = "text-base font-bold text-rose-400 font-mono";
+      } else {
+        monthlyElem.textContent = `-₺${Math.abs(monthlyExtra).toFixed(2)}`;
+        monthlyElem.className = "text-base font-bold text-emerald-400 font-mono";
+      }
+      document.getElementById('resultMonthlyExtraDesc').textContent = `${selectedMonthlyKm.toLocaleString('tr-TR')} km & ${selectedConsumption}L için`;
+
+      // Update Taxes & Chart
+      updateTaxBreakdown(newPrice);
+    }
+
+    // Tax Distribution Engine
+    function updateTaxBreakdown(price) {
+      if (price <= 0) return;
+      // Fixed approximate Turkish fuel taxes
+      const otv = 11.29; // Maktu ÖTV
+      const kdv = price * (20 / 120); // 20% KDV included in total
+      const distributorBayi = price * 0.085; // ~8.5%
+      const rafineri = Math.max(0, price - otv - kdv - distributorBayi);
+
+      document.getElementById('taxRafineri').textContent = `₺${rafineri.toFixed(2)} (%${((rafineri / price) * 100).toFixed(0)})`;
+      document.getElementById('taxOTV').textContent = `₺${otv.toFixed(2)} (%${((otv / price) * 100).toFixed(0)})`;
+      document.getElementById('taxKDV').textContent = `₺${kdv.toFixed(2)} (%${((kdv / price) * 100).toFixed(0)})`;
+      document.getElementById('taxBayi').textContent = `₺${distributorBayi.toFixed(2)} (%${((distributorBayi / price) * 100).toFixed(0)})`;
+
+      if (taxChartInstance) {
+        taxChartInstance.data.datasets[0].data = [
+          rafineri.toFixed(2),
+          otv.toFixed(2),
+          kdv.toFixed(2),
+          distributorBayi.toFixed(2)
+        ];
+        taxChartInstance.update();
+      }
+    }
+
+    // Chart.js Tax Donut
+    function initTaxChart() {
+      const ctx = document.getElementById('fuelTaxChart').getContext('2d');
+      taxChartInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Rafineri & Ham Petrol', 'ÖTV', 'KDV (%20)', 'Dağıtıcı & Bayi'],
+          datasets: [{
+            data: [23.50, 11.29, 7.75, 4.11],
+            backgroundColor: ['#3b82f6', '#f59e0b', '#ef4444', '#10b981'],
+            borderColor: '#111827',
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return ` ${context.label}: ₺${context.raw}`;
+                }
+              }
+            }
+          },
+          cutout: '68%'
+        }
+      });
+    }
+
+    // TAB SWITCHING
+    function switchTab(tab) {
+      activeTab = tab;
+      const tabs = ['fuel', 'lpg', 'tube', 'gas'];
+      tabs.forEach(t => {
+        const btn = document.getElementById(`tabBtn${t.charAt(0).toUpperCase() + t.slice(1)}`);
+        const content = document.getElementById(`tabContent${t.charAt(0).toUpperCase() + t.slice(1)}`);
+        
+        if (t === tab) {
+          content.classList.remove('hidden');
+          btn.className = "px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 bg-amber-500 text-slate-950 shadow-lg shadow-amber-900/30";
+        } else {
+          content.classList.add('hidden');
+          btn.className = "px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 text-slate-300 hover:text-white hover:bg-slate-800";
+        }
+      });
+    }
+
+    // LPG LOGIC
+    function setLpgTank(liters) {
+      selectedLpgTank = liters;
+      document.getElementById('lpgTankSizeDisplay').textContent = liters;
+      calculateLpg();
+    }
+
+    function calculateLpg() {
+      const current = parseFloat(document.getElementById('lpgCurrentPrice').value) || 0;
+      const change = parseFloat(document.getElementById('lpgChangeInput').value) || 0;
+      const newPrice = current + change;
+
+      document.getElementById('resultLpgNewPrice').textContent = `₺${newPrice.toFixed(2)}`;
+      const savings = change * selectedLpgTank;
+      document.getElementById('resultLpgTankSavings').textContent = `+₺${savings.toFixed(2)}`;
+
+      // Benzin vs LPG Saving percentage
+      const benzinPrice = parseFloat(document.getElementById('fuelCurrentPrice').value) || 45.15;
+      const lpgEquivalentPrice = newPrice * 1.18; // 18% higher consumption
+      const savingPercent = ((1 - (lpgEquivalentPrice / benzinPrice)) * 100).toFixed(1);
+      document.getElementById('resultLpgSavingPercent').textContent = `%${Math.max(0, savingPercent)}`;
+
+      const cost100 = (7.8 * newPrice).toFixed(2);
+      document.getElementById('resultLpg100KmCost').textContent = `₺${cost100}`;
+    }
+
+    // TUBE LOGIC
+    function onTubeTypeChange(type) {
+      const item = tubeBasePrices[type];
+      if (item) {
+        document.getElementById('tubeCurrentPrice').value = item.price;
+        calculateTube();
+      }
+    }
+
+    function onTubeTLInput(val) {
+      const current = parseFloat(document.getElementById('tubeCurrentPrice').value) || 1;
+      const diff = parseFloat(val) || 0;
+      const pct = ((diff / current) * 100).toFixed(1);
+      document.getElementById('tubeChangePercent').value = pct;
+      calculateTube();
+    }
+
+    function onTubePercentInput(val) {
+      const current = parseFloat(document.getElementById('tubeCurrentPrice').value) || 1;
+      const pct = parseFloat(val) || 0;
+      const diff = ((current * pct) / 100).toFixed(0);
+      document.getElementById('tubeChangeTL').value = diff;
+      calculateTube();
+    }
+
+    function calculateTube() {
+      const current = parseFloat(document.getElementById('tubeCurrentPrice').value) || 0;
+      const diff = parseFloat(document.getElementById('tubeChangeTL').value) || 0;
+      const newPrice = current + diff;
+      const pct = current > 0 ? ((diff / current) * 100).toFixed(1) : 0;
+
+      document.getElementById('resultTubeNewPrice').textContent = `₺${newPrice.toFixed(2)}`;
+      document.getElementById('resultTubeDiffBadge').textContent = `+₺${diff.toFixed(2)} (+%${pct})`;
+
+      const selType = document.getElementById('tubeTypeSelect').value;
+      const tubeInfo = tubeBasePrices[selType] || tubeBasePrices.tombul_12kg;
+      
+      const dailyCost = (newPrice / tubeInfo.days).toFixed(2);
+      const kgPrice = (newPrice / tubeInfo.kg).toFixed(2);
+
+      document.getElementById('resultTubeDailyCost').textContent = `₺${dailyCost} / gün`;
+      document.getElementById('resultTubeKgPrice').textContent = `₺${kgPrice} / kg`;
+    }
+
+    // NATURAL GAS LOGIC
+    function onGasM3SliderChange(val) {
+      document.getElementById('gasM3Display').textContent = `${val} m³`;
+      calculateGas();
+    }
+
+    function setGasZam(pct) {
+      document.querySelectorAll('#tabContentGas button').forEach(b => {
+        if (b.textContent.includes(`%${pct}`)) {
+          b.className = "py-1.5 rounded-lg bg-orange-600 text-xs font-mono text-white font-bold";
+        } else {
+          b.className = "py-1.5 rounded-lg bg-slate-800 text-xs font-mono text-slate-300 hover:bg-slate-700";
+        }
+      });
+      calculateGas(pct);
+    }
+
+    function calculateGas(forcedZamPct = null) {
+      const baseM3 = parseFloat(document.getElementById('gasUnitPrice').value) || 0;
+      const m3Amount = parseFloat(document.getElementById('sliderGasM3').value) || 220;
+      
+      let zamPct = 20; // default 20%
+      if (forcedZamPct !== null) zamPct = forcedZamPct;
+
+      const newM3 = baseM3 * (1 + (zamPct / 100));
+      const oldBill = baseM3 * m3Amount;
+      const newBill = newM3 * m3Amount;
+      const diffBill = newBill - oldBill;
+
+      document.getElementById('resultGasBill').textContent = `₺${newBill.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      document.getElementById('resultGasDiffBadge').textContent = `+₺${diffBill.toFixed(2)} (%${zamPct} zamla)`;
+      document.getElementById('resultGasNewM3').textContent = `₺${newM3.toFixed(2)} / m³`;
+      document.getElementById('resultGasDailyCost').textContent = `₺${(newBill / 30).toFixed(2)} / gün`;
+      document.getElementById('resultGasSeasonTotal').textContent = `₺${(newBill * 4).toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    }
+
+    // INTERCITY ROUTE CALCULATOR
+    function calculateRoute(km, name) {
+      const consumption = parseFloat(document.getElementById('sliderConsumption').value) || 6.5;
+      const p = parseFloat(document.getElementById('fuelCurrentPrice').value) || 45.15;
+      let change = parseFloat(document.getElementById('fuelChangeInput').value) || 1.50;
+      if (fuelChangeMode === 'indirim') change = -change;
+      const newPrice = p + change;
+
+      const roundTripKm = km * 2;
+      const totalLiters = (roundTripKm / 100) * consumption;
+      const oldCost = totalLiters * p;
+      const newCost = totalLiters * newPrice;
+      const diff = newCost - oldCost;
+
+      document.getElementById('routeTitleText').textContent = `${name} (Gidiş-Dönüş Raporu)`;
+      document.getElementById('routeDetailText').textContent = `${roundTripKm} km toplam mesafe, ortalama ${consumption}L/100km tüketimle hesaplanmıştır.`;
+      document.getElementById('routeTotalNewCost').textContent = `₺${newCost.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      
+      const diffElem = document.getElementById('routeDiffCost');
+      if (diff >= 0) {
+        diffElem.textContent = `+₺${diff.toFixed(2)} Zam Farkı`;
+        diffElem.className = "text-rose-400 font-bold font-mono text-[11px]";
+      } else {
+        diffElem.textContent = `-₺${Math.abs(diff).toFixed(2)} İndirim Avantajı`;
+        diffElem.className = "text-emerald-400 font-bold font-mono text-[11px]";
+      }
+    }
+
+    // SOCIAL SHARE
+    function shareFuelWarning() {
+      const newPrice = document.getElementById('resultNewPrice').textContent;
+      const tankSavings = document.getElementById('resultTankSavings').textContent;
+      const fuelName = activeFuelType === 'benzin' ? 'Benzin' : 'Motorin';
+      const city = cityPrices[activeCityKey]?.name || 'İstanbul';
+
+      const text = `⛽ *AKARYAKIT ZAM ALARMI (${city})*\n\n` +
+                   `🔴 *Yeni Litre Fiyatı:* ${newPrice}\n` +
+                   `💰 *Depoyu Bu Gece Fullersen Kazancın:* ${tankSavings}\n\n` +
+                   `Aracınızın deposuna ve aylık masrafınıza etkisini hesaplayın:\n` +
+                   `https://pratik-araclar.pratikweb.workers.dev/akaryakit-zam-hesaplayici/`;
+
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+    }
+
+    function copyFuelSummary() {
+      const newPrice = document.getElementById('resultNewPrice').textContent;
+      const tankSavings = document.getElementById('resultTankSavings').textContent;
+      const text = `Akaryakıt Yeni Fiyat: ${newPrice} | Depo Kârı: ${tankSavings} - Pratik Araçlar: https://pratik-araclar.pratikweb.workers.dev/akaryakit-zam-hesaplayici/`;
+
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById('btnCopyFuel');
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = '<i class="fa-solid fa-check text-emerald-400"></i> Kopyalandı!';
+        setTimeout(() => { btn.innerHTML = originalHTML; }, 2000);
+      });
+    }
+  </script>
+</body>
+</html>

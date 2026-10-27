@@ -53,3 +53,8 @@
 - URL: https://pratik-araclar.pratikweb.workers.dev/nobetci-eczane/
 - Açıklama: Türkiye genelinde 81 il ve ilçeler için kullanıcının GPS konumuna en yakın nöbetçi eczaneleri mesafesine göre (metre ve km cinsinden) sıralayan harita tabanlı arama motoru. Canlı OpenStreetMap eczane verisi, tek tıkla doğrudan arama (tel:), Google Maps ve Apple Maps ile canlı navigasyon/yol tarifi başlatma, WhatsApp ile konum ve adres paylaşımı ve 81 il Eczacı Odaları resmi nöbet listesi doğrulama bağlantıları.
 - Hedef Kitle: Gece, hafta sonu veya tatil günlerinde acil ilaç arayan hastalar, hasta yakınları, bebekli aileler, nöbetçi eczane adresi ve telefonunu teyit etmek isteyen vatandaşlar.
+
+### 11. Akaryakıt, Zam & Enerji Hesaplayıcı
+- URL: https://pratik-araclar.pratikweb.workers.dev/akaryakit-zam-hesaplayici/
+- Açıklama: Benzin (95 Oktan), motorin (dizel), LPG otogaz, mutfak/piknik tüpü (12 kg ve 2 kg) ile konut doğalgazı (m³ tüketim) zam ve indirimlerini anında hesaplayan çok modüllü enerji simülatörü. İl bazında (İstanbul Avrupa/Anadolu, Ankara, İzmir, Bursa, Antalya vb.) güncel EPDK tavan fiyatları, gece yarısı (00:01) zammı geri sayım sayacı, araç depo kapasitesine göre (40L, 45L, 50L, 60L) zam öncesi depo fulletme kâr/tasarruf hesabı, aylık kilometre ve yakıt tüketimine göre bütçe ek masrafı, Chart.js ile 1 litre benzindeki vergi dağılımı (ÖTV, KDV, rafineri, bayi kârı), popüler şehirlerarası seyahat (İstanbul-Ankara, İstanbul-İzmir vb.) yakıt maliyeti analizi ve tek tıkla WhatsApp zam raporu paylaşımı.
+- Hedef Kitle: Araç sahipleri, sürücüler, filo yöneticileri, kuryeler, tüp gaz kullanan haneler ve kış doğalgaz faturasını bütçelemek isteyen tüm tüketiciler.
