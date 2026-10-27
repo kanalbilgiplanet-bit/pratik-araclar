@@ -38,3 +38,8 @@
 - URL: https://pratik-araclar.pratikweb.workers.dev/boru-bukme-hesaplayici/
 - Açıklama: Metal, elektrik (EMT) ve tesisat boruları için hassas büküm hesaplama aracı. Trigonometrik offset (engel aşma), 90 derece dirsek ve 3 noktalı eyer bükümü hesapları. İki işaret arası mesafe, kısalma (shrink) payı, açınım yay boyu, canlı ölçekli SVG şematik çizim ve standart büküm çarpanları cetveli.
 - Hedef Kitle: Elektrik teknisyenleri, tesisatçılar, boru büküm atölyeleri, CNC büküm operatörleri, şantiye ustaları ve makine mühendisliği öğrencileri.
+
+### 8. Canlı Sel Uyarısı & Meteorolojik Yağış Radarı
+- URL: https://pratik-araclar.pratikweb.workers.dev/sel-uyarisi/
+- Açıklama: Türkiye geneli anlık meteorolojik Doppler yağış radarı (RainViewer) ve Open-Meteo gerçek zamanlı tahmin motoru entegrasyonu. Canlı sağanak bulut akışı animasyonu (son 2 saat), il/ilçe bazında anlık yağış debisi (kg/m²), 6 saatlik yağış projeksiyonu, sarı ve kırmızı sel/su baskını alarm seviyeleri, acil sel güvenlik rehberi ve tek tıkla WhatsApp konumlu afet uyarısı paylaşımı.
+- Hedef Kitle: Şiddetli sağanak ve fırtına anında canlı yağış ve sel tehlikesi arayanlar, araç sahipleri, zemin/bodrum kat sakinleri, afet bölgesinde seyahat eden sürücüler.

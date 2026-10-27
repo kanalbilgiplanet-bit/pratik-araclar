@@ -108,7 +108,7 @@
         <!-- Live Tool Count Badge -->
         <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-800/90 border border-slate-700/80 text-xs font-semibold text-slate-200 shadow-sm">
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span>7 Aktif Araç</span>
+          <span>8 Aktif Araç</span>
         </div>
 
         <!-- Emergency Disaster Radar Quick Link -->
@@ -472,6 +472,48 @@
         </a>
       </article>
 
+      <!-- TOOL 8: Canlı Sel Uyarısı & Yağış Radarı (YENİ - FLAŞ TRAFİK) -->
+      <article class="tool-card group relative flex flex-col justify-between bg-gradient-to-b from-slate-900/90 to-slate-900/50 border border-slate-800 rounded-3xl p-6 hover:border-sky-500/50 transition-all duration-300 hover:shadow-2xl hover:shadow-sky-500/10 hover:-translate-y-1"
+               data-category="harita" 
+               data-keywords="sel uyarısı yağış radarı canlı radar hava durumu fırtına sağanak taşkın su baskını doppler rainviewer open-meteo afet alarm istanbul antalya izmir">
+        <div class="relative">
+          <div class="flex items-start justify-between mb-4">
+            <div class="w-12 h-12 rounded-2xl bg-sky-500/10 border border-sky-500/20 text-sky-400 flex items-center justify-center text-xl group-hover:scale-110 group-hover:bg-sky-500 group-hover:text-slate-950 transition-all duration-300">
+              <i class="fa-solid fa-cloud-showers-heavy"></i>
+            </div>
+            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-rose-500/15 text-rose-400 border border-rose-500/30">
+              <span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping"></span>
+              Canlı Doppler Radarı
+            </span>
+          </div>
+
+          <h2 class="text-xl font-bold text-white group-hover:text-sky-300 transition-colors mb-2">
+            Canlı Sel Uyarısı & Yağış Radarı
+          </h2>
+          
+          <p class="text-slate-400 text-sm leading-relaxed mb-6">
+            Türkiye geneli anlık Doppler yağış radarı bulut akışı, ilçe bazlı yağış debisi ($kg/m^2$) ve ani sel/su baskını sarı/kırmızı alarm takibi.
+          </p>
+
+          <div class="flex flex-wrap gap-2 mb-6">
+            <span class="px-2.5 py-1 text-xs rounded-lg bg-slate-800/80 text-slate-300 border border-slate-700/50">
+              <i class="fa-solid fa-satellite-dish text-sky-400 mr-1"></i>Doppler Radarı
+            </span>
+            <span class="px-2.5 py-1 text-xs rounded-lg bg-slate-800/80 text-slate-300 border border-slate-700/50">
+              <i class="fa-solid fa-triangle-exclamation text-rose-400 mr-1"></i>Sel Alarmı
+            </span>
+            <span class="px-2.5 py-1 text-xs rounded-lg bg-slate-800/80 text-slate-300 border border-slate-700/50">
+              <i class="fa-solid fa-location-arrow text-emerald-400 mr-1"></i>Anlık Konum
+            </span>
+          </div>
+        </div>
+
+        <a href="sel-uyarisi/" class="inline-flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-medium text-sm transition-colors shadow-lg shadow-sky-600/20 group-hover:shadow-sky-600/40">
+          <span>Radarı Aç</span>
+          <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
+        </a>
+      </article>
+
       <!-- YENİ ARAÇ ÖNER KARTI -->
       <article class="border border-dashed border-slate-800 rounded-3xl p-6 flex flex-col items-center justify-center text-center hover:border-indigo-500/40 hover:bg-slate-900/30 transition-all duration-300">
         <div class="w-12 h-12 rounded-2xl bg-slate-800 text-slate-400 flex items-center justify-center text-xl mb-4">
@@ -513,6 +555,7 @@
           <a href="sayac-sorgulama/" class="hover:text-amber-400 transition text-slate-300">Sayaç 186</a>
           <a href="boru-bukme-hesaplayici/" class="hover:text-amber-400 transition text-slate-300">Boru Büküm</a>
           <a href="sel-haritasi/" class="hover:text-cyan-300 transition text-slate-300">Sel Haritası</a>
+          <a href="sel-uyarisi/" class="hover:text-sky-300 transition text-slate-300 font-bold">Canlı Sel Radarı</a>
         </div>
       </div>
       

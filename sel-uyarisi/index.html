@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="tr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canlı Sel Uyarı Haritası & Yağış Radarı | Pratik Araçlar</title>
+  <meta name="description" content="Türkiye geneli anlık yağış, canlı meteorolojik Doppler radarı, sel riski ve ani su baskını alarm haritası. İstanbul, Antalya, İzmir ve 81 il için canlı yağış takibi.">
+  <meta name="keywords" content="sel uyarı haritası, anlık yağış haritası, canlı yağış radarı, sel riski, istanbul sel haritası, yağış uyarısı, meteoroloji radarı, su baskını alarmı">
+  <link rel="canonical" href="https://pratik-araclar.pratikweb.workers.dev/sel-uyarisi/">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%230284c7'/%3E%3Cstop offset='100%25' stop-color='%23e11d48'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23bg)'/%3E%3Cpath d='M32 12 C24 24 16 32 16 42 A16 16 0 0 0 48 42 C48 32 40 24 32 12 Z' fill='%23ffffff'/%3E%3C/svg%3E">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://pratik-araclar.pratikweb.workers.dev/sel-uyarisi/">
+  <meta property="og:title" content="Anlık Sel Uyarı Haritası & Canlı Yağış Radarı">
+  <meta property="og:description" content="Türkiye geneli anlık Doppler yağış radarı ve sel riski alarmı. Bulunduğunuz yerin anlık yağış miktarını ve sel tehlikesini görün.">
+  <meta property="og:locale" content="tr_TR">
+  <meta property="og:site_name" content="Pratik Araçlar">
+
+  <!-- Twitter / X Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://pratik-araclar.pratikweb.workers.dev/sel-uyarisi/">
+  <meta name="twitter:title" content="Anlık Sel Uyarı Haritası & Canlı Yağış Radarı">
+  <meta name="twitter:description" content="Türkiye geneli anlık Doppler yağış radarı ve sel riski alarmı.">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            midnight: '#0b0f19',
+            surface: '#111827',
+            surfaceCard: '#1a2234',
+            surfaceBorder: '#28354d'
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Leaflet CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+  <!-- FontAwesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "name": "Canlı Sel Uyarı Haritası & Yağış Radarı",
+        "url": "https://pratik-araclar.pratikweb.workers.dev/sel-uyarisi/",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "All",
+        "description": "Türkiye geneli canlı meteorolojik Doppler yağış radarı, anlık sağanak ve sel riski uyarı haritası.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "TRY"
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Canlı sel uyarısı ve yağış radarı nasıl çalışır?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Harita, küresel meteorolojik Doppler radarlarından alınan anlık yağış bulutu verilerini (RainViewer) ve Open-Meteo canlı hava durumu tahmin modelini birleştirerek anlık yağış debisini (kg/m²) ve sel alarm seviyesini harita üzerinde görselleştirir."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Sarı ve kırmızı sel uyarısı ne anlama gelir?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Sarı Alarm (2-15 mm/saat): Dikkatli olunması gereken yerel sağanak yağışı ifade eder. Kırmızı Alarm (>15 mm/saat veya fırtına): Ani sel, dere taşkını ve su baskını tehlikesi bulunduğunu, dere yatakları ve bodrum katlardan uzak durulması gerektiğini gösterir."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    .leaflet-container {
+      background: #0b0f19 !important;
+      font-family: inherit;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 5px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.6);
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(100, 116, 139, 0.4);
+      border-radius: 4px;
+    }
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.15); opacity: 0.4; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+    .radar-pulse {
+      animation: pulse-ring 2s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="bg-[#0b0f19] text-slate-100 min-h-screen flex flex-col font-sans antialiased overflow-x-hidden">
+
+  <!-- Top Navigation Header -->
+  <header class="border-b border-slate-800/80 bg-slate-900/80 backdrop-blur-md sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      
+      <div class="flex items-center gap-3">
+        <a href="../" class="flex items-center gap-2 group transition" title="Pratik Araçlar Vitrinine Dön">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-sky-600 to-rose-600 flex items-center justify-center text-white shadow-lg shadow-sky-900/30 group-hover:scale-105 transition">
+            <i class="fa-solid fa-cloud-showers-heavy text-sm"></i>
+          </div>
+          <div class="flex flex-col">
+            <span class="font-bold text-white text-base tracking-tight leading-none group-hover:text-sky-300 transition">
+              Pratik<span class="text-sky-400">Araçlar</span>
+            </span>
+            <span class="text-[10px] text-slate-400 tracking-wider">CANLI SEL RADARI</span>
+          </div>
+        </a>
+
+        <div class="hidden sm:flex items-center gap-2 ml-3 pl-3 border-l border-slate-700/60">
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20">
+            <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
+            Canlı Doppler Radarı
+          </span>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="flex items-center gap-2.5">
+        <a href="../sel-haritasi/" class="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-slate-700/60 hover:text-white transition">
+          <i class="fa-solid fa-water text-cyan-400"></i>
+          <span>İstanbul Dere/Kot Haritası</span>
+        </a>
+        <a href="tel:112" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-red-600 hover:bg-red-500 text-white shadow-sm transition">
+          <i class="fa-solid fa-phone"></i>
+          <span>112 Acil</span>
+        </a>
+        <a href="../" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-slate-700/60 transition">
+          <i class="fa-solid fa-arrow-left"></i>
+          <span class="hidden sm:inline">Vitrin</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Region Quick Switcher Pills -->
+  <div class="bg-slate-900/60 border-b border-slate-800/80 px-4 py-2">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-2 overflow-x-auto custom-scrollbar text-xs">
+      <div class="flex items-center gap-1.5 shrink-0 text-slate-400 mr-2">
+        <i class="fa-solid fa-location-crosshairs text-sky-400"></i>
+        <span class="hidden sm:inline">Bölgeye Odaklan:</span>
+      </div>
+      <div class="flex items-center gap-2 shrink-0">
+        <button onclick="panToRegion(41.015, 28.979, 10, 'İstanbul')" class="region-btn px-2.5 py-1 rounded-md bg-sky-600/20 text-sky-300 border border-sky-500/30 hover:bg-sky-600/30 transition font-medium">İstanbul & Marmara</button>
+        <button onclick="panToRegion(36.884, 30.705, 10, 'Antalya')" class="region-btn px-2.5 py-1 rounded-md bg-slate-800 text-slate-300 border border-slate-700/60 hover:bg-slate-700 hover:text-white transition">Antalya & Akdeniz</button>
+        <button onclick="panToRegion(38.423, 27.142, 10, 'İzmir')" class="region-btn px-2.5 py-1 rounded-md bg-slate-800 text-slate-300 border border-slate-700/60 hover:bg-slate-700 hover:text-white transition">İzmir & Ege</button>
+        <button onclick="panToRegion(41.025, 40.517, 9, 'Rize')" class="region-btn px-2.5 py-1 rounded-md bg-slate-800 text-slate-300 border border-slate-700/60 hover:bg-slate-700 hover:text-white transition">Doğu Karadeniz (Rize-Trabzon)</button>
+        <button onclick="panToRegion(39.933, 32.859, 10, 'Ankara')" class="region-btn px-2.5 py-1 rounded-md bg-slate-800 text-slate-300 border border-slate-700/60 hover:bg-slate-700 hover:text-white transition">İç Anadolu (Ankara)</button>
+        <button onclick="panToRegion(38.963, 35.243, 6, 'Türkiye Geneli')" class="region-btn px-2.5 py-1 rounded-md bg-slate-800 text-slate-300 border border-slate-700/60 hover:bg-slate-700 hover:text-white transition">Türkiye Geneli</button>
+      </div>
+      <button onclick="locateUser()" class="shrink-0 ml-auto inline-flex items-center gap-1 px-3 py-1 rounded-md bg-emerald-600/20 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-600/30 transition font-medium">
+        <i class="fa-solid fa-location-arrow"></i>
+        <span>Konumum</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Workspace (Map + Live Panel) -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex flex-col gap-6">
+
+    <!-- Top Headline Banner -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gradient-to-r from-slate-900 via-sky-950/30 to-slate-900 border border-slate-800 p-4 sm:p-5 rounded-2xl">
+      <div>
+        <div class="flex items-center gap-2 mb-1">
+          <span class="px-2 py-0.5 rounded text-[10px] font-bold tracking-wide uppercase bg-sky-500/20 text-sky-400 border border-sky-500/30">CANLI HAVA & YAĞIŞ RADARI</span>
+          <span id="liveRadarClock" class="text-xs text-slate-400 flex items-center gap-1">
+            <i class="fa-regular fa-clock"></i> <span id="radarTimeLabel">Güncelleniyor...</span>
+          </span>
+        </div>
+        <h1 class="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
+          Anlık Sel Uyarı Haritası & Canlı Yağış Radarı
+        </h1>
+        <p class="text-xs sm:text-sm text-slate-400 mt-1 max-w-3xl">
+          Meteorolojik Doppler radarı yağış bulutlarını anlık izler; konumunuzdaki anlık yağış miktarını ($kg/m^2$) ve ani sel/su baskını riskini gösterir.
+        </p>
+      </div>
+
+      <!-- Quick Status Badge -->
+      <div id="generalAlarmBadge" class="shrink-0 flex items-center gap-3 bg-slate-950/60 border border-slate-800/80 px-4 py-3 rounded-xl">
+        <div class="w-10 h-10 rounded-lg bg-sky-500/20 text-sky-400 flex items-center justify-center text-lg">
+          <i class="fa-solid fa-satellite-dish"></i>
+        </div>
+        <div>
+          <div class="text-[10px] text-slate-400 font-medium">RADAR BAĞLANTISI</div>
+          <div id="radarConnectionText" class="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            Canlı Veri Alınıyor
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Map & Side Details Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      
+      <!-- Interactive Leaflet Map Box (8 Cols) -->
+      <div class="lg:col-span-8 flex flex-col gap-3">
+        
+        <div class="relative w-full h-[480px] sm:h-[560px] rounded-2xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+          
+          <!-- Leaflet Map Container -->
+          <div id="radarMap" class="w-full h-full z-0"></div>
+
+          <!-- Radar Timeline & Playback Controller (Floating on Map Bottom) -->
+          <div class="absolute bottom-4 left-4 right-4 sm:left-6 sm:right-6 bg-slate-900/90 backdrop-blur-md border border-slate-700/80 rounded-xl p-3 z-10 flex flex-col sm:flex-row items-center gap-3 shadow-xl">
+            <div class="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-start">
+              <button id="radarPlayBtn" onclick="toggleRadarPlay()" class="px-3.5 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-medium text-xs flex items-center gap-2 shadow-sm transition">
+                <i id="radarPlayIcon" class="fa-solid fa-play"></i>
+                <span id="radarPlayText">Oynat</span>
+              </button>
+              <span id="radarFrameLabel" class="text-xs font-mono font-semibold text-sky-300 min-w-[70px] text-center">
+                --:--
+              </span>
+            </div>
+
+            <!-- Frame Range Slider -->
+            <div class="flex-1 w-full flex items-center gap-2">
+              <span class="text-[10px] text-slate-400 shrink-0">-2 Saat</span>
+              <input type="range" id="radarSlider" min="0" max="12" value="12" step="1" oninput="onSliderChange(this.value)" class="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-sky-500">
+              <span class="text-[10px] text-emerald-400 font-semibold shrink-0">Şimdi</span>
+            </div>
+
+            <!-- Opacity Toggle -->
+            <div class="hidden md:flex items-center gap-2 text-xs text-slate-400 shrink-0 pl-2 border-l border-slate-700">
+              <span>Şeffaflık:</span>
+              <button onclick="setRadarOpacity(0.5)" class="px-2 py-0.5 rounded bg-slate-800 text-[11px] hover:text-white">50%</button>
+              <button onclick="setRadarOpacity(0.8)" class="px-2 py-0.5 rounded bg-sky-600/30 text-sky-300 text-[11px] hover:text-white font-bold">80%</button>
+              <button onclick="setRadarOpacity(1.0)" class="px-2 py-0.5 rounded bg-slate-800 text-[11px] hover:text-white">100%</button>
+            </div>
+          </div>
+
+          <!-- Radar Legend (Floating on Map Top-Right) -->
+          <div class="absolute top-4 right-4 bg-slate-900/90 backdrop-blur-md border border-slate-800 rounded-xl p-2.5 z-10 text-[11px] space-y-1.5 shadow-lg hidden sm:block">
+            <div class="font-bold text-slate-300 text-[10px] uppercase tracking-wider mb-1 flex items-center gap-1.5">
+              <i class="fa-solid fa-droplet text-sky-400"></i> Yağış Yoğunluğu
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-3.5 h-3.5 rounded bg-[#40a0ff] border border-slate-700"></div>
+              <span class="text-slate-300">Hafif Çisenti</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-3.5 h-3.5 rounded bg-[#00e400] border border-slate-700"></div>
+              <span class="text-slate-300">Orta Yağış</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-3.5 h-3.5 rounded bg-[#ffff00] border border-slate-700"></div>
+              <span class="text-slate-300">Kuvvetli Sağanak</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-3.5 h-3.5 rounded bg-[#ff0000] border border-slate-700"></div>
+              <span class="text-rose-400 font-semibold">Çok Şiddetli / Sel Riski</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-3.5 h-3.5 rounded bg-[#ff00ff] border border-slate-700"></div>
+              <span class="text-purple-300 font-semibold">Fırtına / Dolu</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Info Badges Under Map -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+          <div class="bg-slate-900/60 border border-slate-800 p-3 rounded-xl flex items-center gap-3">
+            <i class="fa-solid fa-shield-halved text-sky-400 text-lg"></i>
+            <div>
+              <div class="text-[10px] text-slate-400">Hizmet Tipi</div>
+              <div class="font-semibold text-slate-200">Canlı Doppler Radarı</div>
+            </div>
+          </div>
+          <div class="bg-slate-900/60 border border-slate-800 p-3 rounded-xl flex items-center gap-3">
+            <i class="fa-solid fa-bolt text-amber-400 text-lg"></i>
+            <div>
+              <div class="text-[10px] text-slate-400">Yenileme Aralığı</div>
+              <div class="font-semibold text-slate-200">Her 10 Dakika</div>
+            </div>
+          </div>
+          <div class="bg-slate-900/60 border border-slate-800 p-3 rounded-xl flex items-center gap-3">
+            <i class="fa-solid fa-map-location-dot text-emerald-400 text-lg"></i>
+            <div>
+              <div class="text-[10px] text-slate-400">Kapsama Alanı</div>
+              <div class="font-semibold text-slate-200">81 İl & Türkiye</div>
+            </div>
+          </div>
+          <div class="bg-slate-900/60 border border-slate-800 p-3 rounded-xl flex items-center gap-3">
+            <i class="fa-solid fa-circle-check text-cyan-400 text-lg"></i>
+            <div>
+              <div class="text-[10px] text-slate-400">Maliyet</div>
+              <div class="font-semibold text-slate-200">%100 Ücretsiz</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Live Location & Flood Warning Details Panel (4 Cols) -->
+      <div class="lg:col-span-4 flex flex-col gap-4">
+        
+        <!-- Location Risk Card -->
+        <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl relative overflow-hidden">
+          
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+            <div>
+              <div class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">SEÇİLİ BÖLGE RAPORU</div>
+              <h2 id="activeLocationName" class="text-lg font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-location-dot text-sky-400 text-sm"></i>
+                <span>İstanbul (Merkez)</span>
+              </h2>
+            </div>
+            <button onclick="refreshActiveLocation()" title="Verileri Güncelle" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition">
+              <i class="fa-solid fa-arrows-rotate text-xs"></i>
+            </button>
+          </div>
+
+          <!-- Risk Status Box -->
+          <div id="riskLevelCard" class="mt-4 p-4 rounded-xl bg-slate-800/80 border border-slate-700/60 flex items-center gap-4 transition-all">
+            <div id="riskIconContainer" class="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl shrink-0">
+              <i id="riskIcon" class="fa-solid fa-cloud-sun"></i>
+            </div>
+            <div>
+              <div id="riskTitle" class="text-sm font-bold text-emerald-300">Düşük Risk / Güvenli</div>
+              <div id="riskDescription" class="text-xs text-slate-400 mt-0.5">Şu an için ani sel veya kritik yağış tehdidi bulunmuyor.</div>
+            </div>
+          </div>
+
+          <!-- Weather & Rain Metrics Grid -->
+          <div class="grid grid-cols-2 gap-3 mt-4 text-xs">
+            
+            <div class="bg-slate-950/60 border border-slate-800/80 p-3 rounded-xl">
+              <div class="text-[10px] text-slate-400 flex items-center gap-1.5 mb-1">
+                <i class="fa-solid fa-cloud-rain text-sky-400"></i> Anlık Yağış
+              </div>
+              <div class="text-base font-extrabold text-white">
+                <span id="currentRainRate">0.0</span> <span class="text-xs font-normal text-slate-400">kg/m²</span>
+              </div>
+              <div id="rainRateLabel" class="text-[10px] text-slate-400 mt-0.5">Yağış yok</div>
+            </div>
+
+            <div class="bg-slate-950/60 border border-slate-800/80 p-3 rounded-xl">
+              <div class="text-[10px] text-slate-400 flex items-center gap-1.5 mb-1">
+                <i class="fa-solid fa-umbrella text-indigo-400"></i> Yağış Olasılığı
+              </div>
+              <div class="text-base font-extrabold text-white">
+                %<span id="currentRainProb">15</span>
+              </div>
+              <div id="rainProbLabel" class="text-[10px] text-slate-400 mt-0.5">Düşük ihtimal</div>
+            </div>
+
+            <div class="bg-slate-950/60 border border-slate-800/80 p-3 rounded-xl">
+              <div class="text-[10px] text-slate-400 flex items-center gap-1.5 mb-1">
+                <i class="fa-solid fa-temperature-half text-amber-400"></i> Sıcaklık
+              </div>
+              <div class="text-base font-extrabold text-white">
+                <span id="currentTemp">--</span> <span class="text-xs font-normal text-slate-400">°C</span>
+              </div>
+              <div id="currentWeatherDesc" class="text-[10px] text-slate-400 mt-0.5">Parçalı bulutlu</div>
+            </div>
+
+            <div class="bg-slate-950/60 border border-slate-800/80 p-3 rounded-xl">
+              <div class="text-[10px] text-slate-400 flex items-center gap-1.5 mb-1">
+                <i class="fa-solid fa-wind text-teal-400"></i> Rüzgar Hızı
+              </div>
+              <div class="text-base font-extrabold text-white">
+                <span id="currentWind">--</span> <span class="text-xs font-normal text-slate-400">km/s</span>
+              </div>
+              <div id="currentWindDesc" class="text-[10px] text-slate-400 mt-0.5">Sakin</div>
+            </div>
+
+          </div>
+
+          <!-- Next 6 Hours Rain Timeline -->
+          <div class="mt-4 pt-3 border-t border-slate-800">
+            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center justify-between">
+              <span>Gelecek 6 Saat Yağış Beklentisi</span>
+              <span class="text-sky-400">Open-Meteo</span>
+            </div>
+            <div id="hourlyTimelineContainer" class="grid grid-cols-6 gap-1 text-center">
+              <!-- Dynamically Populated Hours -->
+              <div class="bg-slate-950/50 p-2 rounded-lg border border-slate-800">
+                <div class="text-[10px] text-slate-400">--:--</div>
+                <div class="text-xs font-bold text-slate-300 mt-1">0 mm</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- WhatsApp & Social Share Button -->
+          <div class="mt-5 pt-4 border-t border-slate-800 flex flex-col gap-2">
+            <button onclick="shareRainWarning()" class="w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-900/30 transition">
+              <i class="fa-brands fa-whatsapp text-sm"></i>
+              <span>Bu Bölgenin Yağış/Sel Raporunu Paylaş</span>
+            </button>
+            <a href="../sel-haritasi/" class="w-full py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium text-xs flex items-center justify-center gap-2 border border-slate-700/60 transition">
+              <i class="fa-solid fa-water text-cyan-400"></i>
+              <span>İstanbul Dere Yatağı & Kot Analizine Git</span>
+            </a>
+          </div>
+
+        </div>
+
+        <!-- Emergency Flood Safety Instructions Card -->
+        <div class="bg-slate-900/70 border border-slate-800 rounded-2xl p-4 text-xs space-y-2.5">
+          <div class="font-bold text-amber-400 flex items-center gap-2">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span>Ani Sel ve Su Baskınında Altın Kurallar</span>
+          </div>
+          <ul class="space-y-1.5 text-slate-300 text-[11px] leading-relaxed list-disc list-inside">
+            <li><strong>Dere ve vadi yataklarından</strong> derhal yüksek kotlu güvenli alanlara çıkın.</li>
+            <li>Bodrum kat, alt geçit ve zemin altı otoparklara <strong>kesinlikle girmeyin</strong>.</li>
+            <li>Su basmış yollara aracınızla girmeyin; <strong>30 cm su bir aracı sürükleyebilir</strong>.</li>
+            <li>Elektrik direklerinden ve su birikintisindeki kablolardan uzak durun.</li>
+            <li>Acil durumlarda vakit kaybetmeden <strong>112 Acil Çağrı</strong> hattını arayın.</li>
+          </ul>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Educational & SEO FAQ Section -->
+    <section class="mt-8 pt-8 border-t border-slate-800/80">
+      <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+        <i class="fa-solid fa-circle-question text-sky-400"></i>
+        <span>Canlı Yağış Radarı ve Sel Uyarıları Hakkında Sıkça Sorulanlar</span>
+      </h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+        <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl space-y-1.5">
+          <h4 class="font-semibold text-slate-200">Radar haritasındaki renkler ne anlama gelir?</h4>
+          <p class="text-slate-400 leading-relaxed">
+            Mavi renk hafif çisentiyi, yeşil normal yağışı, sarı kuvvetli sağanağı, kırmızı ve mor ise ani sel ve su baskını yaratabilecek çok şiddetli yağış ve fırtına kütlelerini gösterir.
+          </p>
+        </div>
+        <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl space-y-1.5">
+          <h4 class="font-semibold text-slate-200">Veriler ne sıklıkla güncellenir?</h4>
+          <p class="text-slate-400 leading-relaxed">
+            Doppler meteoroloji radarı her 10 dakikada bir en güncel uydu/radar kütlelerini çeker. Konumunuza özel yağış ve rüzgar tahminleri ise Open-Meteo küresel modelleriyle anlık hesaplanır.
+          </p>
+        </div>
+        <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl space-y-1.5">
+          <h4 class="font-semibold text-slate-200">İstanbul Sel Haritası ile bu araç arasındaki fark nedir?</h4>
+          <p class="text-slate-400 leading-relaxed">
+            İstanbul Sel Haritası ilçelerin topoğrafik yapısını ve geçmiş taşkın riski olan dere yataklarını inceler. Bu araç ise şu anki canlı bulut hareketlerini ve anlık yağış debisini gösterir.
+          </p>
+        </div>
+        <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl space-y-1.5">
+          <h4 class="font-semibold text-slate-200">Resmi uyarılar nereden takip edilmelidir?</h4>
+          <p class="text-slate-400 leading-relaxed">
+            Bu platform vatandaş farkındalığı için açık kaynak verilerle çalışır. Resmi afet ve sel uyarıları için T.C. İçişleri Bakanlığı AFAD ve Meteoroloji Genel Müdürlüğü (MGM) bültenlerini takip ediniz.
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800/80 bg-slate-900/60 mt-12 py-8 text-xs text-slate-400">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-2">
+          <span class="font-bold text-white tracking-tight">Pratik<span class="text-sky-400">Araçlar</span></span>
+          <span>•</span>
+          <span class="text-slate-400">Canlı Sel Uyarısı & Yağış Radarı</span>
+        </div>
+        <div class="flex items-center gap-6">
+          <a href="../" class="hover:text-sky-300 transition text-slate-300 font-medium">Ana Vitrin</a>
+          <a href="../sel-haritasi/" class="hover:text-sky-300 transition text-slate-300 font-medium">İstanbul Sel Haritası</a>
+          <a href="../acil-durum-radar/" class="hover:text-sky-300 transition text-slate-300 font-medium">AcilDurumRadar</a>
+        </div>
+      </div>
+      
+      <!-- Legal Notice -->
+      <div class="pt-4 border-t border-slate-800/60 text-[11px] text-slate-400 leading-relaxed text-center sm:text-left flex flex-col sm:flex-row items-center gap-2">
+        <i class="fa-solid fa-scale-balanced text-amber-400 text-xs shrink-0"></i>
+        <span><strong>Yasal Bilgilendirme:</strong> Bu sayfadaki Doppler radar görüntüleri ve hava durumu analizleri açık kaynak meteorolojik modeller (RainViewer & Open-Meteo) ile genel farkındalık amacıyla sunulmaktadır. Can ve mal güvenliği gerektiren acil durumlarda AFAD, Valilik ve MGM resmi uyarılarını dikkate alınız.</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script Logic: Leaflet + RainViewer Doppler Radar + Open-Meteo -->
+  <script>
+    // State
+    let map = null;
+    let radarLayers = [];
+    let radarTimestamps = [];
+    let currentRadarIndex = 0;
+    let isPlaying = false;
+    let playInterval = null;
+    let radarOpacity = 0.8;
+    let activeLat = 41.015;
+    let activeLng = 28.979;
+    let activeLocationTitle = 'İstanbul (Merkez)';
+    let userMarker = null;
+
+    // Initialize Map
+    function initMap() {
+      map = L.map('radarMap', {
+        center: [activeLat, activeLng],
+        zoom: 9,
+        zoomControl: true,
+        attributionControl: false
+      });
+
+      // Dark Basemap (CartoDB DarkMatter)
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        maxZoom: 18,
+        subdomains: 'abcd'
+      }).addTo(map);
+
+      // Attribution
+      L.control.attribution({ position: 'bottomright' })
+        .addAttribution('&copy; <a href="https://www.openstreetmap.org/copyright" class="text-slate-500">OSM</a> | <a href="https://www.rainviewer.com/" class="text-sky-400">RainViewer</a>')
+        .addTo(map);
+
+      // Add default location pin
+      updateMarker(activeLat, activeLng, activeLocationTitle);
+
+      // Map click event: inspect clicked location
+      map.on('click', function(e) {
+        activeLat = e.latlng.lat;
+        activeLng = e.latlng.lng;
+        activeLocationTitle = `Seçilen Nokta (${activeLat.toFixed(2)}, ${activeLng.toFixed(2)})`;
+        updateMarker(activeLat, activeLng, activeLocationTitle);
+        fetchLocationWeather(activeLat, activeLng, activeLocationTitle);
+      });
+
+      // Load Live Radar Frames
+      loadRainViewerRadar();
+
+      // Load initial weather data for Istanbul
+      fetchLocationWeather(activeLat, activeLng, activeLocationTitle);
+    }
+
+    // Update marker pin
+    function updateMarker(lat, lng, title) {
+      if (userMarker) {
+        map.removeLayer(userMarker);
+      }
+      userMarker = L.circleMarker([lat, lng], {
+        radius: 8,
+        fillColor: '#38bdf8',
+        color: '#ffffff',
+        weight: 2,
+        opacity: 1,
+        fillOpacity: 0.9
+      }).addTo(map);
+
+      userMarker.bindPopup(`<strong class="text-slate-900">${title}</strong><br><span class="text-xs text-slate-600">Yağış raporu yükleniyor...</span>`).openPopup();
+    }
+
+    // Fetch RainViewer Doppler Radar Tiles
+    async function loadRainViewerRadar() {
+      try {
+        const res = await fetch('https://api.rainviewer.com/public/weather-maps.json');
+        if (!res.ok) throw new Error('Radar API erişilemedi');
+        const data = await res.json();
+
+        if (!data.radar || !data.radar.past || data.radar.past.length === 0) {
+          document.getElementById('radarConnectionText').innerHTML = '<span class="text-amber-400">Radar Verisi Bekleniyor</span>';
+          return;
+        }
+
+        const host = data.host;
+        radarTimestamps = data.radar.past;
+        currentRadarIndex = radarTimestamps.length - 1;
+
+        // Create tile layers for each timestamp
+        radarLayers = radarTimestamps.map((item) => {
+          const tileUrl = `${host}${item.path}/256/{z}/{x}/{y}/2/1_1.png`;
+          return L.tileLayer(tileUrl, {
+            opacity: 0,
+            zIndex: 100
+          });
+        });
+
+        // Add all layers to map
+        radarLayers.forEach(layer => layer.addTo(map));
+
+        // Show the latest frame
+        showRadarFrame(currentRadarIndex);
+
+        // Update slider attributes
+        const slider = document.getElementById('radarSlider');
+        slider.max = radarTimestamps.length - 1;
+        slider.value = currentRadarIndex;
+
+        document.getElementById('radarConnectionText').innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Canlı Doppler Aktif';
+
+      } catch (err) {
+        console.error('Radar yüklenemedi:', err);
+        document.getElementById('radarConnectionText').innerHTML = '<span class="text-rose-400">Bağlantı Hatası</span>';
+      }
+    }
+
+    // Show specific radar frame
+    function showRadarFrame(index) {
+      if (index < 0 || index >= radarLayers.length) return;
+
+      radarLayers.forEach((layer, i) => {
+        layer.setOpacity(i === index ? radarOpacity : 0);
+      });
+
+      currentRadarIndex = index;
+
+      // Update Time Label
+      const timeObj = new Date(radarTimestamps[index].time * 1000);
+      const hours = String(timeObj.getHours()).padStart(2, '0');
+      const mins = String(timeObj.getMinutes()).padStart(2, '0');
+      const timeStr = `${hours}:${mins}`;
+
+      document.getElementById('radarFrameLabel').textContent = timeStr;
+      document.getElementById('radarTimeLabel').textContent = `${timeStr} (Son Radar Görüntüsü)`;
+      document.getElementById('radarSlider').value = index;
+    }
+
+    // Toggle Play/Pause animation
+    function toggleRadarPlay() {
+      if (isPlaying) {
+        stopRadarPlay();
+      } else {
+        startRadarPlay();
+      }
+    }
+
+    function startRadarPlay() {
+      if (radarLayers.length === 0) return;
+      isPlaying = true;
+      document.getElementById('radarPlayIcon').className = 'fa-solid fa-pause';
+      document.getElementById('radarPlayText').textContent = 'Durdur';
+
+      playInterval = setInterval(() => {
+        let nextIndex = currentRadarIndex + 1;
+        if (nextIndex >= radarLayers.length) {
+          nextIndex = 0;
+        }
+        showRadarFrame(nextIndex);
+      }, 700);
+    }
+
+    function stopRadarPlay() {
+      isPlaying = false;
+      clearInterval(playInterval);
+      document.getElementById('radarPlayIcon').className = 'fa-solid fa-play';
+      document.getElementById('radarPlayText').textContent = 'Oynat';
+    }
+
+    function onSliderChange(val) {
+      stopRadarPlay();
+      showRadarFrame(parseInt(val));
+    }
+
+    function setRadarOpacity(val) {
+      radarOpacity = val;
+      if (radarLayers[currentRadarIndex]) {
+        radarLayers[currentRadarIndex].setOpacity(val);
+      }
+    }
+
+    // Pan to specific region
+    function panToRegion(lat, lng, zoom, name) {
+      activeLat = lat;
+      activeLng = lng;
+      activeLocationTitle = name;
+      map.flyTo([lat, lng], zoom, { duration: 1.2 });
+      updateMarker(lat, lng, name);
+      fetchLocationWeather(lat, lng, name);
+    }
+
+    // Locate User with GPS
+    function locateUser() {
+      if (!navigator.geolocation) {
+        alert('Tarayıcınız konum özelliğini desteklemiyor.');
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(
+        pos => {
+          activeLat = pos.coords.latitude;
+          activeLng = pos.coords.longitude;
+          activeLocationTitle = 'Bulunduğunuz Konum';
+          map.flyTo([activeLat, activeLng], 12, { duration: 1.5 });
+          updateMarker(activeLat, activeLng, activeLocationTitle);
+          fetchLocationWeather(activeLat, activeLng, activeLocationTitle);
+        },
+        err => {
+          alert('Konumunuza erişilemedi. Lütfen tarayıcı izinlerinizi kontrol edin.');
+        }
+      );
+    }
+
+    function refreshActiveLocation() {
+      fetchLocationWeather(activeLat, activeLng, activeLocationTitle);
+    }
+
+    // Fetch Weather & Rain Risk via Open-Meteo
+    async function fetchLocationWeather(lat, lng, locationName) {
+      document.getElementById('activeLocationName').innerHTML = `<i class="fa-solid fa-location-dot text-sky-400 text-sm"></i> <span>${locationName}</span>`;
+
+      try {
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,relative_humidity_2m,precipitation,rain,weather_code,wind_speed_10m&hourly=precipitation,precipitation_probability&timezone=auto&forecast_days=1`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('Hava durumu verisi alınamadı');
+        const data = await res.json();
+
+        const current = data.current;
+        const temp = Math.round(current.temperature_2m);
+        const rainRate = current.precipitation || current.rain || 0;
+        const wind = Math.round(current.wind_speed_10m);
+        const wmoCode = current.weather_code;
+
+        document.getElementById('currentTemp').textContent = temp;
+        document.getElementById('currentRainRate').textContent = rainRate.toFixed(1);
+        document.getElementById('currentWind').textContent = wind;
+
+        // Interpret Weather Code
+        const weatherInfo = interpretWMO(wmoCode);
+        document.getElementById('currentWeatherDesc').textContent = weatherInfo.desc;
+
+        // Rain Probability from hourly current hour
+        const nowHour = new Date().getHours();
+        const hourlyProb = data.hourly.precipitation_probability ? data.hourly.precipitation_probability[nowHour] || 0 : 0;
+        document.getElementById('currentRainProb').textContent = hourlyProb;
+
+        if (rainRate > 0) {
+          document.getElementById('rainRateLabel').textContent = rainRate > 15 ? 'Şiddetli yağış!' : 'Yağış var';
+        } else {
+          document.getElementById('rainRateLabel').textContent = 'Anlık yağış yok';
+        }
+
+        document.getElementById('rainProbLabel').textContent = hourlyProb > 60 ? 'Yüksek ihtimal' : (hourlyProb > 30 ? 'Orta ihtimal' : 'Düşük ihtimal');
+        document.getElementById('currentWindDesc').textContent = wind > 40 ? 'Fırtınalı' : (wind > 20 ? 'Rüzgarlı' : 'Sakin');
+
+        // Calculate Flood & Rain Risk Level
+        evaluateRiskLevel(rainRate, hourlyProb, wmoCode, wind);
+
+        // Populate Hourly Forecast Next 6 Hours
+        populateHourlyTimeline(data.hourly);
+
+        // Update Marker Popup with real data
+        if (userMarker) {
+          userMarker.setPopupContent(`
+            <div class="text-slate-900 text-xs font-sans">
+              <strong>${locationName}</strong><br>
+              Yağış: <b>${rainRate} kg/m²</b> | Sıcaklık: <b>${temp}°C</b><br>
+              Durum: ${weatherInfo.desc}
+            </div>
+          `);
+        }
+
+      } catch (err) {
+        console.error('Hava durumu hatası:', err);
+      }
+    }
+
+    // Evaluate Risk Level
+    function evaluateRiskLevel(rainRate, hourlyProb, wmoCode, wind) {
+      const card = document.getElementById('riskLevelCard');
+      const icon = document.getElementById('riskIcon');
+      const iconContainer = document.getElementById('riskIconContainer');
+      const title = document.getElementById('riskTitle');
+      const desc = document.getElementById('riskDescription');
+
+      // Heavy rain or thunderstorm WMO codes: 65 (heavy rain), 82 (violent shower), 95-99 (thunderstorm)
+      const isSevereThunderstorm = (wmoCode >= 95 && wmoCode <= 99) || wmoCode === 82 || rainRate >= 15;
+      const isModerateRain = rainRate >= 2 || (hourlyProb >= 70 && rainRate > 0) || (wmoCode >= 61 && wmoCode <= 64);
+
+      if (isSevereThunderstorm) {
+        // Red Alarm
+        card.className = 'mt-4 p-4 rounded-xl bg-rose-950/40 border border-rose-600/60 flex items-center gap-4 transition-all';
+        iconContainer.className = 'w-12 h-12 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center text-xl shrink-0';
+        icon.className = 'fa-solid fa-triangle-exclamation';
+        title.className = 'text-sm font-bold text-rose-300';
+        title.textContent = 'KIRMIZI ALARM: Ani Sel & Taşkın Tehlikesi!';
+        desc.textContent = 'Çok şiddetli yağış ve fırtına kütlesi. Dere yataklarından uzak durun, bodrum katlara inmeyin.';
+      } else if (isModerateRain) {
+        // Yellow Alarm
+        card.className = 'mt-4 p-4 rounded-xl bg-amber-950/40 border border-amber-600/60 flex items-center gap-4 transition-all';
+        iconContainer.className = 'w-12 h-12 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl shrink-0';
+        icon.className = 'fa-solid fa-cloud-showers-heavy';
+        title.className = 'text-sm font-bold text-amber-300';
+        title.textContent = 'SARI ALARM: Yerel Sağanak & Dikkat';
+        desc.textContent = 'Kuvvetli yağış geçişi bekleniyor. Zemin katlarda su baskınına karşı tedbirli olun.';
+      } else {
+        // Green / Safe
+        card.className = 'mt-4 p-4 rounded-xl bg-slate-800/80 border border-slate-700/60 flex items-center gap-4 transition-all';
+        iconContainer.className = 'w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl shrink-0';
+        icon.className = 'fa-solid fa-cloud-sun';
+        title.className = 'text-sm font-bold text-emerald-300';
+        title.textContent = 'Düşük Risk / Güvenli';
+        desc.textContent = 'Şu an için ani sel veya taşkın riski bulunmuyor.';
+      }
+    }
+
+    // Populate Next 6 Hours Timeline
+    function populateHourlyTimeline(hourly) {
+      const container = document.getElementById('hourlyTimelineContainer');
+      container.innerHTML = '';
+
+      const now = new Date();
+      const currentHour = now.getHours();
+
+      for (let i = 0; i < 6; i++) {
+        const targetHour = (currentHour + i) % 24;
+        const rainAmount = hourly.precipitation ? hourly.precipitation[targetHour] || 0 : 0;
+        const prob = hourly.precipitation_probability ? hourly.precipitation_probability[targetHour] || 0 : 0;
+
+        const isHeavy = rainAmount >= 10;
+        const isMed = rainAmount >= 2;
+
+        const bgClass = isHeavy ? 'bg-rose-950/60 border-rose-500/50' : (isMed ? 'bg-amber-950/60 border-amber-500/50' : 'bg-slate-950/50 border-slate-800');
+        const textClass = isHeavy ? 'text-rose-400' : (isMed ? 'text-amber-400' : 'text-slate-300');
+
+        const box = document.createElement('div');
+        box.className = `${bgClass} p-2 rounded-lg border text-center transition`;
+        box.innerHTML = `
+          <div class="text-[10px] text-slate-400">${String(targetHour).padStart(2, '0')}:00</div>
+          <div class="text-xs font-bold ${textClass} mt-1">${rainAmount} mm</div>
+          <div class="text-[9px] text-slate-400 mt-0.5">%${prob}</div>
+        `;
+        container.appendChild(box);
+      }
+    }
+
+    // Interpret WMO Weather Code
+    function interpretWMO(code) {
+      if (code === 0) return { desc: 'Açık hava' };
+      if (code === 1 || code === 2 || code === 3) return { desc: 'Parçalı bulutlu' };
+      if (code === 45 || code === 48) return { desc: 'Sisli' };
+      if (code >= 51 && code <= 55) return { desc: 'Hafif çisenti' };
+      if (code >= 61 && code <= 65) return { desc: 'Sağanak yağışlı' };
+      if (code >= 71 && code <= 77) return { desc: 'Kar yağışlı' };
+      if (code >= 80 && code <= 82) return { desc: 'Kuvvetli sağanak' };
+      if (code >= 95 && code <= 99) return { desc: 'Gök gürültülü fırtına' };
+      return { desc: 'Bulutlu' };
+    }
+
+    // Share on WhatsApp
+    function shareRainWarning() {
+      const rain = document.getElementById('currentRainRate').textContent;
+      const risk = document.getElementById('riskTitle').textContent;
+      const text = encodeURIComponent(
+        `🚨 *Canlı Sel & Yağış Uyarısı: ${activeLocationTitle}*\n\n` +
+        `• Durum: ${risk}\n` +
+        `• Anlık Yağış: ${rain} kg/m²\n\n` +
+        `Bölgenizdeki canlı Doppler radarını ve sel tehlikesini haritada hemen izleyin:\n` +
+        `https://pratik-araclar.pratikweb.workers.dev/sel-uyarisi/`
+      );
+      window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+    }
+
+    // Initialize on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      initMap();
+    });
+  </script>
+</body>
+</html>
