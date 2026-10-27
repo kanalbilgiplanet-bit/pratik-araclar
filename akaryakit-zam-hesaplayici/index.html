@@ -357,14 +357,14 @@
               <div>
                 <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">HESAPLANAN YENİ POMPA FİYATI</span>
                 <div class="flex items-baseline gap-2 mt-0.5">
-                  <span id="resultNewPrice" class="text-3xl sm:text-4xl font-extrabold text-white font-mono">₺46.65</span>
-                  <span id="resultDiffBadge" class="px-2 py-0.5 rounded text-xs font-bold font-mono bg-rose-500/20 text-rose-400 border border-rose-500/30">+₺1.50 (+3.3%)</span>
+                  <span id="resultNewPrice" class="text-3xl sm:text-4xl font-extrabold text-white font-mono">₺44.39</span>
+                  <span id="resultDiffBadge" class="px-2 py-0.5 rounded text-xs font-bold font-mono bg-rose-500/20 text-rose-400 border border-rose-500/30">+₺1.50 (+3.5%)</span>
                 </div>
               </div>
               
               <div class="text-right">
                 <div class="text-[10px] text-slate-400">Önceki Fiyat</div>
-                <div id="resultOldPrice" class="text-sm font-mono text-slate-300 font-semibold">₺45.15 / Litre</div>
+                <div id="resultOldPrice" class="text-sm font-mono text-slate-300 font-semibold">₺42.89 / Litre</div>
               </div>
             </div>
 
@@ -482,7 +482,7 @@
           <div>
             <label class="block text-xs font-semibold text-slate-300 mb-1">Mevcut LPG Litre Fiyatı (TL):</label>
             <div class="relative">
-              <input type="number" step="0.01" id="lpgCurrentPrice" value="25.45" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-white font-mono font-bold text-sm focus:outline-none focus:border-sky-500 transition" oninput="calculateLpg()">
+              <input type="number" step="0.01" id="lpgCurrentPrice" value="25.13" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-white font-mono font-bold text-sm focus:outline-none focus:border-sky-500 transition" oninput="calculateLpg()">
               <span class="absolute right-4 top-2.5 text-xs text-slate-400">₺/L</span>
             </div>
           </div>
@@ -572,7 +572,7 @@
           <div>
             <label class="block text-xs font-semibold text-slate-300 mb-1">Mevcut Tüp Satış Fiyatı (TL):</label>
             <div class="relative">
-              <input type="number" step="1" id="tubeCurrentPrice" value="840" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-white font-mono font-bold text-sm focus:outline-none focus:border-teal-500 transition" oninput="calculateTube()">
+              <input type="number" step="1" id="tubeCurrentPrice" value="875" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-white font-mono font-bold text-sm focus:outline-none focus:border-teal-500 transition" oninput="calculateTube()">
               <span class="absolute right-4 top-2.5 text-xs text-slate-400">₺</span>
             </div>
           </div>
@@ -639,7 +639,7 @@
           <div>
             <label class="block text-xs font-semibold text-slate-300 mb-1">Doğalgaz Dağıtım Şirketi / m³ Birim Fiyatı (TL):</label>
             <div class="relative">
-              <input type="number" step="0.01" id="gasUnitPrice" value="8.15" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-white font-mono font-bold text-sm focus:outline-none focus:border-orange-500 transition" oninput="calculateGas()">
+              <input type="number" step="0.01" id="gasUnitPrice" value="9.25" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-white font-mono font-bold text-sm focus:outline-none focus:border-orange-500 transition" oninput="calculateGas()">
               <span class="absolute right-4 top-2.5 text-xs text-slate-400">₺/m³</span>
             </div>
             <div class="text-[10px] text-slate-500 mt-1">İGDAŞ, BAŞKENTGAZ, İZMİRGAZ konut sübvansiyonlu tarifesi</div>
@@ -860,28 +860,28 @@
     let activeTab = 'fuel';
     let taxChartInstance = null;
 
-    // Base Regional Prices Database
+    // Base Regional Prices Database (Güncel EPDK & Dağıtım Şirketleri Ortalama Pompa Fiyatları)
     const cityPrices = {
-      istanbul_avrupa: { benzin: 45.15, motorin: 44.85, lpg: 25.45, tube: 840, gas: 8.15, name: 'İstanbul (Avrupa)' },
-      istanbul_anadolu: { benzin: 45.05, motorin: 44.75, lpg: 25.35, tube: 840, gas: 8.15, name: 'İstanbul (Anadolu)' },
-      ankara: { benzin: 45.85, motorin: 45.70, lpg: 25.80, tube: 850, gas: 8.25, name: 'Ankara' },
-      izmir: { benzin: 46.10, motorin: 45.95, lpg: 25.75, tube: 855, gas: 8.20, name: 'İzmir' },
-      bursa: { benzin: 45.70, motorin: 45.45, lpg: 25.50, tube: 845, gas: 8.18, name: 'Bursa' },
-      antalya: { benzin: 46.80, motorin: 46.65, lpg: 26.15, tube: 865, gas: 8.35, name: 'Antalya' },
-      adana: { benzin: 46.35, motorin: 46.20, lpg: 25.90, tube: 850, gas: 8.25, name: 'Adana' },
-      konya: { benzin: 46.60, motorin: 46.45, lpg: 26.00, tube: 860, gas: 8.30, name: 'Konya' },
-      gaziantep: { benzin: 46.50, motorin: 46.35, lpg: 25.95, tube: 855, gas: 8.28, name: 'Gaziantep' },
-      trabzon: { benzin: 46.75, motorin: 46.55, lpg: 26.10, tube: 860, gas: 8.32, name: 'Trabzon' },
-      diyarbakir: { benzin: 47.10, motorin: 46.90, lpg: 26.35, tube: 870, gas: 8.40, name: 'Diyarbakır' }
+      istanbul_avrupa: { benzin: 42.89, motorin: 42.77, lpg: 25.13, tube: 875, gas: 9.25, name: 'İstanbul (Avrupa)' },
+      istanbul_anadolu: { benzin: 42.77, motorin: 42.71, lpg: 24.59, tube: 875, gas: 9.25, name: 'İstanbul (Anadolu)' },
+      ankara: { benzin: 43.30, motorin: 43.31, lpg: 25.14, tube: 885, gas: 9.35, name: 'Ankara' },
+      izmir: { benzin: 43.75, motorin: 43.83, lpg: 25.04, tube: 890, gas: 9.30, name: 'İzmir' },
+      bursa: { benzin: 43.40, motorin: 43.35, lpg: 24.95, tube: 880, gas: 9.25, name: 'Bursa' },
+      antalya: { benzin: 44.20, motorin: 44.35, lpg: 25.40, tube: 895, gas: 9.40, name: 'Antalya' },
+      adana: { benzin: 43.80, motorin: 43.90, lpg: 25.20, tube: 885, gas: 9.35, name: 'Adana' },
+      konya: { benzin: 44.15, motorin: 44.10, lpg: 25.35, tube: 890, gas: 9.35, name: 'Konya' },
+      gaziantep: { benzin: 44.05, motorin: 44.15, lpg: 25.30, tube: 885, gas: 9.35, name: 'Gaziantep' },
+      trabzon: { benzin: 44.10, motorin: 44.15, lpg: 25.30, tube: 890, gas: 9.35, name: 'Trabzon' },
+      diyarbakir: { benzin: 44.60, motorin: 44.75, lpg: 25.55, tube: 900, gas: 9.45, name: 'Diyarbakır' }
     };
 
-    // Tube Database
+    // Tube Database (12 kg Ev ve Piknik Tüpü Güncel Fiyatları)
     const tubeBasePrices = {
-      tombul_12kg: { name: "12 kg Tombul Ev Tüpü", kg: 12, price: 840, days: 50 },
-      uzun_12kg: { name: "12 kg Uzun Ev Tüpü", kg: 12, price: 840, days: 50 },
-      piknik_2kg: { name: "2 kg Küçük Piknik Tüpü", kg: 2, price: 165, days: 20 },
-      ticari_24kg: { name: "24 kg Ticari Tüp", kg: 24, price: 1680, days: 40 },
-      sanayi_45kg: { name: "45 kg Sanayi Tüpü", kg: 45, price: 3150, days: 30 }
+      tombul_12kg: { name: "12 kg Tombul Ev Tüpü", kg: 12, price: 875, days: 50 },
+      uzun_12kg: { name: "12 kg Uzun Ev Tüpü", kg: 12, price: 875, days: 50 },
+      piknik_2kg: { name: "2 kg Küçük Piknik Tüpü", kg: 2, price: 175, days: 20 },
+      ticari_24kg: { name: "24 kg Ticari Tüp", kg: 24, price: 1750, days: 40 },
+      sanayi_45kg: { name: "45 kg Sanayi Tüpü", kg: 45, price: 3280, days: 30 }
     };
 
     // Initialize
@@ -1168,7 +1168,7 @@
       document.getElementById('resultLpgTankSavings').textContent = `+₺${savings.toFixed(2)}`;
 
       // Benzin vs LPG Saving percentage
-      const benzinPrice = parseFloat(document.getElementById('fuelCurrentPrice').value) || 45.15;
+      const benzinPrice = parseFloat(document.getElementById('fuelCurrentPrice').value) || 42.89;
       const lpgEquivalentPrice = newPrice * 1.18; // 18% higher consumption
       const savingPercent = ((1 - (lpgEquivalentPrice / benzinPrice)) * 100).toFixed(1);
       document.getElementById('resultLpgSavingPercent').textContent = `%${Math.max(0, savingPercent)}`;
@@ -1260,7 +1260,7 @@
     // INTERCITY ROUTE CALCULATOR
     function calculateRoute(km, name) {
       const consumption = parseFloat(document.getElementById('sliderConsumption').value) || 6.5;
-      const p = parseFloat(document.getElementById('fuelCurrentPrice').value) || 45.15;
+      const p = parseFloat(document.getElementById('fuelCurrentPrice').value) || 42.89;
       let change = parseFloat(document.getElementById('fuelChangeInput').value) || 1.50;
       if (fuelChangeMode === 'indirim') change = -change;
       const newPrice = p + change;
