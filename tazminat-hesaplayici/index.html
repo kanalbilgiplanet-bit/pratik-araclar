@@ -83,7 +83,7 @@
             "name": "2026 yılı kıdem tazminatı tavanı ne kadardır?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "2026 yılı kıdem tazminatı tavanı memur maaş katsayısına göre güncellenir ve giydirilmiş brüt ücretiniz bu tavanı aşsa bile kıdem tazminatı hesabı bu tavan tutar üzerinden yapılır."
+              "text": "Hazine ve Maliye Bakanlığı genelgesi uyarınca, 2026 yılı ikinci yarısı (1 Temmuz - 31 Aralık 2026) için resmi kıdem tazminatı tavanı 73.729,87 TL'dir. 2026 yılının ilk yarısında (Ocak-Haziran) ise 64.948,77 TL olarak uygulanmıştır."
             }
           }
         ]
@@ -270,10 +270,11 @@
         <div class="flex items-center gap-2 text-slate-400">
           <span>Kıdem Tavanı:</span>
           <select id="ceilingYearSelect" class="bg-[#0b0f19] border border-slate-700 rounded-lg px-2.5 py-1 text-slate-200 font-semibold focus:outline-none">
-            <option value="2026_1" selected>2026 (46.520,38 ₺)</option>
-            <option value="2027_proj">2027 Projeksiyon (~60.000 ₺)</option>
-            <option value="2025_2">2025 II. Dönem (41.828,42 ₺)</option>
-            <option value="2025_1">2025 I. Dönem (35.058,58 ₺)</option>
+            <option value="2026_2" selected>2026 II. Dönem (73.729,87 ₺ - Güncel)</option>
+            <option value="2026_1">2026 I. Dönem (64.948,77 ₺)</option>
+            <option value="2027_proj">2027 Projeksiyon (~82.200 ₺)</option>
+            <option value="2025_2">2025 II. Dönem (53.919,68 ₺)</option>
+            <option value="2024_2">2024 II. Dönem (46.520,38 ₺)</option>
           </select>
         </div>
       </div>
@@ -445,12 +446,13 @@
 
   <!-- Application Logic -->
   <script>
-    // Severance Ceilings (Kıdem Tazminatı Tavanı)
+    // Severance Ceilings (Kıdem Tazminatı Tavanı - HMB Resmi Verileri)
     const SEVERANCE_CEILINGS = {
-      "2026_1": { label: "2026 Tavanı", ceiling: 46520.38 },
-      "2027_proj": { label: "2027 Projeksiyon", ceiling: 60000.00 },
-      "2025_2": { label: "2025 II. Dönem", ceiling: 41828.42 },
-      "2025_1": { label: "2025 I. Dönem", ceiling: 35058.58 }
+      "2026_2": { label: "2026 II. Dönem (Temmuz - Aralık)", ceiling: 73729.87 },
+      "2026_1": { label: "2026 I. Dönem (Ocak - Haziran)", ceiling: 64948.77 },
+      "2027_proj": { label: "2027 Projeksiyon (Tahmini)", ceiling: 82200.00 },
+      "2025_2": { label: "2025 II. Dönem", ceiling: 53919.68 },
+      "2024_2": { label: "2024 II. Dönem", ceiling: 46520.38 }
     };
 
     const STAMP_TAX_RATE = 0.00759; // Binde 7.59

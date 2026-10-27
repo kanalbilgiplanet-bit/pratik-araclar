@@ -547,12 +547,64 @@
 
   <!-- Application Logic -->
   <script>
-    // Tax and Minimum Wage Configurations by Year
+    // Tax and Minimum Wage Configurations by Year (GİB & Resmi Gazete Güncel)
     const TAX_CONFIGS = {
       "2026": {
         year: "2026",
         label: "2026 (Güncel Tarife)",
-        note: "2026 GİB resmi vergi tarifeleri",
+        note: "2026 GİB 332 No'lu Tebliğ & Resmi Gazete",
+        minWageGross: 33030.00,
+        sgkWorkerRate: 0.14,
+        unemploymentWorkerRate: 0.01,
+        sgkEmployerRate: 0.155,
+        sgkEmployerRateNoIncentive: 0.205,
+        unemploymentEmployerRate: 0.02,
+        stampTaxRate: 0.00759,
+        sgkCeilingMultiple: 7.5,
+        brackets: [
+          { limit: 190000, rate: 0.15, label: "%15" },
+          { limit: 400000, rate: 0.20, label: "%20" },
+          { limit: 1500000, rate: 0.27, label: "%27" },
+          { limit: 5300000, rate: 0.35, label: "%35" },
+          { limit: Infinity, rate: 0.40, label: "%40" }
+        ],
+        blogTitle: "2026 Yılı Asgari Ücret ve Gelir Vergisi Mevzuatı",
+        blogBadge: "Resmi Tarife",
+        blogContent: `
+          <p>2026 yılı için belirlenen resmi brüt asgari ücret <strong>33.030,00 ₺</strong> olup, çalışanın eline net <strong>28.075,50 ₺</strong> geçmektedir. 2026 yılında Gelir İdaresi Başkanlığı (GİB 332 Seri No'lu Tebliği) uyarınca 1. vergi dilimi sınırı <strong>190.000 ₺</strong>, 2. dilim ise <strong>400.000 ₺</strong> olarak uygulanmaktadır.</p>
+          <p><strong>Vergi İstisnası Avantajı:</strong> 7349 sayılı Kanun uyarınca, 2026 yılında tüm çalışanların brüt ücretlerinin asgari ücrete kadar olan kısmı için her ay gelir vergisi ve damga vergisi istisnası uygulanarak doğrudan çalışanın net maaşına yansıtılır.</p>
+        `
+      },
+      "2027": {
+        year: "2027",
+        label: "2027 (Yeni Zam / Projeksiyon)",
+        note: "2027 tahmini %25-30 artış projeksiyonu",
+        minWageGross: 42000.00,
+        sgkWorkerRate: 0.14,
+        unemploymentWorkerRate: 0.01,
+        sgkEmployerRate: 0.155,
+        sgkEmployerRateNoIncentive: 0.205,
+        unemploymentEmployerRate: 0.02,
+        stampTaxRate: 0.00759,
+        sgkCeilingMultiple: 7.5,
+        brackets: [
+          { limit: 270000, rate: 0.15, label: "%15" },
+          { limit: 570000, rate: 0.20, label: "%20" },
+          { limit: 2100000, rate: 0.27, label: "%27" },
+          { limit: 7500000, rate: 0.35, label: "%35" },
+          { limit: Infinity, rate: 0.40, label: "%40" }
+        ],
+        blogTitle: "2027 Yılı Asgari Ücret Zammı ve Vergi Projeksiyonu",
+        blogBadge: "Tahmini Projeksiyon",
+        blogContent: `
+          <p>Orta Vadeli Program (OVP) ve yıl sonu enflasyon hedefleri doğrultusunda 2027 yılı için brüt asgari ücretin <strong>~42.000 ₺</strong> seviyesine çıkması ve net asgari ücretin <strong>~35.700 ₺</strong> olması beklenmektedir.</p>
+          <p><strong>Vergi Dilimi Beklentisi:</strong> Yeniden değerleme oranına bağlı olarak 2027 yılında %15'lik ilk dilim eşiğinin 270.000 ₺ barajına yükseltilmesi öngörülmektedir.</p>
+        `
+      },
+      "2025": {
+        year: "2025",
+        label: "2025",
+        note: "2025 Resmi Gazete tarifeleri",
         minWageGross: 26005.50,
         sgkWorkerRate: 0.14,
         unemploymentWorkerRate: 0.01,
@@ -568,62 +620,10 @@
           { limit: 4300000, rate: 0.35, label: "%35" },
           { limit: Infinity, rate: 0.40, label: "%40" }
         ],
-        blogTitle: "2026 Yılı Asgari Ücret ve Gelir Vergisi Mevzuatı",
-        blogBadge: "Resmi Tarife",
-        blogContent: `
-          <p>2026 yılı için belirlenen brüt asgari ücret <strong>26.005,50 ₺</strong> olup, çalışanın eline net <strong>22.104,68 ₺</strong> geçmektedir. 2026 yılında Gelir İdaresi Başkanlığı (GİB) tarafından 1. vergi dilimi sınırı <strong>158.000 ₺</strong> olarak belirlenmiştir.</p>
-          <p><strong>Vergi İstisnası Avantajı:</strong> 7349 sayılı Kanun uyarınca, 2026 yılında tüm çalışanların brüt ücretlerinin asgari ücrete kadar olan kısmı için her ay 3.315,70 ₺'ye kadar gelir vergisi ve 197,38 ₺ damga vergisi istisnası uygulanarak doğrudan çalışanın net maaşına yansıtılır.</p>
-        `
-      },
-      "2027": {
-        year: "2027",
-        label: "2027 (Yeni Zam / Projeksiyon)",
-        note: "2027 tahmini %28-30 artış projeksiyonu",
-        minWageGross: 33500.00,
-        sgkWorkerRate: 0.14,
-        unemploymentWorkerRate: 0.01,
-        sgkEmployerRate: 0.155,
-        sgkEmployerRateNoIncentive: 0.205,
-        unemploymentEmployerRate: 0.02,
-        stampTaxRate: 0.00759,
-        sgkCeilingMultiple: 7.5,
-        brackets: [
-          { limit: 210000, rate: 0.15, label: "%15" },
-          { limit: 440000, rate: 0.20, label: "%20" },
-          { limit: 1100000, rate: 0.27, label: "%27" },
-          { limit: 5800000, rate: 0.35, label: "%35" },
-          { limit: Infinity, rate: 0.40, label: "%40" }
-        ],
-        blogTitle: "2027 Yılı Asgari Ücret Zammı ve Vergi Projeksiyonu",
-        blogBadge: "Tahmini Projeksiyon",
-        blogContent: `
-          <p>Orta Vadeli Program (OVP) ve yıl sonu enflasyon hedefleri doğrultusunda 2027 yılı için brüt asgari ücretin <strong>~33.500 ₺</strong> seviyesine çıkması ve net asgari ücretin <strong>~28.475 ₺</strong> olması beklenmektedir.</p>
-          <p><strong>Vergi Dilimi Beklentisi:</strong> Yeniden değerleme oranına bağlı olarak 2027 yılında %15'lik ilk dilim eşiğinin 210.000 ₺ barajına yükseltilmesi öngörülmektedir. Resmi Gazete duyurusu yapıldığında bu veriler anında kesinleştirilecektir.</p>
-        `
-      },
-      "2025": {
-        year: "2025",
-        label: "2025",
-        note: "2025 Resmi Gazete tarifeleri",
-        minWageGross: 20002.50,
-        sgkWorkerRate: 0.14,
-        unemploymentWorkerRate: 0.01,
-        sgkEmployerRate: 0.155,
-        sgkEmployerRateNoIncentive: 0.205,
-        unemploymentEmployerRate: 0.02,
-        stampTaxRate: 0.00759,
-        sgkCeilingMultiple: 7.5,
-        brackets: [
-          { limit: 110000, rate: 0.15, label: "%15" },
-          { limit: 230000, rate: 0.20, label: "%20" },
-          { limit: 580000, rate: 0.27, label: "%27" },
-          { limit: 3000000, rate: 0.35, label: "%35" },
-          { limit: Infinity, rate: 0.40, label: "%40" }
-        ],
         blogTitle: "2025 Yılı Asgari Ücret ve Vergi Dönemi",
         blogBadge: "Geçmiş Tarife",
         blogContent: `
-          <p>2025 yılı boyunca brüt asgari ücret <strong>20.002,50 ₺</strong>, net asgari ücret ise <strong>17.002,12 ₺</strong> olarak uygulanmıştır. 1. vergi dilimi 110.000 ₺ olarak baz alınmıştır.</p>
+          <p>2025 yılı boyunca brüt asgari ücret <strong>26.005,50 ₺</strong>, net asgari ücret ise <strong>22.104,68 ₺</strong> olarak uygulanmıştır. 1. vergi dilimi 158.000 ₺ olarak baz alınmıştır.</p>
         `
       },
       "2024": {
@@ -648,7 +648,7 @@
         blogTitle: "2024 Yılı Vergi ve Asgari Ücret Parametreleri",
         blogBadge: "Geçmiş Tarife",
         blogContent: `
-          <p>2024 yılı karşılaştırma ve geçmiş dönem bordro kontrolleri için bu parametreler baz alınmaktadır.</p>
+          <p>2024 yılı boyunca brüt asgari ücret <strong>20.002,50 ₺</strong>, net asgari ücret ise <strong>17.002,12 ₺</strong> olarak uygulanmıştır. 1. vergi dilimi 110.000 ₺ olarak baz alınmıştır.</p>
         `
       }
     };
