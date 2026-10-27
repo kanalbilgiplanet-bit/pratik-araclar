@@ -187,10 +187,11 @@
                 id="currentRent" 
                 type="text" 
                 inputmode="decimal" 
-                value="18.500,00 ₺" 
-                class="w-full px-4 py-3.5 bg-slate-900 border border-slate-700/80 rounded-2xl text-white font-bold text-lg sm:text-xl focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 shadow-inner transition"
-                placeholder="Örn: 18.500,00 ₺"
+                value="18.500" 
+                class="w-full pl-4 pr-12 py-3.5 bg-slate-900 border border-slate-700/80 rounded-2xl text-white font-bold text-lg sm:text-xl focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 shadow-inner transition"
+                placeholder="18.500"
               >
+              <span class="absolute right-4 top-3.5 text-lg text-slate-400 font-bold pointer-events-none select-none">₺</span>
             </div>
 
             <!-- Quick Pill Buttons -->
@@ -635,24 +636,64 @@
     let currentPropType = 'konut'; // 'konut' or 'isyeri'
     let currentYear = '2026';
 
-    // Format & Parse Currency Helpers
-    function parseCurrency(str) {
-      if (typeof str === 'number') return isNaN(str) ? 0 : str;
-      if (!str) return 0;
-      let cleaned = String(str).replace(/[^\d.,]/g, '').trim();
-      if (!cleaned) return 0;
-      if (cleaned.includes('.') && cleaned.includes(',')) {
-        cleaned = cleaned.replace(/\./g, '').replace(',', '.');
-      } else if (cleaned.includes(',')) {
-        cleaned = cleaned.replace(',', '.');
-      } else if (cleaned.includes('.')) {
-        const parts = cleaned.split('.');
-        if (parts.length > 2 || (parts.length === 2 && parts[1].length === 3)) {
-          cleaned = cleaned.replace(/\./g, '');
-        }
+    // Live Realtime Number Formatter (No TL symbol inside input, instant on input)
+    function formatNumberLive(rawVal) {
+      if (rawVal === null || rawVal === undefined) return '';
+      let str = String(rawVal).trim().replace(/[^\d.,]/g, '');
+      if (!str) return '';
+      if (!str.includes(',') && /\.\d{1,2}$/.test(str)) {
+        str = str.replace(/\.(\d{1,2})$/, ',$1');
       }
-      const val = parseFloat(cleaned);
-      return isNaN(val) ? 0 : val;
+      let parts = str.split(',');
+      let intDigits = parts[0].replace(/\D/g, '');
+      if (!intDigits && parts.length === 1) return '';
+      if (!intDigits && parts.length > 1) intDigits = '0';
+      let formattedInt = intDigits ? BigInt(intDigits).toLocaleString('tr-TR') : '0';
+      if (parts.length > 1) {
+        let dec = parts.slice(1).join('').replace(/\D/g, '').slice(0, 2);
+        return formattedInt + ',' + dec;
+      }
+      return formattedInt;
+    }
+
+    function parseNumberLive(val) {
+      if (val === null || val === undefined) return 0;
+      if (typeof val === 'number') return isNaN(val) ? 0 : val;
+      let str = String(val).replace(/[^\d,]/g, '').replace(',', '.');
+      const num = parseFloat(str);
+      return isNaN(num) ? 0 : num;
+    }
+
+    function attachLiveNumberFormatter(input, onCalculate) {
+      input.addEventListener('input', function() {
+        const raw = this.value;
+        const oldCursor = this.selectionEnd || raw.length;
+        let digitsBeforeCursor = 0;
+        for (let i = 0; i < oldCursor; i++) {
+          if (/\d/.test(raw[i])) digitsBeforeCursor++;
+        }
+        const formatted = formatNumberLive(raw);
+        this.value = formatted;
+        let newCursor = formatted.length;
+        let countedDigits = 0;
+        for (let i = 0; i < formatted.length; i++) {
+          if (/\d/.test(formatted[i])) countedDigits++;
+          if (countedDigits === digitsBeforeCursor) {
+            newCursor = i + 1;
+            break;
+          }
+        }
+        if (raw[oldCursor - 1] === ',' && formatted.includes(',')) {
+          newCursor = formatted.indexOf(',') + 1;
+        }
+        if (newCursor > formatted.length) newCursor = formatted.length;
+        this.setSelectionRange(newCursor, newCursor);
+        if (onCalculate) onCalculate();
+      });
+
+      input.addEventListener('focus', function() {
+        this.select();
+      });
     }
 
     function fmtTRY(amount) {
@@ -697,7 +738,7 @@
 
     // Main Calculator Function
     function calculateRent() {
-      const oldRent = parseCurrency(currentRentInput.value);
+      const oldRent = parseNumberLive(currentRentInput.value);
       
       let rate = 0;
       let monthName = '';
@@ -808,18 +849,7 @@
     });
 
     // Event Listeners
-    currentRentInput.addEventListener('input', calculateRent);
-    currentRentInput.addEventListener('focus', function() {
-      this.select();
-    });
-    currentRentInput.addEventListener('blur', function() {
-      const val = parseCurrency(this.value);
-      if (val > 0) this.value = fmtTRY(val);
-    });
-    currentRentInput.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') this.blur();
-    });
-
+    attachLiveNumberFormatter(currentRentInput, calculateRent);
     monthSelect.addEventListener('change', calculateRent);
     customRateInput.addEventListener('input', calculateRent);
     contractAgeSelect.addEventListener('change', calculateRent);
@@ -828,7 +858,7 @@
     document.querySelectorAll('.quick-rent-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const val = parseInt(btn.getAttribute('data-val'), 10);
-        currentRentInput.value = fmtTRY(val);
+        currentRentInput.value = formatNumberLive(val);
         calculateRent();
       });
     });

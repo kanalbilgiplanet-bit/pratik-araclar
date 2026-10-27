@@ -277,10 +277,11 @@
               type="text" 
               inputmode="decimal" 
               id="salaryInput" 
-              value="50.000,00 ₺" 
-              class="w-full bg-[#0b0f19] border border-slate-700/80 rounded-xl px-4 py-2.5 text-base font-extrabold text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition"
-              placeholder="50.000,00 ₺"
+              value="50.000" 
+              class="w-full bg-[#0b0f19] border border-slate-700/80 rounded-xl pl-4 pr-12 py-2.5 text-base font-extrabold text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition"
+              placeholder="50.000"
             >
+            <span class="absolute right-4 top-2.5 text-sm text-slate-400 font-bold pointer-events-none select-none">₺</span>
           </div>
           <span class="text-[11px] text-slate-400 mt-1 block">Aylık baz alınan maaş tutarı</span>
         </div>
@@ -667,23 +668,64 @@
     const blogCardBadge = document.getElementById('blogCardBadge');
     const blogCardContent = document.getElementById('blogCardContent');
 
-    function parseCurrency(str) {
-      if (typeof str === 'number') return isNaN(str) ? 0 : str;
-      if (!str) return 0;
-      let cleaned = String(str).replace(/[^\d.,]/g, '').trim();
-      if (!cleaned) return 0;
-      if (cleaned.includes('.') && cleaned.includes(',')) {
-        cleaned = cleaned.replace(/\./g, '').replace(',', '.');
-      } else if (cleaned.includes(',')) {
-        cleaned = cleaned.replace(',', '.');
-      } else if (cleaned.includes('.')) {
-        const parts = cleaned.split('.');
-        if (parts.length > 2 || (parts.length === 2 && parts[1].length === 3)) {
-          cleaned = cleaned.replace(/\./g, '');
-        }
+    // Live Realtime Number Formatter (No TL symbol inside input, instant on input)
+    function formatNumberLive(rawVal) {
+      if (rawVal === null || rawVal === undefined) return '';
+      let str = String(rawVal).trim().replace(/[^\d.,]/g, '');
+      if (!str) return '';
+      if (!str.includes(',') && /\.\d{1,2}$/.test(str)) {
+        str = str.replace(/\.(\d{1,2})$/, ',$1');
       }
-      const val = parseFloat(cleaned);
-      return isNaN(val) ? 0 : val;
+      let parts = str.split(',');
+      let intDigits = parts[0].replace(/\D/g, '');
+      if (!intDigits && parts.length === 1) return '';
+      if (!intDigits && parts.length > 1) intDigits = '0';
+      let formattedInt = intDigits ? BigInt(intDigits).toLocaleString('tr-TR') : '0';
+      if (parts.length > 1) {
+        let dec = parts.slice(1).join('').replace(/\D/g, '').slice(0, 2);
+        return formattedInt + ',' + dec;
+      }
+      return formattedInt;
+    }
+
+    function parseNumberLive(val) {
+      if (val === null || val === undefined) return 0;
+      if (typeof val === 'number') return isNaN(val) ? 0 : val;
+      let str = String(val).replace(/[^\d,]/g, '').replace(',', '.');
+      const num = parseFloat(str);
+      return isNaN(num) ? 0 : num;
+    }
+
+    function attachLiveNumberFormatter(input, onCalculate) {
+      input.addEventListener('input', function() {
+        const raw = this.value;
+        const oldCursor = this.selectionEnd || raw.length;
+        let digitsBeforeCursor = 0;
+        for (let i = 0; i < oldCursor; i++) {
+          if (/\d/.test(raw[i])) digitsBeforeCursor++;
+        }
+        const formatted = formatNumberLive(raw);
+        this.value = formatted;
+        let newCursor = formatted.length;
+        let countedDigits = 0;
+        for (let i = 0; i < formatted.length; i++) {
+          if (/\d/.test(formatted[i])) countedDigits++;
+          if (countedDigits === digitsBeforeCursor) {
+            newCursor = i + 1;
+            break;
+          }
+        }
+        if (raw[oldCursor - 1] === ',' && formatted.includes(',')) {
+          newCursor = formatted.indexOf(',') + 1;
+        }
+        if (newCursor > formatted.length) newCursor = formatted.length;
+        this.setSelectionRange(newCursor, newCursor);
+        if (onCalculate) onCalculate();
+      });
+
+      input.addEventListener('focus', function() {
+        this.select();
+      });
     }
 
     function formatTL(num) {
@@ -712,7 +754,7 @@
     // Set Minimum Wage Shortcut
     setMinWageBtn.addEventListener('click', () => {
       const cfg = TAX_CONFIGS[yearSelect.value];
-      salaryInput.value = formatTL(cfg.minWageGross);
+      salaryInput.value = formatNumberLive(cfg.minWageGross);
       calculatePayroll();
     });
 
@@ -727,17 +769,7 @@
 
     retireeCheck.addEventListener('change', calculatePayroll);
     employerIncentiveCheck.addEventListener('change', calculatePayroll);
-    salaryInput.addEventListener('input', calculatePayroll);
-    salaryInput.addEventListener('focus', function() {
-      this.select();
-    });
-    salaryInput.addEventListener('blur', function() {
-      const val = parseCurrency(this.value);
-      if (val > 0) this.value = formatTL(val);
-    });
-    salaryInput.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') this.blur();
-    });
+    attachLiveNumberFormatter(salaryInput, calculatePayroll);
 
     if (printBtn) {
       printBtn.addEventListener('click', () => {
@@ -782,7 +814,7 @@
       const cfg = TAX_CONFIGS[year];
       const isRetiree = retireeCheck.checked;
       const hasEmployerIncentive = employerIncentiveCheck.checked;
-      let inputVal = parseCurrency(salaryInput.value);
+      let inputVal = parseNumberLive(salaryInput.value);
 
       if (inputVal <= 0) inputVal = cfg.minWageGross;
 

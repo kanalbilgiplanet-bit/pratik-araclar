@@ -351,7 +351,8 @@
               <div>
                 <label class="block text-xs font-semibold text-slate-300 mb-1">Araç Güncel Kasko Rayiç Değeri:</label>
                 <div class="relative">
-                  <input type="text" inputmode="decimal" id="inputVehicleValue" value="850.000,00 ₺" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-white font-mono font-bold text-sm focus:outline-none focus:border-cyan-500 transition" oninput="calculateDamage()">
+                  <input type="text" inputmode="decimal" id="inputVehicleValue" value="850.000" class="w-full bg-slate-950 border border-slate-700 rounded-xl pl-4 pr-12 py-2.5 text-white font-mono font-bold text-sm focus:outline-none focus:border-cyan-500 transition" placeholder="850.000">
+                  <span class="absolute right-4 top-2.5 text-xs text-slate-400 font-semibold pointer-events-none select-none">₺</span>
                 </div>
               </div>
               <div>
@@ -400,7 +401,8 @@
             <div>
               <label class="block text-xs font-semibold text-slate-300 mb-1">Sigorta / Kasko Poliçe Teminat Limiti:</label>
               <div class="relative">
-                <input type="text" inputmode="decimal" id="inputPolicyLimit" value="750.000,00 ₺" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-white font-mono font-bold text-sm focus:outline-none focus:border-cyan-500 transition" oninput="calculateDamage()">
+                <input type="text" inputmode="decimal" id="inputPolicyLimit" value="750.000" class="w-full bg-slate-950 border border-slate-700 rounded-xl pl-4 pr-12 py-2.5 text-white font-mono font-bold text-sm focus:outline-none focus:border-cyan-500 transition" placeholder="750.000">
+                <span class="absolute right-4 top-2.5 text-xs text-slate-400 font-semibold pointer-events-none select-none">₺</span>
               </div>
             </div>
 
@@ -882,45 +884,70 @@
       calculateDamage();
     });
 
-    // Helper: TR friendly parse float & currency
+    // Live Realtime Number Formatter (No TL symbol inside input, instant on input)
+    function formatNumberLive(rawVal) {
+      if (rawVal === null || rawVal === undefined) return '';
+      let str = String(rawVal).trim().replace(/[^\d.,]/g, '');
+      if (!str) return '';
+      if (!str.includes(',') && /\.\d{1,2}$/.test(str)) {
+        str = str.replace(/\.(\d{1,2})$/, ',$1');
+      }
+      let parts = str.split(',');
+      let intDigits = parts[0].replace(/\D/g, '');
+      if (!intDigits && parts.length === 1) return '';
+      if (!intDigits && parts.length > 1) intDigits = '0';
+      let formattedInt = intDigits ? BigInt(intDigits).toLocaleString('tr-TR') : '0';
+      if (parts.length > 1) {
+        let dec = parts.slice(1).join('').replace(/\D/g, '').slice(0, 2);
+        return formattedInt + ',' + dec;
+      }
+      return formattedInt;
+    }
+
     function parseAmount(val) {
       if (val === null || val === undefined) return 0;
       if (typeof val === 'number') return isNaN(val) ? 0 : val;
-      let cleaned = String(val).replace(/[^\d.,]/g, '').trim();
-      if (!cleaned) return 0;
-      if (cleaned.includes('.') && cleaned.includes(',')) {
-        cleaned = cleaned.replace(/\./g, '').replace(',', '.');
-      } else if (cleaned.includes(',')) {
-        cleaned = cleaned.replace(',', '.');
-      } else if (cleaned.includes('.')) {
-        const parts = cleaned.split('.');
-        if (parts.length > 2 || (parts.length === 2 && parts[1].length === 3)) {
-          cleaned = cleaned.replace(/\./g, '');
-        }
-      }
-      const num = parseFloat(cleaned);
+      let str = String(val).replace(/[^\d,]/g, '').replace(',', '.');
+      const num = parseFloat(str);
       return isNaN(num) ? 0 : num;
     }
 
-    function formatCurrencyTR(num) {
-      return (num || 0).toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ₺';
+    function attachLiveNumberFormatter(input, onCalculate) {
+      input.addEventListener('input', function() {
+        const raw = this.value;
+        const oldCursor = this.selectionEnd || raw.length;
+        let digitsBeforeCursor = 0;
+        for (let i = 0; i < oldCursor; i++) {
+          if (/\d/.test(raw[i])) digitsBeforeCursor++;
+        }
+        const formatted = formatNumberLive(raw);
+        this.value = formatted;
+        let newCursor = formatted.length;
+        let countedDigits = 0;
+        for (let i = 0; i < formatted.length; i++) {
+          if (/\d/.test(formatted[i])) countedDigits++;
+          if (countedDigits === digitsBeforeCursor) {
+            newCursor = i + 1;
+            break;
+          }
+        }
+        if (raw[oldCursor - 1] === ',' && formatted.includes(',')) {
+          newCursor = formatted.indexOf(',') + 1;
+        }
+        if (newCursor > formatted.length) newCursor = formatted.length;
+        this.setSelectionRange(newCursor, newCursor);
+        if (onCalculate) onCalculate();
+      });
+
+      input.addEventListener('focus', function() {
+        this.select();
+      });
     }
 
-    // Attach focus/blur currency formatting to vehicle & policy inputs
+    // Attach live currency formatting to vehicle & policy inputs
     ['inputVehicleValue', 'inputPolicyLimit'].forEach(id => {
       const el = document.getElementById(id);
-      if (el) {
-        el.addEventListener('focus', function() {
-          this.select();
-        });
-        el.addEventListener('blur', function() {
-          const val = parseAmount(this.value);
-          if (val > 0) this.value = formatCurrencyTR(val);
-        });
-        el.addEventListener('keydown', function(e) {
-          if (e.key === 'Enter') this.blur();
-        });
-      }
+      if (el) attachLiveNumberFormatter(el, calculateDamage);
     });
 
     // Property Type Switcher
