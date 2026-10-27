@@ -1,7 +1,8 @@
 User-agent: *
 Allow: /
+Disallow: /scratch/
 
-# AI Arama ve Tarayıcı Motorları (ChatGPT, Perplexity, Claude, Google)
+# AI Arama ve Ajan Motorlari (ChatGPT, Perplexity, Claude, Google Gemini)
 User-agent: GPTBot
 Allow: /
 
@@ -18,6 +19,9 @@ User-agent: Claude-Web
 Allow: /
 
 User-agent: anthropic-ai
+Allow: /
+
+User-agent: Applebot-Extended
 Allow: /
 
 Sitemap: https://pratik-araclar.pratikweb.workers.dev/sitemap.xml

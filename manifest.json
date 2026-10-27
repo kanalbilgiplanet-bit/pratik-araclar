@@ -1,0 +1,44 @@
+{
+  "name": "Pratik Araçlar",
+  "short_name": "PratikAraçlar",
+  "description": "Günlük ve acil ihtiyaçlar için hızlı, ücretsiz ve reklamsız 12 mikro web aracı.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0b0f19",
+  "theme_color": "#0b0f19",
+  "lang": "tr",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/assets/og-banner.png",
+      "sizes": "1200x630",
+      "type": "image/png"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Akaryakıt Zam Hesaplayıcı",
+      "url": "/akaryakit-zam-hesaplayici/",
+      "description": "Benzin, motorin, LPG ve tüp gaz zamlarını anlık hesaplayın."
+    },
+    {
+      "name": "Canlı Sel Radarı",
+      "url": "/sel-uyarisi/",
+      "description": "Doppler yağış kütleleri ve ani sel uyarısı."
+    },
+    {
+      "name": "Sel Hasar Tazminatı",
+      "url": "/sel-hasar-tazminat/",
+      "description": "Fotoğraflı resmi sigorta ihbar dosyası hazırlama."
+    },
+    {
+      "name": "En Yakın Nöbetçi Eczane",
+      "url": "/nobetci-eczane/",
+      "description": "GPS konumuna en yakın nöbetçi eczane ve yol tarifi."
+    }
+  ]
+}
