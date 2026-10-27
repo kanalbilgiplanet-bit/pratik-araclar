@@ -200,7 +200,7 @@
           Anlık Sel Uyarı Haritası & Canlı Yağış Radarı
         </h1>
         <p class="text-xs sm:text-sm text-slate-400 mt-1 max-w-3xl">
-          Meteorolojik Doppler radarı yağış bulutlarını anlık izler; konumunuzdaki anlık yağış miktarını ($kg/m^2$) ve ani sel/su baskını riskini gösterir.
+          Meteorolojik Doppler radarı yağış bulutlarını anlık izler; konumunuzdaki anlık yağış miktarını (kg/m²) ve ani sel/su baskını riskini gösterir.
         </p>
       </div>
 
@@ -528,10 +528,17 @@
         attributionControl: false
       });
 
-      // Dark Basemap (CartoDB DarkMatter)
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-        maxZoom: 18,
-        subdomains: 'abcd'
+      // ArcGIS World Dark Gray Basemap (Karanlık Tema, API Key İstemez, %100 Güvenilir)
+      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+        maxZoom: 16,
+        attribution: '&copy; Esri, HERE, Garmin'
+      }).addTo(map);
+
+      // Şehir ve İlçe İsimleri Katmanı
+      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}', {
+        maxZoom: 16,
+        pane: 'tilePane',
+        zIndex: 5
       }).addTo(map);
 
       // Attribution

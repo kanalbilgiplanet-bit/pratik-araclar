@@ -392,10 +392,17 @@
         attributionControl: false
       });
 
-      // Dark Basemap (CartoDB DarkMatter)
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-        maxZoom: 19,
-        subdomains: 'abcd'
+      // ArcGIS World Dark Gray Basemap (Karanlık Tema, API Key İstemez, %100 Güvenilir)
+      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+        maxZoom: 16,
+        attribution: '&copy; Esri, HERE, Garmin'
+      }).addTo(map);
+
+      // Cadde ve Sokak İsimleri Katmanı
+      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}', {
+        maxZoom: 16,
+        pane: 'tilePane',
+        zIndex: 5
       }).addTo(map);
 
       // Attribution
