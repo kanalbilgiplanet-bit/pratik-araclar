@@ -1,0 +1,1367 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sel Hasar Tazminat Hesaplayıcı & Fotoğraflı Sigorta İhbar Dosyası Hazırlayıcı</title>
+  <meta name="description" content="Sel ve su baskını sonrası tahmini hasar ve sigorta tazminatınızı hesaplayın, EXIF zaman ve GPS damgalı hasar fotoğraflarınızla resmi sigorta başvuru dilekçenizi (PDF) anında oluşturun.">
+  <meta name="keywords" content="sel sigorta tazminat hesaplama, sel hasar raporu, sel sonrası tazminat ne kadar, su baskını sigorta dilekçesi, sel hasarı fotoğraf raporu, dask sel karşılama">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://pratik-araclar.pratikweb.workers.dev/sel-hasar-tazminat/">
+  <meta property="og:title" content="Sel Hasar Tazminat Hesaplayıcı & Fotoğraflı Sigorta İhbar Dosyası">
+  <meta property="og:description" content="Su derinliği ve alanınıza göre hasarınızı hesaplayın; EXIF tarih ve GPS damgalı fotoğraflarınızla sigortaya sunulabilir resmi PDF başvuru dosyasını 30 saniyede indirin.">
+  <meta property="og:image" content="https://pratik-araclar.pratikweb.workers.dev/assets/og-sel-tazminat.jpg">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Sel Hasar Tazminat Hesaplayıcı & Sigorta Raporu">
+  <meta name="twitter:description" content="Sel ve su baskını hasarını anında hesaplayın, fotoğraflı resmi sigorta ihbar dosyanızı tek tıkla PDF olarak indirin.">
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https://pratik-araclar.pratikweb.workers.dev/sel-hasar-tazminat/">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- EXIF.js CDN for Image Metadata -->
+  <script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
+
+  <!-- jsPDF CDN for Client-side PDF Generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <!-- Structured Data (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "name": "Sel Hasar Tazminat Hesaplayıcı & Sigorta İhbar Dosyası",
+        "url": "https://pratik-araclar.pratikweb.workers.dev/sel-hasar-tazminat/",
+        "description": "Sel ve su baskını sonrası bina, eşya ve temizlik hasarını hesaplayan, EXIF damgalı fotoğraflarla resmi sigorta ihbar dosyası oluşturan ücretsiz araç.",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "All",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "TRY"
+        }
+      },
+      {
+        "@type": "HowTo",
+        "name": "Sel Hasarı Sonrası Sigorta Başvuru Dosyası Nasıl Hazırlanır?",
+        "step": [
+          {
+            "@type": "HowToStep",
+            "name": "Su Yüksekliği ve Hasar Alanını Girin",
+            "text": "Ev, işyeri veya aracınızda yükselen su yüksekliğini (cm) ve etkilenen alanı belirleyin."
+          },
+          {
+            "@type": "HowToStep",
+            "name": "Hasar Fotoğraflarını Yükleyin",
+            "text": "Çektiğiniz fotoğrafları yükleyerek EXIF çekim zamanı ve GPS konumunun otomatik okunmasını sağlayın."
+          },
+          {
+            "@type": "HowToStep",
+            "name": "Resmi Sigorta İhbar Dosyasını PDF Olarak İndirin",
+            "text": "Hesaplanan hasar tablosu ve kanıt fotoğraflarıyla resmi ihbar dilekçenizi tek tıkla indirin ve sigortanıza iletin."
+          }
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "DASK sel ve su baskını hasarını karşılar mı?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Hayır. DASK (Zorunlu Deprem Sigortası) yalnızca deprem ve depremin doğrudan neden olduğu hasarları karşılar. Sel, yağmur suyu ve nehir taşması zararları için konut veya işyeri sigortanızda 'Sel ve Su Baskını' ek teminatı bulunmalıdır."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Sel hasarını sigortaya bildirmek için kaç gün sürem var?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Türk Ticaret Kanunu (TTK md. 1446) uyarınca sigortalı, hasarın gerçekleştiğini öğrendiği tarihten itibaren en geç 5 iş günü içinde sigorta şirketine veya acentesine bildirimde bulunmak zorundadır."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Eksper gelene kadar sel hasarlı eşyalar atılabilir mi?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Kesinlikle hayır. Sigorta eksperi hasar yerini bizzat inceleyip tespit tutanağı düzenlemeden önce hasarlı hiçbir eşya çöpe atılmamalıdır. Ancak suyun daha fazla yayılmasını önleyecek acil tedbirler fotoğraflanarak alınmalıdır."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    /* Hide native number input spinners across all browsers */
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none !important;
+      margin: 0 !important;
+      display: none !important;
+    }
+    input[type="number"] {
+      -moz-appearance: textfield !important;
+      appearance: textfield !important;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 5px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.6);
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(100, 116, 139, 0.4);
+      border-radius: 4px;
+    }
+    @media print {
+      body { background: white !important; color: black !important; padding: 0 !important; }
+      header, footer, .no-print, #wizardSteps, .hero-section { display: none !important; }
+      #printArea { display: block !important; margin: 0 !important; padding: 0 !important; }
+    }
+  </style>
+</head>
+<body class="bg-[#0b0f19] text-slate-100 min-h-screen flex flex-col font-sans antialiased overflow-x-hidden selection:bg-cyan-500 selection:text-slate-950">
+
+  <!-- Header -->
+  <header class="border-b border-slate-800/80 bg-slate-900/80 backdrop-blur-md sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      
+      <div class="flex items-center gap-3">
+        <a href="../" class="flex items-center gap-2 group transition" title="Pratik Araçlar Vitrinine Dön">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center text-white shadow-lg shadow-cyan-900/30 group-hover:scale-105 transition">
+            <i class="fa-solid fa-house-flood-water text-sm"></i>
+          </div>
+          <div class="flex flex-col">
+            <span class="font-bold text-white text-base tracking-tight leading-none group-hover:text-cyan-300 transition">
+              Pratik<span class="text-cyan-400">Araçlar</span>
+            </span>
+            <span class="text-[10px] text-slate-400 tracking-wider">SEL & SİGORTA DOSYASI</span>
+          </div>
+        </a>
+
+        <div class="hidden sm:flex items-center gap-2 ml-3 pl-3 border-l border-slate-700/60">
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+            <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+            EXIF Damgalı Resmi Belge
+          </span>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="flex items-center gap-2.5">
+        <a href="../sel-uyarisi/" class="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700/60 transition">
+          <i class="fa-solid fa-radar text-sky-400"></i> Canlı Sel Radarı
+        </a>
+        <a href="../sel-haritasi/" class="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700/60 transition">
+          <i class="fa-solid fa-map-location-dot text-cyan-400"></i> Sel Haritası
+        </a>
+        <a href="#hukuk-rehberi" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold bg-cyan-600 hover:bg-cyan-500 text-white shadow-md shadow-cyan-900/30 transition">
+          <i class="fa-solid fa-scale-balanced"></i> TTK 5 Gün Kuralı
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Main Hero & Breadcrumbs -->
+  <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full space-y-6">
+
+    <!-- Breadcrumb -->
+    <nav class="flex items-center gap-2 text-xs text-slate-400 no-print">
+      <a href="../" class="hover:text-cyan-400 transition">Ana Sayfa</a>
+      <span>/</span>
+      <a href="../sel-haritasi/" class="hover:text-cyan-400 transition">Afet & Sel Araçları</a>
+      <span>/</span>
+      <span class="text-slate-200 font-semibold">Sel Hasar Tazminat & Fotoğraflı İhbar Dosyası</span>
+    </nav>
+
+    <!-- Hero Title Card -->
+    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-slate-900/90 to-cyan-950/40 border border-slate-800 p-6 sm:p-8 shadow-2xl hero-section">
+      <div class="relative z-10 max-w-3xl">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 mb-3">
+          <i class="fa-solid fa-shield-halved"></i> 6102 Sayılı TTK md. 1446 Resmi İhbar Formatı
+        </div>
+        <h1 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">
+          Sel Hasar Tazminat Hesaplayıcı & <span class="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">Fotoğraflı Sigorta İhbar Dosyası</span>
+        </h1>
+        <p class="text-slate-300 text-sm sm:text-base mt-2.5 leading-relaxed">
+          Su basma yüksekliği ve metrekarenize göre tahmini hasarınızı hesaplayın; fotoğraflarınızdan otomatik okunan <strong>tarih, saat ve GPS konum damgalarıyla</strong> sigorta şirketine sunulabilir resmi <strong>Eksper İhbar Dosyanızı (PDF)</strong> 30 saniyede hazırlayın.
+        </p>
+
+        <!-- Trust Badges -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6 pt-5 border-t border-slate-800/80 text-xs text-slate-300">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-certificate text-cyan-400 text-sm"></i>
+            <span>Resmi Başvuru Formatı</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-camera-retro text-sky-400 text-sm"></i>
+            <span>EXIF Saat & GPS Damgası</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-lock text-emerald-400 text-sm"></i>
+            <span>%100 Cihaz İçi Gizlilik</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-file-pdf text-rose-400 text-sm"></i>
+            <span>Anında Ücretsiz PDF</span>
+          </div>
+        </div>
+      </div>
+      <div class="absolute -right-16 -bottom-16 w-80 h-80 rounded-full bg-cyan-500/10 blur-3xl pointer-events-none"></div>
+    </div>
+
+    <!-- 3 Step Progress Indicator -->
+    <div id="wizardSteps" class="grid grid-cols-3 gap-2 sm:gap-4 no-print">
+      <div class="p-3 sm:p-4 rounded-2xl bg-cyan-500/15 border border-cyan-500/40 text-cyan-300 flex items-center gap-3">
+        <span class="w-7 h-7 rounded-full bg-cyan-500 text-slate-950 font-bold flex items-center justify-center text-xs">1</span>
+        <div class="hidden sm:block">
+          <div class="text-xs font-bold leading-tight">Hasar & Tazminat</div>
+          <div class="text-[10px] text-cyan-400/80">Su seviyesi & m² hesabı</div>
+        </div>
+        <span class="sm:hidden text-xs font-bold">1. Hesapla</span>
+      </div>
+
+      <div class="p-3 sm:p-4 rounded-2xl bg-slate-900 border border-slate-800 text-slate-300 flex items-center gap-3">
+        <span class="w-7 h-7 rounded-full bg-slate-800 text-slate-300 font-bold flex items-center justify-center text-xs">2</span>
+        <div class="hidden sm:block">
+          <div class="text-xs font-bold leading-tight text-white">Fotoğraflı Delil</div>
+          <div class="text-[10px] text-slate-400">EXIF zaman & konum</div>
+        </div>
+        <span class="sm:hidden text-xs font-bold">2. Fotoğraf</span>
+      </div>
+
+      <div class="p-3 sm:p-4 rounded-2xl bg-slate-900 border border-slate-800 text-slate-300 flex items-center gap-3">
+        <span class="w-7 h-7 rounded-full bg-slate-800 text-slate-300 font-bold flex items-center justify-center text-xs">3</span>
+        <div class="hidden sm:block">
+          <div class="text-xs font-bold leading-tight text-white">Resmi Dosya (PDF)</div>
+          <div class="text-[10px] text-slate-400">Tek tıkla sigortaya ihbar</div>
+        </div>
+        <span class="sm:hidden text-xs font-bold">3. PDF İndir</span>
+      </div>
+    </div>
+
+    <!-- MAIN TWO-COLUMN WORKFLOW -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      
+      <!-- LEFT COLUMN: Calculation & Photos (7 cols) -->
+      <div class="lg:col-span-7 space-y-6">
+
+        <!-- CARD 1: Property Type & Water Level Simulator -->
+        <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-5 sm:p-6 shadow-xl space-y-5">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+            <h2 class="text-base font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-water text-cyan-400"></i>
+              <span>1. Hasar Türü ve Su Yüksekliği</span>
+            </h2>
+            <span class="text-xs text-cyan-400 font-mono font-semibold">Adım 1/3</span>
+          </div>
+
+          <!-- Property Type Selector -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-2">Hasar Gören Varlık Türü:</label>
+            <div class="grid grid-cols-3 gap-2">
+              <button type="button" onclick="setPropertyType('konut')" id="btnPropKonut" class="py-2.5 px-3 rounded-xl text-xs font-bold transition flex flex-col items-center justify-center gap-1 bg-cyan-500 text-slate-950 shadow-md">
+                <i class="fa-solid fa-house text-base"></i>
+                <span>Konut (Ev)</span>
+              </button>
+              <button type="button" onclick="setPropertyType('isyeri')" id="btnPropIsyeri" class="py-2.5 px-3 rounded-xl text-xs font-bold transition flex flex-col items-center justify-center gap-1 bg-slate-800 text-slate-300 hover:text-white">
+                <i class="fa-solid fa-store text-base"></i>
+                <span>Ticari İşyeri</span>
+              </button>
+              <button type="button" onclick="setPropertyType('arac')" id="btnPropArac" class="py-2.5 px-3 rounded-xl text-xs font-bold transition flex flex-col items-center justify-center gap-1 bg-slate-800 text-slate-300 hover:text-white">
+                <i class="fa-solid fa-car text-base"></i>
+                <span>Araç (Kasko)</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Water Depth Slider with Visual Gauge -->
+          <div class="pt-2">
+            <div class="flex justify-between items-center mb-1.5">
+              <label class="text-xs font-semibold text-slate-300">Su Basma Yüksekliği (Derinlik):</label>
+              <span id="waterDepthDisplay" class="text-sm font-mono font-extrabold text-cyan-400 bg-cyan-950/60 px-2.5 py-0.5 rounded-lg border border-cyan-800/60">45 cm</span>
+            </div>
+
+            <!-- Water Gauge Bar Visual -->
+            <div class="relative h-6 bg-slate-950 rounded-xl overflow-hidden border border-slate-800 mb-3">
+              <div id="waterGaugeBar" class="h-full bg-gradient-to-r from-sky-500 via-cyan-400 to-blue-600 transition-all duration-200" style="width: 22.5%;"></div>
+              <div class="absolute inset-0 flex items-center justify-between px-3 text-[10px] text-white font-mono font-bold pointer-events-none drop-shadow">
+                <span>0 cm</span>
+                <span id="waterLevelBadgeText">Priz & Mobilya Seviyesi</span>
+                <span>200 cm+</span>
+              </div>
+            </div>
+
+            <input type="range" id="sliderWaterDepth" min="5" max="200" step="5" value="45" oninput="onWaterDepthChange(this.value)" class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-cyan-500">
+            
+            <!-- Quick Water Level Presets -->
+            <div class="grid grid-cols-4 gap-2 mt-2.5 text-[11px] font-mono">
+              <button type="button" onclick="setWaterDepth(15)" class="py-1 px-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition text-center">15 cm (Parke)</button>
+              <button type="button" onclick="setWaterDepth(45)" class="py-1 px-2 rounded-lg bg-cyan-600 text-white font-bold transition text-center">45 cm (Mobilya)</button>
+              <button type="button" onclick="setWaterDepth(85)" class="py-1 px-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition text-center">85 cm (Tezgâh)</button>
+              <button type="button" onclick="setWaterDepth(150)" class="py-1 px-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition text-center">150 cm (Tam Ziyan)</button>
+            </div>
+          </div>
+
+          <!-- Area and Floor Level (for Konut & İşyeri) -->
+          <div id="sectionAreaAndFloor" class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <label class="text-xs font-semibold text-slate-300">Etkilenen Alan (m²):</label>
+                <span id="areaDisplay" class="text-xs font-mono font-bold text-slate-200">95 m²</span>
+              </div>
+              <div class="relative">
+                <input type="text" inputmode="decimal" id="inputArea" value="95" class="w-full bg-slate-950 border border-slate-700 rounded-xl pl-4 pr-12 py-2.5 text-white font-mono font-bold text-sm focus:outline-none focus:border-cyan-500 transition" oninput="onAreaInput(this.value)">
+                <span class="absolute right-4 top-2.5 text-xs text-slate-400 font-semibold pointer-events-none select-none">m²</span>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Kat Seviyesi / Risk Durumu:</label>
+              <select id="selectFloorLevel" onchange="calculateDamage()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-100 focus:outline-none focus:border-cyan-500 transition">
+                <option value="1.30">Bodrum / Yarı Bodrum Kat (%30 Ek Risk)</option>
+                <option value="1.10">Bahçe Katı / Müstakil Zemin (%10 Ek Risk)</option>
+                <option value="1.00" selected>Düz Giriş / Zemin Kat (Standart)</option>
+                <option value="0.90">Yüksek Giriş / 1. Kat</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Vehicle Specific Inputs (shown when 'arac' selected) -->
+          <div id="sectionVehicleInputs" class="hidden space-y-3 pt-2">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 mb-1">Araç Güncel Kasko Rayiç Değeri (TL):</label>
+                <div class="relative">
+                  <input type="text" inputmode="decimal" id="inputVehicleValue" value="850000" class="w-full bg-slate-950 border border-slate-700 rounded-xl pl-4 pr-12 py-2.5 text-white font-mono font-bold text-sm focus:outline-none focus:border-cyan-500 transition" oninput="calculateDamage()">
+                  <span class="absolute right-4 top-2.5 text-xs text-slate-400 font-semibold pointer-events-none select-none">₺</span>
+                </div>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 mb-1">Motor Çalışır Durumda mıydı?</label>
+                <select id="selectEngineState" onchange="calculateDamage()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-100 focus:outline-none focus:border-cyan-500 transition">
+                  <option value="parked">Park Halinde / Kontak Kapalı (Daha Az Hasar)</option>
+                  <option value="running">Seyir Halinde / Suya Girdi (Hidrolik Şok / Pert Riski)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Damaged Items Inventory Checkboxes -->
+          <div id="sectionDamagedItems" class="pt-3 border-t border-slate-800">
+            <label class="block text-xs font-semibold text-slate-300 mb-2">Hasar Gören Kalemler (İşaretleyin):</label>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
+              <label class="flex items-center gap-2 p-2.5 rounded-xl bg-slate-950/70 border border-slate-800 hover:border-slate-700 cursor-pointer">
+                <input type="checkbox" id="itemParke" checked onchange="calculateDamage()" class="rounded border-slate-700 text-cyan-500 focus:ring-0">
+                <span class="text-slate-200">Parke & Zemin</span>
+              </label>
+              <label class="flex items-center gap-2 p-2.5 rounded-xl bg-slate-950/70 border border-slate-800 hover:border-slate-700 cursor-pointer">
+                <input type="checkbox" id="itemKapi" checked onchange="calculateDamage()" class="rounded border-slate-700 text-cyan-500 focus:ring-0">
+                <span class="text-slate-200">Kapı & Süpürgelik</span>
+              </label>
+              <label class="flex items-center gap-2 p-2.5 rounded-xl bg-slate-950/70 border border-slate-800 hover:border-slate-700 cursor-pointer">
+                <input type="checkbox" id="itemMobilya" checked onchange="calculateDamage()" class="rounded border-slate-700 text-cyan-500 focus:ring-0">
+                <span class="text-slate-200">Mobilya & Koltuk</span>
+              </label>
+              <label class="flex items-center gap-2 p-2.5 rounded-xl bg-slate-950/70 border border-slate-800 hover:border-slate-700 cursor-pointer">
+                <input type="checkbox" id="itemBeyazEsya" checked onchange="calculateDamage()" class="rounded border-slate-700 text-cyan-500 focus:ring-0">
+                <span class="text-slate-200">Beyaz Eşya</span>
+              </label>
+              <label class="flex items-center gap-2 p-2.5 rounded-xl bg-slate-950/70 border border-slate-800 hover:border-slate-700 cursor-pointer">
+                <input type="checkbox" id="itemElektronik" onchange="calculateDamage()" class="rounded border-slate-700 text-cyan-500 focus:ring-0">
+                <span class="text-slate-200">Elektronik & TV</span>
+              </label>
+              <label class="flex items-center gap-2 p-2.5 rounded-xl bg-slate-950/70 border border-slate-800 hover:border-slate-700 cursor-pointer">
+                <input type="checkbox" id="itemTesisat" onchange="calculateDamage()" class="rounded border-slate-700 text-cyan-500 focus:ring-0">
+                <span class="text-slate-200">Kombi & Elektrik</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Policy & Deductible -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-3 border-t border-slate-800">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Sigorta / Kasko Poliçe Teminat Limiti (TL):</label>
+              <div class="relative">
+                <input type="text" inputmode="decimal" id="inputPolicyLimit" value="750000" class="w-full bg-slate-950 border border-slate-700 rounded-xl pl-4 pr-12 py-2.5 text-white font-mono font-bold text-sm focus:outline-none focus:border-cyan-500 transition" oninput="calculateDamage()">
+                <span class="absolute right-4 top-2.5 text-xs text-slate-400 font-semibold pointer-events-none select-none">₺</span>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Poliçe Muafiyet Oranı (%):</label>
+              <div class="relative">
+                <input type="text" inputmode="decimal" id="inputDeductible" value="2" class="w-full bg-slate-950 border border-slate-700 rounded-xl pl-4 pr-12 py-2.5 text-white font-mono font-bold text-sm focus:outline-none focus:border-cyan-500 transition" oninput="calculateDamage()">
+                <span class="absolute right-4 top-2.5 text-xs text-slate-400 font-semibold pointer-events-none select-none">%</span>
+              </div>
+              <div class="text-[10px] text-slate-500 mt-1">Türkiye standart konut/kasko muafiyeti genelde %2'dir.</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- CARD 2: Photo Evidence & EXIF Verification -->
+        <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-5 sm:p-6 shadow-xl space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+            <h2 class="text-base font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-camera-retro text-sky-400"></i>
+              <span>2. Fotoğraflı Delil & EXIF İspat Motoru</span>
+            </h2>
+            <span class="text-xs text-sky-400 font-mono font-semibold">Adım 2/3</span>
+          </div>
+
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Fotoğrafları seçtiğinizde cihazınızın dosyaya işlediği <strong>çekim saati</strong> ve <strong>GPS koordinatları</strong> otomatik okunur. Bu bilgiler sigorta eksperlerinin en çok itiraz ettiği "olay tarihi ve mahalli uyuşmazlığını" sıfıra indirir.
+          </p>
+
+          <!-- Upload Drop Zone -->
+          <div id="dropZone" onclick="document.getElementById('photoInput').click()" class="border-2 border-dashed border-slate-700 hover:border-cyan-500 bg-slate-950/60 rounded-2xl p-6 text-center cursor-pointer transition group">
+            <input type="file" id="photoInput" multiple accept="image/*" class="hidden" onchange="handlePhotoUpload(this.files)">
+            <div class="w-12 h-12 rounded-2xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition">
+              <i class="fa-solid fa-cloud-arrow-up text-xl"></i>
+            </div>
+            <div class="text-sm font-bold text-white mb-1">Hasar Fotoğraflarını Buraya Sürükleyin veya Seçin</div>
+            <div class="text-xs text-slate-400">Telefon veya kamerayla çekilmiş orijinal fotoğraflar (En fazla 4 adet)</div>
+            <div class="mt-3 inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-semibold bg-slate-800 text-slate-300">
+              <i class="fa-solid fa-shield text-emerald-400"></i> Fotoğraflarınız sunucuya gönderilmez, cihazınızda işlenir.
+            </div>
+          </div>
+
+          <!-- Photo Cards Container -->
+          <div id="photoListContainer" class="space-y-3">
+            <!-- Dynamic Photo Cards Injected Here -->
+          </div>
+
+          <!-- Manual Location / Geolocation Helper if EXIF lacks GPS -->
+          <div class="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+            <div class="text-slate-300">
+              <i class="fa-solid fa-location-crosshairs text-cyan-400 mr-1.5"></i>
+              <span id="labelDetectedLocation">Konum Durumu: Fotoğraflardan bekleniyor veya cihaz konumunuzu ekleyin.</span>
+            </div>
+            <button type="button" onclick="getCurrentLocation()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-300 font-semibold transition shrink-0">
+              <i class="fa-solid fa-crosshairs mr-1"></i> Cihaz Konumumu Al
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- RIGHT COLUMN: Results & Official PDF Dossier (5 cols) -->
+      <div class="lg:col-span-5 space-y-6">
+
+        <!-- CARD 3: Calculation Breakdown -->
+        <div class="bg-gradient-to-br from-slate-900 via-slate-900 to-cyan-950/50 border border-cyan-800/40 rounded-3xl p-5 sm:p-6 shadow-2xl space-y-5">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+            <span class="text-xs font-bold text-cyan-400 uppercase tracking-wider">TAHMİNİ HASAR & TAZMİNAT DÖKÜMÜ</span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold font-mono bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">CANLI HESAP</span>
+          </div>
+
+          <!-- Big Compensation Number -->
+          <div>
+            <div class="text-[11px] text-slate-400 font-semibold mb-1">Sigortadan Talep Edilebilir Net Tazminat:</div>
+            <div class="flex items-baseline gap-2">
+              <span id="resultClaimAmount" class="text-3xl sm:text-4xl font-extrabold text-white font-mono tracking-tight">₺184,500.00</span>
+            </div>
+            <div class="text-xs text-slate-400 mt-1 flex items-center justify-between">
+              <span>Toplam Tahmini Hasar:</span>
+              <span id="resultTotalDamage" class="font-mono font-bold text-slate-200">₺188,265.00</span>
+            </div>
+            <div class="text-xs text-slate-400 mt-0.5 flex items-center justify-between">
+              <span>Poliçe Muafiyet Kesintisi (%2):</span>
+              <span id="resultDeductibleAmount" class="font-mono text-rose-400 font-semibold">-₺3,765.00</span>
+            </div>
+          </div>
+
+          <!-- Breakdown Sub-Cards -->
+          <div class="space-y-2.5 pt-3 border-t border-slate-800 text-xs">
+            <div class="flex justify-between items-center p-2.5 rounded-xl bg-slate-950/60 border border-slate-800/80">
+              <span class="text-slate-300 flex items-center gap-2">
+                <i class="fa-solid fa-hammer text-amber-400 text-xs"></i> Yapısal Onarım (Zemin/Duvar/Kapı):
+              </span>
+              <span id="breakdownStructural" class="font-mono font-bold text-slate-100">₺85,500.00</span>
+            </div>
+
+            <div class="flex justify-between items-center p-2.5 rounded-xl bg-slate-950/60 border border-slate-800/80">
+              <span class="text-slate-300 flex items-center gap-2">
+                <i class="fa-solid fa-couch text-sky-400 text-xs"></i> Eşya & Demirbaş Ziyanı:
+              </span>
+              <span id="breakdownItems" class="font-mono font-bold text-slate-100">₺76,000.00</span>
+            </div>
+
+            <div class="flex justify-between items-center p-2.5 rounded-xl bg-slate-950/60 border border-slate-800/80">
+              <span class="text-slate-300 flex items-center gap-2">
+                <i class="fa-solid fa-broom text-teal-400 text-xs"></i> Çamur Tahliye & Temizlik Masrafı:
+              </span>
+              <span id="breakdownCleaning" class="font-mono font-bold text-slate-100">₺26,765.00</span>
+            </div>
+          </div>
+
+          <div class="p-3 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-xs text-cyan-200 leading-relaxed">
+            <i class="fa-solid fa-circle-info mr-1"></i>
+            <strong>Eksper Prensibi:</strong> Bu hesaplama Bayındırlık & Çevre Bakanlığı rayiçleri, sigorta ekspertiz amortisman katsayıları ve fiili su basma yüksekliği baz alınarak yapılmıştır.
+          </div>
+        </div>
+
+        <!-- CARD 4: Official Claim Dossier Form & PDF Export -->
+        <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-5 sm:p-6 shadow-xl space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+            <h2 class="text-base font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-file-signature text-emerald-400"></i>
+              <span>3. Resmi Başvuru Bilgileri (PDF)</span>
+            </h2>
+            <span class="text-xs text-emerald-400 font-mono font-semibold">Adım 3/3</span>
+          </div>
+
+          <p class="text-xs text-slate-300">
+            Sigorta şirketinizin hasar dosyasını doğrudan açabilmesi için aşağıdaki bilgileri eksiksiz doldurun:
+          </p>
+
+          <div class="space-y-3 text-xs">
+            <div>
+              <label class="block font-semibold text-slate-300 mb-1">Sigortalı / Hak Sahibi Adı Soyadı:</label>
+              <input type="text" id="pdfOwnerName" value="Ahmet Yılmaz" placeholder="Ad Soyad" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-medium focus:outline-none focus:border-cyan-500">
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block font-semibold text-slate-300 mb-1">TCKN / VKN:</label>
+                <input type="text" id="pdfTckn" value="12345678901" placeholder="TC Kimlik No" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-mono focus:outline-none focus:border-cyan-500">
+              </div>
+              <div>
+                <label class="block font-semibold text-slate-300 mb-1">İletişim Telefonu:</label>
+                <input type="text" id="pdfPhone" value="0532 555 0000" placeholder="05XX XXX XX XX" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-mono focus:outline-none focus:border-cyan-500">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block font-semibold text-slate-300 mb-1">Sigorta Şirketi:</label>
+                <select id="pdfInsurer" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-medium focus:outline-none focus:border-cyan-500">
+                  <option value="Türkiye Sigorta">Türkiye Sigorta</option>
+                  <option value="Allianz Sigorta">Allianz Sigorta</option>
+                  <option value="Anadolu Sigorta">Anadolu Sigorta</option>
+                  <option value="Aksigorta">Aksigorta</option>
+                  <option value="Axa Sigorta">Axa Sigorta</option>
+                  <option value="Sompo Sigorta">Sompo Sigorta</option>
+                  <option value="HDI Sigorta">HDI Sigorta</option>
+                  <option value="Diğer Sigorta Şirketi">Diğer</option>
+                </select>
+              </div>
+              <div>
+                <label class="block font-semibold text-slate-300 mb-1">Poliçe Numarası:</label>
+                <input type="text" id="pdfPolicyNo" value="POL-2026-98741" placeholder="Poliçe No" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-mono focus:outline-none focus:border-cyan-500">
+              </div>
+            </div>
+
+            <div>
+              <label class="block font-semibold text-slate-300 mb-1">Hasar Meydana Gelen Olay Adresi:</label>
+              <input type="text" id="pdfAddress" value="Atatürk Mah. Karanfil Sok. No:12 D:1 Kadıköy / İstanbul" placeholder="Mahalle, Sokak, No, İlçe, İl" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-medium focus:outline-none focus:border-cyan-500">
+            </div>
+
+            <div>
+              <label class="block font-semibold text-slate-300 mb-1">Olay Özeti & Hasar Notu:</label>
+              <textarea id="pdfNotes" rows="2" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-white text-xs focus:outline-none focus:border-cyan-500">Şiddetli sağanak yağış neticesinde sokak rögarının taşmasıyla dairemize 45 cm su basmış, zemin ve mobilyalar kullanılamaz hale gelmiştir.</textarea>
+            </div>
+          </div>
+
+          <!-- Download Action Buttons -->
+          <div class="pt-3 space-y-2">
+            <button type="button" onclick="generatePdfDossier()" class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-extrabold text-sm transition shadow-lg shadow-cyan-900/40 flex items-center justify-center gap-2 active:scale-98">
+              <i class="fa-solid fa-file-pdf text-base"></i>
+              <span>Resmi Sigorta Dosyasını İndir (PDF)</span>
+            </button>
+
+            <button type="button" onclick="printOfficialDossier()" class="w-full py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs transition border border-slate-700 flex items-center justify-center gap-2">
+              <i class="fa-solid fa-print"></i>
+              <span>Yazdır / Tarayıcıdan Kaydet</span>
+            </button>
+          </div>
+
+          <div class="text-[11px] text-slate-400 text-center">
+            Dosya referans no: <span id="labelRefCode" class="font-mono text-cyan-400 font-bold">SEL-2026-8419</span>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- LEGAL GUIDE & EXPERT CHECKLIST -->
+    <section id="hukuk-rehberi" class="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl space-y-6">
+      <div class="flex items-center gap-3 pb-4 border-b border-slate-800">
+        <div class="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center text-lg">
+          <i class="fa-solid fa-scale-balanced"></i>
+        </div>
+        <div>
+          <h2 class="text-lg font-bold text-white">Sel ve Su Baskını Hasarında Hukuki Haklarınız & Eksper Rehberi</h2>
+          <p class="text-xs text-slate-400">Türk Ticaret Kanunu (TTK) ve Hazine Sigortacılık Mevzuatı Temel Kuralları</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5 text-xs text-slate-300">
+        
+        <div class="p-4 rounded-2xl bg-slate-950/70 border border-slate-800 space-y-2">
+          <div class="font-bold text-amber-400 text-sm flex items-center gap-2">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span>5 İş Günü İhbar Kuralı (TTK 1446)</span>
+          </div>
+          <p class="leading-relaxed">
+            Rizikonun gerçekleştiğini öğrendiğiniz tarihten itibaren en geç <strong>5 iş günü</strong> içinde sigortacıya veya acenteye bildirim yapılmalıdır. Hazırladığınız PDF ihbar dilekçesi bu süreyi yasal olarak kanıtlar.
+          </p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-slate-950/70 border border-slate-800 space-y-2">
+          <div class="font-bold text-sky-400 text-sm flex items-center gap-2">
+            <i class="fa-solid fa-camera"></i>
+            <span>Eksper Öncesi Delil Saklama</span>
+          </div>
+          <p class="leading-relaxed">
+            Eksper gelmeden hasarlı eşyaları kesinlikle atmayın! Ancak küflenmeyi ve hasarın büyümesini önlemek için su tahliyesi yapılabilir; tahliye öncesinde tüm eşyaların su seviyesiyle fotoğrafını çekin.
+          </p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-slate-950/70 border border-slate-800 space-y-2">
+          <div class="font-bold text-emerald-400 text-sm flex items-center gap-2">
+            <i class="fa-solid fa-building-shield"></i>
+            <span>DASK ve Konut Poliçesi Farkı</span>
+          </div>
+          <p class="leading-relaxed">
+            <strong>DASK (Zorunlu Deprem Sigortası) sel hasarını ödemez!</strong> Sel zararları için Konut / İşyeri poliçesinde "Sel ve Su Baskını" ek klozunun bulunması şarttır. Araçlarda ise Kasko poliçesi sel teminatı içerir.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Expert 5 Golden Rules Checklist -->
+      <div class="p-4 rounded-2xl bg-gradient-to-r from-cyan-950/30 to-slate-900 border border-cyan-800/40 space-y-2">
+        <div class="text-xs font-bold text-cyan-300 uppercase tracking-wide">Eksper Geldiğinde Dosyanızda Bulunması Gerekenler:</div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-300">
+          <div class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-cyan-400 text-xs"></i> İndirdiğiniz bu İhbar ve Tazminat Dosyası (PDF)</div>
+          <div class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-cyan-400 text-xs"></i> Tapu fotokopisi veya kira kontratı</div>
+          <div class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-cyan-400 text-xs"></i> EXIF tarih damgalı orijinal fotoğraf dosyaları</div>
+          <div class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-cyan-400 text-xs"></i> Varsa itfaiye veya belediye sel tespit tutanağı</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ ACCORDION SECTION -->
+    <section class="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl space-y-4">
+      <h2 class="text-lg font-bold text-white mb-2 flex items-center gap-2">
+        <i class="fa-solid fa-circle-question text-cyan-400"></i>
+        <span>Sıkça Sorulan Sorular (Sel & Sigorta Tazminatı)</span>
+      </h2>
+
+      <div class="space-y-3 text-xs">
+        <details class="group bg-slate-950/60 p-4 rounded-2xl border border-slate-800 cursor-pointer">
+          <summary class="font-bold text-slate-200 flex justify-between items-center list-none">
+            <span>DASK sel veya su basması zararımı karşılar mı?</span>
+            <i class="fa-solid fa-chevron-down text-slate-400 group-open:rotate-180 transition"></i>
+          </summary>
+          <p class="mt-2 text-slate-400 leading-relaxed">
+            Hayır. DASK yalnızca deprem ve depremin doğrudan tetiklediği yangın, infilak, tsunami gibi zararları teminat altına alır. Yağmur suyu taşması, dere yatağı taşması veya altyapı yetersizliği kaynaklı seller için Konut Sigortanızda sel teminatının yer alması zorunludur.
+          </p>
+        </details>
+
+        <details class="group bg-slate-950/60 p-4 rounded-2xl border border-slate-800 cursor-pointer">
+          <summary class="font-bold text-slate-200 flex justify-between items-center list-none">
+            <span>Fotoğraflarda EXIF zaman ve konum damgası neden bu kadar önemlidir?</span>
+            <summary class="hidden"></summary>
+            <i class="fa-solid fa-chevron-down text-slate-400 group-open:rotate-180 transition"></i>
+          </summary>
+          <p class="mt-2 text-slate-400 leading-relaxed">
+            Sigorta şirketleri hasarın poliçe vadesi içinde ve belirtilen adreste gerçekleştiğini teyit etmek ister. Akıllı telefonla çekilen orijinal fotoğrafların EXIF başlığında çekildiği tam saniye ve GPS koordinatı yer alır. Bu bilgilerin rapora gömülmesi dosyanın itirazsız onaylanmasını hızlandırır.
+          </p>
+        </details>
+
+        <details class="group bg-slate-950/60 p-4 rounded-2xl border border-slate-800 cursor-pointer">
+          <summary class="font-bold text-slate-200 flex justify-between items-center list-none">
+            <span>Kiracıyım, selde evdeki eşyalarım zarar gördü; tazminatı ben mi ev sahibi mi alır?</span>
+            <summary class="hidden"></summary>
+            <i class="fa-solid fa-chevron-down text-slate-400 group-open:rotate-180 transition"></i>
+          </summary>
+          <p class="mt-2 text-slate-400 leading-relaxed">
+            Eşya sigortasını kiracı kendisi yaptırdıysa eşya tazminatını doğrudan kiracı alır. Ev sahibinin yaptırdığı bina poliçesi yalnızca bina demirbaşlarını (parke, kombi, kapılar) karşılar; kiracının eşyalarını kapsamaz.
+          </p>
+        </details>
+      </div>
+    </section>
+
+    <!-- CROSS PROMOTION SECTION -->
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2 no-print">
+      <a href="../sel-uyarisi/" class="p-4 rounded-2xl bg-slate-900 border border-slate-800 hover:border-sky-500/60 transition group flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-sky-500/10 text-sky-400 flex items-center justify-center text-lg group-hover:scale-110 transition">
+          <i class="fa-solid fa-radar"></i>
+        </div>
+        <div>
+          <div class="text-xs font-bold text-white group-hover:text-sky-300 transition">Canlı Sel & Yağış Radarı</div>
+          <div class="text-[11px] text-slate-400">Yaklaşan yağış kütlelerini anlık izleyin</div>
+        </div>
+      </a>
+
+      <a href="../sel-haritasi/" class="p-4 rounded-2xl bg-slate-900 border border-slate-800 hover:border-cyan-500/60 transition group flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center text-lg group-hover:scale-110 transition">
+          <i class="fa-solid fa-map-location-dot"></i>
+        </div>
+        <div>
+          <div class="text-xs font-bold text-white group-hover:text-cyan-300 transition">Türkiye Sel Risk Haritası</div>
+          <div class="text-[11px] text-slate-400">İl ve ilçe bazlı sel riski analizi</div>
+        </div>
+      </a>
+
+      <a href="../acil-durum-radar/" class="p-4 rounded-2xl bg-slate-900 border border-slate-800 hover:border-rose-500/60 transition group flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-rose-500/10 text-rose-400 flex items-center justify-center text-lg group-hover:scale-110 transition">
+          <i class="fa-solid fa-truck-medical"></i>
+        </div>
+        <div>
+          <div class="text-xs font-bold text-white group-hover:text-rose-300 transition">Acil Durum Radarı</div>
+          <div class="text-[11px] text-slate-400">En yakın acil toplanma & yardım hatları</div>
+        </div>
+      </a>
+    </section>
+
+  </main>
+
+  <!-- PRINT ONLY DOSSIER TEMPLATE (used for window.print()) -->
+  <div id="printArea" class="hidden p-8 text-black bg-white max-w-4xl mx-auto font-sans">
+    <div class="border-b-2 border-black pb-4 mb-6 flex justify-between items-start">
+      <div>
+        <h1 class="text-xl font-bold uppercase tracking-tight">T.C. SİGORTA VE REASÜRANS ŞİRKETLERİ NEZDİNDE</h1>
+        <h2 class="text-base font-extrabold text-blue-800">SEL VE SU BASKINI HASAR İHBARI, TAZMİNAT TALEP VE DELİL DOSYASI</h2>
+        <p class="text-xs text-gray-600 mt-1">6102 Sayılı Türk Ticaret Kanunu (TTK md. 1446) Yasal Süresi İçinde Düzenlenmiştir</p>
+      </div>
+      <div class="text-right text-xs">
+        <div class="font-bold">Dosya Ref: <span id="printRefCode">SEL-2026-8419</span></div>
+        <div>Tarih: <span id="printCurrentDate">27.10.2026</span></div>
+      </div>
+    </div>
+
+    <!-- Applicant Table -->
+    <table class="w-full text-xs border border-gray-400 mb-6">
+      <tr class="bg-gray-100 font-bold border-b border-gray-400">
+        <td colspan="4" class="p-2 uppercase">1. SİGORTALI / HAK SAHİBİ VE POLİÇE BİLGİLERİ</td>
+      </tr>
+      <tr class="border-b border-gray-300">
+        <td class="p-2 font-bold w-1/4 bg-gray-50">Sigortalı Adı Soyadı:</td>
+        <td class="p-2 w-1/4" id="printOwnerName">-</td>
+        <td class="p-2 font-bold w-1/4 bg-gray-50">TCKN / VKN:</td>
+        <td class="p-2 w-1/4 font-mono" id="printTckn">-</td>
+      </tr>
+      <tr class="border-b border-gray-300">
+        <td class="p-2 font-bold bg-gray-50">İletişim Telefonu:</td>
+        <td class="p-2 font-mono" id="printPhone">-</td>
+        <td class="p-2 font-bold bg-gray-50">Sigorta Şirketi & Poliçe No:</td>
+        <td class="p-2" id="printPolicyInfo">-</td>
+      </tr>
+      <tr>
+        <td class="p-2 font-bold bg-gray-50">Olay Yeri Adresi:</td>
+        <td colspan="3" class="p-2" id="printAddress">-</td>
+      </tr>
+    </table>
+
+    <!-- Damage Calculation Table -->
+    <table class="w-full text-xs border border-gray-400 mb-6">
+      <tr class="bg-gray-100 font-bold border-b border-gray-400">
+        <td colspan="4" class="p-2 uppercase">2. HASAR TESPİT VE TAZMİNAT KEŞİF TABLOSU</td>
+      </tr>
+      <tr class="border-b border-gray-300">
+        <td class="p-2 font-bold w-1/4 bg-gray-50">Hasar Türü:</td>
+        <td class="p-2 w-1/4" id="printPropType">Konut (Ev)</td>
+        <td class="p-2 font-bold w-1/4 bg-gray-50">Su Basma Derinliği:</td>
+        <td class="p-2 w-1/4 font-mono font-bold" id="printWaterDepth">-</td>
+      </tr>
+      <tr class="border-b border-gray-300">
+        <td class="p-2 font-bold bg-gray-50">Etkilenen Alan:</td>
+        <td class="p-2 font-mono" id="printArea">-</td>
+        <td class="p-2 font-bold bg-gray-50">Kat Seviyesi:</td>
+        <td class="p-2" id="printFloor">-</td>
+      </tr>
+      <tr class="border-b border-gray-300">
+        <td class="p-2 font-bold bg-gray-50">1. Yapısal Onarım (Zemin/Duvar/Kapı):</td>
+        <td colspan="3" class="p-2 font-mono font-bold text-right" id="printStructuralCost">-</td>
+      </tr>
+      <tr class="border-b border-gray-300">
+        <td class="p-2 font-bold bg-gray-50">2. Eşya / Demirbaş / Emtia Ziyanı:</td>
+        <td colspan="3" class="p-2 font-mono font-bold text-right" id="printItemsCost">-</td>
+      </tr>
+      <tr class="border-b border-gray-300">
+        <td class="p-2 font-bold bg-gray-50">3. Çamur Arındırma & Tahliye Masrafı:</td>
+        <td colspan="3" class="p-2 font-mono font-bold text-right" id="printCleaningCost">-</td>
+      </tr>
+      <tr class="border-b border-gray-300 bg-gray-50">
+        <td class="p-2 font-bold">Toplam Belirlenen Hasar Tutarı:</td>
+        <td colspan="3" class="p-2 font-mono font-bold text-right" id="printTotalDamage">-</td>
+      </tr>
+      <tr class="border-b border-gray-300">
+        <td class="p-2 font-bold">Poliçe Muafiyet Kesintisi (%2):</td>
+        <td colspan="3" class="p-2 font-mono text-red-600 text-right" id="printDeductible">-</td>
+      </tr>
+      <tr class="bg-blue-50 font-bold text-sm">
+        <td class="p-2 text-blue-900">SİGORTADAN TALEP EDİLEN NET TAZMİNAT:</td>
+        <td colspan="3" class="p-2 font-mono font-extrabold text-blue-900 text-right" id="printNetClaim">-</td>
+      </tr>
+    </table>
+
+    <!-- Notes & Statement -->
+    <div class="mb-6 text-xs">
+      <div class="font-bold mb-1">3. OLAY ÖZETİ VE SİGORTALI BEYANI:</div>
+      <div class="p-3 border border-gray-300 bg-gray-50 rounded" id="printNotes">-</div>
+    </div>
+
+    <!-- Photo Thumbnails with EXIF -->
+    <div class="mb-6">
+      <div class="font-bold text-xs uppercase mb-2">4. DELİL FOTOĞRAFLARI (EXIF ZAMAN VE GPS DAMGALI):</div>
+      <div id="printPhotosContainer" class="grid grid-cols-2 gap-4">
+        <!-- Injected dynamically -->
+      </div>
+    </div>
+
+    <!-- Signatures -->
+    <div class="border-t border-gray-400 pt-4 mt-8 flex justify-between text-xs">
+      <div class="w-1/2 pr-4">
+        <p class="text-[10px] text-gray-500">İşbu dosya PratikAraçlar Sel Hasar ve Delil Motoru aracılığıyla oluşturulmuş olup, olay yeri orijinal dijital fotoğraf metadata (EXIF) kayıtlarını doğrulamaktadır.</p>
+      </div>
+      <div class="text-right w-1/3">
+        <div class="font-bold">Beyan Eden Hak Sahibi:</div>
+        <div id="printSignName" class="mt-1 font-semibold">-</div>
+        <div class="mt-8 border-b border-black w-32 ml-auto"></div>
+        <div class="text-[10px] text-gray-500 mt-1">İmza</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800 bg-slate-950/80 py-8 text-xs text-slate-400 mt-12 no-print">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <div class="w-6 h-6 rounded-lg bg-cyan-500 flex items-center justify-center text-slate-950 font-bold text-xs">P</div>
+        <span>© 2026 PratikAraçlar - Ücretsiz Hızlı Web Araçları Portalı</span>
+      </div>
+      <div class="flex items-center gap-4 text-slate-400">
+        <a href="../sel-haritasi/" class="hover:text-cyan-400 transition">Sel Haritası</a>
+        <a href="../sel-uyarisi/" class="hover:text-cyan-400 transition">Sel Radarı</a>
+        <a href="../akaryakit-zam-hesaplayici/" class="hover:text-cyan-400 transition">Akaryakıt Zam</a>
+        <a href="../" class="hover:text-cyan-400 transition">Tüm Araçlar</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JAVASCRIPT ENGINE -->
+  <script>
+    // State Variables
+    let activePropertyType = 'konut'; // 'konut', 'isyeri', 'arac'
+    let waterDepthCm = 45;
+    let areaM2 = 95;
+    let vehicleMarketValue = 850000;
+    let uploadedPhotos = []; // { file, dataUrl, date, makeModel, gpsLat, gpsLng, note }
+    let globalGpsCoords = null;
+    let uniqueRefCode = 'SEL-2026-' + Math.floor(1000 + Math.random() * 9000);
+
+    // Document Init
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('labelRefCode').textContent = uniqueRefCode;
+      document.getElementById('printRefCode').textContent = uniqueRefCode;
+      document.getElementById('printCurrentDate').textContent = new Date().toLocaleDateString('tr-TR');
+      calculateDamage();
+    });
+
+    // Helper: TR friendly parse float
+    function parseAmount(val) {
+      if (val === null || val === undefined) return 0;
+      if (typeof val === 'number') return isNaN(val) ? 0 : val;
+      const cleaned = String(val).replace(',', '.').trim();
+      const num = parseFloat(cleaned);
+      return isNaN(num) ? 0 : num;
+    }
+
+    // Property Type Switcher
+    function setPropertyType(type) {
+      activePropertyType = type;
+      const bK = document.getElementById('btnPropKonut');
+      const bI = document.getElementById('btnPropIsyeri');
+      const bA = document.getElementById('btnPropArac');
+
+      [bK, bI, bA].forEach(b => b.className = "py-2.5 px-3 rounded-xl text-xs font-bold transition flex flex-col items-center justify-center gap-1 bg-slate-800 text-slate-300 hover:text-white");
+
+      const activeBtn = type === 'konut' ? bK : type === 'isyeri' ? bI : bA;
+      activeBtn.className = "py-2.5 px-3 rounded-xl text-xs font-bold transition flex flex-col items-center justify-center gap-1 bg-cyan-500 text-slate-950 shadow-md";
+
+      const sectionArea = document.getElementById('sectionAreaAndFloor');
+      const sectionVehicle = document.getElementById('sectionVehicleInputs');
+      const sectionItems = document.getElementById('sectionDamagedItems');
+
+      if (type === 'arac') {
+        sectionArea.classList.add('hidden');
+        sectionItems.classList.add('hidden');
+        sectionVehicle.classList.remove('hidden');
+      } else {
+        sectionArea.classList.remove('hidden');
+        sectionItems.classList.remove('hidden');
+        sectionVehicle.classList.add('hidden');
+      }
+
+      calculateDamage();
+    }
+
+    // Water Depth Sliders & Presets
+    function onWaterDepthChange(val) {
+      setWaterDepth(parseInt(val, 10));
+    }
+
+    function setWaterDepth(cm) {
+      waterDepthCm = cm;
+      document.getElementById('sliderWaterDepth').value = cm;
+      document.getElementById('waterDepthDisplay').textContent = `${cm} cm`;
+      
+      const pct = Math.min(100, (cm / 200) * 100);
+      document.getElementById('waterGaugeBar').style.width = `${pct}%`;
+
+      let badge = "Zemin & Parke Seviyesi";
+      if (cm >= 30 && cm < 60) badge = "Priz & Alçak Mobilya";
+      else if (cm >= 60 && cm < 100) badge = "Tezgâh & Beyaz Eşya";
+      else if (cm >= 100) badge = "Ağır Hasar / Tam Ziyan";
+      document.getElementById('waterLevelBadgeText').textContent = badge;
+
+      calculateDamage();
+    }
+
+    function onAreaInput(val) {
+      areaM2 = Math.max(10, parseAmount(val));
+      document.getElementById('areaDisplay').textContent = `${areaM2} m²`;
+      calculateDamage();
+    }
+
+    // PRIMARY DAMAGE ENGINE
+    function calculateDamage() {
+      let structuralCost = 0;
+      let itemsCost = 0;
+      let cleaningCost = 0;
+
+      const policyLimit = parseAmount(document.getElementById('inputPolicyLimit').value) || 750000;
+      const deductiblePct = parseAmount(document.getElementById('inputDeductible').value) || 2;
+
+      if (activePropertyType === 'konut' || activePropertyType === 'isyeri') {
+        const floorRisk = parseFloat(document.getElementById('selectFloorLevel').value) || 1.0;
+        const isCommercial = activePropertyType === 'isyeri';
+
+        // Depth coefficient (0.2 to 2.2)
+        const depthFactor = 0.25 + (Math.min(200, waterDepthCm) / 80);
+
+        // Structural costs per m2
+        const baseFloorCost = isCommercial ? 950 : 680; // Parke / seramik
+        const baseWallCost = isCommercial ? 450 : 350;  // Alçı / boya
+        const baseDoorCost = isCommercial ? 500 : 400;  // Kapı & süpürgelik
+
+        let checkedCount = 0;
+        if (document.getElementById('itemParke').checked) { structuralCost += areaM2 * baseFloorCost * 0.9; checkedCount++; }
+        if (document.getElementById('itemKapi').checked) { structuralCost += areaM2 * baseDoorCost * 0.8; checkedCount++; }
+
+        // Items costs
+        const itemCoeff = isCommercial ? 1.6 : 1.0;
+        if (document.getElementById('itemMobilya').checked) {
+          itemsCost += (waterDepthCm > 25 ? 45000 : 18000) * (areaM2 / 80) * itemCoeff;
+        }
+        if (document.getElementById('itemBeyazEsya').checked) {
+          itemsCost += (waterDepthCm > 35 ? 65000 : 25000) * itemCoeff;
+        }
+        if (document.getElementById('itemElektronik').checked) {
+          itemsCost += (waterDepthCm > 50 ? 55000 : 15000) * itemCoeff;
+        }
+        if (document.getElementById('itemTesisat').checked) {
+          itemsCost += (waterDepthCm > 80 ? 40000 : 18000);
+        }
+
+        structuralCost = structuralCost * depthFactor * floorRisk;
+        itemsCost = itemsCost * (depthFactor * 0.85);
+
+        // Cleaning, sludge extraction & dehumidification
+        cleaningCost = areaM2 * (140 + (waterDepthCm * 1.8));
+
+      } else {
+        // VEHICLE CASCO LOGIC
+        const vVal = parseAmount(document.getElementById('inputVehicleValue').value) || 850000;
+        const isRunning = document.getElementById('selectEngineState').value === 'running';
+
+        let damageRatio = 0.12; // 0-30cm: cabin floor, harness
+        if (waterDepthCm >= 30 && waterDepthCm < 65) {
+          damageRatio = isRunning ? 0.65 : 0.42; // seats, airbags, ECU
+        } else if (waterDepthCm >= 65) {
+          damageRatio = isRunning ? 0.95 : 0.80; // engine flooded, total loss risk
+        }
+
+        structuralCost = vVal * damageRatio * 0.6; // mechanical & electrical
+        itemsCost = vVal * damageRatio * 0.35; // interior & electronic trim
+        cleaningCost = vVal * 0.05; // decontamination & dismantling
+      }
+
+      const totalDamage = structuralCost + itemsCost + cleaningCost;
+      const deductibleVal = totalDamage * (deductiblePct / 100);
+      const claimableNet = Math.min(policyLimit, Math.max(0, totalDamage - deductibleVal));
+
+      // Update UI Numbers
+      document.getElementById('resultClaimAmount').textContent = `₺${claimableNet.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      document.getElementById('resultTotalDamage').textContent = `₺${totalDamage.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      document.getElementById('resultDeductibleAmount').textContent = `-₺${deductibleVal.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+      document.getElementById('breakdownStructural').textContent = `₺${structuralCost.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      document.getElementById('breakdownItems').textContent = `₺${itemsCost.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      document.getElementById('breakdownCleaning').textContent = `₺${cleaningCost.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+      // Update Print Template Numbers
+      document.getElementById('printStructuralCost').textContent = `₺${structuralCost.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      document.getElementById('printItemsCost').textContent = `₺${itemsCost.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      document.getElementById('printCleaningCost').textContent = `₺${cleaningCost.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      document.getElementById('printTotalDamage').textContent = `₺${totalDamage.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      document.getElementById('printDeductible').textContent = `-₺${deductibleVal.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      document.getElementById('printNetClaim').textContent = `₺${claimableNet.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    }
+
+    // PHOTO UPLOAD & EXIF EXTRACTION ENGINE
+    function handlePhotoUpload(files) {
+      if (!files || files.length === 0) return;
+      const remainingSlots = 4 - uploadedPhotos.length;
+      if (remainingSlots <= 0) {
+        alert("En fazla 4 adet kanıt fotoğrafı ekleyebilirsiniz.");
+        return;
+      }
+
+      const filesToProcess = Array.from(files).slice(0, remainingSlots);
+
+      filesToProcess.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const dataUrl = e.target.result;
+          
+          // EXIF Extraction
+          EXIF.getData(file, function() {
+            const dateTime = EXIF.getTag(this, "DateTimeOriginal") || EXIF.getTag(this, "DateTime") || new Date().toLocaleString('tr-TR');
+            const make = EXIF.getTag(this, "Make") || "";
+            const model = EXIF.getTag(this, "Model") || "";
+            const makeModel = (make + " " + model).trim() || "Dijital Kamera / Akıllı Telefon";
+
+            // GPS
+            const lat = EXIF.getTag(this, "GPSLatitude");
+            const latRef = EXIF.getTag(this, "GPSLatitudeRef") || "N";
+            const lng = EXIF.getTag(this, "GPSLongitude");
+            const lngRef = EXIF.getTag(this, "GPSLongitudeRef") || "E";
+
+            let gpsString = "Konum Damgası Bulunamadı (Cihaz Konumu Eklenebilir)";
+            let coordObj = null;
+
+            if (lat && lng) {
+              const decLat = convertDMSToDD(lat[0], lat[1], lat[2], latRef);
+              const decLng = convertDMSToDD(lng[0], lng[1], lng[2], lngRef);
+              gpsString = `${decLat.toFixed(4)}° ${latRef}, ${decLng.toFixed(4)}° ${lngRef}`;
+              coordObj = { lat: decLat, lng: decLng };
+              globalGpsCoords = coordObj;
+              document.getElementById('labelDetectedLocation').textContent = `Doğrulanan Olay Yeri GPS: ${gpsString}`;
+            }
+
+            uploadedPhotos.push({
+              file: file,
+              dataUrl: dataUrl,
+              date: dateTime,
+              makeModel: makeModel,
+              gpsString: gpsString,
+              coords: coordObj,
+              note: `Hasar Fotoğrafı #${uploadedPhotos.length + 1}`
+            });
+
+            renderPhotoList();
+          });
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // Convert GPS DMS (Degrees Minutes Seconds) to Decimal Degrees
+    function convertDMSToDD(degrees, minutes, seconds, direction) {
+      let dd = degrees + minutes / 60 + seconds / 3600;
+      if (direction === "S" || direction === "W") {
+        dd = dd * -1;
+      }
+      return dd;
+    }
+
+    // Render Uploaded Photos Cards
+    function renderPhotoList() {
+      const container = document.getElementById('photoListContainer');
+      const printContainer = document.getElementById('printPhotosContainer');
+      container.innerHTML = "";
+      printContainer.innerHTML = "";
+
+      uploadedPhotos.forEach((item, index) => {
+        // UI Card
+        const card = document.createElement('div');
+        card.className = "flex flex-col sm:flex-row items-center gap-3 p-3.5 rounded-2xl bg-slate-950 border border-slate-800 text-xs";
+        card.innerHTML = `
+          <div class="w-20 h-20 rounded-xl overflow-hidden shrink-0 border border-slate-700 bg-slate-900">
+            <img src="${item.dataUrl}" alt="Hasar Kanıtı" class="w-full h-full object-cover">
+          </div>
+          <div class="flex-grow space-y-1.5 w-full">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-white text-xs">Fotoğraf #${index + 1} (${item.makeModel})</span>
+              <button type="button" onclick="removePhoto(${index})" class="text-rose-400 hover:text-rose-300 transition text-[11px] font-semibold">
+                <i class="fa-solid fa-trash-can mr-1"></i> Sil
+              </button>
+            </div>
+            <div class="flex flex-wrap gap-1.5 text-[10px]">
+              <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center gap-1 font-mono">
+                <i class="fa-solid fa-clock"></i> ${item.date}
+              </span>
+              <span class="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 flex items-center gap-1 font-mono">
+                <i class="fa-solid fa-location-dot"></i> ${item.gpsString}
+              </span>
+            </div>
+            <input type="text" value="${item.note}" oninput="updatePhotoNote(${index}, this.value)" placeholder="Açıklama (örn: Salon parke ve koltuk hasarı)" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1 text-slate-200 text-xs focus:outline-none focus:border-cyan-500">
+          </div>
+        `;
+        container.appendChild(card);
+
+        // Print Card
+        const pCard = document.createElement('div');
+        pCard.className = "border border-gray-400 p-2 rounded text-[10px]";
+        pCard.innerHTML = `
+          <img src="${item.dataUrl}" class="w-full h-32 object-cover border border-gray-300 mb-1">
+          <div class="font-bold">${item.note}</div>
+          <div class="text-gray-600">Tarih/Saat: ${item.date}</div>
+          <div class="text-gray-600">Konum (GPS): ${item.gpsString}</div>
+        `;
+        printContainer.appendChild(pCard);
+      });
+    }
+
+    function removePhoto(index) {
+      uploadedPhotos.splice(index, 1);
+      renderPhotoList();
+    }
+
+    function updatePhotoNote(index, text) {
+      if (uploadedPhotos[index]) {
+        uploadedPhotos[index].note = text;
+      }
+    }
+
+    // Geolocation Fallback
+    function getCurrentLocation() {
+      if (!navigator.geolocation) {
+        alert("Tarayıcınız konum servisini desteklemiyor.");
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(
+        pos => {
+          const lat = pos.coords.latitude.toFixed(4);
+          const lng = pos.coords.longitude.toFixed(4);
+          const gpsStr = `${lat}° N, ${lng}° E (Cihaz Doğrulamalı)`;
+          globalGpsCoords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+          document.getElementById('labelDetectedLocation').textContent = `Doğrulanan Olay Yeri: ${gpsStr}`;
+          
+          uploadedPhotos.forEach(p => {
+            if (p.gpsString.includes("Bulunamadı")) {
+              p.gpsString = gpsStr;
+            }
+          });
+          renderPhotoList();
+        },
+        err => {
+          alert("Konum izni alınamadı: " + err.message);
+        }
+      );
+    }
+
+    // Convert Turkish characters to clean ASCII for jsPDF standard font
+    function toAsciiTR(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/ğ/g, 'g').replace(/Ğ/g, 'G')
+        .replace(/ş/g, 's').replace(/Ş/g, 'S')
+        .replace(/ı/g, 'i').replace(/İ/g, 'I')
+        .replace(/ö/g, 'o').replace(/Ö/g, 'O')
+        .replace(/ü/g, 'u').replace(/Ü/g, 'U')
+        .replace(/ç/g, 'c').replace(/Ç/g, 'C');
+    }
+
+    // CLIENT-SIDE PDF GENERATOR (jsPDF)
+    function generatePdfDossier() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF('p', 'mm', 'a4');
+
+      const ownerName = document.getElementById('pdfOwnerName').value || 'Sigortali';
+      const tckn = document.getElementById('pdfTckn').value || '-';
+      const phone = document.getElementById('pdfPhone').value || '-';
+      const insurer = document.getElementById('pdfInsurer').value || 'Sigorta Sirketi';
+      const policyNo = document.getElementById('pdfPolicyNo').value || '-';
+      const address = document.getElementById('pdfAddress').value || '-';
+      const notes = document.getElementById('pdfNotes').value || '-';
+
+      const totalDam = document.getElementById('resultTotalDamage').textContent;
+      const dedVal = document.getElementById('resultDeductibleAmount').textContent;
+      const netClaim = document.getElementById('resultClaimAmount').textContent;
+
+      // Header
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(14);
+      doc.setTextColor(15, 23, 42);
+      doc.text(toAsciiTR("T.C. SIGORTA SIRKETLERI VE EKSPERTIZ BIRIMLERINE"), 105, 18, { align: 'center' });
+      
+      doc.setFontSize(11);
+      doc.setTextColor(30, 64, 175);
+      doc.text(toAsciiTR("SEL VE SU BASKINI HASAR IHBARI, TAZMINAT TALEP VE DELIL DOSYASI"), 105, 24, { align: 'center' });
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8);
+      doc.setTextColor(100, 116, 139);
+      doc.text(toAsciiTR("6102 Sayili TTK md. 1446 Resmi Sureli Bildirim Uyarinca Duzenlenmistir"), 105, 29, { align: 'center' });
+
+      doc.setDrawColor(203, 213, 225);
+      doc.line(14, 32, 196, 32);
+
+      // Metadata Bar
+      doc.setFontSize(8);
+      doc.setTextColor(51, 65, 85);
+      doc.text(toAsciiTR(`Dosya Ref: ${uniqueRefCode}`), 14, 37);
+      doc.text(toAsciiTR(`Tarih: ${new Date().toLocaleDateString('tr-TR')}`), 196, 37, { align: 'right' });
+
+      // Section 1: Customer & Policy
+      doc.setFillColor(241, 245, 249);
+      doc.rect(14, 41, 182, 6, 'F');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.setTextColor(15, 23, 42);
+      doc.text(toAsciiTR("1. HAK SAHIBI VE POLICE BILGILERI"), 16, 45.5);
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8.5);
+      doc.text(toAsciiTR(`Sigortali / Hak Sahibi: ${ownerName}`), 16, 52);
+      doc.text(toAsciiTR(`TCKN / VKN: ${tckn}`), 115, 52);
+
+      doc.text(toAsciiTR(`Iletisim Tel: ${phone}`), 16, 57);
+      doc.text(toAsciiTR(`Sigorta Sirketi: ${insurer} | Police No: ${policyNo}`), 115, 57);
+
+      doc.text(toAsciiTR(`Hasar Mahalli / Adres: ${address}`), 16, 62);
+
+      // Section 2: Calculation Breakdown Table
+      doc.setFillColor(241, 245, 249);
+      doc.rect(14, 68, 182, 6, 'F');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.text(toAsciiTR("2. HASAR VE TAZMINAT KESIF TABLOSU"), 16, 72.5);
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8.5);
+      const propLabel = activePropertyType === 'konut' ? 'Konut (Ev)' : activePropertyType === 'isyeri' ? 'Ticari Isyeri' : 'Arac (Kasko)';
+      doc.text(toAsciiTR(`Varlik Turu: ${propLabel} | Su Derinligi: ${waterDepthCm} cm | Etkilenen Alan: ${areaM2} m2`), 16, 79);
+
+      doc.text(toAsciiTR(`- Yapisal Onarim (Zemin/Boya/Kapi): ${document.getElementById('breakdownStructural').textContent}`), 16, 85);
+      doc.text(toAsciiTR(`- Esya / Demirbas Ziyani: ${document.getElementById('breakdownItems').textContent}`), 16, 90);
+      doc.text(toAsciiTR(`- Camur Arindirma & Temizlik Masrafi: ${document.getElementById('breakdownCleaning').textContent}`), 16, 95);
+
+      doc.line(14, 98, 196, 98);
+      doc.setFont('helvetica', 'bold');
+      doc.text(toAsciiTR(`Toplam Tespit Edilen Hasar Tutari: ${totalDam}`), 16, 103);
+      doc.text(toAsciiTR(`Police Muafiyet Indirimi (%2): ${dedVal}`), 16, 108);
+
+      doc.setFillColor(238, 242, 255);
+      doc.rect(14, 111, 182, 8, 'F');
+      doc.setTextColor(30, 64, 175);
+      doc.setFontSize(9.5);
+      doc.text(toAsciiTR(`SIGORTADAN TALEP EDILEN NET TAZMINAT: ${netClaim}`), 16, 116.5);
+
+      // Section 3: Statement
+      doc.setTextColor(15, 23, 42);
+      doc.setFillColor(241, 245, 249);
+      doc.rect(14, 122, 182, 6, 'F');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.text(toAsciiTR("3. OLAY OZETI VE RESMI IHBAR BEYANI"), 16, 126.5);
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8);
+      const splitNotes = doc.splitTextToSize(toAsciiTR(notes), 180);
+      doc.text(splitNotes, 16, 133);
+
+      // Section 4: Photo Evidence & EXIF Stamp
+      doc.setFillColor(241, 245, 249);
+      doc.rect(14, 146, 182, 6, 'F');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.text(toAsciiTR("4. FOTOGRAFLI DELIL EKLERI (EXIF TARIH VE GPS DAMGALI)"), 16, 150.5);
+
+      // Add uploaded photos (up to 2 on first page or grid)
+      let photoY = 155;
+      if (uploadedPhotos.length === 0) {
+        doc.setFont('helvetica', 'italic');
+        doc.setFontSize(8);
+        doc.text(toAsciiTR("Dosyaya yuklenmis fotograf bulunmamaktadir. Eksper incelemesine sunulmak uzere fotograflar ayrica iletilecektir."), 16, photoY + 5);
+      } else {
+        uploadedPhotos.slice(0, 2).forEach((p, idx) => {
+          try {
+            doc.addImage(p.dataUrl, 'JPEG', 16 + (idx * 92), photoY, 85, 52);
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(7);
+            doc.text(toAsciiTR(`Foto ${idx+1}: ${p.note}`), 16 + (idx * 92), photoY + 56);
+            doc.text(toAsciiTR(`Tarih: ${p.date} | GPS: ${p.gpsString}`), 16 + (idx * 92), photoY + 60);
+          } catch(e) {
+            console.error("PDF image add failed:", e);
+          }
+        });
+      }
+
+      // Footer Signature Box
+      doc.line(14, 270, 196, 270);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(7.5);
+      doc.setTextColor(100, 116, 139);
+      doc.text(toAsciiTR("Yukaridaki hasar ve delil beyanlarinin olay anindaki fiili durumu yansittigini taahhut eder, dosyanin acilmasini arz ederim."), 14, 275);
+      
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(8.5);
+      doc.setTextColor(15, 23, 42);
+      doc.text(toAsciiTR(`Sigortali / Hak Sahibi: ${ownerName}`), 140, 280);
+      doc.text(toAsciiTR("Imza: _______________________"), 140, 287);
+
+      // Save PDF
+      doc.save(`sel-hasar-ihbar-dosyasi-${uniqueRefCode}.pdf`);
+    }
+
+    // PRINT OFFICIAL DOSSIER (Browser window.print)
+    function printOfficialDossier() {
+      // Sync form values into print area
+      document.getElementById('printOwnerName').textContent = document.getElementById('pdfOwnerName').value;
+      document.getElementById('printSignName').textContent = document.getElementById('pdfOwnerName').value;
+      document.getElementById('printTckn').textContent = document.getElementById('pdfTckn').value;
+      document.getElementById('printPhone').textContent = document.getElementById('pdfPhone').value;
+      document.getElementById('printPolicyInfo').textContent = `${document.getElementById('pdfInsurer').value} / ${document.getElementById('pdfPolicyNo').value}`;
+      document.getElementById('printAddress').textContent = document.getElementById('pdfAddress').value;
+      document.getElementById('printNotes').textContent = document.getElementById('pdfNotes').value;
+
+      document.getElementById('printPropType').textContent = activePropertyType === 'konut' ? 'Konut (Ev)' : activePropertyType === 'isyeri' ? 'Ticari İşyeri' : 'Araç (Kasko)';
+      document.getElementById('printWaterDepth').textContent = `${waterDepthCm} cm`;
+      document.getElementById('printArea').textContent = `${areaM2} m²`;
+      document.getElementById('printFloor').textContent = document.getElementById('selectFloorLevel').selectedOptions[0].text;
+
+      calculateDamage();
+      window.print();
+    }
+  </script>
+</body>
+</html>
