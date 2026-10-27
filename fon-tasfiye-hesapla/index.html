@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="tr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fon Tasfiye Hesaplayıcı | Net Hakediş, Stopaj & Kesinti Hesaplama</title>
+  <meta name="description" content="Yatırım fonu, BES ve serbest fon tasfiyelerinde ele geçecek net nakit tutar, stopaj vergisi ve fon kesintilerini anlık hesaplayın. SPK bilgilendirme simülatörü.">
+  <meta name="keywords" content="fon tasfiye hesaplama, fon tasfiye net tutar, fon stopaj kesintisi, tefas fon itfa, bes tasfiye hakediş, fon tasfiye gelir vergisi, fon tasfiye hesaplayıcı">
+  <link rel="canonical" href="https://pratik-araclar.pratikweb.workers.dev/fon-tasfiye-hesapla/">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2310b981'/%3E%3Cstop offset='100%25' stop-color='%233b82f6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23bg)'/%3E%3Cpath d='M20 44 L32 20 L44 44 Z' fill='none' stroke='%23ffffff' stroke-width='5' stroke-linejoin='round'/%3E%3Ccircle cx='32' cy='32' r='4' fill='%23ffffff'/%3E%3C/svg%3E">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://pratik-araclar.pratikweb.workers.dev/fon-tasfiye-hesapla/">
+  <meta property="og:title" content="Fon Tasfiye Hesaplayıcı - Net Ele Geçecek Tutar Simülatörü">
+  <meta property="og:description" content="Fon tasfiye sürecinde stopaj ve gider kesintileri sonrası elinize geçecek net tutarı anında öğrenin. %100 ücretsiz.">
+  <meta property="og:locale" content="tr_TR">
+
+  <!-- Twitter / X Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://pratik-araclar.pratikweb.workers.dev/fon-tasfiye-hesapla/">
+  <meta name="twitter:title" content="Fon Tasfiye Hesaplayıcı - Net Ele Geçecek Tutar Simülatörü">
+  <meta name="twitter:description" content="Fon tasfiye sürecinde stopaj ve gider kesintileri sonrası elinize geçecek net tutarı anında öğrenin.">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            midnight: '#0b0f19',
+            surface: '#111827',
+            surfaceCard: '#1a2234',
+            surfaceBorder: '#28354d'
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- FontAwesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "name": "Fon Tasfiye Hesaplayıcı",
+        "url": "https://pratik-araclar.pratikweb.workers.dev/fon-tasfiye-hesapla/",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "All",
+        "description": "Yatırım fonu, TEFAS, BES ve serbest fon tasfiye net tutar, stopaj ve hakediş simülasyon aracı.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "TRY"
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Fon tasfiyesinde stopaj nasıl kesilir?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yatırım fonu tasfiyelerinde stopaj kural olarak anapara üzerinden değil, elde edilen getiri (kâr) üzerinden kesilir. Fon türüne göre stopaj oranı %0 ile %15 arasında değişir."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Bu hesaplama resmi yatırım tavsiyesi midir?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "HAYIR. Bu araç yalnızca matematiksel simülasyon ve bilgilendirme amaçlıdır. SPK mevzuatı gereğince yatırım danışmanlığı veya tavsiyesi niteliği taşımaz."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    @media print {
+      body { background: white !important; color: black !important; }
+      header, footer, .no-print { display: none !important; }
+      .print-box { border: 1px solid #cbd5e1 !important; background: white !important; color: black !important; box-shadow: none !important; }
+      .text-white { color: #0f172a !important; }
+      .text-slate-400 { color: #475569 !important; }
+    }
+  </style>
+</head>
+<body class="bg-[#0b0f19] text-slate-100 min-h-screen flex flex-col font-sans antialiased overflow-x-hidden selection:bg-emerald-500 selection:text-slate-950">
+
+  <!-- Header -->
+  <header class="border-b border-slate-800/80 bg-slate-900/80 backdrop-blur-md sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      
+      <div class="flex items-center gap-3">
+        <a href="../" class="flex items-center gap-2 group transition" title="Pratik Araçlar Vitrinine Dön">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-600 to-sky-600 flex items-center justify-center text-white shadow-lg shadow-emerald-900/30 group-hover:scale-105 transition">
+            <i class="fa-solid fa-coins text-sm"></i>
+          </div>
+          <div class="flex flex-col">
+            <span class="font-bold text-white text-base tracking-tight leading-none group-hover:text-emerald-300 transition">
+              Pratik<span class="text-emerald-400">Araçlar</span>
+            </span>
+            <span class="text-[10px] text-slate-400 tracking-wider">FON TASFİYE RAPORU</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Quick Nav Buttons -->
+      <div class="flex items-center gap-2.5">
+        <a href="../maas-hesaplayici/" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-slate-700/60 transition">
+          <i class="fa-solid fa-calculator text-sky-400"></i>
+          <span>Maaş & Vergi</span>
+        </a>
+        <a href="../kira-artisi-hesaplayici/" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-slate-700/60 transition">
+          <i class="fa-solid fa-house text-emerald-400"></i>
+          <span>Kira Artışı</span>
+        </a>
+        <a href="../" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-slate-700/60 transition">
+          <i class="fa-solid fa-arrow-left"></i>
+          <span class="hidden sm:inline">Vitrin</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- PROMINENT LEGAL DISCLAIMER BANNER (SPK UYARISI) -->
+  <div class="bg-amber-500/10 border-b border-amber-500/25 px-4 py-2.5">
+    <div class="max-w-7xl mx-auto flex items-center gap-3 text-xs text-amber-200/90 leading-relaxed">
+      <div class="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0 text-sm">
+        <i class="fa-solid fa-scale-balanced"></i>
+      </div>
+      <div>
+        <strong class="font-bold text-amber-300 uppercase tracking-wide">Yasal Uyarı & Yatırım Tavsiyesi Değildir (YTD):</strong>
+        <span>
+          Bu sayfadaki hesaplamalar, SPK mevzuatı çerçevesinde bir <strong>yatırım danışmanlığı veya tavsiyesi niteliğinde olmayıp</strong> yalnızca matematiksel simülasyon ve bilgilendirme amaçlıdır. Nihai tasfiye tutarları için portföy yönetim şirketiniz veya Takasbank resmi dekontlarını esas alınız.
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex flex-col gap-6">
+
+    <!-- Hero Title -->
+    <div>
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/25 mb-2">
+        <i class="fa-solid fa-calculator text-emerald-400"></i>
+        <span>2026 Mevzuatı & Stopaj Simülatörü</span>
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+        Fon Tasfiye & İtfa Net Tutar Hesaplayıcı
+      </h1>
+      <p class="text-xs sm:text-sm text-slate-400 mt-1 max-w-3xl">
+        Tasfiyeye giren veya itfa edilen yatırım fonu, BES ya da özel fon paylarınızın brüt birikim tutarından stopaj vergisi ve fon giderleri düşüldükten sonra <strong>hesabınıza yatacak net tutarı</strong> anında hesaplayın.
+      </p>
+    </div>
+
+    <!-- Mode Tabs -->
+    <div class="flex flex-wrap gap-2 border-b border-slate-800 pb-3 no-print">
+      <button data-mode="tefas" class="mode-tab active px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-emerald-600 text-slate-950 transition flex items-center gap-2 shadow-md">
+        <i class="fa-solid fa-chart-line"></i>
+        <span>Yatırım Fonu / TEFAS Tasfiyesi</span>
+      </button>
+      <button data-mode="bes" class="mode-tab px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition flex items-center gap-2">
+        <i class="fa-solid fa-piggy-bank text-amber-400"></i>
+        <span>BES & Şirket Katkılı Fon Tasfiyesi</span>
+      </button>
+      <button data-mode="private" class="mode-tab px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition flex items-center gap-2">
+        <i class="fa-solid fa-briefcase text-sky-400"></i>
+        <span>Serbest / Girişim Sermayesi (GSYF)</span>
+      </button>
+    </div>
+
+    <!-- Layout Grid: Form (7 cols) + Live Result (5 cols) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      
+      <!-- Left: Form Inputs (7 Cols) -->
+      <div class="lg:col-span-7 bg-slate-900/80 border border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xl space-y-5">
+        
+        <!-- Input Method Toggle (Tutar or Pay Adedi) -->
+        <div id="tefasInputToggleContainer" class="flex items-center justify-between bg-slate-950/60 p-1.5 rounded-xl border border-slate-800 text-xs">
+          <span class="text-slate-400 pl-2">Hesaplama Yöntemi:</span>
+          <div class="flex gap-1">
+            <button id="calcByAmountBtn" onclick="setInputMode('amount')" class="px-3 py-1 rounded-lg bg-emerald-600 text-slate-950 font-bold transition">Toplam Tutar ile</button>
+            <button id="calcByShareBtn" onclick="setInputMode('share')" class="px-3 py-1 rounded-lg text-slate-400 hover:text-white transition">Pay Adedi & Fiyat ile</button>
+          </div>
+        </div>
+
+        <!-- Fon Kodu / Adı (İsteğe Bağlı) -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1.5">
+            Fon Kodu veya Fon Adı <span class="text-slate-500 font-normal">(İsteğe Bağlı - Örn: AFT, TTE, GSYF)</span>
+          </label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
+              <i class="fa-solid fa-tag text-xs"></i>
+            </div>
+            <input type="text" id="fundCodeInput" placeholder="Örn: XYZ Portföy Girişim Fonu" class="w-full pl-9 pr-3 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-white text-xs sm:text-sm placeholder-slate-600 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500">
+          </div>
+        </div>
+
+        <!-- Mode 1: TEFAS / Standard Inputs -->
+        <div id="formSectionAmount" class="space-y-4">
+          
+          <!-- Toplam Tasfiye Tutarı / Yatırım Tutarı -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1.5">
+              Toplam Tasfiye / Çıkış Tutarı (₺) <span class="text-rose-400">*</span>
+            </label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
+                <span class="font-bold text-xs">₺</span>
+              </div>
+              <input type="number" id="grossAmountInput" value="100000" min="0" step="100" class="w-full pl-8 pr-3 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-white text-sm sm:text-base font-semibold focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500">
+            </div>
+            <!-- Quick Chips -->
+            <div class="flex flex-wrap gap-1.5 mt-2">
+              <button onclick="setGross(25000)" class="px-2 py-0.5 rounded bg-slate-800 text-[11px] text-slate-400 hover:text-white">25.000 ₺</button>
+              <button onclick="setGross(50000)" class="px-2 py-0.5 rounded bg-slate-800 text-[11px] text-slate-400 hover:text-white">50.000 ₺</button>
+              <button onclick="setGross(100000)" class="px-2 py-0.5 rounded bg-emerald-500/20 text-[11px] text-emerald-300 font-semibold">100.000 ₺</button>
+              <button onclick="setGross(250000)" class="px-2 py-0.5 rounded bg-slate-800 text-[11px] text-slate-400 hover:text-white">250.000 ₺</button>
+              <button onclick="setGross(500000)" class="px-2 py-0.5 rounded bg-slate-800 text-[11px] text-slate-400 hover:text-white">500.000 ₺</button>
+            </div>
+          </div>
+
+          <!-- Kâr / Getiri Tutarı (Stopaj Kâr Üzerinden Hesaplanır) -->
+          <div id="costProfitBox" class="bg-slate-950/60 p-3.5 rounded-xl border border-slate-800 space-y-2">
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-semibold text-slate-300">Tahmini Kâr (Getiri) Oranı:</span>
+              <span id="profitPercentLabel" class="text-emerald-400 font-bold">%30 Kâr</span>
+            </div>
+            <input type="range" id="profitPercentSlider" min="0" max="100" value="30" step="5" oninput="onProfitSlider(this.value)" class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-500">
+            <div class="flex items-center justify-between text-[11px] text-slate-500">
+              <span>%0 (Kâr yok/Zarar)</span>
+              <span>%50 Kâr</span>
+              <span>%100 Kâr (Tümü Kazanç)</span>
+            </div>
+            <p class="text-[11px] text-slate-400">
+              * Yatırım fonlarında stopaj <strong>anapara üzerinden değil, yalnızca elde edilen kâr üzerinden</strong> kesilir.
+            </p>
+          </div>
+
+        </div>
+
+        <!-- Mode Share: Pay Adedi & Birim Fiyat (Hidden by Default) -->
+        <div id="formSectionShare" class="hidden space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Pay Adedi</label>
+              <input type="number" id="shareCountInput" value="10000" min="1" class="w-full px-3 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-white text-sm font-semibold focus:outline-none focus:border-emerald-500">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Tasfiye / İtfa Pay Fiyatı (₺)</label>
+              <input type="number" id="sharePriceInput" value="12.50" step="0.01" min="0" class="w-full px-3 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-white text-sm font-semibold focus:outline-none focus:border-emerald-500">
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Ortalama Alış / Maliyet Fiyatı (₺)</label>
+            <input type="number" id="shareCostInput" value="10.00" step="0.01" min="0" class="w-full px-3 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-white text-sm font-semibold focus:outline-none focus:border-emerald-500">
+          </div>
+        </div>
+
+        <!-- BES Hakediş Seçici (Only for BES mode) -->
+        <div id="besHakedisSection" class="hidden space-y-3 bg-amber-950/20 p-4 rounded-xl border border-amber-800/40">
+          <label class="block text-xs font-bold text-amber-300">
+            <i class="fa-solid fa-clock-rotate-left mr-1"></i>Sistemde Bulunma Süresi & Hakediş Oranı (BES Mevzuatı):
+          </label>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+            <button onclick="setBesHakedis(0)" class="bes-btn p-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-400 hover:text-white text-center">
+              <div class="text-[10px] text-slate-500">&lt; 3 Yıl</div>
+              <div class="font-bold text-rose-400 mt-0.5">%0 Hakediş</div>
+            </button>
+            <button onclick="setBesHakedis(15)" class="bes-btn p-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-400 hover:text-white text-center">
+              <div class="text-[10px] text-slate-500">3 - 6 Yıl</div>
+              <div class="font-bold text-amber-400 mt-0.5">%15 Hakediş</div>
+            </button>
+            <button onclick="setBesHakedis(35)" class="bes-btn active p-2 rounded-lg bg-amber-500/20 border border-amber-500/50 text-amber-300 text-center">
+              <div class="text-[10px] text-amber-400/80">6 - 10 Yıl</div>
+              <div class="font-bold text-amber-300 mt-0.5">%35 Hakediş</div>
+            </button>
+            <button onclick="setBesHakedis(60)" class="bes-btn p-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-400 hover:text-white text-center">
+              <div class="text-[10px] text-slate-500">10+ Yıl</div>
+              <div class="font-bold text-emerald-400 mt-0.5">%60 Hakediş</div>
+            </button>
+          </div>
+          <div class="flex items-center justify-between text-[11px] text-slate-400 pt-1">
+            <span>Uygulanan Şirket / Devlet Katkısı Hakedişi:</span>
+            <span id="activeHakedisRate" class="font-bold text-amber-300">%35</span>
+          </div>
+        </div>
+
+        <!-- Stopaj & Kesinti Oranı Seçici -->
+        <div class="space-y-2">
+          <label class="block text-xs font-semibold text-slate-300">
+            Yasal Gelir Vergisi Stopajı Oranı (%)
+          </label>
+          <div class="grid grid-cols-4 gap-2 text-xs">
+            <button onclick="setTaxRate(0)" class="tax-btn p-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-400 hover:text-white text-center">
+              <div class="font-bold text-white">%0</div>
+              <div class="text-[9px] text-slate-500">Hisse / Muaf</div>
+            </button>
+            <button onclick="setTaxRate(7.5)" class="tax-btn p-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-400 hover:text-white text-center">
+              <div class="font-bold text-white">%7,5</div>
+              <div class="text-[9px] text-slate-500">İndirimli</div>
+            </button>
+            <button onclick="setTaxRate(10)" class="tax-btn active p-2 rounded-lg bg-emerald-500/20 border border-emerald-500/50 text-emerald-300 text-center font-bold">
+              <div class="font-bold text-emerald-300">%10</div>
+              <div class="text-[9px] text-emerald-400/80">Standart Fon</div>
+            </button>
+            <button onclick="setTaxRate(15)" class="tax-btn p-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-400 hover:text-white text-center">
+              <div class="font-bold text-white">%15</div>
+              <div class="text-[9px] text-slate-500">BES & Erken Çıkış</div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Ek Kesintiler (Fon Tasfiye & Saklama Komisyonu) -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">
+            Fon Tasfiye / Yönetim & Saklama Gider Kesintisi (%)
+          </label>
+          <div class="flex items-center gap-3">
+            <input type="number" id="feePercentInput" value="1.0" step="0.1" min="0" max="10" class="w-24 px-3 py-2 bg-slate-950 border border-slate-700/80 rounded-xl text-white text-sm font-semibold focus:outline-none focus:border-emerald-500">
+            <span class="text-xs text-slate-400">Tasfiye/kayyım/takas masrafı (Genelde %0,5 - %2 arası)</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right: Live Results & Donut Chart (5 Cols) -->
+      <div class="lg:col-span-5 flex flex-col gap-4">
+        
+        <!-- Result Card -->
+        <div class="bg-gradient-to-b from-slate-900 to-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-2xl relative overflow-hidden print-box">
+          
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">HESAPLAMA SONUCU</span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+              Net Nakit
+            </span>
+          </div>
+
+          <!-- Hero Net Tutar -->
+          <div class="my-5 text-center">
+            <div class="text-xs text-slate-400 font-medium mb-1">HESABINIZA GEÇECEK NET TUTAR</div>
+            <div id="heroNetDisplay" class="text-3xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300 tracking-tight">
+              0,00 ₺
+            </div>
+            <div id="heroProfitDisplay" class="text-[11px] text-slate-400 mt-1">
+              Brüt: <span id="labelGross" class="font-semibold text-slate-300">0 ₺</span> • Toplam Kesinti: <span id="labelTotalCut" class="font-semibold text-rose-400">0 ₺</span>
+            </div>
+          </div>
+
+          <!-- Chart.js Donut -->
+          <div class="relative w-44 h-44 mx-auto my-3 flex items-center justify-center">
+            <canvas id="cutDonutChart"></canvas>
+          </div>
+
+          <!-- Breakdown Table -->
+          <div class="space-y-2 mt-4 pt-4 border-t border-slate-800 text-xs">
+            <div class="flex items-center justify-between text-slate-300">
+              <span class="flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-slate-400"></span> Brüt Tasfiye Tutarı:
+              </span>
+              <span id="detGrossVal" class="font-bold text-white">0,00 ₺</span>
+            </div>
+            <div class="flex items-center justify-between text-slate-300">
+              <span class="flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span> Stopaj Matrahı (Kâr/Gelir):
+              </span>
+              <span id="detTaxBaseVal" class="font-medium text-amber-300">0,00 ₺</span>
+            </div>
+            <div class="flex items-center justify-between text-slate-300">
+              <span class="flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span> Gelir Vergisi Stopajı:
+              </span>
+              <span id="detTaxVal" class="font-bold text-rose-400">-0,00 ₺</span>
+            </div>
+            <div class="flex items-center justify-between text-slate-300">
+              <span class="flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-purple-500"></span> Fon Tasfiye / Gider Kesintisi:
+              </span>
+              <span id="detFeeVal" class="font-bold text-purple-400">-0,00 ₺</span>
+            </div>
+            <div class="flex items-center justify-between text-emerald-400 pt-2 border-t border-slate-800 font-bold text-sm">
+              <span class="flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span> Ele Geçecek Net Ödeme:
+              </span>
+              <span id="detNetVal">0,00 ₺</span>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="mt-5 pt-4 border-t border-slate-800 flex flex-col sm:flex-row gap-2 no-print">
+            <button onclick="shareWhatsApp()" class="flex-1 py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-900/30 transition">
+              <i class="fa-brands fa-whatsapp"></i>
+              <span>WhatsApp İle Paylaş</span>
+            </button>
+            <button onclick="window.print()" class="py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium text-xs flex items-center justify-center gap-1.5 border border-slate-700/60 transition">
+              <i class="fa-solid fa-print"></i>
+              <span>Yazdır / PDF</span>
+            </button>
+            <button onclick="saveToHistory()" title="Geçmişe Kaydet" class="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium text-xs flex items-center justify-center border border-slate-700/60 transition">
+              <i class="fa-solid fa-bookmark"></i>
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Prominent In-Result Disclaimer Card -->
+        <div class="bg-slate-900/60 border border-slate-800 p-3.5 rounded-xl text-[11px] text-slate-400 leading-relaxed flex items-start gap-2.5">
+          <i class="fa-solid fa-shield-halved text-amber-400 text-sm mt-0.5 shrink-0"></i>
+          <div>
+            <strong class="text-slate-300 font-semibold">Tavsiye Niteliğinde Değildir:</strong>
+            Bu simülasyon hesaplaması vergi kanunları ve standart stopaj oranları baz alınarak hazırlanmıştır. Fonun kuruluş statüsü, portföy yapısı ve istisnalara göre resmi kesintiler farklılık gösterebilir.
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Calculation History Table -->
+    <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 shadow-xl no-print">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+          <i class="fa-solid fa-clock-rotate-left text-emerald-400"></i>
+          <span>Kayıtlı Hesaplama Geçmişi</span>
+        </h3>
+        <button onclick="clearHistory()" class="text-xs text-slate-400 hover:text-rose-400 transition">
+          <i class="fa-solid fa-trash-can mr-1"></i>Temizle
+        </button>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs">
+          <thead>
+            <tr class="border-b border-slate-800 text-slate-400">
+              <th class="py-2 font-medium">Tarih</th>
+              <th class="py-2 font-medium">Fon / Tür</th>
+              <th class="py-2 font-medium">Brüt Tutar</th>
+              <th class="py-2 font-medium">Stopaj</th>
+              <th class="py-2 font-medium">Net Ödeme</th>
+              <th class="py-2 font-medium text-right">İşlem</th>
+            </tr>
+          </thead>
+          <tbody id="historyTableBody">
+            <tr>
+              <td colspan="6" class="py-4 text-center text-slate-500">Henüz kaydedilmiş bir hesaplama bulunmuyor.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <section class="mt-4 pt-6 border-t border-slate-800/80">
+      <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+        <i class="fa-solid fa-circle-question text-emerald-400"></i>
+        <span>Fon Tasfiyesi & Stopaj Kesintileri Hakkında Sıkça Sorulanlar</span>
+      </h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+        <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl space-y-1.5">
+          <h4 class="font-semibold text-slate-200">Fon tasfiyesinde kâr yoksa veya zarar varsa stopaj kesilir mi?</h4>
+          <p class="text-slate-400 leading-relaxed">
+            Hayır. Gelir Vergisi Kanunu uyarınca stopaj yalnızca anapara üzerindeki getiri (sermaye kazancı) üzerinden alınır. Yatırımcı zararda ise stopaj kesintisi 0 ₺ olur.
+          </p>
+        </div>
+        <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl space-y-1.5">
+          <h4 class="font-semibold text-slate-200">Tasfiye tutarı yatırımcının hesabına ne zaman yatar?</h4>
+          <p class="text-slate-400 leading-relaxed">
+            Tasfiye süreci fonun tasfiye kurulunun kararına, SPK tesciline ve fon varlıklarının nakde dönüştürülme hızına bağlı olarak birkaç günden birkaç aya kadar sürebilir.
+          </p>
+        </div>
+        <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl space-y-1.5">
+          <h4 class="font-semibold text-slate-200">Hisse senedi yoğun fonlarda tasfiye stopajı kaçtır?</h4>
+          <p class="text-slate-400 leading-relaxed">
+            Portföyünün en az %80'i BIST hisse senetlerinden oluşan hisse senedi yoğun yatırım fonlarında kural olarak stopaj oranı %0'dır (istisna uygulanır).
+          </p>
+        </div>
+        <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl space-y-1.5">
+          <h4 class="font-semibold text-slate-200">Bu araç yatırım kararı almak için kullanılabilir mi?</h4>
+          <p class="text-slate-400 leading-relaxed">
+            Kesinlikle hayır. Bu sayfa sadece matematiksel kesinti ve net tutar projeksiyonu sunar. Herhangi bir fonu alma, satma ya da tasfiye sürecine onay verme konusunda yetkili portföy yöneticinize danışınız.
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800/80 bg-slate-900/60 mt-12 py-8 text-xs text-slate-400">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-2">
+          <span class="font-bold text-white tracking-tight">Pratik<span class="text-emerald-400">Araçlar</span></span>
+          <span>•</span>
+          <span class="text-slate-400">Fon Tasfiye Hesaplayıcı</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-3 sm:gap-4 text-[11px] sm:text-xs">
+          <a href="../" class="hover:text-emerald-300 transition text-slate-300">Ana Vitrin</a>
+          <a href="../maas-hesaplayici/" class="hover:text-sky-300 transition text-slate-300">Maaş & Vergi</a>
+          <a href="../kira-artisi-hesaplayici/" class="hover:text-emerald-300 transition text-slate-300">Kira Artışı</a>
+          <a href="../tazminat-hesaplayici/" class="hover:text-indigo-300 transition text-slate-300">Tazminat</a>
+        </div>
+      </div>
+      
+      <!-- Prominent Footer Legal Notice -->
+      <div class="pt-4 border-t border-slate-800/60 text-[11px] text-slate-400 leading-relaxed text-center sm:text-left flex flex-col sm:flex-row items-center gap-2">
+        <i class="fa-solid fa-scale-balanced text-amber-400 text-xs shrink-0"></i>
+        <span><strong>SPK Yasal Bildirimi:</strong> Bu sitede sunulan araçlar hiçbir şekilde yatırım danışmanlığı, getiri taahhüdü veya resmi tasfiye dekontu niteliğinde değildir. 6362 sayılı Sermaye Piyasası Kanunu kapsamında yetkili kuruluşlarca verilmiş bir tavsiye yerine geçmez.</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script Logic -->
+  <script>
+    // State
+    let currentMode = 'tefas'; // 'tefas', 'bes', 'private'
+    let inputMode = 'amount'; // 'amount', 'share'
+    let taxRate = 10; // Default %10 stopaj
+    let besHakedisRate = 35; // Default %35 hakedis
+    let profitPercent = 30; // Default %30 profit
+    let donutChart = null;
+
+    // Elements
+    const grossAmountInput = document.getElementById('grossAmountInput');
+    const profitPercentSlider = document.getElementById('profitPercentSlider');
+    const profitPercentLabel = document.getElementById('profitPercentLabel');
+    const shareCountInput = document.getElementById('shareCountInput');
+    const sharePriceInput = document.getElementById('sharePriceInput');
+    const shareCostInput = document.getElementById('shareCostInput');
+    const feePercentInput = document.getElementById('feePercentInput');
+    const fundCodeInput = document.getElementById('fundCodeInput');
+
+    // UI Result Elements
+    const heroNetDisplay = document.getElementById('heroNetDisplay');
+    const labelGross = document.getElementById('labelGross');
+    const labelTotalCut = document.getElementById('labelTotalCut');
+    const detGrossVal = document.getElementById('detGrossVal');
+    const detTaxBaseVal = document.getElementById('detTaxBaseVal');
+    const detTaxVal = document.getElementById('detTaxVal');
+    const detFeeVal = document.getElementById('detFeeVal');
+    const detNetVal = document.getElementById('detNetVal');
+
+    // Formatting Helper
+    function formatTL(num) {
+      return (num || 0).toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ₺';
+    }
+
+    // Initialize Chart.js
+    function initChart() {
+      const ctx = document.getElementById('cutDonutChart').getContext('2d');
+      donutChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Net Tutar', 'Stopaj Vergisi', 'Gider Kesintisi'],
+          datasets: [{
+            data: [90000, 3000, 1000],
+            backgroundColor: ['#10b981', '#f43f5e', '#a855f7'],
+            borderWidth: 0,
+            hoverOffset: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return ` ${context.label}: ${formatTL(context.parsed)}`;
+                }
+              }
+            }
+          },
+          cutout: '72%'
+        }
+      });
+    }
+
+    // Main Calculation
+    function calculate() {
+      let gross = 0;
+      let taxBase = 0; // Stopaj matrahı
+      let fee = 0;
+
+      const feePercent = parseFloat(feePercentInput.value) || 0;
+
+      if (currentMode === 'tefas') {
+        if (inputMode === 'amount') {
+          gross = parseFloat(grossAmountInput.value) || 0;
+          // Kâr oranı üzerinden matrah
+          taxBase = gross * (profitPercent / 100);
+        } else {
+          const count = parseFloat(shareCountInput.value) || 0;
+          const price = parseFloat(sharePriceInput.value) || 0;
+          const cost = parseFloat(shareCostInput.value) || 0;
+          gross = count * price;
+          const unitProfit = Math.max(0, price - cost);
+          taxBase = count * unitProfit;
+        }
+      } else if (currentMode === 'bes') {
+        const rawGross = parseFloat(grossAmountInput.value) || 0;
+        // BES hakediş oranı uygulanır
+        gross = rawGross * (besHakedisRate / 100);
+        // BES'te getiri oranı üzerinden veya hakedişli tutar üzerinden
+        taxBase = gross * (profitPercent / 100);
+      } else if (currentMode === 'private') {
+        gross = parseFloat(grossAmountInput.value) || 0;
+        taxBase = gross * (profitPercent / 100);
+      }
+
+      // Stopaj Kesintisi
+      const taxCut = taxBase * (taxRate / 100);
+
+      // Fon Gider Kesintisi
+      const feeCut = gross * (feePercent / 100);
+
+      // Toplam Kesintiler
+      const totalCut = taxCut + feeCut;
+
+      // Net Ele Geçecek Tutar
+      const net = Math.max(0, gross - totalCut);
+
+      // Update UI
+      heroNetDisplay.textContent = formatTL(net);
+      labelGross.textContent = formatTL(gross);
+      labelTotalCut.textContent = formatTL(totalCut);
+
+      detGrossVal.textContent = formatTL(gross);
+      detTaxBaseVal.textContent = formatTL(taxBase);
+      detTaxVal.textContent = '-' + formatTL(taxCut);
+      detFeeVal.textContent = '-' + formatTL(feeCut);
+      detNetVal.textContent = formatTL(net);
+
+      // Update Chart
+      if (donutChart) {
+        donutChart.data.datasets[0].data = [net, taxCut, feeCut];
+        donutChart.update();
+      }
+    }
+
+    // Set Input Mode
+    function setInputMode(mode) {
+      inputMode = mode;
+      const isShare = mode === 'share';
+      document.getElementById('formSectionAmount').classList.toggle('hidden', isShare);
+      document.getElementById('formSectionShare').classList.toggle('hidden', !isShare);
+
+      document.getElementById('calcByAmountBtn').className = !isShare 
+        ? 'px-3 py-1 rounded-lg bg-emerald-600 text-slate-950 font-bold transition'
+        : 'px-3 py-1 rounded-lg text-slate-400 hover:text-white transition';
+      document.getElementById('calcByShareBtn').className = isShare 
+        ? 'px-3 py-1 rounded-lg bg-emerald-600 text-slate-950 font-bold transition'
+        : 'px-3 py-1 rounded-lg text-slate-400 hover:text-white transition';
+
+      calculate();
+    }
+
+    // Profit Slider
+    function onProfitSlider(val) {
+      profitPercent = parseInt(val);
+      profitPercentLabel.textContent = `%${profitPercent} Kâr`;
+      calculate();
+    }
+
+    // Set Gross Amount Shortcut
+    function setGross(amount) {
+      grossAmountInput.value = amount;
+      calculate();
+    }
+
+    // Set Tax Rate
+    function setTaxRate(rate) {
+      taxRate = rate;
+      document.querySelectorAll('.tax-btn').forEach(btn => {
+        btn.classList.remove('active', 'bg-emerald-500/20', 'border-emerald-500/50', 'text-emerald-300', 'font-bold');
+        btn.classList.add('bg-slate-950', 'border-slate-800', 'text-slate-400');
+      });
+      event.currentTarget.classList.add('active', 'bg-emerald-500/20', 'border-emerald-500/50', 'text-emerald-300', 'font-bold');
+      event.currentTarget.classList.remove('bg-slate-950', 'border-slate-800', 'text-slate-400');
+      calculate();
+    }
+
+    // Set BES Hakediş
+    function setBesHakedis(rate) {
+      besHakedisRate = rate;
+      document.getElementById('activeHakedisRate').textContent = `%${rate}`;
+      document.querySelectorAll('.bes-btn').forEach(btn => {
+        btn.classList.remove('active', 'bg-amber-500/20', 'border-amber-500/50', 'text-amber-300');
+        btn.classList.add('bg-slate-950', 'border-slate-800', 'text-slate-400');
+      });
+      event.currentTarget.classList.add('active', 'bg-amber-500/20', 'border-amber-500/50', 'text-amber-300');
+      event.currentTarget.classList.remove('bg-slate-950', 'border-slate-800', 'text-slate-400');
+      calculate();
+    }
+
+    // Mode Tabs Switcher
+    document.querySelectorAll('.mode-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.mode-tab').forEach(t => {
+          t.classList.remove('active', 'bg-emerald-600', 'text-slate-950', 'shadow-md');
+          t.classList.add('bg-slate-900', 'border', 'border-slate-800', 'text-slate-400');
+        });
+        tab.classList.add('active', 'bg-emerald-600', 'text-slate-950', 'shadow-md');
+        tab.classList.remove('bg-slate-900', 'border-slate-800', 'text-slate-400');
+
+        currentMode = tab.getAttribute('data-mode');
+
+        document.getElementById('besHakedisSection').classList.toggle('hidden', currentMode !== 'bes');
+        document.getElementById('tefasInputToggleContainer').classList.toggle('hidden', currentMode !== 'tefas');
+
+        if (currentMode === 'bes') {
+          setTaxRate(15);
+        } else if (currentMode === 'tefas') {
+          setTaxRate(10);
+        }
+
+        calculate();
+      });
+    });
+
+    // Event Listeners for inputs
+    [grossAmountInput, shareCountInput, sharePriceInput, shareCostInput, feePercentInput].forEach(inp => {
+      inp.addEventListener('input', calculate);
+    });
+
+    // Share Text Generator (With Prominent Legal Notice)
+    function generateShareSummary() {
+      const fund = fundCodeInput.value.trim() || 'Yatırım Fonu';
+      const gross = detGrossVal.textContent;
+      const tax = detTaxVal.textContent;
+      const net = detNetVal.textContent;
+
+      return `📊 FON TASFİYE HESAPLAMA RAPORU\n` +
+             `• Fon / Tür: ${fund}\n` +
+             `• Brüt Tasfiye Tutarı: ${gross}\n` +
+             `• Stopaj Kesintisi: ${tax}\n` +
+             `• HESABA GEÇECEK NET TUTAR: ${net}\n\n` +
+             `⚠️ Yasal Uyarı: Bu hesaplama yatırım tavsiyesi değildir (YTD). Bilgilendirme simülasyonudur.\n` +
+             `Detaylı Hesaplama: https://pratik-araclar.pratikweb.workers.dev/fon-tasfiye-hesapla/`;
+    }
+
+    function shareWhatsApp() {
+      const text = encodeURIComponent(generateShareSummary());
+      window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+    }
+
+    // LocalStorage History
+    function saveToHistory() {
+      const fund = fundCodeInput.value.trim() || (currentMode === 'bes' ? 'BES Fonu' : 'Yatırım Fonu');
+      const item = {
+        id: Date.now(),
+        date: new Date().toLocaleDateString('tr-TR'),
+        fund: fund,
+        gross: detGrossVal.textContent,
+        tax: detTaxVal.textContent,
+        net: detNetVal.textContent
+      };
+
+      let history = JSON.parse(localStorage.getItem('fon_tasfiye_history') || '[]');
+      history.unshift(item);
+      if (history.length > 8) history.pop();
+      localStorage.setItem('fon_tasfiye_history', JSON.stringify(history));
+
+      renderHistory();
+    }
+
+    function renderHistory() {
+      const tbody = document.getElementById('historyTableBody');
+      const history = JSON.parse(localStorage.getItem('fon_tasfiye_history') || '[]');
+
+      if (history.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="py-4 text-center text-slate-500">Henüz kaydedilmiş bir hesaplama bulunmuyor.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = history.map(item => `
+        <tr class="border-b border-slate-800/60 hover:bg-slate-800/30 transition">
+          <td class="py-2.5 text-slate-400">${item.date}</td>
+          <td class="py-2.5 font-semibold text-white">${item.fund}</td>
+          <td class="py-2.5 text-slate-300">${item.gross}</td>
+          <td class="py-2.5 text-rose-400">${item.tax}</td>
+          <td class="py-2.5 font-bold text-emerald-400">${item.net}</td>
+          <td class="py-2.5 text-right">
+            <button onclick="deleteHistoryItem(${item.id})" class="text-slate-500 hover:text-rose-400 p-1">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function deleteHistoryItem(id) {
+      let history = JSON.parse(localStorage.getItem('fon_tasfiye_history') || '[]');
+      history = history.filter(x => x.id !== id);
+      localStorage.setItem('fon_tasfiye_history', JSON.stringify(history));
+      renderHistory();
+    }
+
+    function clearHistory() {
+      localStorage.removeItem('fon_tasfiye_history');
+      renderHistory();
+    }
+
+    // Initialize
+    window.addEventListener('DOMContentLoaded', () => {
+      initChart();
+      calculate();
+      renderHistory();
+    });
+  </script>
+</body>
+</html>

@@ -43,3 +43,8 @@
 - URL: https://pratik-araclar.pratikweb.workers.dev/sel-uyarisi/
 - Açıklama: Türkiye geneli anlık meteorolojik Doppler yağış radarı (RainViewer) ve Open-Meteo gerçek zamanlı tahmin motoru entegrasyonu. Canlı sağanak bulut akışı animasyonu (son 2 saat), il/ilçe bazında anlık yağış debisi (kg/m²), 6 saatlik yağış projeksiyonu, sarı ve kırmızı sel/su baskını alarm seviyeleri, acil sel güvenlik rehberi ve tek tıkla WhatsApp konumlu afet uyarısı paylaşımı.
 - Hedef Kitle: Şiddetli sağanak ve fırtına anında canlı yağış ve sel tehlikesi arayanlar, araç sahipleri, zemin/bodrum kat sakinleri, afet bölgesinde seyahat eden sürücüler.
+
+### 9. Fon Tasfiye & İtfa Net Tutar Hesaplayıcı
+- URL: https://pratik-araclar.pratikweb.workers.dev/fon-tasfiye-hesapla/
+- Açıklama: SPK mevzuatına uygun olarak tasfiyeye giren veya itfa edilen yatırım fonları (TEFAS), BES emeklilik fonları ve serbest/girişim sermayesi (GSYF) fonlarında yatırımcının eline geçecek net nakit tutarı simüle eden finans aracı. Kâr üzerinden gelir vergisi stopajı (%0 - %15), BES kademeli hakediş süreleri (%0 - %100), fon gider ve tasfiye komisyonu kesintileri, interaktif Chart.js donut grafik dağılımı, tarayıcıda kayıtlı geçmiş hesabı ve belirgin YTD (Yatırım Tavsiyesi Değildir) yasal bilgilendirmesi.
+- Hedef Kitle: Tasfiye sürecindeki fon yatırımcıları, fonunu bozdurmak isteyenler, BES katılımcıları, finansal danışmanlar ve portföy yöneticileri.
