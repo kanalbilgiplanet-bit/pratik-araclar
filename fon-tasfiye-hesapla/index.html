@@ -94,6 +94,14 @@
   </script>
 
   <style>
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type="number"] {
+      -moz-appearance: textfield;
+    }
     @media print {
       body { background: white !important; color: black !important; }
       header, footer, .no-print { display: none !important; }
@@ -224,21 +232,18 @@
           <!-- Toplam Tasfiye Tutarı / Yatırım Tutarı -->
           <div>
             <label class="block text-xs font-semibold text-slate-300 mb-1.5">
-              Toplam Tasfiye / Çıkış Tutarı (₺) <span class="text-rose-400">*</span>
+              Toplam Tasfiye / Çıkış Tutarı <span class="text-rose-400">*</span>
             </label>
             <div class="relative">
-              <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
-                <span class="font-bold text-xs">₺</span>
-              </div>
-              <input type="number" id="grossAmountInput" value="100000" min="0" step="100" class="w-full pl-8 pr-3 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-white text-sm sm:text-base font-semibold focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500">
+              <input type="text" inputmode="decimal" id="grossAmountInput" value="100.000,00 ₺" class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-white text-sm sm:text-base font-semibold focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition" placeholder="Örn: 96.000,00 ₺">
             </div>
             <!-- Quick Chips -->
             <div class="flex flex-wrap gap-1.5 mt-2">
-              <button onclick="setGross(25000)" class="px-2 py-0.5 rounded bg-slate-800 text-[11px] text-slate-400 hover:text-white">25.000 ₺</button>
-              <button onclick="setGross(50000)" class="px-2 py-0.5 rounded bg-slate-800 text-[11px] text-slate-400 hover:text-white">50.000 ₺</button>
-              <button onclick="setGross(100000)" class="px-2 py-0.5 rounded bg-emerald-500/20 text-[11px] text-emerald-300 font-semibold">100.000 ₺</button>
-              <button onclick="setGross(250000)" class="px-2 py-0.5 rounded bg-slate-800 text-[11px] text-slate-400 hover:text-white">250.000 ₺</button>
-              <button onclick="setGross(500000)" class="px-2 py-0.5 rounded bg-slate-800 text-[11px] text-slate-400 hover:text-white">500.000 ₺</button>
+              <button type="button" onclick="setGross(25000)" class="px-2 py-0.5 rounded bg-slate-800 text-[11px] text-slate-400 hover:text-white transition">25.000 ₺</button>
+              <button type="button" onclick="setGross(50000)" class="px-2 py-0.5 rounded bg-slate-800 text-[11px] text-slate-400 hover:text-white transition">50.000 ₺</button>
+              <button type="button" onclick="setGross(100000)" class="px-2 py-0.5 rounded bg-emerald-500/20 text-[11px] text-emerald-300 font-semibold transition">100.000 ₺</button>
+              <button type="button" onclick="setGross(250000)" class="px-2 py-0.5 rounded bg-slate-800 text-[11px] text-slate-400 hover:text-white transition">250.000 ₺</button>
+              <button type="button" onclick="setGross(500000)" class="px-2 py-0.5 rounded bg-slate-800 text-[11px] text-slate-400 hover:text-white transition">500.000 ₺</button>
             </div>
           </div>
 
@@ -266,16 +271,16 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label class="block text-xs font-semibold text-slate-300 mb-1">Pay Adedi</label>
-              <input type="number" id="shareCountInput" value="10000" min="1" class="w-full px-3 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-white text-sm font-semibold focus:outline-none focus:border-emerald-500">
+              <input type="text" inputmode="numeric" id="shareCountInput" value="10.000" class="w-full px-3 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-white text-sm font-semibold focus:outline-none focus:border-emerald-500">
             </div>
             <div>
-              <label class="block text-xs font-semibold text-slate-300 mb-1">Tasfiye / İtfa Pay Fiyatı (₺)</label>
-              <input type="number" id="sharePriceInput" value="12.50" step="0.01" min="0" class="w-full px-3 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-white text-sm font-semibold focus:outline-none focus:border-emerald-500">
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Tasfiye / İtfa Pay Fiyatı</label>
+              <input type="text" inputmode="decimal" id="sharePriceInput" value="12,50 ₺" class="w-full px-3 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-white text-sm font-semibold focus:outline-none focus:border-emerald-500">
             </div>
           </div>
           <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1">Ortalama Alış / Maliyet Fiyatı (₺)</label>
-            <input type="number" id="shareCostInput" value="10.00" step="0.01" min="0" class="w-full px-3 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-white text-sm font-semibold focus:outline-none focus:border-emerald-500">
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Ortalama Alış / Maliyet Fiyatı</label>
+            <input type="text" inputmode="decimal" id="shareCostInput" value="10,00 ₺" class="w-full px-3 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-white text-sm font-semibold focus:outline-none focus:border-emerald-500">
           </div>
         </div>
 
@@ -563,7 +568,26 @@
     const detFeeVal = document.getElementById('detFeeVal');
     const detNetVal = document.getElementById('detNetVal');
 
-    // Formatting Helper
+    // Formatting & Parsing Helpers
+    function parseCurrency(str) {
+      if (typeof str === 'number') return isNaN(str) ? 0 : str;
+      if (!str) return 0;
+      let cleaned = String(str).replace(/[^\d.,]/g, '').trim();
+      if (!cleaned) return 0;
+      if (cleaned.includes('.') && cleaned.includes(',')) {
+        cleaned = cleaned.replace(/\./g, '').replace(',', '.');
+      } else if (cleaned.includes(',')) {
+        cleaned = cleaned.replace(',', '.');
+      } else if (cleaned.includes('.')) {
+        const parts = cleaned.split('.');
+        if (parts.length > 2 || (parts.length === 2 && parts[1].length === 3)) {
+          cleaned = cleaned.replace(/\./g, '');
+        }
+      }
+      const val = parseFloat(cleaned);
+      return isNaN(val) ? 0 : val;
+    }
+
     function formatTL(num) {
       return (num || 0).toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ₺';
     }
@@ -610,25 +634,25 @@
 
       if (currentMode === 'tefas') {
         if (inputMode === 'amount') {
-          gross = parseFloat(grossAmountInput.value) || 0;
+          gross = parseCurrency(grossAmountInput.value);
           // Kâr oranı üzerinden matrah
           taxBase = gross * (profitPercent / 100);
         } else {
-          const count = parseFloat(shareCountInput.value) || 0;
-          const price = parseFloat(sharePriceInput.value) || 0;
-          const cost = parseFloat(shareCostInput.value) || 0;
+          const count = parseCurrency(shareCountInput.value);
+          const price = parseCurrency(sharePriceInput.value);
+          const cost = parseCurrency(shareCostInput.value);
           gross = count * price;
           const unitProfit = Math.max(0, price - cost);
           taxBase = count * unitProfit;
         }
       } else if (currentMode === 'bes') {
-        const rawGross = parseFloat(grossAmountInput.value) || 0;
+        const rawGross = parseCurrency(grossAmountInput.value);
         // BES hakediş oranı uygulanır
         gross = rawGross * (besHakedisRate / 100);
         // BES'te getiri oranı üzerinden veya hakedişli tutar üzerinden
         taxBase = gross * (profitPercent / 100);
       } else if (currentMode === 'private') {
-        gross = parseFloat(grossAmountInput.value) || 0;
+        gross = parseCurrency(grossAmountInput.value);
         taxBase = gross * (profitPercent / 100);
       }
 
@@ -688,7 +712,15 @@
 
     // Set Gross Amount Shortcut
     function setGross(amount) {
-      grossAmountInput.value = amount;
+      grossAmountInput.value = formatTL(amount);
+      document.querySelectorAll('#formSectionAmount .flex-wrap button').forEach(btn => {
+        const num = parseCurrency(btn.textContent);
+        if (num === amount) {
+          btn.className = 'px-2 py-0.5 rounded bg-emerald-500/20 text-[11px] text-emerald-300 font-semibold transition';
+        } else {
+          btn.className = 'px-2 py-0.5 rounded bg-slate-800 text-[11px] text-slate-400 hover:text-white transition';
+        }
+      });
       calculate();
     }
 
@@ -745,6 +777,35 @@
     // Event Listeners for inputs
     [grossAmountInput, shareCountInput, sharePriceInput, shareCostInput, feePercentInput].forEach(inp => {
       inp.addEventListener('input', calculate);
+    });
+
+    // Formatting on Blur / Focus for currency inputs
+    [grossAmountInput, sharePriceInput, shareCostInput].forEach(inp => {
+      inp.addEventListener('focus', function() {
+        this.select();
+      });
+      inp.addEventListener('blur', function() {
+        const val = parseCurrency(this.value);
+        if (val > 0) {
+          this.value = formatTL(val);
+        }
+      });
+      inp.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') this.blur();
+      });
+    });
+
+    shareCountInput.addEventListener('focus', function() {
+      this.select();
+    });
+    shareCountInput.addEventListener('blur', function() {
+      const val = parseCurrency(this.value);
+      if (val > 0) {
+        this.value = Math.round(val).toLocaleString('tr-TR');
+      }
+    });
+    shareCountInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') this.blur();
     });
 
     // Share Text Generator (With Prominent Legal Notice)

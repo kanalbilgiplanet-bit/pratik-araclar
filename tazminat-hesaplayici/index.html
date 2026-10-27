@@ -208,15 +208,13 @@
           </label>
           <div class="relative">
             <input 
-              type="number" 
+              type="text" 
+              inputmode="decimal" 
               id="grossSalaryInput" 
-              value="45000" 
-              step="500" 
-              min="1"
-              class="w-full bg-[#0b0f19] border border-slate-700/80 rounded-xl pl-4 pr-14 py-2.5 text-base font-extrabold text-slate-100 focus:outline-none focus:border-indigo-500 transition"
-              placeholder="45000"
+              value="45.000,00 ₺" 
+              class="w-full bg-[#0b0f19] border border-slate-700/80 rounded-xl px-4 py-2.5 text-base font-extrabold text-slate-100 focus:outline-none focus:border-indigo-500 transition"
+              placeholder="45.000,00 ₺"
             >
-            <span class="absolute right-3.5 top-3 text-xs text-slate-400 font-bold pointer-events-none">₺ / Ay</span>
           </div>
           <span class="text-[11px] text-slate-400 mt-1 block">Bordrodaki çıplak brüt maaş</span>
         </div>
@@ -228,15 +226,13 @@
           </label>
           <div class="relative">
             <input 
-              type="number" 
+              type="text" 
+              inputmode="decimal" 
               id="extraBenefitsInput" 
-              value="5000" 
-              step="250" 
-              min="0"
-              class="w-full bg-[#0b0f19] border border-slate-700/80 rounded-xl pl-4 pr-14 py-2.5 text-base font-extrabold text-slate-100 focus:outline-none focus:border-indigo-500 transition"
-              placeholder="0"
+              value="5.000,00 ₺" 
+              class="w-full bg-[#0b0f19] border border-slate-700/80 rounded-xl px-4 py-2.5 text-base font-extrabold text-slate-100 focus:outline-none focus:border-indigo-500 transition"
+              placeholder="0,00 ₺"
             >
-            <span class="absolute right-3.5 top-3 text-xs text-slate-400 font-bold pointer-events-none">₺ / Ay</span>
           </div>
           <span class="text-[11px] text-slate-400 mt-1 block">Yol, yemek, düzenli prim, ikramiye</span>
         </div>
@@ -497,15 +493,47 @@
     startDateInput.value = threeYearsAgo.toISOString().split('T')[0];
     endDateInput.value = today.toISOString().split('T')[0];
 
+    function parseCurrency(str) {
+      if (typeof str === 'number') return isNaN(str) ? 0 : str;
+      if (!str) return 0;
+      let cleaned = String(str).replace(/[^\d.,]/g, '').trim();
+      if (!cleaned) return 0;
+      if (cleaned.includes('.') && cleaned.includes(',')) {
+        cleaned = cleaned.replace(/\./g, '').replace(',', '.');
+      } else if (cleaned.includes(',')) {
+        cleaned = cleaned.replace(',', '.');
+      } else if (cleaned.includes('.')) {
+        const parts = cleaned.split('.');
+        if (parts.length > 2 || (parts.length === 2 && parts[1].length === 3)) {
+          cleaned = cleaned.replace(/\./g, '');
+        }
+      }
+      const val = parseFloat(cleaned);
+      return isNaN(val) ? 0 : val;
+    }
+
     function formatTL(num) {
       return new Intl.NumberFormat('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(num) + ' ₺';
     }
 
     // Shortcut for 2026 minimum wage
     setMinWageSeveranceBtn.addEventListener('click', () => {
-      grossSalaryInput.value = 26005.50;
-      extraBenefitsInput.value = 0;
+      grossSalaryInput.value = formatTL(26005.50);
+      extraBenefitsInput.value = formatTL(0);
       calculateCompensation();
+    });
+
+    [grossSalaryInput, extraBenefitsInput].forEach(inp => {
+      inp.addEventListener('focus', function() {
+        this.select();
+      });
+      inp.addEventListener('blur', function() {
+        const val = parseCurrency(this.value);
+        this.value = formatTL(val);
+      });
+      inp.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') this.blur();
+      });
     });
 
     calcNoticeCheck.addEventListener('change', () => {
@@ -574,8 +602,8 @@
       kpiTenureText.textContent = `${tenure.years} Yıl ${tenure.months} Ay ${tenure.days} Gün`;
       kpiTenureDaysSub.textContent = `Toplam ${tenure.totalDays} takvim günü`;
 
-      const grossSalary = parseFloat(grossSalaryInput.value) || 0;
-      const extraBenefits = parseFloat(extraBenefitsInput.value) || 0;
+      const grossSalary = parseCurrency(grossSalaryInput.value);
+      const extraBenefits = parseCurrency(extraBenefitsInput.value);
       const dressedMonthlyGross = grossSalary + extraBenefits;
 
       const ceilingData = SEVERANCE_CEILINGS[ceilingYearSelect.value];

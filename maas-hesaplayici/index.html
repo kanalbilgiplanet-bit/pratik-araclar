@@ -270,15 +270,13 @@
           
           <div class="relative">
             <input 
-              type="number" 
+              type="text" 
+              inputmode="decimal" 
               id="salaryInput" 
-              value="50000" 
-              step="500" 
-              min="1"
-              class="w-full bg-[#0b0f19] border border-slate-700/80 rounded-xl pl-4 pr-16 py-2.5 text-base font-extrabold text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition"
-              placeholder="50000"
+              value="50.000,00 ₺" 
+              class="w-full bg-[#0b0f19] border border-slate-700/80 rounded-xl px-4 py-2.5 text-base font-extrabold text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition"
+              placeholder="50.000,00 ₺"
             >
-            <span class="absolute right-3.5 top-3 text-xs text-slate-400 font-bold pointer-events-none">₺ / Ay</span>
           </div>
           <span class="text-[11px] text-slate-400 mt-1 block">Aylık baz alınan maaş tutarı</span>
         </div>
@@ -665,6 +663,25 @@
     const blogCardBadge = document.getElementById('blogCardBadge');
     const blogCardContent = document.getElementById('blogCardContent');
 
+    function parseCurrency(str) {
+      if (typeof str === 'number') return isNaN(str) ? 0 : str;
+      if (!str) return 0;
+      let cleaned = String(str).replace(/[^\d.,]/g, '').trim();
+      if (!cleaned) return 0;
+      if (cleaned.includes('.') && cleaned.includes(',')) {
+        cleaned = cleaned.replace(/\./g, '').replace(',', '.');
+      } else if (cleaned.includes(',')) {
+        cleaned = cleaned.replace(',', '.');
+      } else if (cleaned.includes('.')) {
+        const parts = cleaned.split('.');
+        if (parts.length > 2 || (parts.length === 2 && parts[1].length === 3)) {
+          cleaned = cleaned.replace(/\./g, '');
+        }
+      }
+      const val = parseFloat(cleaned);
+      return isNaN(val) ? 0 : val;
+    }
+
     function formatTL(num) {
       return new Intl.NumberFormat('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(num) + ' ₺';
     }
@@ -691,7 +708,7 @@
     // Set Minimum Wage Shortcut
     setMinWageBtn.addEventListener('click', () => {
       const cfg = TAX_CONFIGS[yearSelect.value];
-      salaryInput.value = cfg.minWageGross;
+      salaryInput.value = formatTL(cfg.minWageGross);
       calculatePayroll();
     });
 
@@ -707,6 +724,16 @@
     retireeCheck.addEventListener('change', calculatePayroll);
     employerIncentiveCheck.addEventListener('change', calculatePayroll);
     salaryInput.addEventListener('input', calculatePayroll);
+    salaryInput.addEventListener('focus', function() {
+      this.select();
+    });
+    salaryInput.addEventListener('blur', function() {
+      const val = parseCurrency(this.value);
+      if (val > 0) this.value = formatTL(val);
+    });
+    salaryInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') this.blur();
+    });
 
     if (printBtn) {
       printBtn.addEventListener('click', () => {
@@ -751,7 +778,7 @@
       const cfg = TAX_CONFIGS[year];
       const isRetiree = retireeCheck.checked;
       const hasEmployerIncentive = employerIncentiveCheck.checked;
-      let inputVal = parseFloat(salaryInput.value) || 0;
+      let inputVal = parseCurrency(salaryInput.value);
 
       if (inputVal <= 0) inputVal = cfg.minWageGross;
 
