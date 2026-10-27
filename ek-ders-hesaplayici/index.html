@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="tr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Speed & Preconnect Resource Hints -->
+  <link rel="preconnect" href="https://cdn.tailwindcss.com">
+  <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+
+  <title>2026 - 2027 MEB Öğretmen Ek Ders Hesaplayıcı | KBS & Vergi Dilimi Uyumlu</title>
+  <meta name="description" content="2026 ve 2027 MEB öğretmen ek ders ücreti hesaplama motoru. Nöbet, DYK, hazırlık-planlama (10'a 1), yüksek lisans (%7) ve %15-%20-%27 vergi dilimi kesintili net puantaj dökümü.">
+  <meta name="keywords" content="ek ders hesaplama, meb ek ders saat ücreti 2026, öğretmen ek ders hesaplama, nöbet ek ders kaç saat, dyk ek ders ücreti, kbs ek ders hesaplama robotu, vergi dilimi ek ders kesintisi, ücretli öğretmen ek ders">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <link rel="canonical" href="https://pratik-araclar.pratikweb.workers.dev/ek-ders-hesaplayici/">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%236366f1'/%3E%3Cstop offset='100%25' stop-color='%2310b981'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23bg)'/%3E%3Cpath d='M32 14 L48 24 L32 34 L16 24 Z' fill='%23ffffff'/%3E%3Cpath d='M20 28 L20 42 C20 46 44 46 44 42 L44 28' fill='none' stroke='%23ffffff' stroke-width='4' stroke-linecap='round'/%3E%3Ccircle cx='48' cy='36' r='3' fill='%23ffffff'/%3E%3C/svg%3E">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://pratik-araclar.pratikweb.workers.dev/ek-ders-hesaplayici/">
+  <meta property="og:title" content="MEB Öğretmen Ek Ders Hesaplama Motoru (2026 - 2027)">
+  <meta property="og:description" content="KBS puantajı, nöbet, DYK, hazırlık-planlama ve vergi dilimi kesintisiyle bu ay elinize geçecek net ek ders tutarını anında hesaplayın.">
+  <meta property="og:image" content="https://pratik-araclar.pratikweb.workers.dev/assets/og-banner.png">
+  <meta property="og:locale" content="tr_TR">
+  <meta property="og:site_name" content="Pratik Araçlar">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://pratik-araclar.pratikweb.workers.dev/ek-ders-hesaplayici/">
+  <meta name="twitter:title" content="MEB Öğretmen Ek Ders Hesaplayıcı (2026 - 2027)">
+  <meta name="twitter:description" content="KBS puantajı, nöbet, DYK, hazırlık-planlama ve vergi dilimi kesintisiyle net ek dersinizi anında hesaplayın.">
+  <meta name="twitter:image" content="https://pratik-araclar.pratikweb.workers.dev/assets/og-banner.png">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            midnight: '#0b0f19',
+            surface: '#111827',
+            surfaceCard: '#1a2234',
+            surfaceBorder: '#28354d'
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- FontAwesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "@id": "https://pratik-araclar.pratikweb.workers.dev/ek-ders-hesaplayici/#app",
+        "url": "https://pratik-araclar.pratikweb.workers.dev/ek-ders-hesaplayici/",
+        "name": "MEB Öğretmen Ek Ders Hesaplayıcı",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "All",
+        "browserRequirements": "Requires JavaScript. Requires HTML5.",
+        "description": "2026 ve 2027 MEB öğretmen ek ders ücreti, nöbet, DYK ve vergi dilimi kesintisi hesaplama aracı.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "TRY"
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://pratik-araclar.pratikweb.workers.dev/ek-ders-hesaplayici/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Hazırlık ve Planlama (10'a 1) ek dersi nasıl hesaplanır?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Milli Eğitim Bakanlığı Yönetici ve Öğretmenlerinin Ders ve Ek Ders Saatlerine İlişkin Karar'ın 11. maddesine göre; öğretmenlere haftalık girdikleri her 10 saat ders için 1 saat hazırlık ve planlama görevi ek dersi verilir. Bir haftada bu kapsamda en fazla 3 saat ek ders ödenebilir (Örn: 20-29 saat arası derse giren 2 saat, 30 saat ve üzeri derse giren 3 saat alır)."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "DYK (Destekleme ve Yetiştirme Kursu) ek dersi neden 2 kat ödenir?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "657 sayılı Devlet Memurları Kanunu'nun 176. maddesi gereğince, MEB bünyesinde açılan Destekleme ve Yetiştirme Kurslarında (DYK) fiilen görev alan yönetici ve öğretmenlere ek ders ücretleri %100 artırımlı (normal gündüz ücretinin tam 2 katı) olarak ödenir."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Ek ders ücretinden hangi vergiler kesilir?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Kadrolu ve sözleşmeli öğretmenlerin ek ders ödemelerinden SGK primi kesilmez. Sadece Gelir Vergisi (%15, %20 veya %27) ve Damga Vergisi (binde 7,59) kesilir. Ücretli öğretmenlerde ise ek olarak işçi SGK primi kesintisi uygulanır."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    @media print {
+      .no-print { display: none !important; }
+      body { background: white !important; color: black !important; }
+      .print-border { border: 1px solid #ccc !important; box-shadow: none !important; }
+    }
+  </style>
+</head>
+<body class="bg-[#0b0f19] text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-indigo-500 selection:text-white">
+
+  <!-- Header -->
+  <header class="no-print border-b border-slate-800/80 bg-slate-900/60 backdrop-blur-md sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="/" class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-emerald-400 flex items-center justify-center shadow-lg shadow-indigo-500/20 text-white font-bold transition hover:scale-105">
+          <i class="fa-solid fa-graduation-cap"></i>
+        </a>
+        <div>
+          <a href="/" class="text-lg font-bold tracking-tight text-white hover:text-indigo-300 transition-colors">
+            Pratik<span class="text-indigo-400">Araçlar</span>
+          </a>
+          <span class="hidden sm:inline-block text-xs text-slate-400 ml-2 border-l border-slate-700 pl-2">
+            MEB Öğretmen Ek Ders Motoru
+          </span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 sm:gap-4">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          2026 - 2027 Güncel
+        </span>
+        <a href="/" class="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition">
+          <i class="fa-solid fa-arrow-left mr-1.5"></i>Tüm Araçlar
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="no-print pt-8 pb-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full text-center">
+    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-xs font-medium mb-3">
+      <i class="fa-solid fa-calculator text-indigo-400"></i>
+      KBS Puantaj, Nöbet, DYK ve Gelir Vergisi Kesintisi
+    </div>
+    <h1 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight max-w-4xl mx-auto mb-3">
+      MEB Öğretmen <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-emerald-300 to-teal-400">Ek Ders Hesaplayıcı</span>
+    </h1>
+    <p class="text-slate-400 text-xs sm:text-sm max-w-2xl mx-auto leading-relaxed">
+      Maaş karşılığı, hazırlık ve planlama (10'a 1), nöbet görevi, DYK kursu ve vergi dilimi kesintileriyle ay sonunda hesabınıza yatacak net ek ders tutarını kuruşu kuruşuna öğrenin.
+    </p>
+  </section>
+
+  <!-- MAIN APP GRID -->
+  <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pb-16">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- LEFT: Configuration & Input Panels (7 Cols) -->
+      <div class="lg:col-span-7 space-y-6">
+
+        <!-- CALCULATION MODE SWITCHER -->
+        <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-5 sm:p-6 shadow-xl space-y-5">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+            <h2 class="text-sm font-bold uppercase tracking-wider text-slate-200 flex items-center gap-2">
+              <i class="fa-solid fa-sliders text-indigo-400"></i>
+              <span>1. Hesaplama Yöntemi & Branş Seçimi</span>
+            </h2>
+            <span class="text-[11px] text-slate-400">MEB Mevzuatı Uyumlu</span>
+          </div>
+
+          <!-- Mode Toggle Tabs -->
+          <div class="grid grid-cols-2 gap-2 p-1.5 bg-slate-950/80 rounded-2xl border border-slate-800">
+            <button type="button" id="tabWizard" class="py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 bg-indigo-600 text-white shadow-lg shadow-indigo-600/30">
+              <i class="fa-solid fa-wand-magic-sparkles text-xs"></i>
+              <span>Haftalık Program Sihirbazı</span>
+            </button>
+            <button type="button" id="tabDirect" class="py-2.5 px-3 rounded-xl font-semibold text-xs sm:text-sm text-slate-400 hover:text-white transition-all flex items-center justify-center gap-2">
+              <i class="fa-solid fa-list-check text-xs"></i>
+              <span>Aylık Puantaj (Saat Girişi)</span>
+            </button>
+          </div>
+
+          <!-- Branch / Position Selector -->
+          <div class="space-y-2">
+            <label class="block text-xs font-semibold text-slate-300">
+              Öğretmenlik Branşı / Görev Ünvanı:
+            </label>
+            <select id="branchSelect" class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-4 py-3 text-slate-200 font-medium text-xs sm:text-sm focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition">
+              <option value="brans">Genel Branş Öğretmeni (15 Saat Maaş Karşılığı - Max 30 Saat)</option>
+              <option value="sinif">Sınıf Öğretmeni (18 Saat Maaş Karşılığı - Max 30 Saat)</option>
+              <option value="okuloncesi">Okul Öncesi Öğretmeni (18 Saat Maaş Karşılığı + 12 Saat Zorunlu Ek Ders)</option>
+              <option value="meslek">Meslek / Atölye Dersi Öğretmeni (20 Saat Maaş Karşılığı - Max 44 Saat)</option>
+              <option value="ozelEgitim">Özel Eğitim Öğretmeni (%25 Artırımlı Ödeme)</option>
+              <option value="rehber">Rehber Öğretmen / Psikolojik Danışman (Haftalık 18 Saat Sabit)</option>
+              <option value="mudurYardimcisi">Müdür Yardımcısı (Haftalık 19 Saat Yönetim Görevi)</option>
+              <option value="mudur">Okul Müdürü (Haftalık 24 Saat Yönetim Görevi)</option>
+            </select>
+          </div>
+
+          <!-- Status & Degree Options -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-400 mb-1.5">Kadro Durumu:</label>
+              <select id="employmentType" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-indigo-500">
+                <option value="kadrolu">Kadrolu Öğretmen</option>
+                <option value="sozlesmeli">Sözleşmeli Öğretmen</option>
+                <option value="ucretli">Ücretli Öğretmen (SGK Primli)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-400 mb-1.5">Öğrenim Durumu:</label>
+              <select id="degreeBonus" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-indigo-500">
+                <option value="0">Lisans (%0)</option>
+                <option value="0.07">Yüksek Lisans (+%7 Artırımlı)</option>
+                <option value="0.20">Doktora (+%20 Artırımlı)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-400 mb-1.5">Gelir Vergisi Dilimi:</label>
+              <select id="taxBracket" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-indigo-500">
+                <option value="0.15">%15 (Yıl Başı / Ocak-Haziran)</option>
+                <option value="0.20" selected>%20 (Yıl Ortası / Temmuz-Ekim)</option>
+                <option value="0.27">%27 (Yıl Sonu / Kasım-Aralık)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Coefficient Period -->
+          <div class="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs bg-slate-950/60 p-3 rounded-2xl border border-slate-800/80">
+            <span class="text-slate-300 font-medium">Maaş Katsayısı Dönemi:</span>
+            <div class="flex items-center gap-3">
+              <label class="flex items-center gap-1.5 cursor-pointer text-slate-300">
+                <input type="radio" name="coeffPeriod" value="2026" checked class="text-indigo-600 focus:ring-0">
+                <span>2026 Temmuz-Aralık (Güncel)</span>
+              </label>
+              <label class="flex items-center gap-1.5 cursor-pointer text-slate-400">
+                <input type="radio" name="coeffPeriod" value="2027" class="text-indigo-600 focus:ring-0">
+                <span>2027 Ocak Zamlı (Tahmini)</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- MODE 1: WEEKLY PROGRAM WIZARD (DEFAULT) -->
+        <div id="wizardPanel" class="bg-slate-900/90 border border-slate-800 rounded-3xl p-5 sm:p-6 shadow-xl space-y-5">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+            <h2 class="text-sm font-bold uppercase tracking-wider text-slate-200 flex items-center gap-2">
+              <i class="fa-solid fa-calendar-week text-emerald-400"></i>
+              <span>2. Haftalık Ders ve Görev Dağılımı</span>
+            </h2>
+            <span class="text-[11px] text-emerald-400 font-semibold" id="autoSalaryMatchBadge">15 Saat Maaş Karşılığı</span>
+          </div>
+
+          <!-- Weekly Lesson Hours Slider / Stepper -->
+          <div class="p-4 bg-slate-950/70 rounded-2xl border border-slate-800 space-y-3">
+            <div class="flex items-center justify-between">
+              <div>
+                <label for="weeklyLessons" class="text-xs font-bold text-white block">Haftalık Fiili Girdiğiniz Ders Saati:</label>
+                <span class="text-[11px] text-slate-400">Okuldaki toplam ders saati (Maaş karşılığı dahil)</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <button type="button" id="btnMinusLesson" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-bold flex items-center justify-center transition">-</button>
+                <input type="number" id="weeklyLessons" value="24" min="0" max="44" class="w-14 text-center font-bold text-base bg-slate-900 border border-slate-700 rounded-lg py-1 text-white focus:outline-none">
+                <button type="button" id="btnPlusLesson" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-bold flex items-center justify-center transition">+</button>
+              </div>
+            </div>
+
+            <!-- Auto calculations summary row -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-2 border-t border-slate-800 text-[11px]">
+              <div class="p-2 rounded-xl bg-slate-900 border border-slate-800/80">
+                <span class="text-slate-400 block">Maaş Karşılığı:</span>
+                <span id="wizardSalaryHours" class="font-bold text-slate-200">15 Saat</span>
+              </div>
+              <div class="p-2 rounded-xl bg-slate-900 border border-slate-800/80">
+                <span class="text-slate-400 block">Ders Ek Dersi:</span>
+                <span id="wizardExtraLessonHours" class="font-bold text-emerald-400">9 Saat</span>
+              </div>
+              <div class="p-2 rounded-xl bg-slate-900 border border-slate-800/80 col-span-2 sm:col-span-1">
+                <span class="text-slate-400 block">Hazırlık & Planlama (10'a 1):</span>
+                <span id="wizardPrepHours" class="font-bold text-indigo-400">+2 Saat</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Extra Duty Checkboxes & Additions -->
+          <div class="space-y-3">
+            <h3 class="text-xs font-bold text-slate-300">Ek Görev ve Nöbetler:</h3>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <!-- Nöbet -->
+              <label class="flex items-start gap-3 p-3.5 rounded-2xl bg-slate-950/60 border border-slate-800 hover:border-slate-700 cursor-pointer transition">
+                <input type="checkbox" id="checkDutyWatch" checked class="mt-0.5 rounded text-indigo-600 focus:ring-0">
+                <div>
+                  <div class="text-xs font-bold text-white flex items-center gap-1.5">
+                    <i class="fa-solid fa-person-shelter text-amber-400"></i>
+                    <span>Haftalık Nöbet Görevi</span>
+                  </div>
+                  <span class="text-[11px] text-slate-400">Haftada sabit +3 saat ek ders</span>
+                </div>
+              </label>
+
+              <!-- Sınıf Rehberliği / Kulüp -->
+              <label class="flex items-start gap-3 p-3.5 rounded-2xl bg-slate-950/60 border border-slate-800 hover:border-slate-700 cursor-pointer transition">
+                <input type="checkbox" id="checkGuidanceClub" checked class="mt-0.5 rounded text-indigo-600 focus:ring-0">
+                <div>
+                  <div class="text-xs font-bold text-white flex items-center gap-1.5">
+                    <i class="fa-solid fa-users text-cyan-400"></i>
+                    <span>Sınıf Rehberliği / Kulüp</span>
+                  </div>
+                  <span class="text-[11px] text-slate-400">Haftada sabit +2 saat ek ders</span>
+                </div>
+              </label>
+            </div>
+
+            <!-- Additional Weekly Courses (DYK, İYEP, etc.) -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+              <div class="p-3 rounded-2xl bg-slate-950/60 border border-slate-800">
+                <div class="flex items-center justify-between mb-1.5">
+                  <span class="text-[11px] font-bold text-amber-300">DYK Hafta Sonu:</span>
+                  <span class="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold">2 KAT</span>
+                </div>
+                <input type="number" id="weeklyDykWeekend" value="0" min="0" max="20" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-white text-center font-bold focus:outline-none focus:border-amber-400" placeholder="Saat/Hafta">
+              </div>
+
+              <div class="p-3 rounded-2xl bg-slate-950/60 border border-slate-800">
+                <div class="flex items-center justify-between mb-1.5">
+                  <span class="text-[11px] font-bold text-amber-300">DYK Hafta İçi:</span>
+                  <span class="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold">2 KAT</span>
+                </div>
+                <input type="number" id="weeklyDykWeekday" value="0" min="0" max="20" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-white text-center font-bold focus:outline-none focus:border-amber-400" placeholder="Saat/Hafta">
+              </div>
+
+              <div class="p-3 rounded-2xl bg-slate-950/60 border border-slate-800">
+                <div class="flex items-center justify-between mb-1.5">
+                  <span class="text-[11px] font-bold text-teal-300">İYEP / Egzersiz:</span>
+                  <span class="text-[10px] px-1.5 py-0.5 rounded bg-teal-500/20 text-teal-300 font-bold">Normal</span>
+                </div>
+                <input type="number" id="weeklyIyep" value="0" min="0" max="15" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-white text-center font-bold focus:outline-none focus:border-teal-400" placeholder="Saat/Hafta">
+              </div>
+            </div>
+
+            <!-- Month week count multiplier -->
+            <div class="pt-2 flex items-center justify-between text-xs text-slate-400 bg-slate-950/50 p-3 rounded-xl border border-slate-800/80">
+              <span>Hesaplanan Ay İçi Hafta Sayısı:</span>
+              <div class="flex items-center gap-2">
+                <select id="monthWeeksSelect" class="bg-slate-900 border border-slate-700 text-slate-200 text-xs font-bold rounded-lg px-2.5 py-1 focus:outline-none">
+                  <option value="4" selected>4 Hafta (Standart Ay)</option>
+                  <option value="4.5">4.5 Hafta (31 Çeken Aylar)</option>
+                  <option value="5">5 Hafta (Uzun Dönem)</option>
+                  <option value="3">3 Hafta (Tatil / Ara Tatil Ayı)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MODE 2: DIRECT MONTHLY PUANTAJ INPUT (HIDDEN BY DEFAULT) -->
+        <div id="directPanel" class="hidden bg-slate-900/90 border border-slate-800 rounded-3xl p-5 sm:p-6 shadow-xl space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+            <h2 class="text-sm font-bold uppercase tracking-wider text-slate-200 flex items-center gap-2">
+              <i class="fa-solid fa-table-cells text-sky-400"></i>
+              <span>2. Aylık Toplam Ek Ders Puantajı Girişi</span>
+            </h2>
+            <span class="text-[11px] text-slate-400">KBS Bordro Formatı</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="space-y-1.5">
+              <label class="text-xs font-semibold text-slate-300">Aylık Gündüz Dersi (101):</label>
+              <input type="number" id="directDayHours" value="60" min="0" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white font-bold focus:outline-none focus:border-indigo-500">
+              <span class="text-[10px] text-slate-500 block">Normal gündüz ek dersi + hazırlık planlama</span>
+            </div>
+
+            <div class="space-y-1.5">
+              <label class="text-xs font-semibold text-slate-300">Aylık Nöbet Görevi (104):</label>
+              <input type="number" id="directWatchHours" value="12" min="0" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white font-bold focus:outline-none focus:border-indigo-500">
+              <span class="text-[10px] text-slate-500 block">Genellikle ayda 12 saat (4 hafta x 3 saat)</span>
+            </div>
+
+            <div class="space-y-1.5">
+              <label class="text-xs font-semibold text-slate-300">Aylık Gece / Hafta Sonu (102):</label>
+              <input type="number" id="directNightHours" value="0" min="0" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white font-bold focus:outline-none focus:border-indigo-500">
+              <span class="text-[10px] text-slate-500 block">18:00 sonrası veya hafta sonu dersleri</span>
+            </div>
+
+            <div class="space-y-1.5">
+              <label class="text-xs font-semibold text-slate-300">Aylık DYK Kursu Saati (2 Kat):</label>
+              <input type="number" id="directDykHours" value="0" min="0" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white font-bold focus:outline-none focus:border-amber-400">
+              <span class="text-[10px] text-slate-500 block">Destekleme kursları %100 fazlasıyla ödenir</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: LIVE SUMMARY & NET CALCULATION DISPLAY (5 Cols) -->
+      <div class="lg:col-span-5 bg-gradient-to-b from-[#0f172a] to-[#0b1329] border border-slate-800/90 rounded-3xl p-6 sm:p-8 shadow-2xl relative sticky top-24 space-y-6">
+        
+        <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+          <div class="flex items-center gap-2">
+            <div class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></div>
+            <h2 class="text-sm font-bold uppercase tracking-wider text-slate-300">Maaşa Eklenecek Ek Ders</h2>
+          </div>
+          <span id="badgeBranchDisplay" class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-indigo-500/15 text-indigo-300 border border-indigo-500/30">
+            Genel Branş
+          </span>
+        </div>
+
+        <!-- HERO NET AMOUNT DISPLAY -->
+        <div class="py-4 text-center border-b border-slate-800/80">
+          <span class="text-xs uppercase tracking-wider font-semibold text-slate-400 block mb-1">
+            Hesaba Yatacak Net Tutar
+          </span>
+          <div id="netEkDersDisplay" class="text-3xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 tracking-tight">
+            0,00 ₺
+          </div>
+          <div class="inline-flex items-center gap-2 mt-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-semibold">
+            <i class="fa-solid fa-clock mr-1 text-xs"></i>
+            Toplam: <span id="summaryTotalHours">0</span> Saat Ek Ders
+          </div>
+        </div>
+
+        <!-- BREAKDOWN ROWS -->
+        <div class="space-y-3 text-xs sm:text-sm">
+          <div class="flex justify-between items-center text-slate-400">
+            <span>Toplam Brüt Tutar:</span>
+            <span id="summaryGrossTotal" class="font-bold text-slate-200">0,00 ₺</span>
+          </div>
+
+          <div class="flex justify-between items-center text-slate-400">
+            <span class="flex items-center gap-1.5">
+              <i class="fa-solid fa-minus text-rose-400 text-xs"></i>
+              <span id="summaryTaxLabel">Gelir Vergisi Kesintisi (%20):</span>
+            </span>
+            <span id="summaryIncomeTax" class="font-bold text-rose-400">-0,00 ₺</span>
+          </div>
+
+          <div class="flex justify-between items-center text-slate-400">
+            <span class="flex items-center gap-1.5">
+              <i class="fa-solid fa-minus text-rose-400 text-xs"></i>
+              <span>Damga Vergisi (Binde 7,59):</span>
+            </span>
+            <span id="summaryStampTax" class="font-bold text-rose-400">-0,00 ₺</span>
+          </div>
+
+          <div id="sgkRow" class="hidden flex justify-between items-center text-slate-400">
+            <span class="flex items-center gap-1.5">
+              <i class="fa-solid fa-minus text-rose-400 text-xs"></i>
+              <span>SGK İşçi Primi Kesintisi (%15):</span>
+            </span>
+            <span id="summarySgkTax" class="font-bold text-rose-400">-0,00 ₺</span>
+          </div>
+
+          <div class="flex justify-between items-center text-slate-400 pt-2 border-t border-slate-800/60">
+            <span>1 Saatlik Net Ücret Karşılığı:</span>
+            <span id="summarySingleHourNet" class="font-bold text-white text-sm sm:text-base">0,00 ₺</span>
+          </div>
+        </div>
+
+        <!-- ACTION BUTTONS: WHATSAPP & PRINT -->
+        <div class="pt-2 space-y-2.5 no-print">
+          <button id="whatsappShareBtn" class="w-full py-3.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm transition-all shadow-lg shadow-emerald-600/30 flex items-center justify-center gap-2 group">
+            <i class="fa-brands fa-whatsapp text-lg group-hover:scale-110 transition-transform"></i>
+            <span>Zümreye / Arkadaşına Paylaş</span>
+          </button>
+
+          <button onclick="window.print()" class="w-full py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-semibold text-xs border border-slate-700 transition flex items-center justify-center gap-2">
+            <i class="fa-solid fa-print text-xs"></i>
+            <span>KBS Puantaj Dökümünü Yazdır / PDF</span>
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- PUANTAJ DETAY TABLOSU (A4 & YAZDIR UYUMLU) -->
+    <div class="mt-12 bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-slate-800">
+        <div>
+          <h3 class="text-base font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-table-list text-indigo-400"></i>
+            <span>Ek Ders Puantajı & Kalem Bazlı Döküm Tablosu</span>
+          </h3>
+          <p class="text-xs text-slate-400 mt-0.5">Seçilen görev ve kurs türlerine göre brüt katsayı ve net hak ediş cetveli</p>
+        </div>
+        <span class="text-xs font-mono text-slate-400 bg-slate-950 px-3 py-1.5 rounded-xl border border-slate-800">
+          Katsayı: <span id="displayCoeffNumber">1.575512</span>
+        </span>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs">
+          <thead>
+            <tr class="border-b border-slate-800 text-slate-400 uppercase tracking-wider text-[11px]">
+              <th class="py-2.5 px-3">Görev / Ek Ders Kalemi</th>
+              <th class="py-2.5 px-3 text-center">Aylık Saat</th>
+              <th class="py-2.5 px-3 text-right">Saat Başı Brüt</th>
+              <th class="py-2.5 px-3 text-right">Toplam Brüt</th>
+              <th class="py-2.5 px-3 text-right text-rose-400">Toplam Kesinti</th>
+              <th class="py-2.5 px-3 text-right text-emerald-400">Net Tutar</th>
+            </tr>
+          </thead>
+          <tbody id="breakdownTableBody" class="divide-y divide-slate-800/60 font-mono">
+            <!-- Dynamically populated rows -->
+          </tbody>
+          <tfoot class="border-t-2 border-slate-700 font-bold">
+            <tr class="text-sm bg-slate-950/60 font-mono">
+              <td class="py-3 px-3 text-white font-sans">GENEL TOPLAM</td>
+              <td id="tableTotalHours" class="py-3 px-3 text-center text-slate-200">0</td>
+              <td class="py-3 px-3 text-right text-slate-400">-</td>
+              <td id="tableTotalGross" class="py-3 px-3 text-right text-slate-200">0,00 ₺</td>
+              <td id="tableTotalDeduction" class="py-3 px-3 text-right text-rose-400">-0,00 ₺</td>
+              <td id="tableTotalNet" class="py-3 px-3 text-right text-emerald-400 text-base">0,00 ₺</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+
+    <!-- STRATEGIC LEGAL TIPS FOR TEACHERS -->
+    <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4 no-print">
+      <!-- Tip 1 -->
+      <div class="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-2">
+        <div class="flex items-center gap-2 text-indigo-400 font-bold text-xs">
+          <i class="fa-solid fa-lightbulb text-sm"></i>
+          <span>TÜYO 1: Hazırlık & Planlama (10'a 1)</span>
+        </div>
+        <p class="text-xs text-slate-300 leading-relaxed">
+          MEB Kararı Madde 11 uyarınca haftalık girdiğiniz <strong>her 10 saat ders için 1 saat</strong> hazırlık ve planlama ek dersi yazılır. 19 saat derse giren 1 saat alırken, 20 saat derse giren 2 saat alır. Haftada maksimum 3 saat verilebilir.
+        </p>
+      </div>
+
+      <!-- Tip 2 -->
+      <div class="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-2">
+        <div class="flex items-center gap-2 text-amber-400 font-bold text-xs">
+          <i class="fa-solid fa-bolt text-sm"></i>
+          <span>TÜYO 2: DYK Kurslarında %100 Fazlası</span>
+        </div>
+        <p class="text-xs text-slate-300 leading-relaxed">
+          657 Sayılı Kanun Madde 176 uyarınca Destekleme ve Yetiştirme Kurslarında (DYK) görev alan öğretmenlerin saat ücreti <strong>tam 2 kat olarak (%100 artırımlı)</strong> hesaplanır. Hafta sonu DYK dersleri ise gece katsayısıyla (150 gösterge) daha da yüksek ödenir.
+        </p>
+      </div>
+
+      <!-- Tip 3 -->
+      <div class="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-2">
+        <div class="flex items-center gap-2 text-emerald-400 font-bold text-xs">
+          <i class="fa-solid fa-graduation-cap text-sm"></i>
+          <span>TÜYO 3: Yüksek Lisans ve Doktora Farkı</span>
+        </div>
+        <p class="text-xs text-slate-300 leading-relaxed">
+          Yüksek lisans mezunu öğretmenlerin fiilen girdikleri ders ücretleri <strong>%7 artırımlı</strong>, doktora mezunlarının ise <strong>%20 artırımlı</strong> ödenir. Bu fark nöbet ve hazırlık-planlama gibi fiilen girilmeyen saatlere yansıtılmaz.
+        </p>
+      </div>
+    </div>
+
+    <!-- Kahve Molası / PopNDodge Banner -->
+    <div class="mt-8 bg-slate-900/60 border border-slate-800 hover:border-violet-500/40 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs transition no-print">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-violet-500/10 border border-violet-500/20 text-violet-400 flex items-center justify-center text-base shrink-0">
+          <i class="fa-solid fa-gamepad"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-slate-200">☕ Ek ders puantajı tamam, öğretmenler odasında kısa bir oyun molası?</span>
+            <span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-violet-500/15 text-violet-300 border border-violet-500/30">Ücretsiz Oyun</span>
+          </div>
+          <p class="text-slate-400 text-[11px] mt-0.5">
+            Geliştiricimizden refleks ve balon patlatma oyunu: <strong>PopNDodge: Balon Patlatma VS</strong> Google Play'de!
+          </p>
+        </div>
+      </div>
+      <a href="https://play.google.com/store/apps/details?id=com.eymenefe.popndodge" target="_blank" rel="noopener noreferrer" class="shrink-0 px-3 py-1.5 rounded-lg bg-violet-600 hover:bg-violet-500 text-white font-semibold transition flex items-center gap-1.5 shadow-sm shadow-violet-600/20 text-xs">
+        <i class="fa-brands fa-google-play"></i>
+        <span>Google Play'de Oyna</span>
+        <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-70"></i>
+      </a>
+    </div>
+
+    <!-- FAQ ACCORDION -->
+    <div class="mt-8 bg-slate-900/90 border border-slate-800 rounded-3xl p-5 sm:p-6 shadow-xl space-y-3 no-print">
+      <h3 class="text-sm sm:text-base font-bold text-white flex items-center gap-2 mb-2">
+        <i class="fa-solid fa-circle-question text-indigo-400"></i>
+        <span>MEB Ek Ders Ücretleri Hakkında Sıkça Sorulan Sorular</span>
+      </h3>
+
+      <div class="space-y-2 text-xs">
+        <details class="group bg-slate-950/70 p-3.5 rounded-xl border border-slate-800/80 cursor-pointer">
+          <summary class="font-bold text-slate-200 flex items-center justify-between group-hover:text-indigo-300 transition">
+            <span>Ek ders ücreti saatlik brüt ve net olarak ne kadardır?</span>
+            <i class="fa-solid fa-chevron-down text-slate-500 text-[10px] group-open:rotate-180 transition"></i>
+          </summary>
+          <p class="text-slate-400 mt-2 leading-relaxed">
+            2026 yılı ikinci yarısı için memur aylık katsayısı 1,575512'dir. Gündüz ek ders göstergesi (140) ile çarpıldığında brüt saat ücreti <strong>220,57 TL</strong>'dir. %15 vergi diliminde ele geçen net ücret yaklaşık <strong>185,81 TL</strong>, %20 vergi diliminde <strong>174,78 TL</strong>, %27 diliminde ise <strong>159,34 TL</strong>'dir.
+          </p>
+        </details>
+
+        <details class="group bg-slate-950/70 p-3.5 rounded-xl border border-slate-800/80 cursor-pointer">
+          <summary class="font-bold text-slate-200 flex items-center justify-between group-hover:text-indigo-300 transition">
+            <span>Haftalık nöbet görevi kaç saat olarak eklenir?</span>
+            <i class="fa-solid fa-chevron-down text-slate-500 text-[10px] group-open:rotate-180 transition"></i>
+          </summary>
+          <p class="text-slate-400 mt-2 leading-relaxed">
+            MEB'e bağlı okullarda nöbet tutan öğretmen ve yöneticilere tuttukları nöbet görevi karşılığında haftada <strong>3 saat ek ders ücreti</strong> ödenir. Ayda ortalama 4 hafta nöbet tutulduğunda 12 saat nöbet ek dersi hak edilir.
+          </p>
+        </details>
+
+        <details class="group bg-slate-950/70 p-3.5 rounded-xl border border-slate-800/80 cursor-pointer">
+          <summary class="font-bold text-slate-200 flex items-center justify-between group-hover:text-indigo-300 transition">
+            <span>Sözleşmeli ve kadrolu öğretmenlerin ek dersi farklı mıdır?</span>
+            <i class="fa-solid fa-chevron-down text-slate-500 text-[10px] group-open:rotate-180 transition"></i>
+          </summary>
+          <p class="text-slate-400 mt-2 leading-relaxed">
+            Hayır, kadrolu ve sözleşmeli öğretmenler aynı gösterge (140) ve aynı memur katsayısı üzerinden ek ders ücreti alırlar. İkisinden de yalnızca gelir vergisi ve damga vergisi kesilir. Ancak ücretli öğretmenlerde SGK primi kesintisi uygulandığı için net tutar farklılaşır.
+          </p>
+        </details>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="no-print border-t border-slate-800 bg-slate-950/80 py-8 text-xs text-slate-400 mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <div class="w-6 h-6 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold text-xs">P</div>
+        <span class="font-bold text-white">PratikAraçlar</span>
+        <span>•</span>
+        <span>MEB Öğretmen Ek Ders Hesaplama Motoru</span>
+      </div>
+      <div class="flex flex-wrap items-center gap-4 text-xs">
+        <a href="../maas-hesaplayici/" class="hover:text-indigo-300 transition text-slate-300">Maaş & Vergi</a>
+        <a href="../kira-artisi-hesaplayici/" class="hover:text-emerald-300 transition text-slate-300">Kira Artışı</a>
+        <a href="../ydo-harc-zam-hesaplayici/" class="hover:text-amber-300 transition text-slate-300">2027 YDO Zamları</a>
+        <a href="../tazminat-hesaplayici/" class="hover:text-indigo-300 transition text-slate-300">Tazminat</a>
+        <a href="/" class="hover:text-white transition text-slate-400">Tüm 14 Araç</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- SCRIPT LOGIC -->
+  <script>
+    // MEB COEFFICIENTS & CONSTANTS
+    const COEFF_2026 = 1.575512; // 2026 Temmuz - Aralık Memur Katsayısı
+    const COEFF_2027_EST = 1.756695; // 2027 Ocak Tahmini Memur Katsayısı (+%11.5)
+
+    const INDICATOR_DAY = 140; // Gündüz ek ders göstergesi
+    const INDICATOR_NIGHT = 150; // Gece ve hafta sonu göstergesi
+    const STAMP_TAX_RATE = 0.00759; // Binde 7.59 damga vergisi
+
+    // DOM ELEMENTS
+    const tabWizard = document.getElementById('tabWizard');
+    const tabDirect = document.getElementById('tabDirect');
+    const wizardPanel = document.getElementById('wizardPanel');
+    const directPanel = document.getElementById('directPanel');
+
+    const branchSelect = document.getElementById('branchSelect');
+    const employmentType = document.getElementById('employmentType');
+    const degreeBonus = document.getElementById('degreeBonus');
+    const taxBracket = document.getElementById('taxBracket');
+    const coeffPeriodRadios = document.querySelectorAll('input[name="coeffPeriod"]');
+
+    const weeklyLessons = document.getElementById('weeklyLessons');
+    const btnMinusLesson = document.getElementById('btnMinusLesson');
+    const btnPlusLesson = document.getElementById('btnPlusLesson');
+    const checkDutyWatch = document.getElementById('checkDutyWatch');
+    const checkGuidanceClub = document.getElementById('checkGuidanceClub');
+    const weeklyDykWeekend = document.getElementById('weeklyDykWeekend');
+    const weeklyDykWeekday = document.getElementById('weeklyDykWeekday');
+    const weeklyIyep = document.getElementById('weeklyIyep');
+    const monthWeeksSelect = document.getElementById('monthWeeksSelect');
+
+    const directDayHours = document.getElementById('directDayHours');
+    const directWatchHours = document.getElementById('directWatchHours');
+    const directNightHours = document.getElementById('directNightHours');
+    const directDykHours = document.getElementById('directDykHours');
+
+    // OUTPUT DISPLAYS
+    const autoSalaryMatchBadge = document.getElementById('autoSalaryMatchBadge');
+    const wizardSalaryHours = document.getElementById('wizardSalaryHours');
+    const wizardExtraLessonHours = document.getElementById('wizardExtraLessonHours');
+    const wizardPrepHours = document.getElementById('wizardPrepHours');
+    const badgeBranchDisplay = document.getElementById('badgeBranchDisplay');
+
+    const netEkDersDisplay = document.getElementById('netEkDersDisplay');
+    const summaryTotalHours = document.getElementById('summaryTotalHours');
+    const summaryGrossTotal = document.getElementById('summaryGrossTotal');
+    const summaryTaxLabel = document.getElementById('summaryTaxLabel');
+    const summaryIncomeTax = document.getElementById('summaryIncomeTax');
+    const summaryStampTax = document.getElementById('summaryStampTax');
+    const sgkRow = document.getElementById('sgkRow');
+    const summarySgkTax = document.getElementById('summarySgkTax');
+    const summarySingleHourNet = document.getElementById('summarySingleHourNet');
+    const displayCoeffNumber = document.getElementById('displayCoeffNumber');
+
+    const breakdownTableBody = document.getElementById('breakdownTableBody');
+    const tableTotalHours = document.getElementById('tableTotalHours');
+    const tableTotalGross = document.getElementById('tableTotalGross');
+    const tableTotalDeduction = document.getElementById('tableTotalDeduction');
+    const tableTotalNet = document.getElementById('tableTotalNet');
+    const whatsappShareBtn = document.getElementById('whatsappShareBtn');
+
+    let currentMode = 'wizard'; // 'wizard' or 'direct'
+
+    // Format currency TR
+    function formatCurrency(val) {
+      return (val || 0).toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ₺';
+    }
+
+    // Tab switching
+    tabWizard.addEventListener('click', () => {
+      currentMode = 'wizard';
+      tabWizard.classList.add('bg-indigo-600', 'text-white', 'shadow-lg', 'shadow-indigo-600/30');
+      tabWizard.classList.remove('text-slate-400');
+      tabDirect.classList.remove('bg-indigo-600', 'text-white', 'shadow-lg', 'shadow-indigo-600/30');
+      tabDirect.classList.add('text-slate-400');
+      wizardPanel.classList.remove('hidden');
+      directPanel.classList.add('hidden');
+      calculate();
+    });
+
+    tabDirect.addEventListener('click', () => {
+      currentMode = 'direct';
+      tabDirect.classList.add('bg-indigo-600', 'text-white', 'shadow-lg', 'shadow-indigo-600/30');
+      tabDirect.classList.remove('text-slate-400');
+      tabWizard.classList.remove('bg-indigo-600', 'text-white', 'shadow-lg', 'shadow-indigo-600/30');
+      tabWizard.classList.add('text-slate-400');
+      directPanel.classList.remove('hidden');
+      wizardPanel.classList.add('hidden');
+      calculate();
+    });
+
+    // Stepper buttons
+    btnMinusLesson.addEventListener('click', () => {
+      let v = parseInt(weeklyLessons.value) || 0;
+      if (v > 0) { weeklyLessons.value = v - 1; calculate(); }
+    });
+    btnPlusLesson.addEventListener('click', () => {
+      let v = parseInt(weeklyLessons.value) || 0;
+      if (v < 44) { weeklyLessons.value = v + 1; calculate(); }
+    });
+
+    // Event listeners
+    [branchSelect, employmentType, degreeBonus, taxBracket, weeklyLessons, checkDutyWatch, checkGuidanceClub, weeklyDykWeekend, weeklyDykWeekday, weeklyIyep, monthWeeksSelect, directDayHours, directWatchHours, directNightHours, directDykHours].forEach(el => {
+      el.addEventListener('input', calculate);
+      el.addEventListener('change', calculate);
+    });
+
+    coeffPeriodRadios.forEach(r => r.addEventListener('change', calculate));
+
+    // Branch configuration map
+    const branchConfig = {
+      brans: { name: 'Genel Branş Öğretmeni', salaryHours: 15, maxHours: 30, specialMultiplier: 1.0 },
+      sinif: { name: 'Sınıf Öğretmeni', salaryHours: 18, maxHours: 30, specialMultiplier: 1.0 },
+      okuloncesi: { name: 'Okul Öncesi Öğretmeni', salaryHours: 18, maxHours: 30, specialMultiplier: 1.0 },
+      meslek: { name: 'Atölye & Meslek Öğretmeni', salaryHours: 20, maxHours: 44, specialMultiplier: 1.0 },
+      ozelEgitim: { name: 'Özel Eğitim Öğretmeni', salaryHours: 15, maxHours: 30, specialMultiplier: 1.25 },
+      rehber: { name: 'Rehber Öğretmen / PDR', salaryHours: 0, fixedWeekly: 18, specialMultiplier: 1.0 },
+      mudurYardimcisi: { name: 'Müdür Yardımcısı', salaryHours: 0, fixedWeekly: 19, specialMultiplier: 1.0 },
+      mudur: { name: 'Okul Müdürü', salaryHours: 0, fixedWeekly: 24, specialMultiplier: 1.0 }
+    };
+
+    function calculate() {
+      // 1. Get coefficient
+      const selectedPeriod = document.querySelector('input[name="coeffPeriod"]:checked')?.value || '2026';
+      const katsayi = selectedPeriod === '2027' ? COEFF_2027_EST : COEFF_2026;
+      displayCoeffNumber.textContent = katsayi.toFixed(6);
+
+      // 2. Get options
+      const branchKey = branchSelect.value;
+      const bConf = branchConfig[branchKey] || branchConfig.brans;
+      badgeBranchDisplay.textContent = bConf.name;
+
+      const isUcretli = employmentType.value === 'ucretli';
+      sgkRow.classList.toggle('hidden', !isUcretli);
+
+      const degBonus = parseFloat(degreeBonus.value) || 0; // 0, 0.07, 0.20
+      const incomeTaxRate = parseFloat(taxBracket.value) || 0.20;
+      summaryTaxLabel.textContent = `Gelir Vergisi Kesintisi (%${Math.round(incomeTaxRate * 100)}):`;
+
+      // Rates calculation (Brüt saat ücretleri)
+      // Normal Day Brüt: 140 * katsayi * specialMultiplier * (1 + degBonus)
+      const baseDayGross = INDICATOR_DAY * katsayi * bConf.specialMultiplier;
+      const dayGrossWithDegree = baseDayGross * (1 + degBonus);
+
+      // Night & Weekend Brüt: 150 * katsayi * specialMultiplier * (1 + degBonus)
+      const baseNightGross = INDICATOR_NIGHT * katsayi * bConf.specialMultiplier;
+      const nightGrossWithDegree = baseNightGross * (1 + degBonus);
+
+      // DYK Brüt (2 Kat): 140 * 2 * katsayi
+      const dykDayGross = INDICATOR_DAY * 2 * katsayi;
+      const dykNightGross = INDICATOR_NIGHT * 2 * katsayi;
+
+      let items = []; // { title: string, hours: number, grossUnit: number }
+
+      if (currentMode === 'wizard') {
+        const weeks = parseFloat(monthWeeksSelect.value) || 4;
+        autoSalaryMatchBadge.textContent = bConf.salaryHours > 0 ? `${bConf.salaryHours} Saat Maaş Karşılığı` : 'Sabit Yönetim Puantajı';
+
+        if (bConf.fixedWeekly) {
+          // Rehberlik or Yönetici
+          const weeklyFixed = bConf.fixedWeekly;
+          const monthlyFixed = weeklyFixed * weeks;
+          items.push({ title: `${bConf.name} Haftalık Yönetim/Rehberlik (${weeklyFixed} saat/hf)`, hours: monthlyFixed, grossUnit: dayGrossWithDegree });
+        } else {
+          // Standard teaching branch
+          const totalWeeklyLessons = parseInt(weeklyLessons.value) || 0;
+          const salaryHours = bConf.salaryHours;
+          const extraLessonHours = Math.max(0, totalWeeklyLessons - salaryHours);
+          
+          // Hazırlık ve Planlama: Her 10 saate 1 saat (Maksimum 3 saat)
+          let prepWeekly = Math.min(3, Math.floor(totalWeeklyLessons / 10));
+
+          wizardSalaryHours.textContent = `${salaryHours} Saat`;
+          wizardExtraLessonHours.textContent = `${extraLessonHours} Saat`;
+          wizardPrepHours.textContent = `+${prepWeekly} Saat`;
+
+          if (extraLessonHours > 0) {
+            items.push({ title: 'Fiili Ders Ek Dersi (Maaş Karşılığı Fazlası)', hours: extraLessonHours * weeks, grossUnit: dayGrossWithDegree });
+          }
+
+          if (prepWeekly > 0) {
+            items.push({ title: "Hazırlık ve Planlama Görevi (10'a 1 Kuralı)", hours: prepWeekly * weeks, grossUnit: baseDayGross });
+          }
+        }
+
+        // Nöbet
+        if (checkDutyWatch.checked) {
+          items.push({ title: 'Haftalık Nöbet Görevi (3 Saat/Hafta)', hours: 3 * weeks, grossUnit: baseDayGross });
+        }
+
+        // Sınıf Rehberliği / Kulüp
+        if (checkGuidanceClub.checked && !bConf.fixedWeekly) {
+          items.push({ title: 'Sosyal Kulüp / Sınıf Rehberlik Görevi (2 Saat/Hafta)', hours: 2 * weeks, grossUnit: baseDayGross });
+        }
+
+        // DYK Hafta Sonu
+        const dykWEnd = (parseInt(weeklyDykWeekend.value) || 0) * weeks;
+        if (dykWEnd > 0) {
+          items.push({ title: 'DYK Destekleme Kursu - Hafta Sonu (%100 Artırımlı)', hours: dykWEnd, grossUnit: dykNightGross });
+        }
+
+        // DYK Hafta İçi
+        const dykWDay = (parseInt(weeklyDykWeekday.value) || 0) * weeks;
+        if (dykWDay > 0) {
+          items.push({ title: 'DYK Destekleme Kursu - Hafta İçi (%100 Artırımlı)', hours: dykWDay, grossUnit: dykDayGross });
+        }
+
+        // İYEP / Egzersiz
+        const iyepHrs = (parseInt(weeklyIyep.value) || 0) * weeks;
+        if (iyepHrs > 0) {
+          items.push({ title: 'İYEP / Egzersiz / Destek Eğitim Odası', hours: iyepHrs, grossUnit: baseDayGross });
+        }
+
+      } else {
+        // Direct puantaj mode
+        const dDay = parseFloat(directDayHours.value) || 0;
+        const dWatch = parseFloat(directWatchHours.value) || 0;
+        const dNight = parseFloat(directNightHours.value) || 0;
+        const dDyk = parseFloat(directDykHours.value) || 0;
+
+        if (dDay > 0) items.push({ title: 'Aylık Normal Gündüz Ek Dersi (101)', hours: dDay, grossUnit: dayGrossWithDegree });
+        if (dWatch > 0) items.push({ title: 'Aylık Nöbet Görevi Ek Dersi (104)', hours: dWatch, grossUnit: baseDayGross });
+        if (dNight > 0) items.push({ title: 'Aylık Gece / Hafta Sonu Ek Dersi (102)', hours: dNight, grossUnit: nightGrossWithDegree });
+        if (dDyk > 0) items.push({ title: 'Aylık DYK Kursu Ek Dersi (%100 Fazlası)', hours: dDyk, grossUnit: dykDayGross });
+      }
+
+      // Calculations and Table population
+      let totalH = 0;
+      let totalGross = 0;
+      let totalIncomeTax = 0;
+      let totalStampTax = 0;
+      let totalSgkTax = 0;
+      let totalNet = 0;
+
+      breakdownTableBody.innerHTML = '';
+
+      items.forEach(item => {
+        const itemGross = item.hours * item.grossUnit;
+        const itemIncomeTax = itemGross * incomeTaxRate;
+        const itemStampTax = itemGross * STAMP_TAX_RATE;
+        const itemSgk = isUcretli ? (itemGross * 0.15) : 0;
+        const itemDeduction = itemIncomeTax + itemStampTax + itemSgk;
+        const itemNet = itemGross - itemDeduction;
+
+        totalH += item.hours;
+        totalGross += itemGross;
+        totalIncomeTax += itemIncomeTax;
+        totalStampTax += itemStampTax;
+        totalSgkTax += itemSgk;
+        totalNet += itemNet;
+
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-800/40 transition-colors';
+        tr.innerHTML = `
+          <td class="py-2.5 px-3 text-slate-200 font-sans">${item.title}</td>
+          <td class="py-2.5 px-3 text-center font-bold text-white">${item.hours}</td>
+          <td class="py-2.5 px-3 text-right text-slate-400">${formatCurrency(item.grossUnit)}</td>
+          <td class="py-2.5 px-3 text-right text-slate-200">${formatCurrency(itemGross)}</td>
+          <td class="py-2.5 px-3 text-right text-rose-400">-${formatCurrency(itemDeduction)}</td>
+          <td class="py-2.5 px-3 text-right text-emerald-400 font-bold">${formatCurrency(itemNet)}</td>
+        `;
+        breakdownTableBody.appendChild(tr);
+      });
+
+      if (items.length === 0) {
+        breakdownTableBody.innerHTML = `<tr><td colspan="6" class="py-6 text-center text-slate-500 font-sans">Seçilen kriterlere göre ek ders saati bulunmuyor.</td></tr>`;
+      }
+
+      // Summary Card Updates
+      netEkDersDisplay.textContent = formatCurrency(totalNet);
+      summaryTotalHours.textContent = totalH;
+      summaryGrossTotal.textContent = formatCurrency(totalGross);
+      summaryIncomeTax.textContent = `-${formatCurrency(totalIncomeTax)}`;
+      summaryStampTax.textContent = `-${formatCurrency(totalStampTax)}`;
+      summarySgkTax.textContent = `-${formatCurrency(totalSgkTax)}`;
+
+      const singleHourNet = totalH > 0 ? (totalNet / totalH) : (baseDayGross * (1 - incomeTaxRate - STAMP_TAX_RATE));
+      summarySingleHourNet.textContent = formatCurrency(singleHourNet) + ' / Saat';
+
+      // Table Footer Updates
+      tableTotalHours.textContent = totalH;
+      tableTotalGross.textContent = formatCurrency(totalGross);
+      tableTotalDeduction.textContent = `-${formatCurrency(totalIncomeTax + totalStampTax + totalSgkTax)}`;
+      tableTotalNet.textContent = formatCurrency(totalNet);
+
+      // WhatsApp Share Link
+      const shareMsg = encodeURIComponent(`Öğretmen Ek Ders Hesaplama Sonucum (${bConf.name}):\n\n` +
+        `• Toplam Ek Ders: ${totalH} Saat\n` +
+        `• Brüt Kazanç: ${formatCurrency(totalGross)}\n` +
+        `• Net Ele Geçecek: ${formatCurrency(totalNet)}\n` +
+        `• Vergi Dilimi: %${Math.round(incomeTaxRate * 100)}\n\n` +
+        `Sen de nöbet, DYK ve vergi dilimiyle ek dersini hesapla:\n` +
+        `https://pratik-araclar.pratikweb.workers.dev/ek-ders-hesaplayici/`);
+      
+      whatsappShareBtn.onclick = () => {
+        window.open(`https://api.whatsapp.com/send?text=${shareMsg}`, '_blank');
+      };
+    }
+
+    // Run initial calculation
+    calculate();
+  </script>
+</body>
+</html>
