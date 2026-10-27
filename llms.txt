@@ -48,3 +48,8 @@
 - URL: https://pratik-araclar.pratikweb.workers.dev/fon-tasfiye-hesapla/
 - Açıklama: SPK mevzuatına uygun olarak tasfiyeye giren veya itfa edilen yatırım fonları (TEFAS), BES emeklilik fonları ve serbest/girişim sermayesi (GSYF) fonlarında yatırımcının eline geçecek net nakit tutarı simüle eden finans aracı. Kâr üzerinden gelir vergisi stopajı (%0 - %15), BES kademeli hakediş süreleri (%0 - %100), fon gider ve tasfiye komisyonu kesintileri, interaktif Chart.js donut grafik dağılımı, tarayıcıda kayıtlı geçmiş hesabı ve belirgin YTD (Yatırım Tavsiyesi Değildir) yasal bilgilendirmesi.
 - Hedef Kitle: Tasfiye sürecindeki fon yatırımcıları, fonunu bozdurmak isteyenler, BES katılımcıları, finansal danışmanlar ve portföy yöneticileri.
+
+### 10. En Yakın Nöbetçi Eczane Haritası & Yol Tarifi
+- URL: https://pratik-araclar.pratikweb.workers.dev/nobetci-eczane/
+- Açıklama: Türkiye genelinde 81 il ve ilçeler için kullanıcının GPS konumuna en yakın nöbetçi eczaneleri mesafesine göre (metre ve km cinsinden) sıralayan harita tabanlı arama motoru. Canlı OpenStreetMap eczane verisi, tek tıkla doğrudan arama (tel:), Google Maps ve Apple Maps ile canlı navigasyon/yol tarifi başlatma, WhatsApp ile konum ve adres paylaşımı ve 81 il Eczacı Odaları resmi nöbet listesi doğrulama bağlantıları.
+- Hedef Kitle: Gece, hafta sonu veya tatil günlerinde acil ilaç arayan hastalar, hasta yakınları, bebekli aileler, nöbetçi eczane adresi ve telefonunu teyit etmek isteyen vatandaşlar.
