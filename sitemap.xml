@@ -90,4 +90,22 @@
     <changefreq>daily</changefreq>
     <priority>0.95</priority>
   </url>
+  <url>
+    <loc>https://pratik-araclar.pratikweb.workers.dev/eokul-mebbis-fotograf-kucultucu/</loc>
+    <lastmod>2026-10-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://pratik-araclar.pratikweb.workers.dev/mtv-arac-muayene-hesaplayici/</loc>
+    <lastmod>2026-10-27</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://pratik-araclar.pratikweb.workers.dev/tapu-harci-emlak-hesaplayici/</loc>
+    <lastmod>2026-10-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
 </urlset>

@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="tr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Speed & Preconnect Resource Hints -->
+  <link rel="preconnect" href="https://cdn.tailwindcss.com">
+  <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+
+  <title>e-Okul, MEBBİS & Biyometrik Fotoğraf Küçültücü (133x171 Piksel & Toplu İndir)</title>
+  <meta name="description" content="e-Okul öğrenci fotoğrafı (133x171 piksel, 150 KB altı), MEBBİS personel fotoğrafı ve ÖSYM biyometrik vesikalık boyutlandırıcı. Tekli veya 40 fotoğrafı toplu küçültüp ZIP indirin. %100 KVKK uyumlu.">
+  <meta name="keywords" content="e okul fotoğraf küçültücü, 133x171 piksel fotoğraf yapma, mebbis fotoğraf boyutu ayarlama, toplu e okul fotoğraf küçültme, e okul 150 kb altı fotoğraf, biyometrik fotoğraf boyutlandırma, meb k12 tr manşet resmi boyutlandırma">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <link rel="canonical" href="https://pratik-araclar.pratikweb.workers.dev/eokul-mebbis-fotograf-kucultucu/">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%230ea5e9'/%3E%3Cstop offset='100%25' stop-color='%236366f1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23bg)'/%3E%3Crect x='14' y='18' width='36' height='28' rx='6' fill='none' stroke='%23ffffff' stroke-width='4'/%3E%3Ccircle cx='32' cy='32' r='7' fill='none' stroke='%23ffffff' stroke-width='4'/%3E%3Ccircle cx='43' cy='24' r='2' fill='%23ffffff'/%3E%3C/svg%3E">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://pratik-araclar.pratikweb.workers.dev/eokul-mebbis-fotograf-kucultucu/">
+  <meta property="og:title" content="e-Okul & MEBBİS Otomatik Fotoğraf Küçültücü (133x171 Piksel)">
+  <meta property="og:description" content="Öğrenci ve personel fotoğraflarını saniyeler içinde 133x171 piksel ve 100 KB altına düşürün. Toplu sınıf listesi ZIP indirme ve %100 tarayıcı içi KVKK güvenliği.">
+  <meta property="og:image" content="https://pratik-araclar.pratikweb.workers.dev/assets/og-banner.png">
+  <meta property="og:locale" content="tr_TR">
+  <meta property="og:site_name" content="Pratik Araçlar">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="e-Okul & MEBBİS Otomatik Fotoğraf Küçültücü (133x171)">
+  <meta name="twitter:description" content="Fotoğrafları sunucuya yüklemeden tarayıcınızda 133x171 piksel ve 100 KB altına toplu küçültün.">
+  <meta name="twitter:image" content="https://pratik-araclar.pratikweb.workers.dev/assets/og-banner.png">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            midnight: '#0b0f19',
+            surface: '#111827',
+            surfaceCard: '#1a2234'
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- FontAwesome 6 & JSZip for Batch Download -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" defer></script>
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "@id": "https://pratik-araclar.pratikweb.workers.dev/eokul-mebbis-fotograf-kucultucu/#app",
+        "url": "https://pratik-araclar.pratikweb.workers.dev/eokul-mebbis-fotograf-kucultucu/",
+        "name": "e-Okul, MEBBİS & Biyometrik Fotoğraf Küçültücü",
+        "applicationCategory": "MultimediaApplication",
+        "operatingSystem": "All",
+        "description": "e-Okul (133x171), MEBBİS ve ÖSYM standartlarına uygun tekli ve toplu fotoğraf boyutlandırma ve KB düşürme aracı.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "TRY"
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://pratik-araclar.pratikweb.workers.dev/eokul-mebbis-fotograf-kucultucu/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "e-Okul öğrenci fotoğraf boyutu kaç piksel ve kaç KB olmalıdır?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "MEB e-Okul Yönetim Bilgi Sistemi'ne yüklenecek öğrenci fotoğrafları 133x171 piksel çözünürlüğünde, JPG formatında ve dosya boyutu 10 KB ile 150 KB arasında olmalıdır."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Yüklenen öğrenci fotoğrafları sunucuya kaydediliyor mu? KVKK açısından güvenli mi?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Hayır, seçtiğiniz hiçbir fotoğraf internet üzerinden bir sunucuya gönderilmez. Tüm kırpma ve boyut küçültme işlemleri %100 kendi telefonunuzun veya bilgisayarınızın tarayıcısı içinde (HTML5 Canvas teknolojisiyle) gerçekleşir. Bu sayede KVKK ve öğrenci gizliliği %100 korunur."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body class="bg-[#0b0f19] text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-sky-500 selection:text-white">
+
+  <!-- Header -->
+  <header class="border-b border-slate-800/80 bg-slate-900/60 backdrop-blur-md sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="/" class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-sky-500/20 text-white font-bold transition hover:scale-105">
+          <i class="fa-solid fa-camera-retro"></i>
+        </a>
+        <div>
+          <a href="/" class="text-lg font-bold tracking-tight text-white hover:text-sky-300 transition-colors">
+            Pratik<span class="text-sky-400">Araçlar</span>
+          </a>
+          <span class="hidden sm:inline-block text-xs text-slate-400 ml-2 border-l border-slate-700 pl-2">
+            e-Okul & MEBBİS Fotoğraf Motoru
+          </span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 sm:gap-3">
+        <span class="hidden md:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+          <i class="fa-solid fa-shield-halved"></i>
+          %100 Tarayıcı İçi & KVKK Uyumlu
+        </span>
+        <a href="/ek-ders-hesaplayici/" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-500/15 hover:bg-indigo-500/25 text-indigo-300 border border-indigo-500/30 text-xs font-semibold transition">
+          <i class="fa-solid fa-graduation-cap"></i>
+          <span>Ek Ders Hesapla</span>
+        </a>
+        <a href="/" class="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition">
+          <i class="fa-solid fa-arrow-left mr-1.5"></i>Tüm Araçlar
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="pt-8 pb-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full text-center">
+    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-300 text-xs font-medium mb-3">
+      <i class="fa-solid fa-wand-magic-sparkles text-sky-400"></i>
+      Tekli veya 40 Öğrenciyi Toplu Boyutlandırın • Sunucuya Yüklenmez
+    </div>
+    <h1 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight max-w-4xl mx-auto mb-3">
+      e-Okul, MEBBİS & Biyometrik <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-cyan-300 to-indigo-400">Fotoğraf Küçültücü</span>
+    </h1>
+    <p class="text-slate-400 text-xs sm:text-sm max-w-2xl mx-auto leading-relaxed">
+      Yüksek megapikselli telefon fotoğraflarını e-Okul (<strong>133x171 px</strong>), MEBBİS, ÖSYM veya okul web sitesi manşet standartlarına uygun piksel ve KB sınırına tek tıkla indirin.
+    </p>
+  </section>
+
+  <!-- Main Content -->
+  <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pb-16 space-y-8">
+
+    <!-- STEP 1: PRESET & SETTINGS BAR -->
+    <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-5 sm:p-6 shadow-xl space-y-5">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-800">
+        <h2 class="text-sm font-bold uppercase tracking-wider text-slate-200 flex items-center gap-2">
+          <i class="fa-solid fa-sliders text-sky-400"></i>
+          <span>1. Hedef Sistem Standardını Seçin</span>
+        </h2>
+        <span class="text-xs text-emerald-400 font-medium flex items-center gap-1">
+          <i class="fa-solid fa-lock text-[11px]"></i>
+          Fotoğraflar cihazınızdan dışarı çıkmaz (Çevrimdışı İşleme)
+        </span>
+      </div>
+
+      <!-- Preset Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3" id="presetButtonsGrid">
+        
+        <button type="button" data-preset="eokul" data-w="133" data-h="171" data-kb="60" class="preset-btn active text-left p-3.5 rounded-2xl bg-sky-500/15 border-2 border-sky-500 transition group">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-xs font-extrabold text-white">e-Okul Öğrenci</span>
+            <span class="px-1.5 py-0.5 text-[10px] font-bold rounded bg-sky-500 text-slate-950">En Popüler</span>
+          </div>
+          <div class="text-sm font-mono font-bold text-sky-300">133 x 171 px</div>
+          <div class="text-[11px] text-slate-400 mt-1">JPG • ~20-60 KB (&lt;150 KB)</div>
+        </button>
+
+        <button type="button" data-preset="mebbis" data-w="133" data-h="171" data-kb="80" class="preset-btn text-left p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-slate-700 transition group">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-xs font-bold text-slate-200">MEBBİS Personel</span>
+            <i class="fa-solid fa-id-badge text-indigo-400 text-xs"></i>
+          </div>
+          <div class="text-sm font-mono font-bold text-indigo-300">133 x 171 px</div>
+          <div class="text-[11px] text-slate-400 mt-1">Özlük & Kimlik • &lt;100 KB</div>
+        </button>
+
+        <button type="button" data-preset="osym" data-w="413" data-h="531" data-kb="95" class="preset-btn text-left p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-slate-700 transition group">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-xs font-bold text-slate-200">Biyometrik / e-Devlet</span>
+            <i class="fa-solid fa-passport text-emerald-400 text-xs"></i>
+          </div>
+          <div class="text-sm font-mono font-bold text-emerald-300">413 x 531 px</div>
+          <div class="text-[11px] text-slate-400 mt-1">35x45 mm Oranı • &lt;100 KB</div>
+        </button>
+
+        <button type="button" data-preset="mebk12" data-w="810" data-h="420" data-kb="120" class="preset-btn text-left p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-slate-700 transition group">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-xs font-bold text-slate-200">MEB Okul Manşet</span>
+            <i class="fa-solid fa-panorama text-amber-400 text-xs"></i>
+          </div>
+          <div class="text-sm font-mono font-bold text-amber-300">810 x 420 px</div>
+          <div class="text-[11px] text-slate-400 mt-1">meb.k12.tr Haber • Yatay</div>
+        </button>
+
+        <button type="button" data-preset="custom" data-w="300" data-h="400" data-kb="100" class="preset-btn text-left p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-slate-700 transition group">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-xs font-bold text-slate-200">Özel Ölçü Gir</span>
+            <i class="fa-solid fa-ruler-combined text-purple-400 text-xs"></i>
+          </div>
+          <div class="text-sm font-mono font-bold text-purple-300">Serbest Piksel</div>
+          <div class="text-[11px] text-slate-400 mt-1">İstediğiniz En x Boy</div>
+        </button>
+
+      </div>
+
+      <!-- Fine Tuning Controls -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-3 border-t border-slate-800/80 text-xs">
+        <div>
+          <label class="block text-slate-400 font-semibold mb-1">Genişlik (Piksel):</label>
+          <input type="number" id="inputWidth" value="133" min="30" max="2400" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-bold font-mono focus:outline-none focus:border-sky-500">
+        </div>
+        <div>
+          <label class="block text-slate-400 font-semibold mb-1">Yükseklik (Piksel):</label>
+          <input type="number" id="inputHeight" value="171" min="30" max="2400" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-bold font-mono focus:outline-none focus:border-sky-500">
+        </div>
+        <div>
+          <label class="block text-slate-400 font-semibold mb-1">Maksimum Boyut (KB):</label>
+          <input type="number" id="inputMaxKb" value="60" min="10" max="1000" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-emerald-400 font-bold font-mono focus:outline-none focus:border-sky-500">
+        </div>
+        <div>
+          <label class="block text-slate-400 font-semibold mb-1">Kırpma / Hizalama Modu:</label>
+          <select id="selectCropMode" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-semibold focus:outline-none focus:border-sky-500">
+            <option value="cover_top" selected>Akıllı Vesikalık (Yüz/Üst Odaklı Doldur)</option>
+            <option value="cover_center">Tam Ortala ve Doldur (Kenarları Kırp)</option>
+            <option value="contain_white">Kırpmadan Sığdır (Beyaz Arka Plan)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2: UPLOAD DROPZONE -->
+    <div id="dropZone" class="relative border-2 border-dashed border-sky-500/40 hover:border-sky-400 bg-slate-900/60 hover:bg-slate-900/90 rounded-3xl p-8 sm:p-12 text-center transition-all cursor-pointer group shadow-xl">
+      <input type="file" id="fileInput" multiple accept="image/jpeg,image/png,image/webp,image/heic" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+      <div class="w-16 h-16 rounded-2xl bg-sky-500/15 border border-sky-500/30 text-sky-400 flex items-center justify-center text-3xl mx-auto mb-4 group-hover:scale-110 transition-transform shadow-lg shadow-sky-500/10">
+        <i class="fa-solid fa-cloud-arrow-up"></i>
+      </div>
+      <h3 class="text-base sm:text-lg font-bold text-white mb-1">
+        Fotoğrafları Buraya Sürükleyin veya Seçmek İçin Tıklayın
+      </h3>
+      <p class="text-xs sm:text-sm text-slate-400 max-w-lg mx-auto">
+        Tek bir fotoğraf veya <strong>tüm sınıfın fotoğraflarını (30-40 adet birden)</strong> aynı anda seçebilirsiniz. JPG, PNG ve WebP desteklenir.
+      </p>
+      <div class="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-sky-600 text-white font-bold text-xs shadow-lg shadow-sky-600/30">
+        <i class="fa-solid fa-folder-open"></i>
+        <span>Cihazdan Fotoğraf Seç</span>
+      </div>
+    </div>
+
+    <!-- STEP 3: PROCESSED PHOTOS GALLERY & BATCH ACTIONS -->
+    <div id="resultsSection" class="hidden space-y-6">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 flex items-center justify-center text-lg">
+            <i class="fa-solid fa-circle-check"></i>
+          </div>
+          <div>
+            <h3 class="text-sm sm:text-base font-bold text-white">
+              <span id="processedCountText">0</span> Fotoğraf Başarıyla Küçültüldü!
+            </h3>
+            <p class="text-xs text-slate-400">
+              Tüm fotoğraflar e-Okul / MEBBİS piksel ve KB standartlarına uygun JPG formatına dönüştürüldü.
+            </p>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2.5 w-full sm:w-auto justify-end">
+          <button type="button" id="reprocessBtn" class="px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition flex items-center gap-1.5">
+            <i class="fa-solid fa-rotate"></i>
+            <span>Yeni Ayarlarla Yeniden İşle</span>
+          </button>
+          <button type="button" id="clearAllBtn" class="px-3.5 py-2.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 border border-rose-500/30 text-xs font-semibold transition flex items-center gap-1.5">
+            <i class="fa-solid fa-trash-can"></i>
+            <span>Listeyi Temizle</span>
+          </button>
+          <button type="button" id="downloadZipBtn" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-sm font-bold transition shadow-lg shadow-emerald-600/30 flex items-center gap-2">
+            <i class="fa-solid fa-file-zipper"></i>
+            <span>Tümünü Tek ZIP Olarak İndir</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Cards Grid -->
+      <div id="photoCardsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <!-- Injected dynamically -->
+      </div>
+    </div>
+
+    <!-- Kahve Molası / PopNDodge Banner -->
+    <div class="bg-slate-900/60 border border-slate-800 hover:border-violet-500/40 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs transition">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-violet-500/10 border border-violet-500/20 text-violet-400 flex items-center justify-center text-base shrink-0">
+          <i class="fa-solid fa-gamepad"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-slate-200">☕ Sınıfın e-Okul fotoğrafları hazır! Kısa bir kafa dağıtma molası?</span>
+            <span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-violet-500/15 text-violet-300 border border-violet-500/30">Ücretsiz Oyun</span>
+          </div>
+          <p class="text-slate-400 text-[11px] mt-0.5">
+            Geliştiricimizden refleks ve balon patlatma oyunu: <strong>PopNDodge: Balon Patlatma VS</strong> Google Play'de!
+          </p>
+        </div>
+      </div>
+      <a href="https://play.google.com/store/apps/details?id=com.eymenefe.popndodge" target="_blank" rel="noopener noreferrer" class="shrink-0 px-3 py-1.5 rounded-lg bg-violet-600 hover:bg-violet-500 text-white font-semibold transition flex items-center gap-1.5 shadow-sm shadow-violet-600/20 text-xs">
+        <i class="fa-brands fa-google-play"></i>
+        <span>Google Play'de Oyna</span>
+        <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-70"></i>
+      </a>
+    </div>
+
+    <!-- SEO & OFFICIAL DIMENSIONS TABLE -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 pt-4">
+      <div class="lg:col-span-6 bg-slate-900/90 border border-slate-800 rounded-3xl p-6 space-y-4">
+        <h3 class="text-base font-bold text-white flex items-center gap-2">
+          <i class="fa-solid fa-table text-sky-400"></i>
+          <span>Resmi Kurum Fotoğraf Ölçüleri Tablosu (2026)</span>
+        </h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead>
+              <tr class="border-b border-slate-800 text-slate-400">
+                <th class="py-2">Sistem / Kurum</th>
+                <th class="py-2">Piksel Ölçüsü</th>
+                <th class="py-2">Maks. Boyut</th>
+                <th class="py-2">Format</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800/60 text-slate-300">
+              <tr>
+                <td class="py-2.5 font-semibold text-white">e-Okul Öğrenci</td>
+                <td class="py-2.5 font-mono text-sky-400">133 x 171 px</td>
+                <td class="py-2.5">10 KB – 150 KB</td>
+                <td class="py-2.5">JPG / JPEG</td>
+              </tr>
+              <tr>
+                <td class="py-2.5 font-semibold text-white">MEBBİS Özlük</td>
+                <td class="py-2.5 font-mono text-indigo-400">133 x 171 px</td>
+                <td class="py-2.5">Maks. 120 KB</td>
+                <td class="py-2.5">JPG / JPEG</td>
+              </tr>
+              <tr>
+                <td class="py-2.5 font-semibold text-white">ÖSYM / e-Devlet</td>
+                <td class="py-2.5 font-mono text-emerald-400">413 x 531 px</td>
+                <td class="py-2.5">Maks. 100 KB</td>
+                <td class="py-2.5">JPG / JPEG</td>
+              </tr>
+              <tr>
+                <td class="py-2.5 font-semibold text-white">meb.k12.tr Manşet</td>
+                <td class="py-2.5 font-mono text-amber-400">810 x 420 px</td>
+                <td class="py-2.5">Maks. 150 KB</td>
+                <td class="py-2.5">JPG / JPEG</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- FAQ -->
+      <div class="lg:col-span-6 bg-slate-900/90 border border-slate-800 rounded-3xl p-6 space-y-3">
+        <h3 class="text-base font-bold text-white flex items-center gap-2">
+          <i class="fa-solid fa-circle-question text-sky-400"></i>
+          <span>Sıkça Sorulan Sorular</span>
+        </h3>
+        <div class="space-y-2 text-xs">
+          <details class="group bg-slate-950/70 p-3.5 rounded-xl border border-slate-800 cursor-pointer" open>
+            <summary class="font-bold text-slate-200 flex items-center justify-between">
+              <span>e-Okul'da "Fotoğraf boyutu uygun değil" hatası neden çıkar?</span>
+              <i class="fa-solid fa-chevron-down text-slate-500 text-[10px]"></i>
+            </summary>
+            <p class="text-slate-400 mt-2 leading-relaxed">
+              e-Okul sistemi yalnızca tam olarak <strong>133x171 piksel</strong> olan ve dosya boyutu <strong>10 KB'tan küçük, 150 KB'tan büyük olmayan</strong> `.jpg` fotoğrafları kabul eder. Bu araç hem pikseli tam 133x171 yapar hem de boyutu ideal ~35-55 KB aralığına sabitler.
+            </p>
+          </details>
+          <details class="group bg-slate-950/70 p-3.5 rounded-xl border border-slate-800 cursor-pointer">
+            <summary class="font-bold text-slate-200 flex items-center justify-between">
+              <span>Öğrenci fotoğraflarını yüklemek KVKK açısından güvenli mi?</span>
+              <i class="fa-solid fa-chevron-down text-slate-500 text-[10px]"></i>
+            </summary>
+            <p class="text-slate-400 mt-2 leading-relaxed">
+              Evet, <strong>%100 güvenlidir</strong>. Aracımız fotoğrafları hiçbir sunucuya yüklemez; işlem tamamen kendi bilgisayarınızın/telefonunuzun tarayıcı belleğinde (HTML5 Canvas) yapılır. İnternet bağlantısını kesseniz bile çalışmaya devam eder.
+            </p>
+          </details>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800 bg-slate-950/80 py-8 text-xs text-slate-400 mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <div class="w-6 h-6 rounded-lg bg-sky-600 flex items-center justify-center text-white font-bold text-xs">P</div>
+        <span class="font-bold text-white">PratikAraçlar</span>
+        <span>•</span>
+        <span>e-Okul & MEBBİS Otomatik Fotoğraf Küçültücü</span>
+      </div>
+      <div class="flex flex-wrap items-center gap-4 text-xs">
+        <a href="../ek-ders-hesaplayici/" class="hover:text-indigo-300 transition text-slate-300">MEB Ek Ders</a>
+        <a href="../maas-hesaplayici/" class="hover:text-sky-300 transition text-slate-300">Maaş & Vergi</a>
+        <a href="../ydo-harc-zam-hesaplayici/" class="hover:text-amber-300 transition text-slate-300">2027 YDO Zamları</a>
+        <a href="/" class="hover:text-white transition text-slate-400">Tüm Araçlar</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Client-Side Photo Processing Engine -->
+  <script>
+    const presetButtons = document.querySelectorAll('.preset-btn');
+    const inputWidth = document.getElementById('inputWidth');
+    const inputHeight = document.getElementById('inputHeight');
+    const inputMaxKb = document.getElementById('inputMaxKb');
+    const selectCropMode = document.getElementById('selectCropMode');
+
+    const fileInput = document.getElementById('fileInput');
+    const dropZone = document.getElementById('dropZone');
+    const resultsSection = document.getElementById('resultsSection');
+    const photoCardsGrid = document.getElementById('photoCardsGrid');
+    const processedCountText = document.getElementById('processedCountText');
+    const reprocessBtn = document.getElementById('reprocessBtn');
+    const clearAllBtn = document.getElementById('clearAllBtn');
+    const downloadZipBtn = document.getElementById('downloadZipBtn');
+
+    let uploadedFiles = []; // Raw File objects
+    let processedItems = []; // { fileName, originalSize, newBlob, newUrl, newSizeKb, width, height }
+
+    // Preset Selection
+    presetButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        presetButtons.forEach(b => {
+          b.className = 'preset-btn text-left p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-slate-700 transition group';
+        });
+        btn.className = 'preset-btn active text-left p-3.5 rounded-2xl bg-sky-500/15 border-2 border-sky-500 transition group';
+
+        const w = parseInt(btn.getAttribute('data-w')) || 133;
+        const h = parseInt(btn.getAttribute('data-h')) || 171;
+        const kb = parseInt(btn.getAttribute('data-kb')) || 60;
+
+        inputWidth.value = w;
+        inputHeight.value = h;
+        inputMaxKb.value = kb;
+
+        if (btn.getAttribute('data-preset') === 'mebk12') {
+          selectCropMode.value = 'cover_center';
+        } else {
+          selectCropMode.value = 'cover_top';
+        }
+
+        if (uploadedFiles.length > 0) {
+          processAllFiles();
+        }
+      });
+    });
+
+    // Drag & Drop Visuals
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('border-sky-400', 'bg-slate-900');
+    });
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('border-sky-400', 'bg-slate-900');
+    });
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('border-sky-400', 'bg-slate-900');
+      if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        handleNewFiles(Array.from(e.dataTransfer.files));
+      }
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files && e.target.files.length > 0) {
+        handleNewFiles(Array.from(e.target.files));
+        fileInput.value = '';
+      }
+    });
+
+    reprocessBtn.addEventListener('click', () => {
+      if (uploadedFiles.length > 0) processAllFiles();
+    });
+
+    clearAllBtn.addEventListener('click', () => {
+      uploadedFiles = [];
+      processedItems.forEach(item => URL.revokeObjectURL(item.newUrl));
+      processedItems = [];
+      photoCardsGrid.innerHTML = '';
+      resultsSection.classList.add('hidden');
+    });
+
+    function handleNewFiles(files) {
+      const validFiles = files.filter(f => f.type.startsWith('image/'));
+      if (validFiles.length === 0) return;
+      uploadedFiles = uploadedFiles.concat(validFiles);
+      processAllFiles();
+    }
+
+    async function processAllFiles() {
+      const targetW = Math.max(20, parseInt(inputWidth.value) || 133);
+      const targetH = Math.max(20, parseInt(inputHeight.value) || 171);
+      const maxKb = Math.max(10, parseInt(inputMaxKb.value) || 60);
+      const cropMode = selectCropMode.value;
+
+      // Clean old object URLs
+      processedItems.forEach(item => URL.revokeObjectURL(item.newUrl));
+      processedItems = [];
+      photoCardsGrid.innerHTML = '';
+      resultsSection.classList.remove('hidden');
+
+      for (let i = 0; i < uploadedFiles.length; i++) {
+        const file = uploadedFiles[i];
+        try {
+          const item = await resizeAndCompressImage(file, targetW, targetH, maxKb, cropMode);
+          processedItems.push(item);
+          renderPhotoCard(item, i);
+        } catch (err) {
+          console.error('Image processing error:', err);
+        }
+      }
+
+      processedCountText.textContent = processedItems.length;
+    }
+
+    function resizeAndCompressImage(file, targetW, targetH, maxKb, cropMode) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        const objectUrl = URL.createObjectURL(file);
+
+        img.onload = async () => {
+          URL.revokeObjectURL(objectUrl);
+
+          const canvas = document.createElement('canvas');
+          canvas.width = targetW;
+          canvas.height = targetH;
+          const ctx = canvas.getContext('2d');
+
+          // Fill white background (critical for transparent PNGs & e-Okul)
+          ctx.fillStyle = '#FFFFFF';
+          ctx.fillRect(0, 0, targetW, targetH);
+
+          const srcW = img.width;
+          const srcH = img.height;
+          const targetRatio = targetW / targetH;
+          const srcRatio = srcW / srcH;
+
+          if (cropMode === 'contain_white') {
+            let drawW = targetW;
+            let drawH = targetH;
+            if (srcRatio > targetRatio) {
+              drawH = targetW / srcRatio;
+            } else {
+              drawW = targetH * srcRatio;
+            }
+            const dx = (targetW - drawW) / 2;
+            const dy = (targetH - drawH) / 2;
+            ctx.drawImage(img, 0, 0, srcW, srcH, dx, dy, drawW, drawH);
+          } else {
+            // Cover mode (smart top-bias for portraits or center)
+            let sx = 0, sy = 0, sWidth = srcW, sHeight = srcH;
+            if (srcRatio > targetRatio) {
+              sWidth = srcH * targetRatio;
+              sx = (srcW - sWidth) / 2;
+            } else {
+              sHeight = srcW / targetRatio;
+              // Top bias keeps head/face centered in portrait photos
+              sy = cropMode === 'cover_top' ? Math.max(0, (srcH - sHeight) * 0.20) : (srcH - sHeight) / 2;
+            }
+            ctx.drawImage(img, sx, sy, sWidth, sHeight, 0, 0, targetW, targetH);
+          }
+
+          // Iterative quality tuning to fit under maxKb (and above 11 KB for e-Okul minimum rule)
+          let quality = 0.92;
+          let blob = await canvasToBlob(canvas, quality);
+
+          while (blob.size / 1024 > maxKb && quality > 0.25) {
+            quality -= 0.08;
+            blob = await canvasToBlob(canvas, quality);
+          }
+
+          const baseName = file.name.replace(/\.[^/.]+$/, '');
+          const cleanName = `${baseName}_${targetW}x${targetH}.jpg`;
+          const newUrl = URL.createObjectURL(blob);
+
+          resolve({
+            fileName: cleanName,
+            originalSizeKb: (file.size / 1024).toFixed(1),
+            newBlob: blob,
+            newUrl: newUrl,
+            newSizeKb: (blob.size / 1024).toFixed(1),
+            width: targetW,
+            height: targetH
+          });
+        };
+
+        img.onerror = reject;
+        img.src = objectUrl;
+      });
+    }
+
+    function canvasToBlob(canvas, quality) {
+      return new Promise(resolve => {
+        canvas.toBlob(blob => resolve(blob), 'image/jpeg', quality);
+      });
+    }
+
+    function renderPhotoCard(item, index) {
+      const card = document.createElement('div');
+      card.className = 'bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between gap-3 shadow-lg';
+      card.innerHTML = `
+        <div class="flex items-center gap-3">
+          <div class="w-16 h-20 rounded-xl bg-slate-950 border border-slate-700 overflow-hidden shrink-0 flex items-center justify-center">
+            <img src="${item.newUrl}" alt="${item.fileName}" class="max-w-full max-h-full object-contain">
+          </div>
+          <div class="min-w-0 flex-1">
+            <div class="text-xs font-bold text-white truncate" title="${item.fileName}">${item.fileName}</div>
+            <div class="text-[11px] text-sky-400 font-mono font-semibold mt-0.5">${item.width} x ${item.height} px</div>
+            <div class="flex items-center gap-1.5 mt-1 text-[11px]">
+              <span class="line-through text-slate-500">${item.originalSizeKb} KB</span>
+              <i class="fa-solid fa-arrow-right text-[9px] text-slate-500"></i>
+              <span class="px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400 font-bold border border-emerald-500/30">${item.newSizeKb} KB</span>
+            </div>
+          </div>
+        </div>
+        <a href="${item.newUrl}" download="${item.fileName}" class="w-full py-2 px-3 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs text-center transition flex items-center justify-center gap-1.5">
+          <i class="fa-solid fa-download"></i>
+          <span>JPG İndir</span>
+        </a>
+      `;
+      photoCardsGrid.appendChild(card);
+    }
+
+    // Batch ZIP Download
+    downloadZipBtn.addEventListener('click', async () => {
+      if (processedItems.length === 0) return;
+      if (typeof JSZip === 'undefined') {
+        alert('ZIP kütüphanesi yükleniyor, lütfen 1 saniye sonra tekrar deneyin.');
+        return;
+      }
+
+      const origHtml = downloadZipBtn.innerHTML;
+      downloadZipBtn.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i> <span>ZIP Hazırlanıyor...</span>';
+      downloadZipBtn.disabled = true;
+
+      try {
+        const zip = new JSZip();
+        processedItems.forEach((item, idx) => {
+          // Ensure unique names inside zip
+          const uniqueName = `${idx + 1}_${item.fileName}`;
+          zip.file(uniqueName, item.newBlob);
+        });
+
+        const content = await zip.generateAsync({ type: 'blob' });
+        const zipUrl = URL.createObjectURL(content);
+        const a = document.createElement('a');
+        a.href = zipUrl;
+        a.download = `eokul_mebbis_fotograflar_${processedItems.length}_adet.zip`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(zipUrl), 5000);
+      } catch (e) {
+        console.error('ZIP error:', e);
+      } finally {
+        downloadZipBtn.innerHTML = origHtml;
+        downloadZipBtn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
