@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="tr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Speed & Preconnect Resource Hints -->
+  <link rel="preconnect" href="https://cdn.tailwindcss.com">
+  <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+
+  <title>Besin Etiketi Okuyucu & Şeker/Tuz Analizi | Nutri-Score Sağlık Puanı</title>
+  <meta name="description" content="Gıda paketlerinin besin değerleri tablosunu fotoğraftan okuyun veya manuel girin; şeker, doymuş yağ, tuz ve kalori oranlarını DSÖ kriterleriyle anında analiz edin.">
+  <meta name="keywords" content="besin etiketi okuyucu online, gıda şeker sodyum kontrol aracı, etiket tarayıcı mobil web, sağlıklı beslenme ürün puanı, nutri-score hesaplama, gıda katkı ve tuz oranı, 100g besin değeri tablosu">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <link rel="canonical" href="https://pratik-araclar.pratikweb.workers.dev/etiket-okuyucu/">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2310b981'/%3E%3Cstop offset='100%25' stop-color='%2306b6d4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23bg)'/%3E%3Cpath d='M20 14 L44 14 C48 14 50 16 50 20 L50 44 C50 48 48 50 44 50 L20 50 C16 50 14 48 14 44 L14 20 C14 16 16 14 20 14 Z' fill='none' stroke='%23ffffff' stroke-width='4'/%3E%3Cpath d='M22 24 L42 24 M22 32 L36 32 M22 40 L30 40' stroke='%23ffffff' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://pratik-araclar.pratikweb.workers.dev/etiket-okuyucu/">
+  <meta property="og:title" content="Besin Etiketi Okuyucu – Şeker, Doymuş Yağ ve Tuz Analizi">
+  <meta property="og:description" content="Paket gıda fotoğrafını yükleyin veya değerleri girin; Nutri-Score ve DSÖ kriterleriyle ürünün ne kadar sağlıklı olduğunu anında öğrenin.">
+  <meta property="og:image" content="https://pratik-araclar.pratikweb.workers.dev/assets/og-banner.png">
+  <meta property="og:locale" content="tr_TR">
+  <meta property="og:site_name" content="Pratik Araçlar">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://pratik-araclar.pratikweb.workers.dev/etiket-okuyucu/">
+  <meta name="twitter:title" content="Besin Etiketi Okuyucu & Şeker/Tuz Analizi">
+  <meta name="twitter:description" content="Paket gıdaların şeker, tuz, yağ oranlarını tek tıkla analiz edin. %100 ücretsiz ve reklamsız mobil web aracı.">
+  <meta name="twitter:image" content="https://pratik-araclar.pratikweb.workers.dev/assets/og-banner.png">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            midnight: '#0b0f19',
+            surface: '#111827',
+            surfaceCard: '#1a2234',
+            surfaceBorder: '#28354d'
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- FontAwesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <!-- Tesseract.js (On-demand client OCR) -->
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "@id": "https://pratik-araclar.pratikweb.workers.dev/etiket-okuyucu/#app",
+        "url": "https://pratik-araclar.pratikweb.workers.dev/etiket-okuyucu/",
+        "name": "Besin Etiketi Okuyucu & Şeker/Tuz Analizi",
+        "applicationCategory": "HealthApplication",
+        "operatingSystem": "All",
+        "browserRequirements": "Requires JavaScript. Requires HTML5.",
+        "description": "Ambalajlı gıdaların besin tablosunu fotoğraftan okuyarak şeker, doymuş yağ, tuz ve kalori oranlarını DSÖ ve Nutri-Score standartlarında analiz eden sağlık aracı.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "TRY"
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://pratik-araclar.pratikweb.workers.dev/etiket-okuyucu/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Besin etiketinde yüksek şeker sınırı nedir?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Dünya Sağlık Örgütü (DSÖ) ve Birleşik Krallık Gıda Standartları Ajansı (FSA) trafik ışığı sistemine göre; 100 gram katı gıdada 22.5 gramdan fazla şeker bulunması 'Kırmızı (Yüksek Şeker)', 5 gramdan az olması ise 'Yeşil (Düşük Şeker)' olarak kabul edilir."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Nutri-Score puanı nasıl hesaplanır?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Nutri-Score; gıdanın kalori, doymuş yağ, şeker ve sodyum gibi negatif unsurlarından, meyve/sebze, lif ve protein gibi pozitif unsurlarını çıkararak A (en sağlıklı) ile E (en az sağlıklı) arasında 5 harfli renkli bir skor üretir."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Yüklediğim fotoğraflar sunucuya kaydedilir mi?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Hayır. Görsel işleme ve OCR (optik karakter tanıma) işlemi Tesseract.js kütüphanesi sayesinde %100 cihazınızın tarayıcısında çalışır. Fotoğraflarınız hiçbir harici sunucuya veya buluta yüklenmez (KVKK uyumludur)."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #0b0f19; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #334155; }
+    @media print {
+      body { background: #fff !important; color: #000 !important; }
+      header, footer, #btnShareWhatsapp, #btnReset, .no-print { display: none !important; }
+      .print-card { border: 1px solid #ccc !important; background: #fff !important; color: #000 !important; box-shadow: none !important; }
+    }
+  </style>
+</head>
+<body class="bg-[#0b0f19] text-slate-100 min-h-screen flex flex-col font-sans selection:bg-emerald-500 selection:text-white">
+
+  <!-- Top Announcement Bar -->
+  <div class="bg-gradient-to-r from-emerald-950 via-teal-900 to-slate-900 border-b border-emerald-800/40 text-emerald-200 text-xs py-2 px-4 text-center">
+    <div class="max-w-7xl mx-auto flex items-center justify-center gap-2 flex-wrap">
+      <span class="inline-flex items-center gap-1 font-bold bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-500/30 text-[11px]">
+        <i class="fa-solid fa-apple-whole text-emerald-400"></i> DSÖ & Nutri-Score Uyumlu
+      </span>
+      <span>Ambalajlı gıdaların şeker, tuz ve yağ gizli tuzaklarını tek tıkla ortaya çıkarın. %100 İstemci Tarafı (Cihaz İçi) Güvenli Analiz.</span>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="border-b border-slate-800/80 bg-slate-900/60 backdrop-blur-md sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-3 group">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-cyan-400 flex items-center justify-center shadow-lg shadow-emerald-500/25 group-hover:scale-105 transition-transform">
+          <i class="fa-solid fa-barcode text-white text-lg"></i>
+        </div>
+        <div>
+          <span class="text-xl font-bold tracking-tight text-white group-hover:text-emerald-300 transition-colors">
+            Pratik<span class="text-emerald-400">Araçlar</span>
+          </span>
+          <span class="hidden sm:inline-block text-[11px] text-slate-400 ml-2 border-l border-slate-700 pl-2">
+            Besin Etiketi Okuyucu
+          </span>
+        </div>
+      </a>
+
+      <div class="flex items-center gap-3">
+        <button id="btnQuickSample" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-medium transition border border-slate-700">
+          <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i>
+          <span class="hidden sm:inline">Örnek Ürün Yükle</span>
+          <span class="sm:hidden">Örnek</span>
+        </button>
+        <a href="/" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-medium transition border border-slate-700/80 flex items-center gap-1.5">
+          <i class="fa-solid fa-house text-xs"></i>
+          <span class="hidden sm:inline">Tüm Araçlar</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="relative pt-8 pb-6 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center">
+    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 mb-4 text-xs font-semibold rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-300">
+      <i class="fa-solid fa-heart-pulse text-emerald-400"></i>
+      <span>Akıllı Gıda & Sağlıklı Beslenme Analiz Motoru</span>
+    </div>
+
+    <h1 class="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white mb-3 leading-tight">
+      Besin Etiketi Okuyucu & <br>
+      <span class="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">
+        Şeker, Yağ, Tuz ve Kalori Analizi
+      </span>
+    </h1>
+
+    <p class="text-slate-400 text-sm sm:text-base max-w-2xl mx-auto">
+      Ambalajın arkasındaki besin tablosunun fotoğrafını çekin veya değerleri girin; ürünün <strong>Nutri-Score</strong> harfini, gizli şeker oranını ve trafik ışığı uyarılarını anında görün.
+    </p>
+  </section>
+
+  <!-- Main Calculator Grid -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full" id="mainSection">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+      <!-- LEFT: Upload, OCR & Manual Input (7 Cols) -->
+      <div class="lg:col-span-7 space-y-6">
+
+        <!-- Method Switcher Pills -->
+        <div class="flex items-center gap-2 p-1.5 bg-slate-900 border border-slate-800 rounded-2xl text-xs font-medium">
+          <button type="button" id="tabPhoto" class="flex-1 py-2.5 px-4 rounded-xl bg-emerald-600 text-white font-bold transition flex items-center justify-center gap-2 shadow-md">
+            <i class="fa-solid fa-camera"></i>
+            <span>Etiket Fotoğrafı Yükle / Çek</span>
+          </button>
+          <button type="button" id="tabManual" class="flex-1 py-2.5 px-4 rounded-xl text-slate-400 hover:text-white transition flex items-center justify-center gap-2">
+            <i class="fa-solid fa-pen-to-square"></i>
+            <span>Değerleri Manuel Gir</span>
+          </button>
+        </div>
+
+        <!-- 1. PHOTO UPLOAD & OCR BOX -->
+        <div id="boxPhoto" class="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-7 space-y-5 shadow-2xl backdrop-blur-md">
+          <div class="border-2 border-dashed border-slate-700 hover:border-emerald-500/60 rounded-2xl p-6 text-center transition cursor-pointer bg-slate-950/40 relative group" id="dropArea">
+            <input type="file" id="fileInput" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+            
+            <div id="uploadPrompt" class="space-y-3">
+              <div class="w-14 h-14 mx-auto rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                <i class="fa-solid fa-camera-retro"></i>
+              </div>
+              <div>
+                <p class="text-sm font-bold text-white">Etiket Fotoğrafını Sürükleyin veya Seçin</p>
+                <p class="text-xs text-slate-400 mt-1">Paketin arkasındaki "100g Besin Değerleri" tablosunu net şekilde çekin.</p>
+              </div>
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800 text-[11px] text-slate-300">
+                <i class="fa-solid fa-shield-halved text-emerald-400"></i>
+                <span>Görselleriniz sunucuya gitmez, %100 cihazınızda işlenir.</span>
+              </div>
+            </div>
+
+            <!-- Image Preview Box -->
+            <div id="previewContainer" class="hidden space-y-3">
+              <img id="imagePreview" src="" alt="Etiket Önizleme" class="max-h-56 mx-auto rounded-xl border border-slate-700 object-contain shadow-lg">
+              <div class="flex items-center justify-center gap-2 text-xs">
+                <span id="fileNameDisplay" class="text-slate-300 font-semibold truncate max-w-xs">etiket.jpg</span>
+                <button type="button" id="btnRemoveImage" class="text-rose-400 hover:text-rose-300 font-bold z-20">Değiştir</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- OCR Progress Bar -->
+          <div id="ocrProgressBox" class="hidden space-y-2 p-4 rounded-2xl bg-slate-950 border border-emerald-500/30">
+            <div class="flex justify-between text-xs">
+              <span class="font-bold text-emerald-300 flex items-center gap-2">
+                <i class="fa-solid fa-spinner fa-spin text-emerald-400"></i>
+                <span id="ocrStatusText">Optik Karakter Tanıma (OCR) çalışıyor...</span>
+              </span>
+              <span id="ocrPercent" class="font-mono text-emerald-400">0%</span>
+            </div>
+            <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
+              <div id="ocrProgressBar" class="h-full bg-emerald-500 transition-all duration-300" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. NUTRITIONAL VALUES INPUT FORM (Always visible or synced with OCR) -->
+        <form id="nutritionForm" class="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-7 space-y-6 shadow-2xl backdrop-blur-md">
+          
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div>
+              <h2 class="text-base font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-table-list text-emerald-400"></i>
+                <span>Besin Değerleri (100g / 100ml Bazında)</span>
+              </h2>
+              <p class="text-xs text-slate-400 mt-0.5">Değerleri ambalajdaki tabloya göre kontrol edebilir veya elle düzeltebilirsiniz.</p>
+            </div>
+            <span class="text-xs px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 font-semibold">
+              100g Standart
+            </span>
+          </div>
+
+          <!-- Ürün Adı & Kategori -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label for="urunAdi" class="block text-xs font-semibold text-slate-300 mb-1.5">
+                Ürün / Atıştırmalık Adı (İsteğe Bağlı)
+              </label>
+              <input type="text" id="urunAdi" placeholder="Örn: Fındıklı Çikolatalı Gofret" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-emerald-500">
+            </div>
+
+            <div>
+              <label for="porsiyonGr" class="block text-xs font-semibold text-slate-300 mb-1.5">
+                Paket / 1 Porsiyon Gramajı (g)
+              </label>
+              <div class="relative">
+                <input type="number" id="porsiyonGr" value="50" min="1" step="1" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-emerald-500">
+                <span class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-xs text-slate-500">gram</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Nutrients Grid (2x2 Inputs) -->
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            
+            <!-- Enerji (kcal) -->
+            <div>
+              <label for="valEnerji" class="block text-xs font-semibold text-slate-300 mb-1.5">
+                Enerji (Kalori)
+              </label>
+              <div class="relative">
+                <input type="number" id="valEnerji" value="480" min="0" step="1" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-100 font-mono focus:outline-none focus:border-emerald-500">
+                <span class="absolute inset-y-0 right-0 pr-2.5 flex items-center text-xs text-slate-500">kcal</span>
+              </div>
+            </div>
+
+            <!-- Toplam Yağ -->
+            <div>
+              <label for="valYag" class="block text-xs font-semibold text-slate-300 mb-1.5">
+                Toplam Yağ
+              </label>
+              <div class="relative">
+                <input type="number" id="valYag" value="24" min="0" step="0.1" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-100 font-mono focus:outline-none focus:border-emerald-500">
+                <span class="absolute inset-y-0 right-0 pr-2.5 flex items-center text-xs text-slate-500">g</span>
+              </div>
+            </div>
+
+            <!-- Doymuş Yağ (Kritik) -->
+            <div>
+              <label for="valDoymusYag" class="block text-xs font-semibold text-rose-300 mb-1.5">
+                Doymuş Yağ ⚠️
+              </label>
+              <div class="relative">
+                <input type="number" id="valDoymusYag" value="12" min="0" step="0.1" class="w-full bg-slate-950 border border-rose-500/50 rounded-xl px-3 py-2 text-sm text-slate-100 font-mono focus:outline-none focus:border-rose-400">
+                <span class="absolute inset-y-0 right-0 pr-2.5 flex items-center text-xs text-slate-500">g</span>
+              </div>
+            </div>
+
+            <!-- Karbonhidrat -->
+            <div>
+              <label for="valKarbonhidrat" class="block text-xs font-semibold text-slate-300 mb-1.5">
+                Karbonhidrat
+              </label>
+              <div class="relative">
+                <input type="number" id="valKarbonhidrat" value="58" min="0" step="0.1" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-100 font-mono focus:outline-none focus:border-emerald-500">
+                <span class="absolute inset-y-0 right-0 pr-2.5 flex items-center text-xs text-slate-500">g</span>
+              </div>
+            </div>
+
+            <!-- Şeker (Kritik) -->
+            <div>
+              <label for="valSeker" class="block text-xs font-semibold text-rose-300 mb-1.5">
+                Şekerler ⚠️
+              </label>
+              <div class="relative">
+                <input type="number" id="valSeker" value="38" min="0" step="0.1" class="w-full bg-slate-950 border border-rose-500/50 rounded-xl px-3 py-2 text-sm text-slate-100 font-mono focus:outline-none focus:border-rose-400">
+                <span class="absolute inset-y-0 right-0 pr-2.5 flex items-center text-xs text-slate-500">g</span>
+              </div>
+            </div>
+
+            <!-- Lif (Olumlu) -->
+            <div>
+              <label for="valLif" class="block text-xs font-semibold text-emerald-300 mb-1.5">
+                Lif (Diyet Lifi)
+              </label>
+              <div class="relative">
+                <input type="number" id="valLif" value="3.5" min="0" step="0.1" class="w-full bg-slate-950 border border-emerald-500/40 rounded-xl px-3 py-2 text-sm text-slate-100 font-mono focus:outline-none focus:border-emerald-400">
+                <span class="absolute inset-y-0 right-0 pr-2.5 flex items-center text-xs text-slate-500">g</span>
+              </div>
+            </div>
+
+            <!-- Protein (Olumlu) -->
+            <div>
+              <label for="valProtein" class="block text-xs font-semibold text-emerald-300 mb-1.5">
+                Protein
+              </label>
+              <div class="relative">
+                <input type="number" id="valProtein" value="6.5" min="0" step="0.1" class="w-full bg-slate-950 border border-emerald-500/40 rounded-xl px-3 py-2 text-sm text-slate-100 font-mono focus:outline-none focus:border-emerald-400">
+                <span class="absolute inset-y-0 right-0 pr-2.5 flex items-center text-xs text-slate-500">g</span>
+              </div>
+            </div>
+
+            <!-- Tuz / Sodyum (Kritik) -->
+            <div>
+              <label for="valTuz" class="block text-xs font-semibold text-amber-300 mb-1.5">
+                Tuz (veya Na x 2.5) ⚠️
+              </label>
+              <div class="relative">
+                <input type="number" id="valTuz" value="0.45" min="0" step="0.01" class="w-full bg-slate-950 border border-amber-500/50 rounded-xl px-3 py-2 text-sm text-slate-100 font-mono focus:outline-none focus:border-amber-400">
+                <span class="absolute inset-y-0 right-0 pr-2.5 flex items-center text-xs text-slate-500">g</span>
+              </div>
+            </div>
+
+            <!-- Hızlı Şablonlar -->
+            <div>
+              <label class="block text-xs font-semibold text-slate-400 mb-1.5">
+                Hızlı Karşılaştırma
+              </label>
+              <select id="presetSelect" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-2.5 py-2 text-xs text-slate-200 focus:outline-none focus:border-emerald-500">
+                <option value="">-- Popüler Ürün Seç --</option>
+                <option value="gofret">Çikolatalı Gofret (Standart)</option>
+                <option value="kola">Gazlı Şekerli İçecek (330ml)</option>
+                <option value="cips">Patates Cipsi</option>
+                <option value="yulaf">Doğal Yulaf Ezmesi</option>
+                <option value="yogurt">Sade Probiyotik Yoğurt</option>
+                <option value="biskuvi">Yulaflı Bisküvi</option>
+              </select>
+            </div>
+
+          </div>
+
+          <div class="flex items-center justify-between pt-2">
+            <span class="text-xs text-slate-400">Değerleri değiştirdiğinizde sonuçlar anlık güncellenir.</span>
+            <button type="button" id="btnReset" class="text-xs text-slate-400 hover:text-white font-medium transition">
+              <i class="fa-solid fa-rotate-left mr-1"></i> Sıfırla
+            </button>
+          </div>
+
+        </form>
+
+      </div>
+
+      <!-- RIGHT: Result Card, Traffic Lights, Nutri-Score & Chart (5 Cols Sticky) -->
+      <div class="lg:col-span-5 space-y-6 sticky top-20">
+
+        <!-- Result Card -->
+        <div id="resultCard" class="bg-gradient-to-b from-slate-900 via-slate-900/95 to-slate-950 border border-emerald-500/40 rounded-3xl p-6 sm:p-7 shadow-2xl backdrop-blur-md relative overflow-hidden print-card">
+
+          <!-- Ambient Glow -->
+          <div id="healthGlow" class="absolute -top-20 -right-20 w-44 h-44 bg-emerald-500/20 rounded-full blur-3xl pointer-events-none"></div>
+
+          <!-- Header of Score -->
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xs font-bold text-slate-400 tracking-wider uppercase flex items-center gap-1.5">
+              <i class="fa-solid fa-heart-pulse text-emerald-400"></i>
+              <span>Gıda Sağlıklılık Puanı</span>
+            </span>
+            <span id="badgePortion" class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-slate-800 border border-slate-700 text-slate-300">
+              Porsiyon: 50g
+            </span>
+          </div>
+
+          <!-- Big Health Score & Status -->
+          <div class="flex items-baseline gap-3 mb-4">
+            <span id="scoreDisplay" class="text-6xl sm:text-7xl font-black tracking-tight text-white font-mono">
+              38
+            </span>
+            <div class="flex flex-col">
+              <span class="text-xl sm:text-2xl font-bold text-slate-500">/ 100</span>
+              <span id="scoreStatusText" class="text-xs font-bold text-amber-400">Düşük Besin Değeri</span>
+            </div>
+          </div>
+
+          <!-- Nutri-Score Bar (A, B, C, D, E) -->
+          <div class="mb-6 bg-slate-950/60 p-3.5 rounded-2xl border border-slate-800 space-y-2">
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-bold text-slate-300">Resmi Nutri-Score Derecesi</span>
+              <span id="lblNutriGrade" class="font-extrabold text-sm text-orange-400">Derece: D</span>
+            </div>
+            
+            <div class="grid grid-cols-5 gap-1.5 text-center font-black text-sm" id="nutriScoreBar">
+              <div data-grade="A" class="py-1.5 rounded-lg bg-emerald-600/30 text-emerald-500 transition-all opacity-40">A</div>
+              <div data-grade="B" class="py-1.5 rounded-lg bg-teal-500/30 text-teal-400 transition-all opacity-40">B</div>
+              <div data-grade="C" class="py-1.5 rounded-lg bg-amber-500/30 text-amber-400 transition-all opacity-40">C</div>
+              <div data-grade="D" class="py-1.5 rounded-lg bg-orange-600 text-white shadow-lg shadow-orange-600/40 scale-105 opacity-100">D</div>
+              <div data-grade="E" class="py-1.5 rounded-lg bg-rose-600/30 text-rose-500 transition-all opacity-40">E</div>
+            </div>
+          </div>
+
+          <!-- Traffic Light Nutrient Meters (Şeker, Doymuş Yağ, Tuz, Kalori) -->
+          <div class="space-y-3 mb-6">
+            <div class="text-xs font-bold text-slate-300 flex items-center justify-between">
+              <span>DSÖ Trafik Işığı Analizi (100g)</span>
+              <span class="text-[10px] text-slate-500">Yeşil / Sarı / Kırmızı</span>
+            </div>
+
+            <!-- Şeker Meter -->
+            <div class="p-3 rounded-xl bg-slate-950/70 border border-slate-800 flex items-center justify-between" id="meterSeker">
+              <div class="flex items-center gap-2.5">
+                <div class="w-7 h-7 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center text-xs font-bold">
+                  <i class="fa-solid fa-cubes-stacked"></i>
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-slate-200">Şeker</div>
+                  <div class="text-[10px] text-slate-400"><span id="lblSekerGr">38.0g</span> / 100g (Porsiyonda: <span id="lblSekerPortion">19.0g</span>)</div>
+                </div>
+              </div>
+              <span id="badgeSeker" class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30">
+                🔴 ÇOK YÜKSEK
+              </span>
+            </div>
+
+            <!-- Doymuş Yağ Meter -->
+            <div class="p-3 rounded-xl bg-slate-950/70 border border-slate-800 flex items-center justify-between" id="meterDoymusYag">
+              <div class="flex items-center gap-2.5">
+                <div class="w-7 h-7 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center text-xs font-bold">
+                  <i class="fa-solid fa-droplet"></i>
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-slate-200">Doymuş Yağ</div>
+                  <div class="text-[10px] text-slate-400"><span id="lblDoymusYagGr">12.0g</span> / 100g</div>
+                </div>
+              </div>
+              <span id="badgeDoymusYag" class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30">
+                🔴 YÜKSEK
+              </span>
+            </div>
+
+            <!-- Tuz Meter -->
+            <div class="p-3 rounded-xl bg-slate-950/70 border border-slate-800 flex items-center justify-between" id="meterTuz">
+              <div class="flex items-center gap-2.5">
+                <div class="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-xs font-bold">
+                  <i class="fa-solid fa-mortar-pestle"></i>
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-slate-200">Tuz (Sodyum)</div>
+                  <div class="text-[10px] text-slate-400"><span id="lblTuzGr">0.45g</span> / 100g</div>
+                </div>
+              </div>
+              <span id="badgeTuz" class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                🟡 ORTA
+              </span>
+            </div>
+
+            <!-- 1 Porsiyondaki Küp Şeker Karşılığı (Çarpıcı Görselleştirici) -->
+            <div class="p-3.5 rounded-2xl bg-gradient-to-r from-rose-950/40 to-slate-950 border border-rose-500/30 flex items-center justify-between">
+              <div>
+                <span class="text-[11px] font-semibold text-rose-300 block">Bu Paketteki Gizli Şeker:</span>
+                <span class="text-xs text-slate-300">1 porsiyon (50g) tükettiğinizde</span>
+              </div>
+              <div class="text-right">
+                <span id="lblKupSeker" class="text-lg font-black text-rose-400 font-mono">~4.8</span>
+                <span class="text-xs font-bold text-rose-300">Küp Şeker 🍬</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Makro Besin Dağılımı Donut Grafiği -->
+          <div class="mb-6 bg-slate-950/50 p-4 rounded-2xl border border-slate-800">
+            <div class="text-xs font-bold text-slate-300 mb-2 flex items-center justify-between">
+              <span>Makro Besin Dağılımı (100g)</span>
+              <span id="lblKaloriSummary" class="text-[11px] text-emerald-400 font-bold">480 kcal</span>
+            </div>
+            <div class="relative h-44 w-full flex items-center justify-center">
+              <canvas id="macroChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Actionable Nutrition Guidance -->
+          <div class="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-2.5 mb-6 text-xs" id="guidanceBox">
+            <div class="font-bold text-emerald-400 flex items-center gap-1.5">
+              <i class="fa-solid fa-stethoscope"></i>
+              <span>Beslenme Uzmanı Değerlendirmesi</span>
+            </div>
+            <ul id="guidanceList" class="space-y-1.5 text-slate-300">
+              <!-- Dynamically populated -->
+            </ul>
+          </div>
+
+          <!-- Buttons: WhatsApp Share & Print PDF -->
+          <div class="space-y-2.5 no-print">
+            <button type="button" id="btnShareWhatsapp" class="w-full py-3.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/25">
+              <i class="fa-brands fa-whatsapp text-sm"></i>
+              <span>Besin Raporunu WhatsApp'tan Paylaş</span>
+            </button>
+
+            <button type="button" id="btnPrintReport" class="w-full py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs transition flex items-center justify-center gap-2 border border-slate-700">
+              <i class="fa-solid fa-print text-xs"></i>
+              <span>Yazdır / PDF Olarak Kaydet</span>
+            </button>
+          </div>
+
+        </div>
+
+        <!-- MOLA KAHVE BANNER (PopNDodge Promosyonu) -->
+        <div class="p-4 rounded-2xl bg-gradient-to-r from-purple-950/40 via-slate-900 to-indigo-950/40 border border-purple-500/30 text-left flex items-center justify-between gap-3 shadow-lg no-print">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-purple-500/20 border border-purple-500/40 flex items-center justify-center text-purple-300 text-lg shrink-0">
+              <i class="fa-solid fa-gamepad"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-1.5">
+                <span class="text-xs font-bold text-white">Zihninizi Dinlendirin</span>
+                <span class="px-1.5 py-0.2 rounded text-[9px] font-semibold bg-purple-500/20 text-purple-300 border border-purple-500/30">Ücretsiz Oyun</span>
+              </div>
+              <p class="text-[11px] text-slate-400 mt-0.5">
+                Alışverişten sonra eğlenceli bir mola verin: <strong>PopNDodge</strong>
+              </p>
+            </div>
+          </div>
+          <a href="https://play.google.com/store/apps/details?id=com.eymenefe.popndodge" target="_blank" rel="noopener noreferrer" class="shrink-0 px-3 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold transition flex items-center gap-1 shadow-md shadow-purple-600/20">
+            <i class="fa-brands fa-google-play text-xs"></i>
+            <span>Oyna</span>
+          </a>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Educational Info Section / Besin Etiketi Okuma Rehberi -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 border-t border-slate-800/80">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+      <!-- Box 1: Trafik Işıkları Kriterleri -->
+      <div class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 space-y-3">
+        <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-lg">
+          <i class="fa-solid fa-traffic-light"></i>
+        </div>
+        <h3 class="text-base font-bold text-white">DSÖ Trafik Işığı Sistemi</h3>
+        <p class="text-xs text-slate-400 leading-relaxed">
+          Gıda Standartları Ajansı (FSA) 100 gram katı gıdalar için sınırları şöyle belirler:
+        </p>
+        <ul class="text-xs text-slate-400 space-y-1.5">
+          <li>🟢 <strong>Şeker:</strong> &lt; 5g Düşük | 🟡 5 - 22.5g Orta | 🔴 &gt; 22.5g Yüksek</li>
+          <li>🟢 <strong>Doymuş Yağ:</strong> &lt; 1.5g Düşük | 🟡 1.5 - 5g Orta | 🔴 &gt; 5g Yüksek</li>
+          <li>🟢 <strong>Tuz:</strong> &lt; 0.3g Düşük | 🟡 0.3 - 1.5g Orta | 🔴 &gt; 1.5g Yüksek</li>
+        </ul>
+      </div>
+
+      <!-- Box 2: Gizli Şeker Tuzakları -->
+      <div class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 space-y-3">
+        <div class="w-10 h-10 rounded-xl bg-rose-500/10 text-rose-400 flex items-center justify-center text-lg">
+          <i class="fa-solid fa-skull-crossbones"></i>
+        </div>
+        <h3 class="text-base font-bold text-white">Gizli Şeker & İsimleri</h3>
+        <p class="text-xs text-slate-400 leading-relaxed">
+          Üreticiler bazen "şeker" kelimesi yerine şu isimleri kullanır:
+        </p>
+        <ul class="text-xs text-slate-400 space-y-1 list-disc list-inside">
+          <li>Yüksek Fruktozlu Mısır Şurubu (Glikoz-Fruktoz)</li>
+          <li>Dekstroz, Maltoz, Sakkaroz</li>
+          <li>İnvert Şeker Şurubu, Elma/Üzüm Suyu Konsantresi</li>
+          <li>Maltodekstrin ve Agav/Pirinç Şurubu</li>
+        </ul>
+      </div>
+
+      <!-- Box 3: Günlük Limitler -->
+      <div class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 space-y-3">
+        <div class="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center text-lg">
+          <i class="fa-solid fa-person-breastfeeding"></i>
+        </div>
+        <h3 class="text-base font-bold text-white">Günlük Güvenli Tüketim Sınırları</h3>
+        <p class="text-xs text-slate-400 leading-relaxed">
+          Dünya Sağlık Örgütü (DSÖ) tavsiyelerine göre sağlıklı bir yetişkinin:
+        </p>
+        <ul class="text-xs text-slate-400 space-y-1.5 list-disc list-inside">
+          <li>Günlük serbest şeker alımı en fazla <strong>25 gram</strong> (~6 küp şeker) olmalıdır.</li>
+          <li>Günlük tuz tüketimi <strong>5 gramı</strong> (1 çay kaşığı) geçmemelidir.</li>
+          <li>Doymuş yağ alımı günlük kalorinin en fazla %10'u olmalıdır.</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800/80 bg-slate-900/60 mt-12 py-8 text-xs text-slate-400">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-2">
+          <span class="font-bold text-white tracking-tight">Pratik<span class="text-emerald-400">Araçlar</span></span>
+          <span>•</span>
+          <span class="text-slate-400">Besin Etiketi Okuyucu & Şeker/Tuz Analizi</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px] sm:text-xs">
+          <span class="text-slate-500">© 2026 PratikAraçlar</span>
+          <a href="/" class="hover:text-emerald-300 transition text-slate-300">Ana Sayfa</a>
+          <a href="/yesil-sertifika-uyum/" class="hover:text-emerald-300 transition text-slate-300">Yeşil Sertifika</a>
+          <a href="/ydo-harc-zam-hesaplayici/" class="hover:text-amber-300 transition text-slate-300">2027 YDO</a>
+          <a href="/ek-ders-hesaplayici/" class="hover:text-indigo-300 transition text-slate-300">MEB Ek Ders</a>
+          <a href="/eokul-mebbis-fotograf-kucultucu/" class="hover:text-cyan-300 transition text-slate-300">e-Okul Fotoğraf</a>
+          <a href="/mtv-arac-muayene-hesaplayici/" class="hover:text-amber-300 transition text-slate-300">MTV & Muayene</a>
+          <a href="/tapu-harci-emlak-hesaplayici/" class="hover:text-emerald-300 transition text-slate-300">Tapu Harcı</a>
+          <a href="/maas-hesaplayici/" class="hover:text-sky-300 transition text-slate-300">Maaş & Vergi</a>
+        </div>
+      </div>
+      
+      <!-- Legal Notice -->
+      <div class="pt-4 border-t border-slate-800/60 text-[11px] text-slate-500 leading-relaxed text-center sm:text-left flex flex-col sm:flex-row items-center gap-2">
+        <i class="fa-solid fa-circle-info text-emerald-400 text-xs shrink-0"></i>
+        <span><strong>Sağlık Bilgilendirmesi:</strong> Bu araç gıda etiketlerindeki verileri matematiksel modellerle karşılaştırarak genel bir farkındalık sunar; tıbbi tanı, diyetisyen reçetesi veya hekim tavsiyesi yerine geçmez. Özel sağlık koşullarınızda doktorunuza danışınız.</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Application Logic -->
+  <script>
+    (function() {
+      // DOM Elements
+      const tabPhoto = document.getElementById('tabPhoto');
+      const tabManual = document.getElementById('tabManual');
+      const boxPhoto = document.getElementById('boxPhoto');
+      const fileInput = document.getElementById('fileInput');
+      const dropArea = document.getElementById('dropArea');
+      const uploadPrompt = document.getElementById('uploadPrompt');
+      const previewContainer = document.getElementById('previewContainer');
+      const imagePreview = document.getElementById('imagePreview');
+      const fileNameDisplay = document.getElementById('fileNameDisplay');
+      const btnRemoveImage = document.getElementById('btnRemoveImage');
+      const ocrProgressBox = document.getElementById('ocrProgressBox');
+      const ocrProgressBar = document.getElementById('ocrProgressBar');
+      const ocrPercent = document.getElementById('ocrPercent');
+      const ocrStatusText = document.getElementById('ocrStatusText');
+
+      // Inputs
+      const urunAdi = document.getElementById('urunAdi');
+      const porsiyonGr = document.getElementById('porsiyonGr');
+      const valEnerji = document.getElementById('valEnerji');
+      const valYag = document.getElementById('valYag');
+      const valDoymusYag = document.getElementById('valDoymusYag');
+      const valKarbonhidrat = document.getElementById('valKarbonhidrat');
+      const valSeker = document.getElementById('valSeker');
+      const valLif = document.getElementById('valLif');
+      const valProtein = document.getElementById('valProtein');
+      const valTuz = document.getElementById('valTuz');
+      const presetSelect = document.getElementById('presetSelect');
+
+      // Score Card Elements
+      const scoreDisplay = document.getElementById('scoreDisplay');
+      const scoreStatusText = document.getElementById('scoreStatusText');
+      const badgePortion = document.getElementById('badgePortion');
+      const lblNutriGrade = document.getElementById('lblNutriGrade');
+      const nutriScoreBar = document.getElementById('nutriScoreBar');
+      const healthGlow = document.getElementById('healthGlow');
+      const lblKaloriSummary = document.getElementById('lblKaloriSummary');
+      const guidanceList = document.getElementById('guidanceList');
+
+      // Traffic meters
+      const lblSekerGr = document.getElementById('lblSekerGr');
+      const lblSekerPortion = document.getElementById('lblSekerPortion');
+      const badgeSeker = document.getElementById('badgeSeker');
+      const lblDoymusYagGr = document.getElementById('lblDoymusYagGr');
+      const badgeDoymusYag = document.getElementById('badgeDoymusYag');
+      const lblTuzGr = document.getElementById('lblTuzGr');
+      const badgeTuz = document.getElementById('badgeTuz');
+      const lblKupSeker = document.getElementById('lblKupSeker');
+
+      let macroChart = null;
+
+      // Presets Dataset
+      const PRESETS = {
+        gofret: { name: 'Çikolatalı Gofret', portion: 50, kcal: 520, yag: 28, doymus: 14, karb: 60, seker: 42, lif: 2.5, protein: 6, tuz: 0.4 },
+        kola: { name: 'Gazlı Kolalı İçecek', portion: 330, kcal: 42, yag: 0, doymus: 0, karb: 10.6, seker: 10.6, lif: 0, protein: 0, tuz: 0.02 },
+        cips: { name: 'Klasik Patates Cipsi', portion: 40, kcal: 535, yag: 34, doymus: 12, karb: 50, seker: 1.5, lif: 4, protein: 6.5, tuz: 1.6 },
+        yulaf: { name: 'Doğal Yulaf Ezmesi', portion: 60, kcal: 370, yag: 7, doymus: 1.2, karb: 60, seker: 1.2, lif: 10, protein: 13, tuz: 0.03 },
+        yogurt: { name: 'Sade Doğal Yoğurt', portion: 200, kcal: 65, yag: 3.5, doymus: 2.2, karb: 4.5, seker: 4.5, lif: 0, protein: 4, tuz: 0.1 },
+        biskuvi: { name: 'Yulaflı Bisküvi', portion: 45, kcal: 455, yag: 18, doymus: 8, karb: 64, seker: 24, lif: 5.5, protein: 7.5, tuz: 0.8 }
+      };
+
+      function initMacroChart() {
+        const ctx = document.getElementById('macroChart').getContext('2d');
+        macroChart = new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels: ['Şeker', 'Diğer Karb.', 'Doymuş Yağ', 'Diğer Yağ', 'Protein', 'Lif'],
+            datasets: [{
+              data: [38, 20, 12, 12, 6.5, 3.5],
+              backgroundColor: [
+                '#f43f5e', // Şeker (Rose)
+                '#38bdf8', // Diğer Karb (Sky)
+                '#fb923c', // Doymuş Yağ (Orange)
+                '#fbbf24', // Diğer Yağ (Amber)
+                '#10b981', // Protein (Emerald)
+                '#a855f7'  // Lif (Purple)
+              ],
+              borderWidth: 0,
+              hoverOffset: 4
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'right',
+                labels: {
+                  boxWidth: 10,
+                  font: { size: 10 },
+                  color: '#94a3b8'
+                }
+              },
+              tooltip: {
+                callbacks: {
+                  label: function(ctx) {
+                    return ` ${ctx.label}: ${ctx.raw}g / 100g`;
+                  }
+                }
+              }
+            },
+            cutout: '65%'
+          }
+        });
+      }
+
+      function calculate() {
+        const portion = parseFloat(porsiyonGr.value) || 100;
+        const kcal = parseFloat(valEnerji.value) || 0;
+        const yag = parseFloat(valYag.value) || 0;
+        const doymus = parseFloat(valDoymusYag.value) || 0;
+        const karb = parseFloat(valKarbonhidrat.value) || 0;
+        const seker = parseFloat(valSeker.value) || 0;
+        const lif = parseFloat(valLif.value) || 0;
+        const protein = parseFloat(valProtein.value) || 0;
+        const tuz = parseFloat(valTuz.value) || 0;
+
+        badgePortion.textContent = `Porsiyon: ${portion}g`;
+        lblKaloriSummary.textContent = `${kcal} kcal / 100g`;
+
+        // 1. Nutri-Score & Health Score Algorithm (FSA & DSÖ Base)
+        // Negatif Puanlar (Ne kadar yüksekse sağlık puanını düşürür)
+        let negativePoints = 0;
+        // Enerji: her 335 kJ (~80 kcal) için 1 puan
+        negativePoints += Math.min(10, Math.floor(kcal / 80));
+        // Şeker: her 4.5g için 1 puan
+        negativePoints += Math.min(10, Math.floor(seker / 4.5));
+        // Doymuş yağ: her 1g için 1 puan
+        negativePoints += Math.min(10, Math.floor(doymus / 1));
+        // Sodyum (Tuz / 2.5): her 90mg sodyum (~0.225g tuz) için 1 puan
+        negativePoints += Math.min(10, Math.floor(tuz / 0.225));
+
+        // Pozitif Puanlar (Ne kadar yüksekse sağlık puanını artırır)
+        let positivePoints = 0;
+        // Lif: her 0.9g için 1 puan
+        positivePoints += Math.min(5, Math.floor(lif / 0.9));
+        // Protein: her 1.6g için 1 puan
+        positivePoints += Math.min(5, Math.floor(protein / 1.6));
+
+        // Net Puan: -15 (en iyi) ile +40 (en kötü) arası
+        const netNutri = negativePoints - positivePoints;
+
+        // 100 üzerinden Genel Sağlık Skoru
+        // netNutri -15 ise 100 puan, netNutri +35 ise 10 puan
+        let score100 = Math.round(100 - ((netNutri + 15) / 50) * 90);
+        score100 = Math.max(5, Math.min(100, score100));
+        scoreDisplay.textContent = score100;
+
+        // Nutri-Score Grade Determination
+        let grade = 'C';
+        if (netNutri <= -1) grade = 'A';
+        else if (netNutri <= 2) grade = 'B';
+        else if (netNutri <= 10) grade = 'C';
+        else if (netNutri <= 18) grade = 'D';
+        else grade = 'E';
+
+        lblNutriGrade.textContent = `Derece: ${grade}`;
+
+        // Highlight Nutri-Score Bar
+        const gradeDivs = nutriScoreBar.querySelectorAll('[data-grade]');
+        gradeDivs.forEach(div => {
+          const g = div.getAttribute('data-grade');
+          if (g === grade) {
+            div.className = `py-1.5 rounded-lg text-white font-extrabold shadow-lg scale-105 opacity-100 ${
+              g === 'A' ? 'bg-emerald-600 shadow-emerald-600/40' :
+              g === 'B' ? 'bg-teal-500 shadow-teal-500/40' :
+              g === 'C' ? 'bg-amber-500 shadow-amber-500/40' :
+              g === 'D' ? 'bg-orange-600 shadow-orange-600/40' :
+              'bg-rose-600 shadow-rose-600/40'
+            }`;
+          } else {
+            div.className = `py-1.5 rounded-lg text-slate-400 opacity-40 transition-all ${
+              g === 'A' ? 'bg-emerald-600/20' :
+              g === 'B' ? 'bg-teal-500/20' :
+              g === 'C' ? 'bg-amber-500/20' :
+              g === 'D' ? 'bg-orange-600/20' :
+              'bg-rose-600/20'
+            }`;
+          }
+        });
+
+        // Score Status & Ambient Glow
+        let statusText = '';
+        let glowClass = 'bg-emerald-500/20';
+        if (score100 >= 80) {
+          statusText = 'Çok Sağlıklı & Temiz İçerik';
+          glowClass = 'bg-emerald-500/25';
+          scoreStatusText.className = 'text-xs font-bold text-emerald-400';
+        } else if (score100 >= 65) {
+          statusText = 'Dengeli & Sağlıklı';
+          glowClass = 'bg-teal-500/20';
+          scoreStatusText.className = 'text-xs font-bold text-teal-400';
+        } else if (score100 >= 50) {
+          statusText = 'Orta Kalite (Ölçülü Tüketilmeli)';
+          glowClass = 'bg-amber-500/20';
+          scoreStatusText.className = 'text-xs font-bold text-amber-400';
+        } else if (score100 >= 35) {
+          statusText = 'Düşük Kalite (Şeker/Yağ Yüksek)';
+          glowClass = 'bg-orange-500/20';
+          scoreStatusText.className = 'text-xs font-bold text-orange-400';
+        } else {
+          statusText = 'Aşırı İşlenmiş & Zararlı';
+          glowClass = 'bg-rose-500/25';
+          scoreStatusText.className = 'text-xs font-bold text-rose-400';
+        }
+        scoreStatusText.textContent = statusText;
+        healthGlow.className = `absolute -top-20 -right-20 w-44 h-44 ${glowClass} rounded-full blur-3xl pointer-events-none`;
+
+        // 2. Traffic Lights (FSA Sınırları)
+        // Şeker: <5 yeşil, 5-22.5 sarı, >22.5 kırmızı
+        const sekerPortion = (seker * portion / 100);
+        lblSekerGr.textContent = `${seker.toFixed(1)}g`;
+        lblSekerPortion.textContent = `${sekerPortion.toFixed(1)}g`;
+        if (seker > 22.5) {
+          badgeSeker.textContent = '🔴 ÇOK YÜKSEK';
+          badgeSeker.className = 'px-2.5 py-1 rounded-full text-[10px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30';
+        } else if (seker >= 5) {
+          badgeSeker.textContent = '🟡 ORTA';
+          badgeSeker.className = 'px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30';
+        } else {
+          badgeSeker.textContent = '🟢 DÜŞÜK';
+          badgeSeker.className = 'px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+        }
+
+        // Küp Şeker Hesabı (1 küp şeker = ~4 gram)
+        const kupSeker = (sekerPortion / 4.0).toFixed(1);
+        lblKupSeker.textContent = `~${kupSeker}`;
+
+        // Doymuş Yağ: <1.5 yeşil, 1.5-5 sarı, >5 kırmızı
+        lblDoymusYagGr.textContent = `${doymus.toFixed(1)}g`;
+        if (doymus > 5) {
+          badgeDoymusYag.textContent = '🔴 YÜKSEK';
+          badgeDoymusYag.className = 'px-2.5 py-1 rounded-full text-[10px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30';
+        } else if (doymus >= 1.5) {
+          badgeDoymusYag.textContent = '🟡 ORTA';
+          badgeDoymusYag.className = 'px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30';
+        } else {
+          badgeDoymusYag.textContent = '🟢 DÜŞÜK';
+          badgeDoymusYag.className = 'px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+        }
+
+        // Tuz: <0.3 yeşil, 0.3-1.5 sarı, >1.5 kırmızı
+        lblTuzGr.textContent = `${tuz.toFixed(2)}g`;
+        if (tuz > 1.5) {
+          badgeTuz.textContent = '🔴 YÜKSEK TUZ';
+          badgeTuz.className = 'px-2.5 py-1 rounded-full text-[10px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30';
+        } else if (tuz >= 0.3) {
+          badgeTuz.textContent = '🟡 ORTA';
+          badgeTuz.className = 'px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30';
+        } else {
+          badgeTuz.textContent = '🟢 DÜŞÜK';
+          badgeTuz.className = 'px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+        }
+
+        // 3. Update Macro Donut Chart
+        if (macroChart) {
+          const otherKarb = Math.max(0, karb - seker);
+          const otherYag = Math.max(0, yag - doymus);
+          macroChart.data.datasets[0].data = [
+            seker,
+            otherKarb,
+            doymus,
+            otherYag,
+            protein,
+            lif
+          ];
+          macroChart.update();
+        }
+
+        // 4. Generate Actionable Expert Guidance
+        generateGuidance(seker, doymus, tuz, lif, protein, sekerPortion, kupSeker, portion);
+      }
+
+      function generateGuidance(seker, doymus, tuz, lif, protein, sekerPortion, kupSeker, portion) {
+        const list = [];
+
+        if (sekerPortion > 15) {
+          list.push(`⚠️ Bu üründen 1 porsiyon (${portion}g) yediğinizde yaklaşık <strong>${kupSeker} küp şeker</strong> tüketmiş olursunuz (DSÖ günlük 25g limitinin %${Math.round((sekerPortion/25)*100)}'i).`);
+        } else if (seker < 5) {
+          list.push(`✅ Şeker oranı oldukça düşüktür (&lt;5g), kan şekerinde ani dalgalanma yaratmaz.`);
+        }
+
+        if (doymus > 5) {
+          list.push(`⚠️ Doymuş yağ oranı yüksek (%${doymus.toFixed(1)}). Düzenli ve yüksek tüketimi kötü kolesterolü (LDL) tetikleyebilir.`);
+        }
+
+        if (tuz > 1.2) {
+          list.push(`⚠️ Yüksek sodyum/tuz içerir. Günlük 5g tuz sınırını korumak için günün geri kalanında tuzsuz gıdalar tercih edilmelidir.`);
+        }
+
+        if (lif >= 6) {
+          list.push(`✅ <strong>Yüksek Diyet Lifi:</strong> Sindirimi yavaşlatır, uzun süre tokluk sağlar ve bağırsak mikrobiyotasını destekler.`);
+        }
+
+        if (protein >= 10) {
+          list.push(`✅ <strong>Zengin Protein:</strong> Kas onarımı ve tokluk hissiyatı için oldukça başarılı bir protein oranına sahiptir.`);
+        }
+
+        if (list.length === 0) {
+          list.push(`ℹ️ Ortalama besin profili. Dengeli bir öğün planlaması çerçevesinde porsiyon kontrolüyle tüketilebilir.`);
+        }
+
+        let html = '';
+        list.slice(0, 3).forEach(txt => {
+          html += `<li class="flex items-start gap-2 leading-relaxed">
+            <span class="mt-0.5">•</span>
+            <span>${txt}</span>
+          </li>`;
+        });
+        guidanceList.innerHTML = html;
+      }
+
+      // OCR Parsing Engine
+      async function runOCR(file) {
+        ocrProgressBox.classList.remove('hidden');
+        ocrProgressBar.style.width = '0%';
+        ocrPercent.textContent = '0%';
+        ocrStatusText.textContent = 'OCR motoru başlatılıyor...';
+
+        try {
+          const worker = await Tesseract.createWorker('tur+eng', 1, {
+            logger: m => {
+              if (m.status === 'recognizing text') {
+                const p = Math.round(m.progress * 100);
+                ocrProgressBar.style.width = `${p}%`;
+                ocrPercent.textContent = `${p}%`;
+                ocrStatusText.textContent = `Besin tablosu taranıyor: %${p}`;
+              }
+            }
+          });
+
+          const ret = await worker.recognize(file);
+          await worker.terminate();
+
+          ocrStatusText.textContent = 'Veriler çözümleniyor...';
+          parseOCRText(ret.data.text);
+          ocrProgressBox.classList.add('hidden');
+        } catch (err) {
+          console.error(err);
+          ocrStatusText.textContent = 'Okuma tamamlanamadı, lütfen değerleri manuel kontrol ediniz.';
+          setTimeout(() => { ocrProgressBox.classList.add('hidden'); }, 3000);
+        }
+      }
+
+      function parseOCRText(text) {
+        console.log("OCR Extracted Text:\n", text);
+        const lower = text.toLowerCase().replace(/,/g, '.');
+
+        // Regex helpers
+        function extractValue(regex) {
+          const match = lower.match(regex);
+          if (match && match[1]) {
+            const num = parseFloat(match[1]);
+            return isNaN(num) ? null : num;
+          }
+          return null;
+        }
+
+        // Enerji / Kalori
+        const kcal = extractValue(/(\d+[\.\d]*)\s*k?cal/) || extractValue(/enerji[^\d]*(\d+[\.\d]*)/);
+        if (kcal && kcal > 10 && kcal < 1000) valEnerji.value = Math.round(kcal);
+
+        // Yağ
+        const yag = extractValue(/toplam\s*ya[gğ][^\d]*(\d+[\.\d]*)/) || extractValue(/ya[gğ][^\d]*(\d+[\.\d]*)\s*g/);
+        if (yag !== null && yag <= 100) valYag.value = yag;
+
+        // Doymuş Yağ
+        const doymus = extractValue(/doymu[sş]\s*ya[gğ][^\d]*(\d+[\.\d]*)/);
+        if (doymus !== null && doymus <= 100) valDoymusYag.value = doymus;
+
+        // Karbonhidrat
+        const karb = extractValue(/karbonhidrat[^\d]*(\d+[\.\d]*)/);
+        if (karb !== null && karb <= 100) valKarbonhidrat.value = karb;
+
+        // Şekerler
+        const seker = extractValue(/[sş]ekerler?[^\d]*(\d+[\.\d]*)/) || extractValue(/sugar[^\d]*(\d+[\.\d]*)/);
+        if (seker !== null && seker <= 100) valSeker.value = seker;
+
+        // Lif
+        const lif = extractValue(/lif[^\d]*(\d+[\.\d]*)/) || extractValue(/fiber[^\d]*(\d+[\.\d]*)/);
+        if (lif !== null && lif <= 100) valLif.value = lif;
+
+        // Protein
+        const protein = extractValue(/protein[^\d]*(\d+[\.\d]*)/);
+        if (protein !== null && protein <= 100) valProtein.value = protein;
+
+        // Tuz
+        const tuz = extractValue(/tuz[^\d]*(\d+[\.\d]*)/) || extractValue(/salt[^\d]*(\d+[\.\d]*)/);
+        if (tuz !== null && tuz <= 50) valTuz.value = tuz;
+
+        calculate();
+      }
+
+      // Event Listeners for Inputs
+      const formInputs = document.querySelectorAll('#nutritionForm input');
+      formInputs.forEach(inp => {
+        inp.addEventListener('input', calculate);
+        inp.addEventListener('change', calculate);
+      });
+
+      // Preset Selector
+      presetSelect.addEventListener('change', function() {
+        const val = this.value;
+        if (val && PRESETS[val]) {
+          const p = PRESETS[val];
+          urunAdi.value = p.name;
+          porsiyonGr.value = p.portion;
+          valEnerji.value = p.kcal;
+          valYag.value = p.yag;
+          valDoymusYag.value = p.doymus;
+          valKarbonhidrat.value = p.karb;
+          valSeker.value = p.seker;
+          valLif.value = p.lif;
+          valProtein.value = p.protein;
+          valTuz.value = p.tuz;
+          calculate();
+        }
+      });
+
+      // Quick Sample Button in Header
+      document.getElementById('btnQuickSample').addEventListener('click', function() {
+        presetSelect.value = 'gofret';
+        presetSelect.dispatchEvent(new Event('change'));
+      });
+
+      // Reset Button
+      document.getElementById('btnReset').addEventListener('click', function() {
+        urunAdi.value = '';
+        porsiyonGr.value = '50';
+        valEnerji.value = '480';
+        valYag.value = '24';
+        valDoymusYag.value = '12';
+        valKarbonhidrat.value = '58';
+        valSeker.value = '38';
+        valLif.value = '3.5';
+        valProtein.value = '6.5';
+        valTuz.value = '0.45';
+        presetSelect.value = '';
+        calculate();
+      });
+
+      // File Input Change
+      fileInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        fileNameDisplay.textContent = file.name;
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          imagePreview.src = evt.target.result;
+          uploadPrompt.classList.add('hidden');
+          previewContainer.classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+
+        runOCR(file);
+      });
+
+      btnRemoveImage.addEventListener('click', function(e) {
+        e.stopPropagation();
+        fileInput.value = '';
+        uploadPrompt.classList.remove('hidden');
+        previewContainer.classList.add('hidden');
+        imagePreview.src = '';
+      });
+
+      // Tab switcher
+      tabPhoto.addEventListener('click', function() {
+        tabPhoto.className = 'flex-1 py-2.5 px-4 rounded-xl bg-emerald-600 text-white font-bold transition flex items-center justify-center gap-2 shadow-md';
+        tabManual.className = 'flex-1 py-2.5 px-4 rounded-xl text-slate-400 hover:text-white transition flex items-center justify-center gap-2';
+        boxPhoto.scrollIntoView({ behavior: 'smooth' });
+      });
+
+      tabManual.addEventListener('click', function() {
+        tabManual.className = 'flex-1 py-2.5 px-4 rounded-xl bg-emerald-600 text-white font-bold transition flex items-center justify-center gap-2 shadow-md';
+        tabPhoto.className = 'flex-1 py-2.5 px-4 rounded-xl text-slate-400 hover:text-white transition flex items-center justify-center gap-2';
+        document.getElementById('nutritionForm').scrollIntoView({ behavior: 'smooth' });
+      });
+
+      // Print / PDF
+      document.getElementById('btnPrintReport').addEventListener('click', function() {
+        window.print();
+      });
+
+      // WhatsApp Share
+      document.getElementById('btnShareWhatsapp').addEventListener('click', function() {
+        const name = urunAdi.value.trim() || 'Paket Gıda';
+        const score = scoreDisplay.textContent.trim();
+        const nutri = lblNutriGrade.textContent.trim();
+        const seker = lblSekerGr.textContent.trim();
+        const kup = lblKupSeker.textContent.trim();
+        const tuz = lblTuzGr.textContent.trim();
+        const url = window.location.href;
+
+        const text = `🔍 *Gıda Besin Etiketi & Sağlık Analizi* 🔍\n\n` +
+          `🍫 *Ürün:* ${name}\n` +
+          `⭐ *Sağlıklılık Skoru:* ${score} / 100\n` +
+          `🏅 *Nutri-Score:* ${nutri}\n` +
+          `🍬 *100g Şeker:* ${seker} (Porsiyonda: ${kup} küp şeker)\n` +
+          `🧂 *100g Tuz:* ${tuz}\n\n` +
+          `📊 Paketin arkasındaki gizli şeker ve tuz oranlarını siz de anında test edin:\n` +
+          `👉 ${url}`;
+
+        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+      });
+
+      // Initial run
+      initMacroChart();
+      calculate();
+    })();
+  </script>
+</body>
+</html>
