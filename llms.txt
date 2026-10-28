@@ -88,3 +88,8 @@
 - URL: https://pratik-araclar.pratikweb.workers.dev/tapu-harci-emlak-hesaplayici/
 - Açıklama: Konut, işyeri ve arsa alım-satım işlemlerinde 492 sayılı Harçlar Kanunu uyarınca %4 tapu harcı (%2 alıcı + %2 satıcı veya tek taraf anlaşmalı), 2026 TKGM döner sermaye ücreti (6.681 TL) ve Taşınmaz Ticareti Yönetmeliği'ne göre %4 + %20 KDV emlak danışmanlık hizmet bedelini kuruşu kuruşuna hesaplayan gayrimenkul finans aracı. Alıcı ve satıcı maliyet kartları ile tek tıkla WhatsApp tablosu paylaşımı.
 - Hedef Kitle: Ev, arsa veya işyeri alıp satan vatandaşlar, gayrimenkul danışmanları, emlak ofisleri, müteahhitler ve konut kredisi kullanan yatırımcılar.
+
+### 18. Yeşil Sertifika (YeS-TR) Uyum Testi & Bina Enerji Puanı
+- URL: https://pratik-araclar.pratikweb.workers.dev/yesil-sertifika-uyum/
+- Açıklama: Çevre, Şehircilik ve İklim Değişikliği Bakanlığı'nın YeS-TR Binalar için Yeşil Sertifika ve Enerji Kimlik Belgesi (EKB) kriterlerine göre binaların sürdürülebilirlik puanını (0 - 100) hesaplayan simülasyon ve değerlendirme aracı. Konut, ofis/ticari, kamu ve sanayi binaları için enerji tüketimi, çatı GES/ısı pompası payı, dış cephe yalıtımı, yağmur suyu hasadı, gri su arıtma, EPD belgeli malzeme, iç hava kalitesi (düşük VOC), EV şarj altyapısı ve toplu taşıma yakınlığı gibi 5 ana başlıkta anlık puanlama yapar. Bronz, Gümüş, Altın ve Platin YeS-TR sertifika derecesini, interaktif Chart.js radar dağılım grafiğini, puan yükseltme rehberini, tek tıkla WhatsApp raporu ve resmi A4/PDF çıktısını sunar.
+- Hedef Kitle: Ev sahipleri, apartman ve site yöneticileri, mimarlar, inşaat mühendisleri, müteahhitler, gayrimenkul değerleme uzmanları ve yeşil bina sertifikası almak isteyen tüm mülk sahipleri.
