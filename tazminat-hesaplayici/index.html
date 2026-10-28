@@ -121,22 +121,20 @@
 <body class="bg-[#0b0f19] text-slate-300 min-h-screen flex flex-col font-sans selection:bg-indigo-500 selection:text-white">
 
   <!-- Header -->
-  <header class="border-b border-slate-800/90 bg-[#0f172a]/90 backdrop-blur-md sticky top-0 z-40 h-16 flex items-center shrink-0">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex items-center justify-between">
+  <header class="border-b border-slate-800/80 bg-slate-900/80 backdrop-blur-md sticky top-0 z-40 h-16 flex items-center shrink-0">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex items-center justify-between gap-4">
       <div class="flex items-center gap-3">
-        <a href="../index.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold transition border border-slate-700/80 shadow-sm" title="Ana Portala Dön">
-          <i class="fa-solid fa-arrow-left text-xs"></i>
-          <span>Vitrin</span>
-        </a>
-        <div class="h-4 w-px bg-slate-800"></div>
-        <div class="flex items-center gap-2.5">
-          <div class="w-8 h-8 rounded-lg bg-indigo-500/15 border border-indigo-500/30 text-indigo-400 flex items-center justify-center text-sm">
-            <i class="fa-solid fa-file-invoice-dollar"></i>
+        <a href="../" class="flex items-center gap-2.5 group transition" title="Pratik Araçlar Vitrinine Dön">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center text-white font-black shadow-lg shadow-indigo-900/30 group-hover:scale-105 transition">
+            <i class="fa-solid fa-file-invoice-dollar text-sm"></i>
           </div>
-          <h1 class="text-xs sm:text-sm font-bold text-slate-100 flex items-center gap-2">
-            Kıdem & İhbar Tazminatı Hesaplayıcı
-          </h1>
-        </div>
+          <div class="flex flex-col">
+            <span class="font-bold text-white text-base tracking-tight leading-none group-hover:text-indigo-300 transition">
+              Pratik<span class="text-indigo-400">Araçlar</span>
+            </span>
+            <span class="text-[10px] text-slate-400 tracking-wider font-semibold uppercase">KIDEM & İHBAR TAZMİNATI</span>
+          </div>
+        </a>
       </div>
 
       <div class="flex items-center gap-2">
@@ -144,8 +142,12 @@
           <i class="fa-solid fa-calculator text-xs"></i>
           <span>Maaş Hesaplayıcı ➔</span>
         </a>
-        <button id="printBtn" class="no-print px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white text-xs font-semibold border border-slate-700/80 transition flex items-center gap-1.5 shadow-sm active:scale-95" title="Yazdır veya PDF Kaydet">
-          <i class="fa-solid fa-print text-indigo-400"></i>
+        <a href="../" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold border border-slate-700/80 transition shadow-sm">
+          <i class="fa-solid fa-arrow-left text-xs"></i>
+          <span class="hidden sm:inline">Tüm Araçlar</span>
+        </a>
+        <button id="printBtn" class="no-print px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold border border-indigo-500/80 transition flex items-center gap-1.5 shadow-sm active:scale-95" title="Yazdır veya PDF Kaydet">
+          <i class="fa-solid fa-print"></i>
           <span class="hidden sm:inline">PDF / Yazdır</span>
         </button>
       </div>

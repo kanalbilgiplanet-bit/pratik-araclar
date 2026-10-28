@@ -204,35 +204,27 @@
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans overflow-hidden">
 
   <!-- Top Navigation & Utility Bar -->
-  <header class="h-14 sm:h-16 border-b border-slate-800 bg-slate-900 px-3 sm:px-6 flex items-center justify-between z-30 shrink-0">
-    <div class="flex items-center gap-2 sm:gap-4 overflow-hidden">
-      <!-- Back to Portal Button -->
-      <a href="../index.html" class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white text-xs font-medium transition border border-slate-700 shadow-sm shrink-0" title="Ana Portala Geri Dön">
-        <i class="fa-solid fa-arrow-left text-xs"></i>
-        <span>Vitrin</span>
+  <header class="h-16 border-b border-slate-800/80 bg-slate-900/90 backdrop-blur-md px-3 sm:px-6 flex items-center justify-between z-30 shrink-0 gap-4">
+    <div class="flex items-center gap-3">
+      <a href="../" class="flex items-center gap-2.5 group transition" title="Pratik Araçlar Vitrinine Dön">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center text-white font-black shadow-lg shadow-cyan-900/30 group-hover:scale-105 transition shrink-0">
+          <i class="fa-solid fa-water text-sm"></i>
+        </div>
+        <div class="flex flex-col">
+          <span class="font-bold text-white text-base tracking-tight leading-none group-hover:text-cyan-300 transition">
+            Pratik<span class="text-cyan-400">Araçlar</span>
+          </span>
+          <span class="text-[10px] text-slate-400 tracking-wider font-semibold uppercase">SEL & TAŞKIN RİSKİ HARİTASI</span>
+        </div>
       </a>
-
-      <div class="h-4 w-px bg-slate-800 shrink-0"></div>
-
-      <!-- App Title -->
-      <div class="flex items-center gap-2 truncate">
-        <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-cyan-500/20 border border-cyan-500/40 text-cyan-400 flex items-center justify-center text-xs sm:text-sm shadow-sm shrink-0">
-          <i class="fa-solid fa-water"></i>
-        </div>
-        <div class="truncate">
-          <h1 class="text-xs sm:text-sm font-bold text-white flex items-center gap-1.5 truncate">
-            <span class="sm:hidden truncate">Sel Riski Haritası</span>
-            <span class="hidden sm:inline">İstanbul Sel & Taşkın Riski Haritası</span>
-            <span class="hidden md:inline-block px-2 py-0.5 text-[10px] font-semibold bg-red-500/20 text-red-300 border border-red-500/40 rounded-full">
-              Afet Analizi
-            </span>
-          </h1>
-        </div>
-      </div>
     </div>
 
     <!-- Right Header Action -->
     <div class="flex items-center gap-2 shrink-0">
+      <a href="../" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold border border-slate-700/80 transition shadow-sm">
+        <i class="fa-solid fa-arrow-left text-xs"></i>
+        <span class="hidden sm:inline">Tüm Araçlar</span>
+      </a>
       <button id="emergencyHelpBtn" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-semibold shadow-lg shadow-red-600/30 transition flex items-center gap-1.5">
         <i class="fa-solid fa-triangle-exclamation animate-bounce text-xs"></i>
         <span class="hidden sm:inline">Acil Rehber (112)</span>
