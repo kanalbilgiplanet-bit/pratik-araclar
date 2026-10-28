@@ -1109,13 +1109,42 @@
         </div>
       </div>
       
-      <!-- Legal Notice -->
-      <div class="pt-4 border-t border-slate-800/60 text-[11px] text-slate-400 leading-relaxed text-center sm:text-left flex flex-col sm:flex-row items-center gap-2">
-        <i class="fa-solid fa-scale-balanced text-amber-400 text-xs shrink-0"></i>
-        <span><strong>Yasal Bilgilendirme:</strong> Bu platformdaki tüm mikro araçlar, afet haritaları ve hesaplamalar yalnızca genel farkındalık ve bilgilendirme amaçlıdır; resmi veya hukuki bağlayıcılığı yoktur. Acil ve resmi durumlarda yetkili kamu kurumlarının (AFAD, Valilik, MGM) duyurularını dikkate alınız.</span>
+      <!-- Legal Notice & Policy Links -->
+      <div class="pt-4 border-t border-slate-800/60 text-[11px] text-slate-400 leading-relaxed text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-scale-balanced text-amber-400 text-xs shrink-0"></i>
+          <span><strong>Yasal Bilgilendirme:</strong> Bu platformdaki tüm mikro araçlar, afet haritaları ve hesaplamalar yalnızca genel farkındalık ve bilgilendirme amaçlıdır; resmi veya hukuki bağlayıcılığı yoktur. Acil ve resmi durumlarda yetkili kamu kurumlarının (AFAD, Valilik, MGM) duyurularını dikkate alınız.</span>
+        </div>
+        <div class="flex items-center gap-3 shrink-0 text-xs">
+          <a href="/gizlilik-politikasi/" class="text-indigo-400 hover:text-indigo-300 underline font-medium">Gizlilik & KVKK</a>
+          <span>•</span>
+          <a href="/kullanim-kosullari/" class="text-indigo-400 hover:text-indigo-300 underline font-medium">Kullanım Koşulları</a>
+        </div>
       </div>
     </div>
   </footer>
+
+  <!-- Floating Minimalist Cookie Consent Banner -->
+  <div id="cookieBanner" class="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:max-w-md bg-slate-900/95 border border-slate-700/80 rounded-2xl p-4 shadow-2xl backdrop-blur-md z-50 transition-all duration-500 transform translate-y-32 opacity-0 pointer-events-none">
+    <div class="flex items-start gap-3">
+      <div class="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center shrink-0 mt-0.5">
+        <i class="fa-solid fa-cookie-bite"></i>
+      </div>
+      <div class="flex-1 text-xs text-slate-300 space-y-2">
+        <p class="leading-relaxed">
+          Sitemizde deneyiminizi iyileştirmek, sayfa hızını artırmak ve temel analitikler için çerezler ile yerel depolama kullanılmaktadır.
+        </p>
+        <div class="flex items-center gap-2 pt-1">
+          <button id="btnAcceptCookies" class="px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition shadow-sm">
+            Kabul Et
+          </button>
+          <a href="/gizlilik-politikasi/" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs transition border border-slate-700">
+            Detaylar
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Search & Filter Logic (Akıllı Türkçe Token Tabanlı Arama) -->
   <script>
@@ -1200,6 +1229,21 @@
       filterTools();
       searchInput.focus();
     });
+
+    // Cookie Consent Banner Logic
+    const cookieBanner = document.getElementById('cookieBanner');
+    const btnAcceptCookies = document.getElementById('btnAcceptCookies');
+    if (cookieBanner && !localStorage.getItem('pratik_cookie_consent')) {
+      setTimeout(() => {
+        cookieBanner.classList.remove('translate-y-32', 'opacity-0', 'pointer-events-none');
+      }, 800);
+    }
+    if (btnAcceptCookies && cookieBanner) {
+      btnAcceptCookies.addEventListener('click', () => {
+        localStorage.setItem('pratik_cookie_consent', 'accepted');
+        cookieBanner.classList.add('translate-y-32', 'opacity-0', 'pointer-events-none');
+      });
+    }
   </script>
 </body>
 </html>
