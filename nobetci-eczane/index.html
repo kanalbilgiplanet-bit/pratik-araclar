@@ -262,6 +262,17 @@
       </a>
     </div>
 
+    <!-- Non-Blocking Feedback Notification Banner (Alertsiz / Kesintisiz Bildirim) -->
+    <div id="searchFeedback" class="hidden transition-all duration-300 px-4 py-2.5 rounded-xl text-xs font-medium flex items-center justify-between gap-2 border">
+      <div class="flex items-center gap-2">
+        <i id="searchFeedbackIcon" class="fa-solid fa-circle-info text-sky-400 shrink-0"></i>
+        <span id="searchFeedbackText" class="truncate"></span>
+      </div>
+      <button onclick="hideSearchFeedback()" type="button" class="text-slate-400 hover:text-white px-1 shrink-0">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
     <!-- Main Workspace (Map + Pharmacy List Drawer) -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
       
@@ -753,10 +764,43 @@
       updatePharmacyListAndMap();
     }
 
+    // Non-Blocking In-Page Notification Toast System (Asla alert() ile ekranı kitlemez!)
+    function showToast(msg, type = 'warning') {
+      const box = document.getElementById('searchFeedback');
+      const txt = document.getElementById('searchFeedbackText');
+      const ico = document.getElementById('searchFeedbackIcon');
+      if (!box || !txt) return;
+
+      txt.innerText = msg;
+      let baseClass = 'transition-all duration-300 px-4 py-2.5 rounded-xl text-xs font-medium flex items-center justify-between gap-2 border ';
+      if (type === 'error' || type === 'warning') {
+        baseClass += 'bg-amber-950/40 text-amber-300 border-amber-800/60 shadow-lg shadow-amber-950/20';
+        if (ico) ico.className = 'fa-solid fa-triangle-exclamation text-amber-400 shrink-0';
+      } else if (type === 'info') {
+        baseClass += 'bg-sky-950/40 text-sky-300 border-sky-800/60 shadow-lg shadow-sky-950/20';
+        if (ico) ico.className = 'fa-solid fa-circle-info text-sky-400 shrink-0';
+      } else {
+        baseClass += 'bg-emerald-950/40 text-emerald-300 border-emerald-800/60 shadow-lg shadow-emerald-950/20';
+        if (ico) ico.className = 'fa-solid fa-circle-check text-emerald-400 shrink-0';
+      }
+      box.className = baseClass;
+      box.classList.remove('hidden');
+
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => {
+        hideSearchFeedback();
+      }, 4500);
+    }
+
+    function hideSearchFeedback() {
+      const box = document.getElementById('searchFeedback');
+      if (box) box.classList.add('hidden');
+    }
+
     // Geolocation: Find Nearby
     function locateAndFindNearby() {
       if (!navigator.geolocation) {
-        alert('Tarayıcınız konum özelliğini desteklemiyor.');
+        showToast('Tarayıcınız konum özelliğini desteklemiyor.', 'warning');
         return;
       }
 
@@ -784,12 +828,13 @@
 
           map.flyTo([userCoords.lat, userCoords.lng], 14, { duration: 1.5 });
           activeCityName = 'Yakın Çevreniz';
+          showToast('📍 Konumunuz alındı, yakınınızdaki nöbetçi eczaneler aranıyor...', 'success');
 
           // Try fetching real live pharmacies within 5km from Overpass OpenStreetMap
           await fetchNearbyOverpass(userCoords.lat, userCoords.lng);
         },
         (err) => {
-          alert('Konumunuza ulaşılamadı. Lütfen tarayıcı konum iznini onaylayın.');
+          showToast('Konumunuza ulaşılamadı. Lütfen tarayıcıda konum iznini onaylayıp tekrar deneyin.', 'warning');
         },
         { timeout: 10000, enableHighAccuracy: true }
       );
@@ -910,15 +955,50 @@
           userCoords = { lat: first.lat, lng: first.lng };
           map.flyTo([first.lat, first.lng], 14, { duration: 1.2 });
           updatePharmacyListAndMap();
+          showToast(`📍 ${first.district || first.city} bölgesinde ${localMatches.length} nöbetçi eczane listelendi`, 'success');
           return;
         }
 
-        // 2. Nationwide Geocoding via Nominatim
-        const geoQuery = encodeURIComponent(val + ', Türkiye');
-        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${geoQuery}&countrycodes=tr&limit=1`, {
-          headers: { 'Accept-Language': 'tr' }
-        });
-        const geoData = await res.json();
+        // 2. Intelligent Candidate Generator for OpenStreetMap Geocoding
+        const trCities = ['adana','adiyaman','afyonkarahisar','agri','aksaray','amasya','ankara','antalya','ardahan','artvin','aydin','balikesir','bartin','batman','bayburt','bilecik','bingol','bitlis','bolu','burdur','bursa','canakkale','cankiri','corum','denizli','diyarbakir','duzce','edirne','elazig','erzincan','erzurum','eskisehir','gaziantep','giresun','gumushane','hakkari','hatay','igdir','isparta','istanbul','izmir','kahramanmaras','karabuk','karaman','kars','kastamonu','kayseri','kilis','kirikkale','kirklareli','kirsehir','kocaeli','konya','kutahya','malatya','manisa','mardin','mersin','mugla','mus','nevsehir','nigde','ordu','osmaniye','rize','sakarya','samsun','sanliurfa','siirt','sinop','sivas','sirnak','tekirdag','tokat','trabzon','tunceli','usak','van','yalova','yozgat','zonguldak'];
+
+        const tokens = qNorm.split(/\s+/).filter(Boolean);
+        const foundCity = tokens.find(t => trCities.includes(t));
+        const restTokens = tokens.filter(t => t !== foundCity);
+        const restStr = restTokens.join(' ');
+
+        const queryCandidates = [];
+        if (foundCity && restStr) {
+          // If query has e.g. "konya alemdar" -> try "alemdar caddesi konya", "alemdar mahallesi konya", "konya alemdar"
+          if (!restStr.includes('cadde') && !restStr.includes('sokak') && !restStr.includes('mahalle') && !restStr.includes('bulvar')) {
+            queryCandidates.push(`${restStr} caddesi ${foundCity}`);
+            queryCandidates.push(`${restStr} mahallesi ${foundCity}`);
+          }
+          queryCandidates.push(val);
+          queryCandidates.push(`${restStr} ${foundCity}`);
+        } else {
+          queryCandidates.push(val);
+          if (!qNorm.includes('cadde') && !qNorm.includes('sokak') && !qNorm.includes('mahalle') && !qNorm.includes('bulvar')) {
+            queryCandidates.push(`${val} caddesi`);
+            queryCandidates.push(`${val} mahallesi`);
+          }
+        }
+
+        async function fetchNominatimPlaces(q) {
+          try {
+            const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&countrycodes=tr&limit=3`;
+            const r = await fetch(url, { headers: { 'Accept-Language': 'tr' } });
+            return await r.json();
+          } catch(e) {
+            return [];
+          }
+        }
+
+        let geoData = [];
+        for (const candidate of queryCandidates) {
+          geoData = await fetchNominatimPlaces(candidate);
+          if (geoData && geoData.length > 0) break;
+        }
 
         if (geoData && geoData.length > 0) {
           const place = geoData[0];
@@ -980,6 +1060,7 @@
 
             currentPharmacies = fetched;
             updatePharmacyListAndMap();
+            showToast(`📍 ${placeName} çevresinde ${fetched.length} nöbetçi eczane listeleniyor`, 'success');
           } else {
             // Overpass fallback or calculate distance to closest known
             await fetchNearbyOverpass(newLat, newLng);
@@ -987,13 +1068,15 @@
               currentPharmacies = [...initialPharmacies];
               updatePharmacyListAndMap();
             }
+            showToast(`📍 ${placeName} konumu haritada açıldı`, 'info');
           }
         } else {
-          // Notify
-          alert(`"${val}" için Türkiye genelinde bir konum bulunamadı. Lütfen kelimeyi kontrol edin.`);
+          // Non-blocking Toast notification (Asla alert ile ekranı dondurmaz!)
+          showToast(`"${val}" için tam konum bulunamadı. Lütfen ilçe, cadde veya sokak adını kontrol edin.`, 'warning');
         }
       } catch (err) {
         console.error('Doğrudan arama hatası:', err);
+        showToast('Arama servisine bağlanırken bir sorun oluştu. Lütfen tekrar deneyin.', 'error');
       } finally {
         btn.innerHTML = originalBtnHtml;
         btn.disabled = false;
