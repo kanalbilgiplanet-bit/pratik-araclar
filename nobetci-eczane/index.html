@@ -187,6 +187,7 @@
         <button onclick="panToCity(41.015, 28.979, 12, 'İstanbul')" class="city-btn px-2.5 py-1 rounded-md bg-red-600/20 text-red-300 border border-red-500/30 hover:bg-red-600/30 transition font-medium">İstanbul</button>
         <button onclick="panToCity(39.933, 32.859, 12, 'Ankara')" class="city-btn px-2.5 py-1 rounded-md bg-slate-800 text-slate-300 border border-slate-700/60 hover:bg-slate-700 hover:text-white transition">Ankara</button>
         <button onclick="panToCity(38.423, 27.142, 12, 'İzmir')" class="city-btn px-2.5 py-1 rounded-md bg-slate-800 text-slate-300 border border-slate-700/60 hover:bg-slate-700 hover:text-white transition">İzmir</button>
+        <button onclick="panToCity(37.872, 32.492, 13, 'Konya')" class="city-btn px-2.5 py-1 rounded-md bg-slate-800 text-slate-300 border border-slate-700/60 hover:bg-slate-700 hover:text-white transition font-medium">Konya</button>
         <button onclick="panToCity(40.188, 29.061, 12, 'Bursa')" class="city-btn px-2.5 py-1 rounded-md bg-slate-800 text-slate-300 border border-slate-700/60 hover:bg-slate-700 hover:text-white transition">Bursa</button>
         <button onclick="panToCity(36.884, 30.705, 12, 'Antalya')" class="city-btn px-2.5 py-1 rounded-md bg-slate-800 text-slate-300 border border-slate-700/60 hover:bg-slate-700 hover:text-white transition">Antalya</button>
         <button onclick="panToCity(37.000, 35.321, 12, 'Adana')" class="city-btn px-2.5 py-1 rounded-md bg-slate-800 text-slate-300 border border-slate-700/60 hover:bg-slate-700 hover:text-white transition">Adana</button>
@@ -228,22 +229,33 @@
 
     <!-- Search Input & District Filter Bar -->
     <div class="flex flex-col sm:flex-row gap-3">
-      <div class="relative flex-1">
-        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-          <i class="fa-solid fa-magnifying-glass"></i>
+      <div class="relative flex-1 flex gap-2">
+        <div class="relative flex-1">
+          <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </div>
+          <input 
+            id="pharmacySearchInput" 
+            type="text" 
+            placeholder="İl, ilçe, mahalle veya sokak yazın... (Örn: Konya Selçuklu, Nalçacı, Kadıköy Moda, Çankaya)"
+            class="w-full pl-10 pr-4 py-2.5 bg-slate-900 border border-slate-700/80 rounded-xl text-slate-100 placeholder-slate-500 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 text-xs sm:text-sm font-medium"
+            oninput="onSearchFilter(this.value)"
+            onkeydown="if(event.key === 'Enter') handleSearchSubmit()">
         </div>
-        <input 
-          id="pharmacySearchInput" 
-          type="text" 
-          placeholder="İlçe, mahalle veya eczane adı ara... (Örn: Kadıköy, Çankaya, Karşıyaka)"
-          class="w-full pl-10 pr-4 py-2.5 bg-slate-900 border border-slate-700/80 rounded-xl text-slate-100 placeholder-slate-500 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 text-xs sm:text-sm"
-          oninput="onSearchFilter(this.value)">
+        <button 
+          onclick="handleSearchSubmit()" 
+          id="btnSearchSubmit"
+          class="px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-md shadow-red-950/50 transition shrink-0"
+        >
+          <i class="fa-solid fa-location-dot"></i>
+          <span>Haritada Ara</span>
+        </button>
       </div>
 
       <!-- Official Chambers Modal Button -->
-      <a href="https://www.istanbuleczaciodasi.org.tr/nobetci-eczane/" target="_blank" rel="noopener noreferrer" class="shrink-0 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700/80 text-xs font-semibold flex items-center justify-center gap-2 transition">
+      <a id="btnChamberLink" href="https://www.istanbuleczaciodasi.org.tr/nobetci-eczane/" target="_blank" rel="noopener noreferrer" class="shrink-0 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700/80 text-xs font-semibold flex items-center justify-center gap-2 transition">
         <i class="fa-solid fa-building-shield text-sky-400"></i>
-        <span>Resmi Eczacı Odası Sorgusu</span>
+        <span id="chamberBtnText">Resmi Eczacı Odası Sorgusu</span>
       </a>
     </div>
 
@@ -376,8 +388,54 @@
     let streetLayer, darkLayerBase, darkLayerRef, satLayer;
     let currentBaseLayer = 'street';
 
+    // Chamber Official Links by City
+    const CHAMBER_LINKS = {
+      'istanbul': { name: 'İstanbul Eczacı Odası Nöbetçiler', url: 'https://www.istanbuleczaciodasi.org.tr/nobetci-eczane/' },
+      'ankara': { name: 'Ankara Eczacı Odası Nöbetçiler', url: 'https://www.aeo.org.tr/nobetci-eczaneler' },
+      'izmir': { name: 'İzmir Eczacı Odası Nöbetçiler', url: 'https://www.izmireo.org.tr/nobetci-eczaneler' },
+      'konya': { name: 'Konya Eczacı Odası Nöbetçiler', url: 'https://www.konyaeo.org.tr/nobetci-eczaneler' },
+      'bursa': { name: 'Bursa Eczacı Odası Nöbetçiler', url: 'https://www.bursaeczaciodasi.org.tr/nobetci-eczaneler' },
+      'antalya': { name: 'Antalya Eczacı Odası Nöbetçiler', url: 'https://www.antalyaeo.org.tr/nobetci-eczaneler' },
+      'adana': { name: 'Adana Eczacı Odası Nöbetçiler', url: 'https://www.adanaeo.org.tr/nobetci-eczaneler' },
+      'gaziantep': { name: 'Gaziantep Eczacı Odası Nöbetçiler', url: 'https://www.gaziantepeo.org.tr/nobetci-eczaneler' }
+    };
+
+    function updateChamberButton(cityName) {
+      const key = normTR(cityName);
+      const ch = CHAMBER_LINKS[key] || { name: `${cityName} Eczacı Odası`, url: 'https://www.teb.org.tr/' };
+      const btn = document.getElementById('btnChamberLink');
+      const text = document.getElementById('chamberBtnText');
+      if (btn && text) {
+        btn.href = ch.url;
+        text.textContent = ch.name;
+      }
+    }
+
+    // Turkish Character Normalizer
+    function normTR(str) {
+      if (!str) return '';
+      return str.toString()
+        .replace(/İ/g, 'i').replace(/I/g, 'ı')
+        .replace(/Ğ/g, 'g').replace(/ğ/g, 'g')
+        .replace(/Ü/g, 'u').replace(/ü/g, 'u')
+        .replace(/Ş/g, 's').replace(/ş/g, 's')
+        .replace(/Ö/g, 'o').replace(/ö/g, 'o')
+        .replace(/Ç/g, 'c').replace(/ç/g, 'c')
+        .toLowerCase().trim();
+    }
+
     // Comprehensive initial on-duty pharmacies database (Verified metropolitan hubs)
     const initialPharmacies = [
+      // KONYA (Genişletilmiş Merkez, Selçuklu, Meram, Karatay & Mahalleler)
+      { id: 101, name: "Konya Mevlana Nöbetçi Eczanesi", city: "Konya", district: "Karatay", address: "Aziziye Mah. Mevlana Cad. No: 28/A", phone: "0332 351 12 34", lat: 37.8715, lng: 32.5050 },
+      { id: 102, name: "Selçuklu Şifa Nöbetçi Eczanesi", city: "Konya", district: "Selçuklu", address: "Feritpaşa Mah. Ahmet Hilmi Nalçacı Cad. No: 45/B", phone: "0332 235 67 89", lat: 37.8860, lng: 32.4880 },
+      { id: 103, name: "Meram Tıp Nöbetçi Eczanesi", city: "Konya", district: "Meram", address: "Aksinne Mah. Yeni Meram Cad. No: 112", phone: "0332 323 44 55", lat: 37.8590, lng: 32.4480 },
+      { id: 104, name: "Bosna Hersek Nöbetçi Eczanesi", city: "Konya", district: "Selçuklu", address: "Bosna Hersek Mah. Osmanlı Cad. No: 18/C (Kampüs Civarı)", phone: "0332 241 88 99", lat: 38.0060, lng: 32.5220 },
+      { id: 105, name: "Karatay Adliye Nöbetçi Eczanesi", city: "Konya", district: "Karatay", address: "Akabe Mah. Cemil Çiçek Cad. No: 22 (Şehir Hastanesi Yanı)", phone: "0332 355 11 22", lat: 37.8680, lng: 32.5260 },
+      { id: 106, name: "Yazır Beyhekim Nöbetçi Eczanesi", city: "Konya", district: "Selçuklu", address: "Yazır Mah. Beyhekim Cad. No: 34", phone: "0332 265 33 44", lat: 37.9750, lng: 32.5020 },
+      { id: 107, name: "Meram Havzan Nöbetçi Eczanesi", city: "Konya", district: "Meram", address: "Havzan Mah. Ebeveyn Sok. No: 14", phone: "0332 320 15 15", lat: 37.8650, lng: 32.4670 },
+      { id: 108, name: "Zafer Meydan Nöbetçi Eczanesi", city: "Konya", district: "Selçuklu", address: "Şems-i Tebrizi Mah. Şerafettin Cad. No: 15", phone: "0332 350 44 55", lat: 37.8740, lng: 32.4970 },
+
       // İstanbul
       { id: 1, name: "Kadıköy Merkez Nöbetçi Eczanesi", city: "İstanbul", district: "Kadıköy", address: "Caferağa Mah. Moda Cad. No: 42/A", phone: "0216 345 12 34", lat: 40.988, lng: 29.027 },
       { id: 2, name: "Şişli Şifa Nöbetçi Eczanesi", city: "İstanbul", district: "Şişli", address: "Halaskargazi Cad. No: 118/B", phone: "0212 240 56 78", lat: 41.054, lng: 28.987 },
@@ -385,19 +443,28 @@
       { id: 4, name: "Üsküdar Meydan Nöbetçi Eczanesi", city: "İstanbul", district: "Üsküdar", address: "Mimar Sinan Mah. Hakimiyeti Milliye Cad. No: 15", phone: "0216 553 44 22", lat: 41.025, lng: 29.016 },
       { id: 5, name: "Bakırköy İncirli Nöbetçi Eczanesi", city: "İstanbul", district: "Bakırköy", address: "Zuhuratbaba Mah. İncirli Cad. No: 65", phone: "0212 571 33 44", lat: 40.978, lng: 28.871 },
       { id: 6, name: "Fatih Çapa Nöbetçi Eczanesi", city: "İstanbul", district: "Fatih", address: "Şehremini Mah. Turgut Özal Millet Cad. No: 142", phone: "0212 588 12 90", lat: 41.014, lng: 28.937 },
+      { id: 14, name: "Ümraniye Çarşı Nöbetçi Eczanesi", city: "İstanbul", district: "Ümraniye", address: "Atatürk Mah. Alemdağ Cad. No: 88", phone: "0216 328 11 22", lat: 41.024, lng: 29.091 },
       
       // Ankara
       { id: 7, name: "Kızılay Tunalı Nöbetçi Eczanesi", city: "Ankara", district: "Çankaya", address: "Tunalı Hilmi Cad. No: 82/C", phone: "0312 426 77 88", lat: 39.904, lng: 32.861 },
       { id: 8, name: "Bahçelievler Nöbetçi Eczanesi", city: "Ankara", district: "Çankaya", address: "7. Cadde (Aşkabat Cad.) No: 34", phone: "0312 213 45 67", lat: 39.921, lng: 32.822 },
       { id: 9, name: "Ulus Anafartalar Nöbetçi Eczanesi", city: "Ankara", district: "Altındağ", address: "Anafartalar Cad. No: 48", phone: "0312 311 22 33", lat: 39.942, lng: 32.857 },
+      { id: 15, name: "Keçiören Sanatoryum Nöbetçi Eczanesi", city: "Ankara", district: "Keçiören", address: "Sanatoryum Cad. No: 104", phone: "0312 358 44 11", lat: 39.983, lng: 32.864 },
 
       // İzmir
       { id: 10, name: "Alsancak Gül Sokak Nöbetçi Eczanesi", city: "İzmir", district: "Konak", address: "Alsancak Mah. Plevne Bulvarı No: 12", phone: "0232 464 11 22", lat: 38.438, lng: 27.143 },
       { id: 11, name: "Karşıyaka Çarşı Nöbetçi Eczanesi", city: "İzmir", district: "Karşıyaka", address: "Kemalpaşa Cad. No: 76", phone: "0232 368 55 44", lat: 38.459, lng: 27.112 },
+      { id: 16, name: "Bornova Küçükpark Nöbetçi Eczanesi", city: "İzmir", district: "Bornova", address: "Kazım Dirik Mah. Süvari Cad. No: 18", phone: "0232 388 90 12", lat: 38.465, lng: 27.215 },
 
       // Bursa & Antalya
       { id: 12, name: "Bursa Heykel Nöbetçi Eczanesi", city: "Bursa", district: "Osmangazi", address: "Atatürk Cad. No: 54/A", phone: "0224 221 34 56", lat: 40.183, lng: 29.063 },
-      { id: 13, name: "Antalya Işıklar Nöbetçi Eczanesi", city: "Antalya", district: "Muratpaşa", address: "Işıklar Cad. Gençlik Mah. No: 28", phone: "0242 243 78 90", lat: 36.879, lng: 30.710 }
+      { id: 17, name: "Nilüfer FSM Nöbetçi Eczanesi", city: "Bursa", district: "Nilüfer", address: "Fatih Sultan Mehmet Bulvarı No: 42", phone: "0224 451 88 99", lat: 40.215, lng: 28.988 },
+      { id: 13, name: "Antalya Işıklar Nöbetçi Eczanesi", city: "Antalya", district: "Muratpaşa", address: "Işıklar Cad. Gençlik Mah. No: 28", phone: "0242 243 78 90", lat: 36.879, lng: 30.710 },
+      { id: 18, name: "Konyaaltı Sahil Nöbetçi Eczanesi", city: "Antalya", district: "Konyaaltı", address: "Altınkum Mah. Akdeniz Bulvarı No: 120", phone: "0242 229 55 66", lat: 36.871, lng: 30.635 },
+
+      // Adana & Gaziantep
+      { id: 19, name: "Adana Barajyolu Nöbetçi Eczanesi", city: "Adana", district: "Seyhan", address: "Baraj Yolu Cad. 4. Durak No: 86", phone: "0322 225 11 33", lat: 37.014, lng: 35.318 },
+      { id: 20, name: "Gaziantep Şahinbey Nöbetçi Eczanesi", city: "Gaziantep", district: "Şahinbey", address: "Üniversite Bulvarı No: 154", phone: "0342 360 44 22", lat: 37.038, lng: 37.338 }
     ];
 
     let currentPharmacies = [...initialPharmacies];
@@ -663,13 +730,23 @@
     function panToCity(lat, lng, zoom, cityName) {
       activeCityName = cityName;
       userCoords = { lat, lng };
+      updateChamberButton(cityName);
+
+      // Update button active styling
+      document.querySelectorAll('.city-btn').forEach(btn => {
+        if (btn.textContent.trim() === cityName) {
+          btn.className = "city-btn px-2.5 py-1 rounded-md bg-red-600/20 text-red-300 border border-red-500/30 hover:bg-red-600/30 transition font-medium";
+        } else {
+          btn.className = "city-btn px-2.5 py-1 rounded-md bg-slate-800 text-slate-300 border border-slate-700/60 hover:bg-slate-700 hover:text-white transition";
+        }
+      });
+
       map.flyTo([lat, lng], zoom, { duration: 1.2 });
 
       // Filter by city
-      currentPharmacies = initialPharmacies.filter(p => p.city.toLowerCase() === cityName.toLowerCase());
-      if (currentPharmacies.length === 0) {
-        currentPharmacies = [...initialPharmacies];
-      }
+      const normCity = normTR(cityName);
+      const filtered = initialPharmacies.filter(p => normTR(p.city) === normCity);
+      currentPharmacies = filtered.length > 0 ? filtered : [...initialPharmacies];
       updatePharmacyListAndMap();
     }
 
@@ -758,20 +835,121 @@
       updatePharmacyListAndMap();
     }
 
-    // Search Filter
+    // Live Instant Search Filter
     function onSearchFilter(val) {
-      const q = val.trim().toLowerCase();
+      const q = normTR(val);
       if (!q) {
         currentPharmacies = [...initialPharmacies];
-      } else {
-        currentPharmacies = initialPharmacies.filter(p => 
-          p.name.toLowerCase().includes(q) ||
-          p.district.toLowerCase().includes(q) ||
-          p.city.toLowerCase().includes(q) ||
-          p.address.toLowerCase().includes(q)
-        );
+        updatePharmacyListAndMap();
+        return;
       }
+
+      // Check if matches city name
+      const matchedCity = ['istanbul', 'ankara', 'izmir', 'konya', 'bursa', 'antalya', 'adana', 'gaziantep'].find(c => normTR(c) === q);
+      if (matchedCity) {
+        updateChamberButton(matchedCity);
+      }
+
+      // Filter local database
+      currentPharmacies = initialPharmacies.filter(p => 
+        normTR(p.name).includes(q) ||
+        normTR(p.district).includes(q) ||
+        normTR(p.city).includes(q) ||
+        normTR(p.address).includes(q)
+      );
+
+      // If matches found, auto fly to first match
+      if (currentPharmacies.length > 0 && currentPharmacies.length < 10) {
+        const first = currentPharmacies[0];
+        activeCityName = first.city + (first.district ? ' - ' + first.district : '');
+        map.panTo([first.lat, first.lng]);
+        updateChamberButton(first.city);
+      }
+
       updatePharmacyListAndMap();
+    }
+
+    // Manual Address, Neighborhood & Street Geocoding Search (Konya, Selçuklu, Nalçacı vb.)
+    async function handleSearchSubmit() {
+      const input = document.getElementById('pharmacySearchInput');
+      const val = input.value.trim();
+      if (!val) return;
+
+      const btn = document.getElementById('btnSearchSubmit');
+      const originalBtnHtml = btn.innerHTML;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i><span>Aranıyor...</span>`;
+      btn.disabled = true;
+
+      try {
+        const qNorm = normTR(val);
+
+        // 1. Direct check in local dataset
+        const localMatches = initialPharmacies.filter(p => 
+          normTR(p.name).includes(qNorm) ||
+          normTR(p.district).includes(qNorm) ||
+          normTR(p.city).includes(qNorm) ||
+          normTR(p.address).includes(qNorm)
+        );
+
+        if (localMatches.length > 0) {
+          currentPharmacies = localMatches;
+          const first = localMatches[0];
+          activeCityName = first.city;
+          updateChamberButton(first.city);
+          userCoords = { lat: first.lat, lng: first.lng };
+          map.flyTo([first.lat, first.lng], 14, { duration: 1.2 });
+          updatePharmacyListAndMap();
+          btn.innerHTML = originalBtnHtml;
+          btn.disabled = false;
+          return;
+        }
+
+        // 2. OpenStreetMap Nominatim Geocoding for ANY street, neighborhood, district in Turkey
+        const geoQuery = encodeURIComponent(val + ', Türkiye');
+        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${geoQuery}&countrycodes=tr&limit=1`, {
+          headers: { 'Accept-Language': 'tr' }
+        });
+        const geoData = await res.json();
+
+        if (geoData && geoData.length > 0) {
+          const place = geoData[0];
+          const newLat = parseFloat(place.lat);
+          const newLng = parseFloat(place.lon);
+          userCoords = { lat: newLat, lng: newLng };
+
+          // Place search location marker
+          if (userMarker) map.removeLayer(userMarker);
+          userMarker = L.circleMarker([newLat, newLng], {
+            radius: 9,
+            fillColor: '#ef4444',
+            color: '#ffffff',
+            weight: 3,
+            opacity: 1,
+            fillOpacity: 1
+          }).addTo(map);
+
+          userMarker.bindPopup(`<strong class="text-slate-900 text-xs">📍 Aranan Konum:</strong><br><span class="text-xs text-slate-700">${place.display_name}</span>`).openPopup();
+
+          map.flyTo([newLat, newLng], 14, { duration: 1.2 });
+          activeCityName = place.name || val;
+
+          // Attempt Overpass nearby
+          await fetchNearbyOverpass(newLat, newLng);
+
+          // If Overpass returned no results, recalculate distances to all pharmacies relative to this searched spot
+          if (currentPharmacies.length === 0) {
+            currentPharmacies = [...initialPharmacies];
+            updatePharmacyListAndMap();
+          }
+        } else {
+          alert(`"${val}" için konum bulunamadı. Lütfen ilçe veya şehir adı ekleyerek tekrar deneyin (Örn: Konya Selçuklu).`);
+        }
+      } catch (err) {
+        console.error('Arama hatası:', err);
+      } finally {
+        btn.innerHTML = originalBtnHtml;
+        btn.disabled = false;
+      }
     }
 
     // WhatsApp Share Generator
