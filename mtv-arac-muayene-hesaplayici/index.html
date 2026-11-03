@@ -78,7 +78,15 @@
             "name": "2026 yılı TÜVTÜRK otomobil muayene ve egzoz emisyon ücreti ne kadardır?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "2026 yılında otomobil, minibüs ve kamyonet grubu için TÜVTÜRK araç muayene ücreti KDV dahil 3.288,00 TL, egzoz gazı emisyon ölçüm ücreti ise 460,00 TL'dir. İkisi birlikte toplam 3.748,00 TL tutmaktadır."
+              "text": "2026 yılında otomobil, minibüs ve kamyonet grubu için TÜVTÜRK araç muayene ücreti KDV dahil 3.288,00 TL, egzoz gazı emisyon ölçüm ücreti ise 460,00 TL'dir. İkisi birlikte toplam 3.748,00 TL tutmaktadır. 2027 yılı için kesinleşen %27,83 resmi YDO artışıyla muayene ücreti 4.203,00 TL, egzoz ile birlikte toplam 4.791,00 TL olmaktadır."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "2027 yılı TÜVTÜRK muayene ücreti ne kadar olacak?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "TÜİK tarafından açıklanan %27,83 Resmi Yeniden Değerleme Oranı (YDO) sonrasında, 1 Ocak 2027 itibarıyla otomobil, minibüs ve kamyonetler için TÜVTÜRK muayene ücreti 4.203 TL, egzoz emisyon ölçüm bedeli 588 TL ve toplam tarife 4.791 TL olacaktır."
             }
           },
           {
@@ -480,14 +488,14 @@
       const penaltyRate = delayMonths * 0.05; // %5 per month
       const penaltyAmount = selectedBaseFee * penaltyRate;
       const total = selectedBaseFee + exhaust + penaltyAmount;
-      const est2027 = (selectedBaseFee + exhaust) * 1.415 + penaltyAmount;
+      const est2027 = (selectedBaseFee + exhaust) * 1.2783 + penaltyAmount;
 
       inspBaseFee.textContent = fmt(selectedBaseFee);
       inspExhaustFee.textContent = '+' + fmt(exhaust);
       inspPenaltyLabel.textContent = `Gecikme Cezası (${delayMonths} Ay - %${delayMonths * 5}):`;
       inspPenaltyFee.textContent = penaltyAmount > 0 ? '+' + fmt(penaltyAmount) : '0,00 ₺';
       inspTotalDisplay.textContent = fmt(total);
-      insp2027Projection.textContent = `2027 Ocak Tahmini (~%41,5 YDO): ${fmt(est2027)}`;
+      insp2027Projection.textContent = `2027 Resmi YDO (%27,83 Artışla): ${fmt(est2027)}`;
 
       shareInspectionWa.onclick = () => {
         const msg = encodeURIComponent(`2026 TÜVTÜRK Araç Muayene Hesabım:\n• Muayene Ücreti: ${fmt(selectedBaseFee)}\n• Egzoz Emisyon: ${fmt(exhaust)}\n• Gecikme Cezası (${delayMonths} Ay): ${fmt(penaltyAmount)}\n• Toplam Ödenecek: ${fmt(total)}\n\nSen de hesapla: https://pratik-araclar.pratikweb.workers.dev/mtv-arac-muayene-hesaplayici/`);
@@ -526,12 +534,12 @@
       const arr = MTV_MATRIX[key] || MTV_MATRIX.oto_1600;
       const annual2026 = arr[selectedAgeIdx] || arr[0];
       const half = annual2026 / 2;
-      const est2027 = Math.round(annual2026 * 1.415);
+      const est2027 = Math.round(annual2026 * 1.2783);
 
       mtvTotalDisplay.textContent = fmt(annual2026);
       mtvInstallment1.textContent = fmt(half);
       mtvInstallment2.textContent = fmt(half);
-      mtv2027Display.textContent = `2027 Tahmini Yıllık MTV (~%41,5 YDO): ${fmt(est2027)}`;
+      mtv2027Display.textContent = `2027 Resmi YDO Yıllık MTV (%27,83): ${fmt(est2027)}`;
     }
 
     calcInspection();
