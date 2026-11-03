@@ -988,6 +988,14 @@
 
     // Init on Load
     document.addEventListener('DOMContentLoaded', () => {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const cat = params.get('kategori') || params.get('cat');
+        if (cat && ['all', 'imei', 'pasaport', 'ehliyet', 'ceza', 'mtv'].includes(cat)) {
+          switchCategory(cat);
+          return;
+        }
+      } catch (_) {}
       render();
     });
   </script>
