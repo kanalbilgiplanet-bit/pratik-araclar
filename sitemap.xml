@@ -127,6 +127,18 @@
     <priority>0.95</priority>
   </url>
   <url>
+    <loc>https://pratik-araclar.pratikweb.workers.dev/hali-saha-kadro/</loc>
+    <lastmod>2026-11-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://pratik-araclar.pratikweb.workers.dev/hali-saha-kadro-kurucu/</loc>
+    <lastmod>2026-11-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
     <loc>https://pratik-araclar.pratikweb.workers.dev/gizlilik-politikasi/</loc>
     <lastmod>2026-10-28</lastmod>
     <changefreq>monthly</changefreq>

@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="tr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Halı Saha Kadro Kurucu & Taktik Tahtası – PratikAraçlar</title>
+  <meta name="description" content="Ücretsiz halı saha kadro kurucu ve taktik dağıtıcı. 5v5, 6v6, 7v7, 8v8 takımları kurun, otomatik dengeli kura çekin, yeşil saha görseli indirin ve tek tıkla WhatsApp kadrosu paylaşın!">
+  <meta name="keywords" content="halı saha kadro kurucu, halı saha taktik tahtası, halı saha takım dağıtıcı, halı saha kura çekme, halı saha kadrosu whatsapp, futbol kadro yapma">
+  <link rel="canonical" href="https://pratik-araclar.pratikweb.workers.dev/hali-saha-kadro/">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://pratik-araclar.pratikweb.workers.dev/hali-saha-kadro/">
+  <meta property="og:title" content="Halı Saha Kadro Kurucu & Taktik Dağıtıcı">
+  <meta property="og:description" content="Halı saha kadronu 30 saniyede kur, takımları otomatik dengele, taktik görselini al ve WhatsApp grubuna tek tıkla gönder!">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=1200&q=80">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://pratik-araclar.pratikweb.workers.dev/hali-saha-kadro/">
+  <meta property="twitter:title" content="Halı Saha Kadro Kurucu – PratikAraçlar">
+  <meta property="twitter:description" content="Halı saha kadronu kur, dengeli takım dağıt ve WhatsApp grubuna hazır at!">
+  <meta property="twitter:image" content="https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=1200&q=80">
+
+  <!-- Tailwind CSS & FontAwesome -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            pitch: {
+              light: '#1b4d24',
+              DEFAULT: '#14381b',
+              dark: '#0d2411',
+              stripe: '#18421f',
+              line: 'rgba(255, 255, 255, 0.45)'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Football pitch grass stripes */
+    .pitch-stripes {
+      background: repeating-linear-gradient(
+        0deg,
+        #14381b,
+        #14381b 40px,
+        #17421f 40px,
+        #17421f 80px
+      );
+    }
+    .player-token {
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+      cursor: grab;
+      user-select: none;
+    }
+    .player-token:active {
+      cursor: grabbing;
+      transform: scale(1.08);
+    }
+  </style>
+
+  <!-- Schema.org WebApplication -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "name": "Halı Saha Kadro Kurucu & Taktik Tahtası",
+        "url": "https://pratik-araclar.pratikweb.workers.dev/hali-saha-kadro/",
+        "applicationCategory": "SportsApplication",
+        "operatingSystem": "All",
+        "description": "5v5, 6v6, 7v7 ve 8v8 halı saha kadrolarını oluşturan, dengeli takım dağıtan ve WhatsApp için hazır kadro metni ile taktik görseli üreten ücretsiz araç.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "TRY"
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Halı saha için en ideal kadro boyutu nedir?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Türkiye'deki standart halı sahaların büyük çoğunluğu 7'ye 7 (toplam 14 oyuncu) maçlar için uygundur. Küçük ebatlı salon sahalarında 6v6, büyük nizamiye yakın sahalarda ise 8v8 tercih edilir."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Otomatik dengeli takım dağıtıcı nasıl çalışır?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "14 oyuncunun adını girdiğinizde veya oyuncuların yıldız/seviye puanlarını belirlediğinizde, algoritma her iki takımın toplam gücünü birbirine en yakın olacak şekilde iki dengeli takıma (A Takımı ve B Takımı) otomatik olarak böler."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-emerald-500 selection:text-white">
+
+  <!-- Top Navigation Header -->
+  <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="/" class="flex items-center gap-2 group">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-600 to-green-400 flex items-center justify-center text-white shadow-lg shadow-emerald-900/40 group-hover:scale-105 transition">
+            <i class="fa-solid fa-futbol text-lg"></i>
+          </div>
+          <div>
+            <span class="text-base font-extrabold tracking-tight text-white flex items-center gap-1.5">
+              PratikAraçlar
+              <span class="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Halı Saha</span>
+            </span>
+          </div>
+        </a>
+      </div>
+
+      <div class="flex items-center gap-2 sm:gap-3">
+        <a href="/" class="text-xs sm:text-sm font-semibold text-slate-400 hover:text-white px-3 py-2 rounded-lg hover:bg-slate-800 transition flex items-center gap-1.5">
+          <i class="fa-solid fa-arrow-left"></i>
+          <span class="hidden sm:inline">Portala Dön</span>
+        </a>
+        <button onclick="shareWhatsApp()" class="text-xs sm:text-sm font-bold bg-emerald-600 hover:bg-emerald-500 text-white px-3.5 py-2 rounded-xl shadow-lg shadow-emerald-900/50 flex items-center gap-2 transition active:scale-95">
+          <i class="fa-brands fa-whatsapp text-base"></i>
+          <span>WhatsApp'a At</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Notification Toast -->
+  <div id="toastNotification" class="fixed top-20 left-1/2 -translate-x-1/2 z-50 hidden transition-all duration-300">
+    <div class="bg-emerald-500 text-slate-950 px-4 py-2 rounded-full font-bold text-xs sm:text-sm shadow-xl flex items-center gap-2 border border-emerald-300">
+      <i class="fa-solid fa-check"></i>
+      <span id="toastMessage">Kadronuz WhatsApp için kopyalandı!</span>
+    </div>
+  </div>
+
+  <!-- Main Content Layout -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex flex-col gap-6">
+
+    <!-- Hero Title & Match Preset Info -->
+    <div class="bg-gradient-to-r from-slate-900 via-emerald-950/20 to-slate-900 border border-slate-800 p-5 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div>
+        <div class="flex items-center gap-2 mb-1.5">
+          <span class="px-2 py-0.5 rounded text-[10px] font-bold tracking-wide uppercase bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">VİRAL TAKTİK TAHTASI</span>
+          <span class="text-xs text-slate-400 flex items-center gap-1">
+            <i class="fa-solid fa-users"></i> Otomatik Dengeli Takım & WhatsApp Kadro Dağıtıcı
+          </span>
+        </div>
+        <h1 class="text-xl sm:text-2xl font-black text-white tracking-tight">
+          Halı Saha Kadro & Taktik Kurucu
+        </h1>
+        <p class="text-xs sm:text-sm text-slate-400 mt-1 max-w-2xl">
+          Oyuncuları yazın, şansına veya güçlerine göre 2 dengeli takıma ayırın, yeşil saha görselini indirin veya tek tıkla WhatsApp grubuna gönderin!
+        </p>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="flex flex-wrap items-center gap-2">
+        <button onclick="autoBalanceTeams()" class="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs flex items-center gap-2 shadow-lg shadow-amber-950/40 transition">
+          <i class="fa-solid fa-shuffle"></i>
+          <span>Dengeli Kura Çek</span>
+        </button>
+        <button onclick="downloadPitchImage()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold text-xs flex items-center gap-2 transition">
+          <i class="fa-solid fa-camera"></i>
+          <span>Görsel İndir (PNG)</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Match Matchday Details Settings (Time, Pitch, Fee, IBAN) -->
+    <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 sm:p-5">
+      <div class="flex items-center justify-between cursor-pointer" onclick="toggleDetailsCollapse()">
+        <span class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
+          <i class="fa-solid fa-calendar-days text-emerald-400"></i> Maç Detayları (WhatsApp Mesajında Görünür)
+        </span>
+        <i id="detailsCollapseIcon" class="fa-solid fa-chevron-up text-slate-400 text-xs transition"></i>
+      </div>
+
+      <div id="detailsCollapseContent" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 mt-4">
+        <div>
+          <label class="block text-[11px] font-semibold text-slate-400 mb-1">Tarih & Saat</label>
+          <input type="text" id="matchDateTime" value="Bu Çarşamba 22:00 - 23:00" class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+        </div>
+        <div>
+          <label class="block text-[11px] font-semibold text-slate-400 mb-1">Halı Saha / Tesis Adı</label>
+          <input type="text" id="matchPitchName" value="Şampiyon Halı Saha" class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+        </div>
+        <div>
+          <label class="block text-[11px] font-semibold text-slate-400 mb-1">Kişi Başı Ücret (TL)</label>
+          <input type="text" id="matchFee" value="200 TL" class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+        </div>
+        <div>
+          <label class="block text-[11px] font-semibold text-slate-400 mb-1">Kaptan IBAN (Opsiyonel)</label>
+          <input type="text" id="matchIban" placeholder="TR..." value="" class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+        </div>
+      </div>
+    </div>
+
+    <!-- Match Format & Formation Selector Bar -->
+    <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-900 border border-slate-800 p-3 rounded-2xl">
+      <!-- Player count format -->
+      <div class="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
+        <span class="text-xs font-bold text-slate-400 mr-1">Format:</span>
+        <button onclick="setFormat(5)" id="btnFormat5" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:text-white transition">5v5 (10 Kişi)</button>
+        <button onclick="setFormat(6)" id="btnFormat6" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:text-white transition">6v6 (12 Kişi)</button>
+        <button onclick="setFormat(7)" id="btnFormat7" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-600 text-white shadow-md shadow-emerald-900/40 transition">7v7 (14 Kişi)</button>
+        <button onclick="setFormat(8)" id="btnFormat8" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:text-white transition">8v8 (16 Kişi)</button>
+      </div>
+
+      <!-- Quick Paste & Distribution Modal Trigger -->
+      <div class="flex items-center gap-2">
+        <button onclick="openQuickListModal()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 flex items-center gap-1.5 transition">
+          <i class="fa-solid fa-list-check text-emerald-400"></i>
+          <span>Hızlı İsim Listesi Yapıştır</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Workspace (Football Pitch + Team Management Drawers) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      
+      <!-- Team A (White/Red) List (3 Cols) -->
+      <div class="lg:col-span-3 bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col gap-3 shadow-xl order-2 lg:order-1">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+          <div class="flex items-center gap-2">
+            <span class="w-3.5 h-3.5 rounded-full bg-white border border-slate-400 shadow"></span>
+            <input type="text" id="teamAName" value="BEYAZ TAKIM" class="font-extrabold text-sm text-white bg-transparent border-b border-transparent hover:border-slate-700 focus:border-emerald-500 focus:outline-none w-32">
+          </div>
+          <span id="teamACountBadge" class="text-xs font-bold px-2 py-0.5 rounded-full bg-white/10 text-white">7 Oyuncu</span>
+        </div>
+
+        <div id="teamAList" class="flex flex-col gap-2">
+          <!-- Rendered via JS -->
+        </div>
+
+        <div class="pt-2 border-t border-slate-800 text-center">
+          <span class="text-[11px] text-slate-500">Oyuncuları sahada sürükleyebilir veya mevkilerini değiştirebilirsiniz.</span>
+        </div>
+      </div>
+
+      <!-- Center: Football Pitch Canvas & Interactive Field (6 Cols) -->
+      <div class="lg:col-span-6 flex flex-col gap-3 order-1 lg:order-2">
+        
+        <!-- Pitch Container -->
+        <div id="pitchCard" class="relative w-full aspect-[3/4] sm:aspect-[4/5] rounded-3xl overflow-hidden border-2 border-emerald-800/80 shadow-2xl pitch-stripes flex flex-col justify-between p-3 select-none">
+          
+          <!-- Outer Boundary White Line -->
+          <div class="absolute inset-3 border-2 border-white/50 pointer-events-none rounded-xl"></div>
+
+          <!-- Halfway Line & Center Circle -->
+          <div class="absolute left-3 right-3 top-1/2 -translate-y-1/2 h-[2px] bg-white/50 pointer-events-none"></div>
+          <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 sm:w-32 sm:h-32 rounded-full border-2 border-white/50 pointer-events-none flex items-center justify-center">
+            <div class="w-2.5 h-2.5 rounded-full bg-white/60"></div>
+          </div>
+
+          <!-- Top Goal Area & Penalty Box (Team A Goal) -->
+          <div class="absolute top-3 left-1/2 -translate-x-1/2 w-48 sm:w-60 h-20 sm:h-24 border-2 border-t-0 border-white/50 pointer-events-none"></div>
+          <div class="absolute top-3 left-1/2 -translate-x-1/2 w-24 sm:w-28 h-8 sm:h-10 border-2 border-t-0 border-white/50 pointer-events-none"></div>
+          <div class="absolute top-[80px] sm:top-[96px] left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-white/60 pointer-events-none"></div>
+
+          <!-- Bottom Goal Area & Penalty Box (Team B Goal) -->
+          <div class="absolute bottom-3 left-1/2 -translate-x-1/2 w-48 sm:w-60 h-20 sm:h-24 border-2 border-b-0 border-white/50 pointer-events-none"></div>
+          <div class="absolute bottom-3 left-1/2 -translate-x-1/2 w-24 sm:w-28 h-8 sm:h-10 border-2 border-b-0 border-white/50 pointer-events-none"></div>
+          <div class="absolute bottom-[80px] sm:bottom-[96px] left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-white/60 pointer-events-none"></div>
+
+          <!-- Watermark Brand -->
+          <div class="absolute bottom-4 right-4 z-10 text-[10px] font-bold text-white/40 tracking-wider flex items-center gap-1 pointer-events-none">
+            <i class="fa-solid fa-futbol"></i> PratikAraçlar
+          </div>
+
+          <!-- Team A Half (Top) Player Tokens Container -->
+          <div id="pitchTeamA" class="relative w-full h-1/2 z-20">
+            <!-- Tokens rendered via JS with absolute percentage positioning -->
+          </div>
+
+          <!-- Team B Half (Bottom) Player Tokens Container -->
+          <div id="pitchTeamB" class="relative w-full h-1/2 z-20">
+            <!-- Tokens rendered via JS with absolute percentage positioning -->
+          </div>
+        </div>
+
+        <!-- Field Actions Bar -->
+        <div class="flex items-center justify-between gap-2 px-1">
+          <div class="flex items-center gap-2">
+            <span class="text-xs text-slate-400 font-medium">Forma Rengi:</span>
+            <button onclick="cycleTeamColor('A')" id="btnColorA" class="w-6 h-6 rounded-full bg-white border-2 border-slate-700 shadow-sm transition hover:scale-110" title="Takım 1 Rengini Değiştir"></button>
+            <span class="text-xs text-slate-600 font-bold">vs</span>
+            <button onclick="cycleTeamColor('B')" id="btnColorB" class="w-6 h-6 rounded-full bg-red-600 border-2 border-slate-700 shadow-sm transition hover:scale-110" title="Takım 2 Rengini Değiştir"></button>
+          </div>
+          <button onclick="resetPositions()" class="text-xs text-slate-400 hover:text-white flex items-center gap-1 transition">
+            <i class="fa-solid fa-arrows-rotate"></i>
+            <span>Dizilişi Sıfırla</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Team B (Black/Blue) List (3 Cols) -->
+      <div class="lg:col-span-3 bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col gap-3 shadow-xl order-3">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+          <div class="flex items-center gap-2">
+            <span class="w-3.5 h-3.5 rounded-full bg-red-600 border border-red-400 shadow"></span>
+            <input type="text" id="teamBName" value="KIRMIZI TAKIM" class="font-extrabold text-sm text-white bg-transparent border-b border-transparent hover:border-slate-700 focus:border-red-500 focus:outline-none w-32">
+          </div>
+          <span id="teamBCountBadge" class="text-xs font-bold px-2 py-0.5 rounded-full bg-red-500/20 text-red-400">7 Oyuncu</span>
+        </div>
+
+        <div id="teamBList" class="flex flex-col gap-2">
+          <!-- Rendered via JS -->
+        </div>
+
+        <div class="pt-2 border-t border-slate-800 text-center">
+          <span class="text-[11px] text-slate-500">Oyuncu isimlerini düzenleyip WhatsApp'a hazır aktarın.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ready-to-Send WhatsApp Text Preview Box -->
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-2xl flex flex-col gap-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-800">
+        <div>
+          <h2 class="text-base font-extrabold text-white flex items-center gap-2">
+            <i class="fa-brands fa-whatsapp text-emerald-400 text-lg"></i>
+            Hazır WhatsApp Maç & Kadro Duyurusu
+          </h2>
+          <p class="text-xs text-slate-400 mt-0.5">
+            Bu metin otomatik güncellenir. "WhatsApp'ta Paylaş"a basarak doğrudan maçı kurduğunuz gruba gönderebilirsiniz.
+          </p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="copyWhatsAppText()" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-bold flex items-center gap-1.5 transition active:scale-95">
+            <i class="fa-regular fa-copy"></i>
+            <span>Metni Kopyala</span>
+          </button>
+          <button onclick="shareWhatsApp()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold flex items-center gap-2 shadow-lg shadow-emerald-950/50 transition active:scale-95">
+            <i class="fa-brands fa-whatsapp text-base"></i>
+            <span>Gruba Gönder</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Preview Textarea -->
+      <textarea id="whatsappPreviewArea" rows="9" readonly class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs sm:text-sm font-mono text-emerald-300 focus:outline-none resize-none leading-relaxed"></textarea>
+    </div>
+
+    <!-- Hidden Canvas for Pitch Image Generation -->
+    <canvas id="pitchCanvas" width="900" height="1200" class="hidden"></canvas>
+
+    <!-- Quick Paste List Modal (Popup) -->
+    <div id="quickListModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-5 shadow-2xl flex flex-col gap-4">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+          <h3 class="text-sm font-extrabold text-white flex items-center gap-2">
+            <i class="fa-solid fa-paste text-emerald-400"></i>
+            Hızlı Oyuncu Listesi Yapıştır
+          </h3>
+          <button onclick="closeQuickListModal()" class="text-slate-400 hover:text-white">
+            <i class="fa-solid fa-xmark text-base"></i>
+          </button>
+        </div>
+        <p class="text-xs text-slate-400 leading-relaxed">
+          WhatsApp'tan kopyaladığınız isim listesini alt alta buraya yapıştırın. Sistem isimleri otomatik temizler ve takımlara eşit dağıtır:
+        </p>
+        <textarea id="quickNamesInput" rows="7" placeholder="Ahmet&#10;Mehmet&#10;Ali&#10;Can&#10;Burak&#10;Emre&#10;Hakan..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs font-mono text-white focus:outline-none focus:border-emerald-500"></textarea>
+        
+        <div class="flex items-center justify-between gap-3 pt-2">
+          <span class="text-[11px] text-slate-500">Mevcut kadro güncellenecektir.</span>
+          <div class="flex items-center gap-2">
+            <button onclick="closeQuickListModal()" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-semibold hover:text-white">İptal</button>
+            <button onclick="applyQuickNames()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-md shadow-emerald-950">Takımlara Dağıt</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEO Content & FAQ Section -->
+    <section class="bg-slate-900/50 border border-slate-800/80 rounded-2xl p-6 sm:p-8 mt-4">
+      <h2 class="text-lg font-bold text-white mb-3 flex items-center gap-2">
+        <i class="fa-solid fa-circle-question text-emerald-400"></i>
+        Halı Saha Kadro & Taktik Dağıtıcı Hakkında Sıkça Sorulanlar
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-slate-400 leading-relaxed mt-4">
+        <div class="bg-slate-900/90 border border-slate-800 p-4 rounded-xl">
+          <h3 class="font-bold text-slate-200 text-sm mb-1">Dengeli Kura Çekme Nasıl Çalışır?</h3>
+          <p>
+            Arkadaşlarınızın isimlerini girdiğinizde "Dengeli Kura Çek" butonuna basarak oyuncuları rastgele ve eşit olarak iki takıma bölebilirsiniz. Böylece maç öncesi "Takımlar adil olmadı" tartışmalarının önüne geçilir.
+          </p>
+        </div>
+        <div class="bg-slate-900/90 border border-slate-800 p-4 rounded-xl">
+          <h3 class="font-bold text-slate-200 text-sm mb-1">Yeşil Saha Taktik Görseli Nasıl İndirilir?</h3>
+          <p>
+            "Görsel İndir (PNG)" butonuna tıkladığınızda sistem anlık olarak yüksek çözünürlüklü bir yeşil saha taktik görseli (900x1200 px) oluşturur. Bu görseli doğrudan Instagram hikayenizde veya WhatsApp durumunda paylaşabilirsiniz.
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Portal Footer -->
+  <footer class="border-t border-slate-800/80 bg-slate-950 py-8 text-center text-xs text-slate-500 mt-auto">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <i class="fa-solid fa-futbol text-emerald-500"></i>
+        <span class="font-bold text-slate-400">PratikAraçlar Halı Saha Kadro Kurucu</span>
+      </div>
+      <div class="flex items-center gap-4 text-[11px]">
+        <a href="/" class="hover:text-slate-300">Tüm Araçlar</a>
+        <a href="/etkinlik-davet/" class="hover:text-slate-300">Etkinlik Davet</a>
+        <a href="/nobetci-eczane/" class="hover:text-slate-300">Nöbetçi Eczane</a>
+        <a href="/kira-artisi-hesaplayici/" class="hover:text-slate-300">Kira Artışı</a>
+      </div>
+      <span>&copy; 2026 PratikAraçlar • Sıfır Maliyetli Mikro Araçlar Portalı</span>
+    </div>
+  </footer>
+
+  <!-- Application Logic -->
+  <script>
+    // State
+    let currentFormat = 7; // default 7v7 (14 players)
+    
+    // Team Colors
+    const availableColors = [
+      { name: 'Beyaz', bg: '#ffffff', text: '#0f172a', border: '#cbd5e1' },
+      { name: 'Kırmızı', bg: '#dc2626', text: '#ffffff', border: '#f87171' },
+      { name: 'Siyah', bg: '#0f172a', text: '#ffffff', border: '#334155' },
+      { name: 'Mavi', bg: '#2563eb', text: '#ffffff', border: '#60a5fa' },
+      { name: 'Sarı', bg: '#eab308', text: '#0f172a', border: '#fef08a' },
+      { name: 'Yeşil', bg: '#16a34a', text: '#ffffff', border: '#86efac' }
+    ];
+
+    let colorIndexA = 0; // Beyaz
+    let colorIndexB = 1; // Kırmızı
+
+    // Initial Default Squad Data
+    let teamA = [
+      { id: 'a1', name: 'Ahmet (K)', pos: 'Kaleci', x: 50, y: 15 },
+      { id: 'a2', name: 'Mehmet', pos: 'Defans Sol', x: 25, y: 40 },
+      { id: 'a3', name: 'Can', pos: 'Defans', x: 50, y: 36 },
+      { id: 'a4', name: 'Burak', pos: 'Defans Sağ', x: 75, y: 40 },
+      { id: 'a5', name: 'Emre', pos: 'Orta Saha', x: 35, y: 70 },
+      { id: 'a6', name: 'Ali', pos: 'Orta Saha', x: 65, y: 70 },
+      { id: 'a7', name: 'Hakan', pos: 'Forvet', x: 50, y: 90 }
+    ];
+
+    let teamB = [
+      { id: 'b1', name: 'Mert (K)', pos: 'Kaleci', x: 50, y: 85 },
+      { id: 'b2', name: 'Serkan', pos: 'Defans Sol', x: 25, y: 60 },
+      { id: 'b3', name: 'Volkan', pos: 'Defans', x: 50, y: 64 },
+      { id: 'b4', name: 'Kemal', pos: 'Defans Sağ', x: 75, y: 60 },
+      { id: 'b5', name: 'Oğuz', pos: 'Orta Saha', x: 35, y: 30 },
+      { id: 'b6', name: 'Selim', pos: 'Orta Saha', x: 65, y: 30 },
+      { id: 'b7', name: 'Tolga', pos: 'Forvet', x: 50, y: 10 }
+    ];
+
+    // Tactical formation blueprints based on format
+    const formationDefaults = {
+      5: {
+        A: [
+          { pos: 'Kaleci', x: 50, y: 15 },
+          { pos: 'Defans Sol', x: 30, y: 45 },
+          { pos: 'Defans Sağ', x: 70, y: 45 },
+          { pos: 'Orta Saha', x: 50, y: 70 },
+          { pos: 'Forvet', x: 50, y: 90 }
+        ],
+        B: [
+          { pos: 'Kaleci', x: 50, y: 85 },
+          { pos: 'Defans Sol', x: 30, y: 55 },
+          { pos: 'Defans Sağ', x: 70, y: 55 },
+          { pos: 'Orta Saha', x: 50, y: 30 },
+          { pos: 'Forvet', x: 50, y: 10 }
+        ]
+      },
+      6: {
+        A: [
+          { pos: 'Kaleci', x: 50, y: 15 },
+          { pos: 'Defans Sol', x: 25, y: 45 },
+          { pos: 'Defans Sağ', x: 75, y: 45 },
+          { pos: 'Orta Saha Sol', x: 35, y: 72 },
+          { pos: 'Orta Saha Sağ', x: 65, y: 72 },
+          { pos: 'Forvet', x: 50, y: 92 }
+        ],
+        B: [
+          { pos: 'Kaleci', x: 50, y: 85 },
+          { pos: 'Defans Sol', x: 25, y: 55 },
+          { pos: 'Defans Sağ', x: 75, y: 55 },
+          { pos: 'Orta Saha Sol', x: 35, y: 28 },
+          { pos: 'Orta Saha Sağ', x: 65, y: 28 },
+          { pos: 'Forvet', x: 50, y: 8 }
+        ]
+      },
+      7: {
+        A: [
+          { pos: 'Kaleci', x: 50, y: 15 },
+          { pos: 'Defans Sol', x: 25, y: 40 },
+          { pos: 'Defans', x: 50, y: 36 },
+          { pos: 'Defans Sağ', x: 75, y: 40 },
+          { pos: 'Orta Saha Sol', x: 35, y: 70 },
+          { pos: 'Orta Saha Sağ', x: 65, y: 70 },
+          { pos: 'Forvet', x: 50, y: 90 }
+        ],
+        B: [
+          { pos: 'Kaleci', x: 50, y: 85 },
+          { pos: 'Defans Sol', x: 25, y: 60 },
+          { pos: 'Defans', x: 50, y: 64 },
+          { pos: 'Defans Sağ', x: 75, y: 60 },
+          { pos: 'Orta Saha Sol', x: 35, y: 30 },
+          { pos: 'Orta Saha Sağ', x: 65, y: 30 },
+          { pos: 'Forvet', x: 50, y: 10 }
+        ]
+      },
+      8: {
+        A: [
+          { pos: 'Kaleci', x: 50, y: 15 },
+          { pos: 'Defans Sol', x: 20, y: 40 },
+          { pos: 'Stoper Sol', x: 40, y: 36 },
+          { pos: 'Stoper Sağ', x: 60, y: 36 },
+          { pos: 'Defans Sağ', x: 80, y: 40 },
+          { pos: 'Orta Saha', x: 50, y: 65 },
+          { pos: 'Forvet Sol', x: 35, y: 90 },
+          { pos: 'Forvet Sağ', x: 65, y: 90 }
+        ],
+        B: [
+          { pos: 'Kaleci', x: 50, y: 85 },
+          { pos: 'Defans Sol', x: 20, y: 60 },
+          { pos: 'Stoper Sol', x: 40, y: 64 },
+          { pos: 'Stoper Sağ', x: 60, y: 64 },
+          { pos: 'Defans Sağ', x: 80, y: 60 },
+          { pos: 'Orta Saha', x: 50, y: 35 },
+          { pos: 'Forvet Sol', x: 35, y: 10 },
+          { pos: 'Forvet Sağ', x: 65, y: 10 }
+        ]
+      }
+    };
+
+    // Initialize UI
+    window.addEventListener('DOMContentLoaded', () => {
+      renderSquads();
+      setupPitchDraggables();
+      updateWhatsAppPreview();
+
+      // Listen for text changes
+      ['matchDateTime', 'matchPitchName', 'matchFee', 'matchIban', 'teamAName', 'teamBName'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('input', updateWhatsAppPreview);
+      });
+    });
+
+    // Change Match Format (5v5, 6v6, 7v7, 8v8)
+    function setFormat(size) {
+      currentFormat = size;
+
+      [5, 6, 7, 8].forEach(s => {
+        const btn = document.getElementById(`btnFormat${s}`);
+        if (s === size) {
+          btn.className = "px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-600 text-white shadow-md shadow-emerald-900/40 transition";
+        } else {
+          btn.className = "px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:text-white transition";
+        }
+      });
+
+      // Adjust teams length
+      adjustTeamSize(teamA, 'a', size);
+      adjustTeamSize(teamB, 'b', size);
+
+      resetPositions();
+    }
+
+    function adjustTeamSize(team, prefix, targetSize) {
+      const defaults = formationDefaults[targetSize][prefix.toUpperCase()];
+      while (team.length < targetSize) {
+        const i = team.length + 1;
+        const blueprint = defaults[i - 1] || { pos: 'Oyuncu', x: 50, y: 50 };
+        team.push({
+          id: `${prefix}${i}`,
+          name: `Oyuncu ${i}`,
+          pos: blueprint.pos,
+          x: blueprint.x,
+          y: blueprint.y
+        });
+      }
+      if (team.length > targetSize) {
+        team.splice(targetSize);
+      }
+    }
+
+    // Reset player positions on pitch
+    function resetPositions() {
+      const defsA = formationDefaults[currentFormat].A;
+      const defsB = formationDefaults[currentFormat].B;
+
+      teamA.forEach((p, idx) => {
+        if (defsA[idx]) {
+          p.x = defsA[idx].x;
+          p.y = defsA[idx].y;
+          p.pos = defsA[idx].pos;
+        }
+      });
+
+      teamB.forEach((p, idx) => {
+        if (defsB[idx]) {
+          p.x = defsB[idx].x;
+          p.y = defsB[idx].y;
+          p.pos = defsB[idx].pos;
+        }
+      });
+
+      renderSquads();
+      updateWhatsAppPreview();
+    }
+
+    // Cycle Team Color
+    function cycleTeamColor(teamKey) {
+      if (teamKey === 'A') {
+        colorIndexA = (colorIndexA + 1) % availableColors.length;
+        if (colorIndexA === colorIndexB) colorIndexA = (colorIndexA + 1) % availableColors.length;
+        document.getElementById('btnColorA').style.backgroundColor = availableColors[colorIndexA].bg;
+      } else {
+        colorIndexB = (colorIndexB + 1) % availableColors.length;
+        if (colorIndexB === colorIndexA) colorIndexB = (colorIndexB + 1) % availableColors.length;
+        document.getElementById('btnColorB').style.backgroundColor = availableColors[colorIndexB].bg;
+      }
+      renderSquads();
+    }
+
+    // Render Squads on Lists and Pitch
+    function renderSquads() {
+      const colA = availableColors[colorIndexA];
+      const colB = availableColors[colorIndexB];
+
+      // Badges
+      document.getElementById('teamACountBadge').innerText = `${teamA.length} Oyuncu`;
+      document.getElementById('teamBCountBadge').innerText = `${teamB.length} Oyuncu`;
+
+      // 1. Render Team A List
+      const listA = document.getElementById('teamAList');
+      listA.innerHTML = '';
+      teamA.forEach((player, idx) => {
+        listA.appendChild(createPlayerListRow(player, 'A', idx));
+      });
+
+      // 2. Render Team B List
+      const listB = document.getElementById('teamBList');
+      listB.innerHTML = '';
+      teamB.forEach((player, idx) => {
+        listB.appendChild(createPlayerListRow(player, 'B', idx));
+      });
+
+      // 3. Render Pitch Tokens
+      const pitchA = document.getElementById('pitchTeamA');
+      pitchA.innerHTML = '';
+      teamA.forEach((player, idx) => {
+        pitchA.appendChild(createPitchToken(player, colA, 'A', idx));
+      });
+
+      const pitchB = document.getElementById('pitchTeamB');
+      pitchB.innerHTML = '';
+      teamB.forEach((player, idx) => {
+        pitchB.appendChild(createPitchToken(player, colB, 'B', idx));
+      });
+
+      updateWhatsAppPreview();
+    }
+
+    function createPlayerListRow(player, teamKey, index) {
+      const row = document.createElement('div');
+      row.className = "flex items-center gap-2 bg-slate-950/70 border border-slate-800 rounded-xl px-2.5 py-1.5";
+
+      const num = document.createElement('span');
+      num.className = "text-[11px] font-bold text-slate-500 w-4 text-center shrink-0";
+      num.innerText = index + 1;
+
+      const nameInput = document.createElement('input');
+      nameInput.type = "text";
+      nameInput.value = player.name;
+      nameInput.className = "flex-1 bg-transparent text-xs font-semibold text-white focus:outline-none focus:border-b focus:border-emerald-500";
+      nameInput.oninput = (e) => {
+        player.name = e.target.value;
+        const tokenLabel = document.getElementById(`token-label-${player.id}`);
+        if (tokenLabel) tokenLabel.innerText = player.name;
+        updateWhatsAppPreview();
+      };
+
+      const swapBtn = document.createElement('button');
+      swapBtn.className = "text-slate-500 hover:text-amber-400 text-xs px-1.5 transition";
+      swapBtn.title = "Karşı Takıma Geçir";
+      swapBtn.innerHTML = '<i class="fa-solid fa-arrow-right-arrow-left text-[11px]"></i>';
+      swapBtn.onclick = () => swapPlayerTeam(teamKey, index);
+
+      row.appendChild(num);
+      row.appendChild(nameInput);
+      row.appendChild(swapBtn);
+      return row;
+    }
+
+    function createPitchToken(player, colorObj, teamKey, index) {
+      const token = document.createElement('div');
+      token.id = `token-${player.id}`;
+      token.className = "player-token absolute flex flex-col items-center -translate-x-1/2 -translate-y-1/2 z-30";
+      token.style.left = `${player.x}%`;
+      token.style.top = `${player.y}%`;
+
+      token.innerHTML = `
+        <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center font-black text-xs shadow-xl border-2 cursor-grab transition-transform" 
+             style="background-color: ${colorObj.bg}; color: ${colorObj.text}; border-color: ${colorObj.border};">
+          ${index === 0 ? '<i class="fa-solid fa-mitten text-xs"></i>' : index + 1}
+        </div>
+        <span id="token-label-${player.id}" class="mt-1 px-1.5 py-0.5 rounded text-[10px] font-bold tracking-tight bg-slate-950/90 text-white border border-slate-700/60 shadow whitespace-nowrap max-w-[85px] truncate">
+          ${player.name}
+        </span>
+      `;
+
+      return token;
+    }
+
+    // Drag and drop positioning on pitch
+    function setupPitchDraggables() {
+      const pitchCard = document.getElementById('pitchCard');
+      let activeDrag = null;
+      let activeTeam = null;
+      let activePlayer = null;
+
+      function onPointerDown(e) {
+        const token = e.target.closest('.player-token');
+        if (!token) return;
+
+        const id = token.id.replace('token-', '');
+        activePlayer = teamA.find(p => p.id === id);
+        if (activePlayer) {
+          activeTeam = 'A';
+        } else {
+          activePlayer = teamB.find(p => p.id === id);
+          activeTeam = 'B';
+        }
+
+        if (activePlayer) {
+          activeDrag = token;
+          e.preventDefault();
+        }
+      }
+
+      function onPointerMove(e) {
+        if (!activeDrag || !activePlayer) return;
+
+        const container = activeTeam === 'A' ? document.getElementById('pitchTeamA') : document.getElementById('pitchTeamB');
+        const rect = container.getBoundingClientRect();
+
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+        let xPct = ((clientX - rect.left) / rect.width) * 100;
+        let yPct = ((clientY - rect.top) / rect.height) * 100;
+
+        xPct = Math.max(8, Math.min(92, xPct));
+        yPct = Math.max(8, Math.min(92, yPct));
+
+        activePlayer.x = Math.round(xPct);
+        activePlayer.y = Math.round(yPct);
+
+        activeDrag.style.left = `${activePlayer.x}%`;
+        activeDrag.style.top = `${activePlayer.y}%`;
+      }
+
+      function onPointerUp() {
+        activeDrag = null;
+        activePlayer = null;
+        activeTeam = null;
+      }
+
+      pitchCard.addEventListener('mousedown', onPointerDown);
+      window.addEventListener('mousemove', onPointerMove);
+      window.addEventListener('mouseup', onPointerUp);
+
+      pitchCard.addEventListener('touchstart', onPointerDown, { passive: false });
+      window.addEventListener('touchmove', onPointerMove, { passive: false });
+      window.addEventListener('touchend', onPointerUp);
+    }
+
+    // Swap Player between Team A and B
+    function swapPlayerTeam(fromTeam, index) {
+      if (fromTeam === 'A') {
+        if (teamB.length > 0) {
+          const temp = teamA[index].name;
+          teamA[index].name = teamB[index % teamB.length].name;
+          teamB[index % teamB.length].name = temp;
+        }
+      } else {
+        if (teamA.length > 0) {
+          const temp = teamB[index].name;
+          teamB[index].name = teamA[index % teamA.length].name;
+          teamA[index % teamA.length].name = temp;
+        }
+      }
+      renderSquads();
+      showToast('Oyuncuların takımları değiştirildi!');
+    }
+
+    // Auto-balance teams (Kura Çekme)
+    function autoBalanceTeams() {
+      // Gather all player names
+      const allNames = [...teamA.map(p => p.name), ...teamB.map(p => p.name)];
+
+      // Fisher-Yates shuffle
+      for (let i = allNames.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [allNames[i], allNames[j]] = [allNames[j], allNames[i]];
+      }
+
+      // Reassign to teams
+      const half = currentFormat;
+      teamA.forEach((p, idx) => {
+        p.name = allNames[idx] || `Oyuncu ${idx + 1}`;
+      });
+      teamB.forEach((p, idx) => {
+        p.name = allNames[half + idx] || `Oyuncu ${idx + 1}`;
+      });
+
+      renderSquads();
+      showToast('🎲 Takımlar rastgele kura ile dengeli olarak yeniden dağıtıldı!');
+    }
+
+    // Quick Paste List Modal
+    function openQuickListModal() {
+      const modal = document.getElementById('quickListModal');
+      const textarea = document.getElementById('quickNamesInput');
+      const currentList = [...teamA.map(p => p.name), ...teamB.map(p => p.name)].join('\n');
+      textarea.value = currentList;
+      modal.classList.remove('hidden');
+    }
+
+    function closeQuickListModal() {
+      document.getElementById('quickListModal').classList.add('hidden');
+    }
+
+    function applyQuickNames() {
+      const text = document.getElementById('quickNamesInput').value;
+      const lines = text.split('\n')
+        .map(s => s.replace(/^[0-9]+[\.\-\)\s]*/, '').trim())
+        .filter(Boolean);
+
+      if (lines.length === 0) {
+        showToast('Lütfen en az bir isim girin.');
+        return;
+      }
+
+      // Check format recommendation
+      if (lines.length >= 16 && currentFormat < 8) setFormat(8);
+      else if (lines.length >= 14 && currentFormat < 7) setFormat(7);
+      else if (lines.length >= 12 && currentFormat < 6) setFormat(6);
+
+      const half = currentFormat;
+      teamA.forEach((p, idx) => {
+        if (lines[idx]) p.name = lines[idx];
+      });
+      teamB.forEach((p, idx) => {
+        if (lines[half + idx]) p.name = lines[half + idx];
+      });
+
+      closeQuickListModal();
+      renderSquads();
+      showToast(`${lines.length} oyuncu başarıyla takımlara aktarıldı!`);
+    }
+
+    // Generate WhatsApp Text
+    function getWhatsAppMessageText() {
+      const dt = document.getElementById('matchDateTime').value.trim();
+      const pitch = document.getElementById('matchPitchName').value.trim();
+      const fee = document.getElementById('matchFee').value.trim();
+      const iban = document.getElementById('matchIban').value.trim();
+      const nameA = document.getElementById('teamAName').value.trim() || 'BEYAZ TAKIM';
+      const nameB = document.getElementById('teamBName').value.trim() || 'KIRMIZI TAKIM';
+
+      let msg = `⚽ *HALI SAHA MAÇ KADROSU & TAKTİK DİZİLİŞİ* ⚽\n\n`;
+      if (dt) msg += `📅 *Tarih & Saat:* ${dt}\n`;
+      if (pitch) msg += `📍 *Halı Saha:* ${pitch}\n`;
+      if (fee) msg += `💰 *Kişi Başı Ücret:* ${fee}\n`;
+      if (iban) msg += `💳 *Kaptan IBAN:* ${iban}\n`;
+      msg += `\n`;
+
+      msg += `⚪ *${nameA.toUpperCase()} (${teamA.length} Kişi):*\n`;
+      teamA.forEach((p, i) => {
+        const icon = i === 0 ? '🧤' : (i <= 3 ? '🛡️' : (i < teamA.length - 1 ? '⚡' : '🎯'));
+        msg += `${icon} ${i + 1}. ${p.name}\n`;
+      });
+
+      msg += `\n🔴 *${nameB.toUpperCase()} (${teamB.length} Kişi):*\n`;
+      teamB.forEach((p, i) => {
+        const icon = i === 0 ? '🧤' : (i <= 3 ? '🛡️' : (i < teamB.length - 1 ? '⚡' : '🎯'));
+        msg += `${icon} ${i + 1}. ${p.name}\n`;
+      });
+
+      msg += `\n📋 *Taktik tahtasında gör & kadronu kur:* https://pratik-araclar.pratikweb.workers.dev/hali-saha-kadro/`;
+      return msg;
+    }
+
+    function updateWhatsAppPreview() {
+      const area = document.getElementById('whatsappPreviewArea');
+      if (area) area.value = getWhatsAppMessageText();
+    }
+
+    function copyWhatsAppText() {
+      const text = getWhatsAppMessageText();
+      navigator.clipboard.writeText(text).then(() => {
+        showToast('📋 WhatsApp kadro metni panoya kopyalandı!');
+      }).catch(() => {
+        showToast('Kopyalama başarısız oldu.');
+      });
+    }
+
+    function shareWhatsApp() {
+      const text = getWhatsAppMessageText();
+      const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
+      window.open(url, '_blank');
+    }
+
+    // Toggle match details collapse
+    function toggleDetailsCollapse() {
+      const content = document.getElementById('detailsCollapseContent');
+      const icon = document.getElementById('detailsCollapseIcon');
+      if (content.classList.contains('hidden')) {
+        content.classList.remove('hidden');
+        icon.className = 'fa-solid fa-chevron-up text-slate-400 text-xs transition';
+      } else {
+        content.classList.add('hidden');
+        icon.className = 'fa-solid fa-chevron-down text-slate-400 text-xs transition';
+      }
+    }
+
+    // Toast helper
+    function showToast(msg) {
+      const toast = document.getElementById('toastNotification');
+      const msgEl = document.getElementById('toastMessage');
+      msgEl.innerText = msg;
+      toast.classList.remove('hidden');
+      clearTimeout(window._toastT);
+      window._toastT = setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 3500);
+    }
+
+    // Download pitch canvas image as high-res PNG
+    function downloadPitchImage() {
+      const canvas = document.getElementById('pitchCanvas');
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width;
+      const h = canvas.height;
+
+      // 1. Draw Field Background Grass Stripes
+      const stripeHeight = 60;
+      for (let y = 0; y < h; y += stripeHeight) {
+        ctx.fillStyle = (Math.floor(y / stripeHeight) % 2 === 0) ? '#14381b' : '#18421f';
+        ctx.fillRect(0, y, w, stripeHeight);
+      }
+
+      // 2. White Pitch Lines
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.65)';
+      ctx.lineWidth = 6;
+
+      // Boundary
+      const p = 40;
+      ctx.strokeRect(p, p, w - 2*p, h - 2*p);
+
+      // Halfway line & center circle
+      ctx.beginPath();
+      ctx.moveTo(p, h / 2);
+      ctx.lineTo(w - p, h / 2);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(w / 2, h / 2, 110, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(w / 2, h / 2, 8, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Top Goal Box
+      ctx.strokeRect(w/2 - 200, p, 400, 160);
+      ctx.strokeRect(w/2 - 90, p, 180, 60);
+
+      // Bottom Goal Box
+      ctx.strokeRect(w/2 - 200, h - p - 160, 400, 160);
+      ctx.strokeRect(w/2 - 90, h - p - 60, 180, 60);
+
+      // Header Banner (Match Date & Pitch)
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+      ctx.fillRect(p + 10, p + 10, w - 2*p - 20, 70);
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(p + 10, p + 10, w - 2*p - 20, 70);
+
+      ctx.fillStyle = '#10b981';
+      ctx.font = 'bold 22px "Plus Jakarta Sans", sans-serif';
+      ctx.textAlign = 'center';
+      const dt = document.getElementById('matchDateTime').value || 'Halı Saha Maçı';
+      const pitchName = document.getElementById('matchPitchName').value || 'PratikAraçlar';
+      ctx.fillText(`⚽ ${pitchName.toUpperCase()} • ${dt}`, w / 2, p + 52);
+
+      // Draw Team A Players (Top Half)
+      const colA = availableColors[colorIndexA];
+      teamA.forEach((pl, i) => {
+        const px = p + ((w - 2*p) * (pl.x / 100));
+        const py = p + 80 + (((h / 2) - p - 100) * (pl.y / 100));
+        drawPlayerOnCanvas(ctx, pl.name, i, px, py, colA);
+      });
+
+      // Draw Team B Players (Bottom Half)
+      const colB = availableColors[colorIndexB];
+      teamB.forEach((pl, i) => {
+        const px = p + ((w - 2*p) * (pl.x / 100));
+        const py = (h / 2) + 20 + (((h / 2) - p - 100) * (pl.y / 100));
+        drawPlayerOnCanvas(ctx, pl.name, i, px, py, colB);
+      });
+
+      // Footer Watermark
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+      ctx.font = 'bold 18px "Plus Jakarta Sans", sans-serif';
+      ctx.textAlign = 'right';
+      ctx.fillText('pratik-araclar.../hali-saha-kadro/', w - p - 20, h - p - 15);
+
+      // Export & Download
+      const link = document.createElement('a');
+      link.download = `hali-saha-kadro-${Date.now()}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      showToast('📸 Taktik görseli başarıyla indirildi!');
+    }
+
+    function drawPlayerOnCanvas(ctx, name, index, x, y, colorObj) {
+      // Token Circle
+      ctx.save();
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.4)';
+      ctx.shadowBlur = 10;
+      ctx.shadowOffsetY = 4;
+
+      ctx.fillStyle = colorObj.bg;
+      ctx.beginPath();
+      ctx.arc(x, y, 26, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.strokeStyle = colorObj.border;
+      ctx.lineWidth = 4;
+      ctx.stroke();
+      ctx.restore();
+
+      // Number or Goalkeeper Text
+      ctx.fillStyle = colorObj.text;
+      ctx.font = '900 16px "Plus Jakarta Sans", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(index === 0 ? 'K' : `${index + 1}`, x, y);
+
+      // Name Label Pill
+      ctx.font = 'bold 16px "Plus Jakarta Sans", sans-serif';
+      const textMetrics = ctx.measureText(name);
+      const pillWidth = Math.max(70, textMetrics.width + 18);
+      const pillHeight = 26;
+
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.9)';
+      ctx.beginPath();
+      ctx.roundRect(x - (pillWidth / 2), y + 32, pillWidth, pillHeight, 6);
+      ctx.fill();
+
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      ctx.fillStyle = '#ffffff';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(name, x, y + 45);
+    }
+  </script>
+</body>
+</html>
