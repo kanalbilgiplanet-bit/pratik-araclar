@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="tr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Preconnect CDN hints -->
+  <link rel="preconnect" href="https://cdn.tailwindcss.com">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+
+  <title>Buluşma & Etkinlik Davetiyesi Hazırlayıcı (WhatsApp & Google Takvim) | Pratik Araçlar</title>
+  <meta name="description" content="Halı saha, 'bir ara görüşelim' buluşmaları, doğum günü ve toplantılar için tek tıkla emojili WhatsApp davetiyesi, Google Takvim linki ve .ics dosyası oluşturun.">
+  <meta name="keywords" content="etkinlik davetiye hazırlayıcı, whatsapp davet mesajı, halı saha davet metni, buluşma planlayıcı, google takvim etkinlik linki oluşturma, ical oluşturucu, doğum günü whatsapp davetiyesi">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <link rel="canonical" href="https://pratik-araclar.pratikweb.workers.dev/etkinlik-davet/">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2310b981'/%3E%3Cstop offset='100%25' stop-color='%2306b6d4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23bg)'/%3E%3Cpath d='M16 24 C16 18 48 18 48 24 L48 44 C48 50 16 50 16 44 Z' fill='none' stroke='%23ffffff' stroke-width='4'/%3E%3Cpath d='M22 16 L22 22 M42 16 L42 22' stroke='%23ffffff' stroke-width='4' stroke-linecap='round'/%3E%3Ccircle cx='32' cy='34' r='5' fill='%23ffffff'/%3E%3C/svg%3E">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://pratik-araclar.pratikweb.workers.dev/etkinlik-davet/">
+  <meta property="og:title" content="Buluşma & Etkinlik Davetiyesi Hazırlayıcı (WhatsApp & Takvim)">
+  <meta property="og:description" content="Artık 'bir ara görüşelim' deyip ertelemek yok! Emojili hazır WhatsApp daveti ve tek tıkla takvim linki oluştur.">
+  <meta property="og:image" content="https://pratik-araclar.pratikweb.workers.dev/assets/og-banner.png">
+  <meta property="og:locale" content="tr_TR">
+  <meta property="og:site_name" content="Pratik Araçlar">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://pratik-araclar.pratikweb.workers.dev/etkinlik-davet/">
+  <meta name="twitter:title" content="Buluşma & Etkinlik Davetiyesi Hazırlayıcı">
+  <meta name="twitter:description" content="Halı saha, doğum günü ve buluşmalar için hazır WhatsApp davetiyesi ve Google Takvim bağlantısı üretin.">
+  <meta name="twitter:image" content="https://pratik-araclar.pratikweb.workers.dev/assets/og-banner.png">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            midnight: '#0b0f19',
+            surface: '#111827',
+            surfaceCard: '#1a2234',
+            surfaceBorder: '#28354d',
+            waBg: '#0b141a',
+            waBubble: '#005c4b',
+            waBubbleOut: '#005c4b'
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- FontAwesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "name": "Buluşma & Etkinlik Davetiyesi Hazırlayıcı",
+        "url": "https://pratik-araclar.pratikweb.workers.dev/etkinlik-davet/",
+        "applicationCategory": "SocialApplication",
+        "operatingSystem": "All",
+        "description": "Halı saha, erteleyen arkadaşlar buluşması, doğum günü ve toplantılar için hazır WhatsApp davet metni ve Google/Apple Takvim bağlantısı oluşturma aracı.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "TRY"
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Oluşturulan etkinlik davetini arkadaşlarım nasıl takvimine ekler?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Oluşturulan WhatsApp mesajının altındaki 'Google Takvim'e Ekle' linkine tıklayan herkes etkinliği tek dokunuşla kendi telefon takvimine kaydeder. Ayrıca iPhone ve Outlook kullanıcıları için .ics takvim dosyası da üretilir."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Halı saha ve arkadaş buluşmaları için hazır şablonlar var mı?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Evet. Halı saha kadro çağrısı, '6 aydır ertelediğimiz o buluşma' esprili çağrısı, doğum günü partisi, kahvaltı, mangal ve kurumsal toplantılar için mizahi, samimi ve resmi tonlarda hazır şablonlar sunulmaktadır."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+    
+    .cat-pill.active {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #022c22;
+      border-color: #34d399;
+      font-weight: 700;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+    }
+    .tone-pill.active {
+      background: linear-gradient(135deg, #0ea5e9, #0284c7);
+      color: #ffffff;
+      border-color: #38bdf8;
+      font-weight: 700;
+      box-shadow: 0 4px 14px rgba(14, 165, 233, 0.35);
+    }
+  </style>
+</head>
+<body class="bg-[#0b0f19] text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-emerald-500 selection:text-slate-950">
+
+  <!-- Header -->
+  <header class="border-b border-slate-800/80 bg-slate-900/80 backdrop-blur-md sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <a href="../" class="flex items-center gap-2.5 group transition" title="Pratik Araçlar Vitrinine Dön">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-500 to-cyan-500 flex items-center justify-center text-slate-950 font-black shadow-lg shadow-emerald-900/30 group-hover:scale-105 transition">
+            <i class="fa-solid fa-calendar-check text-sm"></i>
+          </div>
+          <div class="flex flex-col">
+            <span class="font-bold text-white text-base tracking-tight leading-none group-hover:text-emerald-300 transition">
+              Pratik<span class="text-emerald-400">Araçlar</span>
+            </span>
+            <span class="text-[10px] text-slate-400 tracking-wider uppercase font-semibold">Buluşma & Davet Motoru</span>
+          </div>
+        </a>
+      </div>
+
+      <div class="flex items-center gap-2.5">
+        <span class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          WhatsApp & Google Takvim Uyumlu
+        </span>
+        <a href="../" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-medium bg-slate-800/80 hover:bg-slate-700 text-slate-200 border border-slate-700/60 transition">
+          <i class="fa-solid fa-arrow-left"></i>
+          <span>Tüm Araçlar</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="pt-8 pb-6 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center space-y-3">
+    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-bold tracking-wide">
+      <i class="fa-brands fa-whatsapp text-emerald-400 text-sm"></i>
+      <span>ERTELEMEYE SON: 30 SANİYEDE HAZIR WHATSAPP DAVETİYESİ & TAKVİM LİNKİ</span>
+    </div>
+    <h1 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">
+      "Bir Ara Görüşelimciler" & <span class="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">Etkinlik Davetiyesi</span> Hazırlayıcı
+    </h1>
+    <p class="text-sm sm:text-base text-slate-300 max-w-3xl mx-auto leading-relaxed">
+      Aylardır ertelenen arkadaş buluşmaları, halı saha kadroları, doğum günleri ve toplantılar için 
+      <strong>emojili WhatsApp davet mesajı</strong> ve tek tıkla telefona kaydedilen <strong>Google Takvim bağlantısı</strong> oluşturun.
+    </p>
+  </section>
+
+  <!-- Main Container -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex-grow space-y-6 w-full pb-16">
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+      <!-- LEFT COLUMN: Form Inputs & Selectors (7 cols) -->
+      <div class="lg:col-span-7 bg-slate-900/90 border border-slate-800 rounded-3xl p-5 sm:p-7 shadow-xl space-y-6">
+
+        <!-- Step 1: Category Selector -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2 flex items-center gap-2">
+            <span class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-[11px] font-black">1</span>
+            <span>Etkinlik / Buluşma Türü</span>
+          </label>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+            <button type="button" onclick="selectCategory('bulusma')" class="cat-pill active p-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-300 hover:text-white transition text-left flex items-center gap-2 text-xs" data-cat="bulusma">
+              <span class="text-base">☕</span>
+              <span class="font-medium">Bir Ara Görüşelim</span>
+            </button>
+            <button type="button" onclick="selectCategory('halisaha')" class="cat-pill p-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-300 hover:text-white transition text-left flex items-center gap-2 text-xs" data-cat="halisaha">
+              <span class="text-base">⚽</span>
+              <span class="font-medium">Halı Saha Maçı</span>
+            </button>
+            <button type="button" onclick="selectCategory('dogumgunu')" class="cat-pill p-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-300 hover:text-white transition text-left flex items-center gap-2 text-xs" data-cat="dogumgunu">
+              <span class="text-base">🎂</span>
+              <span class="font-medium">Doğum Günü / Parti</span>
+            </button>
+            <button type="button" onclick="selectCategory('yemek')" class="cat-pill p-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-300 hover:text-white transition text-left flex items-center gap-2 text-xs" data-cat="yemek">
+              <span class="text-base">🍽️</span>
+              <span class="font-medium">Akşam Yemeği / İftar</span>
+            </button>
+            <button type="button" onclick="selectCategory('mangal')" class="cat-pill p-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-300 hover:text-white transition text-left flex items-center gap-2 text-xs" data-cat="mangal">
+              <span class="text-base">🍖</span>
+              <span class="font-medium">Piknik & Mangal</span>
+            </button>
+            <button type="button" onclick="selectCategory('toplanti')" class="cat-pill p-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-300 hover:text-white transition text-left flex items-center gap-2 text-xs" data-cat="toplanti">
+              <span class="text-base">💼</span>
+              <span class="font-medium">İş / Proje Toplantısı</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 2: Tone Selector -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2 flex items-center gap-2">
+            <span class="w-5 h-5 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-[11px] font-black">2</span>
+            <span>Mesajın Tonu & Esprisi</span>
+          </label>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <button type="button" onclick="selectTone('esprili')" class="tone-pill active p-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-300 hover:text-white transition text-left text-xs" data-tone="esprili">
+              <div class="font-bold flex items-center gap-1.5">
+                <span>😂</span> Sitemkâr & Komik
+              </div>
+              <div class="text-[10px] text-slate-400 mt-0.5">Erteleyenlere inat</div>
+            </button>
+            <button type="button" onclick="selectTone('samimi')" class="tone-pill p-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-300 hover:text-white transition text-left text-xs" data-tone="samimi">
+              <div class="font-bold flex items-center gap-1.5">
+                <span>❤️</span> Samimi & Sıcak
+              </div>
+              <div class="text-[10px] text-slate-400 mt-0.5">Hasret giderelim</div>
+            </button>
+            <button type="button" onclick="selectTone('gaz')" class="tone-pill p-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-300 hover:text-white transition text-left text-xs" data-tone="gaz">
+              <div class="font-bold flex items-center gap-1.5">
+                <span>⚡</span> Coşkulu & Gaz
+              </div>
+              <div class="text-[10px] text-slate-400 mt-0.5">Eksik olan yanar!</div>
+            </button>
+            <button type="button" onclick="selectTone('resmi')" class="tone-pill p-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-300 hover:text-white transition text-left text-xs" data-tone="resmi">
+              <div class="font-bold flex items-center gap-1.5">
+                <span>👔</span> Net & Resmi
+              </div>
+              <div class="text-[10px] text-slate-400 mt-0.5">Kısa ve kurumsal</div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 3: Event Details Inputs -->
+        <div class="space-y-4 pt-1">
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+            <span class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-[11px] font-black">3</span>
+            <span>Etkinlik Detayları</span>
+          </label>
+
+          <!-- Title -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Buluşma / Etkinlik Başlığı</label>
+            <input 
+              type="text" 
+              id="eventTitle" 
+              value="6 Aydır Ertelediğimiz Efsane Buluşma" 
+              placeholder="Örn: Hafta Sonu Halı Saha Kapışması" 
+              class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-white text-xs sm:text-sm font-medium transition"
+              oninput="updatePreview()"
+            >
+          </div>
+
+          <!-- Date & Time Row -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Tarih & Saat</label>
+              <input 
+                type="datetime-local" 
+                id="eventDateTime" 
+                class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-white text-xs sm:text-sm font-mono font-medium transition"
+                oninput="updatePreview()"
+              >
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Tahmini Süre</label>
+              <select 
+                id="eventDuration" 
+                class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-white text-xs sm:text-sm font-medium transition"
+                onchange="updatePreview()"
+              >
+                <option value="60">1 Saat</option>
+                <option value="90">1.5 Saat</option>
+                <option value="120" selected>2 Saat</option>
+                <option value="180">3 Saat</option>
+                <option value="240">4 Saat</option>
+                <option value="360">Tüm Gün</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Location -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Mekân / Konum (Google Maps linki de ekleyebilirsiniz)</label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500 text-xs">
+                <i class="fa-solid fa-location-dot"></i>
+              </span>
+              <input 
+                type="text" 
+                id="eventLocation" 
+                value="Kadıköy Sahil / Moda Çay Bahçesi" 
+                placeholder="Örn: Beşiktaş Şampiyon Halı Saha" 
+                class="w-full pl-8 pr-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-white text-xs sm:text-sm font-medium transition"
+                oninput="updatePreview()"
+              >
+            </div>
+          </div>
+
+          <!-- Custom Punchline / Note -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Özel Not / Vurgu</label>
+            <input 
+              type="text" 
+              id="eventNote" 
+              value="Bahaneler yasak, gelen ilk çayı benden içer!" 
+              placeholder="Örn: Kramponunu unutan kaleye geçer!" 
+              class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-white text-xs sm:text-sm font-medium transition"
+              oninput="updatePreview()"
+            >
+          </div>
+
+          <!-- Organizer Name (Optional) -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Organizatör / Çağıran (Opsiyonel)</label>
+            <input 
+              type="text" 
+              id="eventOrganizer" 
+              placeholder="Örn: Kaptan Ahmet" 
+              class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-white text-xs sm:text-sm font-medium transition"
+              oninput="updatePreview()"
+            >
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- RIGHT COLUMN: Real-Time WhatsApp Bubble & One-Click Actions (5 cols) -->
+      <div class="lg:col-span-5 space-y-4 sticky top-20">
+
+        <!-- WhatsApp Preview Box -->
+        <div class="bg-[#0b141a] border border-slate-800/90 rounded-3xl p-4 sm:p-5 shadow-2xl space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800/60 text-xs">
+            <span class="font-bold text-emerald-400 flex items-center gap-2">
+              <i class="fa-brands fa-whatsapp text-emerald-400 text-base"></i>
+              <span>WhatsApp Canlı Önizleme</span>
+            </span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              Gönderilmeye Hazır
+            </span>
+          </div>
+
+          <!-- WhatsApp Chat Bubble Simulation -->
+          <div class="bg-[#111b21] p-3.5 rounded-2xl border border-slate-800/80 shadow-inner">
+            <div class="bg-[#005c4b] text-slate-100 rounded-2xl rounded-tr-none p-3.5 text-xs sm:text-sm leading-relaxed whitespace-pre-wrap font-sans shadow-md" id="previewText">
+              <!-- Dynamically populated -->
+            </div>
+            <div class="flex justify-end items-center gap-1 text-[10px] text-slate-400 mt-1.5 pr-1">
+              <span id="previewTime">Şimdi</span>
+              <i class="fa-solid fa-check-double text-sky-400"></i>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="space-y-2.5 pt-1">
+            <!-- WhatsApp Send Button -->
+            <button 
+              type="button" 
+              onclick="shareWhatsAppDirect()" 
+              class="w-full py-3.5 px-4 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold text-sm flex items-center justify-center gap-2.5 shadow-lg shadow-emerald-950/60 transition active:scale-95"
+            >
+              <i class="fa-brands fa-whatsapp text-lg"></i>
+              <span>Doğrudan WhatsApp'ta Paylaş</span>
+            </button>
+
+            <!-- Copy Text Button -->
+            <button 
+              type="button" 
+              onclick="copyToClipboard()" 
+              id="copyBtn"
+              class="w-full py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs flex items-center justify-center gap-2 border border-slate-700 transition"
+            >
+              <i class="fa-regular fa-copy"></i>
+              <span id="copyBtnText">Metni Kopyala</span>
+            </button>
+          </div>
+
+          <!-- Calendar Integration Buttons -->
+          <div class="pt-3 border-t border-slate-800/60 space-y-2">
+            <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+              <i class="fa-solid fa-calendar-plus text-cyan-400"></i>
+              <span>Takvim Entegrasyonu</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <a 
+                id="btnGoogleCal" 
+                href="#" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                class="py-2.5 px-3 rounded-xl bg-cyan-600/15 hover:bg-cyan-600/25 text-cyan-300 font-semibold text-xs flex items-center justify-center gap-1.5 border border-cyan-500/30 transition text-center"
+              >
+                <i class="fa-brands fa-google"></i>
+                <span>Google Takvim</span>
+              </a>
+              <button 
+                type="button" 
+                onclick="downloadIcsFile()" 
+                class="py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs flex items-center justify-center gap-1.5 border border-slate-700 transition"
+              >
+                <i class="fa-solid fa-file-arrow-down"></i>
+                <span>Apple / .ICS İndir</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Viral Growth Card -->
+        <div class="p-4 rounded-2xl bg-gradient-to-r from-emerald-950/40 to-slate-900 border border-emerald-800/30 text-xs text-slate-300 flex items-start gap-3">
+          <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-sm shrink-0">
+            <i class="fa-solid fa-bullhorn"></i>
+          </div>
+          <div>
+            <div class="font-bold text-white mb-0.5">Gruplarda Hızlı Cevap Alma İpucu</div>
+            <p class="text-[11px] text-slate-400 leading-relaxed">
+              WhatsApp gruplarında etkinlik duyurusu yaparken <strong>"Gelecekler +1 koysun"</strong> veya takvime ekleme linkini eklemek katılım oranını %60 artırır.
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- SEO & FAQ Section -->
+    <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-5 sm:p-7 shadow-xl space-y-4">
+      <h2 class="text-sm sm:text-base font-bold text-white flex items-center gap-2">
+        <i class="fa-solid fa-circle-question text-emerald-400"></i>
+        <span>Sıkça Sorulan Sorular & İpuçları</span>
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+        <div class="bg-slate-950/60 p-4 rounded-2xl border border-slate-800 space-y-1.5">
+          <div class="font-bold text-emerald-400">Katılımcılar etkinliği Google Takvim'e nasıl ekler?</div>
+          <p class="text-slate-400 leading-relaxed">
+            WhatsApp ile gönderdiğiniz mesajın altındaki Google Takvim bağlantısına tıklandığında, kullanıcının telefonundaki Google Takvim uygulaması otomatik olarak açılır ve etkinlik tarihi, saati, mekânı ve açıklaması hazır olarak ekrana gelir. Kullanıcının tek yapması gereken "Kaydet"e basmaktır.
+          </p>
+        </div>
+
+        <div class="bg-slate-950/60 p-4 rounded-2xl border border-slate-800 space-y-1.5">
+          <div class="font-bold text-emerald-400">iPhone ve Outlook kullanıcıları nasıl faydalanır?</div>
+          <p class="text-slate-400 leading-relaxed">
+            iPhone kullanan arkadaşlarınıza .ics takvim dosyası linki gönderildiğinde, iOS otomatik olarak Apple Takvim uygulamasına davetiye olarak işler. Hiçbir harici uygulama indirmeye gerek yoktur.
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800/80 bg-slate-950 py-8 px-4 sm:px-6 lg:px-8 mt-auto">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+      <div class="flex items-center gap-2">
+        <div class="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs font-bold">PA</div>
+        <span>© 2026 PratikAraçlar - Buluşma & Etkinlik Davetiyesi Hazırlayıcı</span>
+      </div>
+      <div class="flex items-center gap-4 text-slate-400">
+        <a href="../" class="hover:text-emerald-300 transition">Tüm Araçlar</a>
+        <a href="../ydo-harc-zam-hesaplayici/" class="hover:text-amber-300 transition">2027 YDO Zamları</a>
+        <a href="../maas-hesaplayici/" class="hover:text-sky-300 transition">Maaş & Vergi</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast Notification Container -->
+  <div id="toast" class="fixed bottom-6 right-6 bg-emerald-500 text-slate-950 px-4 py-2.5 rounded-xl font-bold text-xs shadow-2xl flex items-center gap-2 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none z-50">
+    <i class="fa-solid fa-circle-check"></i>
+    <span id="toastMsg">Panoya kopyalandı!</span>
+  </div>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    // State
+    let currentCategory = 'bulusma';
+    let currentTone = 'esprili';
+
+    const CATEGORY_TEMPLATES = {
+      bulusma: {
+        title: "6 Aydır Ertelediğimiz Efsane Buluşma",
+        location: "Kadıköy Sahil / Moda Çay Bahçesi",
+        note: "Bahaneler yasak, gelen ilk çayı benden içer!",
+        emojis: {
+          esprili: "☕😂",
+          samimi: "☕❤️",
+          gaz: "☕🔥",
+          resmi: "☕📅"
+        },
+        openings: {
+          esprili: "Millet! 'Hadi bir ara görüşelim' diyeli tam 6 ay oldu, aramızdan torun sahibi olanlar çıkacak neredeyse. Tarihi ve saati mühürledik, bahaneler kesinlikle kabul edilmiyor! 🚫🙅‍♂️",
+          samimi: "Canlar! Ne zamandır birbirimizi göremiyoruz, çok özleştik. Şöyle güzel bir kahve eşliğinde hasret giderelim diye tarihi belirledik. Herkesi bekliyorum! ❤️",
+          gaz: "Ekip toplanıyor! Nihayet herkesin müsait olacağı o efsane günü kilitledik. Gelmeyen pişman olur, bu buluşma kaçmaz! 💥🚀",
+          resmi: "Değerli arkadaşlar, bir süredir planlamakta olduğumuz ortak buluşmamızın detayları aşağıda belirlenmiştir. Katılımınızı rica ederiz."
+        }
+      },
+      halisaha: {
+        title: "Haftalık Halı Saha Derbisi",
+        location: "Beşiktaş Şampiyon Halı Saha",
+        note: "Kramponunu unutan kaleye geçer! Maç başı ücreti nakit getiriniz.",
+        emojis: {
+          esprili: "⚽👟",
+          samimi: "⚽🤝",
+          gaz: "⚽🔥",
+          resmi: "⚽📋"
+        },
+        openings: {
+          esprili: "Beyler! Kadrolar yazıldı, taktikler hazırlandı. Son dakika 'hanım izin vermedi' diyen maç parasını öder! 🏃‍♂️💨",
+          samimi: "Selamlar beyler! Bu hafta güzel bir ter atmak, keyifli bir maç yapmak için sahayı kiraladık. Herkes hazır olsun! ⚽",
+          gaz: "Büyük kapışma günü geldi! Kaybeden tatlıyı ısmarlar. Eksik olan yanar, kondisyonunu toplayan sahaya gelsin! ⚡🏆",
+          resmi: "Haftalık halı saha müsabakası programı kesinleşmiştir. Zamanında sahada hazır bulunmanızı rica ederiz."
+        }
+      },
+      dogumgunu: {
+        title: "Yeni Yaşı Kutluyoruz! (Sürpriz Parti)",
+        location: "Nişantaşı / Rooftop Lounge",
+        note: "Erken gelin, sürprizi bozmayın! Hediye şart değil, varlığınız yeter.",
+        emojis: {
+          esprili: "🎂🥳",
+          samimi: "🎂🎁",
+          gaz: "🎂🎉",
+          resmi: "🎂✨"
+        },
+        openings: {
+          esprili: "Bir yıl daha yaşlanıyoruz ama asla kabul etmiyoruz! Pastayı kesmeye, eğlenmeye hazır olun. Gelmeyene pasta dilimi yok! 🍰🕺",
+          samimi: "Canım arkadaşlarım, yeni yaşımı sizlerle birlikte neşe ve mutlulukla karşılamak istiyorum. İyi ki varsınız, hepinizi bekliyorum! 💕",
+          gaz: "Yılın partisine hazır mıyız?! Yeni yaşı bomba gibi karşılıyoruz. Müzik, eğlence ve kahkaha garanti! 🍾🎶",
+          resmi: "Doğum günü kutlamamız kapsamında siz değerli dostlarımızı aramızda görmekten onur ve mutluluk duyarız."
+        }
+      },
+      yemek: {
+        title: "Keyifli Akşam Yemeği & Muhabbet",
+        location: "Bostancı Balıkçısı / Meydan",
+        note: "Rezervasyon yaptırıldı, lütfen aç gelin!",
+        emojis: {
+          esprili: "🍽️😋",
+          samimi: "🍽️🍷",
+          gaz: "🍽️🔥",
+          resmi: "🍽️🥂"
+        },
+        openings: {
+          esprili: "Diyetleri askıya alıyoruz! Masayı donattık, hesabı ortak ödüyoruz ama muhabbet sınırsız. Aç gelin! 🥩🍔",
+          samimi: "Dostlar, güzel bir masada toplanıp dertleşmek ve lezzetli yemekler yemek için rezervasyonumuzu yaptık. Şimdiden afiyet olsun! ✨",
+          gaz: "Efsane lezzet turu başlıyor! Sofranın hakkını verecek olanları bekliyoruz. Kaçıran çok şey kaybeder! 🌮🍕",
+          resmi: "Birlikte akşam yemeği organizasyonumuzun detayları aşağıda yer almaktadır. Katılım teyidinizi rica ederiz."
+        }
+      },
+      mangal: {
+        title: "Hafta Sonu Doğa, Piknik & Mangal",
+        location: "Belgrad Ormanı / Neşet Suyu Tabiat Parkı",
+        note: "Kamp sandalyesini kapan gelsin! İçecekler serbest.",
+        emojis: {
+          esprili: "🍖🔥",
+          samimi: "🍖🌲",
+          gaz: "🍖🏕️",
+          resmi: "🍖🌿"
+        },
+        openings: {
+          esprili: "Şehrin dumanından kaçıp mangalın dumanına koşuyoruz! Köfteleri çevirmeye hazır olun, sandalyesini unutan ayakta yer! ⛺🍢",
+          samimi: "Güzel havayı değerlendirip doğayla iç içe harika bir piknik yapalım dedik. Sandalyenizi, neşenizi alın gelin! 🍃",
+          gaz: "Ateş yakıldı, etler hazırlandı! Hafta sonuna yakışır bomba gibi bir piknik yapıyoruz. Erken gelen iyi yeri kapar! 🥩🔥",
+          resmi: "Hafta sonu açık hava piknik ve doğa etkinliğimizin detayları bilginize sunulmuştur."
+        }
+      },
+      toplanti: {
+        title: "Proje Değerlendirme & Strateji Toplantısı",
+        location: "Ofis Toplantı Salonu A / Google Meet",
+        note: "Gündem maddelerini önceden inceleyiniz.",
+        emojis: {
+          esprili: "💼☕",
+          samimi: "💼🤝",
+          gaz: "💼🚀",
+          resmi: "💼📊"
+        },
+        openings: {
+          esprili: "'Bu toplantı bir e-posta olabilirdi' dememeniz için süreyi kısa, kahveyi bol tuttuk! Katılım zorunludur. 😉",
+          samimi: "Arkadaşlar merhaba, birlikte yürüttüğümüz işleri hızlandırmak ve fikir alışverişi yapmak için kısa bir araya geliyoruz. Katkılarınızı bekliyorum.",
+          gaz: "Hedefleri vurma zamanı! Projemizi bir üst seviyeye taşıyacak kritik toplantıya tam kadro bekliyoruz! 🎯📈",
+          resmi: "Sayın katılımcılar; planlanan değerlendirme ve iş akışı toplantımızın tarihi, saati ve bağlantı bilgileri aşağıda belirtilmiştir."
+        }
+      }
+    };
+
+    // Initialize Default Date: Next Saturday at 18:00
+    function initDefaultDate() {
+      const now = new Date();
+      const day = now.getDay();
+      let diff = (6 - day + 7) % 7;
+      if (diff === 0) diff = 7; // Next Saturday
+      
+      const target = new Date(now.getFullYear(), now.getMonth(), now.getDate() + diff, 18, 0, 0);
+      
+      const pad = n => String(n).padStart(2, '0');
+      const iso = `${target.getFullYear()}-${pad(target.getMonth()+1)}-${pad(target.getDate())}T${pad(target.getHours())}:${pad(target.getMinutes())}`;
+      document.getElementById('eventDateTime').value = iso;
+    }
+
+    // Category Selector
+    function selectCategory(cat) {
+      currentCategory = cat;
+      document.querySelectorAll('.cat-pill').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-cat') === cat);
+      });
+
+      const tmpl = CATEGORY_TEMPLATES[cat];
+      if (tmpl) {
+        document.getElementById('eventTitle').value = tmpl.title;
+        document.getElementById('eventLocation').value = tmpl.location;
+        document.getElementById('eventNote').value = tmpl.note;
+      }
+
+      updatePreview();
+    }
+
+    // Tone Selector
+    function selectTone(tone) {
+      currentTone = tone;
+      document.querySelectorAll('.tone-pill').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-tone') === tone);
+      });
+      updatePreview();
+    }
+
+    // Date Helpers
+    function parseDate() {
+      const val = document.getElementById('eventDateTime').value;
+      if (!val) return null;
+      return new Date(val);
+    }
+
+    function formatTurkishDate(d) {
+      if (!d || isNaN(d.getTime())) return "Belirlenmedi";
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+      return d.toLocaleDateString('tr-TR', options);
+    }
+
+    function toGoogleCalendarDate(d) {
+      const pad = n => String(n).padStart(2, '0');
+      return `${d.getUTCFullYear()}${pad(d.getUTCMonth()+1)}${pad(d.getUTCDate())}T${pad(d.getUTCHours())}${pad(d.getUTCMinutes())}00Z`;
+    }
+
+    // Generate Full Message Text
+    function generateMessageText() {
+      const tmpl = CATEGORY_TEMPLATES[currentCategory] || CATEGORY_TEMPLATES.bulusma;
+      const title = document.getElementById('eventTitle').value.trim() || tmpl.title;
+      const location = document.getElementById('eventLocation').value.trim() || tmpl.location;
+      const note = document.getElementById('eventNote').value.trim() || tmpl.note;
+      const organizer = document.getElementById('eventOrganizer').value.trim();
+      const dt = parseDate();
+      const dtStr = formatTurkishDate(dt);
+      
+      const emoji = tmpl.emojis[currentTone] || "📅";
+      const opening = tmpl.openings[currentTone] || tmpl.openings.esprili;
+
+      // Google Calendar Link
+      let calLink = "https://pratik-araclar.pratikweb.workers.dev/etkinlik-davet/";
+      if (dt && !isNaN(dt.getTime())) {
+        const durationMins = parseInt(document.getElementById('eventDuration').value) || 120;
+        const endDt = new Date(dt.getTime() + durationMins * 60000);
+        const startIso = toGoogleCalendarDate(dt);
+        const endIso = toGoogleCalendarDate(endDt);
+        const details = `${note}\n\nOrganize eden: ${organizer || 'Arkadaş Grubu'}\nPratikAraçlar ile hazırlandı: https://pratik-araclar.pratikweb.workers.dev/etkinlik-davet/`;
+        calLink = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${startIso}/${endIso}&details=${encodeURIComponent(details)}&location=${encodeURIComponent(location)}`;
+      }
+
+      let msg = `${emoji} *${title.toUpperCase()}*\n\n` +
+                `${opening}\n\n` +
+                `📍 *Yer:* ${location}\n` +
+                `🗓️ *Tarih & Saat:* ${dtStr}\n` +
+                `💡 *Not:* ${note}\n`;
+
+      if (organizer) {
+        msg += `👤 *Organizatör:* ${organizer}\n`;
+      }
+
+      msg += `\n📲 *Tek Tıkla Google Takvimine Kaydet:*\n${calLink}\n\n` +
+             `👉 _Sen de hemen davet hazırla: pratik-araclar.pratikweb.workers.dev/etkinlik-davet/_`;
+
+      return { msg, calLink, title, location, note, organizer, dt };
+    }
+
+    // Real-Time Preview Update
+    function updatePreview() {
+      const data = generateMessageText();
+      document.getElementById('previewText').textContent = data.msg;
+
+      // Update Google Cal button href
+      document.getElementById('btnGoogleCal').href = data.calLink;
+    }
+
+    // Copy to Clipboard
+    function copyToClipboard() {
+      const data = generateMessageText();
+      navigator.clipboard.writeText(data.msg).then(() => {
+        showToast("Davet metni ve takvim linki kopyalandı!");
+        const btnText = document.getElementById('copyBtnText');
+        btnText.textContent = "Kopyalandı! ✓";
+        setTimeout(() => { btnText.textContent = "Metni Kopyala"; }, 2000);
+      }).catch(() => {
+        // Fallback
+        const textarea = document.createElement('textarea');
+        textarea.value = data.msg;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        showToast("Davet metni kopyalandı!");
+      });
+    }
+
+    // Direct WhatsApp Share
+    function shareWhatsAppDirect() {
+      const data = generateMessageText();
+      const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(data.msg)}`;
+      window.open(url, '_blank');
+    }
+
+    // Download .ICS (RFC 5545) File
+    function downloadIcsFile() {
+      const data = generateMessageText();
+      if (!data.dt || isNaN(data.dt.getTime())) {
+        showToast("Lütfen önce geçerli bir tarih seçin!");
+        return;
+      }
+
+      const durationMins = parseInt(document.getElementById('eventDuration').value) || 120;
+      const endDt = new Date(data.dt.getTime() + durationMins * 60000);
+      const startIso = toGoogleCalendarDate(data.dt);
+      const endIso = toGoogleCalendarDate(endDt);
+      const nowIso = toGoogleCalendarDate(new Date());
+      const uid = 'event-' + Date.now() + '@pratik-araclar.pratikweb.workers.dev';
+
+      const icsLines = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//PratikAraclar//Etkinlik Davetiyesi//TR',
+        'CALSCALE:GREGORIAN',
+        'METHOD:PUBLISH',
+        'BEGIN:VEVENT',
+        `UID:${uid}`,
+        `DTSTAMP:${nowIso}`,
+        `DTSTART:${startIso}`,
+        `DTEND:${endIso}`,
+        `SUMMARY:${data.title.replace(/[\r\n]+/g, ' ')}`,
+        `DESCRIPTION:${(data.note + ' - https://pratik-araclar.pratikweb.workers.dev/etkinlik-davet/').replace(/[\r\n]+/g, '\\n')}`,
+        `LOCATION:${data.location.replace(/[\r\n]+/g, ' ')}`,
+        'STATUS:CONFIRMED',
+        'END:VEVENT',
+        'END:VCALENDAR'
+      ];
+
+      const icsContent = icsLines.join('\r\n');
+      const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${data.title.replace(/[^a-zA-Z0-9çÇğĞıİöÖşŞüÜ_-]/g, '_')}.ics`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      showToast("Apple / Outlook .ICS takvim dosyası indirildi!");
+    }
+
+    // Toast Helper
+    function showToast(text) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toastMsg').textContent = text;
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 2500);
+    }
+
+    // Init on Load
+    document.addEventListener('DOMContentLoaded', () => {
+      initDefaultDate();
+      updatePreview();
+    });
+  </script>
+</body>
+</html>
