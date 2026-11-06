@@ -151,6 +151,18 @@
     <priority>0.85</priority>
   </url>
   <url>
+    <loc>https://pratik-araclar.pratikweb.workers.dev/aidat-iade-dilekcesi/</loc>
+    <lastmod>2026-11-06</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://pratik-araclar.pratikweb.workers.dev/kredi-karti-aidat-iadesi/</loc>
+    <lastmod>2026-11-06</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
     <loc>https://pratik-araclar.pratikweb.workers.dev/gizlilik-politikasi/</loc>
     <lastmod>2026-10-28</lastmod>
     <changefreq>monthly</changefreq>
