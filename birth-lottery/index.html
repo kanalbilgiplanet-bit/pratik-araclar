@@ -676,14 +676,31 @@
           </div>
         </div>
 
-        <div class="paper-card p-3.5 space-y-1">
-          <div class="flex items-center justify-between">
-            <h4 class="font-bold text-stone-900 text-xs sm:text-sm font-serif" id="focusTitle">Bu Yılın Odağı: Bebeklik</h4>
-            <span class="text-[10px] sm:text-[11px] text-stone-500 font-medium px-2 py-0.5 bg-stone-100 rounded" id="focusAgeTag">0-5 Yaş</span>
+        <!-- INTERACTIVE "BU YILIN ODAĞI" (IMAGES 1, 2, 3) -->
+        <div class="paper-card p-4 space-y-3" id="interactiveFocusCard">
+          <div class="flex items-center justify-between border-b border-stone-100 pb-1.5">
+            <h4 class="font-black text-stone-900 text-sm sm:text-base font-serif tracking-tight" id="txtFocusHeader">Bu yılın odağı</h4>
+            <span class="text-[9px] sm:text-[10px] text-stone-400 font-bold uppercase tracking-wider">İSTEDİĞİN ZAMAN DEĞİŞTİREBİLİRSİN</span>
           </div>
-          <p class="text-xs text-stone-600 leading-relaxed" id="focusDescription">
-            Henüz bebeksin. Anne baban seni büyütüyor. Erken çocukluk anıları birikir ve mizaç bu yıllarda şekillenir.
-          </p>
+
+          <!-- Dynamic Context Line (Class, Location, Status) -->
+          <div class="text-xs font-semibold text-stone-700 flex items-center gap-1.5" id="focusContextLine">
+            <span id="focusSchoolStatus">İlkokul çağı</span> · <span id="focusLocationStatus">kırsal alan · Malezya</span>
+          </div>
+
+          <!-- Interactive Focus Pills Grid -->
+          <div class="flex flex-wrap gap-2 pt-1" id="focusPillsContainer">
+            <!-- Populated dynamically by JS -->
+          </div>
+
+          <!-- Harcama ve Yatırım Button -->
+          <div class="pt-2 border-t border-stone-100 flex items-center justify-between">
+            <button onclick="openSpendingModal()" class="px-3.5 py-1.5 rounded-xl bg-white hover:bg-stone-50 border border-stone-300 text-stone-800 text-xs font-semibold shadow-xs flex items-center gap-1.5 transition active:scale-95">
+              <i class="fa-solid fa-coins text-amber-600"></i>
+              <span>Harcama ve yatırım</span>
+            </button>
+            <span class="text-[11px] font-mono font-bold text-stone-600" id="focusSavingsBadge">Biriken: 0 TL</span>
+          </div>
         </div>
 
         <div class="paper-card p-3.5 space-y-2.5">
@@ -798,11 +815,12 @@
 
         <div class="space-y-2 pt-1" id="modalOptionsContainer"></div>
 
-        <div class="pt-2 border-t border-stone-100 flex items-center justify-between text-xs">
-          <button onclick="enableAutoDecideFromModal()" class="text-stone-500 hover:text-stone-800 underline text-[11px]" id="txtAutoLeave">
+        <div class="pt-3 border-t border-stone-100 flex flex-col items-center justify-center gap-2 text-xs">
+          <!-- Styled Auto Decide Pill (Image 4) -->
+          <button onclick="enableAutoDecideFromModal()" class="px-5 py-2 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-700 font-semibold text-xs border border-stone-300 shadow-2xs transition active:scale-95" id="txtAutoLeave">
             Bundan sonra kararları otomatiğe bırak
           </button>
-          <span class="text-[10px] text-stone-400 italic">Kararınız hayatı etkiler</span>
+          <span class="text-[10px] text-stone-400 italic">Seçilen karar hayat çizgini doğrudan etkiler</span>
         </div>
       </div>
 
@@ -810,6 +828,106 @@
   </div>
 
   <!-- ========================================================================= -->
+  
+  <!-- ========================================================================= -->
+  <!-- MODAL: HARCAMA VE YATIRIM (IMAGE 5) -->
+  <!-- ========================================================================= -->
+  <div id="modalSpending" class="fixed inset-0 bg-stone-950/70 backdrop-blur-xs z-50 hidden flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full border border-stone-200 shadow-2xl p-5 sm:p-6 space-y-4 max-h-[92vh] overflow-y-auto animate-fadeIn relative">
+      
+      <!-- Top Bar: Header & Close -->
+      <div class="flex items-center justify-between border-b border-stone-100 pb-2">
+        <span class="text-xs font-bold uppercase tracking-wider text-stone-400">Harcama ve yatırım</span>
+        <button onclick="closeSpendingModal()" class="text-xs font-bold text-stone-500 hover:text-stone-900 px-2 py-1 rounded hover:bg-stone-100 transition">
+          Kapat
+        </button>
+      </div>
+
+      <!-- Money Display Header -->
+      <div class="space-y-1">
+        <h3 class="text-2xl sm:text-3xl font-black font-serif text-stone-900 tracking-tight" id="spendingSavingsTitle">
+          Biriken para 2.468 TL
+        </h3>
+        <p class="text-xs text-stone-500 leading-relaxed" id="spendingSubtitle">
+          Tutarlar Türkiye fiyatlarıyla gösterilir; yıllık gelirin <span id="spendingAnnualIncome" class="font-bold text-stone-700">14.800 TL</span>. Harcadığın kadar mutluluğun, ilişkilerin, sağlığın ve geleceğin değişir. Seçerken zaman durur.
+        </p>
+      </div>
+
+      <!-- Section: Şimdi Yapmaya Değer Olanlar -->
+      <div class="space-y-3 pt-2">
+        <div class="text-[10px] font-bold uppercase tracking-wider text-stone-400">
+          ŞİMDİ YAPMAYA DEĞER OLANLAR
+        </div>
+
+        <!-- Card 1: Biriyle Tanışmaya Çık / Flört -->
+        <div class="p-3.5 rounded-xl border border-stone-200 bg-stone-50/70 space-y-2">
+          <div>
+            <h5 class="text-xs font-bold text-stone-900">Biriyle tanışmaya çık</h5>
+            <p class="text-[11px] text-stone-500">Nasıl arayacağını seç - seneye biriyle tanışma ihtimali ↑</p>
+          </div>
+          <button onclick="executeSpending('flirt', 397, 'Sosyal ortamlarda yeni insanlarla tanıştın', { social: +5, happy: +3 })" class="w-full text-left px-3.5 py-2 rounded-lg bg-white border border-stone-300 hover:border-teal-700 hover:bg-teal-50/40 text-xs font-semibold text-stone-800 transition flex items-center justify-between group shadow-2xs">
+            <span>Sosyal ortamlara çık, arkadaşlarından tanıştırmalarını iste</span>
+            <span class="font-mono text-stone-600 group-hover:text-teal-800 font-bold shrink-0">397 TL</span>
+          </button>
+        </div>
+
+        <!-- Card 2: Aile ve Arkadaşlarla Yemek / Hediyeler -->
+        <div class="p-3.5 rounded-xl border border-stone-200 bg-stone-50/70 space-y-2">
+          <div>
+            <h5 class="text-xs font-bold text-stone-900">Aile ve arkadaşlarla dışarıda yemek ve hediyeler</h5>
+            <p class="text-[11px] text-stone-500">İlişkiler +4 · Mutluluk +2</p>
+          </div>
+          <button onclick="executeSpending('dinner', 596, 'Sevdiklerine güzel bir akşam yemeği ısmarladın', { social: +6, happy: +4 })" class="w-full text-left px-3.5 py-2 rounded-lg bg-white border border-stone-300 hover:border-teal-700 hover:bg-teal-50/40 text-xs font-semibold text-stone-800 transition flex items-center justify-between group shadow-2xs">
+            <span>Aile ve dost sofrası kur</span>
+            <span class="font-mono text-stone-600 group-hover:text-teal-800 font-bold shrink-0">596 TL Türkiye fiyatlarıyla</span>
+          </button>
+        </div>
+
+        <!-- Card 3: Yurt İçi Gezi / Seyahat -->
+        <div class="p-3.5 rounded-xl border border-stone-200 bg-stone-50/70 space-y-2">
+          <div>
+            <h5 class="text-xs font-bold text-stone-900">Yurt içi gezi</h5>
+            <p class="text-[11px] text-stone-500">Mutluluk +3 · bilgi biraz↑ - kimin geleceğini seç</p>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <button onclick="executeSpending('trip_friends', 1191, 'Arkadaşlarınla unutulmaz bir seyahat yaptın', { happy: +6, social: +4, edu: +2 })" class="px-2.5 py-2 rounded-lg bg-white border border-stone-300 hover:border-teal-700 hover:bg-teal-50/40 text-[11px] font-semibold text-stone-800 transition text-center shadow-2xs">
+              <div>Arkadaşlarınla</div>
+              <div class="font-mono text-stone-500 text-[10px] font-bold">1.191 TL</div>
+            </button>
+            <button onclick="executeSpending('trip_family', 1191, 'Kardeşlerin ve ailenle tatile çıktın', { happy: +5, social: +5, edu: +2 })" class="px-2.5 py-2 rounded-lg bg-white border border-stone-300 hover:border-teal-700 hover:bg-teal-50/40 text-[11px] font-semibold text-stone-800 transition text-center shadow-2xs">
+              <div>Kardeşlerinle</div>
+              <div class="font-mono text-stone-500 text-[10px] font-bold">1.191 TL</div>
+            </button>
+            <button onclick="executeSpending('trip_solo', 1191, 'Kendi başına huzurlu bir keşif yolculuğuna çıktın', { happy: +6, edu: +4, health: +2 })" class="px-2.5 py-2 rounded-lg bg-white border border-stone-300 hover:border-teal-700 hover:bg-teal-50/40 text-[11px] font-semibold text-stone-800 transition text-center shadow-2xs">
+              <div>Tek başına</div>
+              <div class="font-mono text-stone-500 text-[10px] font-bold">1.191 TL</div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Card 4: Sertifikalar ve İş Kursları -->
+        <div class="p-3.5 rounded-xl border border-stone-200 bg-stone-50/70 space-y-2">
+          <div>
+            <h5 class="text-xs font-bold text-stone-900">Sertifikalar ve iş kursları</h5>
+            <p class="text-[11px] text-stone-500">Bilgi ↑ · Gelir ↑ - terfiye ve geleceğe kalıcı katkı</p>
+          </div>
+          <div class="space-y-1.5">
+            <button onclick="executeSpending('cert', 2978, 'Mesleki uzmanlık sertifikası programını tamamladın', { edu: +12, incomeBonus: 0.15 })" class="w-full text-left px-3.5 py-2 rounded-lg bg-white border border-stone-300 hover:border-teal-700 hover:bg-teal-50/40 text-xs font-semibold text-stone-800 transition flex items-center justify-between group shadow-2xs">
+              <span>Sertifikalar ve iş kursları</span>
+              <span class="font-mono text-stone-600 group-hover:text-teal-800 font-bold shrink-0">2.978 TL</span>
+            </button>
+            <button onclick="executeSpending('lang', 794, 'Yabancı dil kursunu başarıyla bitirdin', { edu: +8, social: +3 })" class="w-full text-left px-3.5 py-2 rounded-lg bg-white border border-stone-300 hover:border-teal-700 hover:bg-teal-50/40 text-xs font-semibold text-stone-800 transition flex items-center justify-between group shadow-2xs">
+              <span>Göç öncesi dil kursu</span>
+              <span class="font-mono text-stone-600 group-hover:text-teal-800 font-bold shrink-0">794 TL</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
   <!-- SCREEN 4: MEMORIAL & REAL COUNTRY COMPARISON -->
   <!-- ========================================================================= -->
   <div id="screenMemorial" class="hidden flex-1 max-w-2xl w-full mx-auto px-4 py-6 sm:py-10 flex flex-col justify-center">
@@ -2402,6 +2520,38 @@
           { text: { tr: "Yakın arkadaşlarınla derin sohbetler ve sırlar paylaş", en: "Cultivate deep, loyal confidants" }, stats: { social: +8, happy: +7 } }
         ]
       },
+            15: {
+        sceneType: 'work_office',
+        title: { tr: "İş buldun", en: "First Employment Opportunity" },
+        prompt: { tr: "Çalışma çağına adım attın. Yaşadığın coğrafyada bulabileceğin ilk iş olanakları:", en: "Entering the workforce. Early labor market opportunities in your region:" },
+        citation: { tr: "ILO (Uluslararası Çalışma Örgütü) verilerine göre küresel genç istihdamında kayıt dışılık ve kırsal tarım belirleyici faktördür.", en: "ILO data highlights informal labor and rural agriculture as dominant early employment pathways." },
+        choices: [
+          { 
+            title: "Tarım işçisi",
+            sub: "Yılda 721 $ PPP · Türkiye fiyatlarıyla ayda 1.399 TL · kayıt dışı iş",
+            text: { tr: "Tarım işçisi (Yılda 721 $ PPP · ayda ~1.400 TL)", en: "Agricultural laborer" }, 
+            stats: { health: -1, social: +3, incomeTL: 1400 } 
+          },
+          { 
+            title: "Küçük çiftçi (geçimlik tarım)",
+            sub: "Yılda 630 $ PPP · Türkiye fiyatlarıyla ayda 1.223 TL · kayıt dışı iş",
+            text: { tr: "Küçük çiftçi / geçimlik tarım (ayda ~1.220 TL)", en: "Smallholder subsistence farmer" }, 
+            stats: { social: +4, happy: +2, incomeTL: 1220 } 
+          },
+          { 
+            title: "Çoban veya çırak",
+            sub: "Yılda 463 $ PPP · Türkiye fiyatlarıyla ayda 899 TL · kayıt dışı iş",
+            text: { tr: "Çoban veya zanaat çırağı (ayda ~900 TL)", en: "Herder or craft apprentice" }, 
+            stats: { health: +2, edu: +4, incomeTL: 900 } 
+          },
+          { 
+            title: "Daha iyi bir iş bekle",
+            sub: "Bir yıl daha iş ara veya eğitime devam et",
+            text: { tr: "Daha iyi bir iş bekle (Bir yıl daha iş ara)", en: "Hold out for better opportunities" }, 
+            stats: { edu: +6, happy: -2, incomeTL: 0 } 
+          }
+        ]
+      },
       18: {
         sceneType: 'graduation',
         title: { tr: "On sekiz yaş: Yetişkinliğin İlk Adımı", en: "Age Eighteen: Crossing into Adulthood" },
@@ -2885,6 +3035,35 @@
         }
       }
 
+      // Yearly Focus Stat Progression (Images 1, 2, 3)
+      if (currentSim.yearlyFocus === 'study') {
+        currentSim.education = Math.min(100, currentSim.education + 2);
+        currentSim.happiness = Math.max(10, currentSim.happiness - 1);
+      } else if (currentSim.yearlyFocus === 'friends' || currentSim.yearlyFocus === 'play') {
+        currentSim.happiness = Math.min(100, currentSim.happiness + 2);
+        currentSim.social = Math.min(100, currentSim.social + 3);
+      } else if (currentSim.yearlyFocus === 'family') {
+        currentSim.happiness = Math.min(100, currentSim.happiness + 2);
+        currentSim.education = Math.max(5, currentSim.education - 1);
+      } else if (currentSim.yearlyFocus === 'sport' || currentSim.yearlyFocus === 'health') {
+        currentSim.health = Math.min(100, currentSim.health + 2);
+      } else if (currentSim.yearlyFocus === 'hobbies') {
+        currentSim.happiness = Math.min(100, currentSim.happiness + 3);
+      } else if (currentSim.yearlyFocus === 'career') {
+        currentSim.annualIncomeTL = Math.round((currentSim.annualIncomeTL || 14800) * 1.05);
+        currentSim.happiness = Math.max(10, currentSim.happiness - 1);
+      }
+
+      // Savings Accrual (Image 5)
+      if (currentSim.currentAge >= 15) {
+        const annualAddition = Math.round((currentSim.annualIncomeTL || 14800) * 0.15);
+        currentSim.savingsTL = (currentSim.savingsTL || 2468) + annualAddition;
+      } else if (currentSim.currentAge >= 6) {
+        currentSim.savingsTL = (currentSim.savingsTL || 500) + Math.floor(Math.random() * 80 + 20);
+      }
+
+      renderYearlyFocusPills();
+
       if (!silent) {
         updateSimUIDynamic();
       }
@@ -3067,13 +3246,22 @@
       milestone.choices.forEach((choice, idx) => {
         const btn = document.createElement('button');
         btn.onclick = () => selectDecisionChoice(idx);
-        btn.className = 'w-full text-left p-3 rounded-xl border border-stone-200 hover:border-[#7F1D1D] hover:bg-rose-50/40 text-xs font-semibold text-stone-800 transition flex items-center justify-between group';
+        btn.className = 'w-full text-left p-3.5 rounded-xl border border-stone-200 hover:border-[#7F1D1D] hover:bg-rose-50/40 text-xs font-semibold text-stone-800 transition flex items-center justify-between group shadow-2xs';
+        
+        const mainText = choice.title || (choice.text ? (choice.text[currentLang] || choice.text.tr) : '');
+        const subHtml = choice.sub 
+          ? `<div class="text-[11px] text-stone-500 font-normal mt-0.5">${choice.sub}</div>`
+          : '';
+
         btn.innerHTML = `
-          <span class="flex items-center gap-2">
-            <span class="w-5 h-5 rounded-full bg-stone-100 group-hover:bg-[#7F1D1D] group-hover:text-white font-mono text-[10px] flex items-center justify-center font-bold text-stone-600 transition">${idx + 1}</span>
-            <span class="leading-relaxed">${choice.text[currentLang] || choice.text.tr}</span>
-          </span>
-          <i class="fa-solid fa-chevron-right text-[10px] text-stone-400 group-hover:text-[#7F1D1D] transition"></i>
+          <div class="flex items-start gap-3">
+            <span class="w-5 h-5 rounded-full bg-stone-100 group-hover:bg-[#7F1D1D] group-hover:text-white font-mono text-[10px] flex items-center justify-center font-bold text-stone-600 transition shrink-0 mt-0.5">${idx + 1}</span>
+            <div>
+              <div class="font-bold text-stone-900 group-hover:text-[#7F1D1D] transition leading-tight">${mainText}</div>
+              ${subHtml}
+            </div>
+          </div>
+          <i class="fa-solid fa-chevron-right text-[10px] text-stone-400 group-hover:text-[#7F1D1D] transition shrink-0 ml-2"></i>
         `;
         container.appendChild(btn);
       });
@@ -3971,6 +4159,185 @@
         backToWelcome();
       }
     }
+
+
+    // =========================================================================
+    // 15. INTERACTIVE "BU YILIN ODAĞI" & SPENDING SYSTEM (IMAGES 1, 2, 3, 5)
+    // =========================================================================
+
+    function initInteractiveFocus() {
+      if (!currentSim) return;
+      if (!currentSim.yearlyFocus) {
+        currentSim.yearlyFocus = currentSim.currentAge < 6 ? 'family' : (currentSim.currentAge < 18 ? 'study' : 'career');
+      }
+      if (typeof currentSim.savingsTL === 'undefined') {
+        currentSim.savingsTL = 2468;
+      }
+      if (typeof currentSim.annualIncomeTL === 'undefined') {
+        currentSim.annualIncomeTL = 14800;
+      }
+      renderYearlyFocusPills();
+    }
+
+    function renderYearlyFocusPills() {
+      if (!currentSim) return;
+      const container = document.getElementById('focusPillsContainer');
+      const contextLine = document.getElementById('focusContextLine');
+      const savingsBadge = document.getElementById('focusSavingsBadge');
+      if (!container) return;
+
+      const age = currentSim.currentAge;
+      const cName = currentSim.country[currentLang] || currentSim.country.name;
+
+      // Update Context line (matching Image 1 & 2: "İlkokul 2. sınıf · kırsal Kuzey Kivu Eyaleti · Kongo Demokratik Cumhuriyeti")
+      if (contextLine) {
+        let statusTitle = '';
+        if (age < 6) {
+          statusTitle = 'Okul öncesi & aile yanı';
+        } else if (age <= 10) {
+          statusTitle = `İlkokul ${Math.max(1, age - 5)}. sınıf`;
+        } else if (age <= 14) {
+          statusTitle = `Ortaokul ${Math.max(1, age - 10)}. sınıf`;
+        } else if (age <= 18) {
+          statusTitle = currentSim.education > 50 ? 'Lise dönemi' : 'Çalışan genç (tarım & ticaret)';
+        } else if (age <= 60) {
+          statusTitle = currentSim.assets?.hasFactory ? 'Şirket sahibi & girişimci' : (currentSim.education > 65 ? 'Uzman kadro / ofis' : 'Geçimlik zanaatkar / çalışan');
+        } else {
+          statusTitle = 'Emeklilik & tecrübe çağı';
+        }
+
+        contextLine.innerHTML = `<span class="font-bold text-stone-800">${statusTitle}</span> · <span class="text-stone-500">${currentSim.city}, ${cName}</span>`;
+      }
+
+      // Update savings badge
+      if (savingsBadge) {
+        savingsBadge.textContent = `Biriken: ${formatTL(currentSim.savingsTL)} TL`;
+      }
+
+      // Determine pills based on life stage
+      let pills = [];
+      if (age < 6) {
+        pills = [
+          { key: 'family', label: 'Evde yardım', sub: 'Aile↑ Bilgi biraz↓' },
+          { key: 'play', label: 'Arkadaşlar ve oyun', sub: 'İlişkiler↑ Mutluluk↑' },
+          { key: 'health', label: 'Uyku ve dinlenme', sub: 'Sağlık↑' }
+        ];
+      } else if (age < 18) {
+        pills = [
+          { key: 'study', label: 'Ders çalışma', sub: 'Bilgiyi koru · Mutluluk↓' },
+          { key: 'friends', label: 'Arkadaşlar ve oyun', sub: 'İlişkiler↑ Mutluluk↑' },
+          { key: 'family', label: 'Evde yardım', sub: 'Aile↑ Bilgi biraz↓' },
+          { key: 'sport', label: 'Spor', sub: 'Sağlık↑' },
+          { key: 'hobbies', label: 'Hobiler', sub: 'Mutluluk↑ Hobi becerisi↑' }
+        ];
+      } else {
+        pills = [
+          { key: 'career', label: 'Kariyer ve iş', sub: 'Gelir↑ Yorgunluk↑' },
+          { key: 'family', label: 'Aile ve evlilik', sub: 'Aile bağı↑ Mutluluk↑' },
+          { key: 'friends', label: 'Sosyal çevre & dostlar', sub: 'İlişkiler↑ Mutluluk↑' },
+          { key: 'sport', label: 'Spor & zindelik', sub: 'Sağlık↑' },
+          { key: 'hobbies', label: 'Hobiler & kültür', sub: 'Mutluluk↑ Vizyon↑' }
+        ];
+      }
+
+      container.innerHTML = '';
+      pills.forEach(pill => {
+        const isSelected = (currentSim.yearlyFocus === pill.key);
+        const btn = document.createElement('button');
+        btn.onclick = () => setYearlyFocus(pill.key);
+
+        if (isSelected) {
+          // Exact Dark Teal / Emerald from Image 1, 2, 3 (#0F5348)
+          btn.className = 'px-4 py-2 rounded-full bg-[#0F5348] text-white font-bold text-xs shadow-xs border border-[#0F5348] transition flex flex-col items-start active:scale-95 text-left';
+          btn.innerHTML = `
+            <div class="text-xs font-bold leading-tight">${pill.label}</div>
+            <div class="text-[10px] text-teal-100/90 font-normal mt-0.5">${pill.sub}</div>
+          `;
+        } else {
+          btn.className = 'px-4 py-2 rounded-full bg-white hover:bg-stone-50 text-stone-700 font-semibold text-xs border border-stone-300 transition flex flex-col items-start active:scale-95 text-left shadow-2xs';
+          btn.innerHTML = `
+            <div class="text-xs font-bold text-stone-800 leading-tight">${pill.label}</div>
+            <div class="text-[10px] text-stone-400 font-normal mt-0.5">${pill.sub}</div>
+          `;
+        }
+
+        container.appendChild(btn);
+      });
+    }
+
+    function setYearlyFocus(focusKey) {
+      if (!currentSim) return;
+      currentSim.yearlyFocus = focusKey;
+      renderYearlyFocusPills();
+      showShareToast('Odak Güncellendi', 'Bu yılın önceliği başarıyla değiştirildi.');
+    }
+
+    // Modal Spending Functions (Image 5)
+    function openSpendingModal() {
+      if (!currentSim) return;
+      isPlaying = false;
+      updatePlayPauseButton();
+
+      const modal = document.getElementById('modalSpending');
+      const title = document.getElementById('spendingSavingsTitle');
+      const income = document.getElementById('spendingAnnualIncome');
+
+      if (title) title.textContent = `Biriken para ${formatTL(currentSim.savingsTL)} TL`;
+      if (income) income.textContent = `${formatTL(currentSim.annualIncomeTL)} TL`;
+
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeSpendingModal() {
+      const modal = document.getElementById('modalSpending');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function executeSpending(type, cost, name, bonus) {
+      if (!currentSim) return;
+
+      if (currentSim.savingsTL < cost) {
+        showShareToast('Yetersiz Bakiye', `Bu harcama için ${formatTL(cost)} TL gerekiyor. (Biriken: ${formatTL(currentSim.savingsTL)} TL)`);
+        return;
+      }
+
+      currentSim.savingsTL -= cost;
+
+      if (bonus.happy) currentSim.happiness = Math.min(100, currentSim.happiness + bonus.happy);
+      if (bonus.health) currentSim.health = Math.min(100, currentSim.health + bonus.health);
+      if (bonus.social) currentSim.social = Math.min(100, currentSim.social + bonus.social);
+      if (bonus.edu) currentSim.education = Math.min(100, currentSim.education + bonus.edu);
+      if (bonus.incomeBonus) {
+        currentSim.annualIncomeTL = Math.round(currentSim.annualIncomeTL * (1 + bonus.incomeBonus));
+      }
+
+      addTimelineEvent(currentSim.currentAge, `💰 ${name} (${formatTL(cost)} TL harcandı).`);
+
+      // Update Spending Modal headers
+      const title = document.getElementById('spendingSavingsTitle');
+      const income = document.getElementById('spendingAnnualIncome');
+      if (title) title.textContent = `Biriken para ${formatTL(currentSim.savingsTL)} TL`;
+      if (income) income.textContent = `${formatTL(currentSim.annualIncomeTL)} TL`;
+
+      // Update Sim stats in main UI
+      updateSimUIDynamic();
+      renderYearlyFocusPills();
+
+      showShareToast('Harcama Yapıldı!', `${name} - ${formatTL(cost)} TL düşüldü.`);
+    }
+
+    function formatTL(num) {
+      if (typeof num !== 'number') return num || '0';
+      return num.toLocaleString('tr-TR');
+    }
+
+    function enableAutoDecideFromModal() {
+      isAutoDecide = true;
+      updateAutoDecideUI();
+      // Auto-pick the first choice and proceed
+      selectDecisionChoice(0, true);
+    }
+
 
     // =========================================================================
     // 14. VIRAL URL SHARING & COMMUNITY MEMORIAL WALL ENGINE
