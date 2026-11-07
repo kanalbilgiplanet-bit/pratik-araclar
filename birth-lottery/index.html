@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Birth Lottery (1 in 8 Billion) — Global Life Simulator</title>
+  <meta name="description" content="Where would you be born if your life was chosen by chance among 8 billion people? An interactive, real-world demographic life simulator powered by UN global birth data.">
+  <meta name="keywords" content="the birth lottery, birth lottery game, 1 in 8 billion, 1in8b life simulator, 8 billion lives, random birth simulator, doğum piyangosu, 8 milyarda 1 simülasyonu, world life simulator, where were you born">
+  <link rel="canonical" href="https://pratik-araclar.pratikweb.workers.dev/birth-lottery/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://pratik-araclar.pratikweb.workers.dev/birth-lottery/">
+  <meta property="og:title" content="The Birth Lottery (1 in 8 Billion) — Global Life Simulator">
+  <meta property="og:description" content="Draw your cosmic birth ticket. Discover where you'd be born among 8 billion humans and live through a completely randomized life.">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:site_name" content="The Birth Lottery">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://pratik-araclar.pratikweb.workers.dev/birth-lottery/">
+  <meta name="twitter:title" content="The Birth Lottery (1 in 8 Billion)">
+  <meta name="twitter:description" content="Where will you spawn? Live a randomized life based on real UN global statistics.">
+  <meta name="twitter:image" content="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='gold' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23d97706'/%3E%3Cstop offset='100%25' stop-color='%23f59e0b'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='%23faf7f2' stroke='%23e5e0d8' stroke-width='2'/%3E%3Ccircle cx='32' cy='32' r='20' fill='none' stroke='url(%23gold)' stroke-width='4' stroke-dasharray='4 2'/%3E%3Ccircle cx='32' cy='32' r='8' fill='url(%23gold)'/%3E%3C/svg%3E">
+
+  <!-- Fonts: Playfair Display (Serif) & Plus Jakarta Sans (Sans) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS & FontAwesome -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['"Playfair Display"', 'Georgia', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            title: ['"Cinzel"', 'serif'],
+          },
+          colors: {
+            ivory: {
+              50: '#FDFBF7',
+              100: '#FAF7F2',
+              200: '#F4ECE1',
+              300: '#E8DCCB',
+              800: '#3D342B',
+              900: '#1F1A15',
+            },
+            gold: {
+              400: '#F59E0B',
+              500: '#D97706',
+              600: '#B45309',
+              700: '#92400E',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #FAF7F2;
+      color: #1F1A15;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(217, 119, 6, 0.04) 0%, transparent 25%),
+        radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.03) 0%, transparent 25%);
+      min-height: 100vh;
+    }
+
+    /* Vintage Paper / Ticket Styling */
+    .ticket-card {
+      background: #FFFFFF;
+      border: 1px solid #EADBCE;
+      box-shadow: 
+        0 1px 3px 0 rgba(60, 50, 40, 0.05),
+        0 20px 30px -10px rgba(60, 50, 40, 0.08);
+      position: relative;
+    }
+
+    /* Perforated ticket notch */
+    .ticket-notch-left, .ticket-notch-right {
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #FAF7F2;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+      border: 1px solid #EADBCE;
+    }
+    .ticket-notch-left { left: -11px; clip-path: inset(0 0 0 50%); }
+    .ticket-notch-right { right: -11px; clip-path: inset(0 50% 0 0); }
+
+    /* Embossed Gold Stamp */
+    .gold-stamp {
+      border: 2px dashed #D97706;
+      color: #B45309;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      transform: rotate(-3deg);
+    }
+
+    /* Subtle pulse animation for roll button */
+    @keyframes gentlePulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 10px 25px -5px rgba(217, 119, 6, 0.3); }
+      50% { transform: scale(1.02); box-shadow: 0 15px 30px -5px rgba(217, 119, 6, 0.45); }
+    }
+    .pulse-btn {
+      animation: gentlePulse 3s infinite ease-in-out;
+    }
+
+    /* Print / Screenshot Hidden elements */
+    @media print {
+      body { background: white !important; }
+      .no-print { display: none !important; }
+    }
+  </style>
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "The Birth Lottery (1 in 8 Billion)",
+    "url": "https://pratik-araclar.pratikweb.workers.dev/birth-lottery/",
+    "applicationCategory": "GameApplication",
+    "operatingSystem": "All",
+    "description": "An interactive global demographic life simulator based on real United Nations birth rates. Discover where you would be born among 8 billion people on Earth.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
+</head>
+<body class="flex flex-col justify-between selection:bg-amber-200 selection:text-amber-950 font-sans antialiased">
+
+  <!-- Top Navbar / Header -->
+  <header class="w-full border-b border-[#EADBCE] bg-[#FAF7F2]/90 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
+      
+      <!-- Brand & Title -->
+      <a href="/birth-lottery/" class="flex items-center gap-3 group">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center text-white shadow-md shadow-amber-500/20 group-hover:rotate-6 transition-transform">
+          <i class="fa-solid fa-earth-americas text-lg"></i>
+        </div>
+        <div>
+          <span class="font-serif font-black text-lg sm:text-xl text-stone-900 tracking-tight block leading-none">
+            The Birth Lottery
+          </span>
+          <span class="text-[11px] font-semibold text-amber-700 uppercase tracking-widest block mt-0.5">
+            1 in 8 Billion • Life Simulator
+          </span>
+        </div>
+      </a>
+
+      <!-- Right Controls: Language Switcher & Exit to Portal -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- Language Switcher Dropdown / Pills -->
+        <div class="relative inline-block text-left">
+          <button id="langBtn" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-[#EADBCE] text-xs font-semibold text-stone-700 hover:border-amber-500 hover:text-amber-800 transition shadow-sm">
+            <i class="fa-solid fa-globe text-amber-600 text-xs"></i>
+            <span id="currentLangLabel">English</span>
+            <i class="fa-solid fa-chevron-down text-[10px] text-stone-400"></i>
+          </button>
+          
+          <div id="langMenu" class="hidden absolute right-0 mt-2 w-36 rounded-xl bg-white border border-[#EADBCE] shadow-xl py-1 z-50 text-xs font-medium text-stone-700">
+            <button onclick="setLanguage('en')" class="w-full text-left px-3 py-2 hover:bg-amber-50 flex items-center justify-between">
+              <span>🇺🇸 English</span>
+              <span class="text-[10px] text-stone-400">EN</span>
+            </button>
+            <button onclick="setLanguage('tr')" class="w-full text-left px-3 py-2 hover:bg-amber-50 flex items-center justify-between">
+              <span>🇹🇷 Türkçe</span>
+              <span class="text-[10px] text-stone-400">TR</span>
+            </button>
+            <button onclick="setLanguage('es')" class="w-full text-left px-3 py-2 hover:bg-amber-50 flex items-center justify-between">
+              <span>🇪🇸 Español</span>
+              <span class="text-[10px] text-stone-400">ES</span>
+            </button>
+            <button onclick="setLanguage('de')" class="w-full text-left px-3 py-2 hover:bg-amber-50 flex items-center justify-between">
+              <span>🇩🇪 Deutsch</span>
+              <span class="text-[10px] text-stone-400">DE</span>
+            </button>
+            <button onclick="setLanguage('fr')" class="w-full text-left px-3 py-2 hover:bg-amber-50 flex items-center justify-between">
+              <span>🇫🇷 Français</span>
+              <span class="text-[10px] text-stone-400">FR</span>
+            </button>
+            <button onclick="setLanguage('pt')" class="w-full text-left px-3 py-2 hover:bg-amber-50 flex items-center justify-between">
+              <span>🇧🇷 Português</span>
+              <span class="text-[10px] text-stone-400">PT</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Sound Toggle -->
+        <button id="soundToggleBtn" onclick="toggleSound()" class="w-8 h-8 rounded-xl bg-white border border-[#EADBCE] text-stone-600 hover:text-amber-700 flex items-center justify-center text-xs transition shadow-sm" title="Toggle Sound">
+          <i id="soundIcon" class="fa-solid fa-volume-high"></i>
+        </button>
+
+        <!-- Back to PratikAraçlar -->
+        <a href="/" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-600 text-xs font-semibold transition border border-stone-200">
+          <i class="fa-solid fa-arrow-left text-[10px]"></i>
+          <span data-i18n="portal_link">PratikAraçlar</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="flex-1 max-w-4xl w-full mx-auto px-4 py-8 sm:py-12 flex flex-col items-center justify-center">
+
+    <!-- SCREEN 1: WELCOME & TICKET ROLL SCREEN -->
+    <section id="screenWelcome" class="w-full text-center space-y-8 animate-fadeIn">
+      
+      <!-- Philosophy Badge -->
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-800 text-xs font-semibold shadow-sm">
+        <i class="fa-solid fa-sparkles text-amber-600"></i>
+        <span data-i18n="badge_text">Based on 8,000,000,000 Real Lives & UN Demographic Data</span>
+      </div>
+
+      <!-- Main Catchy Title -->
+      <div class="space-y-4 max-w-2xl mx-auto">
+        <h1 class="font-serif font-black text-4xl sm:text-6xl text-stone-900 tracking-tight leading-[1.1]">
+          <span data-i18n="hero_title_1">None of us chose</span> <br>
+          <span class="italic text-amber-700" data-i18n="hero_title_2">where we were born.</span>
+        </h1>
+        <p class="text-stone-600 text-base sm:text-lg leading-relaxed font-normal" data-i18n="hero_desc">
+          Around 134 million babies are born each year across 195 countries. If your soul was drawn at random from the cosmic lottery of humanity, what kind of life would you have lived?
+        </p>
+      </div>
+
+      <!-- Golden Ticket Preview Illustration -->
+      <div class="max-w-md mx-auto ticket-card rounded-3xl p-6 sm:p-8 border-2 border-amber-300/80 shadow-2xl relative overflow-hidden bg-gradient-to-b from-white to-[#FAF6EE]">
+        <div class="ticket-notch-left"></div>
+        <div class="ticket-notch-right"></div>
+        
+        <div class="flex items-center justify-between border-b border-amber-200/80 pb-4 mb-5 text-xs text-amber-900 font-bold tracking-wider uppercase">
+          <span class="flex items-center gap-1.5"><i class="fa-solid fa-ticket text-amber-600"></i> <span data-i18n="ticket_label">Cosmic Birth Ticket</span></span>
+          <span class="font-mono text-stone-400">NO. #8,000,000,000</span>
+        </div>
+
+        <div class="py-6 flex flex-col items-center justify-center space-y-4">
+          <div class="w-20 h-20 rounded-full bg-amber-100/80 border-2 border-amber-400 flex items-center justify-center text-amber-600 text-3xl shadow-inner">
+            <i class="fa-solid fa-dice-d20"></i>
+          </div>
+          <div>
+            <span class="font-serif font-bold text-2xl text-stone-800 block" data-i18n="ticket_mystery">Who will you become?</span>
+            <span class="text-xs text-stone-500 mt-1 block" data-i18n="ticket_sub">Gender, country, family fortune & destiny are waiting.</span>
+          </div>
+        </div>
+
+        <!-- Big Action Button -->
+        <button id="btnStartLottery" onclick="startBirthLottery()" class="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 hover:from-amber-700 hover:to-amber-700 text-white font-extrabold text-base sm:text-lg transition-all shadow-xl shadow-amber-500/25 pulse-btn flex items-center justify-center gap-2">
+          <i class="fa-solid fa-sparkles text-amber-200"></i>
+          <span data-i18n="btn_draw_ticket">Draw Your Birth Ticket</span>
+          <i class="fa-solid fa-arrow-right text-sm"></i>
+        </button>
+
+      </div>
+
+      <!-- Real Facts Footnote -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-2xl mx-auto pt-4 text-left">
+        <div class="p-3 rounded-2xl bg-white border border-[#EADBCE]">
+          <span class="text-[10px] text-stone-400 uppercase font-bold block" data-i18n="stat_pop_label">Global Population</span>
+          <span class="text-sm font-bold text-stone-800">8.05 Billion</span>
+        </div>
+        <div class="p-3 rounded-2xl bg-white border border-[#EADBCE]">
+          <span class="text-[10px] text-stone-400 uppercase font-bold block" data-i18n="stat_births_label">Annual Births</span>
+          <span class="text-sm font-bold text-stone-800">~134 Million/yr</span>
+        </div>
+        <div class="p-3 rounded-2xl bg-white border border-[#EADBCE]">
+          <span class="text-[10px] text-stone-400 uppercase font-bold block" data-i18n="stat_countries_label">Countries Modeled</span>
+          <span class="text-sm font-bold text-stone-800">195 Sovereign States</span>
+        </div>
+        <div class="p-3 rounded-2xl bg-white border border-[#EADBCE]">
+          <span class="text-[10px] text-stone-400 uppercase font-bold block" data-i18n="stat_source_label">Data Authority</span>
+          <span class="text-sm font-bold text-stone-800">UN & World Bank</span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- SCREEN 2: THE BIRTH TICKET REVEAL (SPAWN MOMENT) -->
+    <section id="screenBirth" class="hidden w-full max-w-xl mx-auto space-y-6 animate-fadeIn">
+      
+      <!-- Top Step Indicator -->
+      <div class="flex items-center justify-between text-xs text-stone-500 font-semibold px-2">
+        <span class="flex items-center gap-1.5 text-amber-700 font-bold">
+          <i class="fa-solid fa-certificate"></i> <span data-i18n="step_birth">Step 1: The Cosmic Draw</span>
+        </span>
+        <span class="text-stone-400" data-i18n="age_label_0">Age 0 • Just Born</span>
+      </div>
+
+      <!-- The Official Passport / Ticket -->
+      <div class="ticket-card rounded-3xl p-6 sm:p-8 border-2 border-amber-300 shadow-2xl relative overflow-hidden bg-gradient-to-b from-white via-white to-amber-50/30">
+        <div class="ticket-notch-left"></div>
+        <div class="ticket-notch-right"></div>
+
+        <!-- Ticket Header with Country Flag & Rarity -->
+        <div class="flex items-start justify-between border-b border-stone-200 pb-5 mb-5">
+          <div class="flex items-center gap-3">
+            <span id="birthFlag" class="text-4xl sm:text-5xl filter drop-shadow">🌍</span>
+            <div>
+              <span id="birthCountry" class="font-serif font-black text-2xl sm:text-3xl text-stone-900 block leading-tight">
+                Country Name
+              </span>
+              <span id="birthCity" class="text-xs font-semibold text-stone-500 block">
+                Region / City
+              </span>
+            </div>
+          </div>
+          <div class="text-right">
+            <span id="birthRarityBadge" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800 border border-amber-300">
+              <i class="fa-solid fa-crown text-[10px]"></i> 1.2% Chance
+            </span>
+          </div>
+        </div>
+
+        <!-- Identity Matrix -->
+        <div class="grid grid-cols-2 gap-3 mb-6 text-xs">
+          <div class="p-3 rounded-2xl bg-stone-50 border border-stone-200">
+            <span class="text-stone-400 block text-[10px] uppercase font-bold" data-i18n="label_gender">Biological Sex</span>
+            <span id="birthGender" class="font-bold text-stone-800 text-sm">Female ♀</span>
+          </div>
+          <div class="p-3 rounded-2xl bg-stone-50 border border-stone-200">
+            <span class="text-stone-400 block text-[10px] uppercase font-bold" data-i18n="label_social">Family Background</span>
+            <span id="birthClass" class="font-bold text-stone-800 text-sm">Working Class</span>
+          </div>
+        </div>
+
+        <!-- Family & Narrative Context -->
+        <div class="p-4 rounded-2xl bg-amber-50/70 border border-amber-200/80 mb-6 space-y-2">
+          <div class="flex items-center gap-2 text-xs font-bold text-amber-900">
+            <i class="fa-solid fa-house-chimney text-amber-600"></i>
+            <span data-i18n="label_family_story">Your Family Story</span>
+          </div>
+          <p id="birthFamilyDesc" class="text-stone-700 text-sm leading-relaxed">
+            Loading your life background...
+          </p>
+        </div>
+
+        <!-- Starting Stats Bar -->
+        <div class="space-y-2.5 mb-6 text-xs">
+          <span class="font-bold text-stone-500 uppercase tracking-wider text-[10px] block" data-i18n="label_starting_conditions">Starting Circumstances</span>
+          <div class="space-y-2">
+            <div>
+              <div class="flex justify-between text-stone-600 font-semibold mb-1">
+                <span class="flex items-center gap-1"><i class="fa-solid fa-heart-pulse text-rose-500"></i> <span data-i18n="stat_health">Healthcare & Survival</span></span>
+                <span id="statHealthTxt" class="font-bold">75%</span>
+              </div>
+              <div class="w-full h-2 rounded-full bg-stone-200 overflow-hidden">
+                <div id="statHealthBar" class="h-full bg-rose-500 rounded-full transition-all duration-700" style="width: 75%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-stone-600 font-semibold mb-1">
+                <span class="flex items-center gap-1"><i class="fa-solid fa-coins text-amber-500"></i> <span data-i18n="stat_wealth">Household Wealth</span></span>
+                <span id="statWealthTxt" class="font-bold">40%</span>
+              </div>
+              <div class="w-full h-2 rounded-full bg-stone-200 overflow-hidden">
+                <div id="statWealthBar" class="h-full bg-amber-500 rounded-full transition-all duration-700" style="width: 40%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-stone-600 font-semibold mb-1">
+                <span class="flex items-center gap-1"><i class="fa-solid fa-face-smile text-emerald-500"></i> <span data-i18n="stat_happiness">Family Happiness</span></span>
+                <span id="statHappyTxt" class="font-bold">80%</span>
+              </div>
+              <div class="w-full h-2 rounded-full bg-stone-200 overflow-hidden">
+                <div id="statHappyBar" class="h-full bg-emerald-500 rounded-full transition-all duration-700" style="width: 80%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action: Step into Life -->
+        <button onclick="advanceToStage(1)" class="w-full py-3.5 px-6 rounded-2xl bg-stone-900 hover:bg-black text-white font-bold text-sm sm:text-base transition shadow-lg flex items-center justify-center gap-2">
+          <span data-i18n="btn_enter_childhood">Live Your Childhood (Ages 0 – 12)</span>
+          <i class="fa-solid fa-arrow-right text-xs"></i>
+        </button>
+
+      </div>
+
+    </section>
+
+    <!-- SCREEN 3: INTERACTIVE LIFE STAGES (CHOICES & DESTINY) -->
+    <section id="screenStage" class="hidden w-full max-w-xl mx-auto space-y-6 animate-fadeIn">
+      
+      <!-- Top Stage Banner & Stats Mini Bar -->
+      <div class="ticket-card rounded-2xl p-4 flex items-center justify-between border border-[#EADBCE]">
+        <div class="flex items-center gap-2.5">
+          <span id="stageCountryFlag" class="text-2xl">🌍</span>
+          <div>
+            <span id="stageTitle" class="font-serif font-bold text-sm sm:text-base text-stone-900 block leading-tight">Stage Title</span>
+            <span id="stageAge" class="text-[11px] font-semibold text-amber-700">Ages 13 – 25</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-3 text-xs font-bold text-stone-700">
+          <span class="flex items-center gap-1" title="Health"><i class="fa-solid fa-heart-pulse text-rose-500"></i> <span id="miniHealth">80%</span></span>
+          <span class="flex items-center gap-1" title="Wealth"><i class="fa-solid fa-coins text-amber-500"></i> <span id="miniWealth">50%</span></span>
+          <span class="flex items-center gap-1" title="Happiness"><i class="fa-solid fa-face-smile text-emerald-500"></i> <span id="miniHappy">75%</span></span>
+        </div>
+      </div>
+
+      <!-- Life Event Narrative Card -->
+      <div class="ticket-card rounded-3xl p-6 sm:p-8 border-2 border-stone-300 shadow-xl space-y-6">
+        
+        <div class="flex items-center gap-3">
+          <div id="eventIcon" class="w-12 h-12 rounded-2xl bg-amber-100 border border-amber-300 text-amber-700 flex items-center justify-center text-xl shrink-0">
+            <i class="fa-solid fa-graduation-cap"></i>
+          </div>
+          <div>
+            <span id="eventHeading" class="font-serif font-bold text-xl text-stone-900 block">Milestone Title</span>
+            <span id="eventContext" class="text-xs text-stone-500">Your situation in Mexico City</span>
+          </div>
+        </div>
+
+        <p id="eventNarrative" class="text-stone-700 text-sm sm:text-base leading-relaxed">
+          Narrative text describing what happened in this stage of life.
+        </p>
+
+        <!-- Dynamic Choice Buttons (If Decision Stage) or Single Continue Button -->
+        <div id="choicesContainer" class="space-y-3 pt-2">
+          <!-- Populated by JS -->
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- SCREEN 4: THE FINAL LIFE CERTIFICATE & 9:16 STORY CARD -->
+    <section id="screenFinal" class="hidden w-full max-w-xl mx-auto space-y-6 animate-fadeIn">
+      
+      <div class="text-center space-y-1">
+        <span class="text-xs font-bold uppercase tracking-widest text-amber-700" data-i18n="final_heading_sub">Life Journey Completed</span>
+        <h2 class="font-serif font-black text-3xl sm:text-4xl text-stone-900" data-i18n="final_heading_main">Your Life Certificate</h2>
+      </div>
+
+      <!-- The Aesthetic Certificate (This is what gets captured / shared) -->
+      <div id="lifeCertificateCard" class="ticket-card rounded-3xl p-6 sm:p-8 border-2 border-amber-400 shadow-2xl relative overflow-hidden bg-gradient-to-b from-[#FFFDF9] to-[#FAF5EB]">
+        
+        <!-- Watermark seal -->
+        <div class="absolute -right-12 -bottom-12 w-48 h-48 rounded-full border-8 border-amber-200/40 pointer-events-none flex items-center justify-center">
+          <i class="fa-solid fa-award text-amber-200/30 text-7xl"></i>
+        </div>
+
+        <!-- Top Certificate Header -->
+        <div class="flex items-center justify-between border-b-2 border-stone-200 pb-4 mb-5">
+          <div>
+            <span class="font-title text-xs tracking-widest uppercase font-bold text-amber-800 block">Universal Registry of Humanity</span>
+            <span class="text-[11px] text-stone-400">Earth Census Record #1-IN-8,000,000,000</span>
+          </div>
+          <div class="gold-stamp text-[10px] font-bold px-2 py-0.5 rounded border border-amber-600">
+            CERTIFIED
+          </div>
+        </div>
+
+        <!-- Core Identity Details -->
+        <div class="flex items-start gap-4 mb-6">
+          <span id="finalFlag" class="text-5xl filter drop-shadow">🌍</span>
+          <div class="flex-1">
+            <h3 id="finalNameTitle" class="font-serif font-black text-2xl text-stone-900 leading-tight">
+              Life in Tokyo, Japan
+            </h3>
+            <p id="finalBioLine" class="text-xs font-semibold text-stone-500 mt-0.5">
+              Born female to a working class family • Lived 82 Years
+            </p>
+          </div>
+        </div>
+
+        <!-- 3 Big Metric Medals -->
+        <div class="grid grid-cols-3 gap-2 sm:gap-3 mb-6 text-center">
+          <div class="p-3 rounded-2xl bg-white border border-[#EADBCE]">
+            <span class="text-[10px] text-stone-400 uppercase font-bold block" data-i18n="final_lifespan">Lifespan</span>
+            <span id="finalLifespan" class="text-xl font-serif font-black text-stone-800">76 Yrs</span>
+          </div>
+          <div class="p-3 rounded-2xl bg-white border border-[#EADBCE]">
+            <span class="text-[10px] text-stone-400 uppercase font-bold block" data-i18n="final_happiness">Happiness</span>
+            <span id="finalHappiness" class="text-xl font-serif font-black text-emerald-600">84%</span>
+          </div>
+          <div class="p-3 rounded-2xl bg-white border border-[#EADBCE]">
+            <span class="text-[10px] text-stone-400 uppercase font-bold block" data-i18n="final_wealth">Wealth Tier</span>
+            <span id="finalWealthClass" class="text-xs font-bold text-amber-700 truncate block mt-1">Middle Class</span>
+          </div>
+        </div>
+
+        <!-- Key Life Highlights / Chronicles -->
+        <div class="space-y-3 mb-6">
+          <span class="text-[11px] font-bold uppercase tracking-wider text-stone-400 block" data-i18n="final_timeline_label">Defining Moments</span>
+          <div id="finalMomentsList" class="space-y-2 text-xs text-stone-700">
+            <!-- Dynamic items -->
+          </div>
+        </div>
+
+        <!-- Philosophical Epilogue -->
+        <div class="p-3.5 rounded-2xl bg-amber-50/80 border border-amber-200/90 text-stone-700 text-xs italic leading-relaxed text-center" id="finalEpilogue">
+          "A quiet, resilient life in the heart of humanity. Chosen by pure probability."
+        </div>
+
+        <!-- Certificate Footer -->
+        <div class="mt-6 pt-4 border-t border-stone-200 flex items-center justify-between text-[10px] text-stone-400">
+          <span>pratik-araclar.pratikweb.workers.dev/birth-lottery/</span>
+          <span class="font-bold text-amber-800">#TheBirthLottery</span>
+        </div>
+
+      </div>
+
+      <!-- Action Buttons: Share, WhatsApp, Re-roll -->
+      <div class="space-y-3 no-print">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <button onclick="shareWhatsAppStory()" class="w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm transition flex items-center justify-center gap-2 shadow-sm">
+            <i class="fa-brands fa-whatsapp text-sm"></i>
+            <span data-i18n="btn_share_wa">Share on WhatsApp</span>
+          </button>
+          <button onclick="copyLifeLink()" class="w-full py-3 px-4 rounded-xl bg-white border border-stone-300 hover:border-amber-500 text-stone-800 font-bold text-xs sm:text-sm transition flex items-center justify-center gap-2 shadow-sm">
+            <i class="fa-solid fa-copy text-amber-600"></i>
+            <span data-i18n="btn_copy_story">Copy Story & Link</span>
+          </button>
+        </div>
+
+        <!-- Play Again / Re-roll -->
+        <button onclick="resetAndPlayAgain()" class="w-full py-3.5 px-6 rounded-2xl bg-amber-600 hover:bg-amber-500 text-white font-black text-sm sm:text-base transition shadow-lg shadow-amber-600/20 flex items-center justify-center gap-2">
+          <i class="fa-solid fa-rotate-right"></i>
+          <span data-i18n="btn_play_again">Draw Another Life (Re-Roll)</span>
+        </button>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Minimal Footer -->
+  <footer class="w-full border-t border-[#EADBCE] bg-[#FAF7F2] py-6 text-center text-xs text-stone-500 space-y-2 no-print">
+    <div class="max-w-4xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div class="flex items-center gap-2">
+        <span class="font-serif font-bold text-stone-800">The Birth Lottery</span>
+        <span>•</span>
+        <span data-i18n="footer_sub">An exploration of human destiny & global demography.</span>
+      </div>
+      <div class="flex items-center gap-4 text-[11px]">
+        <a href="/" class="hover:text-amber-700 underline font-semibold" data-i18n="portal_link">PratikAraçlar Portalı</a>
+        <span>•</span>
+        <a href="/gizlilik-politikasi/" class="hover:text-stone-700" data-i18n="privacy_link">Privacy Policy</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast Notification Notification -->
+  <div id="toastNotification" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-stone-900 text-white text-xs font-semibold py-2.5 px-5 rounded-full shadow-2xl transition-all duration-300 opacity-0 pointer-events-none z-50">
+    <span id="toastMessage">Copied!</span>
+  </div>
+
+  <!-- ================= LOGIC & REAL DATA ENGINE ================= -->
+  <script>
+    // ------------------------------------------------------------------------
+    // 1. COMPREHENSIVE MULTI-LANGUAGE DICTIONARY (EN, TR, ES, DE, FR, PT)
+    // ------------------------------------------------------------------------
+    const I18N = {
+      en: {
+        badge_text: "Based on 8,000,000,000 Real Lives & UN Demographic Data",
+        hero_title_1: "None of us chose",
+        hero_title_2: "where we were born.",
+        hero_desc: "Around 134 million babies are born each year across 195 countries. If your soul was drawn at random from the cosmic lottery of humanity, what kind of life would you have lived?",
+        ticket_label: "Cosmic Birth Ticket",
+        ticket_mystery: "Who will you become?",
+        ticket_sub: "Gender, country, family fortune & destiny are waiting.",
+        btn_draw_ticket: "Draw Your Birth Ticket",
+        stat_pop_label: "Global Population",
+        stat_births_label: "Annual Births",
+        stat_countries_label: "Countries Modeled",
+        stat_source_label: "Data Authority",
+        portal_link: "PratikAraçlar Portal",
+        privacy_link: "Privacy Policy",
+        step_birth: "Step 1: The Cosmic Draw",
+        age_label_0: "Age 0 • Just Born",
+        label_gender: "Biological Sex",
+        label_social: "Family Background",
+        label_family_story: "Your Family Story",
+        label_starting_conditions: "Starting Circumstances",
+        stat_health: "Healthcare & Survival",
+        stat_wealth: "Household Wealth",
+        stat_happiness: "Family Happiness",
+        btn_enter_childhood: "Live Your Childhood (Ages 0 – 12)",
+        stage_childhood: "Childhood Era (Ages 0 – 12)",
+        stage_youth: "Youth & Crossroads (Ages 13 – 25)",
+        stage_adulthood: "Adulthood & Career (Ages 26 – 55)",
+        stage_elderly: "Golden Years & Legacy (Ages 56+)",
+        final_heading_sub: "Life Journey Completed",
+        final_heading_main: "Your Life Certificate",
+        final_lifespan: "Lifespan",
+        final_happiness: "Happiness",
+        final_wealth: "Wealth Tier",
+        final_timeline_label: "Defining Moments",
+        btn_share_wa: "Share on WhatsApp",
+        btn_copy_story: "Copy Story & Link",
+        btn_play_again: "Draw Another Life (Re-Roll)",
+        footer_sub: "An exploration of human destiny & global demography.",
+        copied_toast: "📋 Life story copied to clipboard!",
+        male: "Male ♂",
+        female: "Female ♀",
+        chance_text: "Global Spawn Chance",
+      },
+      tr: {
+        badge_text: "8.000.000.000 İnsan ve BM Gerçek Demografi Verilerine Dayalıdır",
+        hero_title_1: "Hiçbirimiz seçmedik",
+        hero_title_2: "nerede doğacağımızı.",
+        hero_desc: "Her yıl 195 ülkede yaklaşık 134 milyon bebek dünyaya geliyor. Eğer ruhunuz insanlığın kozmik piyangosundan rastgele çekilseydi, nasıl bir hayat yaşardınız?",
+        ticket_label: "Kozmik Doğum Bileti",
+        ticket_mystery: "Kime dönüşeceksin?",
+        ticket_sub: "Cinsiyet, ülke, aile durumu ve kaderiniz hazır.",
+        btn_draw_ticket: "Doğum Biletini Çek",
+        stat_pop_label: "Dünya Nüfusu",
+        stat_births_label: "Yıllık Doğum",
+        stat_countries_label: "Kapsanan Ülke",
+        stat_source_label: "Veri Kaynağı",
+        portal_link: "PratikAraçlar Portalı",
+        privacy_link: "Gizlilik Politikası",
+        step_birth: "1. Adım: Kozmik Çekiliş",
+        age_label_0: "0 Yaş • Yeni Doğdun",
+        label_gender: "Cinsiyet",
+        label_social: "Aile Durumu",
+        label_family_story: "Ailenizin Hikayesi",
+        label_starting_conditions: "Başlangıç Koşulları",
+        stat_health: "Sağlık & Yaşam Şansı",
+        stat_wealth: "Aile Varlığı",
+        stat_happiness: "Aile Mutluluğu",
+        btn_enter_childhood: "Çocukluğunu Yaşa (0 – 12 Yaş)",
+        stage_childhood: "Çocukluk Dönemi (0 – 12 Yaş)",
+        stage_youth: "Gençlik & Yol Ayrımları (13 – 25 Yaş)",
+        stage_adulthood: "Yetişkinlik & Kariyer (26 – 55 Yaş)",
+        stage_elderly: "Yaşlılık & Miras (56+ Yaş)",
+        final_heading_sub: "Yaşam Yolculuğu Tamamlandı",
+        final_heading_main: "Hayat Karneniz & Sertifikanız",
+        final_lifespan: "Yaşanılan Yaş",
+        final_happiness: "Mutluluk Skoru",
+        final_wealth: "Varlık Düzeyi",
+        final_timeline_label: "Dönüm Noktaları",
+        btn_share_wa: "WhatsApp'ta Paylaş",
+        btn_copy_story: "Hikayeyi Kopyala",
+        btn_play_again: "Yeni Bir Hayat Çek (Tekrar Oyna)",
+        footer_sub: "İnsan kaderi ve küresel demografi üzerine etkileşimli bir simülasyon.",
+        copied_toast: "📋 Hayat hikayeniz panoya kopyalandı!",
+        male: "Erkek ♂",
+        female: "Kadın ♀",
+        chance_text: "Küresel Doğum Olasılığı",
+      },
+      es: {
+        badge_text: "Basado en 8.000 millones de vidas y datos de la ONU",
+        hero_title_1: "Ninguno de nosotros eligió",
+        hero_title_2: "dónde nacer.",
+        hero_desc: "Alrededor de 134 millones de bebés nacen cada año en 195 países. Si tu alma fuera elegida al azar en la lotería cósmica de la humanidad, ¿qué tipo de vida habrías tenido?",
+        ticket_label: "Billete Cósmico de Nacimiento",
+        ticket_mystery: "¿En quién te convertirás?",
+        ticket_sub: "Género, país, familia y destino te esperan.",
+        btn_draw_ticket: "Sacar Tu Billete de Nacimiento",
+        stat_pop_label: "Población Mundial",
+        stat_births_label: "Nacimientos Anuales",
+        stat_countries_label: "Países",
+        stat_source_label: "Fuente de Datos",
+        portal_link: "Portal PratikAraçlar",
+        privacy_link: "Política de Privacidad",
+        step_birth: "Paso 1: El Sorteo Cósmico",
+        age_label_0: "Edad 0 • Recién Nacido",
+        label_gender: "Sexo Biológico",
+        label_social: "Origen Familiar",
+        label_family_story: "La Historia de Tu Familia",
+        label_starting_conditions: "Condiciones Iniciales",
+        stat_health: "Salud y Supervivencia",
+        stat_wealth: "Riqueza Familiar",
+        stat_happiness: "Felicidad Familiar",
+        btn_enter_childhood: "Vivir Tu Infancia (0 – 12 años)",
+        stage_childhood: "Infancia (0 – 12 años)",
+        stage_youth: "Juventud y Encrucijadas (13 – 25 años)",
+        stage_adulthood: "Adultez y Carrera (26 – 55 años)",
+        stage_elderly: "Años Dorados y Legado (56+ años)",
+        final_heading_sub: "Viaje de Vida Completado",
+        final_heading_main: "Tu Certificado de Vida",
+        final_lifespan: "Esperanza de Vida",
+        final_happiness: "Felicidad",
+        final_wealth: "Nivel de Riqueza",
+        final_timeline_label: "Momentos Clave",
+        btn_share_wa: "Compartir en WhatsApp",
+        btn_copy_story: "Copiar Historia y Enlace",
+        btn_play_again: "Sacar Otra Vida (Volver a Jugar)",
+        footer_sub: "Una exploración del destino humano y la demografía global.",
+        copied_toast: "📋 ¡Historia de vida copiada al portapapeles!",
+        male: "Hombre ♂",
+        female: "Mujer ♀",
+        chance_text: "Probabilidad Global",
+      },
+      de: {
+        badge_text: "Basierend auf 8 Milliarden Leben und UN-Demografiedaten",
+        hero_title_1: "Niemand von uns hat gewählt,",
+        hero_title_2: "wo wir geboren wurden.",
+        hero_desc: "Jedes Jahr werden rund 134 Millionen Babys in 195 Ländern geboren. Wenn deine Seele zufällig in der kosmischen Lotterie der Menschheit gezogen würde, was für ein Leben hättest du geführt?",
+        ticket_label: "Kosmisches Geburtsticket",
+        ticket_mystery: "Wer wirst du sein?",
+        ticket_sub: "Geschlecht, Land, Wohlstand und Schicksal warten.",
+        btn_draw_ticket: "Geburtsticket Ziehen",
+        stat_pop_label: "Weltbevölkerung",
+        stat_births_label: "Geburten pro Jahr",
+        stat_countries_label: "Modellierte Länder",
+        stat_source_label: "Datenquelle",
+        portal_link: "PratikAraçlar Portal",
+        privacy_link: "Datenschutz",
+        step_birth: "Schritt 1: Die Kosmische Ziehung",
+        age_label_0: "Alter 0 • Frisch Geboren",
+        label_gender: "Biologisches Geschlecht",
+        label_social: "Familiärer Hintergrund",
+        label_family_story: "Deine Familiengeschichte",
+        label_starting_conditions: "Startbedingungen",
+        stat_health: "Gesundheit & Überleben",
+        stat_wealth: "Familienvermögen",
+        stat_happiness: "Familienglück",
+        btn_enter_childhood: "Kindheit Erleben (0 – 12 Jahre)",
+        stage_childhood: "Kindheit (0 – 12 Jahre)",
+        stage_youth: "Jugend & Wendepunkte (13 – 25 Jahre)",
+        stage_adulthood: "Erwachsenenalter & Karriere (26 – 55 Jahre)",
+        stage_elderly: "Lebensabend & Vermächtnis (56+ Jahre)",
+        final_heading_sub: "Lebensreise Abgeschlossen",
+        final_heading_main: "Deine Lebensurkunde",
+        final_lifespan: "Lebensdauer",
+        final_happiness: "Glücksniveau",
+        final_wealth: "Wohlstandsstufe",
+        final_timeline_label: "Prägende Momente",
+        btn_share_wa: "Auf WhatsApp Teilen",
+        btn_copy_story: "Lebensgeschichte Kopieren",
+        btn_play_again: "Ein Neues Leben Ziehen (Nochmal)",
+        footer_sub: "Eine Erkundung des menschlichen Schicksals und der globalen Demografie.",
+        copied_toast: "📋 Lebensgeschichte in die Zwischenablage kopiert!",
+        male: "Männlich ♂",
+        female: "Weiblich ♀",
+        chance_text: "Globale Wahrscheinlichkeit",
+      },
+      fr: {
+        badge_text: "Basé sur 8 milliards de vies et données démographiques de l'ONU",
+        hero_title_1: "Aucun de nous n'a choisi",
+        hero_title_2: "où il est né.",
+        hero_desc: "Environ 134 millions de bébés naissent chaque année dans 195 pays. Si votre âme était tirée au sort dans la loterie cosmique de l'humanité, quelle vie auriez-vous vécue?",
+        ticket_label: "Billet Cosmique de Naissance",
+        ticket_mystery: "Qui allez-vous devenir?",
+        ticket_sub: "Sexe, pays, famille et destin vous attendent.",
+        btn_draw_ticket: "Tirer Votre Billet de Naissance",
+        stat_pop_label: "Population Mondiale",
+        stat_births_label: "Naissances Annuelles",
+        stat_countries_label: "Pays Modélisés",
+        stat_source_label: "Source des Données",
+        portal_link: "Portail PratikAraçlar",
+        privacy_link: "Confidentialité",
+        step_birth: "Étape 1: Le Tirage Cosmique",
+        age_label_0: "Âge 0 • Nouveau-né",
+        label_gender: "Sexe Biologique",
+        label_social: "Milieu Familial",
+        label_family_story: "L'Histoire de Votre Famille",
+        label_starting_conditions: "Conditions Initiales",
+        stat_health: "Santé et Survie",
+        stat_wealth: "Richesse Familiale",
+        stat_happiness: "Bonheur Familial",
+        btn_enter_childhood: "Vivre Votre Enfance (0 – 12 ans)",
+        stage_childhood: "Enfance (0 – 12 ans)",
+        stage_youth: "Jeunesse et Choix (13 – 25 ans)",
+        stage_adulthood: "Vie Adulte et Carrière (26 – 55 ans)",
+        stage_elderly: "Âge Mûr et Héritage (56+ ans)",
+        final_heading_sub: "Parcours de Vie Achevé",
+        final_heading_main: "Votre Certificat de Vie",
+        final_lifespan: "Durée de Vie",
+        final_happiness: "Niveau de Bonheur",
+        final_wealth: "Classe Sociale",
+        final_timeline_label: "Moments Marquants",
+        btn_share_wa: "Partager sur WhatsApp",
+        btn_copy_story: "Copier Votre Histoire",
+        btn_play_again: "Tirer Une Nouvelle Vie (Rejouer)",
+        footer_sub: "Une exploration du destin humain et de la démographie mondiale.",
+        copied_toast: "📋 Histoire de vie copiée dans le presse-papier!",
+        male: "Masculin ♂",
+        female: "Féminin ♀",
+        chance_text: "Probabilité Globale",
+      },
+      pt: {
+        badge_text: "Baseado em 8 bilhões de vidas e dados demográficos da ONU",
+        hero_title_1: "Nenhum de nós escolheu",
+        hero_title_2: "onde nasceu.",
+        hero_desc: "Cerca de 134 milhões de bebês nascem a cada ano em 195 países. Se a sua alma fosse sorteada na loteria cósmica da humanidade, que tipo de vida você teria vivido?",
+        ticket_label: "Bilhete Cósmico de Nascimento",
+        ticket_mystery: "Quem você será?",
+        ticket_sub: "Gênero, país, família e destino esperam por você.",
+        btn_draw_ticket: "Tirar Seu Bilhete de Nascimento",
+        stat_pop_label: "População Global",
+        stat_births_label: "Nascimentos Anuais",
+        stat_countries_label: "Países",
+        stat_source_label: "Fonte Oficial",
+        portal_link: "Portal PratikAraçlar",
+        privacy_link: "Privacidade",
+        step_birth: "Etapa 1: O Sorteio Cósmico",
+        age_label_0: "Idade 0 • Recém-Nascido",
+        label_gender: "Sexo Biológico",
+        label_social: "Origem Familiar",
+        label_family_story: "A História da Sua Família",
+        label_starting_conditions: "Condições Iniciais",
+        stat_health: "Saúde e Sobrevivência",
+        stat_wealth: "Riqueza Familiar",
+        stat_happiness: "Felicidade Familiar",
+        btn_enter_childhood: "Viver Sua Infância (0 – 12 anos)",
+        stage_childhood: "Infância (0 – 12 anos)",
+        stage_youth: "Juventude e Encruzilhadas (13 – 25 anos)",
+        stage_adulthood: "Vida Adulta e Carreira (26 – 55 anos)",
+        stage_elderly: "Terceira Idade e Legado (56+ anos)",
+        final_heading_sub: "Jornada de Vida Concluída",
+        final_heading_main: "Sua Certidão de Vida",
+        final_lifespan: "Expectativa Vivida",
+        final_happiness: "Felicidade",
+        final_wealth: "Padrão de Vida",
+        final_timeline_label: "Momentos Marcantes",
+        btn_share_wa: "Compartilhar no WhatsApp",
+        btn_copy_story: "Copiar História e Link",
+        btn_play_again: "Tirar Outra Vida (Jogar Novamente)",
+        footer_sub: "Uma exploração do destino humano e da demografia global.",
+        copied_toast: "📋 História de vida copiada para a área de transferência!",
+        male: "Masculino ♂",
+        female: "Feminino ♀",
+        chance_text: "Probabilidade Global",
+      }
+    };
+
+    let currentLang = 'en';
+
+    // Auto-detect browser language
+    function detectInitialLanguage() {
+      const navLang = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+      if (navLang.startsWith('tr')) return 'tr';
+      if (navLang.startsWith('es')) return 'es';
+      if (navLang.startsWith('de')) return 'de';
+      if (navLang.startsWith('fr')) return 'fr';
+      if (navLang.startsWith('pt')) return 'pt';
+      return 'en';
+    }
+
+    function setLanguage(lang) {
+      if (!I18N[lang]) lang = 'en';
+      currentLang = lang;
+      localStorage.setItem('birth_lottery_lang', lang);
+
+      // Update button label
+      const names = { en: '🇺🇸 English', tr: '🇹🇷 Türkçe', es: '🇪🇸 Español', de: '🇩🇪 Deutsch', fr: '🇫🇷 Français', pt: '🇧🇷 Português' };
+      document.getElementById('currentLangLabel').textContent = names[lang];
+
+      // Update static UI elements
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (I18N[lang][key]) {
+          el.textContent = I18N[lang][key];
+        }
+      });
+
+      // Close dropdown
+      document.getElementById('langMenu').classList.add('hidden');
+    }
+
+    // Toggle language menu
+    const langBtn = document.getElementById('langBtn');
+    const langMenu = document.getElementById('langMenu');
+    langBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      langMenu.classList.toggle('hidden');
+    });
+    document.addEventListener('click', () => {
+      langMenu.classList.add('hidden');
+    });
+
+    // ------------------------------------------------------------------------
+    // 2. REAL UN DEMOGRAPHIC DATASET (COUNTRIES & POPULATION WEIGHTS)
+    // Annual births worldwide: approx 134,000,000
+    // ------------------------------------------------------------------------
+    const COUNTRIES = [
+      { name: "India", tr: "Hindistan", es: "India", de: "Indien", fr: "Inde", pt: "Índia", flag: "🇮🇳", weight: 1750, cities: ["Varanasi", "Mumbai", "Jaipur", "Kolkata"], baseLife: 70, baseWealth: 38, baseHealth: 68 },
+      { name: "China", tr: "Çin", es: "China", de: "China", fr: "Chine", pt: "China", flag: "🇨🇳", weight: 820, cities: ["Chengdu", "Wuhan", "Zhengzhou", "Hangzhou"], baseLife: 78, baseWealth: 65, baseHealth: 82 },
+      { name: "Nigeria", tr: "Nijerya", es: "Nigeria", de: "Nigeria", fr: "Nigéria", pt: "Nigéria", flag: "🇳🇬", weight: 580, cities: ["Lagos", "Kano", "Ibadan", "Abuja"], baseLife: 55, baseWealth: 30, baseHealth: 50 },
+      { name: "Pakistan", tr: "Pakistan", es: "Pakistán", de: "Pakistan", fr: "Pakistan", pt: "Paquistão", flag: "🇵🇰", weight: 470, cities: ["Lahore", "Karachi", "Faisalabad", "Rawalpindi"], baseLife: 66, baseWealth: 32, baseHealth: 60 },
+      { name: "Indonesia", tr: "Endonezya", es: "Indonesia", de: "Indonesien", fr: "Indonésie", pt: "Indonésia", flag: "🇮🇩", weight: 330, cities: ["Surabaya", "Bandung", "Medan", "Yogyakarta"], baseLife: 71, baseWealth: 46, baseHealth: 72 },
+      { name: "DR Congo", tr: "Kongo DC", es: "RD Congo", de: "DR Kongo", fr: "RD Congo", pt: "RD Congo", flag: "🇨🇩", weight: 300, cities: ["Kinshasa", "Lubumbashi", "Mbuji-Mayi", "Goma"], baseLife: 60, baseWealth: 20, baseHealth: 45 },
+      { name: "United States", tr: "Amerika Birleşik Devletleri", es: "Estados Unidos", de: "Vereinigte Staaten", fr: "États-Unis", pt: "Estados Unidos", flag: "🇺🇸", weight: 270, cities: ["Ohio", "Texas", "California", "Georgia"], baseLife: 78, baseWealth: 85, baseHealth: 84 },
+      { name: "Ethiopia", tr: "Etiyopya", es: "Etiopía", de: "Äthiopien", fr: "Éthiopie", pt: "Etiópia", flag: "🇪🇹", weight: 260, cities: ["Addis Ababa", "Gondar", "Hawassa", "Dire Dawa"], baseLife: 65, baseWealth: 25, baseHealth: 58 },
+      { name: "Bangladesh", tr: "Bangladeş", es: "Bangladés", de: "Bangladesch", fr: "Bangladesh", pt: "Bangladesh", flag: "🇧🇩", weight: 220, cities: ["Dhaka", "Chittagong", "Sylhet", "Khulna"], baseLife: 72, baseWealth: 36, baseHealth: 70 },
+      { name: "Brazil", tr: "Brezilya", es: "Brasil", de: "Brasilien", fr: "Brésil", pt: "Brasil", flag: "🇧🇷", weight: 200, cities: ["Salvador", "Belo Horizonte", "Fortaleza", "Curitiba"], baseLife: 76, baseWealth: 55, baseHealth: 75 },
+      { name: "Philippines", tr: "Filipinler", es: "Filipinas", de: "Philippinen", fr: "Philippines", pt: "Filipinas", flag: "🇵🇭", weight: 150, cities: ["Cebu", "Davao", "Quezon City", "Iloilo"], baseLife: 71, baseWealth: 42, baseHealth: 69 },
+      { name: "Egypt", tr: "Mısır", es: "Egipto", de: "Ägypten", fr: "Égypte", pt: "Egito", flag: "🇪🇬", weight: 150, cities: ["Alexandria", "Giza", "Luxor", "Tanta"], baseLife: 71, baseWealth: 40, baseHealth: 70 },
+      { name: "Mexico", tr: "Meksika", es: "México", de: "Mexiko", fr: "Mexique", pt: "México", flag: "🇲🇽", weight: 140, cities: ["Guadalajara", "Puebla", "Monterrey", "Oaxaca"], baseLife: 75, baseWealth: 52, baseHealth: 74 },
+      { name: "Turkey", tr: "Türkiye", es: "Turquía", de: "Türkei", fr: "Turquie", pt: "Turquia", flag: "🇹🇷", weight: 85, cities: ["İzmir", "Konya", "Bursa", "Antalya", "Trabzon"], baseLife: 77, baseWealth: 58, baseHealth: 78 },
+      { name: "Germany", tr: "Almanya", es: "Alemania", de: "Deutschland", fr: "Allemagne", pt: "Alemanha", flag: "🇩🇪", weight: 55, cities: ["Bavaria", "Hamburg", "Leipzig", "Cologne"], baseLife: 81, baseWealth: 88, baseHealth: 92 },
+      { name: "United Kingdom", tr: "Birleşik Krallık", es: "Reino Unido", de: "Vereinigtes Königreich", fr: "Royaume-Uni", pt: "Reino Unido", flag: "🇬🇧", weight: 48, cities: ["Manchester", "Edinburgh", "Bristol", "Leeds"], baseLife: 81, baseWealth: 86, baseHealth: 90 },
+      { name: "France", tr: "Fransa", es: "Francia", de: "Frankreich", fr: "France", pt: "França", flag: "🇫🇷", weight: 50, cities: ["Lyon", "Bordeaux", "Marseille", "Toulouse"], baseLife: 82, baseWealth: 86, baseHealth: 92 },
+      { name: "Japan", tr: "Japonya", es: "Japón", de: "Japan", fr: "Japon", pt: "Japão", flag: "🇯🇵", weight: 52, cities: ["Osaka", "Fukuoka", "Sapporo", "Kyoto"], baseLife: 85, baseWealth: 85, baseHealth: 95 },
+      { name: "Colombia", tr: "Kolombiya", es: "Colombia", de: "Kolumbien", fr: "Colombie", pt: "Colômbia", flag: "🇨🇴", weight: 55, cities: ["Medellín", "Cali", "Barranquilla", "Bucaramanga"], baseLife: 74, baseWealth: 48, baseHealth: 72 },
+      { name: "South Africa", tr: "Güney Afrika", es: "Sudáfrica", de: "Südafrika", fr: "Afrique du Sud", pt: "África do Sul", flag: "🇿🇦", weight: 75, cities: ["Durban", "Pretoria", "Cape Town", "Soweto"], baseLife: 64, baseWealth: 44, baseHealth: 62 },
+      { name: "Argentina", tr: "Arjantin", es: "Argentina", de: "Argentinien", fr: "Argentine", pt: "Argentina", flag: "🇦🇷", weight: 40, cities: ["Córdoba", "Rosario", "Mendoza", "Salta"], baseLife: 76, baseWealth: 54, baseHealth: 76 },
+      { name: "Canada", tr: "Kanada", es: "Canadá", de: "Kanada", fr: "Canada", pt: "Canadá", flag: "🇨🇦", weight: 27, cities: ["Vancouver", "Montreal", "Calgary", "Ottawa"], baseLife: 82, baseWealth: 88, baseHealth: 93 },
+      { name: "Australia", tr: "Avustralya", es: "Australia", de: "Australien", fr: "Australie", pt: "Austrália", flag: "🇦🇺", weight: 22, cities: ["Melbourne", "Brisbane", "Perth", "Adelaide"], baseLife: 83, baseWealth: 89, baseHealth: 94 },
+      { name: "South Korea", tr: "Güney Kore", es: "Corea del Sur", de: "Südkorea", fr: "Corée du Sud", pt: "Coreia do Sul", flag: "🇰🇷", weight: 18, cities: ["Busan", "Daegu", "Incheon", "Gwangju"], baseLife: 84, baseWealth: 84, baseHealth: 94 },
+      { name: "Norway", tr: "Norveç", es: "Noruega", de: "Norwegen", fr: "Norvège", pt: "Noruega", flag: "🇳🇴", weight: 4, cities: ["Bergen", "Trondheim", "Stavanger", "Tromsø"], baseLife: 83, baseWealth: 96, baseHealth: 97, golden: true },
+      { name: "Iceland", tr: "İzlanda", es: "Islandia", de: "Island", fr: "Islande", pt: "Islândia", flag: "🇮🇸", weight: 1, cities: ["Reykjavik", "Akureyri", "Keflavik"], baseLife: 83, baseWealth: 95, baseHealth: 98, golden: true }
+    ];
+
+    // Family Social Classes
+    const SOCIAL_CLASSES = [
+      { id: "rural_poor", name: { en: "Rural Farming Family", tr: "Kırsal Çiftçi Ailesi", es: "Familia Agricultora Rural", de: "Ländliche Bauernfamilie", fr: "Famille Agricole Rurale", pt: "Família Agrícola Rural" }, weight: 35, wealthMod: -15, happyMod: +5 },
+      { id: "working_class", name: { en: "Urban Working Class", tr: "Kentli İşçi Ailesi", es: "Clase Trabajadora Urbana", de: "Städtische Arbeiterklasse", fr: "Classe Ouvrière Urbaine", pt: "Classe Trabalhadora Urbana" }, weight: 42, wealthMod: 0, happyMod: 0 },
+      { id: "middle_class", name: { en: "Educated Middle Class", tr: "Eğitimli Orta Sınıf", es: "Clase Media Profesional", de: "Gebildete Mittelschicht", fr: "Classe Moyenne Éduquée", pt: "Classe Média Instruída" }, weight: 18, wealthMod: +20, happyMod: +10 },
+      { id: "affluent", name: { en: "Wealthy Merchant / Elite", tr: "Varlıklı Tüccar / Elit", es: "Familia Acomodada / Élite", de: "Wohlhabende Oberschicht", fr: "Famille Aisée / Élite", pt: "Família Afluente / Elite" }, weight: 5, wealthMod: +40, happyMod: +15 }
+    ];
+
+    // ------------------------------------------------------------------------
+    // 3. SOUND SYNTHESIS ENGINE (Web Audio API - 0 external files)
+    // ------------------------------------------------------------------------
+    let audioCtx = null;
+    let soundEnabled = true;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+
+    function toggleSound() {
+      soundEnabled = !soundEnabled;
+      const icon = document.getElementById('soundIcon');
+      if (soundEnabled) {
+        icon.className = 'fa-solid fa-volume-high';
+      } else {
+        icon.className = 'fa-solid fa-volume-xmark';
+      }
+    }
+
+    function playStampSound() {
+      if (!soundEnabled) return;
+      initAudio();
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(120, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.12);
+        gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.12);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.12);
+      } catch (e) {}
+    }
+
+    function playChimeSound() {
+      if (!soundEnabled) return;
+      initAudio();
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
+        osc.frequency.setValueAtTime(880.00, audioCtx.currentTime + 0.1); // A5
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.5);
+      } catch (e) {}
+    }
+
+    // ------------------------------------------------------------------------
+    // 4. GAME STATE & SIMULATION LOGIC
+    // ------------------------------------------------------------------------
+    let playerLife = {
+      country: null,
+      city: null,
+      gender: 'female',
+      socialClass: null,
+      health: 80,
+      wealth: 50,
+      happiness: 75,
+      currentAge: 0,
+      lifespan: 75,
+      moments: []
+    };
+
+    // Calculate total weight and roll random country
+    function rollCountry() {
+      const totalWeight = COUNTRIES.reduce((acc, c) => acc + c.weight, 0);
+      let rand = Math.random() * totalWeight;
+      for (const country of COUNTRIES) {
+        if (rand < country.weight) {
+          return country;
+        }
+        rand -= country.weight;
+      }
+      return COUNTRIES[0];
+    }
+
+    // Roll social class
+    function rollClass() {
+      const total = SOCIAL_CLASSES.reduce((acc, c) => acc + c.weight, 0);
+      let rand = Math.random() * total;
+      for (const sc of SOCIAL_CLASSES) {
+        if (rand < sc.weight) return sc;
+        rand -= sc.weight;
+      }
+      return SOCIAL_CLASSES[0];
+    }
+
+    // Start Lottery Action
+    function startBirthLottery() {
+      playStampSound();
+
+      const country = rollCountry();
+      const city = country.cities[Math.floor(Math.random() * country.cities.length)];
+      const gender = Math.random() < 0.496 ? 'female' : 'male';
+      const social = rollClass();
+
+      // Calculate initial stats
+      let health = Math.min(99, Math.max(30, country.baseHealth + Math.floor(Math.random() * 10 - 5)));
+      let wealth = Math.min(99, Math.max(10, country.baseWealth + social.wealthMod + Math.floor(Math.random() * 10 - 5)));
+      let happiness = Math.min(99, Math.max(35, 70 + social.happyMod + Math.floor(Math.random() * 14 - 7)));
+      
+      // Calculate realistic lifespan
+      let lifespan = Math.round(country.baseLife + (wealth > 60 ? 5 : -4) + Math.floor(Math.random() * 8 - 4));
+      lifespan = Math.max(28, Math.min(98, lifespan));
+
+      playerLife = {
+        country: country,
+        city: city,
+        gender: gender,
+        socialClass: social,
+        health: health,
+        wealth: wealth,
+        happiness: happiness,
+        currentAge: 0,
+        lifespan: lifespan,
+        moments: []
+      };
+
+      // Populate Screen 2
+      const countryLocalized = country[currentLang] || country.name;
+      const totalWeight = COUNTRIES.reduce((acc, c) => acc + c.weight, 0);
+      const spawnPercentage = ((country.weight / totalWeight) * 100).toFixed(2);
+
+      document.getElementById('birthFlag').textContent = country.flag;
+      document.getElementById('birthCountry').textContent = countryLocalized;
+      document.getElementById('birthCity').textContent = `${city}, ${countryLocalized}`;
+      
+      const rarityBadge = document.getElementById('birthRarityBadge');
+      if (country.golden) {
+        rarityBadge.innerHTML = `<i class="fa-solid fa-crown text-amber-500"></i> Rare Golden Ticket (${spawnPercentage}%)`;
+        rarityBadge.className = 'inline-flex items-center gap-1 px-3 py-1 rounded-full text-[11px] font-black bg-amber-200 text-amber-950 border-2 border-amber-400 shadow-sm';
+      } else {
+        rarityBadge.innerHTML = `<i class="fa-solid fa-dice text-[10px]"></i> ${spawnPercentage}% ${I18N[currentLang].chance_text}`;
+        rarityBadge.className = 'inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-100 text-amber-900 border border-amber-300';
+      }
+
+      document.getElementById('birthGender').textContent = I18N[currentLang][gender];
+      document.getElementById('birthClass').textContent = social.name[currentLang] || social.name.en;
+
+      // Family Story Narrative
+      const narratives = {
+        en: `You take your first breath in a bustling neighborhood of ${city}. Your parents are part of the local ${social.name.en.toLowerCase()}, holding high hopes for your future. Around you, life pulses with the distinct rhythm of ${countryLocalized}.`,
+        tr: `${city} kentinin hareketli bir mahallesinde dünyaya gözlerinizi açtınız. Aileniz ${social.name.tr.toLowerCase()} olarak geçimini sağlıyor ve sizin için büyük umutlar besliyor. Etrafınızda hayat, ${countryLocalized}'ın kendine has ritmiyle akıyor.`,
+        es: `Das tu primer respiro en un animado barrio de ${city}. Tus padres forman parte de la ${social.name.es.toLowerCase()} local, con grandes esperanzas para tu futuro en ${countryLocalized}.`,
+        de: `Du machst deinen ersten Atemzug in einem lebhaften Viertel von ${city}. Deine Eltern gehören zur lokalen ${social.name.de.toLowerCase()} und haben große Hoffnungen für deine Zukunft in ${countryLocalized}.`,
+        fr: `Vous poussez votre premier cri dans un quartier animé de ${city}. Vos parents font partie de la ${social.name.fr.toLowerCase()} locale et nourrissent de grands espoirs pour votre avenir en ${countryLocalized}.`,
+        pt: `Você dá seu primeiro suspiro em um bairro movimentado de ${city}. Seus pais pertencem à ${social.name.pt.toLowerCase()} local e têm grandes esperanças para o seu futuro em ${countryLocalized}.`
+      };
+      document.getElementById('birthFamilyDesc').textContent = narratives[currentLang] || narratives.en;
+
+      // Update Bars
+      document.getElementById('statHealthTxt').textContent = `${health}%`;
+      document.getElementById('statHealthBar').style.width = `${health}%`;
+      document.getElementById('statWealthTxt').textContent = `${wealth}%`;
+      document.getElementById('statWealthBar').style.width = `${wealth}%`;
+      document.getElementById('statHappyTxt').textContent = `${happiness}%`;
+      document.getElementById('statHappyBar').style.width = `${happiness}%`;
+
+      // Record First Moment
+      playerLife.moments.push({
+        age: 0,
+        text: {
+          en: `Born in ${city}, ${countryLocalized} to a ${social.name.en.toLowerCase()}.`,
+          tr: `${countryLocalized}, ${city}'de ${social.name.tr.toLowerCase()} bir ailenin çocuğu olarak dünyaya geldi.`,
+          es: `Nacido en ${city}, ${countryLocalized}.`,
+          de: `Geboren in ${city}, ${countryLocalized}.`,
+          fr: `Né(e) à ${city}, ${countryLocalized}.`,
+          pt: `Nasceu em ${city}, ${countryLocalized}.`
+        }
+      });
+
+      // Switch Screens
+      document.getElementById('screenWelcome').classList.add('hidden');
+      document.getElementById('screenBirth').classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ------------------------------------------------------------------------
+    // 5. LIFE STAGES & DYNAMIC MILESTONES (Childhood -> Youth -> Adult -> Legacy)
+    // ------------------------------------------------------------------------
+    const STAGE_EVENTS = [
+      // STAGE 1: CHILDHOOD (Ages 0 - 12)
+      {
+        stageIndex: 1,
+        titleKey: "stage_childhood",
+        ageText: "Ages 6 – 12",
+        icon: "fa-solid fa-shapes",
+        heading: {
+          en: "School & Growing Up",
+          tr: "Okul ve Büyüme Çağı",
+          es: "Escuela y Crecimiento",
+          de: "Schule und Aufwachsen",
+          fr: "École et Enfance",
+          pt: "Escola e Infância"
+        },
+        narrative: (p) => {
+          const cName = p.country[currentLang] || p.country.name;
+          const texts = {
+            en: `Growing up in ${p.city}, you spend your childhood between local streets and school. Resources in ${cName} require diligence, but you find genuine joy in small childhood games with neighborhood friends.`,
+            tr: `${p.city}'de büyürken çocukluğunuz sokaklar ve okul arasında geçiyor. ${cName}'deki koşullar çalışkanlık gerektirse de, mahalle arkadaşlarınızla oynadığınız oyunlar çocukluğunuza büyük bir neşe katıyor.`,
+            es: `Al crecer en ${p.city}, pasas tu infancia entre las calles y la escuela. Las condiciones en ${cName} exigen esfuerzo, pero encuentras felicidad en los juegos diarios.`,
+            de: `Du wächst in ${p.city} auf. Zwischen Schule und Straße lernst du früh, worauf es im Leben ankommt.`,
+            fr: `En grandissant à ${p.city}, vous partagez votre temps entre l'école et les ruelles animées.`,
+            pt: `Crescendo em ${p.city}, você vive sua infância entre a escola e as brincadeiras na rua.`
+          };
+          return texts[currentLang] || texts.en;
+        },
+        choices: [
+          {
+            text: {
+              en: "Focus hard on studies and books (+Intelligence, -Free Time)",
+              tr: "Derslere ve kitaplara dört elle sarıl (+Eğitim, -Boş Zaman)",
+              es: "Concentrarse intensamente en los estudios (+Conocimiento)",
+              de: "Fleißig lernen und Bücher lesen (+Bildung)",
+              fr: "Se concentrer sur les études et la lecture (+Savoir)",
+              pt: "Dedicar-se aos estudos com disciplina (+Educação)"
+            },
+            impact: { health: 0, wealth: +10, happiness: -5, moment: {
+              en: "Graduated primary school with honors.",
+              tr: "İlköğretimi başarıyla ve takdirle tamamladı.",
+              es: "Se graduó con honores de la escuela primaria.",
+              de: "Schloss die Grundschule mit Auszeichnung ab.",
+              fr: "A terminé l'école primaire avec mention.",
+              pt: "Concluiu a escola primária com destaque."
+            }}
+          },
+          {
+            text: {
+              en: "Help the family business & make street friends (+Social, +Hardy)",
+              tr: "Aileye yardım et ve mahallede sosyalleş (+Dayanıklılık, +Çevre)",
+              es: "Ayudar a la familia y hacer amigos en el vecindario (+Calle)",
+              de: "Der Familie helfen und Freunde auf der Straße finden (+Praktisch)",
+              fr: "Aider la famille et créer des liens d'amitié (+Sociable)",
+              pt: "Ajudar a família e fazer amigos na vizinhança (+Sociável)"
+            },
+            impact: { health: +5, wealth: +5, happiness: +10, moment: {
+              en: "Learned real-life survival skills and street wisdom early.",
+              tr: "Hayatın pratik zorluklarını ve sokak zekasını erkenden öğrendi.",
+              es: "Aprendió habilidades prácticas de vida y astucia.",
+              de: "Lernte früh praktische Lebensweisheiten.",
+              fr: "A développé une grande débrouillardise dès l'enfance.",
+              pt: "Desenvolveu inteligência prática e jogo de cintura."
+            }}
+          }
+        ]
+      },
+
+      // STAGE 2: YOUTH & CROSSROADS (Ages 13 - 25)
+      {
+        stageIndex: 2,
+        titleKey: "stage_youth",
+        ageText: "Ages 18 – 25",
+        icon: "fa-solid fa-compass",
+        heading: {
+          en: "The Big Decision",
+          tr: "Büyük Yol Ayrımı",
+          es: "La Gran Decisión",
+          de: "Die Große Entscheidung",
+          fr: "Le Grand Choix",
+          pt: "A Grande Decisão"
+        },
+        narrative: (p) => {
+          const cName = p.country[currentLang] || p.country.name;
+          const texts = {
+            en: `Adulthood arrives in ${p.city}. You stand at the defining crossroads of your youth. The economic reality of ${cName} demands a commitment: will you chase higher ambitions or stay rooted in stability?`,
+            tr: `${p.city}'de yetişkinliğe adım attınız. Hayatınızın en kritik yol ayrımındasınız. ${cName}'nin ekonomik koşulları ve fırsatları önünüzde duruyor: Büyük riskler alıp yeni kapılar mı zorlayacaksınız, yoksa güvenli limanda mı kalacaksınız?`,
+            es: `Llega la juventud en ${p.city}. La realidad económica de ${cName} te obliga a elegir tu camino profesional.`,
+            de: `Das Erwachsenenalter in ${p.city} beginnt. Du stehst vor einer entscheidenden Weichenstellung.`,
+            fr: `L'âge adulte arrive à ${p.city}. Vous êtes à la croisée des chemins de votre destin.`,
+            pt: `A fase adulta chega em ${p.city}. Você está diante da encruzilhada mais importante da juventude.`
+          };
+          return texts[currentLang] || texts.en;
+        },
+        choices: [
+          {
+            text: {
+              en: "Pursue higher career / Migrate towards big city lights",
+              tr: "Büyük kente taşın / Kariyer ve yeni ufuklar peşinde koş",
+              es: "Mudarse a la gran metrópoli en busca de oportunidades",
+              de: "In die Metropole ziehen und Karriere wagen",
+              fr: "Tenter sa chance dans une grande métropole",
+              pt: "Mudar-se para a grande metrópole em busca de crescimento"
+            },
+            impact: { health: -5, wealth: +25, happiness: +5, moment: {
+              en: "Moved to a bustling metropolis chasing career dreams.",
+              tr: "Kariyer hedefleri için büyük metropole taşındı ve yeni bir düzen kurdu.",
+              es: "Se trasladó a una metrópoli buscando un futuro mejor.",
+              de: "Zog in eine Metropole, um Karriere zu machen.",
+              fr: "S'est installé(e) dans une grande métropole pour sa carrière.",
+              pt: "Mudou-se para uma metrópole buscando novas oportunidades."
+            }}
+          },
+          {
+            text: {
+              en: "Stay local, master a craft & build family roots",
+              tr: "Memleketinde kal, bir zanaat ustalaş ve yuva kur",
+              es: "Quedarse en la tierra natal, aprender un oficio y formar familia",
+              de: "In der Heimat bleiben, ein Handwerk lernen und Familie gründen",
+              fr: "Rester sur place, apprendre un métier et fonder un foyer",
+              pt: "Ficar na terra natal, dominar uma profissão e criar raízes"
+            },
+            impact: { health: +10, wealth: +10, happiness: +20, moment: {
+              en: "Found deep local peace and settled down with a loyal partner.",
+              tr: "Memleketinde huzurlu bir hayat kurdu ve sevdiği kişiyle evlendi.",
+              es: "Encontró paz y estabilidad junto a su pareja local.",
+              de: "Fand lokalen Frieden und gründete eine glückliche Familie.",
+              fr: "A trouvé la paix et fondé une famille stable.",
+              pt: "Encontrou estabilidade e construiu uma família unida."
+            }}
+          }
+        ]
+      },
+
+      // STAGE 3: ADULTHOOD & TURNING POINTS (Ages 26 - 55)
+      {
+        stageIndex: 3,
+        titleKey: "stage_adulthood",
+        ageText: "Ages 35 – 55",
+        icon: "fa-solid fa-briefcase",
+        heading: {
+          en: "The Trials of Prime Life",
+          tr: "Olgunluk Çağı ve Hayat Sınavları",
+          es: "Los Años de Madurez",
+          de: "Die Jahre der Reife",
+          fr: "Les Épreuves de la Maturité",
+          pt: "Os Anos de Maturidade"
+        },
+        narrative: (p) => {
+          const texts = {
+            en: `The years fly by. Between responsibilities, unexpected economic tides, and personal triumphs, you have carved out your place in the world. You reflect on the trade-offs of your choices.`,
+            tr: `Yıllar hızla akıp geçiyor. Sorumluluklar, ekonomik dalgalanmalar ve kişisel başarılar arasında dünyada kendinize saygın bir yer edindiniz. Geçmiş seçimlerinizin meyvelerini topluyorsunuz.`,
+            es: `Los años pasan rápido. Entre responsabilidades y triunfos, has forjado tu lugar en el mundo.`,
+            de: `Die Jahre vergehen wie im Flug. Zwischen Verantwortung und Erfolgen hast du deinen Platz im Leben gefunden.`,
+            fr: `Les années s'écoulent. Entre responsabilités et victoires, vous avez tracé votre voie.`,
+            pt: `Os anos passam rápido. Entre lutas e conquistas, você construiu seu espaço na sociedade.`
+          };
+          return texts[currentLang] || texts.en;
+        },
+        choices: [
+          {
+            text: {
+              en: "Invest in community, children's future & personal passions",
+              tr: "Ailene, çocuklarının geleceğine ve kişisel tutkularına yatırım yap",
+              es: "Invertir en la familia, los hijos y las pasiones personales",
+              de: "In Familie, Kinder und persönliche Werte investieren",
+              fr: "Investir dans la famille, l'avenir des enfants et ses passions",
+              pt: "Investir na família, no futuro dos filhos e nas paixões da vida"
+            },
+            impact: { health: +5, wealth: +10, happiness: +20, moment: {
+              en: "Became a respected pillar of the family and community.",
+              tr: "Ailesinin ve çevresinin saygı duyduğu bir temel direk haline geldi.",
+              es: "Se convirtió en un pilar respetado de su comunidad.",
+              de: "Wurde zu einer angesehenen Säule in der Gemeinschaft.",
+              fr: "Est devenu(e) un pilier respecté au sein de sa communauté.",
+              pt: "Tornou-se um exemplo de dedicação para a família e a comunidade."
+            }}
+          },
+          {
+            text: {
+              en: "Overwork for financial security & asset accumulation",
+              tr: "Finansal güvenlik ve mal mülk edinmek için gece gündüz çalış",
+              es: "Trabajar incansablemente para asegurar estabilidad financiera",
+              de: "Hart arbeiten für finanzielle Unabhängigkeit und Wohlstand",
+              fr: "Travailler sans relâche pour sécuriser son patrimoine",
+              pt: "Trabalhar duro para acumular patrimônio e segurança financeira"
+            },
+            impact: { health: -15, wealth: +35, happiness: -5, moment: {
+              en: "Achieved remarkable financial security through relentless grit.",
+              tr: "Yoğun çalışma ve azimle ailesine güçlü bir maddi güvence sağladı.",
+              es: "Logró una notable seguridad financiera con gran esfuerzo.",
+              de: "Erarbeitete sich durch harte Arbeit beachtlichen Wohlstand.",
+              fr: "A bâti une sécurité financière solide grâce à sa ténacité.",
+              pt: "Conquistou independência financeira à base de muito suor."
+            }}
+          }
+        ]
+      }
+    ];
+
+    let currentStageIndex = 0;
+
+    function advanceToStage(idx) {
+      playStampSound();
+      currentStageIndex = idx;
+
+      if (idx > STAGE_EVENTS.length) {
+        // Game Complete -> Show Certificate Screen
+        showFinalCertificate();
+        return;
+      }
+
+      const stage = STAGE_EVENTS[idx - 1];
+      const p = playerLife;
+
+      // Update Top Mini Bar
+      document.getElementById('stageCountryFlag').textContent = p.country.flag;
+      document.getElementById('stageTitle').textContent = I18N[currentLang][stage.titleKey] || stage.titleKey;
+      document.getElementById('stageAge').textContent = stage.ageText;
+      document.getElementById('miniHealth').textContent = `${p.health}%`;
+      document.getElementById('miniWealth').textContent = `${p.wealth}%`;
+      document.getElementById('miniHappy').textContent = `${p.happiness}%`;
+
+      // Event Card
+      document.getElementById('eventHeading').textContent = stage.heading[currentLang] || stage.heading.en;
+      document.getElementById('eventContext').textContent = `${p.city}, ${p.country[currentLang] || p.country.name}`;
+      document.getElementById('eventNarrative').textContent = stage.narrative(p);
+
+      // Choices Container
+      const container = document.getElementById('choicesContainer');
+      container.innerHTML = '';
+
+      stage.choices.forEach((choice, cIdx) => {
+        const btn = document.createElement('button');
+        btn.className = 'w-full text-left p-4 rounded-2xl bg-white border border-[#EADBCE] hover:border-amber-500 hover:bg-amber-50/50 transition-all flex items-start gap-3 text-stone-800 text-xs sm:text-sm font-semibold shadow-sm group';
+        btn.innerHTML = `
+          <div class="w-6 h-6 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center shrink-0 font-bold text-xs group-hover:bg-amber-600 group-hover:text-white transition">
+            ${cIdx + 1}
+          </div>
+          <span class="flex-1">${choice.text[currentLang] || choice.text.en}</span>
+        `;
+        btn.onclick = () => selectChoice(choice);
+        container.appendChild(btn);
+      });
+
+      // Switch screen
+      document.getElementById('screenBirth').classList.add('hidden');
+      document.getElementById('screenStage').classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function selectChoice(choice) {
+      playChimeSound();
+      
+      // Apply impacts
+      playerLife.health = Math.min(100, Math.max(10, playerLife.health + choice.impact.health));
+      playerLife.wealth = Math.min(100, Math.max(10, playerLife.wealth + choice.impact.wealth));
+      playerLife.happiness = Math.min(100, Math.max(10, playerLife.happiness + choice.impact.happiness));
+
+      if (choice.impact.moment) {
+        playerLife.moments.push({
+          age: currentStageIndex * 20,
+          text: choice.impact.moment
+        });
+      }
+
+      // Advance
+      advanceToStage(currentStageIndex + 1);
+    }
+
+    // ------------------------------------------------------------------------
+    // 6. FINAL LIFE CERTIFICATE (STORY CARD GENERATION)
+    // ------------------------------------------------------------------------
+    function showFinalCertificate() {
+      playChimeSound();
+      const p = playerLife;
+      const cName = p.country[currentLang] || p.country.name;
+
+      document.getElementById('finalFlag').textContent = p.country.flag;
+      document.getElementById('finalNameTitle').textContent = `Life in ${p.city}, ${cName}`;
+      
+      const genderTxt = I18N[currentLang][p.gender];
+      const classTxt = p.socialClass.name[currentLang] || p.socialClass.name.en;
+      document.getElementById('finalBioLine').textContent = `${genderTxt} • ${classTxt} • ${p.lifespan} Years`;
+
+      document.getElementById('finalLifespan').textContent = `${p.lifespan} Yrs`;
+      document.getElementById('finalHappiness').textContent = `${p.happiness}%`;
+
+      // Wealth tier name
+      let tier = "Working Class";
+      if (p.wealth > 75) tier = "Affluent / Upper";
+      else if (p.wealth > 45) tier = "Middle Class";
+      else tier = "Humble / Modest";
+      document.getElementById('finalWealthClass').textContent = tier;
+
+      // Populate Moments list
+      const listEl = document.getElementById('finalMomentsList');
+      listEl.innerHTML = '';
+      p.moments.forEach(m => {
+        const item = document.createElement('div');
+        item.className = 'flex items-start gap-2';
+        const txt = m.text[currentLang] || m.text.en;
+        item.innerHTML = `<i class="fa-solid fa-feather text-amber-600 mt-0.5 text-[10px]"></i> <span>${txt}</span>`;
+        listEl.appendChild(item);
+      });
+
+      // Epilogue
+      const epilogues = {
+        en: `"At age ${p.lifespan}, you passed away peacefully surrounded by memories of ${p.city}. Out of 8 billion human souls, this unique lifetime belonged entirely to you."`,
+        tr: `"${p.lifespan} yaşında, ${p.city}'deki anılarınız ve sevdiklerinizin eşliğinde huzurla hayata veda ettiniz. Yeryüzündeki 8 milyar insan arasında bu benzersiz hayat yolculuğu tamamen size aitti."`,
+        es: `"A los ${p.lifespan} años, te despediste en paz en ${p.city}. Entre 8.000 millones de almas, esta vida fue enteramente tuya."`,
+        de: `"Im Alter von ${p.lifespan} Jahren schiedest du friedlich in ${p.city} aus dem Leben. Unter 8 Milliarden Menschen gehörte dieses Leben ganz allein dir."`,
+        fr: `"À l'âge de ${p.lifespan} ans, vous vous êtes éteint(e) paisiblement à ${p.city}. Parmi 8 milliards d'âmes, cette vie vous appartenait entièrement."`,
+        pt: `"Aos ${p.lifespan} anos, você partiu em paz em ${p.city}. Entre 8 bilhões de almas, essa história pertenceu unicamente a você."`
+      };
+      document.getElementById('finalEpilogue').textContent = epilogues[currentLang] || epilogues.en;
+
+      // Switch Screen
+      document.getElementById('screenStage').classList.add('hidden');
+      document.getElementById('screenFinal').classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Share via WhatsApp
+    function shareWhatsAppStory() {
+      const p = playerLife;
+      const cName = p.country[currentLang] || p.country.name;
+      const texts = {
+        en: `I just drew my cosmic birth ticket in "The Birth Lottery"! 🌍\n\n• Born in: ${p.city}, ${cName} ${p.country.flag}\n• Lived: ${p.lifespan} Years\n• Happiness: ${p.happiness}%\n\nWhere would you be born among 8 billion people? Draw your ticket:\nhttps://pratik-araclar.pratikweb.workers.dev/birth-lottery/`,
+        tr: `"Doğum Piyangosu: 8 Milyarda 1" simülasyonunda doğum biletimi çektim! 🌍\n\n• Doğum Yeri: ${p.city}, ${cName} ${p.country.flag}\n• Yaşanan Süre: ${p.lifespan} Yıl\n• Mutluluk Skoru: %${p.happiness}\n\nSen 8 milyar insan arasında nerede doğardın? Biletini çek:\nhttps://pratik-araclar.pratikweb.workers.dev/birth-lottery/`,
+        es: `¡Acabo de sacar mi billete en "The Birth Lottery"! 🌍\n\n• Nacido en: ${p.city}, ${cName} ${p.country.flag}\n• Viví: ${p.lifespan} Años\n• Felicidad: ${p.happiness}%\n\n¿Dónde nacerías tú entre 8.000 millones? Saca tu billete:\nhttps://pratik-araclar.pratikweb.workers.dev/birth-lottery/`,
+        de: `Ich habe mein Ticket in "The Birth Lottery" gezogen! 🌍\n\n• Geboren in: ${p.city}, ${cName} ${p.country.flag}\n• Lebensdauer: ${p.lifespan} Jahre\n• Glück: ${p.happiness}%\n\nWo würdest du geboren werden?\nhttps://pratik-araclar.pratikweb.workers.dev/birth-lottery/`,
+        fr: `J'ai tiré mon billet dans "The Birth Lottery"! 🌍\n\n• Né(e) à: ${p.city}, ${cName} ${p.country.flag}\n• Durée de vie: ${p.lifespan} ans\n• Bonheur: ${p.happiness}%\n\nOù seriez-vous né parmi 8 milliards?\nhttps://pratik-araclar.pratikweb.workers.dev/birth-lottery/`,
+        pt: `Tirei meu bilhete na "The Birth Lottery"! 🌍\n\n• Nasci em: ${p.city}, ${cName} ${p.country.flag}\n• Vivi: ${p.lifespan} Anos\n• Felicidade: ${p.happiness}%\n\nOnde você nasceria entre 8 bilhões?\nhttps://pratik-araclar.pratikweb.workers.dev/birth-lottery/`
+      };
+
+      const msg = encodeURIComponent(texts[currentLang] || texts.en);
+      window.open(`https://api.whatsapp.com/send?text=${msg}`, '_blank');
+    }
+
+    // Copy Story & Link
+    function copyLifeLink() {
+      const p = playerLife;
+      const cName = p.country[currentLang] || p.country.name;
+      const txt = `The Birth Lottery (1 in 8 Billion):\nBorn in ${p.city}, ${cName} ${p.country.flag} • Lived ${p.lifespan} Years • Happiness: ${p.happiness}%\nPlay: https://pratik-araclar.pratikweb.workers.dev/birth-lottery/`;
+      
+      navigator.clipboard.writeText(txt).then(() => {
+        showToast(I18N[currentLang].copied_toast);
+      }).catch(() => {
+        showToast("Copied!");
+      });
+    }
+
+    // Play Again / Reset
+    function resetAndPlayAgain() {
+      playStampSound();
+      document.getElementById('screenFinal').classList.add('hidden');
+      document.getElementById('screenStage').classList.add('hidden');
+      document.getElementById('screenBirth').classList.add('hidden');
+      document.getElementById('screenWelcome').classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Toast Helper
+    function showToast(msg) {
+      const toast = document.getElementById('toastNotification');
+      const msgEl = document.getElementById('toastMessage');
+      msgEl.textContent = msg;
+      toast.classList.remove('opacity-0', 'pointer-events-none');
+      clearTimeout(window._t);
+      window._t = setTimeout(() => toast.classList.add('opacity-0', 'pointer-events-none'), 3000);
+    }
+
+    // ------------------------------------------------------------------------
+    // 7. INITIALIZATION
+    // ------------------------------------------------------------------------
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedLang = localStorage.getItem('birth_lottery_lang');
+      const initial = savedLang || detectInitialLanguage();
+      setLanguage(initial);
+    });
+  </script>
+</body>
+</html>
