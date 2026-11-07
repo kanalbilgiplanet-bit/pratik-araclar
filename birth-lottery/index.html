@@ -229,81 +229,82 @@
 
 
   <!-- Main Container -->
-  <main class="flex-1 max-w-4xl w-full mx-auto px-4 py-8 sm:py-12 flex flex-col items-center justify-center">
+  
+  <!-- Main Container (Viewport Balanced, No Awkward Cutoffs) -->
+  <main class="flex-1 max-w-4xl w-full mx-auto px-4 py-3 sm:py-5 flex flex-col items-center justify-center">
 
     <!-- SCREEN 1: WELCOME & TICKET ROLL SCREEN -->
-    <section id="screenWelcome" class="w-full text-center space-y-8 animate-fadeIn">
+    <section id="screenWelcome" class="w-full text-center space-y-3.5 animate-fadeIn">
       
       <!-- Philosophy Badge -->
-      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-800 text-xs font-semibold shadow-sm">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-800 text-[11px] font-semibold shadow-sm">
         <i class="fa-solid fa-sparkles text-amber-600"></i>
         <span data-i18n="badge_text">Based on 8,000,000,000 Real Lives & UN Demographic Data</span>
       </div>
 
       <!-- Main Catchy Title -->
-      <div class="space-y-4 max-w-2xl mx-auto">
-        <h1 class="font-serif font-black text-4xl sm:text-6xl text-stone-900 tracking-tight leading-[1.1]">
-          <span data-i18n="hero_title_1">None of us chose</span> <br>
-          <span class="italic text-amber-700" data-i18n="hero_title_2">where we were born.</span>
+      <div class="space-y-1 max-w-xl mx-auto">
+        <h1 class="font-serif font-black text-2xl sm:text-4xl text-stone-900 tracking-tight leading-tight">
+          <span data-i18n="hero_title_1">None of us chose</span> <span class="italic text-amber-700" data-i18n="hero_title_2">where we were born.</span>
         </h1>
-        <p class="text-stone-600 text-base sm:text-lg leading-relaxed font-normal" data-i18n="hero_desc">
+        <p class="text-stone-600 text-xs sm:text-sm leading-relaxed font-normal max-w-lg mx-auto" data-i18n="hero_desc">
           Around 134 million babies are born each year across 195 countries. If your soul was drawn at random from the cosmic lottery of humanity, what kind of life would you have lived?
         </p>
       </div>
 
-      <!-- Golden Ticket Preview Illustration -->
-      <div class="max-w-md mx-auto ticket-card rounded-3xl p-6 sm:p-8 border-2 border-amber-300/80 shadow-2xl relative overflow-hidden bg-gradient-to-b from-white to-[#FAF6EE]">
+      <!-- Golden Ticket Preview Card (Tight, Compact & Centered) -->
+      <div class="max-w-md mx-auto ticket-card rounded-2xl sm:rounded-3xl p-5 border-2 border-amber-300/90 shadow-xl relative overflow-hidden bg-gradient-to-b from-white to-[#FAF6EE]">
         <div class="ticket-notch-left"></div>
         <div class="ticket-notch-right"></div>
         
-        <div class="flex items-center justify-between border-b border-amber-200/80 pb-4 mb-5 text-xs text-amber-900 font-bold tracking-wider uppercase">
+        <div class="flex items-center justify-between border-b border-amber-200/80 pb-2.5 mb-3 text-[11px] text-amber-900 font-bold tracking-wider uppercase">
           <span class="flex items-center gap-1.5"><i class="fa-solid fa-ticket text-amber-600"></i> <span data-i18n="ticket_label">Cosmic Birth Ticket</span></span>
           <span class="font-mono text-stone-400">NO. #8,000,000,000</span>
         </div>
 
-        <div class="py-6 flex flex-col items-center justify-center space-y-4">
-          <div class="w-20 h-20 rounded-full bg-amber-100/80 border-2 border-amber-400 flex items-center justify-center text-amber-600 text-3xl shadow-inner">
+        <div class="py-2.5 flex flex-col items-center justify-center space-y-1.5 mb-3">
+          <div class="w-12 h-12 rounded-2xl bg-amber-100/90 border border-amber-300 flex items-center justify-center text-amber-600 text-xl shadow-inner">
             <i class="fa-solid fa-dice-d20"></i>
           </div>
           <div>
-            <span class="font-serif font-bold text-2xl text-stone-800 block" data-i18n="ticket_mystery">Who will you become?</span>
-            <span class="text-xs text-stone-500 mt-1 block" data-i18n="ticket_sub">Gender, country, family fortune & destiny are waiting.</span>
+            <span class="font-serif font-bold text-lg sm:text-xl text-stone-800 block" data-i18n="ticket_mystery">Who will you become?</span>
+            <span class="text-[11px] text-stone-500 block mt-0.5" data-i18n="ticket_sub">Gender, country, family fortune & destiny are waiting.</span>
           </div>
         </div>
 
         <!-- Big Action Button -->
-        <button id="btnStartLottery" onclick="startBirthLottery()" class="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 hover:from-amber-700 hover:to-amber-700 text-white font-extrabold text-base sm:text-lg transition-all shadow-xl shadow-amber-500/25 pulse-btn flex items-center justify-center gap-2">
+        <button id="btnStartLottery" onclick="startBirthLottery()" class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 hover:from-amber-700 hover:to-amber-700 text-white font-black text-base transition-all shadow-lg shadow-amber-500/25 pulse-btn flex items-center justify-center gap-2">
           <i class="fa-solid fa-sparkles text-amber-200"></i>
           <span data-i18n="btn_draw_ticket">Draw Your Birth Ticket</span>
-          <i class="fa-solid fa-arrow-right text-sm"></i>
+          <i class="fa-solid fa-arrow-right text-xs"></i>
         </button>
 
       </div>
 
-      <!-- Real Facts Footnote -->
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-2xl mx-auto pt-4 text-left">
-        <div class="p-3 rounded-2xl bg-white border border-[#EADBCE]">
-          <span class="text-[10px] text-stone-400 uppercase font-bold block" data-i18n="stat_pop_label">Global Population</span>
-          <span class="text-sm font-bold text-stone-800">8.05 Billion</span>
+      <!-- Real Facts Footnote (Fully Translated Labels AND Values) -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 max-w-xl mx-auto pt-1 text-left">
+        <div class="p-2 rounded-xl bg-white border border-[#EADBCE]">
+          <span class="text-[9px] text-stone-400 uppercase font-bold block" data-i18n="stat_pop_label">Global Population</span>
+          <span class="text-xs font-bold text-stone-800 block truncate" data-i18n="stat_pop_val">8.05 Billion</span>
         </div>
-        <div class="p-3 rounded-2xl bg-white border border-[#EADBCE]">
-          <span class="text-[10px] text-stone-400 uppercase font-bold block" data-i18n="stat_births_label">Annual Births</span>
-          <span class="text-sm font-bold text-stone-800">~134 Million/yr</span>
+        <div class="p-2 rounded-xl bg-white border border-[#EADBCE]">
+          <span class="text-[9px] text-stone-400 uppercase font-bold block" data-i18n="stat_births_label">Annual Births</span>
+          <span class="text-xs font-bold text-stone-800 block truncate" data-i18n="stat_births_val">~134 Million/yr</span>
         </div>
-        <div class="p-3 rounded-2xl bg-white border border-[#EADBCE]">
-          <span class="text-[10px] text-stone-400 uppercase font-bold block" data-i18n="stat_countries_label">Countries Modeled</span>
-          <span class="text-sm font-bold text-stone-800">195 Sovereign States</span>
+        <div class="p-2 rounded-xl bg-white border border-[#EADBCE]">
+          <span class="text-[9px] text-stone-400 uppercase font-bold block" data-i18n="stat_countries_label">Geographic Scope</span>
+          <span class="text-xs font-bold text-stone-800 block truncate" data-i18n="stat_countries_val">195 Sovereign Nations</span>
         </div>
-        <div class="p-3 rounded-2xl bg-white border border-[#EADBCE]">
-          <span class="text-[10px] text-stone-400 uppercase font-bold block" data-i18n="stat_source_label">Data Authority</span>
-          <span class="text-sm font-bold text-stone-800">UN & World Bank</span>
+        <div class="p-2 rounded-xl bg-white border border-[#EADBCE]">
+          <span class="text-[9px] text-stone-400 uppercase font-bold block" data-i18n="stat_source_label">Data Authority</span>
+          <span class="text-xs font-bold text-stone-800 block truncate" data-i18n="stat_source_val">UN & World Bank</span>
         </div>
       </div>
 
     </section>
 
     <!-- SCREEN 2: THE BIRTH TICKET REVEAL (SPAWN MOMENT) -->
-    <section id="screenBirth" class="hidden w-full max-w-xl mx-auto space-y-6 animate-fadeIn">
+    <section id="screenBirth" class="hidden w-full max-w-xl mx-auto space-y-3.5 animate-fadeIn">
       
       <!-- Top Step Indicator -->
       <div class="flex items-center justify-between text-xs text-stone-500 font-semibold px-2">
@@ -314,16 +315,18 @@
       </div>
 
       <!-- The Official Passport / Ticket -->
-      <div class="ticket-card rounded-3xl p-6 sm:p-8 border-2 border-amber-300 shadow-2xl relative overflow-hidden bg-gradient-to-b from-white via-white to-amber-50/30">
+      <div class="ticket-card rounded-2xl sm:rounded-3xl p-4 sm:p-5 border-2 border-amber-300 shadow-xl relative overflow-hidden bg-gradient-to-b from-white via-white to-amber-50/30">
         <div class="ticket-notch-left"></div>
         <div class="ticket-notch-right"></div>
 
-        <!-- Ticket Header with Country Flag & Rarity -->
-        <div class="flex items-start justify-between border-b border-stone-200 pb-5 mb-5">
+        <!-- Ticket Header with Real Flag Image & Rarity -->
+        <div class="flex items-start justify-between border-b border-stone-200 pb-3 mb-3.5">
           <div class="flex items-center gap-3">
-            <span id="birthFlag" class="text-4xl sm:text-5xl filter drop-shadow">🌍</span>
+            <div id="flagContainer" class="w-12 h-8 rounded-lg overflow-hidden shadow-sm border border-stone-200 shrink-0 bg-stone-100 flex items-center justify-center">
+              <img id="birthFlagImg" src="https://flagcdn.com/w80/tr.png" class="w-full h-full object-cover" alt="Country Flag">
+            </div>
             <div>
-              <span id="birthCountry" class="font-serif font-black text-2xl sm:text-3xl text-stone-900 block leading-tight">
+              <span id="birthCountry" class="font-serif font-black text-xl text-stone-900 block leading-tight">
                 Country Name
               </span>
               <span id="birthCity" class="text-xs font-semibold text-stone-500 block">
@@ -332,63 +335,63 @@
             </div>
           </div>
           <div class="text-right">
-            <span id="birthRarityBadge" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800 border border-amber-300">
+            <span id="birthRarityBadge" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800 border border-amber-300">
               <i class="fa-solid fa-crown text-[10px]"></i> 1.2% Chance
             </span>
           </div>
         </div>
 
         <!-- Identity Matrix -->
-        <div class="grid grid-cols-2 gap-3 mb-6 text-xs">
-          <div class="p-3 rounded-2xl bg-stone-50 border border-stone-200">
-            <span class="text-stone-400 block text-[10px] uppercase font-bold" data-i18n="label_gender">Biological Sex</span>
-            <span id="birthGender" class="font-bold text-stone-800 text-sm">Female ♀</span>
+        <div class="grid grid-cols-2 gap-2 mb-3 text-xs">
+          <div class="p-2 rounded-xl bg-stone-50 border border-stone-200">
+            <span class="text-stone-400 block text-[9px] uppercase font-bold" data-i18n="label_gender">Biological Sex</span>
+            <span id="birthGender" class="font-bold text-stone-800 text-xs sm:text-sm">Female ♀</span>
           </div>
-          <div class="p-3 rounded-2xl bg-stone-50 border border-stone-200">
-            <span class="text-stone-400 block text-[10px] uppercase font-bold" data-i18n="label_social">Family Background</span>
-            <span id="birthClass" class="font-bold text-stone-800 text-sm">Working Class</span>
+          <div class="p-2 rounded-xl bg-stone-50 border border-stone-200">
+            <span class="text-stone-400 block text-[9px] uppercase font-bold" data-i18n="label_social">Family Background</span>
+            <span id="birthClass" class="font-bold text-stone-800 text-xs sm:text-sm truncate block">Working Class</span>
           </div>
         </div>
 
         <!-- Family & Narrative Context -->
-        <div class="p-4 rounded-2xl bg-amber-50/70 border border-amber-200/80 mb-6 space-y-2">
-          <div class="flex items-center gap-2 text-xs font-bold text-amber-900">
-            <i class="fa-solid fa-house-chimney text-amber-600"></i>
+        <div class="p-3 rounded-xl bg-amber-50/70 border border-amber-200/80 mb-3 space-y-1">
+          <div class="flex items-center gap-1.5 text-xs font-bold text-amber-900">
+            <i class="fa-solid fa-house-chimney text-amber-600 text-xs"></i>
             <span data-i18n="label_family_story">Your Family Story</span>
           </div>
-          <p id="birthFamilyDesc" class="text-stone-700 text-sm leading-relaxed">
+          <p id="birthFamilyDesc" class="text-stone-700 text-xs leading-relaxed">
             Loading your life background...
           </p>
         </div>
 
         <!-- Starting Stats Bar -->
-        <div class="space-y-2.5 mb-6 text-xs">
-          <span class="font-bold text-stone-500 uppercase tracking-wider text-[10px] block" data-i18n="label_starting_conditions">Starting Circumstances</span>
-          <div class="space-y-2">
+        <div class="space-y-1.5 mb-4 text-xs">
+          <span class="font-bold text-stone-500 uppercase tracking-wider text-[9px] block" data-i18n="label_starting_conditions">Starting Circumstances</span>
+          <div class="space-y-1">
             <div>
-              <div class="flex justify-between text-stone-600 font-semibold mb-1">
+              <div class="flex justify-between text-stone-600 font-semibold mb-0.5 text-[10px]">
                 <span class="flex items-center gap-1"><i class="fa-solid fa-heart-pulse text-rose-500"></i> <span data-i18n="stat_health">Healthcare & Survival</span></span>
                 <span id="statHealthTxt" class="font-bold">75%</span>
               </div>
-              <div class="w-full h-2 rounded-full bg-stone-200 overflow-hidden">
+              <div class="w-full h-1.5 rounded-full bg-stone-200 overflow-hidden">
                 <div id="statHealthBar" class="h-full bg-rose-500 rounded-full transition-all duration-700" style="width: 75%"></div>
               </div>
             </div>
             <div>
-              <div class="flex justify-between text-stone-600 font-semibold mb-1">
+              <div class="flex justify-between text-stone-600 font-semibold mb-0.5 text-[10px]">
                 <span class="flex items-center gap-1"><i class="fa-solid fa-coins text-amber-500"></i> <span data-i18n="stat_wealth">Household Wealth</span></span>
                 <span id="statWealthTxt" class="font-bold">40%</span>
               </div>
-              <div class="w-full h-2 rounded-full bg-stone-200 overflow-hidden">
+              <div class="w-full h-1.5 rounded-full bg-stone-200 overflow-hidden">
                 <div id="statWealthBar" class="h-full bg-amber-500 rounded-full transition-all duration-700" style="width: 40%"></div>
               </div>
             </div>
             <div>
-              <div class="flex justify-between text-stone-600 font-semibold mb-1">
+              <div class="flex justify-between text-stone-600 font-semibold mb-0.5 text-[10px]">
                 <span class="flex items-center gap-1"><i class="fa-solid fa-face-smile text-emerald-500"></i> <span data-i18n="stat_happiness">Family Happiness</span></span>
                 <span id="statHappyTxt" class="font-bold">80%</span>
               </div>
-              <div class="w-full h-2 rounded-full bg-stone-200 overflow-hidden">
+              <div class="w-full h-1.5 rounded-full bg-stone-200 overflow-hidden">
                 <div id="statHappyBar" class="h-full bg-emerald-500 rounded-full transition-all duration-700" style="width: 80%"></div>
               </div>
             </div>
@@ -396,7 +399,7 @@
         </div>
 
         <!-- Action: Step into Life -->
-        <button onclick="advanceToStage(1)" class="w-full py-3.5 px-6 rounded-2xl bg-stone-900 hover:bg-black text-white font-bold text-sm sm:text-base transition shadow-lg flex items-center justify-center gap-2">
+        <button onclick="advanceToStage(1)" class="w-full py-3 px-5 rounded-xl bg-stone-900 hover:bg-black text-white font-bold text-sm transition shadow-md flex items-center justify-center gap-2">
           <span data-i18n="btn_enter_childhood">Live Your Childhood (Ages 0 – 12)</span>
           <i class="fa-solid fa-arrow-right text-xs"></i>
         </button>
@@ -406,43 +409,45 @@
     </section>
 
     <!-- SCREEN 3: INTERACTIVE LIFE STAGES (CHOICES & DESTINY) -->
-    <section id="screenStage" class="hidden w-full max-w-xl mx-auto space-y-6 animate-fadeIn">
+    <section id="screenStage" class="hidden w-full max-w-xl mx-auto space-y-3.5 animate-fadeIn">
       
       <!-- Top Stage Banner & Stats Mini Bar -->
-      <div class="ticket-card rounded-2xl p-4 flex items-center justify-between border border-[#EADBCE]">
+      <div class="ticket-card rounded-xl p-2.5 sm:p-3 flex items-center justify-between border border-[#EADBCE]">
         <div class="flex items-center gap-2.5">
-          <span id="stageCountryFlag" class="text-2xl">🌍</span>
+          <div class="w-8 h-5 rounded overflow-hidden shadow-xs border border-stone-200 shrink-0">
+            <img id="stageFlagImg" src="https://flagcdn.com/w80/tr.png" class="w-full h-full object-cover" alt="Flag">
+          </div>
           <div>
-            <span id="stageTitle" class="font-serif font-bold text-sm sm:text-base text-stone-900 block leading-tight">Stage Title</span>
-            <span id="stageAge" class="text-[11px] font-semibold text-amber-700">Ages 13 – 25</span>
+            <span id="stageTitle" class="font-serif font-bold text-xs sm:text-sm text-stone-900 block leading-tight">Stage Title</span>
+            <span id="stageAge" class="text-[10px] font-semibold text-amber-700">Ages 13 – 25</span>
           </div>
         </div>
-        <div class="flex items-center gap-3 text-xs font-bold text-stone-700">
-          <span class="flex items-center gap-1" title="Health"><i class="fa-solid fa-heart-pulse text-rose-500"></i> <span id="miniHealth">80%</span></span>
-          <span class="flex items-center gap-1" title="Wealth"><i class="fa-solid fa-coins text-amber-500"></i> <span id="miniWealth">50%</span></span>
-          <span class="flex items-center gap-1" title="Happiness"><i class="fa-solid fa-face-smile text-emerald-500"></i> <span id="miniHappy">75%</span></span>
+        <div class="flex items-center gap-2 text-xs font-bold text-stone-700">
+          <span class="flex items-center gap-1" title="Health"><i class="fa-solid fa-heart-pulse text-rose-500 text-[10px]"></i> <span id="miniHealth">80%</span></span>
+          <span class="flex items-center gap-1" title="Wealth"><i class="fa-solid fa-coins text-amber-500 text-[10px]"></i> <span id="miniWealth">50%</span></span>
+          <span class="flex items-center gap-1" title="Happiness"><i class="fa-solid fa-face-smile text-emerald-500 text-[10px]"></i> <span id="miniHappy">75%</span></span>
         </div>
       </div>
 
       <!-- Life Event Narrative Card -->
-      <div class="ticket-card rounded-3xl p-6 sm:p-8 border-2 border-stone-300 shadow-xl space-y-6">
+      <div class="ticket-card rounded-2xl sm:rounded-3xl p-4 sm:p-5 border-2 border-stone-300 shadow-xl space-y-3.5">
         
-        <div class="flex items-center gap-3">
-          <div id="eventIcon" class="w-12 h-12 rounded-2xl bg-amber-100 border border-amber-300 text-amber-700 flex items-center justify-center text-xl shrink-0">
+        <div class="flex items-center gap-2.5">
+          <div id="eventIcon" class="w-9 h-9 rounded-xl bg-amber-100 border border-amber-300 text-amber-700 flex items-center justify-center text-base shrink-0">
             <i class="fa-solid fa-graduation-cap"></i>
           </div>
           <div>
-            <span id="eventHeading" class="font-serif font-bold text-xl text-stone-900 block">Milestone Title</span>
-            <span id="eventContext" class="text-xs text-stone-500">Your situation in Mexico City</span>
+            <span id="eventHeading" class="font-serif font-bold text-base text-stone-900 block">Milestone Title</span>
+            <span id="eventContext" class="text-[10px] text-stone-500">Your situation in Mexico City</span>
           </div>
         </div>
 
-        <p id="eventNarrative" class="text-stone-700 text-sm sm:text-base leading-relaxed">
+        <p id="eventNarrative" class="text-stone-700 text-xs sm:text-sm leading-relaxed">
           Narrative text describing what happened in this stage of life.
         </p>
 
         <!-- Dynamic Choice Buttons (If Decision Stage) or Single Continue Button -->
-        <div id="choicesContainer" class="space-y-3 pt-2">
+        <div id="choicesContainer" class="space-y-2 pt-1">
           <!-- Populated by JS -->
         </div>
 
@@ -450,98 +455,94 @@
 
     </section>
 
-    <!-- SCREEN 4: THE FINAL LIFE CERTIFICATE & 9:16 STORY CARD -->
-    <section id="screenFinal" class="hidden w-full max-w-xl mx-auto space-y-6 animate-fadeIn">
+    <!-- SCREEN 4: THE FINAL LIFE CERTIFICATE & STORY CARD -->
+    <section id="screenFinal" class="hidden w-full max-w-xl mx-auto space-y-3.5 animate-fadeIn">
       
-      <div class="text-center space-y-1">
-        <span class="text-xs font-bold uppercase tracking-widest text-amber-700" data-i18n="final_heading_sub">Life Journey Completed</span>
-        <h2 class="font-serif font-black text-3xl sm:text-4xl text-stone-900" data-i18n="final_heading_main">Your Life Certificate</h2>
+      <div class="text-center space-y-0.5">
+        <span class="text-[10px] font-bold uppercase tracking-widest text-amber-700" data-i18n="final_heading_sub">Life Journey Completed</span>
+        <h2 class="font-serif font-black text-xl sm:text-2xl text-stone-900" data-i18n="final_heading_main">Your Life Certificate</h2>
       </div>
 
-      <!-- The Aesthetic Certificate (This is what gets captured / shared) -->
-      <div id="lifeCertificateCard" class="ticket-card rounded-3xl p-6 sm:p-8 border-2 border-amber-400 shadow-2xl relative overflow-hidden bg-gradient-to-b from-[#FFFDF9] to-[#FAF5EB]">
+      <!-- The Aesthetic Certificate -->
+      <div id="lifeCertificateCard" class="ticket-card rounded-2xl sm:rounded-3xl p-4 sm:p-5 border-2 border-amber-400 shadow-xl relative overflow-hidden bg-gradient-to-b from-[#FFFDF9] to-[#FAF5EB]">
         
-        <!-- Watermark seal -->
-        <div class="absolute -right-12 -bottom-12 w-48 h-48 rounded-full border-8 border-amber-200/40 pointer-events-none flex items-center justify-center">
-          <i class="fa-solid fa-award text-amber-200/30 text-7xl"></i>
-        </div>
-
-        <!-- Top Certificate Header -->
-        <div class="flex items-center justify-between border-b-2 border-stone-200 pb-4 mb-5">
+        <div class="flex items-center justify-between border-b-2 border-stone-200 pb-2.5 mb-3">
           <div>
-            <span class="font-title text-xs tracking-widest uppercase font-bold text-amber-800 block">Universal Registry of Humanity</span>
-            <span class="text-[11px] text-stone-400">Earth Census Record #1-IN-8,000,000,000</span>
+            <span class="font-title text-[10px] tracking-widest uppercase font-bold text-amber-800 block">Universal Registry of Humanity</span>
+            <span class="text-[9px] text-stone-400">Earth Census Record #1-IN-8,000,000,000</span>
           </div>
-          <div class="gold-stamp text-[10px] font-bold px-2 py-0.5 rounded border border-amber-600">
+          <div class="gold-stamp text-[9px] font-bold px-2 py-0.5 rounded border border-amber-600">
             CERTIFIED
           </div>
         </div>
 
         <!-- Core Identity Details -->
-        <div class="flex items-start gap-4 mb-6">
-          <span id="finalFlag" class="text-5xl filter drop-shadow">🌍</span>
+        <div class="flex items-start gap-3 mb-3">
+          <div class="w-10 h-7 rounded-lg overflow-hidden shadow-sm border border-stone-200 shrink-0">
+            <img id="finalFlagImg" src="https://flagcdn.com/w80/tr.png" class="w-full h-full object-cover" alt="Flag">
+          </div>
           <div class="flex-1">
-            <h3 id="finalNameTitle" class="font-serif font-black text-2xl text-stone-900 leading-tight">
+            <h3 id="finalNameTitle" class="font-serif font-black text-lg text-stone-900 leading-tight">
               Life in Tokyo, Japan
             </h3>
-            <p id="finalBioLine" class="text-xs font-semibold text-stone-500 mt-0.5">
+            <p id="finalBioLine" class="text-[11px] font-semibold text-stone-500 mt-0.5">
               Born female to a working class family • Lived 82 Years
             </p>
           </div>
         </div>
 
         <!-- 3 Big Metric Medals -->
-        <div class="grid grid-cols-3 gap-2 sm:gap-3 mb-6 text-center">
-          <div class="p-3 rounded-2xl bg-white border border-[#EADBCE]">
-            <span class="text-[10px] text-stone-400 uppercase font-bold block" data-i18n="final_lifespan">Lifespan</span>
-            <span id="finalLifespan" class="text-xl font-serif font-black text-stone-800">76 Yrs</span>
+        <div class="grid grid-cols-3 gap-2 mb-3 text-center">
+          <div class="p-2 rounded-xl bg-white border border-[#EADBCE]">
+            <span class="text-[9px] text-stone-400 uppercase font-bold block" data-i18n="final_lifespan">Lifespan</span>
+            <span id="finalLifespan" class="text-base font-serif font-black text-stone-800">76 Yrs</span>
           </div>
-          <div class="p-3 rounded-2xl bg-white border border-[#EADBCE]">
-            <span class="text-[10px] text-stone-400 uppercase font-bold block" data-i18n="final_happiness">Happiness</span>
-            <span id="finalHappiness" class="text-xl font-serif font-black text-emerald-600">84%</span>
+          <div class="p-2 rounded-xl bg-white border border-[#EADBCE]">
+            <span class="text-[9px] text-stone-400 uppercase font-bold block" data-i18n="final_happiness">Happiness</span>
+            <span id="finalHappiness" class="text-base font-serif font-black text-emerald-600">84%</span>
           </div>
-          <div class="p-3 rounded-2xl bg-white border border-[#EADBCE]">
-            <span class="text-[10px] text-stone-400 uppercase font-bold block" data-i18n="final_wealth">Wealth Tier</span>
-            <span id="finalWealthClass" class="text-xs font-bold text-amber-700 truncate block mt-1">Middle Class</span>
+          <div class="p-2 rounded-xl bg-white border border-[#EADBCE]">
+            <span class="text-[9px] text-stone-400 uppercase font-bold block" data-i18n="final_wealth">Wealth Tier</span>
+            <span id="finalWealthClass" class="text-[10px] font-bold text-amber-700 truncate block mt-0.5">Middle Class</span>
           </div>
         </div>
 
         <!-- Key Life Highlights / Chronicles -->
-        <div class="space-y-3 mb-6">
-          <span class="text-[11px] font-bold uppercase tracking-wider text-stone-400 block" data-i18n="final_timeline_label">Defining Moments</span>
-          <div id="finalMomentsList" class="space-y-2 text-xs text-stone-700">
+        <div class="space-y-1.5 mb-3">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-stone-400 block" data-i18n="final_timeline_label">Defining Moments</span>
+          <div id="finalMomentsList" class="space-y-1 text-xs text-stone-700">
             <!-- Dynamic items -->
           </div>
         </div>
 
         <!-- Philosophical Epilogue -->
-        <div class="p-3.5 rounded-2xl bg-amber-50/80 border border-amber-200/90 text-stone-700 text-xs italic leading-relaxed text-center" id="finalEpilogue">
+        <div class="p-2.5 rounded-xl bg-amber-50/80 border border-amber-200/90 text-stone-700 text-xs italic leading-relaxed text-center" id="finalEpilogue">
           "A quiet, resilient life in the heart of humanity. Chosen by pure probability."
         </div>
 
         <!-- Certificate Footer -->
-        <div class="mt-6 pt-4 border-t border-stone-200 flex items-center justify-between text-[10px] text-stone-400">
+        <div class="mt-3 pt-2.5 border-t border-stone-200 flex items-center justify-between text-[10px] text-stone-400">
           <span>pratik-araclar.pratikweb.workers.dev/birth-lottery/</span>
           <span class="font-bold text-amber-800">#TheBirthLottery</span>
         </div>
 
       </div>
 
-      <!-- Action Buttons: Share, WhatsApp, Re-roll -->
-      <div class="space-y-3 no-print">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <button onclick="shareWhatsAppStory()" class="w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm transition flex items-center justify-center gap-2 shadow-sm">
+      <!-- Action Buttons -->
+      <div class="space-y-2 no-print">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <button onclick="shareWhatsAppStory()" class="w-full py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm transition flex items-center justify-center gap-1.5 shadow-sm">
             <i class="fa-brands fa-whatsapp text-sm"></i>
             <span data-i18n="btn_share_wa">Share on WhatsApp</span>
           </button>
-          <button onclick="copyLifeLink()" class="w-full py-3 px-4 rounded-xl bg-white border border-stone-300 hover:border-amber-500 text-stone-800 font-bold text-xs sm:text-sm transition flex items-center justify-center gap-2 shadow-sm">
+          <button onclick="copyLifeLink()" class="w-full py-2.5 px-3 rounded-xl bg-white border border-stone-300 hover:border-amber-500 text-stone-800 font-bold text-xs sm:text-sm transition flex items-center justify-center gap-1.5 shadow-sm">
             <i class="fa-solid fa-copy text-amber-600"></i>
             <span data-i18n="btn_copy_story">Copy Story & Link</span>
           </button>
         </div>
 
         <!-- Play Again / Re-roll -->
-        <button onclick="resetAndPlayAgain()" class="w-full py-3.5 px-6 rounded-2xl bg-amber-600 hover:bg-amber-500 text-white font-black text-sm sm:text-base transition shadow-lg shadow-amber-600/20 flex items-center justify-center gap-2">
+        <button onclick="resetAndPlayAgain()" class="w-full py-3 px-5 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-black text-sm transition shadow-md flex items-center justify-center gap-2">
           <i class="fa-solid fa-rotate-right"></i>
           <span data-i18n="btn_play_again">Draw Another Life (Re-Roll)</span>
         </button>
@@ -550,6 +551,7 @@
     </section>
 
   </main>
+
 
   <!-- Minimal Footer -->
   <footer class="w-full border-t border-[#EADBCE] bg-[#FAF7F2] py-6 text-center text-xs text-stone-500 space-y-2 no-print">
@@ -677,6 +679,11 @@
 
 const I18N = {
   "en": {
+    "stat_countries_label": "Global Scope",
+    "stat_countries_val": "195 Sovereign Nations",
+    "stat_pop_val": "8.05 Billion Humans",
+    "stat_births_val": "~134 Million / Year",
+    "stat_source_val": "UN & World Bank Data",
     "badge_text": "Based on 8,000,000,000 Real Lives & UN Demographic Data",
     "hero_title_1": "None of us chose",
     "hero_title_2": "where we were born.",
@@ -721,6 +728,11 @@ const I18N = {
     "chance_text": "Global Spawn Chance"
   },
   "ko": {
+    "stat_countries_label": "모델링된 국가",
+    "stat_countries_val": "195개 주권 국가",
+    "stat_pop_val": "80.5억 명의 인류",
+    "stat_births_val": "연간 약 1.34억 명",
+    "stat_source_val": "유엔 및 세계은행",
     "badge_text": "80억 명의 실제 삶과 유엔 인구 통계 데이터 기반",
     "hero_title_1": "우리 중 누구도 선택하지 않았다,",
     "hero_title_2": "어디서 태어날지를.",
@@ -765,6 +777,11 @@ const I18N = {
     "chance_text": "글로벌 출생 확률"
   },
   "ja": {
+    "stat_countries_label": "対象国・地域",
+    "stat_countries_val": "195の主権国家",
+    "stat_pop_val": "80.5億人の人類",
+    "stat_births_val": "年間約1.34億人",
+    "stat_source_val": "国連＆世界銀行データ",
     "badge_text": "80億人の実際の命と国連の人口統計データに基づく",
     "hero_title_1": "私たちは誰も選んでいない、",
     "hero_title_2": "どこで生まれるかを。",
@@ -809,6 +826,11 @@ const I18N = {
     "chance_text": "世界の出生確率"
   },
   "zh-TW": {
+    "stat_countries_label": "覆蓋國家與地區",
+    "stat_countries_val": "195 個主權國家",
+    "stat_pop_val": "80.5 億全球人口",
+    "stat_births_val": "約 1.34 億 / 年",
+    "stat_source_val": "聯合國與世行數據",
     "badge_text": "基於全球 80 億真實生命與聯合國人口數據",
     "hero_title_1": "我們沒有人能選擇，",
     "hero_title_2": "自己在何處降生。",
@@ -853,6 +875,11 @@ const I18N = {
     "chance_text": "全球出生概率"
   },
   "zh-CN": {
+    "stat_countries_label": "覆盖国家与地区",
+    "stat_countries_val": "195 个主权国家",
+    "stat_pop_val": "80.5 亿全球人口",
+    "stat_births_val": "约 1.34 亿 / 年",
+    "stat_source_val": "联合国与世行数据",
     "badge_text": "基于全球 80 亿真实生命与联合国人口数据",
     "hero_title_1": "我们无人能够选择，",
     "hero_title_2": "自己在何处降生。",
@@ -897,6 +924,11 @@ const I18N = {
     "chance_text": "全球出生概率"
   },
   "vi": {
+    "stat_countries_label": "Quốc Gia Mô Phỏng",
+    "stat_countries_val": "195 Quốc Gia",
+    "stat_pop_val": "8,05 Tỷ Người",
+    "stat_births_val": "~134 Triệu / Năm",
+    "stat_source_val": "LHQ & Ngân Hàng Thế Giới",
     "badge_text": "Dựa trên 8 tỷ cuộc đời và dữ liệu nhân khẩu học LHQ",
     "hero_title_1": "Không ai trong chúng ta được chọn",
     "hero_title_2": "nơi mình sinh ra.",
@@ -941,6 +973,11 @@ const I18N = {
     "chance_text": "Tỷ Lệ Sinh Toàn Cầu"
   },
   "fr": {
+    "stat_countries_label": "Couverture Mondiale",
+    "stat_countries_val": "195 États Souverains",
+    "stat_pop_val": "8,05 Milliards d'Âmes",
+    "stat_births_val": "~134 Millions / An",
+    "stat_source_val": "Données ONU & Banque Mondiale",
     "badge_text": "Basé sur 8 milliards de vies et données démographiques de l'ONU",
     "hero_title_1": "Aucun de nous n'a choisi",
     "hero_title_2": "où il est né.",
@@ -985,6 +1022,11 @@ const I18N = {
     "chance_text": "Probabilité Globale"
   },
   "th": {
+    "stat_countries_label": "ขอบเขตประเทศ",
+    "stat_countries_val": "195 ประเทศทั่วโลก",
+    "stat_pop_val": "8.05 พันล้านคน",
+    "stat_births_val": "~134 ล้านคน / ปี",
+    "stat_source_val": "ข้อมูลสหประชาชาติ",
     "badge_text": "อิงจากข้อมูลชีวิตจริง 8 พันล้านคนและสถิติประชากรของสหประชาชาติ",
     "hero_title_1": "ไม่มีใครในพวกเราที่เลือกได้ว่า",
     "hero_title_2": "จะเกิดที่ไหนในโลก",
@@ -1029,6 +1071,11 @@ const I18N = {
     "chance_text": "โอกาสเกิดทั่วโลก"
   },
   "es": {
+    "stat_countries_label": "Cobertura Global",
+    "stat_countries_val": "195 Naciones Soberanas",
+    "stat_pop_val": "8.050 Millones",
+    "stat_births_val": "~134 Millones / Año",
+    "stat_source_val": "Datos ONU y Banco Mundial",
     "badge_text": "Basado en 8.000 millones de vidas y datos de la ONU",
     "hero_title_1": "Ninguno de nosotros eligió",
     "hero_title_2": "dónde nacer.",
@@ -1073,6 +1120,11 @@ const I18N = {
     "chance_text": "Probabilidad Global"
   },
   "de": {
+    "stat_countries_label": "Modellierte Länder",
+    "stat_countries_val": "195 Staaten Weltweit",
+    "stat_pop_val": "8,05 Milliarden Menschen",
+    "stat_births_val": "~134 Millionen / Jahr",
+    "stat_source_val": "UN & Weltbank",
     "badge_text": "Basierend auf 8 Milliarden Leben und UN-Demografiedaten",
     "hero_title_1": "Niemand von uns hat gewählt,",
     "hero_title_2": "wo wir geboren wurden.",
@@ -1117,6 +1169,11 @@ const I18N = {
     "chance_text": "Globale Wahrscheinlichkeit"
   },
   "pt": {
+    "stat_countries_label": "Abrangência Global",
+    "stat_countries_val": "195 Nações Soberanas",
+    "stat_pop_val": "8,05 Bilhões de Pessoas",
+    "stat_births_val": "~134 Milhões / Ano",
+    "stat_source_val": "Dados da ONU e Banco Mundial",
     "badge_text": "Baseado em 8 bilhões de vidas e dados demográficos da ONU",
     "hero_title_1": "Nenhum de nós escolheu",
     "hero_title_2": "onde nasceu.",
@@ -1161,6 +1218,11 @@ const I18N = {
     "chance_text": "Probabilidade Global"
   },
   "ru": {
+    "stat_countries_label": "Охват стран",
+    "stat_countries_val": "195 стран мира",
+    "stat_pop_val": "8,05 млрд человек",
+    "stat_births_val": "~134 млн / год",
+    "stat_source_val": "ООН и Всемирный банк",
     "badge_text": "Основано на данных о 8 миллиардах жизней и демографии ООН",
     "hero_title_1": "Никто из нас не выбирал,",
     "hero_title_2": "где нам родиться.",
@@ -1205,6 +1267,11 @@ const I18N = {
     "chance_text": "Вероятность рождения"
   },
   "tr": {
+    "stat_countries_label": "Modellenen Ülkeler",
+    "stat_countries_val": "195 Dünya Ülkesi",
+    "stat_pop_val": "8.05 Milyar İnsan",
+    "stat_births_val": "~134 Milyon / Yıl",
+    "stat_source_val": "BM & Dünya Bankası",
     "badge_text": "8.000.000.000 İnsan ve BM Gerçek Demografi Verilerine Dayalıdır",
     "hero_title_1": "Hiçbirimiz seçmedik",
     "hero_title_2": "nerede doğacağımızı.",
@@ -1249,6 +1316,11 @@ const I18N = {
     "chance_text": "Küresel Doğum Olasılığı"
   },
   "id": {
+    "stat_countries_label": "Cakupan Global",
+    "stat_countries_val": "195 Negara Berdaulat",
+    "stat_pop_val": "8,05 Miliar Jiwa",
+    "stat_births_val": "~134 Juta / Tahun",
+    "stat_source_val": "PBB & Bank Dunia",
     "badge_text": "Berdasarkan 8 Miliar Jiwa & Data Demografi PBB",
     "hero_title_1": "Tak satu pun dari kita memilih",
     "hero_title_2": "di mana kita dilahirkan.",
@@ -1293,6 +1365,11 @@ const I18N = {
     "chance_text": "Peluang Kelahiran Global"
   },
   "it": {
+    "stat_countries_label": "Paesi Modellati",
+    "stat_countries_val": "195 Nazioni del Mondo",
+    "stat_pop_val": "8,05 Miliardi di Anime",
+    "stat_births_val": "~134 Milioni / Anno",
+    "stat_source_val": "Dati ONU & Banca Mondiale",
     "badge_text": "Basato su 8 miliardi di vite e dati demografici dell'ONU",
     "hero_title_1": "Nessuno di noi ha scelto",
     "hero_title_2": "dove nascere.",
@@ -1337,6 +1414,11 @@ const I18N = {
     "chance_text": "Probabilità di Nascita Globale"
   },
   "ar": {
+    "stat_countries_label": "الدول المشمولة",
+    "stat_countries_val": "195 دولة ذات سيادة",
+    "stat_pop_val": "8.05 مليار إنسان",
+    "stat_births_val": "~134 مليون / سنوياً",
+    "stat_source_val": "بيانات الأمم المتحدة",
     "badge_text": "مبني على 8 مليارات حياة حقيقية وبيانات ديموغرافية من الأمم المتحدة",
     "hero_title_1": "لم يختر أي منا،",
     "hero_title_2": "أين سيولد في هذا العالم.",
@@ -1381,6 +1463,11 @@ const I18N = {
     "chance_text": "نسبة الولادة العالمية"
   },
   "fa": {
+    "stat_countries_label": "پوشش جغرافیایی",
+    "stat_countries_val": "۱۹۵ کشور مستقل جهان",
+    "stat_pop_val": "۸.۰۵ میلیارد انسان",
+    "stat_births_val": "حدود ۱۳۴ میلیون / سال",
+    "stat_source_val": "داده‌های سازمان ملل",
     "badge_text": "بر اساس ۸ میلیارد زندگی واقعی و داده‌های جمعیتی سازمان ملل",
     "hero_title_1": "هیچ‌کدام از ما انتخاب نکردیم،",
     "hero_title_2": "کجا به دنیا بیاییم.",
@@ -1425,6 +1512,11 @@ const I18N = {
     "chance_text": "احتمال تولد جهانی"
   },
   "uk": {
+    "stat_countries_label": "Охоплені країни",
+    "stat_countries_val": "195 суверенних держав",
+    "stat_pop_val": "8,05 млрд людей",
+    "stat_births_val": "~134 млн / рік",
+    "stat_source_val": "ООН та Світовий банк",
     "badge_text": "На основі 8 мільярдів життів та демографічних даних ООН",
     "hero_title_1": "Ніхто з нас не обирав,",
     "hero_title_2": "де саме народитися.",
@@ -1469,6 +1561,11 @@ const I18N = {
     "chance_text": "Глобальна ймовірність"
   },
   "pl": {
+    "stat_countries_label": "Objęte Kraje",
+    "stat_countries_val": "195 Państw Świata",
+    "stat_pop_val": "8,05 Miliarda Ludzi",
+    "stat_births_val": "~134 Miliony / Rok",
+    "stat_source_val": "Dane ONZ i Banku Światowego",
     "badge_text": "Na podstawie 8 miliardów istnień i danych demograficznych ONZ",
     "hero_title_1": "Nikt z nas nie wybrał,",
     "hero_title_2": "gdzie przyjdzie na świat.",
@@ -1609,35 +1706,490 @@ let currentLang = 'en';
     // Annual births worldwide: approx 134,000,000
     // ------------------------------------------------------------------------
     const COUNTRIES = [
-      { name: "India", tr: "Hindistan", es: "India", de: "Indien", fr: "Inde", pt: "Índia", flag: "🇮🇳", weight: 1750, cities: ["Varanasi", "Mumbai", "Jaipur", "Kolkata"], baseLife: 70, baseWealth: 38, baseHealth: 68 },
-      { name: "China", tr: "Çin", es: "China", de: "China", fr: "Chine", pt: "China", flag: "🇨🇳", weight: 820, cities: ["Chengdu", "Wuhan", "Zhengzhou", "Hangzhou"], baseLife: 78, baseWealth: 65, baseHealth: 82 },
-      { name: "Nigeria", tr: "Nijerya", es: "Nigeria", de: "Nigeria", fr: "Nigéria", pt: "Nigéria", flag: "🇳🇬", weight: 580, cities: ["Lagos", "Kano", "Ibadan", "Abuja"], baseLife: 55, baseWealth: 30, baseHealth: 50 },
-      { name: "Pakistan", tr: "Pakistan", es: "Pakistán", de: "Pakistan", fr: "Pakistan", pt: "Paquistão", flag: "🇵🇰", weight: 470, cities: ["Lahore", "Karachi", "Faisalabad", "Rawalpindi"], baseLife: 66, baseWealth: 32, baseHealth: 60 },
-      { name: "Indonesia", tr: "Endonezya", es: "Indonesia", de: "Indonesien", fr: "Indonésie", pt: "Indonésia", flag: "🇮🇩", weight: 330, cities: ["Surabaya", "Bandung", "Medan", "Yogyakarta"], baseLife: 71, baseWealth: 46, baseHealth: 72 },
-      { name: "DR Congo", tr: "Kongo DC", es: "RD Congo", de: "DR Kongo", fr: "RD Congo", pt: "RD Congo", flag: "🇨🇩", weight: 300, cities: ["Kinshasa", "Lubumbashi", "Mbuji-Mayi", "Goma"], baseLife: 60, baseWealth: 20, baseHealth: 45 },
-      { name: "United States", tr: "Amerika Birleşik Devletleri", es: "Estados Unidos", de: "Vereinigte Staaten", fr: "États-Unis", pt: "Estados Unidos", flag: "🇺🇸", weight: 270, cities: ["Ohio", "Texas", "California", "Georgia"], baseLife: 78, baseWealth: 85, baseHealth: 84 },
-      { name: "Ethiopia", tr: "Etiyopya", es: "Etiopía", de: "Äthiopien", fr: "Éthiopie", pt: "Etiópia", flag: "🇪🇹", weight: 260, cities: ["Addis Ababa", "Gondar", "Hawassa", "Dire Dawa"], baseLife: 65, baseWealth: 25, baseHealth: 58 },
-      { name: "Bangladesh", tr: "Bangladeş", es: "Bangladés", de: "Bangladesch", fr: "Bangladesh", pt: "Bangladesh", flag: "🇧🇩", weight: 220, cities: ["Dhaka", "Chittagong", "Sylhet", "Khulna"], baseLife: 72, baseWealth: 36, baseHealth: 70 },
-      { name: "Brazil", tr: "Brezilya", es: "Brasil", de: "Brasilien", fr: "Brésil", pt: "Brasil", flag: "🇧🇷", weight: 200, cities: ["Salvador", "Belo Horizonte", "Fortaleza", "Curitiba"], baseLife: 76, baseWealth: 55, baseHealth: 75 },
-      { name: "Philippines", tr: "Filipinler", es: "Filipinas", de: "Philippinen", fr: "Philippines", pt: "Filipinas", flag: "🇵🇭", weight: 150, cities: ["Cebu", "Davao", "Quezon City", "Iloilo"], baseLife: 71, baseWealth: 42, baseHealth: 69 },
-      { name: "Egypt", tr: "Mısır", es: "Egipto", de: "Ägypten", fr: "Égypte", pt: "Egito", flag: "🇪🇬", weight: 150, cities: ["Alexandria", "Giza", "Luxor", "Tanta"], baseLife: 71, baseWealth: 40, baseHealth: 70 },
-      { name: "Mexico", tr: "Meksika", es: "México", de: "Mexiko", fr: "Mexique", pt: "México", flag: "🇲🇽", weight: 140, cities: ["Guadalajara", "Puebla", "Monterrey", "Oaxaca"], baseLife: 75, baseWealth: 52, baseHealth: 74 },
-      { name: "Turkey", tr: "Türkiye", es: "Turquía", de: "Türkei", fr: "Turquie", pt: "Turquia", flag: "🇹🇷", weight: 85, cities: ["İzmir", "Konya", "Bursa", "Antalya", "Trabzon"], baseLife: 77, baseWealth: 58, baseHealth: 78 },
-      { name: "Germany", tr: "Almanya", es: "Alemania", de: "Deutschland", fr: "Allemagne", pt: "Alemanha", flag: "🇩🇪", weight: 55, cities: ["Bavaria", "Hamburg", "Leipzig", "Cologne"], baseLife: 81, baseWealth: 88, baseHealth: 92 },
-      { name: "United Kingdom", tr: "Birleşik Krallık", es: "Reino Unido", de: "Vereinigtes Königreich", fr: "Royaume-Uni", pt: "Reino Unido", flag: "🇬🇧", weight: 48, cities: ["Manchester", "Edinburgh", "Bristol", "Leeds"], baseLife: 81, baseWealth: 86, baseHealth: 90 },
-      { name: "France", tr: "Fransa", es: "Francia", de: "Frankreich", fr: "France", pt: "França", flag: "🇫🇷", weight: 50, cities: ["Lyon", "Bordeaux", "Marseille", "Toulouse"], baseLife: 82, baseWealth: 86, baseHealth: 92 },
-      { name: "Japan", tr: "Japonya", es: "Japón", de: "Japan", fr: "Japon", pt: "Japão", flag: "🇯🇵", weight: 52, cities: ["Osaka", "Fukuoka", "Sapporo", "Kyoto"], baseLife: 85, baseWealth: 85, baseHealth: 95 },
-      { name: "Colombia", tr: "Kolombiya", es: "Colombia", de: "Kolumbien", fr: "Colombie", pt: "Colômbia", flag: "🇨🇴", weight: 55, cities: ["Medellín", "Cali", "Barranquilla", "Bucaramanga"], baseLife: 74, baseWealth: 48, baseHealth: 72 },
-      { name: "South Africa", tr: "Güney Afrika", es: "Sudáfrica", de: "Südafrika", fr: "Afrique du Sud", pt: "África do Sul", flag: "🇿🇦", weight: 75, cities: ["Durban", "Pretoria", "Cape Town", "Soweto"], baseLife: 64, baseWealth: 44, baseHealth: 62 },
-      { name: "Argentina", tr: "Arjantin", es: "Argentina", de: "Argentinien", fr: "Argentine", pt: "Argentina", flag: "🇦🇷", weight: 40, cities: ["Córdoba", "Rosario", "Mendoza", "Salta"], baseLife: 76, baseWealth: 54, baseHealth: 76 },
-      { name: "Canada", tr: "Kanada", es: "Canadá", de: "Kanada", fr: "Canada", pt: "Canadá", flag: "🇨🇦", weight: 27, cities: ["Vancouver", "Montreal", "Calgary", "Ottawa"], baseLife: 82, baseWealth: 88, baseHealth: 93 },
-      { name: "Australia", tr: "Avustralya", es: "Australia", de: "Australien", fr: "Australie", pt: "Austrália", flag: "🇦🇺", weight: 22, cities: ["Melbourne", "Brisbane", "Perth", "Adelaide"], baseLife: 83, baseWealth: 89, baseHealth: 94 },
-      { name: "South Korea", tr: "Güney Kore", es: "Corea del Sur", de: "Südkorea", fr: "Corée du Sud", pt: "Coreia do Sul", flag: "🇰🇷", weight: 18, cities: ["Busan", "Daegu", "Incheon", "Gwangju"], baseLife: 84, baseWealth: 84, baseHealth: 94 },
-      { name: "Norway", tr: "Norveç", es: "Noruega", de: "Norwegen", fr: "Norvège", pt: "Noruega", flag: "🇳🇴", weight: 4, cities: ["Bergen", "Trondheim", "Stavanger", "Tromsø"], baseLife: 83, baseWealth: 96, baseHealth: 97, golden: true },
-      { name: "Iceland", tr: "İzlanda", es: "Islandia", de: "Island", fr: "Islande", pt: "Islândia", flag: "🇮🇸", weight: 1, cities: ["Reykjavik", "Akureyri", "Keflavik"], baseLife: 83, baseWealth: 95, baseHealth: 98, golden: true }
-    ];
+  {
+    "name": "India",
+    "tr": "Hindistan",
+    "iso": "in",
+    "weight": 1750,
+    "cities": [
+      "Varanasi",
+      "Mumbai",
+      "Jaipur",
+      "Kolkata"
+    ],
+    "baseLife": 70,
+    "baseWealth": 38,
+    "baseHealth": 68
+  },
+  {
+    "name": "China",
+    "tr": "Çin",
+    "iso": "cn",
+    "weight": 820,
+    "cities": [
+      "Chengdu",
+      "Wuhan",
+      "Zhengzhou",
+      "Hangzhou"
+    ],
+    "baseLife": 78,
+    "baseWealth": 65,
+    "baseHealth": 82
+  },
+  {
+    "name": "Nigeria",
+    "tr": "Nijerya",
+    "iso": "ng",
+    "weight": 580,
+    "cities": [
+      "Lagos",
+      "Kano",
+      "Ibadan",
+      "Abuja"
+    ],
+    "baseLife": 55,
+    "baseWealth": 30,
+    "baseHealth": 50
+  },
+  {
+    "name": "Pakistan",
+    "tr": "Pakistan",
+    "iso": "pk",
+    "weight": 470,
+    "cities": [
+      "Lahore",
+      "Karachi",
+      "Faisalabad",
+      "Rawalpindi"
+    ],
+    "baseLife": 66,
+    "baseWealth": 32,
+    "baseHealth": 60
+  },
+  {
+    "name": "Indonesia",
+    "tr": "Endonezya",
+    "iso": "id",
+    "weight": 330,
+    "cities": [
+      "Surabaya",
+      "Bandung",
+      "Medan",
+      "Yogyakarta"
+    ],
+    "baseLife": 71,
+    "baseWealth": 46,
+    "baseHealth": 72
+  },
+  {
+    "name": "DR Congo",
+    "tr": "Kongo DC",
+    "iso": "cd",
+    "weight": 300,
+    "cities": [
+      "Kinshasa",
+      "Lubumbashi",
+      "Mbuji-Mayi",
+      "Goma"
+    ],
+    "baseLife": 60,
+    "baseWealth": 20,
+    "baseHealth": 45
+  },
+  {
+    "name": "United States",
+    "tr": "Amerika Birleşik Devletleri",
+    "iso": "us",
+    "weight": 270,
+    "cities": [
+      "Ohio",
+      "Texas",
+      "California",
+      "Georgia"
+    ],
+    "baseLife": 78,
+    "baseWealth": 85,
+    "baseHealth": 84
+  },
+  {
+    "name": "Ethiopia",
+    "tr": "Etiyopya",
+    "iso": "et",
+    "weight": 260,
+    "cities": [
+      "Addis Ababa",
+      "Gondar",
+      "Hawassa",
+      "Dire Dawa"
+    ],
+    "baseLife": 65,
+    "baseWealth": 25,
+    "baseHealth": 58
+  },
+  {
+    "name": "Bangladesh",
+    "tr": "Bangladeş",
+    "iso": "bd",
+    "weight": 220,
+    "cities": [
+      "Dhaka",
+      "Chittagong",
+      "Sylhet",
+      "Khulna"
+    ],
+    "baseLife": 72,
+    "baseWealth": 36,
+    "baseHealth": 70
+  },
+  {
+    "name": "Brazil",
+    "tr": "Brezilya",
+    "iso": "br",
+    "weight": 200,
+    "cities": [
+      "Salvador",
+      "Belo Horizonte",
+      "Fortaleza",
+      "Curitiba"
+    ],
+    "baseLife": 76,
+    "baseWealth": 55,
+    "baseHealth": 75
+  },
+  {
+    "name": "Philippines",
+    "tr": "Filipinler",
+    "iso": "ph",
+    "weight": 150,
+    "cities": [
+      "Cebu",
+      "Davao",
+      "Quezon City",
+      "Iloilo"
+    ],
+    "baseLife": 71,
+    "baseWealth": 42,
+    "baseHealth": 69
+  },
+  {
+    "name": "Egypt",
+    "tr": "Mısır",
+    "iso": "eg",
+    "weight": 150,
+    "cities": [
+      "Alexandria",
+      "Giza",
+      "Luxor",
+      "Tanta"
+    ],
+    "baseLife": 71,
+    "baseWealth": 40,
+    "baseHealth": 70
+  },
+  {
+    "name": "Mexico",
+    "tr": "Meksika",
+    "iso": "mx",
+    "weight": 140,
+    "cities": [
+      "Guadalajara",
+      "Puebla",
+      "Monterrey",
+      "Oaxaca"
+    ],
+    "baseLife": 75,
+    "baseWealth": 52,
+    "baseHealth": 74
+  },
+  {
+    "name": "Turkey",
+    "tr": "Türkiye",
+    "iso": "tr",
+    "weight": 85,
+    "cities": [
+      "İzmir",
+      "Konya",
+      "Bursa",
+      "Antalya",
+      "Trabzon"
+    ],
+    "baseLife": 77,
+    "baseWealth": 58,
+    "baseHealth": 78
+  },
+  {
+    "name": "Germany",
+    "tr": "Almanya",
+    "iso": "de",
+    "weight": 55,
+    "cities": [
+      "Bavaria",
+      "Hamburg",
+      "Leipzig",
+      "Cologne"
+    ],
+    "baseLife": 81,
+    "baseWealth": 88,
+    "baseHealth": 92
+  },
+  {
+    "name": "United Kingdom",
+    "tr": "Birleşik Krallık",
+    "iso": "gb",
+    "weight": 48,
+    "cities": [
+      "Manchester",
+      "Edinburgh",
+      "Bristol",
+      "Leeds"
+    ],
+    "baseLife": 81,
+    "baseWealth": 86,
+    "baseHealth": 90
+  },
+  {
+    "name": "France",
+    "tr": "Fransa",
+    "iso": "fr",
+    "weight": 50,
+    "cities": [
+      "Lyon",
+      "Bordeaux",
+      "Marseille",
+      "Toulouse"
+    ],
+    "baseLife": 82,
+    "baseWealth": 86,
+    "baseHealth": 92
+  },
+  {
+    "name": "Japan",
+    "tr": "Japonya",
+    "iso": "jp",
+    "weight": 52,
+    "cities": [
+      "Osaka",
+      "Fukuoka",
+      "Sapporo",
+      "Kyoto"
+    ],
+    "baseLife": 85,
+    "baseWealth": 85,
+    "baseHealth": 95
+  },
+  {
+    "name": "Colombia",
+    "tr": "Kolombiya",
+    "iso": "co",
+    "weight": 55,
+    "cities": [
+      "Medellín",
+      "Cali",
+      "Barranquilla",
+      "Bucaramanga"
+    ],
+    "baseLife": 74,
+    "baseWealth": 48,
+    "baseHealth": 72
+  },
+  {
+    "name": "South Africa",
+    "tr": "Güney Afrika",
+    "iso": "za",
+    "weight": 75,
+    "cities": [
+      "Durban",
+      "Pretoria",
+      "Cape Town",
+      "Soweto"
+    ],
+    "baseLife": 64,
+    "baseWealth": 44,
+    "baseHealth": 62
+  },
+  {
+    "name": "Argentina",
+    "tr": "Arjantin",
+    "iso": "ar",
+    "weight": 40,
+    "cities": [
+      "Córdoba",
+      "Rosario",
+      "Mendoza",
+      "Salta"
+    ],
+    "baseLife": 76,
+    "baseWealth": 54,
+    "baseHealth": 76
+  },
+  {
+    "name": "Canada",
+    "tr": "Kanada",
+    "iso": "ca",
+    "weight": 27,
+    "cities": [
+      "Vancouver",
+      "Montreal",
+      "Calgary",
+      "Ottawa"
+    ],
+    "baseLife": 82,
+    "baseWealth": 88,
+    "baseHealth": 93
+  },
+  {
+    "name": "Australia",
+    "tr": "Avustralya",
+    "iso": "au",
+    "weight": 22,
+    "cities": [
+      "Melbourne",
+      "Brisbane",
+      "Perth",
+      "Adelaide"
+    ],
+    "baseLife": 83,
+    "baseWealth": 89,
+    "baseHealth": 94
+  },
+  {
+    "name": "South Korea",
+    "tr": "Güney Kore",
+    "iso": "kr",
+    "weight": 18,
+    "cities": [
+      "Busan",
+      "Daegu",
+      "Incheon",
+      "Gwangju"
+    ],
+    "baseLife": 84,
+    "baseWealth": 84,
+    "baseHealth": 94
+  },
+  {
+    "name": "Italy",
+    "tr": "İtalya",
+    "iso": "it",
+    "weight": 26,
+    "cities": [
+      "Milan",
+      "Naples",
+      "Florence",
+      "Bologna"
+    ],
+    "baseLife": 83,
+    "baseWealth": 85,
+    "baseHealth": 93
+  },
+  {
+    "name": "Poland",
+    "tr": "Polonya",
+    "iso": "pl",
+    "weight": 25,
+    "cities": [
+      "Krakow",
+      "Wroclaw",
+      "Gdansk",
+      "Poznan"
+    ],
+    "baseLife": 78,
+    "baseWealth": 70,
+    "baseHealth": 82
+  },
+  {
+    "name": "Ukraine",
+    "tr": "Ukrayna",
+    "iso": "ua",
+    "weight": 20,
+    "cities": [
+      "Lviv",
+      "Odesa",
+      "Dnipro",
+      "Kharkiv"
+    ],
+    "baseLife": 72,
+    "baseWealth": 42,
+    "baseHealth": 68
+  },
+  {
+    "name": "Russia",
+    "tr": "Rusya",
+    "iso": "ru",
+    "weight": 95,
+    "cities": [
+      "St. Petersburg",
+      "Kazan",
+      "Novosibirsk",
+      "Sochi"
+    ],
+    "baseLife": 73,
+    "baseWealth": 62,
+    "baseHealth": 74
+  },
+  {
+    "name": "Thailand",
+    "tr": "Tayland",
+    "iso": "th",
+    "weight": 45,
+    "cities": [
+      "Chiang Mai",
+      "Phuket",
+      "Pattaya",
+      "Khon Kaen"
+    ],
+    "baseLife": 78,
+    "baseWealth": 55,
+    "baseHealth": 78
+  },
+  {
+    "name": "Vietnam",
+    "tr": "Vietnam",
+    "iso": "vn",
+    "weight": 90,
+    "cities": [
+      "Hanoi",
+      "Da Nang",
+      "Can Tho",
+      "Hai Phong"
+    ],
+    "baseLife": 74,
+    "baseWealth": 45,
+    "baseHealth": 74
+  },
+  {
+    "name": "Norway",
+    "tr": "Norveç",
+    "iso": "no",
+    "weight": 4,
+    "cities": [
+      "Bergen",
+      "Trondheim",
+      "Stavanger",
+      "Tromsø"
+    ],
+    "baseLife": 83,
+    "baseWealth": 96,
+    "baseHealth": 97,
+    "golden": true
+  },
+  {
+    "name": "Iceland",
+    "tr": "İzlanda",
+    "iso": "is",
+    "weight": 1,
+    "cities": [
+      "Reykjavik",
+      "Akureyri",
+      "Keflavik"
+    ],
+    "baseLife": 83,
+    "baseWealth": 95,
+    "baseHealth": 98,
+    "golden": true
+  }
+];
 
-    // Family Social Classes
     const SOCIAL_CLASSES = [
       { id: "rural_poor", name: { en: "Rural Farming Family", tr: "Kırsal Çiftçi Ailesi", es: "Familia Agricultora Rural", de: "Ländliche Bauernfamilie", fr: "Famille Agricole Rurale", pt: "Família Agrícola Rural" }, weight: 35, wealthMod: -15, happyMod: +5 },
       { id: "working_class", name: { en: "Urban Working Class", tr: "Kentli İşçi Ailesi", es: "Clase Trabajadora Urbana", de: "Städtische Arbeiterklasse", fr: "Classe Ouvrière Urbaine", pt: "Classe Trabalhadora Urbana" }, weight: 42, wealthMod: 0, happyMod: 0 },
@@ -1779,7 +2331,7 @@ let currentLang = 'en';
       const totalWeight = COUNTRIES.reduce((acc, c) => acc + c.weight, 0);
       const spawnPercentage = ((country.weight / totalWeight) * 100).toFixed(2);
 
-      document.getElementById('birthFlag').textContent = country.flag;
+      const flagImg = document.getElementById('birthFlagImg'); if (flagImg) flagImg.src = 'https://flagcdn.com/w80/' + country.iso + '.png';
       document.getElementById('birthCountry').textContent = countryLocalized;
       document.getElementById('birthCity').textContent = `${city}, ${countryLocalized}`;
       
@@ -2051,7 +2603,7 @@ let currentLang = 'en';
       const p = playerLife;
 
       // Update Top Mini Bar
-      document.getElementById('stageCountryFlag').textContent = p.country.flag;
+      const sFlag = document.getElementById('stageFlagImg'); if (sFlag) sFlag.src = 'https://flagcdn.com/w80/' + p.country.iso + '.png';
       document.getElementById('stageTitle').textContent = I18N[currentLang][stage.titleKey] || stage.titleKey;
       document.getElementById('stageAge').textContent = stage.ageText;
       document.getElementById('miniHealth').textContent = `${p.health}%`;
@@ -2113,7 +2665,7 @@ let currentLang = 'en';
       const p = playerLife;
       const cName = p.country[currentLang] || p.country.name;
 
-      document.getElementById('finalFlag').textContent = p.country.flag;
+      const fFlag = document.getElementById('finalFlagImg'); if (fFlag) fFlag.src = 'https://flagcdn.com/w80/' + p.country.iso + '.png';
       document.getElementById('finalNameTitle').textContent = `Life in ${p.city}, ${cName}`;
       
       const genderTxt = I18N[currentLang][p.gender];
