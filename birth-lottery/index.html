@@ -787,12 +787,17 @@
   <div id="decisionModal" class="fixed inset-0 bg-stone-950/65 backdrop-blur-xs z-50 hidden flex items-center justify-center p-3 sm:p-4">
     <div class="bg-white rounded-2xl max-w-lg w-full border border-stone-200 shadow-2xl overflow-hidden animate-fadeIn space-y-0">
       
-      <div class="bg-stone-50 border-b border-stone-200 px-5 py-3 flex items-center justify-between text-xs">
-        <span class="font-bold text-[#7F1D1D] uppercase tracking-wider flex items-center gap-1.5">
-          <i class="fa-solid fa-scale-balanced"></i>
-          <span id="modalHeaderDecision">Önemli Bir Karar</span>
+      <div class="bg-stone-50 border-b border-stone-200 px-5 py-2.5 flex items-center justify-between text-xs">
+        <span class="font-serif font-bold text-[#7F1D1D] tracking-wide flex items-center gap-1.5" id="modalHeaderDecision">
+          Önemli bir karar
         </span>
-        <span class="font-mono text-stone-500 font-semibold" id="modalAgeYearTag">Yaş 2 · 2028</span>
+        <div class="flex items-center gap-2">
+          <span class="font-mono text-stone-500 font-semibold text-xs" id="modalAgeYearTag">Yaş 19 · 2045</span>
+          <button onclick="closeDecisionModal()" class="px-2.5 py-1 rounded-lg text-[11px] font-semibold text-stone-600 bg-white hover:bg-stone-100 border border-stone-300 flex items-center gap-1 transition shadow-2xs">
+            <span>Bir süre kenara koy</span>
+            <i class="fa-solid fa-chevron-down text-[9px] text-stone-400"></i>
+          </button>
+        </div>
       </div>
 
       <div class="w-full h-32 bg-stone-100 border-b border-stone-200 relative flex items-center justify-center overflow-hidden">
@@ -809,8 +814,9 @@
           </p>
         </div>
 
-        <div class="bg-amber-50 border-l-4 border-amber-500 p-2.5 rounded-r-lg text-[11px] text-amber-900 leading-relaxed" id="modalCitation">
-          Bilimsel not...
+        <div class="bg-[#E6F4EA] border border-[#CEEAD6] p-3 rounded-xl text-xs text-[#137333] leading-relaxed flex items-start gap-2 shadow-2xs" id="modalCitation">
+          <i class="fa-solid fa-circle-info text-emerald-700 mt-0.5 shrink-0 text-xs"></i>
+          <span id="modalCitationText">Kongo Demokratik Cumhuriyeti'nde erkeklerin ilk evlilikteki ortalama yaşının yaklaşık 26 olduğu tahmin ediliyor</span>
         </div>
 
         <div class="space-y-2 pt-1" id="modalOptionsContainer"></div>
@@ -2564,6 +2570,79 @@
           { text: { tr: "Ailenin yanında kalıp aile mesleğini devral", en: "Preserve the family generational craft" }, stats: { social: +9, happy: +6 } }
         ]
       },
+      
+      19: {
+        sceneType: 'teen_street',
+        title: { tr: "Yolda yığılıp kalan biri", en: "A Stranger Collapses" },
+        prompt: { tr: "Sokakta bir yabancı yığılıp kalmış. Herkes aceleyle geçip gidiyor.", en: "A stranger has collapsed on the pavement. People rush by in haste." },
+        citation: { tr: "Dünya Sağlık Örgütü (WHO) verilerine göre acil sağlık müdahalelerinde ilk 15 dakikada yapılan ilk yardım hayatta kalma şansını %60 artırır.", en: "WHO data indicates early bystander first aid within the first 15 minutes increases survival odds by 60%." },
+        choices: [
+          { 
+            title: "Hastaneye götür", 
+            sub: "Biraz zamana ve paraya mal olur", 
+            text: { tr: "Hastaneye götür (Biraz zamana ve paraya mal olur)", en: "Take them to the hospital" }, 
+            stats: { social: +8, happy: +6, health: -1 } 
+          },
+          { 
+            title: "Biri yardım eder, yoluna devam et", 
+            sub: "Aceleyle yoluna devam et", 
+            text: { tr: "Biri yardım eder, yoluna devam et", en: "Assume someone else will help and keep walking" }, 
+            stats: { happy: -3 } 
+          }
+        ]
+      },
+      22: {
+        sceneType: 'work_office',
+        title: { tr: "Aşk kapını çaldı", en: "Love Knocks at the Door" },
+        prompt: { tr: "Bir süredir tanıdığın biri: Esther Kalenga (kadın, 19 yaşında, girişken ve samimi). İş: küçük çiftçi (geçimlik tarım).", en: "Someone you have known for a while expresses romantic interest." },
+        citation: { tr: "Kongo Demokratik Cumhuriyeti'nde (ve gelişmekte olan ülkelerde) ilk evlilikteki ortalama yaşın yaklaşık 26 olduğu tahmin ediliyor (BM Nüfus Verileri).", en: "UN Population Data estimates the average age of first marriage in developing nations around 25-26." },
+        choices: [
+          { 
+            title: "Görüşmeyi dene", 
+            sub: "Birbirinizi tanıma zamanı · evlilik daha sonra", 
+            text: { tr: "Görüşmeyi dene (Birbirinizi tanıma zamanı · evlilik daha sonra)", en: "Start dating and get to know each other" }, 
+            stats: { social: +10, happy: +12 } 
+          },
+          { 
+            title: "İçinden gelmiyor", 
+            sub: "Kendi yolunda ilerle", 
+            text: { tr: "İçinden gelmiyor (Arkadaş kal)", en: "Politely decline" }, 
+            stats: { happy: +2 } 
+          }
+        ]
+      },
+      23: {
+        sceneType: 'wedding',
+        title: { tr: "Evlilik konuşması", en: "The Marriage Conversation" },
+        prompt: { tr: "Esther'le 1 yıldır birliktesiniz. Esther evlilik konusunu açıyor. Esther'in neredeyse hiç birikimi de borcu da yok.", en: "After a year together, your partner brings up marriage." },
+        citation: { tr: "ABD'de ve dünyada nişanlanan çiftlerin yarısından biraz fazlası (%53), nişanlanmadan önce iki ila beş yıl çıkmış (The Knot Küresel Raporu).", en: "Global relationship surveys show 53% of engaged couples date 2-5 years before formal marriage." },
+        choices: [
+          { 
+            title: "Evlen", 
+            sub: "İlişkiler↑ Mutluluk↑", 
+            text: { tr: "Evlen (İlişkiler↑ Mutluluk↑)", en: "Get married" }, 
+            stats: { social: +12, happy: +16 } 
+          },
+          { 
+            title: "Düğünü ertele, birlikte yaşa", 
+            sub: "Resmî nikâh yok · ileride evlenebilirsiniz", 
+            text: { tr: "Düğünü ertele, birlikte yaşa", en: "Postpone the wedding, cohabitate" }, 
+            stats: { social: +6, happy: +8 } 
+          },
+          { 
+            title: "Biraz daha çıkmaya devam et", 
+            sub: "Acele yok", 
+            text: { tr: "Biraz daha çıkmaya devam et (Acele yok)", en: "Continue dating without rush" }, 
+            stats: { social: +4, happy: +4 } 
+          },
+          { 
+            title: "Ayrıl", 
+            sub: "Yolları ayır", 
+            text: { tr: "Ayrıl (Yolları ayır)", en: "Break up" }, 
+            stats: { social: -6, happy: -8 } 
+          }
+        ]
+      },
       25: {
         sceneType: 'wedding',
         title: { tr: "Yirmi beş yaş: Hayat Arkadaşı & Yuva", en: "Age Twenty-Five: Companionship & Foundation" },
@@ -3233,10 +3312,8 @@
       document.getElementById('modalAgeYearTag').textContent = `Yaş ${age} · ${currentSim.currentYear}`;
       document.getElementById('modalDecisionTitle').textContent = milestone.title[currentLang] || milestone.title.tr;
       document.getElementById('modalDecisionPrompt').textContent = milestone.prompt[currentLang] || milestone.prompt.tr;
-      document.getElementById('modalCitation').innerHTML = `
-        <i class="fa-solid fa-graduation-cap mr-1 text-amber-700"></i>
-        <span>${milestone.citation[currentLang] || milestone.citation.tr}</span>
-      `;
+      const citeText = document.getElementById('modalCitationText'); 
+      if (citeText) citeText.textContent = milestone.citation[currentLang] || milestone.citation.tr;
 
       drawSceneToCanvas('modalSceneCanvas', milestone.sceneType);
 
@@ -3267,6 +3344,14 @@
       });
 
       document.getElementById('decisionModal').classList.remove('hidden');
+    }
+
+    
+    function closeDecisionModal() {
+      const modal = document.getElementById('decisionModal');
+      if (modal) modal.classList.add('hidden');
+      isPlaying = true;
+      updatePlayPauseButton();
     }
 
     function selectDecisionChoice(idx, auto = false) {
