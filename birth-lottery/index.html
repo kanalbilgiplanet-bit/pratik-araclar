@@ -254,6 +254,55 @@
 
     </div>
 
+  
+      <!-- ========================================================================= -->
+      <!-- ANMA SAYFASINDA YAYINLANAN HAYATLAR & PAYLAŞILAN HAYATLAR (COMMUNITY WALL) -->
+      <!-- ========================================================================= -->
+      <section class="mt-12 space-y-8 pt-8 border-t border-stone-200">
+        
+        <!-- SECTION 1: Anma sayfasında yayınlanan hayatlar (Horizontal Mini Pixel Room Cards) -->
+        <div class="space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm sm:text-base font-serif font-bold text-stone-800 tracking-tight flex items-center gap-2">
+              <i class="fa-solid fa-monument text-[#7F1D1D]"></i>
+              <span id="txtMemorialLivesTitle">Anma sayfasında yayınlanan hayatlar</span>
+            </h3>
+            <button onclick="scrollToSharedLives()" class="text-xs font-semibold text-[#7F1D1D] hover:underline" id="btnSeeAllTop">Hepsini gör</button>
+          </div>
+
+          <!-- Cards Row (Image 1 top row) -->
+          <div id="memorialWallFeaturedCards" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+            <!-- Populated dynamically by JS -->
+          </div>
+        </div>
+
+        <!-- SECTION 2: Paylaşılan Hayatlar (Image 1 main story cards) -->
+        <div class="space-y-3 pt-4 border-t border-stone-100" id="sharedLivesSection">
+          <div>
+            <h3 class="text-base sm:text-lg font-serif font-bold text-stone-900 tracking-tight flex items-center gap-2">
+              <span id="txtSharedLivesTitle">Paylaşılan hayatlar</span>
+            </h3>
+            <p class="text-xs text-stone-500 mt-0.5" id="txtSharedLivesSubtitle">
+              Herkes burada yaşadığı hayatı ve neler hissettiğini paylaşır. İsim yok, iletişim bilgisi yok. Geriye yalnızca hayatlar kalır.
+            </p>
+          </div>
+
+          <!-- 3-Column Responsive Grid -->
+          <div id="sharedLivesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Populated dynamically by JS -->
+          </div>
+
+          <!-- Hepsini Gör / Daha Fazla Göster Button -->
+          <div class="pt-2 text-left" id="btnSharedLivesMoreContainer">
+            <button onclick="toggleAllSharedLives()" id="btnToggleSharedLives" class="px-4 py-2 rounded-xl bg-white hover:bg-stone-100 text-stone-700 text-xs font-bold border border-stone-300 shadow-xs transition inline-flex items-center gap-2">
+              <span>Hepsini gör</span>
+              <i class="fa-solid fa-chevron-down text-[10px]"></i>
+            </button>
+          </div>
+        </div>
+
+      </section>
+
   </main>
 
   <!-- ========================================================================= -->
@@ -765,6 +814,21 @@
   <!-- ========================================================================= -->
   <div id="screenMemorial" class="hidden flex-1 max-w-2xl w-full mx-auto px-4 py-6 sm:py-10 flex flex-col justify-center">
     
+    <!-- Friend's Shared Life Banner (Image 2 URL sharing feature) -->
+    <div id="sharedLifeNoticeBanner" class="hidden mb-4 p-4 rounded-2xl bg-amber-50 border border-amber-300 text-amber-950 text-xs font-medium text-left flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
+      <div class="flex items-start gap-2.5">
+        <i class="fa-solid fa-user-astronaut text-amber-600 text-base mt-0.5 shrink-0"></i>
+        <div>
+          <div class="font-bold text-amber-900 text-xs sm:text-sm">Arkadaşının Yaşadığı Kozmik Hayatı İnceliyorsun!</div>
+          <div class="text-[11px] text-amber-800/90 mt-0.5" id="sharedLifeBannerDesc">Bak bu coğrafyada neler başarmış, nasıl bir ömür sürmüş:</div>
+        </div>
+      </div>
+      <button onclick="startLottery()" class="px-3.5 py-2 rounded-xl bg-[#7F1D1D] hover:bg-[#681318] text-white text-xs font-bold shrink-0 transition shadow-xs flex items-center justify-center gap-1.5">
+        <i class="fa-solid fa-dice"></i>
+        <span>Sen de Doğ</span>
+      </button>
+    </div>
+
     <div class="bg-white rounded-2xl border border-stone-200 shadow-2xl p-6 sm:p-8 text-center space-y-5 relative overflow-hidden">
       
       <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-stone-100 text-stone-700 border border-stone-300">
@@ -812,16 +876,60 @@
           <div class="font-mono font-bold text-emerald-700 text-sm" id="memFinalRarity">%0.42</div>
         </div>
       </div>
+      <!-- Life Milestones Timeline (So friends can inspect every year & decision) -->
+      <div class="text-left bg-stone-50 rounded-xl p-4 border border-stone-200 text-xs space-y-2">
+        <div class="font-bold text-stone-800 flex items-center justify-between border-b border-stone-200 pb-1.5">
+          <span class="flex items-center gap-1.5">
+            <i class="fa-solid fa-scroll text-[#7F1D1D]"></i>
+            <span>Bu Hayatta Neler Yaşandı? (Kilometre Taşları)</span>
+          </span>
+          <span class="text-[10px] text-stone-500 font-mono" id="memMilestoneCount"></span>
+        </div>
+        <div id="memorialMilestoneFeed" class="space-y-1.5 max-h-48 overflow-y-auto pr-1">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Anma Duvarına Not Bırak & Paylaş (Community Wall Publish) -->
+      <div id="memorialPublishBox" class="text-left p-4 rounded-xl bg-emerald-50/70 border border-emerald-300/80 text-xs space-y-2.5">
+        <div class="font-bold text-emerald-950 flex items-center justify-between">
+          <span class="flex items-center gap-1.5">
+            <i class="fa-solid fa-feather-pointed text-emerald-700"></i>
+            <span>Anma Duvarına Bir Not Bırak ve Paylaş</span>
+          </span>
+          <span class="text-[10px] text-emerald-700 font-semibold px-2 py-0.5 rounded-full bg-emerald-100">Ana Sayfada Yaşasın</span>
+        </div>
+        <p class="text-[11px] text-stone-600 leading-relaxed">
+          Bu hayattan geriye kalan bir son söz veya anı yaz. Ana sayfadaki "Paylaşılan Hayatlar" duvarında yayınlansın:
+        </p>
+        <div class="flex flex-col sm:flex-row gap-2">
+          <input type="text" id="inputMemorialQuote" placeholder="Örn: 'Doğduğum evin kaderim olmasına izin vermedim...' (Opsiyonel)" class="flex-1 bg-white border border-stone-300 rounded-lg px-3 py-2 text-xs text-stone-800 focus:outline-none focus:border-emerald-600">
+          <button onclick="publishToMemorialWall()" id="btnPublishMemorial" class="px-4 py-2 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs transition flex items-center justify-center gap-1.5 shrink-0 shadow-xs">
+            <i class="fa-solid fa-paper-plane"></i>
+            <span>Anma Duvarına Ekle</span>
+          </button>
+        </div>
+        <div id="memorialPublishSuccess" class="hidden text-emerald-800 font-bold text-xs flex items-center gap-1.5 animate-fadeIn">
+          <i class="fa-solid fa-circle-check text-emerald-600"></i>
+          <span>Bu hayat başarıyla Anma Duvarına eklendi ve ana sayfada yayınlandı!</span>
+        </div>
+      </div>
+
 
       <div class="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
-        <button onclick="shareMemorialCertificate()" class="w-full sm:w-auto px-5 py-3 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-800 font-bold text-xs border border-stone-300 transition flex items-center justify-center gap-2">
-          <i class="fa-solid fa-share-nodes"></i>
+        <button onclick="shareMemorialCertificate()" class="w-full sm:w-auto px-5 py-3 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-800 font-bold text-xs border border-stone-300 transition flex items-center justify-center gap-2 shadow-xs">
+          <i class="fa-solid fa-share-nodes text-[#7F1D1D]"></i>
           <span id="btnShareLife">Bu Hayatı Paylaş</span>
         </button>
 
         <button onclick="startLottery()" class="w-full sm:w-auto px-7 py-3 rounded-xl bg-[#7F1D1D] hover:bg-[#681318] text-white font-bold text-sm shadow-md transition flex items-center justify-center gap-2">
           <i class="fa-solid fa-rotate-right"></i>
           <span id="btnReborn">Yeniden Doğ (Kozmik Çekiliş)</span>
+        </button>
+
+        <button onclick="backToWelcome()" class="w-full sm:w-auto px-4 py-3 rounded-xl text-stone-500 hover:text-stone-800 font-medium text-xs transition flex items-center justify-center gap-1.5">
+          <i class="fa-solid fa-house"></i>
+          <span>Ana Sayfaya Dön</span>
         </button>
       </div>
 
@@ -3801,6 +3909,35 @@
       document.getElementById('memFinalRarity').textContent = `%${currentSim.spawnPct}`;
 
       buildCountryComparison();
+
+      // Populate Memorial Milestones Feed (Image 2 enhancement)
+      const memFeed = document.getElementById('memorialMilestoneFeed');
+      const countLabel = document.getElementById('memMilestoneCount');
+      if (memFeed && currentSim.feed) {
+        memFeed.innerHTML = '';
+        if (countLabel) countLabel.textContent = `${currentSim.feed.length} Anı / Olay`;
+        currentSim.feed.forEach(item => {
+          const div = document.createElement('div');
+          div.className = 'p-2 rounded bg-white border border-stone-200/80 text-stone-700 flex items-start gap-2';
+          div.innerHTML = `
+            <span class="px-1.5 py-0.5 rounded bg-stone-200 font-mono font-bold text-[10px] text-stone-700 shrink-0">${item.age} Yaş</span>
+            <span class="leading-relaxed text-[11px]">${item.text}</span>
+          `;
+          memFeed.appendChild(div);
+        });
+      }
+
+      // Reset community publish box
+      const succAlert = document.getElementById('memorialPublishSuccess');
+      if (succAlert) succAlert.classList.add('hidden');
+      const pubBtn = document.getElementById('btnPublishMemorial');
+      if (pubBtn) {
+        pubBtn.disabled = false;
+        pubBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+      }
+      const quoteInp = document.getElementById('inputMemorialQuote');
+      if (quoteInp) quoteInp.value = '';
+
       localStorage.removeItem('birth_lottery_saved_life');
     }
 
@@ -3835,12 +3972,647 @@
       }
     }
 
-    function shareMemorialCertificate() {
-      const shareText = `The Birth Lottery (Doğum Piyangosu): ${currentSim.name} olarak ${currentSim.country[currentLang] || currentSim.country.name}'da dünyaya geldim ve ${currentSim.currentAge} yıl yaşadım. Sen nerede doğardın? -> https://pratik-araclar.pratikweb.workers.dev/birth-lottery/`;
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText(shareText);
-        alert('Hayat hikayesi panoya kopyalandı! Dilediğiniz yerde paylaşabilirsiniz.');
+    // =========================================================================
+    // 14. VIRAL URL SHARING & COMMUNITY MEMORIAL WALL ENGINE
+    // =========================================================================
+
+    // Seeded initial community lives if empty (matching Image 1 exactly)
+    const DEFAULT_COMMUNITY_LIVES = [
+      {
+        id: 'seed_1',
+        name: 'Somjai Kongkaew',
+        country: 'Tayland',
+        countryIso: 'th',
+        city: 'Chiang Mai',
+        gender: 'Kadın',
+        age: 99,
+        birthYear: 2026,
+        deathYear: 2125,
+        aura: '🌱 Fıstık yeşili doku',
+        auraColor: 'text-emerald-700 bg-emerald-50 border-emerald-200',
+        story: "Bu hayat Chiang Mai, Tayland'da, geçimi dar bir ailede kız çocuğu olarak başladı. Liseyi bitirdi. Emekli olana kadar departman müdürü olarak çalıştı. Çocukluğundan beri müziğe karşı eşsiz bir sevgisi vardı.",
+        quote: "Hayalini gerçekleştiremese de güzel ve mutlu bir hayat yaşadı.",
+        likes: 14,
+        timeAgo: '23 dakika önce',
+        timestamp: Date.now() - 23 * 60 * 1000,
+        feed: [
+          { age: 7, text: 'İlkokula başladı, defterlerine rengarenk resimler çizdi.' },
+          { age: 19, text: 'Üniversitede işletme ve müzik kulübüne katıldı.' },
+          { age: 26, text: 'Kendi emeğiyle ilk arabasını satın aldı.' },
+          { age: 31, text: 'Hayat arkadaşıyla evlendi, iki evlat büyüttü.' },
+          { age: 65, text: 'Emekliliğinde Chiang Mai dağlarında huzurla yaşadı.' }
+        ]
+      },
+      {
+        id: 'seed_2',
+        name: 'Laiba Chaudhry',
+        country: 'Pakistan',
+        countryIso: 'pk',
+        city: 'Faysalabad',
+        gender: 'Kadın',
+        age: 92,
+        birthYear: 2026,
+        deathYear: 2118,
+        aura: '🐟 Deniz mavisi doku',
+        auraColor: 'text-blue-700 bg-blue-50 border-blue-200',
+        story: "Bu hayat kırsal Pakistan'da, en yoksul kesimden bir ailede kız çocuğu olarak başladı. Öğrenimini üniversitede sanat ve tasarım alanında yaptı. Emekli olana kadar içerik üreticisi / sanatçı olarak çalıştı.",
+        quote: "Doğduğun evin kaderin olmasına izin vermediğin için seninle gurur duyuyorum.",
+        likes: 28,
+        timeAgo: '27 dakika önce',
+        timestamp: Date.now() - 27 * 60 * 1000,
+        feed: [
+          { age: 6, text: 'Köy okulunda öğretmeninin desteğiyle resim çizmeye başladı.' },
+          { age: 18, text: 'Burs kazanarak üniversiteye girdi.' },
+          { age: 30, text: 'Uluslararası sergide ilk ödülünü kazandı.' },
+          { age: 48, text: 'Genç kızlar için bir sanat atölyesi kurdu.' },
+          { age: 92, text: 'Sevenlerinin dualarıyla huzurla hayata veda etti.' }
+        ]
+      },
+      {
+        id: 'seed_3',
+        name: 'Dior Guindo',
+        country: 'Kamerun',
+        countryIso: 'cm',
+        city: 'Yaoundé',
+        gender: 'Kadın',
+        age: 100,
+        birthYear: 2026,
+        deathYear: 2126,
+        aura: '👾 Lavanta doku',
+        auraColor: 'text-purple-700 bg-purple-50 border-purple-200',
+        story: "Bu hayat kırsal Kamerun'da, sıradan bir ailede kız çocuğu olarak başladı. Öğrenimini üniversitede ve lisansüstü okulda işletme ve iktisat alanında yaptı. Emekli olana kadar finans ekip lideri olarak çalıştı.",
+        quote: "Hiçbir şey için geç değil.",
+        likes: 42,
+        timeAgo: '43 dakika önce',
+        timestamp: Date.now() - 43 * 60 * 1000,
+        feed: [
+          { age: 7, text: 'İlkokula başladı, sınıf birincisi oldu.' },
+          { age: 22, text: 'Ekonomi diplomasını gururla aldı.' },
+          { age: 35, text: 'Bölgesel kalkınma bankasında yönetici oldu.' },
+          { age: 52, text: 'Kendi müstakil bahçeli evini inşa etti.' },
+          { age: 100, text: 'Asırlık bir çınar olarak torunlarının kollarında uyudu.' }
+        ]
+      },
+      {
+        id: 'seed_4',
+        name: 'Wang Yuze',
+        country: 'Çin',
+        countryIso: 'cn',
+        city: 'Şanghay',
+        gender: 'Erkek',
+        age: 94,
+        birthYear: 2026,
+        deathYear: 2120,
+        aura: '☀️ Kehribar doku',
+        auraColor: 'text-amber-700 bg-amber-50 border-amber-200',
+        story: "Bu hayat Şanghay, Çin'de, orta halli bir işçi ailesinde erkek çocuğu olarak başladı. Makine mühendisliği okudu. Demiryolu altyapı projelerinde şantiye şefliği yaptı.",
+        quote: "Geriye baktığımda bir nehir gibi aktı gitti hayat.",
+        likes: 19,
+        timeAgo: '1 saat önce',
+        timestamp: Date.now() - 60 * 60 * 1000,
+        feed: [
+          { age: 7, text: 'İlkokula başladı.' },
+          { age: 23, text: 'Yüksek hızlı tren mühendislik ekibine katıldı.' },
+          { age: 33, text: 'İlk çocuğu dünyaya geldi.' },
+          { age: 50, text: 'Şehir planlama nişanı aldı.' },
+          { age: 94, text: 'Huzur içinde vefat etti.' }
+        ]
+      },
+      {
+        id: 'seed_5',
+        name: 'Pradeep Weerasinghe',
+        country: 'Sri Lanka',
+        countryIso: 'lk',
+        city: 'Kolombo',
+        gender: 'Erkek',
+        age: 90,
+        birthYear: 2026,
+        deathYear: 2116,
+        aura: '🌸 Gül kurusu doku',
+        auraColor: 'text-rose-700 bg-rose-50 border-rose-200',
+        story: "Bu hayat Kolombo, Sri Lanka'da deniz kıyısında küçük bir hanede başladı. Kendi lojistik ve çay ihracat acentesini kurdu. Yıllarca dürüstlükle ticaret yaptı.",
+        quote: "Denizin kenarında sade bir hayat, saraylardan güzeldi.",
+        likes: 31,
+        timeAgo: '1.5 saat önce',
+        timestamp: Date.now() - 90 * 60 * 1000,
+        feed: [
+          { age: 14, text: 'Aile teknesinde babasına yardım etti.' },
+          { age: 26, text: 'İlk küçük nakliye kamyonetini satın aldı.' },
+          { age: 40, text: 'Organik çay kooperatifini kurdu.' },
+          { age: 68, text: 'Okyanusa bakan verandasında emekliliğin tadını çıkardı.' }
+        ]
+      },
+      {
+        id: 'seed_6',
+        name: 'Mohsen Mohammadi',
+        country: 'İran',
+        countryIso: 'ir',
+        city: 'İsfahan',
+        gender: 'Erkek',
+        age: 93,
+        birthYear: 2026,
+        deathYear: 2119,
+        aura: '🍃 Nane yeşili doku',
+        auraColor: 'text-teal-700 bg-teal-50 border-teal-200',
+        story: "Bu hayat İsfahan'da zanaatkar bir ailenin çocuğu olarak başladı. Edebiyat öğretmenliği yaptı, nesiller boyu binlerce gence şiir ve felsefe sevgisi aşıladı.",
+        quote: "Her şeye rağmen onurlu ve güzel bir ömürdü.",
+        likes: 25,
+        timeAgo: '2 saat önce',
+        timestamp: Date.now() - 120 * 60 * 1000,
+        feed: [
+          { age: 7, text: 'Tarihi mahalle okulunda okumayı söktü.' },
+          { age: 20, text: 'Öğretmenlik fakültesinden mezun oldu.' },
+          { age: 42, text: 'Kendi şiir kitabını yayımladı.' },
+          { age: 93, text: 'Binlerce öğrencisinin saygısıyla anılarak huzura erdi.' }
+        ]
       }
+    ];
+
+    let showAllSharedLives = false;
+
+    function getCommunityLives() {
+      try {
+        const stored = localStorage.getItem('birth_lottery_community_lives');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        }
+      } catch (e) {
+        console.error('Error reading community lives:', e);
+      }
+      return DEFAULT_COMMUNITY_LIVES;
+    }
+
+    function saveCommunityLives(lives) {
+      try {
+        localStorage.setItem('birth_lottery_community_lives', JSON.stringify(lives));
+      } catch (e) {
+        console.error('Error saving community lives:', e);
+      }
+    }
+
+    // Mini living room drawing for featured memorial cards (matching Image 1)
+    function drawMiniLivingRoom(canvas, seed) {
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width;
+      const h = canvas.height;
+      ctx.clearRect(0, 0, w, h);
+
+      // Pastel Wall
+      const wallColors = ['#F8FAFC', '#F1F5F9', '#FEF3C7', '#E0F2FE', '#FCE7F3'];
+      ctx.fillStyle = wallColors[seed % wallColors.length];
+      ctx.fillRect(0, 0, w, h * 0.72);
+
+      // Warm Wooden Floor
+      ctx.fillStyle = '#D97706';
+      ctx.fillRect(0, h * 0.72, w, h * 0.28);
+      ctx.fillStyle = '#B45309';
+      ctx.fillRect(0, h * 0.72, w, 2);
+
+      // Two picture frames on wall
+      ctx.strokeStyle = '#94A3B8';
+      ctx.lineWidth = 1.5;
+      ctx.strokeRect(w * 0.14, 7, 16, 12);
+      ctx.strokeRect(w * 0.78, 7, 16, 12);
+      ctx.fillStyle = '#CBD5E1';
+      ctx.fillRect(w * 0.16, 9, 12, 8);
+      ctx.fillRect(w * 0.80, 9, 12, 8);
+
+      // Couch in center
+      const couchX = w * 0.30;
+      const couchY = h * 0.44;
+      const couchW = w * 0.40;
+      const couchH = 20;
+
+      const sofaColors = ['#F43F5E', '#EC4899', '#8B5CF6', '#3B82F6', '#10B981', '#F59E0B'];
+      ctx.fillStyle = sofaColors[seed % sofaColors.length];
+      // Backrest
+      ctx.fillRect(couchX, couchY - 3, couchW, 10);
+      // Seat cushion
+      ctx.fillRect(couchX, couchY + 7, couchW, couchH);
+      // Armrests
+      ctx.fillRect(couchX - 4, couchY + 4, 6, couchH + 3);
+      ctx.fillRect(couchX + couchW - 2, couchY + 4, 6, couchH + 3);
+
+      // Cute Pixel Family sitting on couch
+      const peopleCount = 2 + (seed % 3);
+      for (let p = 0; p < peopleCount; p++) {
+        const px = couchX + 5 + p * (couchW / (peopleCount + 0.4));
+        const py = couchY - 6;
+
+        // Face
+        ctx.fillStyle = '#FDE68A';
+        ctx.fillRect(px, py, 7, 7);
+        // Hair
+        ctx.fillStyle = (p % 2 === 0) ? '#451A03' : '#1C1917';
+        ctx.fillRect(px, py - 2, 7, 3);
+        // Eyes
+        ctx.fillStyle = '#0F172A';
+        ctx.fillRect(px + 1.5, py + 2, 1, 1);
+        ctx.fillRect(px + 4.5, py + 2, 1, 1);
+        // Blushing cheeks
+        ctx.fillStyle = 'rgba(244, 63, 94, 0.7)';
+        ctx.fillRect(px + 0.5, py + 4, 1.5, 1);
+        ctx.fillRect(px + 5, py + 4, 1.5, 1);
+        // Shirt
+        ctx.fillStyle = ['#3B82F6', '#F43F5E', '#10B981', '#F59E0B'][p % 4];
+        ctx.fillRect(px, py + 7, 7, 8);
+      }
+
+      // Lamp on right
+      ctx.fillStyle = '#64748B';
+      ctx.fillRect(w * 0.90, h * 0.30, 2, h * 0.45);
+      ctx.fillStyle = '#FDE047';
+      ctx.beginPath();
+      ctx.arc(w * 0.91, h * 0.28, 5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Render the whole community section on welcome screen
+    function renderCommunityWall() {
+      const lives = getCommunityLives();
+
+      // 1. Featured Top Cards (Image 1 top cards: Wang Yuze, Pradeep, Mohsen...)
+      const featuredContainer = document.getElementById('memorialWallFeaturedCards');
+      if (featuredContainer) {
+        featuredContainer.innerHTML = '';
+        const top3 = lives.slice(0, 3);
+
+        top3.forEach((life, idx) => {
+          const card = document.createElement('div');
+          card.className = 'bg-white rounded-xl border border-stone-200/90 shadow-xs hover:shadow-md transition overflow-hidden cursor-pointer group';
+          card.onclick = () => openSharedLifeFromWall(life);
+
+          card.innerHTML = `
+            <div class="w-full h-20 bg-stone-100 overflow-hidden relative">
+              <canvas id="miniRoomCanvas_${idx}" width="280" height="80" class="w-full h-full block"></canvas>
+            </div>
+            <div class="p-3.5 space-y-0.5">
+              <div class="font-bold text-stone-900 text-sm group-hover:text-[#7F1D1D] transition flex items-center justify-between">
+                <span>${life.name}</span>
+                <span class="text-[11px] font-normal text-stone-400">#${idx + 1}</span>
+              </div>
+              <div class="font-mono text-xs text-stone-500">
+                ${life.birthYear} — ${life.deathYear} · ${life.country}
+              </div>
+            </div>
+          `;
+
+          featuredContainer.appendChild(card);
+
+          // Draw the miniature room canvas
+          setTimeout(() => {
+            const cvs = document.getElementById(`miniRoomCanvas_${idx}`);
+            drawMiniLivingRoom(cvs, idx + (life.age % 5));
+          }, 30);
+        });
+      }
+
+      // 2. Paylaşılan Hayatlar 3-Column Grid (Image 1 main story cards)
+      const gridContainer = document.getElementById('sharedLivesGrid');
+      if (gridContainer) {
+        gridContainer.innerHTML = '';
+        const displayList = showAllSharedLives ? lives : lives.slice(0, 6);
+
+        displayList.forEach((life) => {
+          const item = document.createElement('div');
+          item.className = 'bg-white rounded-2xl p-4 sm:p-5 border border-stone-200/80 shadow-xs hover:shadow-md transition flex flex-col justify-between space-y-3';
+
+          const auraHtml = life.aura 
+            ? `<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold ${life.auraColor || 'text-stone-700 bg-stone-100 border-stone-200'} border">
+                <span>${life.aura}</span>
+              </div>`
+            : '';
+
+          item.innerHTML = `
+            <div class="space-y-2">
+              <div class="flex items-start justify-between gap-2">
+                <div>
+                  <h4 class="font-bold text-stone-900 text-sm sm:text-base leading-tight hover:text-[#7F1D1D] cursor-pointer" onclick="openSharedLifeFromWallById('${life.id}')">
+                    ${life.name}
+                  </h4>
+                  <div class="text-xs text-stone-500 mt-0.5">
+                    ${life.country} · ${life.gender} · <b class="text-stone-700">${life.age} yaşında</b>
+                  </div>
+                </div>
+                <span class="text-[10px] text-stone-400 shrink-0 font-medium">${life.timeAgo || 'Yeni'}</span>
+              </div>
+
+              ${auraHtml}
+
+              <p class="text-xs text-stone-600 leading-relaxed line-clamp-3">
+                ${life.story}
+              </p>
+
+              <blockquote class="text-xs italic font-serif text-stone-800 border-l-2 border-[#7F1D1D]/50 pl-2.5 py-0.5 bg-stone-50/70 rounded-r">
+                “${life.quote}”
+              </blockquote>
+            </div>
+
+            <!-- Footer Action Row (Image 1: Hatırla / Bildir) -->
+            <div class="pt-3 border-t border-stone-100 flex items-center justify-between text-xs">
+              <button onclick="rememberLife('${life.id}')" id="btnRemember_${life.id}" class="px-3 py-1.5 rounded-full border border-stone-300 hover:border-rose-400 hover:bg-rose-50 text-stone-700 hover:text-rose-700 font-semibold text-[11px] transition flex items-center gap-1.5 active:scale-95 shadow-2xs">
+                <i class="fa-solid fa-heart text-rose-500 text-[10px]"></i>
+                <span>Hatırla</span>
+                <span class="font-mono text-stone-500" id="rememberCount_${life.id}">(${life.likes || 1})</span>
+              </button>
+
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] text-stone-400 hidden sm:inline">Biri bu hayatı hatırladı</span>
+                <button onclick="reportLife('${life.id}')" class="text-[11px] text-stone-400 hover:text-stone-600 px-2 py-1 rounded hover:bg-stone-100 transition">
+                  Bildir
+                </button>
+              </div>
+            </div>
+          `;
+
+          gridContainer.appendChild(item);
+        });
+
+        // Toggle button visibility
+        const moreBtnContainer = document.getElementById('btnSharedLivesMoreContainer');
+        if (moreBtnContainer) {
+          moreBtnContainer.style.display = lives.length > 6 ? 'block' : 'none';
+        }
+      }
+    }
+
+    function toggleAllSharedLives() {
+      showAllSharedLives = !showAllSharedLives;
+      const btn = document.getElementById('btnToggleSharedLives');
+      if (btn) {
+        btn.innerHTML = showAllSharedLives 
+          ? `<span>Daha az göster</span> <i class="fa-solid fa-chevron-up text-[10px]"></i>`
+          : `<span>Hepsini gör</span> <i class="fa-solid fa-chevron-down text-[10px]"></i>`;
+      }
+      renderCommunityWall();
+    }
+
+    function scrollToSharedLives() {
+      const section = document.getElementById('sharedLivesSection');
+      if (section) section.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Like / Remember counter
+    function rememberLife(lifeId) {
+      const lives = getCommunityLives();
+      const item = lives.find(l => l.id === lifeId);
+      if (item) {
+        item.likes = (item.likes || 1) + 1;
+        saveCommunityLives(lives);
+        const countSpan = document.getElementById(`rememberCount_${lifeId}`);
+        if (countSpan) countSpan.textContent = `(${item.likes})`;
+        showShareToast('❤️ Biri bu hayatı hatırladı.', 'Bu yaşamın hatırası hafızalara kazındı.');
+      }
+    }
+
+    function reportLife(lifeId) {
+      alert('Geri bildiriminiz alındı. Teşekkür ederiz.');
+    }
+
+    // Publish to community wall when simulation ends
+    function publishToMemorialWall() {
+      if (!currentSim) return;
+
+      const input = document.getElementById('inputMemorialQuote');
+      const customQuote = input ? input.value.trim() : '';
+
+      const auras = [
+        { name: '🌱 Fıstık yeşili doku', color: 'text-emerald-700 bg-emerald-50 border-emerald-200' },
+        { name: '🐟 Deniz mavisi doku', color: 'text-blue-700 bg-blue-50 border-blue-200' },
+        { name: '👾 Lavanta doku', color: 'text-purple-700 bg-purple-50 border-purple-200' },
+        { name: '🌸 Gül kurusu doku', color: 'text-rose-700 bg-rose-50 border-rose-200' },
+        { name: '☀️ Amber doku', color: 'text-amber-700 bg-amber-50 border-amber-200' },
+        { name: '🍃 Nane yeşili doku', color: 'text-teal-700 bg-teal-50 border-teal-200' }
+      ];
+      const selectedAura = auras[Math.floor(Math.random() * auras.length)];
+
+      const cName = currentSim.country[currentLang] || currentSim.country.name;
+      const gText = currentSim.gender === 'female' ? 'kız çocuğu' : 'erkek çocuğu';
+
+      const generatedStory = `Bu hayat ${currentSim.city}, ${cName}'da ${gText} olarak başladı. ${currentSim.currentAge} yaşına kadar sürdü. ${currentSim.feed && currentSim.feed.length > 0 ? currentSim.feed[currentSim.feed.length - 1].text : 'Onurlu bir yaşam mücadelesi verdi.'}`;
+
+      const finalQuote = customQuote || (currentSim.currentAge > 60 
+        ? "Hayalini gerçekleştiremese de güzel ve mutlu bir hayat yaşadı." 
+        : "Doğduğun evin kaderin olmasına izin vermediğin için seninle gurur duyuyorum.");
+
+      const newEntry = {
+        id: 'user_life_' + Date.now(),
+        name: currentSim.name,
+        country: cName,
+        countryIso: currentSim.country.iso,
+        city: currentSim.city,
+        gender: currentSim.gender === 'female' ? 'Kadın' : 'Erkek',
+        age: currentSim.currentAge,
+        birthYear: currentSim.birthYear,
+        deathYear: currentSim.currentYear,
+        aura: selectedAura.name,
+        auraColor: selectedAura.color,
+        story: generatedStory,
+        quote: finalQuote,
+        likes: 1,
+        timeAgo: 'Az önce',
+        timestamp: Date.now(),
+        feed: currentSim.feed || []
+      };
+
+      const lives = getCommunityLives();
+      lives.unshift(newEntry);
+      saveCommunityLives(lives);
+
+      const successAlert = document.getElementById('memorialPublishSuccess');
+      const btnPublish = document.getElementById('btnPublishMemorial');
+      if (successAlert) successAlert.classList.remove('hidden');
+      if (btnPublish) {
+        btnPublish.disabled = true;
+        btnPublish.classList.add('opacity-50', 'cursor-not-allowed');
+      }
+
+      renderCommunityWall();
+      showShareToast('🕊️ Anma Duvarında Yayınlandı!', 'Bu hayat ana sayfada ölümsüzleşti.');
+    }
+
+    // =========================================================================
+    // VIRAL URL SHARING & RE-CREATING FRIEND'S MEMORIAL VIEW (IMAGE 2)
+    // =========================================================================
+
+    function shareMemorialCertificate() {
+      if (!currentSim) return;
+
+      const cName = currentSim.country[currentLang] || currentSim.country.name;
+      const quoteInput = document.getElementById('inputMemorialQuote');
+
+      const payload = {
+        v: 1,
+        n: currentSim.name,
+        g: currentSim.gender,
+        iso: currentSim.country.iso,
+        cn: cName,
+        ct: currentSim.city,
+        a: currentSim.currentAge,
+        by: currentSim.birthYear,
+        dy: currentSim.currentYear,
+        h: currentSim.health,
+        hp: currentSim.happiness,
+        edu: currentSim.currentAge > 20 ? 'Yetkin' : 'Öğrenci',
+        r: currentSim.spawnPct,
+        urc: currentSim.userRealCountry || 'tr',
+        q: quoteInput ? quoteInput.value.trim() : '',
+        f: currentSim.feed ? currentSim.feed.slice(0, 16) : []
+      };
+
+      try {
+        const jsonStr = JSON.stringify(payload);
+        const encoded = btoa(encodeURIComponent(jsonStr));
+        const shareUrl = `${window.location.origin}${window.location.pathname}?life=${encoded}`;
+
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(shareUrl);
+        }
+
+        if (navigator.share) {
+          navigator.share({
+            title: `${currentSim.name} (${currentSim.currentAge} Yaşında) — The Birth Lottery`,
+            text: `The Birth Lottery'de ${cName}'da dünyaya geldim ve ${currentSim.currentAge} yıl yaşadım. Bak bu hayatta neler başardım:`,
+            url: shareUrl
+          }).catch(() => {});
+        }
+
+        showShareToast(
+          'Özel Hayat Linki Kopyalandı!',
+          'Arkadaşına gönderdiğinde doğrudan bu ekranı ve kronolojik başarılarını inceleyecek.'
+        );
+      } catch (e) {
+        console.error('Sharing failed:', e);
+      }
+    }
+
+    function showShareToast(title, desc) {
+      const toast = document.getElementById('globalShareToast');
+      const tTitle = document.getElementById('toastTitle');
+      const tDesc = document.getElementById('toastDesc');
+      if (!toast) return;
+
+      if (title && tTitle) tTitle.textContent = title;
+      if (desc && tDesc) tDesc.textContent = desc;
+
+      toast.classList.remove('hidden');
+      setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 4500);
+    }
+
+    // When someone opens ?life=<BASE64> in their browser
+    function checkSharedLifeUrl() {
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const lifeB64 = urlParams.get('life');
+        if (!lifeB64) return false;
+
+        const jsonStr = decodeURIComponent(atob(lifeB64));
+        const data = JSON.parse(jsonStr);
+
+        if (!data || !data.n) return false;
+
+        displaySharedLifeScreen(data);
+        return true;
+      } catch (e) {
+        console.error('Failed to parse ?life parameter:', e);
+        return false;
+      }
+    }
+
+    function displaySharedLifeScreen(data) {
+      document.getElementById('screenWelcome').classList.add('hidden');
+      document.getElementById('screenSim').classList.add('hidden');
+      document.getElementById('screenMemorial').classList.remove('hidden');
+
+      // Top Notice Banner
+      const banner = document.getElementById('sharedLifeNoticeBanner');
+      if (banner) {
+        banner.classList.remove('hidden');
+        const desc = document.getElementById('sharedLifeBannerDesc');
+        if (desc) {
+          desc.textContent = `Arkadaşın ${data.cn}, ${data.ct}'da dünyaya gelip ${data.a} yıl yaşamış. Bak neler başarmış:`;
+        }
+      }
+
+      // Name & Lifespan
+      document.getElementById('memorialPlayerName').textContent = data.n;
+      document.getElementById('memorialLifespanYears').textContent = 
+        `${data.by || 2026} — ${data.dy || 2071} · (${data.a} Yıl Yaşadı)`;
+
+      // Narrative
+      document.getElementById('memorialNarrative').textContent = 
+        `${data.cn}, ${data.ct}'da başlayan 8 milyarlık kozmik yolculuk, ${data.a} yaşında geride unutulmaz anılar bırakarak huzura erdi.`;
+
+      // Stats
+      document.getElementById('memFinalHealth').textContent = data.h || 75;
+      document.getElementById('memFinalHappy').textContent = `%${data.hp || 80}`;
+      document.getElementById('memFinalEdu').textContent = data.edu || 'Yetkin';
+      document.getElementById('memFinalRarity').textContent = `%${data.r || 1.2}`;
+
+      // Milestones Feed
+      const feedContainer = document.getElementById('memorialMilestoneFeed');
+      const countLabel = document.getElementById('memMilestoneCount');
+      if (feedContainer && data.f) {
+        feedContainer.innerHTML = '';
+        if (countLabel) countLabel.textContent = `${data.f.length} Anı / Olay`;
+        data.f.forEach(item => {
+          const div = document.createElement('div');
+          div.className = 'p-2 rounded bg-white border border-stone-200/80 text-stone-700 flex items-start gap-2';
+          div.innerHTML = `
+            <span class="px-1.5 py-0.5 rounded bg-stone-200 font-mono font-bold text-[10px] text-stone-700 shrink-0">${item.age} Yaş</span>
+            <span class="leading-relaxed text-[11px]">${item.text}</span>
+          `;
+          feedContainer.appendChild(div);
+        });
+      }
+
+      // Comparison card
+      const compBox = document.getElementById('comparisonDetails');
+      if (compBox) {
+        const country = COUNTRIES.find(c => c.iso === data.iso) || COUNTRIES[0];
+        const userCountry = COUNTRIES.find(c => c.iso === (data.urc || 'tr')) || COUNTRIES.find(c => c.iso === 'tr');
+        const diff = (country.baseLife - userCountry.baseLife).toFixed(1);
+        const lifeDiffStr = diff >= 0 ? `+${diff} yıl daha uzun` : `${Math.abs(diff)} yıl daha kısa`;
+        const gdpRatio = (country.gdpPpp / userCountry.gdpPpp).toFixed(1);
+
+        compBox.innerHTML = `
+          <p>• <b>Doğduğun Yer:</b> ${data.cn} (${country.baseLife} yıl beklenti) vs <b>Gerçek Ülken:</b> ${userCountry[currentLang] || userCountry.name} (${userCountry.baseLife} yıl beklenti).</p>
+          <p>• Bu kozmik piyangoda doğduğun ülke, gerçek ülkene kıyasla <b>${lifeDiffStr} bir ortalama ömre</b> sahipti.</p>
+          <p>• Kişi başı refah oranı: Bu hayatın doğduğu ülkede gelir seviyesi gerçek ülkene göre yaklaşık <b>${gdpRatio} katı</b> düzeyindeydi.</p>
+        `;
+      }
+    }
+
+    function openSharedLifeFromWallById(id) {
+      const lives = getCommunityLives();
+      const life = lives.find(l => l.id === id);
+      if (life) openSharedLifeFromWall(life);
+    }
+
+    function openSharedLifeFromWall(life) {
+      const payload = {
+        v: 1,
+        n: life.name,
+        g: life.gender === 'Kadın' ? 'female' : 'male',
+        iso: life.countryIso || 'tr',
+        cn: life.country,
+        ct: life.city || 'Merkez',
+        a: life.age,
+        by: life.birthYear || 2026,
+        dy: life.deathYear || 2110,
+        h: 78,
+        hp: 85,
+        edu: 'Yetkin',
+        r: 1.5,
+        urc: 'tr',
+        q: life.quote,
+        f: life.feed || []
+      };
+      displaySharedLifeScreen(payload);
     }
 
     function saveSimToStorage() {
@@ -3998,8 +4770,22 @@
       renderLanguagePills();
       applyTranslations();
       renderProbabilityBars();
-      checkSavedLife();
+      renderCommunityWall();
+      const hasShared = checkSharedLifeUrl();
+      if (!hasShared) {
+        checkSavedLife();
+      }
     });
   </script>
+
+  <!-- Toast Notification for Link Copy / Actions -->
+  <div id="globalShareToast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-stone-900/95 backdrop-blur-md text-white px-5 py-3.5 rounded-2xl shadow-2xl border border-stone-700 text-xs flex items-center gap-3 hidden transition-all duration-300 animate-fadeIn max-w-sm sm:max-w-md w-[92%]">
+    <i class="fa-solid fa-circle-check text-emerald-400 text-lg shrink-0"></i>
+    <div class="flex-1">
+      <div class="font-bold text-xs" id="toastTitle">Özel Hayat Linki Kopyalandı!</div>
+      <div class="text-[11px] text-stone-300 mt-0.5" id="toastDesc">Arkadaşına gönderdiğinde doğrudan bu ekranı ve kronolojik başarılarını inceleyecek.</div>
+    </div>
+  </div>
+
 </body>
 </html>
