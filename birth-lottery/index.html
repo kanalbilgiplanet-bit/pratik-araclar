@@ -401,13 +401,16 @@
           <span id="txtPlayPause" class="hidden xs:inline">Duraklat</span>
         </button>
 
-        <!-- Speed selector (1x default) -->
-        <div class="flex items-center bg-stone-100 p-0.5 rounded-lg border border-stone-300">
-          <button onclick="setSpeed(1)" id="spdBtn1" class="px-2 py-1 rounded text-xs font-bold transition bg-[#7F1D1D] text-white">1x</button>
-          <button onclick="setSpeed(2)" id="spdBtn2" class="px-2 py-1 rounded text-xs font-bold transition text-stone-600 hover:text-stone-900">2x</button>
-          <button onclick="setSpeed(4)" id="spdBtn4" class="px-2 py-1 rounded text-xs font-bold transition text-stone-600 hover:text-stone-900">4x</button>
-          <button onclick="setSpeed(8)" id="spdBtn8" class="px-2 py-1 rounded text-xs font-bold transition text-stone-600 hover:text-stone-900">8x</button>
-          <button onclick="setSpeed(16)" id="spdBtn16" class="px-2 py-1 rounded text-xs font-bold transition text-stone-600 hover:text-stone-900">16x</button>
+        <!-- Speed selector with dynamic seconds badge -->
+        <div class="flex items-center gap-1.5">
+          <div class="flex items-center bg-stone-100 p-0.5 rounded-lg border border-stone-300">
+            <button onclick="setSpeed(1)" id="spdBtn1" class="px-2 py-1 rounded text-xs font-bold transition bg-[#7F1D1D] text-white">1x</button>
+            <button onclick="setSpeed(2)" id="spdBtn2" class="px-2 py-1 rounded text-xs font-bold transition text-stone-600 hover:text-stone-900">2x</button>
+            <button onclick="setSpeed(4)" id="spdBtn4" class="px-2 py-1 rounded text-xs font-bold transition text-stone-600 hover:text-stone-900">4x</button>
+            <button onclick="setSpeed(8)" id="spdBtn8" class="px-2 py-1 rounded text-xs font-bold transition text-stone-600 hover:text-stone-900">8x</button>
+            <button onclick="setSpeed(16)" id="spdBtn16" class="px-2 py-1 rounded text-xs font-bold transition text-stone-600 hover:text-stone-900">16x</button>
+          </div>
+          <span id="speedDurationBadge" class="text-[11px] font-mono text-stone-600 hidden sm:inline-block bg-stone-100 px-2 py-0.5 rounded border border-stone-300 font-bold" title="Bir yılın simülasyondaki geçiş süresi">1 yıl ≈ 3.0 sn</span>
         </div>
 
         <!-- Next Decision button -->
@@ -415,10 +418,10 @@
           <span id="txtNextDecision">Sonraki karara kadar »</span>
         </button>
 
-        <!-- Auto Decide Toggle -->
-        <button id="btnAutoDecide" onclick="toggleAutoDecide()" class="px-2 py-1.5 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-700 font-medium border border-stone-300 transition flex items-center gap-1" title="Otomatik Karar">
-          <i class="fa-solid fa-wand-magic-sparkles text-[11px] text-amber-600"></i>
-          <span class="hidden sm:inline" id="txtAutoDecide">Otomatik: <b id="valAutoDecide">Kapalı</b></span>
+        <!-- Auto Decide Toggle: Film Modu (Otomatik Karar) -->
+        <button id="btnAutoDecide" onclick="toggleAutoDecide()" class="px-2.5 py-1.5 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-700 font-medium border border-stone-300 transition flex items-center gap-1.5" title="Film Modu: Kararlar kendi kendine otomatik seçilsin mi?">
+          <i class="fa-solid fa-clapperboard text-[11px] text-amber-600"></i>
+          <span class="hidden sm:inline">Film Modu: <b id="valAutoDecide">Kapalı</b></span>
         </button>
 
         <!-- Exit / Re-roll -->
@@ -2624,6 +2627,11 @@
 
     function setSpeed(spd) {
       simSpeedMultiplier = spd;
+      const secPerYear = (3.0 / spd).toFixed(1);
+      const badge = document.getElementById('speedDurationBadge');
+      if (badge) {
+        badge.textContent = '1 yıl ≈ ' + secPerYear + ' sn';
+      }
       [1, 2, 4, 8, 16].forEach(s => {
         const btn = document.getElementById('spdBtn' + s);
         if (btn) {
@@ -2659,14 +2667,27 @@
 
     function toggleAutoDecide() {
       isAutoDecide = !isAutoDecide;
-      document.getElementById('valAutoDecide').textContent = isAutoDecide ? 'Açık' : 'Kapalı';
-      document.getElementById('valAutoDecide').className = isAutoDecide ? 'text-emerald-700 font-bold' : 'text-stone-600 font-bold';
+      updateAutoDecideUI();
+    }
+
+    function updateAutoDecideUI() {
+      const val = document.getElementById('valAutoDecide');
+      const btn = document.getElementById('btnAutoDecide');
+      if (!val || !btn) return;
+      if (isAutoDecide) {
+        val.textContent = 'Açık (Film Modu)';
+        val.className = 'text-emerald-700 font-bold';
+        btn.className = 'px-2.5 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-medium border border-emerald-300 transition flex items-center gap-1.5 shadow-xs';
+      } else {
+        val.textContent = 'Kapalı';
+        val.className = 'text-stone-600 font-bold';
+        btn.className = 'px-2.5 py-1.5 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-700 font-medium border border-stone-300 transition flex items-center gap-1.5';
+      }
     }
 
     function enableAutoDecideFromModal() {
       isAutoDecide = true;
-      document.getElementById('valAutoDecide').textContent = 'Açık';
-      document.getElementById('valAutoDecide').className = 'text-emerald-700 font-bold';
+      updateAutoDecideUI();
       const options = MILESTONES[currentSim.currentAge]?.choices;
       if (options) {
         selectDecisionChoice(Math.floor(Math.random() * options.length));
