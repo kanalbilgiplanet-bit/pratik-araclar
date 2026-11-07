@@ -2762,7 +2762,33 @@
           }
         ]
       },
-      27: {
+            27: {
+        sceneType: 'home_baby',
+        title: { tr: "2. Çocuğun olsun mu?", en: "Have a Second Child?" },
+        prompt: { tr: "Şu anda 1 çocuğun var. Eşin hanede bir çocuk daha olmasını istediğini söylüyor.", en: "You currently have 1 child. Your partner brings up having another child." },
+        citation: { tr: "UN WPP 2024 verilerine göre küresel doğurganlık hızı ülkeden ülkeye kadın başına 1.2 ila 6.1 çocuk arasında değişmektedir.", en: "UN WPP 2024 reports total fertility rates varying globally between 1.2 and 6.1 births per woman." },
+        choices: [
+          { 
+            title: "Çocuk sahibi ol", 
+            sub: "Mutluluk↑ Çocuk masrafı↑", 
+            text: { tr: "Çocuk sahibi ol (Mutluluk↑ Çocuk masrafı↑)", en: "Have a second child" }, 
+            stats: { happy: +12, social: +6, savingsTL: -850 } 
+          },
+          { 
+            title: "Şimdi değil", 
+            sub: "Şimdilik ertele", 
+            text: { tr: "Şimdi değil", en: "Not right now" }, 
+            stats: { happy: +1 } 
+          },
+          { 
+            title: "Artık çocuk yapma", 
+            sub: "Bir daha sormayacağız", 
+            text: { tr: "Artık çocuk yapma (Bir daha sormayacağız)", en: "No more children" }, 
+            stats: { happy: +2 } 
+          }
+        ]
+      },
+      30: {
         sceneType: 'wedding',
         title: { tr: "Yirmi beş yaş: Hayat Arkadaşı & Yuva", en: "Age Twenty-Five: Companionship & Foundation" },
         prompt: { tr: "Yetişkinlik tüm gerçekliğiyle akıyor. Kariyer ve yuva kurma dengesi kuruluyor.", en: "You stand on your own feet. What guides your major life priorities?" },
