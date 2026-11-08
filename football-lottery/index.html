@@ -76,6 +76,13 @@
     .jersey-card:hover {
       transform: translateY(-4px) scale(1.02);
     }
+    /* Hide any injected platform badge */
+    #netlify-badge, .netlify-badge, [data-netlify-badge], a[href*="netlify.com"] {
+      display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
   </style>
 </head>
 
