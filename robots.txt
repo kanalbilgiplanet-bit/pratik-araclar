@@ -2,6 +2,12 @@ User-agent: *
 Allow: /
 Disallow: /scratch/
 
+User-agent: Bingbot
+Allow: /
+
+User-agent: msnbot
+Allow: /
+
 # AI Arama ve Ajan Motorlari (ChatGPT, Perplexity, Claude, Google Gemini)
 User-agent: GPTBot
 Allow: /
