@@ -577,6 +577,18 @@
                 <span class="text-stone-400" id="lblIdJob">Meslek:</span>
                 <span class="font-medium text-stone-800 truncate max-w-[140px]" id="idCardJob">-</span>
               </div>
+              <div class="flex justify-between text-stone-600 border-t border-stone-100 pt-1">
+                <span class="text-stone-400">Mizaç:</span>
+                <span class="font-medium text-stone-800" id="idCardTemperament">Sıcakkanlı</span>
+              </div>
+              <div class="flex justify-between text-stone-600">
+                <span class="text-stone-400">Yetenekler:</span>
+                <span class="font-medium text-stone-800 truncate max-w-[140px]" id="idCardTalent">İnsanlarla iyi geçinmek</span>
+              </div>
+              <div class="flex justify-between text-stone-600">
+                <span class="text-stone-400">Çocukluk hayali:</span>
+                <span class="font-medium text-stone-800 truncate max-w-[140px]" id="idCardDream">Kendi işinin patronu</span>
+              </div>
             </div>
 
             <div class="pt-2 border-t border-stone-100">
@@ -746,6 +758,43 @@
               <span class="font-semibold text-stone-700" id="lblSiblings">Kardeşler:</span>
               <span class="text-stone-600 font-medium text-right" id="valSiblings">Yok (Tek çocuk)</span>
             </div>
+
+            <!-- Eş / Sevgili -->
+            <div class="flex items-start justify-between border-t border-stone-100 pt-1.5" id="rowPartnerBox">
+              <div>
+                <span class="font-semibold text-stone-700">Eş / Sevgili:</span>
+                <div class="text-stone-800 font-medium" id="valPartner">-</div>
+              </div>
+              <span class="font-mono text-stone-500 text-[11px] shrink-0" id="valPartnerAge"></span>
+            </div>
+
+            <!-- Çocuklar -->
+            <div class="flex items-start justify-between border-t border-stone-100 pt-1.5" id="rowChildrenBox">
+              <div>
+                <span class="font-semibold text-stone-700">Çocuklar:</span>
+                <div class="text-stone-800 font-medium" id="valChildren">Yok</div>
+              </div>
+              <span class="font-mono text-stone-500 text-[11px] shrink-0" id="valChildrenCount"></span>
+            </div>
+
+            <!-- Arkadaşlar -->
+            <div class="flex items-start justify-between border-t border-stone-100 pt-1.5">
+              <span class="font-semibold text-stone-700">Arkadaşlar:</span>
+              <span class="text-stone-600 font-medium text-right" id="valFriends">İyi geçinen</span>
+            </div>
+
+            <!-- Hobiler -->
+            <div class="flex items-start justify-between border-t border-stone-100 pt-1.5">
+              <span class="font-semibold text-stone-700">Hobiler:</span>
+              <span class="text-stone-600 font-medium text-right truncate max-w-[140px]" id="valHobbies">Oyun & Müzik Lv.2</span>
+            </div>
+
+            <!-- Sahip Olunanlar -->
+            <div class="flex items-start justify-between border-t border-stone-100 pt-1.5" id="rowAssetsBox">
+              <span class="font-semibold text-stone-700">Sahip olunanlar:</span>
+              <span class="text-stone-600 font-medium text-right truncate max-w-[130px]" id="valAssets">Temel eşyalar</span>
+            </div>
+
           </div>
         </div>
 
@@ -3360,19 +3409,91 @@
       }
     }
 
-    function addTimelineEvent(age, text) {
+    function addTimelineEvent(age, text, dataFact = null) {
       const feed = document.getElementById('simTimelineFeed');
       if (!feed) return;
 
+      const isNegative = text.includes('vefat') || text.includes('kavga') || text.includes('hastalık') || text.includes('borç') || text.includes('zor');
+
       const item = document.createElement('div');
-      item.className = 'p-2 rounded-lg bg-stone-50 border border-stone-200/80 text-xs text-stone-700 flex items-start gap-2 animate-fadeIn';
+      item.className = 'p-2.5 rounded-xl bg-white border border-stone-200/90 text-xs text-stone-700 space-y-1.5 animate-fadeIn shadow-2xs';
+
+      const dataHtml = dataFact 
+        ? `<div class="text-[10px] text-emerald-800 bg-emerald-50 px-2 py-1 rounded-md border border-emerald-200 font-mono leading-tight">
+             <i class="fa-solid fa-chart-line mr-1 text-emerald-600"></i><b>Veri:</b> ${dataFact}
+           </div>`
+        : '';
+
       item.innerHTML = `
-        <span class="px-1.5 py-0.5 rounded bg-stone-200 font-mono font-bold text-[10px] text-stone-700 shrink-0">${age} Yaş</span>
-        <span class="leading-relaxed">${text}</span>
+        <div class="flex items-start gap-2">
+          <span class="px-1.5 py-0.5 rounded bg-stone-100 font-mono font-bold text-[10px] text-stone-600 shrink-0">${age} yaş</span>
+          <span class="leading-relaxed ${isNegative ? 'text-rose-900 font-medium' : 'text-stone-800'}">${text}</span>
+        </div>
+        ${dataHtml}
       `;
 
       feed.insertBefore(item, feed.firstChild);
-      currentSim.feed.push({ age: age, text: text });
+      currentSim.feed.push({ age: age, text: text, dataFact: dataFact });
+    }
+
+    
+    function updateDynamicPeers() {
+      const container = document.getElementById('peersListContainer');
+      if (!container || !currentSim) return;
+      container.innerHTML = '';
+
+      const age = currentSim.currentAge;
+
+      const peersData = [
+        {
+          name: 'Aboubacar Ka',
+          country: 'Mali',
+          iso: 'ml',
+          gender: 'E',
+          status: age < 6 ? 'bebek' : (age < 15 ? 'çalışan çocuk' : (age < 22 ? 'oto tamircisi' : 'oto tamircisi · evli · 1 çocuk'))
+        },
+        {
+          name: 'Aaliya Ansari',
+          country: 'Hindistan',
+          iso: 'in',
+          gender: 'K',
+          status: age < 6 ? 'bebek' : (age < 15 ? 'okulda' : (age < 22 ? 'aileye bakıyor' : 'aileye bakıyor · evli · 1 çocuk'))
+        },
+        {
+          name: 'Ismaël Mahamadou',
+          country: 'Burkina Faso',
+          iso: 'bf',
+          gender: 'E',
+          status: age < 2 ? 'bebek' : '† 2 yaşında · kızamık'
+        },
+        {
+          name: 'Ella Schmitt',
+          country: 'Almanya',
+          iso: 'de',
+          gender: 'K',
+          status: age < 6 ? 'anaokulunda' : (age < 19 ? 'lise öğrencisi' : (age < 25 ? 'üniversitede' : 'iş arıyor'))
+        }
+      ];
+
+      peersData.forEach(peer => {
+        const item = document.createElement('div');
+        item.className = 'flex items-center justify-between text-xs py-1.5 border-b border-stone-100 last:border-0';
+        
+        const isDeceased = peer.status.includes('†');
+        const statusClass = isDeceased ? 'text-stone-400 line-through' : 'text-stone-700 font-medium';
+
+        item.innerHTML = `
+          <div>
+            <div class="font-medium text-stone-800 flex items-center gap-1.5">
+              <img src="https://flagcdn.com/w20/${peer.iso}.png" class="w-4 h-3 rounded-xs object-cover" alt="${peer.iso}">
+              <span class="${isDeceased ? 'text-stone-400' : 'text-stone-900'}">${peer.name}</span>
+            </div>
+            <div class="text-[10px] text-stone-400">${peer.country} · ${peer.gender}</div>
+          </div>
+          <span class="text-[11px] ${statusClass}">${peer.status}</span>
+        `;
+        container.appendChild(item);
+      });
     }
 
     function updateSimUIDynamic() {
@@ -3407,8 +3528,117 @@
       }
 
       if (currentSim.siblings.length > 0) {
-        document.getElementById('valSiblings').textContent = currentSim.siblings.map(s => s.name).join(', ');
+        const leftCount = currentSim.currentAge > 20 ? Math.min(currentSim.siblings.length, Math.floor((currentSim.currentAge - 18) / 2)) : 0;
+        const siblingText = leftCount > 0 
+          ? `${currentSim.siblings.length} · ${leftCount} kişi evden ayrıldı`
+          : currentSim.siblings.map(s => s.name).join(', ');
+        document.getElementById('valSiblings').textContent = siblingText;
       }
+
+      // Eş / Sevgili
+      const partnerEl = document.getElementById('valPartner');
+      const partnerAgeEl = document.getElementById('valPartnerAge');
+      if (partnerEl) {
+        if (currentSim.partner) {
+          const pStatus = currentSim.isMarried ? 'yakın (evli)' : 'yakın (sevgili)';
+          partnerEl.textContent = `${currentSim.partner} · ${pStatus}`;
+          if (partnerAgeEl) partnerAgeEl.textContent = `${Math.max(18, currentSim.currentAge - 2)} yaş`;
+        } else {
+          partnerEl.textContent = '-';
+          if (partnerAgeEl) partnerAgeEl.textContent = '';
+        }
+      }
+
+      // Çocuklar
+      const childrenEl = document.getElementById('valChildren');
+      const childrenCountEl = document.getElementById('valChildrenCount');
+      if (childrenEl) {
+        if (currentSim.children && currentSim.children.length > 0) {
+          const names = currentSim.children.map(c => typeof c === 'string' ? c : c.name).join(', ');
+          childrenEl.textContent = names;
+          if (childrenCountEl) childrenCountEl.textContent = `${currentSim.children.length} çocuk`;
+        } else {
+          childrenEl.textContent = 'Yok';
+          if (childrenCountEl) childrenCountEl.textContent = '';
+        }
+      }
+
+      // Arkadaşlar
+      const friendsEl = document.getElementById('valFriends');
+      if (friendsEl) {
+        friendsEl.textContent = currentSim.social > 75 ? 'Çok yakın & geniş çevre' : (currentSim.social > 45 ? 'İyi geçinen' : 'Mesafeli');
+      }
+
+      // Hobiler (Levels up over time)
+      const hobbiesEl = document.getElementById('valHobbies');
+      if (hobbiesEl) {
+        const hLv = Math.min(25, Math.floor(currentSim.currentAge / 2) + (currentSim.yearlyFocus === 'hobbies' ? 5 : 2));
+        const hName = currentSim.yearlyFocus === 'sport' ? 'Futbol & Atletizm' : (currentSim.education > 60 ? 'Tiyatro & Oyunculuk' : 'Müzik & El Sanatları');
+        hobbiesEl.textContent = `${hName} Lv.${hLv}`;
+      }
+
+      // Sahip Olunanlar
+      const assetsEl = document.getElementById('valAssets');
+      if (assetsEl) {
+        const assetList = ['Akıllı telefon'];
+        if (currentSim.assets?.hasCar) assetList.push('Araba');
+        if (currentSim.assets?.hasHouse) assetList.push('Müstakil ev');
+        if (currentSim.assets?.hasFactory) assetList.push('Üretim tesisi');
+        assetsEl.textContent = assetList.join(', ');
+      }
+
+      // Passport Mizaç, Yetenek, Hayal
+      const mrz = document.getElementById('idCardMrz');
+      if (mrz) {
+        const safeName = (currentSim.name || 'CITIZEN').toUpperCase().replace(/[^A-Z]/g, '');
+        const iso = (currentSim.country?.iso || 'COD').toUpperCase();
+        mrz.innerHTML = `I<${iso}<<${safeName}<<<<<<<<<<<<<<<<<<<br>260801M${iso}<0${currentSim.currentAge}<<<<<<<<<<<<<<<<<<<<<<<<`;
+      }
+
+      // Finanslar: TL & PPP & Borç
+      const pppUSD = Math.round((currentSim.country?.gdpPpp || 800) * (currentSim.currentAge > 18 ? 0.8 : 0.1));
+      const monthlyTL = Math.round((currentSim.annualIncomeTL || 14800) / 12);
+      
+      const valNetWealth = document.getElementById('valNetWealth');
+      if (valNetWealth) {
+        if (currentSim.savingsTL < 0) {
+          valNetWealth.innerHTML = `<span class="text-rose-700 font-bold">${formatTL(currentSim.savingsTL)} TL</span> <span class="text-[10px] text-stone-400">(${pppUSD} $ PPP)</span>`;
+        } else {
+          valNetWealth.innerHTML = `${formatTL(currentSim.savingsTL)} TL <span class="text-[10px] text-stone-400">(${pppUSD} $ PPP)</span>`;
+        }
+      }
+
+      const valAnnualIncome = document.getElementById('valAnnualIncome');
+      if (valAnnualIncome) {
+        valAnnualIncome.innerHTML = `${formatTL(currentSim.annualIncomeTL)} TL <span class="text-[10px] text-stone-400">(aylık ${formatTL(monthlyTL)} TL)</span>`;
+      }
+
+      // Borç satırı
+      const rowDebtBox = document.getElementById('rowDebtBox');
+      const valDebtAmount = document.getElementById('valDebtAmount');
+      if (rowDebtBox && valDebtAmount) {
+        if (currentSim.savingsTL < 0) {
+          rowDebtBox.classList.remove('hidden');
+          valDebtAmount.textContent = `${formatTL(Math.abs(currentSim.savingsTL))} TL`;
+        } else {
+          rowDebtBox.classList.add('hidden');
+        }
+      }
+
+      // Eşin geliri satırı
+      const rowSpouse = document.getElementById('rowSpouseIncomeBox');
+      const valSpouse = document.getElementById('valSpouseIncome');
+      if (rowSpouse && valSpouse) {
+        if (currentSim.isMarried) {
+          rowSpouse.classList.remove('hidden');
+          valSpouse.textContent = `${formatTL(Math.round((currentSim.annualIncomeTL || 14800) * 0.75))} TL`;
+        } else {
+          rowSpouse.classList.add('hidden');
+        }
+      }
+
+      // Dynamic Peers Progression
+      updateDynamicPeers();
 
       updateFocusCard(currentSim.currentAge);
       drawPixelAvatar();
@@ -3539,13 +3769,29 @@
       const cell = document.getElementById('gridCell_' + age);
       if (!cell) return;
 
-      if (happiness >= 75) {
-        cell.className = 'w-full aspect-square rounded-xs bg-emerald-600 life-cell shadow-xs';
-      } else if (happiness >= 50) {
-        cell.className = 'w-full aspect-square rounded-xs bg-amber-500 life-cell shadow-xs';
-      } else {
-        cell.className = 'w-full aspect-square rounded-xs bg-rose-600 life-cell shadow-xs';
+      // Remove active pulse from previous cells
+      for (let i = 0; i < 90; i++) {
+        const c = document.getElementById('gridCell_' + i);
+        if (c) c.classList.remove('ring-2', 'ring-rose-500', 'border-2', 'border-[#7F1D1D]', 'z-10');
       }
+
+      // Base happiness background
+      let bgClass = 'bg-emerald-600';
+      if (happiness < 50) bgClass = 'bg-rose-600';
+      else if (happiness < 75) bgClass = 'bg-teal-700';
+
+      // Check if this age has a key milestone icon (matching Image 1 & 2)
+      let icon = '';
+      if (age === 15) icon = '💼';
+      else if (age === 23) icon = '♥';
+      else if (age === 24) icon = '👶';
+      else if (age === 26) icon = '🚗';
+      else if (age === 50) icon = '🏡';
+      else if (age === 42) icon = '🏭';
+
+      cell.className = `w-full aspect-square rounded-xs ${bgClass} life-cell shadow-xs flex items-center justify-center text-[8px] text-white font-bold ring-2 ring-rose-500 border-2 border-[#7F1D1D] z-10`;
+      cell.textContent = icon;
+      cell.title = `Yaş ${age}: Mutluluk %${happiness}${icon ? ' (' + icon + ')' : ''}`;
     }
 
         // ------------------------------------------------------------------------
