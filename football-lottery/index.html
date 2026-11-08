@@ -150,7 +150,7 @@
   <!-- Live Career HUD (Sticky below navbar during active career) -->
   <section id="careerHud" class="hidden border-b border-pitch-800 bg-pitch-900/95 backdrop-blur-md sticky top-16 z-40 transition-all">
     <div class="max-w-6xl mx-auto px-4 py-2.5">
-      <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-2 text-center text-xs">
+      <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2 text-center text-xs">
         
         <!-- Player & Age -->
         <div class="p-2 rounded-xl bg-pitch-950/70 border border-pitch-800 flex items-center gap-2.5 text-left">
@@ -184,6 +184,17 @@
           <div class="min-w-0">
             <div class="text-[10px] text-slate-400 uppercase font-semibold">Piyasa Değeri</div>
             <div id="hudValue" class="font-display font-bold text-emerald-400 text-xs">€50.000</div>
+          </div>
+        </div>
+
+        <!-- Bank Balance / Servet -->
+        <div class="p-2 rounded-xl bg-pitch-950/70 border border-pitch-800 flex items-center gap-2 text-left">
+          <div class="w-7 h-7 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center shrink-0">
+            💰
+          </div>
+          <div class="min-w-0">
+            <div class="text-[10px] text-slate-400 uppercase font-semibold">Banka / Servet</div>
+            <div id="hudBankBalance" class="font-display font-bold text-amber-300 text-xs">€0</div>
           </div>
         </div>
 
@@ -315,6 +326,23 @@
         </div>
       </div>
 
+      <!-- Hall of Fame / Efsaneler Duvarı Section -->
+      <section id="hallOfFameSection" class="pt-10 border-t border-pitch-800/80 space-y-4 text-left">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/30 text-[10px] font-mono font-bold uppercase">
+              <i class="fa-solid fa-crown text-amber-400"></i> <span id="txtHallBadge">EFSANELER DUVARI</span>
+            </div>
+            <h2 class="text-xl sm:text-2xl font-display font-black text-white mt-1" id="txtHallTitle">Topluluk Efsaneleri & Jübile Karneleri</h2>
+            <p class="text-slate-400 text-xs" id="txtHallDesc">40 yaşına ulaşıp kramponlarını asan oyuncuların ölümsüzleşen kariyerleri.</p>
+          </div>
+        </div>
+
+        <div id="hallOfFameGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5">
+          <!-- Populated dynamically via renderHallOfFame() -->
+        </div>
+      </section>
+
     </div>
 
     <!-- Screen 2: Active Career Timeline (0 to 40 Years) -->
@@ -402,12 +430,17 @@
           <span id="txtPlayAgain">YENİDEN BİR HAYAT ÇEK</span>
         </button>
 
-        <button id="btnShareWhatsApp" class="py-3 px-4 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-emerald-600/20 active:scale-95 transition shrink-0" title="WhatsApp Paylaş">
+        <button id="btnShareToWall" class="py-3 px-3.5 sm:px-4 rounded-2xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-pitch-950 font-display font-black text-xs flex items-center gap-1.5 shadow-lg shadow-amber-500/25 active:scale-95 transition shrink-0" title="Efsaneler Duvarında Paylaş">
+          <i class="fa-solid fa-crown text-sm"></i>
+          <span id="txtShareWall">Duvara Ekle</span>
+        </button>
+
+        <button id="btnShareWhatsApp" class="py-3 px-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-emerald-600/20 active:scale-95 transition shrink-0" title="WhatsApp Paylaş">
           <i class="fa-brands fa-whatsapp text-sm"></i>
           <span class="hidden sm:inline" id="txtShareWA">WhatsApp</span>
         </button>
 
-        <button id="btnCopyResult" class="py-3 px-3.5 rounded-2xl bg-pitch-900 hover:bg-pitch-800 text-slate-300 hover:text-white font-bold text-xs border border-pitch-700 active:scale-95 transition shrink-0" title="Kopyala">
+        <button id="btnCopyResult" class="py-3 px-3 rounded-2xl bg-pitch-900 hover:bg-pitch-800 text-slate-300 hover:text-white font-bold text-xs border border-pitch-700 active:scale-95 transition shrink-0" title="Kopyala">
           <i class="fa-solid fa-copy"></i>
         </button>
       </div>
@@ -444,6 +477,22 @@
               <div class="text-[9px] text-slate-400">Zirve Değeri</div>
               <div class="text-xs font-display font-bold text-emerald-400" id="cardPeakValue">€85.000.000</div>
             </div>
+          </div>
+
+          <!-- Financial Net Worth & Assets Row -->
+          <div class="grid grid-cols-2 gap-2 text-left">
+            <div class="p-2 rounded-xl bg-pitch-900/90 border border-pitch-800">
+              <div class="text-[9px] text-amber-400 font-bold uppercase tracking-wider">Kazanılan Servet / Banka</div>
+              <div class="text-sm sm:text-base font-display font-black text-amber-300" id="cardNetWorth">€0</div>
+            </div>
+            <div class="p-2 rounded-xl bg-pitch-900/90 border border-pitch-800">
+              <div class="text-[9px] text-emerald-400 font-bold uppercase tracking-wider">Kişisel Mülkler & Yatırımlar</div>
+              <div class="text-[11px] font-bold text-slate-200 truncate" id="cardAssets">-</div>
+            </div>
+          </div>
+
+          <!-- Individual Awards / Honors (Ballon d'Or, Golden Boot) -->
+          <div id="cardHonorsRow" class="hidden flex flex-wrap gap-1.5 p-2 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs font-bold text-amber-300">
           </div>
 
           <!-- Stats Grid -->
@@ -760,6 +809,13 @@
       peakOvr: 45,
       marketValue: 0,
       salary: 0,
+      bankBalance: 0, // Liquid savings
+      netWorth: 0,
+      assets: {
+        cars: [],
+        houses: [],
+        businesses: []
+      },
       currentClub: null,
       clubHistory: [],
       stats: {
@@ -769,7 +825,9 @@
         cleanSheets: 0,
         trophies: 0,
         nationalCaps: 0,
-        nationalGoals: 0
+        nationalGoals: 0,
+        goldenBoots: 0,
+        ballonDor: 0
       },
       isRetired: false,
       archetype: ''
@@ -966,6 +1024,9 @@
       player.peakOvr = player.ovr;
       player.marketValue = 0;
       player.salary = 0;
+      player.bankBalance = 0;
+      player.netWorth = 0;
+      player.assets = { cars: [], houses: [], businesses: [] };
       player.currentClub = null;
       player.clubHistory = [];
       player.stats = {
@@ -975,7 +1036,9 @@
         cleanSheets: 0,
         trophies: 0,
         nationalCaps: 0,
-        nationalGoals: 0
+        nationalGoals: 0,
+        goldenBoots: 0,
+        ballonDor: 0
       };
       player.isRetired = false;
 
@@ -1041,6 +1104,12 @@
 
       // Format Market Value
       document.getElementById('hudValue').textContent = formatCurrency(player.marketValue);
+
+      // Bank Balance / Servet
+      const hudBank = document.getElementById('hudBankBalance');
+      if (hudBank) {
+        hudBank.textContent = formatCurrency(player.bankBalance || 0);
+      }
 
       // Stats
       if (player.position.code === 'GK') {
@@ -1412,7 +1481,7 @@
         yearGoals = Math.floor(Math.random() * 3);
         yearAssists = Math.max(2, Math.floor((player.ovr - 55) * 0.25));
       } else if (player.position.code === 'CB') {
-        yearGoals = Math.floor(Math.random() * 4); // Headers on corners
+        yearGoals = Math.floor(Math.random() * 4);
         yearAssists = Math.floor(Math.random() * 2);
       } else if (player.position.code === 'GK') {
         yearCleans = Math.max(5, Math.floor(matchCount * (player.ovr / 190)));
@@ -1423,12 +1492,51 @@
       player.stats.cleanSheets += yearCleans;
 
       // Injury roll based on durability
-      const gotInjured = Math.random() * 100 > player.durability && Math.random() < 0.25;
+      const gotInjured = Math.random() * 100 > player.durability && Math.random() < 0.22;
 
-      // Trophy roll based on club prestige + player OVR
-      const wonTrophy = Math.random() * 100 < (player.currentClub.prestige * 0.35 + (player.ovr > 80 ? 15 : 0));
+      // Realistic League Table Standing (1st to 8th) based on Club Prestige & Player OVR
+      const clubPower = (player.currentClub.prestige || 75) + Math.floor(player.ovr * 0.22);
+      let leagueRank = 5;
+      if (clubPower >= 96) {
+        leagueRank = Math.random() < 0.65 ? 1 : 2;
+      } else if (clubPower >= 86) {
+        leagueRank = Math.random() < 0.38 ? 1 : (Math.random() < 0.5 ? 2 : 3);
+      } else if (clubPower >= 76) {
+        leagueRank = Math.floor(Math.random() * 3 + 3);
+      } else {
+        leagueRank = Math.floor(Math.random() * 4 + 5);
+      }
+
+      // Trophy roll
+      const wonTrophy = (leagueRank === 1) || (Math.random() * 100 < (player.currentClub.prestige * 0.25));
       if (wonTrophy) {
         player.stats.trophies++;
+      }
+
+      // Top Scorer / Altın Ayakkabı calculation
+      let isTopScorer = false;
+      if (player.position.code === 'ST' || player.position.code === 'WNG') {
+        if (yearGoals >= 24) {
+          isTopScorer = true;
+          player.stats.goldenBoots = (player.stats.goldenBoots || 0) + 1;
+        }
+      }
+
+      // Ballon d'Or calculation (if superstar level)
+      let wonBallonDor = false;
+      if (player.ovr >= 87 && (yearGoals >= 26 || (wonTrophy && yearGoals >= 20)) && Math.random() < 0.38) {
+        wonBallonDor = true;
+        player.stats.ballonDor = (player.stats.ballonDor || 0) + 1;
+      }
+
+      // National Team / World Cup simulation (ages 20, 24, 28, 32)
+      let nationalCupYear = false;
+      if ([20, 24, 28, 32].includes(age) && player.ovr >= 76) {
+        nationalCupYear = true;
+        player.stats.nationalCaps += 5;
+        if (player.position.code === 'ST' || player.position.code === 'WNG') {
+          player.stats.nationalGoals += 3;
+        }
       }
 
       // Growth / decline curve
@@ -1437,25 +1545,35 @@
       } else if (age <= 30) {
         player.ovr += (Math.random() < 0.5 ? 1 : 0);
       } else {
-        // Post 30 physical slight decline
         player.ovr -= (Math.random() < 0.6 ? 1 : 0);
       }
       player.peakOvr = Math.max(player.peakOvr, player.ovr);
 
       // Re-calculate Market Value & Salary
       player.marketValue = Math.max(100000, Math.floor(Math.pow(player.ovr / 10, 4) * 12000));
-      if (age > 32) player.marketValue = Math.floor(player.marketValue * 0.6); // Age discount
+      if (age > 32) player.marketValue = Math.floor(player.marketValue * 0.6);
+
+      if (!player.salary || player.salary < 80000) {
+        player.salary = Math.max(80000, Math.floor(Math.pow(player.ovr / 10, 3.8) * 4500));
+      }
+      const annualSavings = Math.round(player.salary * 0.55);
+      player.bankBalance = (player.bankBalance || 0) + annualSavings;
+      player.netWorth = player.bankBalance + player.marketValue;
 
       // Potential Transfer to bigger club if high OVR
       let transferNote = '';
-      if (player.ovr >= 84 && player.currentClub.prestige < 90 && Math.random() < 0.45) {
+      if ([21, 24, 27, 30].includes(age) && player.ovr >= 83 && player.currentClub.prestige < 92 && Math.random() < 0.5) {
         const bigClub = CLUBS.tier1[Math.floor(Math.random() * CLUBS.tier1.length)];
         if (bigClub.name !== player.currentClub.name) {
           player.currentClub = bigClub;
           if (!player.clubHistory.some(c => c.name === bigClub.name)) {
             player.clubHistory.push(bigClub);
           }
-          transferNote = currentLang === 'TR' ? `🔥 DEV TRANSFER: ${bigClub.name} kulübüne transfer oldun!` : `🔥 BLOCKBUSTER TRANSFER: Signed for ${bigClub.name}!`;
+          const transferFee = Math.floor(player.marketValue * (1.1 + Math.random() * 0.4));
+          player.salary = Math.round(player.salary * 1.4);
+          transferNote = currentLang === 'TR' 
+            ? `🔥 DEV TRANSFER: ${bigClub.name} kulübü ${formatCurrency(transferFee)} bonservisle seni kadrosuna kattı!` 
+            : `🔥 BLOCKBUSTER TRANSFER: Signed for ${bigClub.name} for ${formatCurrency(transferFee)}!`;
           Sound.goal();
         }
       }
@@ -1465,36 +1583,70 @@
       let desc = '';
       const deltas = [];
 
-      if (wonTrophy) {
-        title = currentLang === 'TR' ? `🏆 ŞAMPİYONLUK! (${player.currentClub.name})` : `🏆 CHAMPIONS! (${player.currentClub.name})`;
+      if (wonBallonDor) {
+        title = currentLang === 'TR' ? `👑 DÜNYANIN EN İYİSİ: BALLON D'OR KAZANDIN!` : `👑 BALLON D'OR WINNER!`;
         desc = currentLang === 'TR'
-          ? `Kritik maçlarda sahne aldın! Bu sezon ${player.stats.trophies}. kupanı müzene ekledin. Şehir sokakları senin adınla inledi.`
-          : `Delivered in clutch moments! Secured your ${player.stats.trophies}th major trophy. Celebrations lasted all night.`;
-        deltas.push({ text: '+1 Kupa 🏆', color: 'bg-yellow-500/20 text-yellow-300' });
+          ? `Paris'te düzenlenen galada dünyanın en iyi futbolcusu seçildin ve Altın Top ödülünü kaldırdın! Adın efsanelerle yan yana yazıldı.`
+          : `Crowned the best player on planet Earth! You lifted the Ballon d'Or trophy in Paris.`;
+        Sound.goal();
+      } else if (wonTrophy) {
+        title = currentLang === 'TR' ? `🏆 LİG ŞAMPİYONLUĞU! (${player.currentClub.name})` : `🏆 CHAMPIONS! (${player.currentClub.name})`;
+        desc = currentLang === 'TR'
+          ? `${player.currentClub.name} ile ligi 1. sırada tamamlayıp şampiyonluk kupasını kaldırdın! Şehirde yüz binlerce taraftar sokaklara döküldü.`
+          : `Lifted the championship trophy with ${player.currentClub.name}! Unbelievable scenes across the city.`;
       } else if (gotInjured) {
         title = currentLang === 'TR' ? 'Sakatlık Talihsizliği & Tedavi' : 'Injury Setback & Recovery';
         desc = currentLang === 'TR'
           ? 'Adale yırtığı sebebiyle 2 ay sahalardan uzak kaldın. Azimle fizik tedaviye devam edip sezon sonuna yetiştin.'
           : 'A hamstring strain sidelined you for two months. Dedicated physio got you back before season end.';
-        deltas.push({ text: 'Sakatlık Atlattı', color: 'bg-rose-500/20 text-rose-300' });
       } else {
         title = currentLang === 'TR' ? `İstikrarlı Sezon: ${matchCount} Maç` : `Consistent Season: ${matchCount} Apps`;
         desc = currentLang === 'TR'
-          ? `${player.currentClub.name} formasıyla ligde ve kupalarda mücadele ettin. Takımın omurgası haline geldin.`
-          : `Solid campaign for ${player.currentClub.name}, dominating midfield/attack battles across domestic and cup ties.`;
+          ? `${player.currentClub.name} formasıyla ligi ${leagueRank}. sırada tamamladınız. Takımın en kilit oyuncularından biri oldun.`
+          : `Finished ${leagueRank}th in the league with ${player.currentClub.name}, dominating matches as an undisputed starter.`;
+      }
+
+      if (isTopScorer) {
+        desc += currentLang === 'TR' ? ` Sezonu ${yearGoals} golle Gol Kralı tamamlayıp Altın Ayakkabı kazandın!` : ` Scored ${yearGoals} goals to win the Golden Boot!`;
+      }
+
+      if (nationalCupYear) {
+        desc += currentLang === 'TR' ? ` ${player.country.nameTr} Milli Takımı ile Dünya Kupası'nda fırtına gibi estin.` : ` Represented ${player.country.nameEn} in the World Cup.`;
       }
 
       if (transferNote) {
         desc = `${transferNote} ${desc}`;
       }
 
-      // Add deltas
+      // Add deltas: League standing badge
+      if (leagueRank === 1) {
+        deltas.push({ text: `🏆 1. Sıra (Şampiyon!)`, color: 'bg-yellow-500/20 text-yellow-300 border-yellow-500/40' });
+      } else if (leagueRank === 2) {
+        deltas.push({ text: `🥈 2. Sıra (Devler Ligi)`, color: 'bg-slate-500/20 text-slate-200' });
+      } else {
+        deltas.push({ text: `Lig ${leagueRank}.si`, color: 'bg-pitch-950 text-slate-400' });
+      }
+
+      // Goal/Assist or Clean Sheets
       if (player.position.code === 'GK') {
         deltas.push({ text: `${yearCleans} Temiz Ağ`, color: 'bg-pitch-950 text-white' });
       } else {
         deltas.push({ text: `${yearGoals} Gol • ${yearAssists} Asist`, color: 'bg-emerald-500/20 text-emerald-300' });
       }
-      deltas.push({ text: `Değer: ${formatCurrency(player.marketValue)}`, color: 'bg-pitch-950 text-emerald-400 border-pitch-700' });
+
+      if (isTopScorer) {
+        deltas.push({ text: `🥇 GOL KRALI (Altın Ayakkabı)`, color: 'bg-amber-500/20 text-amber-300 border-amber-500/40' });
+      }
+
+      if (wonBallonDor) {
+        deltas.push({ text: `👑 Ballon d'Or`, color: 'bg-yellow-400/20 text-yellow-300 border-yellow-400/50' });
+      }
+
+      if (nationalCupYear) {
+        deltas.push({ text: `🌍 Dünya Kupası`, color: 'bg-rose-500/20 text-rose-300' });
+      }
+
+      deltas.push({ text: `Banka: ${formatCurrency(player.bankBalance)}`, color: 'bg-amber-500/10 text-amber-300' });
 
       addTimelineEvent({
         age,
@@ -1503,7 +1655,7 @@
         title,
         desc,
         statDelta: deltas,
-        icon: wonTrophy ? 'fa-trophy' : 'fa-futbol'
+        icon: wonBallonDor ? 'fa-crown' : (wonTrophy ? 'fa-trophy' : 'fa-futbol')
       });
     }
 
@@ -1516,6 +1668,11 @@
       player.stats.matches += matchCount;
       const yearGoals = player.position.code === 'ST' ? 4 + Math.floor(Math.random() * 5) : Math.floor(Math.random() * 2);
       player.stats.goals += yearGoals;
+
+      if (player.salary) player.salary = Math.floor(player.salary * 0.75);
+      const annualSavings = Math.round((player.salary || 100000) * 0.5);
+      player.bankBalance = (player.bankBalance || 0) + annualSavings;
+      player.netWorth = player.bankBalance + player.marketValue;
 
       let title = '';
       let desc = '';
@@ -1549,7 +1706,10 @@
         badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
         title,
         desc,
-        statDelta: [{ text: `OVR: ${player.ovr}`, color: 'bg-pitch-950 text-slate-300' }],
+        statDelta: [
+          { text: `OVR: ${player.ovr}`, color: 'bg-pitch-950 text-slate-300' },
+          { text: `Banka: ${formatCurrency(player.bankBalance)}`, color: 'bg-amber-500/10 text-amber-300' }
+        ],
         icon: 'fa-medal'
       });
     }
@@ -1647,6 +1807,231 @@
         return true;
       }
 
+      // Age 19: First Big Money & Luxury Spending Dilemma
+      if (age === 19) {
+        showDilemmaModal({
+          badge: currentLang === 'TR' ? 'İLK BÜYÜK MAAŞ & LÜKS (19 YAŞ)' : 'FIRST BIG PAYCHECK (AGE 19)',
+          title: currentLang === 'TR' ? 'İlk Büyük Prim Geldi: Ne Satın Alacaksın?' : 'First Major Bonus: How Do You Spend It?',
+          desc: currentLang === 'TR'
+            ? 'Kulübün sana ilk büyük sözleşme imza primini ödedi (€250.000). Bu parayla ilk olarak ne yapacaksın?'
+            : 'Your club paid you your first major signing bonus (€250,000). What is your very first big financial move?',
+          options: [
+            {
+              text: currentLang === 'TR' ? '🏎️ İtalyan Süper Spor Araba Al (-€180K, Karizma & Hız Tutkusu)' : '🏎️ Buy an Italian Supercar (-€180K, Speed & Glamour)',
+              action: () => {
+                player.bankBalance = Math.max(20000, player.bankBalance - 180000);
+                player.assets.cars.push('İtalyan Süper Spor Araba');
+                addTimelineEvent({
+                  age: 19,
+                  badge: 'LÜKS ARAÇ',
+                  badgeColor: 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30',
+                  title: currentLang === 'TR' ? 'Antrenman Tesislerine Süper Spor Arabayla Girdin!' : 'Arrived at Training in an Italian Supercar!',
+                  desc: currentLang === 'TR' ? 'Kırmızı süper spor arabanla tesislerin önüne yanaştın. Taraftarlar ve basın fotoğrafını çekmek için sıraya girdi.' : 'Showed up in a screaming supercar. Fans and media queued for photos.',
+                  statDelta: [{ text: '🏎️ Süper Spor Araba', color: 'bg-yellow-500/20 text-yellow-300' }]
+                });
+                resumeAfterDilemma();
+              }
+            },
+            {
+              text: currentLang === 'TR' ? '🏡 Ailene Bahçeli Müstakil Ev Al (-€150K, Aile Desteği & Dayanıklılık +8)' : '🏡 Buy a House for Family (-€150K, Durability +8)',
+              action: () => {
+                player.bankBalance = Math.max(30000, player.bankBalance - 150000);
+                player.durability += 8;
+                player.assets.houses.push('Aileye Müstakil Ev');
+                addTimelineEvent({
+                  age: 19,
+                  badge: 'AİLE EVİ',
+                  badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+                  title: currentLang === 'TR' ? 'Ailene Güzel Bir Yuva Hediye Ettin' : 'Gifted Your Family a Beautiful Home',
+                  desc: currentLang === 'TR' ? 'İlk kazandığın büyük parayla anne-babanın hayalini gerçekleştirdin. Ailenin duaları ve huzurlu zihnin performansına yansıdı.' : 'Fulfilled your parents lifelong dream. Family warmth gave you peace of mind.',
+                  statDelta: [{ text: '🏡 Aile Evi', color: 'bg-emerald-500/20 text-emerald-300' }, { text: '+8 Dayanıklılık', color: 'bg-cyan-500/20 text-cyan-300' }]
+                });
+                resumeAfterDilemma();
+              }
+            },
+            {
+              text: currentLang === 'TR' ? '📈 Kripto & Borsa Fonuna Yatır (BÜYÜK RİSK: %50 Katlanır / %50 PARA BATAR!)' : '📈 Crypto/Stock Fund (HIGH RISK: 50% Triple / 50% Lose All!)',
+              action: () => {
+                const win = Math.random() < 0.5;
+                if (win) {
+                  player.bankBalance += 450000;
+                  addTimelineEvent({
+                    age: 19,
+                    badge: '💎 BÜYÜK VURGUN',
+                    badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+                    title: currentLang === 'TR' ? 'Kripto Yatırımın Tavan Yaptı (+€450.000)!' : 'Crypto Investment Mooned (+€450,000)!',
+                    desc: currentLang === 'TR' ? 'Cesur kararın meyvesini verdi! Portföyün 3 katına çıktı, takım arkadaşların yatırım tavsiyesi istemeye başladı.' : 'Your daring bet paid off! Tripled your money overnight.',
+                    statDelta: [{ text: '+€450.000 Kazanç 💰', color: 'bg-emerald-500/20 text-emerald-300' }]
+                  });
+                } else {
+                  player.bankBalance = 15000;
+                  addTimelineEvent({
+                    age: 19,
+                    badge: '💸 YATIRIM BATTI',
+                    badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/30',
+                    title: currentLang === 'TR' ? 'Büyük Çöküş: Tüm Birikimin Battı!' : 'Crash! Lost All Your Savings in Crypto!',
+                    desc: currentLang === 'TR' ? 'Yatırdığın fon bir gecede çöktü ve paran buharlaştı! Genç yaşta büyük bir finans dersi aldın.' : 'The fund went to zero overnight. A harsh financial awakening.',
+                    statDelta: [{ text: '💸 Para Battı', color: 'bg-rose-500/20 text-rose-300' }]
+                  });
+                }
+                resumeAfterDilemma();
+              }
+            }
+          ]
+        });
+        return true;
+      }
+
+      // Age 22: Nightlife vs Physio vs Restaurant Investment
+      if (age === 22) {
+        showDilemmaModal({
+          badge: currentLang === 'TR' ? 'ŞÖHRET VE YATIRIM (22 YAŞ)' : 'FAME & INVESTMENT (AGE 22)',
+          title: currentLang === 'TR' ? 'Şöhret Basamakları: Paranı ve Vaktini Nereye Ayıracaksın?' : 'Fame & Fortune: Where Do You Invest?',
+          desc: currentLang === 'TR'
+            ? 'Şöhretin tüm ülkeye yayıldı. Çevren menajerler, arkadaş grupları ve yatırımcılarla doldu. Hangisine odaklanacaksın?'
+            : 'Fame explodes. Advisors, friends and investors pitch opportunities. What is your priority?',
+          options: [
+            {
+              text: currentLang === 'TR' ? '🥗 Özel Aşçı, Fizyoterapist & Spor Bilimci Tut (-€120K, OVR +3)' : '🥗 Private Chef & Sports Science Team (-€120K, OVR +3)',
+              action: () => {
+                player.ovr += 3;
+                player.durability += 10;
+                player.bankBalance = Math.max(50000, player.bankBalance - 120000);
+                addTimelineEvent({
+                  age: 22,
+                  badge: 'ELİT SPORCU',
+                  badgeColor: 'bg-emerald-500/20 text-emerald-300',
+                  title: currentLang === 'TR' ? 'Cristiano Ronaldo Disiplini: Kusursuz Kondisyon' : 'Elite Professionalism',
+                  desc: currentLang === 'TR' ? 'Özel aşçın ve fizyoterapistinle vücut yağ oranını %8\'e çektin. Sahada 90 dakika yorulmak bilmeyen bir makinesin.' : 'Hired a private performance team. Your match fitness is world-class.',
+                  statDelta: [{ text: '+3 OVR', color: 'bg-emerald-500/20 text-emerald-300' }, { text: '+10 Dayanıklılık', color: 'bg-cyan-500/20 text-cyan-300' }]
+                });
+                resumeAfterDilemma();
+              }
+            },
+            {
+              text: currentLang === 'TR' ? '🍾 VIP Gece Kulübü Partileri & Lüks Hayat (-€80K, Magazin Gündemi, OVR -1)' : '🍾 VIP Nightclub Lifestyle (-€80K, Tabloid Headlines, OVR -1)',
+              action: () => {
+                player.ovr = Math.max(50, player.ovr - 1);
+                player.bankBalance = Math.max(20000, player.bankBalance - 80000);
+                addTimelineEvent({
+                  age: 22,
+                  badge: 'MAGAZİN',
+                  badgeColor: 'bg-rose-500/20 text-rose-300',
+                  title: currentLang === 'TR' ? 'Gece Kulübü Skandalı Manşetlerde!' : 'Nightclub Scandal Hits Front Pages!',
+                  desc: currentLang === 'TR' ? 'Maçtan önceki gece VIP partilerde sabahladın. Fotoğrafların basına sızdı, hoca seni uyardı.' : 'Spotted partying until 4 AM before a fixture. Fined by the club.',
+                  statDelta: [{ text: '-1 OVR', color: 'bg-rose-500/20 text-rose-300' }]
+                });
+                resumeAfterDilemma();
+              }
+            },
+            {
+              text: currentLang === 'TR' ? '🍽️ Menajerin Lüks Steakhouse Projesine Gir (-€300K, %50 İflas / %50 Kâr)' : '🍽️ Luxury Steakhouse Venture (-€300K, 50% Risk / 50% Profit)',
+              action: () => {
+                const success = Math.random() < 0.55;
+                if (success) {
+                  player.bankBalance += 600000;
+                  player.assets.businesses.push('Lüks Steakhouse Zinciri');
+                  addTimelineEvent({
+                    age: 22,
+                    badge: 'BAŞARILI İŞ',
+                    badgeColor: 'bg-emerald-500/20 text-emerald-300',
+                    title: currentLang === 'TR' ? 'Restoran Zincirin Şehrin Gözdesi Oldu (+€600.000)!' : 'Steakhouse Chain Turned Massive Hit (+€600,000)!',
+                    desc: currentLang === 'TR' ? 'Ünlü futbolcular ve sanatçılar mekanına akın etti. Yıllık düzenli pasif gelir elde etmeye başladın.' : 'Celebrity haunt. Turned into a roaring financial asset.',
+                    statDelta: [{ text: '🍽️ Restoran Sahibi', color: 'bg-yellow-500/20 text-yellow-300' }, { text: '+€600.000 Kâr', color: 'bg-emerald-500/20 text-emerald-300' }]
+                  });
+                } else {
+                  player.bankBalance = Math.max(10000, player.bankBalance - 300000);
+                  addTimelineEvent({
+                    age: 22,
+                    badge: 'İFLAS',
+                    badgeColor: 'bg-rose-500/20 text-rose-300',
+                    title: currentLang === 'TR' ? 'Restoran İflas Etti: Ortaklar Parayı Batırdı!' : 'Restaurant Bankrupt! Sunk €300,000!',
+                    desc: currentLang === 'TR' ? 'Kötü yönetim ve güvenilmez ortaklar yüzünden restoran battı ve haciz geldi. €300.000 zarar ettin.' : 'Mismanagement led to bankruptcy. Total loss on the venture.',
+                    statDelta: [{ text: '-€300.000 Batık 💸', color: 'bg-rose-500/20 text-rose-300' }]
+                  });
+                }
+                resumeAfterDilemma();
+              }
+            }
+          ]
+        });
+        return true;
+      }
+
+      // Age 25: Massive Villa vs Boot/Clothing Brand vs Arbitrage Fund
+      if (age === 25) {
+        showDilemmaModal({
+          badge: currentLang === 'TR' ? 'MİLYONLUK YATIRIM (25 YAŞ)' : 'MEGA WEALTH (AGE 25)',
+          title: currentLang === 'TR' ? 'Milyonluk Servet: Malikane mi, Kendi Markan mı?' : 'Million-Euro Choice: Mansion or Global Brand?',
+          desc: currentLang === 'TR'
+            ? 'Kariyerinin en verimli çağındasın. Bankanda milyonlarca euro nakit birikti. Nasıl değerlendireceksin?'
+            : 'In your prime with millions in liquid cash. How do you solidify your fortune?',
+          options: [
+            {
+              text: currentLang === 'TR' ? '🏰 Sahil Şeridinde Özel Havuzlu Dev Malikane Satın Al (-€2.5M)' : '🏰 Buy Coastal Mega Mansion with Private Pool (-€2.5M)',
+              action: () => {
+                player.bankBalance = Math.max(500000, player.bankBalance - 2500000);
+                player.assets.houses.push('Sahil Malikanesi');
+                addTimelineEvent({
+                  age: 25,
+                  badge: 'MALİKANE',
+                  badgeColor: 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30',
+                  title: currentLang === 'TR' ? 'Akdeniz Sahilinde Rüya Malikane Satın Aldın!' : 'Acquired Coastal Dream Mansion!',
+                  desc: currentLang === 'TR' ? '12 odalı, helikopter pistli ve özel havuzlu malikanene taşındın. Dünyanın en ünlü dergilerine kapak oldun.' : 'Moved into a 12-bedroom coastal villa with ocean views.',
+                  statDelta: [{ text: '🏰 Sahil Malikanesi', color: 'bg-yellow-500/20 text-yellow-300' }]
+                });
+                resumeAfterDilemma();
+              }
+            },
+            {
+              text: currentLang === 'TR' ? '👟 Kendi Adını Taşıyan Krampon & Spor Markanı Kur (-€1.5M, Pasif Gelir)' : '👟 Launch Signature Football Boot Brand (-€1.5M)',
+              action: () => {
+                player.bankBalance += 2000000;
+                player.assets.businesses.push('Özel Krampon Markası');
+                addTimelineEvent({
+                  age: 25,
+                  badge: 'GİRİŞİMCİ',
+                  badgeColor: 'bg-emerald-500/20 text-emerald-300',
+                  title: currentLang === 'TR' ? 'Kendi Krampon Markan Dünya Çapında Sattı (+€2M)!' : 'Signature Boots Sold Millions Worldwide (+€2M)!',
+                  desc: currentLang === 'TR' ? 'Tasarladığın kramponlar ve spor giyim ürünleri yok sattı. Artık sadece futbolcu değil, bir iş insanısın.' : 'Your signature boots flew off shelves. Turned into an iconic commercial brand.',
+                  statDelta: [{ text: '👟 Krampon Markası', color: 'bg-emerald-500/20 text-emerald-300' }, { text: '+€2.000.000 Gelir', color: 'bg-yellow-500/20 text-yellow-300' }]
+                });
+                resumeAfterDilemma();
+              }
+            },
+            {
+              text: currentLang === 'TR' ? '📉 Şüpheli Teknoloji Arbitraj Fonu (BÜYÜK KUMAR: %50 Dolandırılırsın / %50 +€4M)' : '📉 Tech Arbitrage Fund (50% Scam / 50% +€4M Windfall)',
+              action: () => {
+                const win = Math.random() < 0.5;
+                if (win) {
+                  player.bankBalance += 4000000;
+                  addTimelineEvent({
+                    age: 25,
+                    badge: 'DEV VURGUN',
+                    badgeColor: 'bg-emerald-500/20 text-emerald-300',
+                    title: currentLang === 'TR' ? 'Fon Rekor Kırdı: Servetin Uçuşa Geçti (+€4M)!' : 'Fund Hit Jackpot (+€4,000,000)!',
+                    desc: currentLang === 'TR' ? 'Riskli yatırımın dünya borsalarında patlama yaptı! Banka hesabına €4.000.000 nakit aktı.' : 'A wildly speculative tech venture paid out 400% returns.',
+                    statDelta: [{ text: '+€4.000.000 Kazanç 💰', color: 'bg-emerald-500/20 text-emerald-300' }]
+                  });
+                } else {
+                  player.bankBalance = Math.max(100000, player.bankBalance - 2000000);
+                  addTimelineEvent({
+                    age: 25,
+                    badge: 'DOLANDIRILDIN',
+                    badgeColor: 'bg-rose-500/20 text-rose-300',
+                    title: currentLang === 'TR' ? 'Büyük Vurgun: Sahte Fon Şirketi €2.000.000 İle Kaçtı!' : 'Scammed! Bogus Tech Fund Stole €2,000,000!',
+                    desc: currentLang === 'TR' ? 'Parayı emanet ettiğin fon yöneticileri sahte evraklarla ortadan kayboldu. Davalık oldun ve €2M battı!' : 'Fund managers vanished with investor deposits. Major financial blow.',
+                    statDelta: [{ text: '-€2.000.000 Battı 💸', color: 'bg-rose-500/20 text-rose-300' }]
+                  });
+                }
+                resumeAfterDilemma();
+              }
+            }
+          ]
+        });
+        return true;
+      }
+
       if (age === 28) {
         showDilemmaModal({
           badge: currentLang === 'TR' ? 'MİLYONLAR MI ŞAMPİYONLAR LİGİ Mİ? (28 YAŞ)' : 'MONEY VS GLORY (AGE 28)',
@@ -1662,6 +2047,7 @@
                 player.currentClub = gulfClub;
                 player.clubHistory.push(gulfClub);
                 player.salary = 25000000;
+                player.bankBalance += 18000000;
                 player.stats.trophies += 2;
                 addTimelineEvent({
                   age: 28,
@@ -1686,6 +2072,69 @@
                   title: currentLang === 'TR' ? 'Parayı Reddettin, Şampiyonlar Turnuvası Kupasını Kaldırdın!' : 'Refused Millions, Lifted the Continental Champions Cup!',
                   desc: currentLang === 'TR' ? 'Finalde uzatmalarda attığın jeneriklik golle takımına kupayı kazandırdın. Efsaneleştin!' : 'Scored an iconic extra-time screamer to win the ultimate club championship.',
                   statDelta: [{ text: '+1 Avrupa Kupası 🏆', color: 'bg-yellow-500/20 text-yellow-300' }]
+                });
+                resumeAfterDilemma();
+              }
+            }
+          ]
+        });
+        return true;
+      }
+
+      // Age 32: Legacy & Academy vs Commercial Skyscraper vs Mega Yacht
+      if (age === 32) {
+        showDilemmaModal({
+          badge: currentLang === 'TR' ? 'KARİYER MİRASI (32 YAŞ)' : 'CAREER LEGACY (AGE 32)',
+          title: currentLang === 'TR' ? 'Kalıcı Miras: Gençlik Akademisi mi, Ticari Gökdelen mi?' : 'Final Legacy: Academy or Commercial Empire?',
+          desc: currentLang === 'TR'
+            ? '30\'lu yaşların ortasına yaklaşırken geleceğe kalıcı bir iz bırakmak istiyorsun. Nasıl bir yatırım yapacaksın?'
+            : 'Approaching the twilight of your playing days. How do you choose to seal your lifetime legacy?',
+          options: [
+            {
+              text: currentLang === 'TR' ? '⚽ Memleketinde Ücretsiz Gençlik Futbol Akademisi Aç (-€1M, Halk Kahramanı)' : '⚽ Open Free Youth Football Academy (-€1M, Folk Hero)',
+              action: () => {
+                player.bankBalance = Math.max(100000, player.bankBalance - 1000000);
+                player.assets.businesses.push('Ücretsiz Futbol Akademisi');
+                player.clutch += 15;
+                addTimelineEvent({
+                  age: 32,
+                  badge: 'HALK KAHRAMANI',
+                  badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+                  title: currentLang === 'TR' ? 'Memleketinde Binlerce Çocuğa Ücretsiz Akademi Kurdun!' : 'Built a Free Football Academy for Thousands of Kids!',
+                  desc: currentLang === 'TR' ? 'Yoksul mahallelerdeki yetenekli çocuklara tesisler ve burs sağladın. Tüm ülke senin fedakarlığını ayakta alkışladı.' : 'Provided state-of-the-art pitches and boots for underprivileged kids.',
+                  statDelta: [{ text: '⚽ Futbol Akademisi', color: 'bg-emerald-500/20 text-emerald-300' }]
+                });
+                resumeAfterDilemma();
+              }
+            },
+            {
+              text: currentLang === 'TR' ? '🏢 Şehir Merkezinde Ticari Gökdelen Katı Al (-€3M, Sürekli Kira Geliri)' : '🏢 Commercial Skyscraper Floors (-€3M, Real Estate Empire)',
+              action: () => {
+                player.bankBalance = Math.max(200000, player.bankBalance - 3000000);
+                player.assets.houses.push('Ticari Gökdelen Katı');
+                addTimelineEvent({
+                  age: 32,
+                  badge: 'GAYRİMENKUL',
+                  badgeColor: 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30',
+                  title: currentLang === 'TR' ? 'Metropolün Kalbinde Gökdelen Sahibi Oldun' : 'Acquired Skyscraper Commercial Floors',
+                  desc: currentLang === 'TR' ? 'Şehrin en lüks iş merkezinde tüm katları kiralayarak ömür boyu garanti nakit akışı kurdun.' : 'Guaranteed steady rental income for generations.',
+                  statDelta: [{ text: '🏢 Gökdelen Katı', color: 'bg-yellow-500/20 text-yellow-300' }]
+                });
+                resumeAfterDilemma();
+              }
+            },
+            {
+              text: currentLang === 'TR' ? '🚤 Ultra Lüks Mega Yat Satın Al (-€2M, Adalarda Zevk-i Sefa)' : '🚤 Buy an Ultra-Luxury Mega Yacht (-€2M)',
+              action: () => {
+                player.bankBalance = Math.max(100000, player.bankBalance - 2000000);
+                player.assets.cars.push('Ultra Lüks Mega Yat');
+                addTimelineEvent({
+                  age: 32,
+                  badge: 'MEGA YAT',
+                  badgeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30',
+                  title: currentLang === 'TR' ? 'Mega Yatınla Tropik Adaları Geziyorsun' : 'Cruising Tropical Islands on Mega Yacht',
+                  desc: currentLang === 'TR' ? 'Kişisel helikopter pisti olan mega yatınla dünya sosyetesinin dikkatini çektin.' : 'Summer breaks spent sailing Mediterranean waters on private superyacht.',
+                  statDelta: [{ text: '🚤 Mega Yat', color: 'bg-cyan-500/20 text-cyan-300' }]
                 });
                 resumeAfterDilemma();
               }
@@ -1796,6 +2245,52 @@
       document.getElementById('cardTotalAssists').textContent = player.stats.assists;
       document.getElementById('cardTotalTrophies').textContent = player.stats.trophies;
 
+      // Populate Financial Assets
+      const netWorthEl = document.getElementById('cardNetWorth');
+      if (netWorthEl) {
+        netWorthEl.textContent = formatCurrency(player.bankBalance || 0);
+      }
+      const assetsEl = document.getElementById('cardAssets');
+      if (assetsEl) {
+        const allAssets = [
+          ...(player.assets?.houses || []),
+          ...(player.assets?.cars || []),
+          ...(player.assets?.businesses || [])
+        ];
+        assetsEl.textContent = allAssets.length > 0 ? allAssets.join(', ') : (currentLang === 'TR' ? 'Mütevazı Birikim' : 'Modest Savings');
+        assetsEl.title = allAssets.join(', ');
+      }
+
+      // Individual Awards & Honors (Ballon d'Or, Altın Ayakkabı)
+      const honorsRow = document.getElementById('cardHonorsRow');
+      if (honorsRow) {
+        const awards = [];
+        if (player.stats.ballonDor > 0) {
+          awards.push(`👑 Ballon d'Or (${player.stats.ballonDor})`);
+        }
+        if (player.stats.goldenBoots > 0) {
+          awards.push(`🥇 ${currentLang === 'TR' ? 'Altın Ayakkabı' : 'Golden Boot'} (${player.stats.goldenBoots})`);
+        }
+        if (player.stats.nationalCaps >= 40) {
+          awards.push(`🌍 ${currentLang === 'TR' ? 'Milli Takım' : 'National Caps'} (${player.stats.nationalCaps})`);
+        }
+        if (awards.length > 0) {
+          honorsRow.innerHTML = awards.map(a => `<span class="px-2 py-0.5 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40">${a}</span>`).join('');
+          honorsRow.classList.remove('hidden');
+        } else {
+          honorsRow.classList.add('hidden');
+        }
+      }
+
+      // Reset Share to Wall button state
+      const shareBtn = document.getElementById('btnShareToWall');
+      if (shareBtn) {
+        shareBtn.disabled = false;
+        shareBtn.classList.remove('opacity-60', 'pointer-events-none');
+        const shareTxt = document.getElementById('txtShareWall');
+        if (shareTxt) shareTxt.textContent = currentLang === 'TR' ? 'Duvara Ekle' : 'Share to Wall';
+      }
+
       // Club History Badges
       const clubContainer = document.getElementById('cardClubList');
       clubContainer.innerHTML = '';
@@ -1875,7 +2370,412 @@
     }
 
     /* =====================================================================
-       13. EVENT LISTENERS
+       13. HALL OF FAME & COMMUNITY SHARING
+       ===================================================================== */
+    const STORAGE_KEY_HOF = 'football_lottery_hall_of_fame';
+
+    const DEFAULT_LEGENDS = [
+      {
+        id: 'hof_gabriel_silva',
+        fullName: 'GABRIEL SILVA',
+        country: { flag: '🇧🇷', nameTr: 'Brezilya', nameEn: 'Brazil' },
+        position: { code: 'ST', nameTr: 'Santrafor', nameEn: 'Striker' },
+        dominantFoot: 'Sağ Ayak',
+        peakOvr: 89,
+        archetype: 'FUTBOL İLAHİ (DÜNYA YILDIZI)',
+        peakValue: '€110.000.000',
+        bankBalance: 78500000,
+        assets: {
+          houses: ['Sahil Malikanesi'],
+          cars: ['İtalyan Süper Spor Araba'],
+          businesses: ['Lüks Steakhouse Zinciri']
+        },
+        stats: { matches: 712, goals: 438, assists: 114, trophies: 12, ballonDor: 2, goldenBoots: 3 },
+        clubHistory: [{ name: 'Rio Yıldızları', badge: '🇧🇷' }, { name: 'Madrid Kings', badge: '👑' }],
+        applause: 342
+      },
+      {
+        id: 'hof_samuel_osimhen',
+        fullName: 'SAMUEL OSIMHEN',
+        country: { flag: '🇳🇬', nameTr: 'Nijerya', nameEn: 'Nigeria' },
+        position: { code: 'RW', nameTr: 'Sağ Kanat', nameEn: 'Right Wing' },
+        dominantFoot: 'Sol Ayak',
+        peakOvr: 84,
+        archetype: 'KULÜP EFSANESİ & KAPTAN',
+        peakValue: '€52.000.000',
+        bankBalance: 32400000,
+        assets: {
+          houses: ['Müstakil Aile Evi'],
+          cars: [],
+          businesses: ['Ücretsiz Futbol Akademisi']
+        },
+        stats: { matches: 640, goals: 215, assists: 130, trophies: 5, ballonDor: 0, goldenBoots: 1 },
+        clubHistory: [{ name: 'Lagos Martıları', badge: '🇳🇬' }, { name: 'Palermo Kartalları', badge: '🦅' }, { name: 'Merseyside Red', badge: '🔴' }],
+        applause: 218
+      },
+      {
+        id: 'hof_takumi_minamino',
+        fullName: 'TAKUMI MINAMINO',
+        country: { flag: '🇯🇵', nameTr: 'Japonya', nameEn: 'Japan' },
+        position: { code: 'CAM', nameTr: 'Ofansif Orta Saha', nameEn: 'Attacking Midfielder' },
+        dominantFoot: 'Sol Ayak',
+        peakOvr: 82,
+        archetype: 'GEZGİN SAVAŞÇI (EVLİYA ÇELEBİ)',
+        peakValue: '€38.000.000',
+        bankBalance: 41200000,
+        assets: {
+          houses: ['Ticari Gökdelen Katı'],
+          cars: [],
+          businesses: ['Özel Krampon Markası']
+        },
+        stats: { matches: 685, goals: 142, assists: 178, trophies: 6, ballonDor: 0, goldenBoots: 0 },
+        clubHistory: [{ name: 'Osaka Şimşekleri', badge: '🇯🇵' }, { name: 'Bask Dağcıları', badge: '⛰️' }, { name: 'Riyad Altın Şeyhleri', badge: '💰' }],
+        applause: 164
+      },
+      {
+        id: 'hof_lucas_hernandez',
+        fullName: 'LUCAS HERNANDEZ',
+        country: { flag: '🇫🇷', nameTr: 'Fransa', nameEn: 'France' },
+        position: { code: 'CB', nameTr: 'Stoper', nameEn: 'Centre-Back' },
+        dominantFoot: 'Sağ Ayak',
+        peakOvr: 86,
+        archetype: 'KULÜP EFSANESİ & KAPTAN',
+        peakValue: '€64.000.000',
+        bankBalance: 51800000,
+        assets: {
+          houses: ['Sahil Malikanesi'],
+          cars: ['Ultra Lüks Mega Yat'],
+          businesses: []
+        },
+        stats: { matches: 622, goals: 34, assists: 18, trophies: 9, ballonDor: 0, goldenBoots: 0 },
+        clubHistory: [{ name: 'Paris Parıltısı', badge: '🗼' }, { name: 'Bavyera Panterleri', badge: '🔴' }],
+        applause: 195
+      },
+      {
+        id: 'hof_emre_demir',
+        fullName: 'EMRE DEMİR',
+        country: { flag: '🇹🇷', nameTr: 'Türkiye', nameEn: 'Turkey' },
+        position: { code: 'CAM', nameTr: 'On Numara', nameEn: 'Playmaker' },
+        dominantFoot: 'Sol Ayak',
+        peakOvr: 81,
+        archetype: 'HALI SAHA RESİTALLERİ USTASI',
+        peakValue: '€28.000.000',
+        bankBalance: 24500000,
+        assets: {
+          houses: ['Müstakil Aile Evi'],
+          cars: ['İtalyan Süper Spor Araba'],
+          businesses: ['Lüks Steakhouse Zinciri']
+        },
+        stats: { matches: 580, goals: 118, assists: 145, trophies: 4, ballonDor: 0, goldenBoots: 0 },
+        clubHistory: [{ name: 'Boğaziçi Aslanları', badge: '🦁' }, { name: 'Anadolu Kartalları', badge: '🦅' }],
+        applause: 298
+      },
+      {
+        id: 'hof_mateo_kovacic',
+        fullName: 'MATEO KOVACIC',
+        country: { flag: '🇭🇷', nameTr: 'Hırvatistan', nameEn: 'Croatia' },
+        position: { code: 'CM', nameTr: 'Merkez Orta Saha', nameEn: 'Central Midfielder' },
+        dominantFoot: 'Sağ Ayak',
+        peakOvr: 85,
+        archetype: 'SAYGI DEĞER EMEKÇİ',
+        peakValue: '€58.000.000',
+        bankBalance: 46000000,
+        assets: {
+          houses: ['Ticari Gökdelen Katı'],
+          cars: [],
+          businesses: ['Ücretsiz Futbol Akademisi']
+        },
+        stats: { matches: 694, goals: 62, assists: 120, trophies: 8, ballonDor: 0, goldenBoots: 0 },
+        clubHistory: [{ name: 'Zagreb Dinamosu', badge: '🇭🇷' }, { name: 'Madrid Kings', badge: '👑' }, { name: 'Merseyside Red', badge: '🔴' }],
+        applause: 182
+      }
+    ];
+
+    function getStoredHallOfFame() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY_HOF);
+        if (!raw) return DEFAULT_LEGENDS;
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          const userIds = new Set(parsed.map(x => x.id));
+          const nonDupDefaults = DEFAULT_LEGENDS.filter(d => !userIds.has(d.id));
+          return [...parsed, ...nonDupDefaults];
+        }
+      } catch (e) {
+        console.warn('HOF parse error:', e);
+      }
+      return DEFAULT_LEGENDS;
+    }
+
+    function renderHallOfFame() {
+      const grid = document.getElementById('hallOfFameGrid');
+      if (!grid) return;
+      const list = getStoredHallOfFame();
+      grid.innerHTML = '';
+
+      list.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'p-4 rounded-2xl bg-pitch-900/90 border border-pitch-800 hover:border-amber-500/40 transition flex flex-col justify-between space-y-3 relative group';
+
+        const assetsList = [
+          ...(item.assets?.houses || []),
+          ...(item.assets?.cars || []),
+          ...(item.assets?.businesses || [])
+        ];
+        const assetTxt = assetsList.length > 0 ? assetsList.slice(0, 2).join(', ') : (currentLang === 'TR' ? 'Mütevazı' : 'Modest');
+
+        const posCode = item.position?.code || 'ST';
+        const flag = item.country?.flag || '⚽';
+        const countryName = currentLang === 'TR' ? (item.country?.nameTr || '') : (item.country?.nameEn || '');
+
+        card.innerHTML = `
+          <div>
+            <div class="flex items-center justify-between border-b border-pitch-800 pb-2">
+              <div class="flex items-center gap-2">
+                <span class="text-2xl">${flag}</span>
+                <div>
+                  <div class="text-xs font-display font-black text-white leading-tight truncate max-w-[130px] sm:max-w-[150px]">${item.fullName}</div>
+                  <div class="text-[10px] text-slate-400 font-mono">${posCode} • ${countryName}</div>
+                </div>
+              </div>
+              <div class="px-2 py-0.5 rounded-lg bg-amber-500/20 text-amber-300 font-display font-black text-xs border border-amber-500/30">
+                ${item.peakOvr} OVR
+              </div>
+            </div>
+
+            <div class="mt-2 flex items-center justify-between text-[10px]">
+              <span class="px-2 py-0.5 rounded-md bg-pitch-950 text-amber-400 font-bold border border-pitch-800 truncate max-w-[180px]">
+                ${item.archetype}
+              </span>
+              <span class="text-slate-400 font-mono">40 Yaş Jübile</span>
+            </div>
+
+            <!-- Mini Stats -->
+            <div class="grid grid-cols-4 gap-1 text-center my-2.5">
+              <div class="p-1 rounded-lg bg-pitch-950 border border-pitch-800/80">
+                <div class="text-[9px] text-slate-400">Maç</div>
+                <div class="text-xs font-bold text-white">${item.stats.matches}</div>
+              </div>
+              <div class="p-1 rounded-lg bg-pitch-950 border border-pitch-800/80">
+                <div class="text-[9px] text-slate-400">Gol</div>
+                <div class="text-xs font-bold text-emerald-400">${item.stats.goals}</div>
+              </div>
+              <div class="p-1 rounded-lg bg-pitch-950 border border-pitch-800/80">
+                <div class="text-[9px] text-slate-400">Asist</div>
+                <div class="text-xs font-bold text-lime-400">${item.stats.assists}</div>
+              </div>
+              <div class="p-1 rounded-lg bg-pitch-950 border border-pitch-800/80">
+                <div class="text-[9px] text-slate-400">Kupa</div>
+                <div class="text-xs font-bold text-yellow-300">${item.stats.trophies}</div>
+              </div>
+            </div>
+
+            <!-- Net Worth & Assets -->
+            <div class="text-[10px] space-y-0.5 text-slate-400">
+              <div>💰 <strong class="text-amber-300">${formatCurrency(item.bankBalance || 0)}</strong> servet</div>
+              <div class="truncate">🏡 <span class="text-slate-300">${assetTxt}</span></div>
+            </div>
+          </div>
+
+          <!-- Card Actions (Applause & Preview) -->
+          <div class="pt-2 border-t border-pitch-800/80 flex items-center justify-between gap-2">
+            <button onclick="applaudLegend('${item.id}')" class="flex-1 py-1.5 px-3 rounded-xl bg-pitch-950 hover:bg-amber-500/10 text-amber-300 border border-pitch-800 hover:border-amber-500/40 text-[11px] font-bold flex items-center justify-center gap-1.5 active:scale-95 transition">
+              <span>👏</span>
+              <span id="applaudCount-${item.id}">${item.applause || 0}</span>
+              <span class="text-[10px] text-slate-400">${currentLang === 'TR' ? 'Alkışla' : 'Clap'}</span>
+            </button>
+            <button onclick="viewLegendCard('${item.id}')" class="p-1.5 px-2.5 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-slate-300 text-xs transition" title="${currentLang === 'TR' ? 'Kartı İncele' : 'Inspect Card'}">
+              <i class="fa-solid fa-eye"></i>
+            </button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function applaudLegend(id) {
+      let all = getStoredHallOfFame();
+      let count = 0;
+
+      all = all.map(item => {
+        if (item.id === id) {
+          item.applause = (item.applause || 0) + 1;
+          count = item.applause;
+        }
+        return item;
+      });
+
+      try {
+        localStorage.setItem(STORAGE_KEY_HOF, JSON.stringify(all));
+      } catch (e) {
+        console.warn('Could not save applause to localStorage:', e);
+      }
+
+      const counterEl = document.getElementById(`applaudCount-${id}`);
+      if (counterEl) {
+        counterEl.textContent = count;
+        counterEl.classList.add('scale-125', 'text-amber-400');
+        setTimeout(() => counterEl.classList.remove('scale-125', 'text-amber-400'), 300);
+      }
+      Sound.coin();
+    }
+
+    function viewLegendCard(id) {
+      const all = getStoredHallOfFame();
+      const item = all.find(x => x.id === id);
+      if (!item) return;
+
+      document.getElementById('cardFlag').textContent = item.country.flag;
+      document.getElementById('cardPlayerName').textContent = item.fullName.toUpperCase();
+      document.getElementById('cardSubTitle').textContent = `${item.position.code} (${currentLang === 'TR' ? (item.position.nameTr || '') : (item.position.nameEn || '')}) • ${item.dominantFoot || ''}`;
+      document.getElementById('cardOvr').textContent = item.peakOvr;
+      document.getElementById('cardArchetypeIcon').textContent = '🌟';
+      document.getElementById('cardArchetypeName').textContent = item.archetype;
+      document.getElementById('cardPeakValue').textContent = item.peakValue || formatCurrency(Math.floor(Math.pow(item.peakOvr / 10, 4) * 12000));
+
+      document.getElementById('cardTotalMatches').textContent = item.stats.matches;
+      document.getElementById('cardTotalGoals').textContent = item.stats.goals;
+      document.getElementById('cardTotalAssists').textContent = item.stats.assists;
+      document.getElementById('cardTotalTrophies').textContent = item.stats.trophies;
+
+      const netWorthEl = document.getElementById('cardNetWorth');
+      if (netWorthEl) netWorthEl.textContent = formatCurrency(item.bankBalance || 0);
+
+      const assetsEl = document.getElementById('cardAssets');
+      if (assetsEl) {
+        const allAssets = [
+          ...(item.assets?.houses || []),
+          ...(item.assets?.cars || []),
+          ...(item.assets?.businesses || [])
+        ];
+        assetsEl.textContent = allAssets.length > 0 ? allAssets.join(', ') : (currentLang === 'TR' ? 'Mütevazı' : 'Modest');
+      }
+
+      const honorsRow = document.getElementById('cardHonorsRow');
+      if (honorsRow) {
+        const awards = [];
+        if (item.stats.ballonDor > 0) awards.push(`👑 Ballon d'Or (${item.stats.ballonDor})`);
+        if (item.stats.goldenBoots > 0) awards.push(`🥇 Altın Ayakkabı (${item.stats.goldenBoots})`);
+        if (awards.length > 0) {
+          honorsRow.innerHTML = awards.map(a => `<span class="px-2 py-0.5 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40">${a}</span>`).join('');
+          honorsRow.classList.remove('hidden');
+        } else {
+          honorsRow.classList.add('hidden');
+        }
+      }
+
+      const clubContainer = document.getElementById('cardClubList');
+      clubContainer.innerHTML = '';
+      (item.clubHistory || []).forEach(c => {
+        const pill = document.createElement('span');
+        pill.className = 'px-2 py-0.5 rounded-lg bg-pitch-900 border border-pitch-800 text-[11px] font-semibold text-slate-200 flex items-center gap-1';
+        pill.innerHTML = `<span>${c.badge || '⚽'}</span> <span>${c.name}</span>`;
+        clubContainer.appendChild(pill);
+      });
+
+      document.getElementById('screenIntro').classList.add('hidden');
+      document.getElementById('screenCareer').classList.add('hidden');
+      document.getElementById('careerHud').classList.add('hidden');
+      document.getElementById('screenRetirement').classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function shareToHallOfFame() {
+      if (!player.isRetired && player.age < 40) return;
+
+      const legend = {
+        id: 'fl_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+        fullName: player.fullName,
+        country: player.country,
+        position: player.position,
+        dominantFoot: player.dominantFoot,
+        peakOvr: player.peakOvr,
+        archetype: player.archetype,
+        peakValue: formatCurrency(Math.floor(Math.pow(player.peakOvr / 10, 4) * 12000)),
+        bankBalance: player.bankBalance || 0,
+        assets: JSON.parse(JSON.stringify(player.assets)),
+        stats: { ...player.stats },
+        clubHistory: player.clubHistory.map(c => ({ name: c.name, badge: c.badge })),
+        applause: 1,
+        date: new Date().toISOString()
+      };
+
+      try {
+        let stored = [];
+        const raw = localStorage.getItem(STORAGE_KEY_HOF);
+        if (raw) stored = JSON.parse(raw);
+        if (!Array.isArray(stored)) stored = [];
+        stored.unshift(legend);
+        if (stored.length > 50) stored = stored.slice(0, 50);
+        localStorage.setItem(STORAGE_KEY_HOF, JSON.stringify(stored));
+      } catch (e) {
+        console.warn('Storage save failed:', e);
+      }
+
+      renderHallOfFame();
+
+      const shareBtn = document.getElementById('btnShareToWall');
+      if (shareBtn) {
+        shareBtn.disabled = true;
+        shareBtn.classList.add('opacity-60', 'pointer-events-none');
+        const shareTxt = document.getElementById('txtShareWall');
+        if (shareTxt) shareTxt.textContent = currentLang === 'TR' ? 'Duvara Eklendi ✔' : 'Shared ✔';
+      }
+
+      try {
+        const payload = btoa(encodeURIComponent(JSON.stringify(legend)));
+        const shareUrl = `${window.location.origin}${window.location.pathname}#career=${payload}`;
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(shareUrl);
+        }
+      } catch (e) {
+        // Fallback
+      }
+
+      Sound.goal();
+      showToast(currentLang === 'TR' ? '🏆 Kariyerin Efsaneler Duvarına Eklendi & Bağlantı Kopyalandı!' : '🏆 Added to Hall of Fame & Link Copied!');
+    }
+
+    function checkSharedCareerUrl() {
+      const hash = window.location.hash;
+      if (!hash || !hash.startsWith('#career=')) return;
+      try {
+        const encoded = hash.replace('#career=', '');
+        const json = decodeURIComponent(atob(encoded));
+        const item = JSON.parse(json);
+        if (item && item.fullName) {
+          viewLegendCard(item.id || 'shared');
+          const all = getStoredHallOfFame();
+          if (!all.some(x => x.fullName === item.fullName)) {
+            all.unshift(item);
+            renderHallOfFame();
+          }
+        }
+      } catch (e) {
+        console.warn('Could not decode shared career url:', e);
+      }
+    }
+
+    function showToast(msg) {
+      let toast = document.getElementById('appToast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'appToast';
+        toast.className = 'fixed top-5 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-2xl bg-pitch-900 border-2 border-emerald-500 text-white font-bold text-xs sm:text-sm shadow-2xl flex items-center gap-2.5 transition-all duration-300 opacity-0 pointer-events-none transform -translate-y-4';
+        document.body.appendChild(toast);
+      }
+      toast.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400 text-base"></i> <span>${msg}</span>`;
+      toast.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-4');
+      toast.classList.add('opacity-100', 'translate-y-0');
+
+      setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'pointer-events-none', '-translate-y-4');
+      }, 3000);
+    }
+
+    /* =====================================================================
+       14. EVENT LISTENERS
        ===================================================================== */
     document.addEventListener('DOMContentLoaded', () => {
       // Sound Toggle
@@ -1905,6 +2805,10 @@
 
       // Auto Play
       document.getElementById('btnAutoPlay').addEventListener('click', toggleAutoPlay);
+
+      // Share to Wall
+      const wallBtn = document.getElementById('btnShareToWall');
+      if (wallBtn) wallBtn.addEventListener('click', shareToHallOfFame);
 
       const restartGame = () => {
         if (isAutoPlaying) toggleAutoPlay();
@@ -1957,6 +2861,10 @@
           setTimeout(() => btnTxt.textContent = old, 2000);
         });
       });
+
+      // Initialize Hall of Fame and check URL params
+      renderHallOfFame();
+      checkSharedCareerUrl();
     });
   </script>
 </body>
