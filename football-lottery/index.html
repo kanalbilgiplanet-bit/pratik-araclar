@@ -1698,8 +1698,13 @@
       return false;
     }
 
+    let wasAutoPlayingBeforeDilemma = false;
+
     function showDilemmaModal(data) {
-      if (isAutoPlaying) toggleAutoPlay(); // Pause auto progression
+      wasAutoPlayingBeforeDilemma = isAutoPlaying;
+      if (isAutoPlaying) {
+        toggleAutoPlay(); // Temporarily pause auto progression so user can read dilemma
+      }
 
       document.getElementById('dilemmaBadge').textContent = data.badge;
       document.getElementById('dilemmaTitle').textContent = data.title;
@@ -1729,6 +1734,16 @@
     function resumeAfterDilemma() {
       updateHUD();
       updateNextAgeButton(player.age + 1);
+
+      // If user was using auto progression before the dilemma, seamlessly resume it
+      if (wasAutoPlayingBeforeDilemma) {
+        wasAutoPlayingBeforeDilemma = false;
+        setTimeout(() => {
+          if (!isAutoPlaying && !player.isRetired && player.age < 40) {
+            toggleAutoPlay();
+          }
+        }, 350);
+      }
     }
 
     /* =====================================================================
