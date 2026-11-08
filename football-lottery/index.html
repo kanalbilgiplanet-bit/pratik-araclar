@@ -113,7 +113,7 @@
   <header class="border-b border-pitch-800 bg-pitch-900/90 backdrop-blur-md sticky top-0 z-50">
     <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <a href="/" class="flex items-center gap-2 group">
+        <button id="navLogoBtn" class="flex items-center gap-2 group cursor-pointer text-left focus:outline-none" title="Oyunu Sıfırla & Başa Dön">
           <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-500 to-lime-400 flex items-center justify-center text-pitch-950 font-black shadow-lg shadow-emerald-500/20 group-hover:scale-105 transition">
             ⚽
           </div>
@@ -124,7 +124,7 @@
             </span>
             <span class="text-[10px] text-slate-400 font-medium" id="txtSubtitleNav">Futbolcu Doğum Piyangosu</span>
           </div>
-        </a>
+        </button>
       </div>
 
       <!-- Controls Right: Sound & Language & Reset -->
@@ -1903,6 +1903,7 @@
         window.scrollTo({ top: 0, behavior: 'instant' });
       };
 
+      document.getElementById('navLogoBtn').addEventListener('click', restartGame);
       document.getElementById('btnRestartDirect').addEventListener('click', restartGame);
       const playAgainBtn = document.getElementById('btnPlayAgain');
       if (playAgainBtn) playAgainBtn.addEventListener('click', restartGame);
