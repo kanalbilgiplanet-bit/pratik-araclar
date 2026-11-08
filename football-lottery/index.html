@@ -1,0 +1,1883 @@
+<!DOCTYPE html>
+<html lang="tr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Futbolcu Doğum Piyangosu | 8 Milyarda 1 Futbol Kariyer Simülatörü</title>
+  <meta name="description" content="Rastgele bir ülkede, rastgele yetenek genetiğiyle doğ! Sokak maçlarından Şampiyonlar Turnuvası finaline 0-40 yaş arası interaktif futbol kariyeri simülatörü. %100 telifsiz ve ücretsiz.">
+  <meta name="keywords" content="futbolcu piyangosu, futbol kariyeri simülatörü, football lottery, the football lottery, new star soccer oyna, futbol menajerlik oyunu, rastgele futbolcu yarat, 8 milyarda bir futbolcu, soccer career simulator">
+  <link rel="canonical" href="https://pratik-araclar.netlify.app/football-lottery/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://pratik-araclar.netlify.app/football-lottery/">
+  <meta property="og:title" content="Futbolcu Doğum Piyangosu | 8 Milyarda 1 Futbol Kariyer Simülatörü">
+  <meta property="og:description" content="Hangi ülkede, hangi yetenekle doğacaksın? Sokaklardan stadyumlara 0-40 yaş arası interaktif futbol kariyerini yaşa!">
+  <meta property="og:image" content="https://pratik-araclar.netlify.app/assets/og-banner.png">
+
+  <!-- Tailwind & Fonts -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;1,700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['"Chakra Petch"', 'sans-serif']
+          },
+          colors: {
+            pitch: {
+              950: '#06130b',
+              900: '#0a2315',
+              800: '#0f3821',
+              700: '#165331',
+              500: '#22c55e',
+              400: '#4ade80'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #06130b; }
+    ::-webkit-scrollbar-thumb { background: #165331; border-radius: 999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #22c55e; }
+
+    /* Stadium Lights Glow */
+    .stadium-glow {
+      background: radial-gradient(circle at 50% 0%, rgba(34, 197, 94, 0.15) 0%, rgba(6, 19, 11, 0.95) 75%);
+    }
+
+    /* Grass lines pattern */
+    .grass-pattern {
+      background-image: repeating-linear-gradient(0deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 60px, transparent 60px, transparent 120px);
+    }
+
+    @keyframes pulse-gold {
+      0%, 100% { box-shadow: 0 0 15px rgba(234, 179, 8, 0.3); }
+      50% { box-shadow: 0 0 30px rgba(234, 179, 8, 0.7); }
+    }
+    .gold-glow { animation: pulse-gold 2.5s infinite; }
+
+    /* Jersey shimmer */
+    .jersey-card {
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .jersey-card:hover {
+      transform: translateY(-4px) scale(1.02);
+    }
+  </style>
+</head>
+
+<body class="bg-pitch-950 text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-emerald-500 selection:text-black">
+
+  <!-- Top Navigation -->
+  <header class="border-b border-pitch-800 bg-pitch-900/90 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="/" class="flex items-center gap-2 group">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-500 to-lime-400 flex items-center justify-center text-pitch-950 font-black shadow-lg shadow-emerald-500/20 group-hover:scale-105 transition">
+            ⚽
+          </div>
+          <div class="flex flex-col">
+            <span class="font-display font-bold text-white text-base tracking-wide flex items-center gap-1.5">
+              THE FOOTBALL <span class="text-emerald-400">LOTTERY</span>
+              <span class="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">V1.0</span>
+            </span>
+            <span class="text-[10px] text-slate-400 font-medium" id="txtSubtitleNav">Futbolcu Doğum Piyangosu</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Controls Right: Sound & Language & Reset -->
+      <div class="flex items-center gap-2.5">
+        <button id="btnSoundToggle" class="px-3 py-1.5 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-slate-300 hover:text-white text-xs font-semibold flex items-center gap-1.5 transition border border-pitch-700/60" title="Ses Aç/Kapat">
+          <i class="fa-solid fa-volume-high text-emerald-400" id="soundIcon"></i>
+          <span class="hidden sm:inline" id="txtSoundLabel">Ses Açık</span>
+        </button>
+
+        <button id="btnLangToggle" class="px-3 py-1.5 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-emerald-300 font-mono text-xs font-bold transition border border-pitch-700/60 flex items-center gap-1">
+          <i class="fa-solid fa-globe"></i>
+          <span id="langCurrent">TR</span>
+        </button>
+
+        <a href="/" class="px-3 py-1.5 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-slate-300 hover:text-white text-xs font-medium transition border border-pitch-700/60 hidden sm:flex items-center gap-1">
+          <i class="fa-solid fa-house"></i>
+          <span>Portal</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Live Career HUD (Sticky below navbar during active career) -->
+  <section id="careerHud" class="hidden border-b border-pitch-800 bg-pitch-900/95 backdrop-blur-md sticky top-16 z-40 transition-all">
+    <div class="max-w-6xl mx-auto px-4 py-2.5">
+      <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-2 text-center text-xs">
+        
+        <!-- Player & Age -->
+        <div class="p-2 rounded-xl bg-pitch-950/70 border border-pitch-800 flex items-center gap-2.5 text-left">
+          <div id="hudCountryFlag" class="text-2xl shrink-0">🇧🇷</div>
+          <div class="min-w-0">
+            <div id="hudPlayerName" class="font-bold text-white truncate text-[13px]">Gabriel Santos</div>
+            <div class="text-[11px] text-emerald-400 font-mono font-semibold flex items-center gap-1">
+              <span id="hudAge">17 Yaşında</span>
+              <span class="text-slate-500">•</span>
+              <span id="hudPosition">ST</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Current Club -->
+        <div class="p-2 rounded-xl bg-pitch-950/70 border border-pitch-800 flex items-center gap-2 text-left">
+          <div id="hudClubBadge" class="w-7 h-7 rounded-lg bg-pitch-800 flex items-center justify-center text-sm font-bold shrink-0">
+            🦁
+          </div>
+          <div class="min-w-0">
+            <div class="text-[10px] text-slate-400 uppercase font-semibold">Kulüp</div>
+            <div id="hudClubName" class="font-bold text-white truncate text-xs">Sokak / Altyapı</div>
+          </div>
+        </div>
+
+        <!-- Market Value -->
+        <div class="p-2 rounded-xl bg-pitch-950/70 border border-pitch-800 flex items-center gap-2 text-left">
+          <div class="w-7 h-7 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center shrink-0">
+            <i class="fa-solid fa-chart-line text-xs"></i>
+          </div>
+          <div class="min-w-0">
+            <div class="text-[10px] text-slate-400 uppercase font-semibold">Piyasa Değeri</div>
+            <div id="hudValue" class="font-display font-bold text-emerald-400 text-xs">€50.000</div>
+          </div>
+        </div>
+
+        <!-- Career Goals / Matches -->
+        <div class="p-2 rounded-xl bg-pitch-950/70 border border-pitch-800 flex items-center gap-2 text-left">
+          <div class="w-7 h-7 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center shrink-0">
+            <i class="fa-solid fa-futbol text-xs"></i>
+          </div>
+          <div class="min-w-0">
+            <div class="text-[10px] text-slate-400 uppercase font-semibold" id="hudStatTitle">Maç / Gol / Asist</div>
+            <div id="hudStats" class="font-display font-bold text-white text-xs">0M / 0G / 0A</div>
+          </div>
+        </div>
+
+        <!-- Trophies -->
+        <div class="p-2 rounded-xl bg-pitch-950/70 border border-pitch-800 flex items-center gap-2 text-left">
+          <div class="w-7 h-7 rounded-lg bg-yellow-500/10 text-yellow-400 flex items-center justify-center shrink-0">
+            🏆
+          </div>
+          <div class="min-w-0">
+            <div class="text-[10px] text-slate-400 uppercase font-semibold">Kupalar</div>
+            <div id="hudTrophies" class="font-display font-bold text-yellow-300 text-xs">0 Kupa</div>
+          </div>
+        </div>
+
+        <!-- Overall Rating -->
+        <div class="p-2 rounded-xl bg-pitch-950/70 border border-pitch-800 flex items-center gap-2 text-left">
+          <div id="hudRatingBox" class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-300 flex items-center justify-center font-display font-black text-xs shrink-0">
+            68
+          </div>
+          <div class="min-w-0">
+            <div class="text-[10px] text-slate-400 uppercase font-semibold">Genel Güç (OVR)</div>
+            <div id="hudTalentTier" class="font-bold text-slate-200 truncate text-[11px]">Gelişiyor</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Container -->
+  <main class="flex-grow max-w-4xl w-full mx-auto px-4 py-8 relative stadium-glow grass-pattern">
+
+    <!-- Screen 1: Birth Roulette & Launch Screen -->
+    <div id="screenIntro" class="space-y-8 text-center">
+      
+      <!-- Headline & Tagline -->
+      <div class="space-y-3 max-w-2xl mx-auto pt-4">
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold tracking-wide uppercase">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+          <span>8 Milyarda 1 Futbolcu Piyangosu</span>
+        </div>
+        <h1 class="text-3xl sm:text-5xl font-display font-black text-white tracking-tight leading-tight">
+          Hangi Ülkede, Hangi Yetenekle <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-lime-300 to-green-400">Doğacaksın?</span>
+        </h1>
+        <p class="text-slate-300 text-sm sm:text-base leading-relaxed" id="txtIntroDesc">
+          Dünyada her yıl 130 milyon bebek doğuyor ama sadece %0.001'i profesyonel futbol sahnesine çıkabiliyor. Çarkı çevir, doğum piyangona teslim ol; sokak aralarından dev stadyumlara uzanan 0-40 yaş kariyerini yaşa!
+        </p>
+      </div>
+
+      <!-- Interactive Birth Roulette Stage -->
+      <div class="max-w-md mx-auto p-6 sm:p-8 rounded-3xl bg-pitch-900/80 border border-pitch-700/80 shadow-2xl backdrop-blur-xl relative overflow-hidden">
+        
+        <!-- Background stadium lights decor -->
+        <div class="absolute -top-12 -left-12 w-36 h-36 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none"></div>
+        <div class="absolute -bottom-12 -right-12 w-36 h-36 bg-lime-500/10 rounded-full blur-2xl pointer-events-none"></div>
+
+        <div class="space-y-6 relative z-10">
+          
+          <!-- Animated Roulette Display Box -->
+          <div id="rouletteBox" class="py-6 px-4 rounded-2xl bg-pitch-950 border border-pitch-800 text-center min-h-[160px] flex flex-col items-center justify-center space-y-2 transition-all">
+            <div id="rouletteFlag" class="text-6xl animate-bounce">🌍</div>
+            <div id="rouletteCountry" class="font-display font-bold text-xl text-white">Doğum Yerin Seçiliyor...</div>
+            <div id="rouletteOdds" class="text-xs text-emerald-400 font-mono">Çarkı çevirmeye hazır!</div>
+          </div>
+
+          <!-- Feature Bullets (Safe / Zero Copyright Guarantee) -->
+          <div class="grid grid-cols-3 gap-2 text-center text-[11px] text-slate-400 pt-1">
+            <div class="p-2 rounded-xl bg-pitch-950/60 border border-pitch-800">
+              <i class="fa-solid fa-dice text-emerald-400 block mb-1 text-sm"></i>
+              <span id="txtBadge1">Tamamen Rastgele</span>
+            </div>
+            <div class="p-2 rounded-xl bg-pitch-950/60 border border-pitch-800">
+              <i class="fa-solid fa-scale-balanced text-amber-400 block mb-1 text-sm"></i>
+              <span id="txtBadge2">Gerçekçi İstatistik</span>
+            </div>
+            <div class="p-2 rounded-xl bg-pitch-950/60 border border-pitch-800">
+              <i class="fa-solid fa-trophy text-yellow-400 block mb-1 text-sm"></i>
+              <span id="txtBadge3">0 - 40 Yaş Jübile</span>
+            </div>
+          </div>
+
+          <!-- Action Button: Spin & Born -->
+          <button id="btnSpinBorn" class="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-emerald-500 via-emerald-600 to-green-600 hover:from-emerald-400 hover:to-green-500 text-pitch-950 font-display font-black text-lg tracking-wider uppercase shadow-xl shadow-emerald-500/25 active:scale-[0.98] transition flex items-center justify-center gap-2 group">
+            <i class="fa-solid fa-bolt text-pitch-950 group-hover:rotate-12 transition"></i>
+            <span id="txtBtnSpin">KADERİNİ ÇEK & DOĞ</span>
+          </button>
+
+        </div>
+      </div>
+
+      <!-- Quick Explainer Carousel / Highlights -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto text-left pt-4">
+        <div class="p-4 rounded-2xl bg-pitch-900/40 border border-pitch-800/80 space-y-1.5">
+          <div class="text-emerald-400 font-bold text-xs uppercase flex items-center gap-1.5">
+            <i class="fa-solid fa-dna"></i> <span>Genetik ve Şans</span>
+          </div>
+          <p class="text-xs text-slate-400 leading-relaxed" id="txtExpl1">
+            Brezilya sahilinde süper yetenekle de doğabilirsin, San Marino'da kasap forvet olarak da. Her hayat bambaşka bir senaryo.
+          </p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-pitch-900/40 border border-pitch-800/80 space-y-1.5">
+          <div class="text-amber-400 font-bold text-xs uppercase flex items-center gap-1.5">
+            <i class="fa-solid fa-code-fork"></i> <span>Kritik Kararlar</span>
+          </div>
+          <p class="text-xs text-slate-400 leading-relaxed" id="txtExpl2">
+            16 yaşında okul mu profesyonellik mi? 29 yaşında Avrupa Şampiyonlar Turnuvası mı yoksa Körfez'in yıllık 25M€ maaşı mı?
+          </p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-pitch-900/40 border border-pitch-800/80 space-y-1.5">
+          <div class="text-cyan-400 font-bold text-xs uppercase flex items-center gap-1.5">
+            <i class="fa-solid fa-id-card"></i> <span>Jübile ve Kartın</span>
+          </div>
+          <p class="text-xs text-slate-400 leading-relaxed" id="txtExpl3">
+            Kariyerin bitince tüm istatistiklerin, kazandığın kupalar ve kariyer unvanınla sana özel dijital futbolcu kartın hazırlanır.
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Screen 2: Active Career Timeline (0 to 40 Years) -->
+    <div id="screenCareer" class="hidden space-y-6">
+      
+      <!-- Born Reveal Banner (Appears right after spin) -->
+      <div id="bornRevealBanner" class="p-6 rounded-3xl bg-gradient-to-r from-pitch-900 via-pitch-800 to-pitch-900 border border-emerald-500/40 shadow-2xl relative overflow-hidden">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div class="flex items-center gap-4 text-left">
+            <div id="revealFlag" class="text-5xl sm:text-6xl p-3 rounded-2xl bg-pitch-950 border border-pitch-700 shrink-0">
+              🇧🇷
+            </div>
+            <div>
+              <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[11px] font-mono font-bold mb-1 border border-emerald-500/30">
+                <span id="revealCountryName">Brezilya'da Doğdun</span>
+                <span class="text-slate-400">•</span>
+                <span id="revealChance">Olasılık: %3.8</span>
+              </div>
+              <h2 id="revealPlayerTitle" class="text-2xl sm:text-3xl font-display font-black text-white">
+                Gabriel Silva
+              </h2>
+              <div class="text-xs text-slate-300 flex flex-wrap items-center gap-2 mt-1">
+                <span class="px-2 py-0.5 rounded bg-pitch-950 text-slate-300 font-semibold" id="revealPosFoot">Santrafor (ST) • Sağ Ayak</span>
+                <span class="px-2 py-0.5 rounded bg-pitch-950 text-amber-300 font-semibold" id="revealTalentTier">Yetenek: %1 Asrın Yeteneği</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Fast action controls -->
+          <div class="flex items-center gap-2 shrink-0">
+            <button id="btnAutoPlay" class="px-4 py-2.5 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-slate-200 text-xs font-bold transition border border-pitch-700 flex items-center gap-1.5">
+              <i class="fa-solid fa-play text-emerald-400" id="autoPlayIcon"></i>
+              <span id="txtAutoPlay">Otomatik İlerle</span>
+            </button>
+            <button id="btnRestartDirect" class="px-3.5 py-2.5 rounded-xl bg-pitch-800 hover:bg-rose-950/60 text-slate-400 hover:text-rose-400 text-xs font-bold transition border border-pitch-700" title="Yeniden Doğ">
+              <i class="fa-solid fa-rotate-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Timeline Container -->
+      <div class="relative pl-6 sm:pl-8 space-y-4 before:content-[''] before:absolute before:left-2 sm:before:left-3 before:top-2 before:bottom-2 before:w-0.5 before:bg-gradient-to-b before:from-emerald-500 before:via-pitch-700 before:to-slate-800" id="timelineList">
+        <!-- Yearly event cards will be dynamically prepended / appended here -->
+      </div>
+
+      <!-- Advance Age Button Bar (Sticky at bottom when needed) -->
+      <div id="advanceBar" class="sticky bottom-6 z-30 pt-4 flex justify-center">
+        <button id="btnAdvanceYear" class="py-3.5 px-8 rounded-2xl bg-gradient-to-r from-emerald-500 to-lime-500 hover:from-emerald-400 hover:to-lime-400 text-pitch-950 font-display font-black text-base tracking-wide uppercase shadow-2xl shadow-emerald-500/30 active:scale-[0.98] transition flex items-center gap-2 border border-emerald-400/40">
+          <span id="txtAdvanceBtn">SONRAKİ YILA GEÇ</span>
+          <span class="px-2 py-0.5 rounded bg-pitch-950/30 text-xs font-mono font-bold" id="badgeNextAge">Yaş: 1</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Screen 3: Career Over / Jubilee & Final Shareable Card -->
+    <div id="screenRetirement" class="hidden space-y-8 text-center pt-2">
+      
+      <div class="space-y-2 max-w-xl mx-auto">
+        <div class="text-5xl animate-bounce">🏆</div>
+        <h2 class="text-3xl sm:text-4xl font-display font-black text-white">JÜBİLE & EFSANE MİRASI</h2>
+        <p class="text-slate-300 text-sm" id="txtRetirementSubtitle">
+          Kramponlarını astın! İşte sokaklardan dünya vitrinine uzanan 40 yıllık hayat hikayen.
+        </p>
+      </div>
+
+      <!-- The Digital Collectible Footballer Card (FUT Style Canvas & HTML) -->
+      <div class="max-w-md mx-auto relative group">
+        <div class="p-6 rounded-3xl bg-gradient-to-b from-pitch-900 via-pitch-950 to-black border-2 border-amber-500/60 shadow-2xl relative overflow-hidden text-left space-y-5 gold-glow" id="jubileeCard">
+          
+          <!-- Card Header Decor -->
+          <div class="flex items-center justify-between border-b border-pitch-800 pb-3">
+            <div class="flex items-center gap-2">
+              <span id="cardFlag" class="text-3xl">🇧🇷</span>
+              <div>
+                <div id="cardPlayerName" class="font-display font-black text-lg text-white leading-tight">GABRIEL SILVA</div>
+                <div class="text-[11px] text-amber-400 font-mono font-bold" id="cardSubTitle">SANTRAFOR (ST) • 1986-2026</div>
+              </div>
+            </div>
+            <div class="text-right">
+              <div id="cardOvr" class="text-3xl font-display font-black text-amber-300">89</div>
+              <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">ZİRVE OVR</div>
+            </div>
+          </div>
+
+          <!-- Career Badge & Archetype -->
+          <div class="p-3 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <span class="text-2xl" id="cardArchetypeIcon">🌟</span>
+              <div>
+                <div class="text-[10px] text-amber-400 font-bold uppercase tracking-wider">Kariyer Kimliği</div>
+                <div class="text-sm font-bold text-white" id="cardArchetypeName">KULÜP EFSANESİ</div>
+              </div>
+            </div>
+            <div class="text-right">
+              <div class="text-[10px] text-slate-400">Zirve Değeri</div>
+              <div class="text-xs font-display font-bold text-emerald-400" id="cardPeakValue">€85.000.000</div>
+            </div>
+          </div>
+
+          <!-- Stats Grid -->
+          <div class="grid grid-cols-4 gap-2 text-center">
+            <div class="p-2.5 rounded-xl bg-pitch-900/80 border border-pitch-800">
+              <div class="text-slate-400 text-[10px] uppercase font-bold">Maç</div>
+              <div class="text-base font-display font-black text-white" id="cardTotalMatches">620</div>
+            </div>
+            <div class="p-2.5 rounded-xl bg-pitch-900/80 border border-pitch-800">
+              <div class="text-slate-400 text-[10px] uppercase font-bold">Gol</div>
+              <div class="text-base font-display font-black text-emerald-400" id="cardTotalGoals">310</div>
+            </div>
+            <div class="p-2.5 rounded-xl bg-pitch-900/80 border border-pitch-800">
+              <div class="text-slate-400 text-[10px] uppercase font-bold">Asist</div>
+              <div class="text-base font-display font-black text-lime-400" id="cardTotalAssists">145</div>
+            </div>
+            <div class="p-2.5 rounded-xl bg-pitch-900/80 border border-pitch-800">
+              <div class="text-slate-400 text-[10px] uppercase font-bold">Kupa</div>
+              <div class="text-base font-display font-black text-yellow-300" id="cardTotalTrophies">7</div>
+            </div>
+          </div>
+
+          <!-- Club History Badges -->
+          <div class="space-y-1.5">
+            <div class="text-[10px] text-slate-400 uppercase font-semibold">Formasını Giydiği Kulüpler</div>
+            <div class="flex flex-wrap gap-1.5" id="cardClubList">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <!-- Card Footer Watermark -->
+          <div class="pt-2 border-t border-pitch-800/80 flex items-center justify-between text-[10px] text-slate-500 font-mono">
+            <span>pratik-araclar.netlify.app</span>
+            <span>#FootballLottery</span>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Action Buttons: Share, WhatsApp, Restart -->
+      <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
+        <button id="btnShareWhatsApp" class="px-5 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-emerald-600/20 transition">
+          <i class="fa-brands fa-whatsapp text-sm"></i>
+          <span id="txtShareWA">WhatsApp'ta Paylaş</span>
+        </button>
+
+        <button id="btnCopyResult" class="px-5 py-3 rounded-2xl bg-pitch-800 hover:bg-pitch-700 text-white font-bold text-xs flex items-center gap-2 border border-pitch-700 transition">
+          <i class="fa-solid fa-copy"></i>
+          <span id="txtCopyResult">Sonucu Kopyala</span>
+        </button>
+
+        <button id="btnPlayAgain" class="px-6 py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-lime-400 hover:from-emerald-400 hover:to-lime-300 text-pitch-950 font-display font-black text-xs uppercase tracking-wider flex items-center gap-2 shadow-xl shadow-emerald-500/25 transition">
+          <i class="fa-solid fa-rotate-right"></i>
+          <span id="txtPlayAgain">YENİDEN BİR HAYAT ÇEK</span>
+        </button>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Dilemma / Critical Choice Modal -->
+  <div id="modalDilemma" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
+    <div class="max-w-md w-full p-6 sm:p-7 rounded-3xl bg-pitch-900 border-2 border-emerald-500/60 shadow-2xl space-y-5 text-left relative animate-in fade-in zoom-in duration-200">
+      
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 border border-amber-500/40 flex items-center justify-center text-xl shrink-0">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+        <div>
+          <div class="text-[10px] text-amber-400 font-bold uppercase tracking-wider" id="dilemmaBadge">Kariyer Dönüm Noktası</div>
+          <h3 class="text-xl font-display font-black text-white" id="dilemmaTitle">Büyük Teklif Geldi!</h3>
+        </div>
+      </div>
+
+      <p class="text-slate-300 text-xs sm:text-sm leading-relaxed" id="dilemmaDesc">
+        Açıklama metni buraya gelecek.
+      </p>
+
+      <div class="space-y-2.5 pt-2" id="dilemmaOptions">
+        <!-- Buttons populated dynamically -->
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Sound Synthesis & Game Engine Script -->
+  <script>
+    /* =====================================================================
+       1. ZERO COPYRIGHT SOUND SYNTHESIZER (PURE WEB AUDIO API)
+       Produces authentic pitch sounds without any external files!
+       ===================================================================== */
+    let audioCtx = null;
+    let soundEnabled = true;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    const Sound = {
+      // Referee Whistle
+      whistle() {
+        if (!soundEnabled) return;
+        try {
+          initAudio();
+          const osc1 = audioCtx.createOscillator();
+          const osc2 = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+
+          osc1.type = 'triangle';
+          osc2.type = 'sine';
+
+          osc1.frequency.setValueAtTime(2600, audioCtx.currentTime);
+          osc2.frequency.setValueAtTime(2850, audioCtx.currentTime);
+
+          // Trill modulation
+          const lfo = audioCtx.createOscillator();
+          const lfoGain = audioCtx.createGain();
+          lfo.frequency.value = 24;
+          lfoGain.gain.value = 80;
+          lfo.connect(osc1.frequency);
+          lfo.connect(osc2.frequency);
+          lfo.start();
+
+          gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.35);
+
+          osc1.connect(gain);
+          osc2.connect(gain);
+          gain.connect(audioCtx.destination);
+
+          osc1.start();
+          osc2.start();
+          osc1.stop(audioCtx.currentTime + 0.35);
+          osc2.stop(audioCtx.currentTime + 0.35);
+          lfo.stop(audioCtx.currentTime + 0.35);
+        } catch (e) {}
+      },
+
+      // Ball Kick Impact (Thud)
+      kick() {
+        if (!soundEnabled) return;
+        try {
+          initAudio();
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(160, audioCtx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(35, audioCtx.currentTime + 0.12);
+
+          gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.12);
+
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.12);
+        } catch (e) {}
+      },
+
+      // Goal Cheering Roar (Synthetic Pink/White Noise Sweep)
+      goal() {
+        if (!soundEnabled) return;
+        try {
+          initAudio();
+          const bufferSize = audioCtx.sampleRate * 1.2;
+          const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+          const data = buffer.getChannelData(0);
+          for (let i = 0; i < bufferSize; i++) {
+            data[i] = Math.random() * 2 - 1;
+          }
+
+          const noise = audioCtx.createBufferSource();
+          noise.buffer = buffer;
+
+          const filter = audioCtx.createBiquadFilter();
+          filter.type = 'bandpass';
+          filter.frequency.setValueAtTime(400, audioCtx.currentTime);
+          filter.frequency.exponentialRampToValueAtTime(1100, audioCtx.currentTime + 0.6);
+          filter.Q.value = 1.8;
+
+          const gain = audioCtx.createGain();
+          gain.gain.setValueAtTime(0.01, audioCtx.currentTime);
+          gain.gain.linearRampToValueAtTime(0.35, audioCtx.currentTime + 0.3);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.2);
+
+          noise.connect(filter);
+          filter.connect(gain);
+          gain.connect(audioCtx.destination);
+
+          noise.start();
+          noise.stop(audioCtx.currentTime + 1.2);
+
+          // Chime melody
+          [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
+            const chime = audioCtx.createOscillator();
+            const chimeGain = audioCtx.createGain();
+            chime.type = 'triangle';
+            chime.frequency.value = freq;
+            chimeGain.gain.setValueAtTime(0.08, audioCtx.currentTime + idx * 0.08);
+            chimeGain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + idx * 0.08 + 0.3);
+            chime.connect(chimeGain);
+            chimeGain.connect(audioCtx.destination);
+            chime.start(audioCtx.currentTime + idx * 0.08);
+            chime.stop(audioCtx.currentTime + idx * 0.08 + 0.3);
+          });
+        } catch (e) {}
+      },
+
+      // Roulette Click tick
+      tick() {
+        if (!soundEnabled) return;
+        try {
+          initAudio();
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+          gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.03);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.03);
+        } catch (e) {}
+      }
+    };
+
+    /* =====================================================================
+       2. DATABASE & DATA MODELS (SAFE PARODY & DEMOGRAPHICS)
+       ===================================================================== */
+    const COUNTRIES = [
+      { nameTr: 'Brezilya', nameEn: 'Brazil', flag: '🇧🇷', weight: 8.5, footballRating: 95, firstNames: ['Gabriel', 'Lucas', 'Thiago', 'Matheus', 'Felipe', 'Vinicius', 'Rodrigo', 'Arthur'], lastNames: ['Silva', 'Santos', 'Oliveira', 'Souza', 'Pereira', 'Lima', 'Costa'] },
+      { nameTr: 'Arjantin', nameEn: 'Argentina', flag: '🇦🇷', weight: 5.5, footballRating: 94, firstNames: ['Mateo', 'Agustin', 'Lautaro', 'Julian', 'Enzo', 'Tomas', 'Facundo'], lastNames: ['Rodriguez', 'Gonzalez', 'Fernandez', 'Lopez', 'Martinez', 'Romero'] },
+      { nameTr: 'Fransa', nameEn: 'France', flag: '🇫🇷', weight: 6.0, footballRating: 93, firstNames: ['Antoine', 'Kylian', 'Theo', 'Lucas', 'Maxime', 'Hugo', 'Adrien'], lastNames: ['Dubois', 'Laurent', 'Moreau', 'Fournier', 'Girard', 'Mercier'] },
+      { nameTr: 'Almanya', nameEn: 'Germany', flag: '🇩🇪', weight: 5.0, footballRating: 92, firstNames: ['Lukas', 'Maximilian', 'Felix', 'Jonas', 'Leon', 'Florian'], lastNames: ['Müller', 'Schmidt', 'Schneider', 'Fischer', 'Weber', 'Meyer'] },
+      { nameTr: 'İngiltere', nameEn: 'England', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', weight: 5.5, footballRating: 92, firstNames: ['Harry', 'Oliver', 'George', 'Jack', 'Charlie', 'James', 'Mason'], lastNames: ['Smith', 'Jones', 'Taylor', 'Brown', 'Williams', 'Walker'] },
+      { nameTr: 'İspanya', nameEn: 'Spain', flag: '🇪🇸', weight: 5.0, footballRating: 92, firstNames: ['Alejandro', 'Pablo', 'Alvaro', 'David', 'Sergio', 'Daniel'], lastNames: ['Garcia', 'Martinez', 'Sanchez', 'Perez', 'Gomez', 'Ruiz'] },
+      { nameTr: 'Türkiye', nameEn: 'Turkey', flag: '🇹🇷', weight: 6.5, footballRating: 82, firstNames: ['Arda', 'Barış', 'Semih', 'Kerem', 'Emre', 'Yusuf', 'Can', 'Eren'], lastNames: ['Yılmaz', 'Kaya', 'Demir', 'Çelik', 'Şahin', 'Yıldız', 'Öztürk'] },
+      { nameTr: 'Portekiz', nameEn: 'Portugal', flag: '🇵🇹', weight: 4.0, footballRating: 90, firstNames: ['Bernardo', 'Ruben', 'Joao', 'Diogo', 'Rafael', 'Gonçalo'], lastNames: ['Silva', 'Santos', 'Ferreira', 'Pereira', 'Oliveira'] },
+      { nameTr: 'İtalya', nameEn: 'Italy', flag: '🇮🇹', weight: 4.5, footballRating: 89, firstNames: ['Lorenzo', 'Federico', 'Nicolo', 'Alessandro', 'Gianluca', 'Matteo'], lastNames: ['Rossi', 'Russo', 'Ferrari', 'Esposito', 'Bianchi', 'Romano'] },
+      { nameTr: 'Hollanda', nameEn: 'Netherlands', flag: '🇳🇱', weight: 3.5, footballRating: 88, firstNames: ['Frenkie', 'Cody', 'Denzel', 'Tijjani', 'Marten', 'Quinten'], lastNames: ['de Jong', 'van Dijk', 'Jansen', 'Bakker', 'Visser', 'Smit'] },
+      { nameTr: 'Nijerya', nameEn: 'Nigeria', flag: '🇳🇬', weight: 7.0, footballRating: 80, firstNames: ['Victor', 'Samuel', 'Kelechi', 'Ademola', 'Chidera', 'Oluwaseun'], lastNames: ['Osimhen', 'Chukwueze', 'Nwankwo', 'Okafor', 'Balogun'] },
+      { nameTr: 'Fas', nameEn: 'Morocco', flag: '🇲🇦', weight: 3.5, footballRating: 84, firstNames: ['Achraf', 'Hakim', 'Sofyan', 'Yassine', 'Azzedine', 'Bilal'], lastNames: ['Hakimi', 'Ziyech', 'Amrabat', 'Bounou', 'En-Nesyri'] },
+      { nameTr: 'Japonya', nameEn: 'Japan', flag: '🇯🇵', weight: 4.0, footballRating: 81, firstNames: ['Takefusa', 'Kaoru', 'Daichi', 'Wataru', 'Ritsu', 'Takumi'], lastNames: ['Kubo', 'Mitoma', 'Kamada', 'Endo', 'Doan', 'Minamino'] },
+      { nameTr: 'Güney Kore', nameEn: 'South Korea', flag: '🇰🇷', weight: 3.0, footballRating: 80, firstNames: ['Heung-min', 'Kang-in', 'Min-jae', 'Hee-chan', 'Gue-sung'], lastNames: ['Kim', 'Lee', 'Park', 'Choi', 'Son', 'Jung'] },
+      { nameTr: 'Uruguay', nameEn: 'Uruguay', flag: '🇺🇾', weight: 2.0, footballRating: 87, firstNames: ['Federico', 'Darwin', 'Ronald', 'Manuel', 'Rodrigo', 'Facundo'], lastNames: ['Valverde', 'Nunez', 'Araujo', 'Bentancur', 'Ugarte'] },
+      { nameTr: 'Hırvatistan', nameEn: 'Croatia', flag: '🇭🇷', weight: 2.0, footballRating: 86, firstNames: ['Luka', 'Mateo', 'Josko', 'Dominik', 'Lovro', 'Borna'], lastNames: ['Modric', 'Kovacic', 'Gvardiol', 'Livakovic', 'Majer', 'Sosa'] },
+      { nameTr: 'Norveç', nameEn: 'Norway', flag: '🇳🇴', weight: 2.0, footballRating: 82, firstNames: ['Erling', 'Martin', 'Alexander', 'Sander', 'Kristoffer'], lastNames: ['Haaland', 'Odegaard', 'Sorloth', 'Berge', 'Ajer'] },
+      { nameTr: 'Kolombiya', nameEn: 'Colombia', flag: '🇨🇴', weight: 3.5, footballRating: 82, firstNames: ['Luis', 'James', 'Jhon', 'Davinson', 'Yaser', 'Richard'], lastNames: ['Diaz', 'Rodriguez', 'Duran', 'Sanchez', 'Asprilla', 'Rios'] },
+      { nameTr: 'ABD', nameEn: 'USA', flag: '🇺🇸', weight: 5.0, footballRating: 77, firstNames: ['Christian', 'Weston', 'Tyler', 'Timothy', 'Folarin', 'Gio'], lastNames: ['Pulisic', 'McKennie', 'Adams', 'Weah', 'Balogun', 'Reyna'] },
+      { nameTr: 'San Marino', nameEn: 'San Marino', flag: '🇸🇲', weight: 0.2, footballRating: 30, firstNames: ['Matteo', 'Filippo', 'Alessandro', 'Nicola', 'Andrea'], lastNames: ['Vitaioli', 'Nanni', 'Ceccaroli', 'Battistini', 'Mularoni'] }
+    ];
+
+    const POSITIONS = [
+      { code: 'GK', nameTr: 'Kaleci', nameEn: 'Goalkeeper', statLabel: 'Kurtarış / Temiz Ağ' },
+      { code: 'CB', nameTr: 'Stoper (Defans)', nameEn: 'Center Back', statLabel: 'Maç / Müdahale / Gol' },
+      { code: 'LB', nameTr: 'Sol Bek', nameEn: 'Left Back', statLabel: 'Maç / Asist / Müdahale' },
+      { code: 'RB', nameTr: 'Sağ Bek', nameEn: 'Right Back', statLabel: 'Maç / Asist / Müdahale' },
+      { code: 'CM', nameTr: 'Orta Saha', nameEn: 'Central Midfielder', statLabel: 'Maç / Gol / Asist' },
+      { code: 'WNG', nameTr: 'Kanat Forvet', nameEn: 'Winger', statLabel: 'Maç / Gol / Asist' },
+      { code: 'ST', nameTr: 'Santrafor (Golcü)', nameEn: 'Striker', statLabel: 'Maç / Gol / Asist' }
+    ];
+
+    // 100% Trademark-safe parody clubs categorized by Tier
+    const CLUBS = {
+      tier1: [
+        { name: 'Madrid Kralları (Beyazlar)', badge: '👑', color: '#ffffff', prestige: 95 },
+        { name: 'Barcelona Blaugrana', badge: '🔷', color: '#a50044', prestige: 94 },
+        { name: 'Merseyside Kırmızıları', badge: '🔴', color: '#c8102e', prestige: 94 },
+        { name: 'Manchester Şeytanları', badge: '🔱', color: '#da291c', prestige: 93 },
+        { name: 'Manchester Gök Maviler', badge: '⚡', color: '#6cabdd', prestige: 95 },
+        { name: 'Münih Şampiyonları', badge: '⭐', color: '#dc052d', prestige: 94 },
+        { name: 'Paris Başkent FC', badge: '🗼', color: '#004170', prestige: 92 },
+        { name: 'Milano Kırmızı-Siyahları', badge: '🔴', color: '#fb090b', prestige: 90 },
+        { name: 'Milano Mavi-Siyahları', badge: '🐍', color: '#010e80', prestige: 91 },
+        { name: 'Torino Zebraları', badge: '🦓', color: '#000000', prestige: 90 },
+        { name: 'İstanbul Aslanları', badge: '🦁', color: '#a90432', prestige: 85 },
+        { name: 'Boğaz Kanaryaları', badge: '🐤', color: '#002d72', prestige: 84 },
+        { name: 'Kara Kartallar FC', badge: '🦅', color: '#111111', prestige: 83 }
+      ],
+      tier2: [
+        { name: 'Dortmund Sarı Duvar', badge: '🐝', color: '#fde100', prestige: 87 },
+        { name: 'Kuzey Londra Topçuları', badge: '🎯', color: '#ef0107', prestige: 89 },
+        { name: 'Kuzey Londra Horozları', badge: '🐓', color: '#132257', prestige: 86 },
+        { name: 'Lizbon Aslanları', badge: '🦁', color: '#006633', prestige: 84 },
+        { name: 'Porto Ejderhaları', badge: '🐉', color: '#003399', prestige: 83 },
+        { name: 'Amsterdam Kırmızı-Beyaz', badge: '❌', color: '#d2122e', prestige: 84 },
+        { name: 'Roma Kurtları', badge: '🐺', color: '#8e1f2f', prestige: 85 },
+        { name: 'Sevilla Kırmızıları', badge: '🗡️', color: '#d4111e', prestige: 82 },
+        { name: 'Karadeniz Fırtınası', badge: '🌊', color: '#670020', prestige: 80 }
+      ],
+      tier3: [
+        { name: 'Anadolu Atletik', badge: '🛡️', color: '#334155', prestige: 68 },
+        { name: 'Bask Dağcıları', badge: '🏔️', color: '#ee2524', prestige: 76 },
+        { name: 'Yorkshire Beyazları', badge: '⚪', color: '#ffcd00', prestige: 72 },
+        { name: 'Lille Mastiffleri', badge: '🐕', color: '#e01e13', prestige: 75 },
+        { name: 'Hamburg Şehir Kulübü', badge: '⚓', color: '#005ca9', prestige: 70 },
+        { name: 'Palermo Kartalları', badge: '🦅', color: '#f7931e', prestige: 66 }
+      ],
+      gulf: [
+        { name: 'Riyad Altın Şeyhleri', badge: '💰', color: '#eab308', prestige: 78, isCashCow: true },
+        { name: 'Doha Körfez Yıldızları', badge: '💎', color: '#8b5cf6', prestige: 77, isCashCow: true }
+      ]
+    };
+
+    /* =====================================================================
+       3. CURRENT GAME STATE
+       ===================================================================== */
+    let currentLang = 'TR'; // 'TR' or 'EN'
+    let isAutoPlaying = false;
+    let autoPlayTimer = null;
+
+    let player = {
+      country: null,
+      firstName: '',
+      lastName: '',
+      fullName: '',
+      age: 0,
+      position: null,
+      dominantFoot: '',
+      talentScore: 0, // 0 - 100
+      workEthic: 0,   // 0 - 100
+      durability: 0,  // Injury resistance 0 - 100
+      clutch: 0,      // Big game composure 0 - 100
+      ovr: 45,        // Current overall
+      peakOvr: 45,
+      marketValue: 0,
+      salary: 0,
+      currentClub: null,
+      clubHistory: [],
+      stats: {
+        matches: 0,
+        goals: 0,
+        assists: 0,
+        cleanSheets: 0,
+        trophies: 0,
+        nationalCaps: 0,
+        nationalGoals: 0
+      },
+      isRetired: false,
+      archetype: ''
+    };
+
+    /* =====================================================================
+       4. TRANSLATIONS (TR & EN)
+       ===================================================================== */
+    const I18N = {
+      TR: {
+        subtitleNav: 'Futbolcu Doğum Piyangosu',
+        soundOn: 'Ses Açık',
+        soundOff: 'Ses Kapalı',
+        introDesc: "Dünyada her yıl 130 milyon bebek doğuyor ama sadece %0.001'i profesyonel futbol sahnesine çıkabiliyor. Çarkı çevir, doğum piyangona teslim ol; sokak aralarından dev stadyumlara uzanan 0-40 yaş kariyerini yaşa!",
+        btnSpin: 'KADERİNİ ÇEK & DOĞ',
+        badge1: 'Tamamen Rastgele',
+        badge2: 'Gerçekçi İstatistik',
+        badge3: '0 - 40 Yaş Jübile',
+        advanceBtn: 'SONRAKİ YILA GEÇ',
+        autoPlay: 'Otomatik İlerle',
+        autoPlayStop: 'Durdur',
+        jubileeTitle: 'JÜBİLE & EFSANE MİRASI',
+        jubileeSub: 'Kramponlarını astın! İşte sokaklardan dünya vitrinine uzanan 40 yıllık hayat hikayen.',
+        shareWA: "WhatsApp'ta Paylaş",
+        copyResult: 'Sonucu Kopyala',
+        copied: 'Kopyalandı!',
+        playAgain: 'YENİDEN BİR HAYAT ÇEK'
+      },
+      EN: {
+        subtitleNav: 'Soccer Career Lottery',
+        soundOn: 'Sound On',
+        soundOff: 'Sound Off',
+        introDesc: '130 million babies are born each year, but only 0.001% reach the world stage. Spin the roulette, surrender to your football birth lottery, and live an authentic 0-40 career from street cages to grand finals!',
+        btnSpin: 'ROLL YOUR DESTINY & BE BORN',
+        badge1: '100% Procedural',
+        badge2: 'Real Statistics',
+        badge3: 'Age 0-40 Jubilee',
+        advanceBtn: 'ADVANCE TO NEXT YEAR',
+        autoPlay: 'Auto Advance',
+        autoPlayStop: 'Pause',
+        jubileeTitle: 'JUBILEE & LEGACY',
+        jubileeSub: 'You have hung up your boots! Here is your 40-year journey from childhood alleys to world spotlight.',
+        shareWA: 'Share on WhatsApp',
+        copyResult: 'Copy Career Summary',
+        copied: 'Copied!',
+        playAgain: 'SPAWN ANOTHER CAREER'
+      }
+    };
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      document.getElementById('langCurrent').textContent = lang;
+      const dict = I18N[lang];
+      document.getElementById('txtSubtitleNav').textContent = dict.subtitleNav;
+      document.getElementById('txtIntroDesc').textContent = dict.introDesc;
+      document.getElementById('txtBtnSpin').textContent = dict.btnSpin;
+      document.getElementById('txtBadge1').textContent = dict.badge1;
+      document.getElementById('txtBadge2').textContent = dict.badge2;
+      document.getElementById('txtBadge3').textContent = dict.badge3;
+      document.getElementById('txtAdvanceBtn').textContent = dict.advanceBtn;
+      document.getElementById('txtAutoPlay').textContent = isAutoPlaying ? dict.autoPlayStop : dict.autoPlay;
+      document.getElementById('txtRetirementSubtitle').textContent = dict.jubileeSub;
+      document.getElementById('txtShareWA').textContent = dict.shareWA;
+      document.getElementById('txtCopyResult').textContent = dict.copyResult;
+      document.getElementById('txtPlayAgain').textContent = dict.playAgain;
+    }
+
+    /* =====================================================================
+       5. ROULETTE & BIRTH ENGINE
+       ===================================================================== */
+    function weightedRandomCountry() {
+      const totalWeight = COUNTRIES.reduce((acc, c) => acc + c.weight, 0);
+      let rand = Math.random() * totalWeight;
+      for (const country of COUNTRIES) {
+        if (rand < country.weight) return country;
+        rand -= country.weight;
+      }
+      return COUNTRIES[0];
+    }
+
+    function rollBirthAttributes(country) {
+      // First & Last name
+      const fn = country.firstNames[Math.floor(Math.random() * country.firstNames.length)];
+      const ln = country.lastNames[Math.floor(Math.random() * country.lastNames.length)];
+      
+      // Position
+      const pos = POSITIONS[Math.floor(Math.random() * POSITIONS.length)];
+
+      // Dominant Foot: Right (74%), Left (23%), Both (3%)
+      const footRand = Math.random();
+      const foot = footRand < 0.74 ? (currentLang === 'TR' ? 'Sağ Ayak' : 'Right Foot') :
+                   footRand < 0.97 ? (currentLang === 'TR' ? 'Sol Ayak' : 'Left Foot') :
+                                     (currentLang === 'TR' ? 'Çift Ayak' : 'Both Feet');
+
+      // Natural Talent Score (Heavy Poisson-like curve)
+      // Most players fall in 40-70. Only rare gems hit 85-99.
+      const r1 = Math.random();
+      let talent = 0;
+      if (r1 < 0.005) { // 0.5% Super Talent
+        talent = 90 + Math.floor(Math.random() * 10);
+      } else if (r1 < 0.05) { // 4.5% World Class potential
+        talent = 80 + Math.floor(Math.random() * 10);
+      } else if (r1 < 0.25) { // 20% Solid Professional
+        talent = 68 + Math.floor(Math.random() * 12);
+      } else if (r1 < 0.65) { // 40% Lower League / Amateur
+        talent = 50 + Math.floor(Math.random() * 18);
+      } else { // 35% Grassroots / Hobby
+        talent = 30 + Math.floor(Math.random() * 20);
+      }
+
+      const workEthic = 40 + Math.floor(Math.random() * 60);
+      const durability = 40 + Math.floor(Math.random() * 60);
+      const clutch = 35 + Math.floor(Math.random() * 65);
+
+      return {
+        country,
+        firstName: fn,
+        lastName: ln,
+        fullName: `${fn} ${ln}`,
+        position: pos,
+        dominantFoot: foot,
+        talentScore: talent,
+        workEthic,
+        durability,
+        clutch
+      };
+    }
+
+    // Roulette Spin Animation
+    function startBirthRoulette() {
+      initAudio();
+      Sound.whistle();
+
+      const btn = document.getElementById('btnSpinBorn');
+      btn.disabled = true;
+      btn.classList.add('opacity-50', 'pointer-events-none');
+
+      const flagEl = document.getElementById('rouletteFlag');
+      const countryEl = document.getElementById('rouletteCountry');
+      const oddsEl = document.getElementById('rouletteOdds');
+
+      let spinCount = 0;
+      const maxSpins = 28;
+      let delay = 50;
+
+      function step() {
+        spinCount++;
+        Sound.tick();
+        const randCountry = COUNTRIES[Math.floor(Math.random() * COUNTRIES.length)];
+        flagEl.textContent = randCountry.flag;
+        countryEl.textContent = currentLang === 'TR' ? randCountry.nameTr : randCountry.nameEn;
+        oddsEl.textContent = currentLang === 'TR' ? `Olasılık: %${randCountry.weight.toFixed(1)}` : `Probability: ${randCountry.weight.toFixed(1)}%`;
+
+        if (spinCount < maxSpins) {
+          delay += Math.floor(spinCount * 5.5);
+          setTimeout(step, delay);
+        } else {
+          // Final Selected Country
+          const finalCountry = weightedRandomCountry();
+          const birth = rollBirthAttributes(finalCountry);
+
+          flagEl.textContent = finalCountry.flag;
+          countryEl.textContent = currentLang === 'TR' ? finalCountry.nameTr : finalCountry.nameEn;
+          oddsEl.textContent = currentLang === 'TR' ? `Olasılık: %${finalCountry.weight.toFixed(1)} • KADERİN ÇEKİLDİ!` : `Probability: ${finalCountry.weight.toFixed(1)}% • BORN!`;
+
+          Sound.goal();
+
+          setTimeout(() => {
+            initCareerWithBirth(birth);
+          }, 1000);
+        }
+      }
+
+      step();
+    }
+
+    /* =====================================================================
+       6. CAREER INITIALIZATION
+       ===================================================================== */
+    function initCareerWithBirth(birth) {
+      player.country = birth.country;
+      player.firstName = birth.firstName;
+      player.lastName = birth.lastName;
+      player.fullName = birth.fullName;
+      player.position = birth.position;
+      player.dominantFoot = birth.dominantFoot;
+      player.talentScore = birth.talentScore;
+      player.workEthic = birth.workEthic;
+      player.durability = birth.durability;
+      player.clutch = birth.clutch;
+
+      player.age = 0;
+      player.ovr = Math.max(30, Math.floor(birth.talentScore * 0.45));
+      player.peakOvr = player.ovr;
+      player.marketValue = 0;
+      player.salary = 0;
+      player.currentClub = null;
+      player.clubHistory = [];
+      player.stats = {
+        matches: 0,
+        goals: 0,
+        assists: 0,
+        cleanSheets: 0,
+        trophies: 0,
+        nationalCaps: 0,
+        nationalGoals: 0
+      };
+      player.isRetired = false;
+
+      // Switch Screens
+      document.getElementById('screenIntro').classList.add('hidden');
+      document.getElementById('screenRetirement').classList.add('hidden');
+      document.getElementById('screenCareer').classList.remove('hidden');
+      document.getElementById('careerHud').classList.remove('hidden');
+
+      // Update Reveal Banner
+      document.getElementById('revealFlag').textContent = birth.country.flag;
+      document.getElementById('revealCountryName').textContent = currentLang === 'TR' ? `${birth.country.nameTr}'da Doğdun` : `Born in ${birth.country.nameEn}`;
+      document.getElementById('revealChance').textContent = currentLang === 'TR' ? `Olasılık: %${birth.country.weight.toFixed(1)}` : `Odds: ${birth.country.weight.toFixed(1)}%`;
+      document.getElementById('revealPlayerTitle').textContent = birth.fullName;
+      document.getElementById('revealPosFoot').textContent = `${birth.position.code} (${currentLang === 'TR' ? birth.position.nameTr : birth.position.nameEn}) • ${birth.dominantFoot}`;
+
+      const talentTierText = 
+        birth.talentScore >= 90 ? (currentLang === 'TR' ? '⭐ Asrın Yeteneği (%0.5)' : '⭐ Generational Prodigy (0.5%)') :
+        birth.talentScore >= 80 ? (currentLang === 'TR' ? '🔥 Süperstar Potansiyeli (%4.5)' : '🔥 Elite Potential (4.5%)') :
+        birth.talentScore >= 65 ? (currentLang === 'TR' ? '⚡ Profesyonel Kumaşı (%20)' : '⚡ Pro Academy Grade (20%)') :
+        birth.talentScore >= 45 ? (currentLang === 'TR' ? '⚽ Amatör / Mahalle Yıldızı (%40)' : '⚽ Grassroots / Local Tier (40%)') :
+                                  (currentLang === 'TR' ? '🧱 Mütevazı Yetenek (%35)' : '🧱 Modest Raw Talent (35%)');
+
+      document.getElementById('revealTalentTier').textContent = talentTierText;
+
+      // Clear timeline and add Age 0
+      document.getElementById('timelineList').innerHTML = '';
+      updateHUD();
+
+      addTimelineEvent({
+        age: 0,
+        badge: '👶 DOĞUM',
+        badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+        title: currentLang === 'TR' ? `${birth.country.nameTr} Topraklarında İlk Nefes!` : `First Breath in ${birth.country.nameEn}!`,
+        desc: currentLang === 'TR' 
+          ? `${birth.country.nameTr}'da bir hastane odasında dünyaya geldin. Bacaklarındaki kuvvet daha kundaktayken dikkat çekti. ${birth.dominantFoot} dominant görünüyor.`
+          : `You entered the world in ${birth.country.nameEn}. Even in your cradle, your leg strength stood out. You naturally favour your ${birth.dominantFoot}.`,
+        statDelta: null,
+        icon: 'fa-baby'
+      });
+
+      updateNextAgeButton(1);
+    }
+
+    /* =====================================================================
+       7. HUD UPDATER
+       ===================================================================== */
+    function updateHUD() {
+      document.getElementById('hudCountryFlag').textContent = player.country.flag;
+      document.getElementById('hudPlayerName').textContent = player.fullName;
+      document.getElementById('hudAge').textContent = currentLang === 'TR' ? `${player.age} Yaşında` : `Age ${player.age}`;
+      document.getElementById('hudPosition').textContent = player.position.code;
+
+      if (player.currentClub) {
+        document.getElementById('hudClubBadge').textContent = player.currentClub.badge;
+        document.getElementById('hudClubName').textContent = player.currentClub.name;
+      } else {
+        document.getElementById('hudClubBadge').textContent = '⚽';
+        document.getElementById('hudClubName').textContent = player.age < 7 ? (currentLang === 'TR' ? 'Bebeklik / Çocukluk' : 'Infant') :
+                                                               player.age < 15 ? (currentLang === 'TR' ? 'Sokak / Okul Takımı' : 'Street / School') :
+                                                                                 (currentLang === 'TR' ? 'Kulüpsüz / Serbest' : 'Free Agent');
+      }
+
+      // Format Market Value
+      document.getElementById('hudValue').textContent = formatCurrency(player.marketValue);
+
+      // Stats
+      if (player.position.code === 'GK') {
+        document.getElementById('hudStatTitle').textContent = currentLang === 'TR' ? 'Maç / Temiz Ağ / Kurt.' : 'Apps / Clean / Saves';
+        document.getElementById('hudStats').textContent = `${player.stats.matches}M / ${player.stats.cleanSheets}TA / ${player.stats.goals}K`;
+      } else {
+        document.getElementById('hudStatTitle').textContent = currentLang === 'TR' ? 'Maç / Gol / Asist' : 'Apps / Goals / Ast';
+        document.getElementById('hudStats').textContent = `${player.stats.matches}M / ${player.stats.goals}G / ${player.stats.assists}A`;
+      }
+
+      document.getElementById('hudTrophies').textContent = `${player.stats.trophies} ${currentLang === 'TR' ? 'Kupa' : 'Trophies'}`;
+      document.getElementById('hudRatingBox').textContent = player.ovr;
+
+      // Color coding rating
+      const rb = document.getElementById('hudRatingBox');
+      if (player.ovr >= 88) {
+        rb.className = 'w-7 h-7 rounded-lg bg-amber-500/30 text-amber-300 flex items-center justify-center font-display font-black text-xs shrink-0 border border-amber-500/50';
+      } else if (player.ovr >= 78) {
+        rb.className = 'w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-300 flex items-center justify-center font-display font-black text-xs shrink-0';
+      } else {
+        rb.className = 'w-7 h-7 rounded-lg bg-pitch-800 text-slate-300 flex items-center justify-center font-display font-black text-xs shrink-0';
+      }
+
+      document.getElementById('hudTalentTier').textContent = 
+        player.ovr >= 90 ? (currentLang === 'TR' ? 'Efsane' : 'Legend') :
+        player.ovr >= 82 ? (currentLang === 'TR' ? 'Yıldız' : 'Star') :
+        player.ovr >= 72 ? (currentLang === 'TR' ? 'Profesyonel' : 'Pro') :
+        player.ovr >= 60 ? (currentLang === 'TR' ? 'Gelişiyor' : 'Developing') :
+                           (currentLang === 'TR' ? 'Amatör' : 'Amateur');
+    }
+
+    function formatCurrency(val) {
+      if (val === 0) return '€0';
+      if (val >= 1000000) return `€${(val / 1000000).toFixed(1)}M`;
+      if (val >= 1000) return `€${Math.floor(val / 1000)}K`;
+      return `€${val}`;
+    }
+
+    /* =====================================================================
+       8. TIMELINE RENDERER (0 to 40 YEARS - NO GAPS)
+       ===================================================================== */
+    function addTimelineEvent(ev) {
+      const list = document.getElementById('timelineList');
+
+      const card = document.createElement('div');
+      card.className = 'relative p-4 sm:p-5 rounded-2xl bg-pitch-900/90 border border-pitch-800 hover:border-pitch-700 shadow-lg space-y-2.5 transition text-left';
+
+      // Year indicator bullet on timeline line
+      const bullet = document.createElement('div');
+      bullet.className = 'absolute -left-[30px] sm:-left-[39px] top-5 w-6 h-6 rounded-full bg-pitch-950 border-2 border-emerald-500 flex items-center justify-center text-[10px] font-bold text-emerald-400 font-mono shadow-md';
+      bullet.textContent = ev.age;
+      card.appendChild(bullet);
+
+      // Top row: badge + age title
+      const topRow = document.createElement('div');
+      topRow.className = 'flex items-center justify-between gap-2';
+
+      const badge = document.createElement('span');
+      badge.className = `px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold border ${ev.badgeColor || 'bg-pitch-800 text-slate-300 border-pitch-700'}`;
+      badge.textContent = ev.badge;
+
+      const iconSpan = document.createElement('span');
+      iconSpan.className = 'text-slate-400 text-xs';
+      iconSpan.innerHTML = `<i class="fa-solid ${ev.icon || 'fa-futbol'}"></i>`;
+
+      topRow.appendChild(badge);
+      topRow.appendChild(iconSpan);
+      card.appendChild(topRow);
+
+      // Event Title
+      const title = document.createElement('h4');
+      title.className = 'text-base font-display font-bold text-white';
+      title.textContent = ev.title;
+      card.appendChild(title);
+
+      // Event Desc
+      const desc = document.createElement('p');
+      desc.className = 'text-xs text-slate-300 leading-relaxed';
+      desc.textContent = ev.desc;
+      card.appendChild(desc);
+
+      // Optional Stat Delta pills
+      if (ev.statDelta) {
+        const deltaRow = document.createElement('div');
+        deltaRow.className = 'flex flex-wrap items-center gap-2 pt-1 text-[11px] font-mono';
+        ev.statDelta.forEach(d => {
+          const pill = document.createElement('span');
+          pill.className = `px-2 py-0.5 rounded ${d.color || 'bg-pitch-950 text-slate-300 border border-pitch-800'}`;
+          pill.textContent = d.text;
+          deltaRow.appendChild(pill);
+        });
+        card.appendChild(deltaRow);
+      }
+
+      list.appendChild(card);
+      card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function updateNextAgeButton(nextAge) {
+      const badge = document.getElementById('badgeNextAge');
+      if (nextAge <= 40) {
+        badge.textContent = currentLang === 'TR' ? `Yaş: ${nextAge}` : `Age: ${nextAge}`;
+      } else {
+        badge.textContent = currentLang === 'TR' ? 'Jübile' : 'Retire';
+      }
+    }
+
+    /* =====================================================================
+       9. PROCEDURAL YEARLY EVENT ENGINE (0-40)
+       Zero skipped years!
+       ===================================================================== */
+    function advanceOneYear() {
+      if (player.age >= 40 || player.isRetired) {
+        finishCareerAndShowJubilee();
+        return;
+      }
+
+      player.age++;
+      Sound.kick();
+
+      // Check if this age triggers a critical interactive dilemma
+      if (checkAgeDilemmas(player.age)) {
+        return; // Pause for user choice
+      }
+
+      generateProceduralYear(player.age);
+      updateHUD();
+      updateNextAgeButton(player.age + 1);
+
+      if (player.age >= 40) {
+        finishCareerAndShowJubilee();
+      }
+    }
+
+    function generateProceduralYear(age) {
+      // Phase 1: Childhood (Ages 1 - 6)
+      if (age <= 6) {
+        handleChildhoodAge(age);
+        return;
+      }
+
+      // Phase 2: School & Street Academy (Ages 7 - 12)
+      if (age <= 12) {
+        handleGrassrootsAge(age);
+        return;
+      }
+
+      // Phase 3: Youth Academy & First Contract (Ages 13 - 17)
+      if (age <= 17) {
+        handleYouthAcademyAge(age);
+        return;
+      }
+
+      // Phase 4: Senior Pro Career (Ages 18 - 34)
+      if (age <= 34) {
+        handleSeniorProAge(age);
+        return;
+      }
+
+      // Phase 5: Veteran & Sunset (Ages 35 - 40)
+      handleVeteranAge(age);
+    }
+
+    // Ages 1-6
+    function handleChildhoodAge(age) {
+      const events = {
+        1: {
+          title: currentLang === 'TR' ? 'İlk Adımlar & Yuvarlanan Plastik Top' : 'First Steps & Plastic Ball',
+          desc: currentLang === 'TR' 
+            ? 'Yürümeye başladığın ilk gün ayağınla plastik bir topa vurdun. Evdeki biblolar tehlikede!'
+            : 'The day you took your first steps, you instinctively kicked a toy ball across the living room.',
+          delta: null
+        },
+        2: {
+          title: currentLang === 'TR' ? 'Bahçede Bitmeyen Enerji' : 'Endless Garden Energy',
+          desc: currentLang === 'TR'
+            ? 'Akranların çizgi film izlerken sen sokakta taşlarla kale yapıp şut çekmeyi taklit ediyorsun.'
+            : 'While other toddlers watch cartoons, you are outside chasing anything that rolls.',
+          delta: null
+        },
+        3: {
+          title: currentLang === 'TR' ? 'İlk Hakiki Meşin Yuvarlak' : 'Your First Real Leather Ball',
+          desc: currentLang === 'TR'
+            ? 'Ailen sana doğum gününde ilk hakiki mini futbol topunu aldı. Yatağa topla giriyorsun.'
+            : 'You received your first mini leather football. You refuse to sleep without it.',
+          delta: null
+        },
+        4: {
+          title: currentLang === 'TR' ? 'Büyük Çocuklarla Sokak Maçı' : 'Playing with Older Kids',
+          desc: currentLang === 'TR'
+            ? 'Mahalledeki büyük çocukların arasına karıştın. Küçük bedenine rağmen top saklama becerin şaşırttı.'
+            : 'You joined older neighbourhood kids in a cage match. Your balance and ball control drew smiles.',
+          delta: null
+        },
+        5: {
+          title: currentLang === 'TR' ? 'Yerel Park Turnuvası' : 'Local Park Tournament',
+          desc: currentLang === 'TR'
+            ? 'Anaokulu turnuvasında kaleye attığın sert şut fileleri havalandırdı. Yerel bir antrenör babana kartını verdi.'
+            : 'At kindergarten sports day, you rocketed a shot into the top corner. A youth coach took note.',
+          delta: null
+        },
+        6: {
+          title: currentLang === 'TR' ? 'İlkokul ve İlk Krampon' : 'First Studded Boots',
+          desc: currentLang === 'TR'
+            ? 'İlkokula başladın. Teneffüslerde okul bahçesinde fırtına gibi esiyorsun. İlk kramponların alındı.'
+            : 'Primary school begins. You dominate recess matches. You got your first studded boots.',
+          delta: [{ text: '+2 OVR', color: 'bg-emerald-500/20 text-emerald-300' }]
+        }
+      };
+
+      const ev = events[age];
+      player.ovr += (age === 6 ? 2 : 1);
+      player.peakOvr = Math.max(player.peakOvr, player.ovr);
+
+      addTimelineEvent({
+        age,
+        badge: currentLang === 'TR' ? 'ÇOCUKLUK' : 'CHILDHOOD',
+        badgeColor: 'bg-pitch-800 text-slate-300 border-pitch-700',
+        title: ev.title,
+        desc: ev.desc,
+        statDelta: ev.delta,
+        icon: 'fa-child'
+      });
+    }
+
+    // Ages 7-12
+    function handleGrassrootsAge(age) {
+      let title = '';
+      let desc = '';
+      let deltas = [];
+
+      if (age === 7) {
+        title = currentLang === 'TR' ? 'Mahalle Altyapı Seçmeleri' : 'Grassroots Academy Trials';
+        desc = currentLang === 'TR' 
+          ? `${player.country.nameTr}'da yerel bir amatör kulübün altyapı seçmelerine katıldın. Antrenörler tekniğine hayran kaldı.`
+          : `You attended your local grassroots academy trial in ${player.country.nameEn}. Coaches were impressed by your flair.`;
+        player.ovr += 3;
+        deltas.push({ text: '+3 OVR (Gelişim)', color: 'bg-emerald-500/20 text-emerald-300' });
+      } else if (age === 8) {
+        title = currentLang === 'TR' ? 'İlk Resmi Lisans & Bölge Şampiyonluğu' : 'First Youth License & Regional Cup';
+        desc = currentLang === 'TR'
+          ? `Minikler liginde ilk resmi maçlarına çıktın. Sezon boyunca 12 gol / 8 asist ürettin.`
+          : `You played in your first official youth league matches, racking up early goals and assists.`;
+        player.ovr += 2;
+        deltas.push({ text: '+2 OVR', color: 'bg-emerald-500/20 text-emerald-300' });
+      } else if (age === 9) {
+        title = currentLang === 'TR' ? 'Fiziksel Büyüme & Kondisyon Eğitimi' : 'Sprint & Agility Growth';
+        desc = currentLang === 'TR'
+          ? 'Antrenörler seni özel kondisyon programına aldı. Süratin ve çevikliğin ikiye katlandı.'
+          : 'Coaches put you on dedicated speed and agility drills. Your acceleration noticeably spiked.';
+        player.ovr += 3;
+      } else if (age === 10) {
+        title = currentLang === 'TR' ? 'Bölge Karmasına Seçilme' : 'District All-Star Call-up';
+        desc = currentLang === 'TR'
+          ? `${player.country.nameTr} çapındaki U11 turnuvasında takımın kaptanı oldun. Ülkenin büyük kulüp gözlemcileri tribünde!`
+          : `Selected for the regional district all-star squad. Scouts from top tier academies took notes in the stands.`;
+        player.ovr += 3;
+        deltas.push({ text: 'Kaptanlık', color: 'bg-amber-500/20 text-amber-300' });
+      } else if (age === 11) {
+        title = currentLang === 'TR' ? 'Gelişim Patlaması & Taktik Olgunluk' : 'Tactical Maturity';
+        desc = currentLang === 'TR'
+          ? 'Sadece bireysel yetenekle değil, oyun aklın ve pas vizyonunla da fark yaratmaya başladın.'
+          : 'You began reading match flow beyond pure dribbling, orchestrating plays and timing runs.';
+        player.ovr += 3;
+      } else if (age === 12) {
+        title = currentLang === 'TR' ? 'Büyük Akademiye Geçiş Daveti' : 'Elite Academy Invitation';
+        desc = currentLang === 'TR'
+          ? `${player.country.nameTr}'ın önde gelen futbol akademisi seni yatılı altyapısına transfer etmek istedi.`
+          : `A prominent national academy invited you to join their elite residential program.`;
+        player.ovr += 4;
+        deltas.push({ text: '+4 OVR', color: 'bg-emerald-500/20 text-emerald-300' });
+      }
+
+      player.peakOvr = Math.max(player.peakOvr, player.ovr);
+
+      addTimelineEvent({
+        age,
+        badge: currentLang === 'TR' ? 'ALTYAPI' : 'ACADEMY',
+        badgeColor: 'bg-lime-500/20 text-lime-300 border-lime-500/30',
+        title,
+        desc,
+        statDelta: deltas.length ? deltas : null,
+        icon: 'fa-futbol'
+      });
+    }
+
+    // Ages 13-17
+    function handleYouthAcademyAge(age) {
+      let title = '';
+      let desc = '';
+      let deltas = [];
+
+      if (age === 14) {
+        title = currentLang === 'TR' ? 'Genç Milli Takım (U15) Daveti' : 'U15 Youth National Team Call-up';
+        desc = currentLang === 'TR'
+          ? `${player.country.nameTr} U15 Milli Takımı'na seçildin! Göğsünde ay-yıldız / ulusal bayrakla ilk uluslararası turnuvana çıktın.`
+          : `Selected for the ${player.country.nameEn} U15 National Team! You represented your country internationally for the first time.`;
+        player.stats.nationalCaps += 3;
+        player.ovr += 4;
+        deltas.push({ text: '+3 Milli Maç', color: 'bg-rose-500/20 text-rose-300' });
+      } else if (age === 15) {
+        title = currentLang === 'TR' ? 'A Takımla İlk İdman Heyecanı' : 'First Training Session with First Team';
+        desc = currentLang === 'TR'
+          ? 'Teknik direktör seni A Takım antrenmanına çağırdı. Sert ikili mücadelelerde tecrübeli stoperlerin saygısını kazandın.'
+          : 'First-team manager invited you to senior training. You held your ground against battle-hardened pros.';
+        player.ovr += 3;
+      } else if (age === 17) {
+        title = currentLang === 'TR' ? 'Profesyonel Sözleşme & İlk A Takım Maçı' : 'First Professional Contract & Senior Debut';
+        desc = currentLang === 'TR'
+          ? '17 yaşında ilk profesyonel sözleşmeni imzaladın! 82. dakikada oyuna girip taraftarların alkışını topladın.'
+          : 'Signed your first professional contract at 17! You made your senior league debut in the 82nd minute.';
+        
+        // Assign a Tier 3 or Tier 2 club
+        if (!player.currentClub) {
+          const pool = player.talentScore > 75 ? CLUBS.tier2 : CLUBS.tier3;
+          player.currentClub = pool[Math.floor(Math.random() * pool.length)];
+          player.clubHistory.push(player.currentClub);
+        }
+
+        player.marketValue = player.talentScore * 15000;
+        player.salary = 30000;
+        player.ovr += 4;
+        player.stats.matches += 8;
+        player.stats.goals += (player.position.code === 'ST' || player.position.code === 'WNG') ? 2 : 0;
+        deltas.push({ text: `Kulüp: ${player.currentClub.name}`, color: 'bg-pitch-950 text-white border-pitch-700' });
+        deltas.push({ text: `Değer: ${formatCurrency(player.marketValue)}`, color: 'bg-emerald-500/20 text-emerald-300' });
+      }
+
+      player.peakOvr = Math.max(player.peakOvr, player.ovr);
+
+      addTimelineEvent({
+        age,
+        badge: currentLang === 'TR' ? 'GENÇ YILDIZ' : 'WONDERKID',
+        badgeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30',
+        title,
+        desc,
+        statDelta: deltas.length ? deltas : null,
+        icon: 'fa-id-card'
+      });
+    }
+
+    // Ages 18-34: Senior Pro
+    function handleSeniorProAge(age) {
+      if (!player.currentClub) {
+        const pool = player.ovr > 80 ? CLUBS.tier1 : player.ovr > 70 ? CLUBS.tier2 : CLUBS.tier3;
+        player.currentClub = pool[Math.floor(Math.random() * pool.length)];
+        player.clubHistory.push(player.currentClub);
+      }
+
+      // Performance calculations based on OVR & Position
+      const matchCount = 32 + Math.floor(Math.random() * 16);
+      player.stats.matches += matchCount;
+
+      let yearGoals = 0;
+      let yearAssists = 0;
+      let yearCleans = 0;
+
+      if (player.position.code === 'ST') {
+        yearGoals = Math.max(4, Math.floor((player.ovr - 55) * (0.4 + Math.random() * 0.4)));
+        yearAssists = Math.floor(yearGoals * 0.3);
+      } else if (player.position.code === 'WNG') {
+        yearGoals = Math.max(3, Math.floor((player.ovr - 55) * 0.3));
+        yearAssists = Math.max(4, Math.floor((player.ovr - 55) * 0.35));
+      } else if (player.position.code === 'CM') {
+        yearGoals = Math.max(1, Math.floor((player.ovr - 60) * 0.2));
+        yearAssists = Math.max(5, Math.floor((player.ovr - 55) * 0.4));
+      } else if (player.position.code === 'LB' || player.position.code === 'RB') {
+        yearGoals = Math.floor(Math.random() * 3);
+        yearAssists = Math.max(2, Math.floor((player.ovr - 55) * 0.25));
+      } else if (player.position.code === 'CB') {
+        yearGoals = Math.floor(Math.random() * 4); // Headers on corners
+        yearAssists = Math.floor(Math.random() * 2);
+      } else if (player.position.code === 'GK') {
+        yearCleans = Math.max(5, Math.floor(matchCount * (player.ovr / 190)));
+      }
+
+      player.stats.goals += yearGoals;
+      player.stats.assists += yearAssists;
+      player.stats.cleanSheets += yearCleans;
+
+      // Injury roll based on durability
+      const gotInjured = Math.random() * 100 > player.durability && Math.random() < 0.25;
+
+      // Trophy roll based on club prestige + player OVR
+      const wonTrophy = Math.random() * 100 < (player.currentClub.prestige * 0.35 + (player.ovr > 80 ? 15 : 0));
+      if (wonTrophy) {
+        player.stats.trophies++;
+      }
+
+      // Growth / decline curve
+      if (age <= 27) {
+        player.ovr += Math.max(0, Math.floor((player.talentScore - player.ovr) * 0.3) + 1);
+      } else if (age <= 30) {
+        player.ovr += (Math.random() < 0.5 ? 1 : 0);
+      } else {
+        // Post 30 physical slight decline
+        player.ovr -= (Math.random() < 0.6 ? 1 : 0);
+      }
+      player.peakOvr = Math.max(player.peakOvr, player.ovr);
+
+      // Re-calculate Market Value & Salary
+      player.marketValue = Math.max(100000, Math.floor(Math.pow(player.ovr / 10, 4) * 12000));
+      if (age > 32) player.marketValue = Math.floor(player.marketValue * 0.6); // Age discount
+
+      // Potential Transfer to bigger club if high OVR
+      let transferNote = '';
+      if (player.ovr >= 84 && player.currentClub.prestige < 90 && Math.random() < 0.45) {
+        const bigClub = CLUBS.tier1[Math.floor(Math.random() * CLUBS.tier1.length)];
+        if (bigClub.name !== player.currentClub.name) {
+          player.currentClub = bigClub;
+          if (!player.clubHistory.some(c => c.name === bigClub.name)) {
+            player.clubHistory.push(bigClub);
+          }
+          transferNote = currentLang === 'TR' ? `🔥 DEV TRANSFER: ${bigClub.name} kulübüne transfer oldun!` : `🔥 BLOCKBUSTER TRANSFER: Signed for ${bigClub.name}!`;
+          Sound.goal();
+        }
+      }
+
+      // Title & Story Generator
+      let title = '';
+      let desc = '';
+      const deltas = [];
+
+      if (wonTrophy) {
+        title = currentLang === 'TR' ? `🏆 ŞAMPİYONLUK! (${player.currentClub.name})` : `🏆 CHAMPIONS! (${player.currentClub.name})`;
+        desc = currentLang === 'TR'
+          ? `Kritik maçlarda sahne aldın! Bu sezon ${player.stats.trophies}. kupanı müzene ekledin. Şehir sokakları senin adınla inledi.`
+          : `Delivered in clutch moments! Secured your ${player.stats.trophies}th major trophy. Celebrations lasted all night.`;
+        deltas.push({ text: '+1 Kupa 🏆', color: 'bg-yellow-500/20 text-yellow-300' });
+      } else if (gotInjured) {
+        title = currentLang === 'TR' ? 'Sakatlık Talihsizliği & Tedavi' : 'Injury Setback & Recovery';
+        desc = currentLang === 'TR'
+          ? 'Adale yırtığı sebebiyle 2 ay sahalardan uzak kaldın. Azimle fizik tedaviye devam edip sezon sonuna yetiştin.'
+          : 'A hamstring strain sidelined you for two months. Dedicated physio got you back before season end.';
+        deltas.push({ text: 'Sakatlık Atlattı', color: 'bg-rose-500/20 text-rose-300' });
+      } else {
+        title = currentLang === 'TR' ? `İstikrarlı Sezon: ${matchCount} Maç` : `Consistent Season: ${matchCount} Apps`;
+        desc = currentLang === 'TR'
+          ? `${player.currentClub.name} formasıyla ligde ve kupalarda mücadele ettin. Takımın omurgası haline geldin.`
+          : `Solid campaign for ${player.currentClub.name}, dominating midfield/attack battles across domestic and cup ties.`;
+      }
+
+      if (transferNote) {
+        desc = `${transferNote} ${desc}`;
+      }
+
+      // Add deltas
+      if (player.position.code === 'GK') {
+        deltas.push({ text: `${yearCleans} Temiz Ağ`, color: 'bg-pitch-950 text-white' });
+      } else {
+        deltas.push({ text: `${yearGoals} Gol • ${yearAssists} Asist`, color: 'bg-emerald-500/20 text-emerald-300' });
+      }
+      deltas.push({ text: `Değer: ${formatCurrency(player.marketValue)}`, color: 'bg-pitch-950 text-emerald-400 border-pitch-700' });
+
+      addTimelineEvent({
+        age,
+        badge: age <= 23 ? (currentLang === 'TR' ? 'YILDIZ' : 'RISING') : (currentLang === 'TR' ? 'PROFESYONEL' : 'SENIOR PRO'),
+        badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+        title,
+        desc,
+        statDelta: deltas,
+        icon: wonTrophy ? 'fa-trophy' : 'fa-futbol'
+      });
+    }
+
+    // Ages 35-40: Veterans
+    function handleVeteranAge(age) {
+      player.ovr = Math.max(62, player.ovr - (Math.random() < 0.7 ? 2 : 1));
+      player.marketValue = Math.floor(player.marketValue * 0.5);
+
+      const matchCount = 18 + Math.floor(Math.random() * 12);
+      player.stats.matches += matchCount;
+      const yearGoals = player.position.code === 'ST' ? 4 + Math.floor(Math.random() * 5) : Math.floor(Math.random() * 2);
+      player.stats.goals += yearGoals;
+
+      let title = '';
+      let desc = '';
+
+      if (age === 35) {
+        title = currentLang === 'TR' ? 'Kaptanlık Pazubandı & Ağabeylik Rolü' : 'Club Captain & Veteran Mentor';
+        desc = currentLang === 'TR'
+          ? 'Hızın eskisi gibi olmasa da oyun aklın ve liderliğinle soyunma odasının en saygı duyulan ismi sensin.'
+          : 'Pace may have dipped, but your leadership and vision make you the undisputed locker room mentor.';
+      } else if (age === 37) {
+        title = currentLang === 'TR' ? 'Son Büyük Transfer / Nostalji Dönüşü' : 'Final Chapter / Nostalgic Return';
+        desc = currentLang === 'TR'
+          ? 'Kariyerinin son virajında tecrübenle kritik son dakika golleri atmaya devam ediyorsun.'
+          : 'Coming off the bench in closing minutes, your experience still snatches vital points.';
+      } else if (age === 39) {
+        title = currentLang === 'TR' ? 'Vedaya Doğru: Son Maçlar' : 'Farewell Tour';
+        desc = currentLang === 'TR'
+          ? 'Taraftarlar her deplasmanda seni ayakta alkışlıyor. Kramponları asma vakti yaklaşıyor.'
+          : 'Fans in every away ground give you standing ovations. The retirement countdown has begun.';
+      } else if (age === 40) {
+        title = currentLang === 'TR' ? 'Ve Jübile! Kramponlar Duvara Asıldı' : 'The Final Whistle! Boots Hung Up';
+        desc = currentLang === 'TR'
+          ? '40 yaşında 80.000 taraftarın önünde gözyaşlarıyla sahaya veda ettin. Efsaneler arasına adını yazdırdın.'
+          : 'At age 40, you waved goodbye to 80,000 weeping supporters. An extraordinary career closes.';
+        Sound.whistle();
+      }
+
+      addTimelineEvent({
+        age,
+        badge: currentLang === 'TR' ? 'VETERAN' : 'VETERAN',
+        badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
+        title,
+        desc,
+        statDelta: [{ text: `OVR: ${player.ovr}`, color: 'bg-pitch-950 text-slate-300' }],
+        icon: 'fa-medal'
+      });
+    }
+
+    /* =====================================================================
+       10. CRITICAL DILEMMAS & DECISION MODALS
+       ===================================================================== */
+    function checkAgeDilemmas(age) {
+      if (age === 13) {
+        showDilemmaModal({
+          badge: currentLang === 'TR' ? 'MEVKİ TERCİHİ (13 YAŞ)' : 'TACTICAL CROSSROAD (AGE 13)',
+          title: currentLang === 'TR' ? 'Antrenörün Mevki Değişikliği Teklifi' : 'Coach Wants You to Switch Position',
+          desc: currentLang === 'TR'
+            ? `Altyapı hocan: "Tekniğin harika ama fiziğin güçlü, seni ${player.position.code === 'ST' ? 'orta sahaya çekmek istiyorum' : 'kanat forvete çekmek istiyorum'}." diyor. Ne yapacaksın?`
+            : `Your youth coach wants to shift you into a new role to fit team tactics. How do you respond?`,
+          options: [
+            {
+              text: currentLang === 'TR' ? 'Hocayı dinle & Yeni mevkide taktik zekanı geliştir (+3 OVR)' : 'Accept coach advice & broaden tactical vision (+3 OVR)',
+              action: () => {
+                player.ovr += 3;
+                player.workEthic += 10;
+                addTimelineEvent({
+                  age: 13,
+                  badge: 'SEÇİM',
+                  badgeColor: 'bg-emerald-500/20 text-emerald-300',
+                  title: currentLang === 'TR' ? 'Taktik Esneklik Kazandın' : 'Embraced Tactical Versatility',
+                  desc: currentLang === 'TR' ? 'Hocanın tavsiyesine uyarak modern bir joker futbolcuya dönüştün.' : 'Listening to the staff transformed you into a versatile asset.',
+                  statDelta: [{ text: '+3 OVR', color: 'bg-emerald-500/20 text-emerald-300' }]
+                });
+                resumeAfterDilemma();
+              }
+            },
+            {
+              text: currentLang === 'TR' ? 'İnat et! Doğal mevkinde kalıp saf yeteneğini parlat' : 'Refuse! Stay in your natural role with sheer stubborn passion',
+              action: () => {
+                player.talentScore += 2;
+                addTimelineEvent({
+                  age: 13,
+                  badge: 'SEÇİM',
+                  badgeColor: 'bg-amber-500/20 text-amber-300',
+                  title: currentLang === 'TR' ? 'Kendi Bildiğinden Şaşmadın' : 'Stuck to Your Natural Instincts',
+                  desc: currentLang === 'TR' ? 'Mevkini vermedin ve inadınla o pozisyonun vazgeçilmezi oldun.' : 'Refused to compromise and honed your signature role.',
+                  statDelta: [{ text: 'Özgüven +', color: 'bg-amber-500/20 text-amber-300' }]
+                });
+                resumeAfterDilemma();
+              }
+            }
+          ]
+        });
+        return true;
+      }
+
+      if (age === 16) {
+        showDilemmaModal({
+          badge: currentLang === 'TR' ? 'HAYATİ TERCİH (16 YAŞ)' : 'LIFE CROSSROAD (AGE 16)',
+          title: currentLang === 'TR' ? 'Okul mu, Yüzde Yüz Futbol mu?' : 'School Education vs Full-Time Football?',
+          desc: currentLang === 'TR'
+            ? 'Ailen üniversiteyi düşünmeni istiyor. Ancak kulüp tam zamanlı profesyonel antrenman kampına çağırıyor. İkisini birden yürütmek imkansız.'
+            : 'Your family stresses the safety of academics. Meanwhile, the academy demands full-time devotion with two-a-day drills.',
+          options: [
+            {
+              text: currentLang === 'TR' ? 'Gemileri yak! Okulu bırak, %100 futbola odaklan (+5 OVR, Riskli)' : 'Burn the ships! Drop out, devote 100% to football (+5 OVR, High Risk)',
+              action: () => {
+                player.ovr += 5;
+                player.workEthic += 15;
+                addTimelineEvent({
+                  age: 16,
+                  badge: 'KRİTİK',
+                  badgeColor: 'bg-rose-500/20 text-rose-300',
+                  title: currentLang === 'TR' ? 'Tüm Kartlarını Futbola Yatırdın' : 'All-In on Professional Football',
+                  desc: currentLang === 'TR' ? 'Günde çift idmanla fiziğini canavara dönüştürdün. A Takım kapıları ardına kadar açıldı.' : 'Unchecked dedication forged you into a physical specimen ready for senior football.',
+                  statDelta: [{ text: '+5 OVR', color: 'bg-emerald-500/20 text-emerald-300' }]
+                });
+                resumeAfterDilemma();
+              }
+            },
+            {
+              text: currentLang === 'TR' ? 'Dengeli git: Liseyi bitir, idmanları aksatma' : 'Balanced path: Finish high school alongside training',
+              action: () => {
+                player.ovr += 2;
+                player.durability += 5;
+                addTimelineEvent({
+                  age: 16,
+                  badge: 'DENGE',
+                  badgeColor: 'bg-cyan-500/20 text-cyan-300',
+                  title: currentLang === 'TR' ? 'Okul ve Futbolu Birlikte Yürüttün' : 'Balanced School & Football',
+                  desc: currentLang === 'TR' ? 'Disiplinli yaşamınla hem mezun oldun hem de altyapıda parlamaya devam ettin.' : 'Earned your diploma while steadily climbing academy ranks.',
+                  statDelta: [{ text: '+2 OVR', color: 'bg-cyan-500/20 text-cyan-300' }]
+                });
+                resumeAfterDilemma();
+              }
+            }
+          ]
+        });
+        return true;
+      }
+
+      if (age === 28) {
+        showDilemmaModal({
+          badge: currentLang === 'TR' ? 'MİLYONLAR MI ŞAMPİYONLAR LİGİ Mİ? (28 YAŞ)' : 'MONEY VS GLORY (AGE 28)',
+          title: currentLang === 'TR' ? 'Körfezden Astronomik 25M€ Teklif!' : 'Astronomical €25M Gulf Mega Offer!',
+          desc: currentLang === 'TR'
+            ? 'Kariyerinin tam zirvesindesin. Körfez devi Riyad Altın Şeyhleri yıllık 25 Milyon € net maaş önerdi! Avrupa Şampiyonlar Turnuvası prestijini bırakıp gitmeli misin?'
+            : 'At your physical peak, Riyadh Gold offers an astonishing €25M net annual tax-free contract! Do you chase generational wealth or European continental glory?',
+          options: [
+            {
+              text: currentLang === 'TR' ? 'Parayı seç: Yıllık 25M€ kabul et! Yedi sülalen zengin olsun (💰)' : 'Accept Generational Wealth: Take the €25M! (💰)',
+              action: () => {
+                const gulfClub = CLUBS.gulf[0];
+                player.currentClub = gulfClub;
+                player.clubHistory.push(gulfClub);
+                player.salary = 25000000;
+                player.stats.trophies += 2;
+                addTimelineEvent({
+                  age: 28,
+                  badge: 'MİLYARDER',
+                  badgeColor: 'bg-yellow-500/20 text-yellow-300 border-yellow-500/40',
+                  title: currentLang === 'TR' ? 'Körfezde Krallar Gibi Karşılandın' : 'Royal Welcome in the Gulf',
+                  desc: currentLang === 'TR' ? 'Özel jetler, lüks villalar ve rekor maaş! Ligde her maç gol krallığına koşuyorsun.' : 'Private jets and colossal contracts. You dominate the domestic cup and league effortlessly.',
+                  statDelta: [{ text: 'Maaş: €25M/Yıl', color: 'bg-yellow-500/20 text-yellow-300' }]
+                });
+                resumeAfterDilemma();
+              }
+            },
+            {
+              text: currentLang === 'TR' ? 'Prestij ve Kupalar: Avrupa zirvesinde kal, efsane ol!' : 'Refuse the Gold: Stay at the European summit for glory & trophies!',
+              action: () => {
+                player.clutch += 15;
+                player.stats.trophies += 1;
+                addTimelineEvent({
+                  age: 28,
+                  badge: 'ŞAMPİYON',
+                  badgeColor: 'bg-emerald-500/20 text-emerald-300',
+                  title: currentLang === 'TR' ? 'Parayı Reddettin, Şampiyonlar Turnuvası Kupasını Kaldırdın!' : 'Refused Millions, Lifted the Continental Champions Cup!',
+                  desc: currentLang === 'TR' ? 'Finalde uzatmalarda attığın jeneriklik golle takımına kupayı kazandırdın. Efsaneleştin!' : 'Scored an iconic extra-time screamer to win the ultimate club championship.',
+                  statDelta: [{ text: '+1 Avrupa Kupası 🏆', color: 'bg-yellow-500/20 text-yellow-300' }]
+                });
+                resumeAfterDilemma();
+              }
+            }
+          ]
+        });
+        return true;
+      }
+
+      return false;
+    }
+
+    function showDilemmaModal(data) {
+      if (isAutoPlaying) toggleAutoPlay(); // Pause auto progression
+
+      document.getElementById('dilemmaBadge').textContent = data.badge;
+      document.getElementById('dilemmaTitle').textContent = data.title;
+      document.getElementById('dilemmaDesc').textContent = data.desc;
+
+      const optsContainer = document.getElementById('dilemmaOptions');
+      optsContainer.innerHTML = '';
+
+      data.options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'w-full p-3.5 rounded-2xl bg-pitch-950 hover:bg-pitch-800 text-left text-xs sm:text-sm font-bold text-white border border-pitch-700 hover:border-emerald-500/60 transition flex items-center justify-between gap-3 group';
+        btn.innerHTML = `
+          <span>${opt.text}</span>
+          <i class="fa-solid fa-arrow-right text-slate-500 group-hover:text-emerald-400 group-hover:translate-x-1 transition shrink-0"></i>
+        `;
+        btn.onclick = () => {
+          document.getElementById('modalDilemma').classList.add('hidden');
+          opt.action();
+        };
+        optsContainer.appendChild(btn);
+      });
+
+      document.getElementById('modalDilemma').classList.remove('hidden');
+      Sound.whistle();
+    }
+
+    function resumeAfterDilemma() {
+      updateHUD();
+      updateNextAgeButton(player.age + 1);
+    }
+
+    /* =====================================================================
+       11. JUBILEE & CAREER CARD GENERATOR
+       ===================================================================== */
+    function finishCareerAndShowJubilee() {
+      player.isRetired = true;
+      if (isAutoPlaying) toggleAutoPlay();
+
+      // Determine Archetype
+      let archetype = '';
+      let icon = '⚽';
+      if (player.stats.trophies >= 8 || player.peakOvr >= 90) {
+        archetype = currentLang === 'TR' ? 'FUTBOL İLAHİ (DÜNYA YILDIZI)' : 'GLOBAL FOOTBALL ICON';
+        icon = '👑';
+      } else if (player.stats.goals >= 250) {
+        archetype = currentLang === 'TR' ? 'ÖLÜMCÜL BİTİRİCİ (GOL MAKİNESİ)' : 'LETHAL FINISHER (GOAL MACHINE)';
+        icon = '🎯';
+      } else if (player.clubHistory.length >= 6) {
+        archetype = currentLang === 'TR' ? 'GEZGİN SAVAŞÇI (EVLİYA ÇELEBİ)' : 'JOURNEYMAN WARRIOR';
+        icon = '🧭';
+      } else if (player.stats.trophies >= 4) {
+        archetype = currentLang === 'TR' ? 'KULÜP EFSANESİ & KAPTAN' : 'CLUB LEGEND & SKIPPER';
+        icon = '⭐';
+      } else if (player.peakOvr <= 68) {
+        archetype = currentLang === 'TR' ? 'HALI SAHA RESİTALLERİ USTASI' : 'GRASSROOTS CULT HERO';
+        icon = '🛡️';
+      } else {
+        archetype = currentLang === 'TR' ? 'SAYGI DEĞER EMEKÇİ' : 'RESPECTED PRO VALIANT';
+        icon = '🎖️';
+      }
+      player.archetype = archetype;
+
+      // Switch screen
+      document.getElementById('screenCareer').classList.add('hidden');
+      document.getElementById('screenRetirement').classList.remove('hidden');
+
+      // Populate Card
+      document.getElementById('cardFlag').textContent = player.country.flag;
+      document.getElementById('cardPlayerName').textContent = player.fullName.toUpperCase();
+      document.getElementById('cardSubTitle').textContent = `${player.position.code} (${currentLang === 'TR' ? player.position.nameTr : player.position.nameEn}) • ${player.dominantFoot}`;
+      document.getElementById('cardOvr').textContent = player.peakOvr;
+      document.getElementById('cardArchetypeIcon').textContent = icon;
+      document.getElementById('cardArchetypeName').textContent = archetype;
+      document.getElementById('cardPeakValue').textContent = formatCurrency(Math.floor(Math.pow(player.peakOvr / 10, 4) * 12000));
+
+      document.getElementById('cardTotalMatches').textContent = player.stats.matches;
+      document.getElementById('cardTotalGoals').textContent = player.stats.goals;
+      document.getElementById('cardTotalAssists').textContent = player.stats.assists;
+      document.getElementById('cardTotalTrophies').textContent = player.stats.trophies;
+
+      // Club History Badges
+      const clubContainer = document.getElementById('cardClubList');
+      clubContainer.innerHTML = '';
+      const uniqueClubs = Array.from(new Set(player.clubHistory.map(c => c.name)))
+        .map(name => player.clubHistory.find(c => c.name === name));
+
+      if (uniqueClubs.length === 0) {
+        clubContainer.innerHTML = `<span class="text-xs text-slate-400">${currentLang === 'TR' ? 'Amatör Küme & Mahalle' : 'Grassroots only'}</span>`;
+      } else {
+        uniqueClubs.forEach(c => {
+          const pill = document.createElement('span');
+          pill.className = 'px-2 py-0.5 rounded-lg bg-pitch-900 border border-pitch-800 text-[11px] font-semibold text-slate-200 flex items-center gap-1';
+          pill.innerHTML = `<span>${c.badge}</span> <span>${c.name}</span>`;
+          clubContainer.appendChild(pill);
+        });
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      Sound.goal();
+    }
+
+    /* =====================================================================
+       12. CONTROLS & AUTO PROGRESSION
+       ===================================================================== */
+    function toggleAutoPlay() {
+      isAutoPlaying = !isAutoPlaying;
+      const btn = document.getElementById('btnAutoPlay');
+      const icon = document.getElementById('autoPlayIcon');
+      const txt = document.getElementById('txtAutoPlay');
+
+      if (isAutoPlaying) {
+        btn.classList.add('bg-emerald-950', 'text-emerald-300', 'border-emerald-500/40');
+        icon.className = 'fa-solid fa-pause text-amber-400';
+        txt.textContent = currentLang === 'TR' ? 'Durdur' : 'Pause';
+
+        autoPlayTimer = setInterval(() => {
+          if (player.age >= 40 || player.isRetired) {
+            toggleAutoPlay();
+            return;
+          }
+          advanceOneYear();
+        }, 900);
+      } else {
+        clearInterval(autoPlayTimer);
+        autoPlayTimer = null;
+        btn.classList.remove('bg-emerald-950', 'text-emerald-300', 'border-emerald-500/40');
+        icon.className = 'fa-solid fa-play text-emerald-400';
+        txt.textContent = currentLang === 'TR' ? 'Otomatik İlerle' : 'Auto Advance';
+      }
+    }
+
+    /* =====================================================================
+       13. EVENT LISTENERS
+       ===================================================================== */
+    document.addEventListener('DOMContentLoaded', () => {
+      // Sound Toggle
+      document.getElementById('btnSoundToggle').addEventListener('click', () => {
+        soundEnabled = !soundEnabled;
+        const icon = document.getElementById('soundIcon');
+        const txt = document.getElementById('txtSoundLabel');
+        if (soundEnabled) {
+          icon.className = 'fa-solid fa-volume-high text-emerald-400';
+          txt.textContent = currentLang === 'TR' ? 'Ses Açık' : 'Sound On';
+        } else {
+          icon.className = 'fa-solid fa-volume-xmark text-slate-500';
+          txt.textContent = currentLang === 'TR' ? 'Sessiz' : 'Muted';
+        }
+      });
+
+      // Language Toggle
+      document.getElementById('btnLangToggle').addEventListener('click', () => {
+        setLanguage(currentLang === 'TR' ? 'EN' : 'TR');
+      });
+
+      // Spin & Born
+      document.getElementById('btnSpinBorn').addEventListener('click', startBirthRoulette);
+
+      // Advance 1 Year
+      document.getElementById('btnAdvanceYear').addEventListener('click', advanceOneYear);
+
+      // Auto Play
+      document.getElementById('btnAutoPlay').addEventListener('click', toggleAutoPlay);
+
+      // Restart
+      document.getElementById('btnRestartDirect').addEventListener('click', () => {
+        if (isAutoPlaying) toggleAutoPlay();
+        document.getElementById('screenCareer').classList.add('hidden');
+        document.getElementById('careerHud').classList.add('hidden');
+        document.getElementById('screenRetirement').classList.add('hidden');
+        document.getElementById('screenIntro').classList.remove('hidden');
+        const btn = document.getElementById('btnSpinBorn');
+        btn.disabled = false;
+        btn.classList.remove('opacity-50', 'pointer-events-none');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      document.getElementById('btnPlayAgain').addEventListener('click', () => {
+        document.getElementById('screenRetirement').classList.add('hidden');
+        document.getElementById('screenIntro').classList.remove('hidden');
+        const btn = document.getElementById('btnSpinBorn');
+        btn.disabled = false;
+        btn.classList.remove('opacity-50', 'pointer-events-none');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      // Share to WhatsApp
+      document.getElementById('btnShareWhatsApp').addEventListener('click', () => {
+        const text = currentLang === 'TR'
+          ? `⚽ Futbolcu Doğum Piyangosu'nda kariyerimi tamamladım!\n\n` +
+            `👤 Oyuncu: ${player.fullName} (${player.country.flag} ${player.country.nameTr})\n` +
+            `⭐ Zirve OVR: ${player.peakOvr} | Mevki: ${player.position.code}\n` +
+            `📊 İstatistik: ${player.stats.matches} Maç, ${player.stats.goals} Gol, ${player.stats.assists} Asist, 🏆 ${player.stats.trophies} Kupa\n` +
+            `🎖️ Kariyer Kimliği: ${player.archetype}\n\n` +
+            `Sen hangi ülkede, hangi yetenekle doğacaksın? Hemen oyna:\nhttps://pratik-araclar.netlify.app/football-lottery/`
+          : `⚽ Just finished my Football Lottery Career!\n\n` +
+            `👤 Player: ${player.fullName} (${player.country.flag} ${player.country.nameEn})\n` +
+            `⭐ Peak OVR: ${player.peakOvr} | Pos: ${player.position.code}\n` +
+            `📊 Stats: ${player.stats.matches} Apps, ${player.stats.goals} Goals, ${player.stats.assists} Ast, 🏆 ${player.stats.trophies} Trophies\n` +
+            `🎖️ Identity: ${player.archetype}\n\n` +
+            `Test your football birth lottery now:\nhttps://pratik-araclar.netlify.app/football-lottery/`;
+
+        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+      });
+
+      // Copy Result
+      document.getElementById('btnCopyResult').addEventListener('click', () => {
+        const text = `⚽ ${player.fullName} (${player.country.flag}) - Futbolcu Doğum Piyangosu\n` +
+          `Zirve OVR: ${player.peakOvr} | ${player.stats.matches} Maç | ${player.stats.goals} Gol | 🏆 ${player.stats.trophies} Kupa | Unvan: ${player.archetype}\n` +
+          `https://pratik-araclar.netlify.app/football-lottery/`;
+
+        navigator.clipboard.writeText(text).then(() => {
+          const btnTxt = document.getElementById('txtCopyResult');
+          const old = btnTxt.textContent;
+          btnTxt.textContent = currentLang === 'TR' ? 'Kopyalandı! ✔' : 'Copied! ✔';
+          setTimeout(() => btnTxt.textContent = old, 2000);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
