@@ -382,23 +382,43 @@
     </div>
 
     <!-- Screen 3: Career Over / Jubilee & Final Shareable Card -->
-    <div id="screenRetirement" class="hidden space-y-8 text-center pt-2">
+    <div id="screenRetirement" class="hidden space-y-4 text-center pt-0 max-w-xl mx-auto">
       
-      <div class="space-y-2 max-w-xl mx-auto">
-        <div class="text-5xl animate-bounce">🏆</div>
-        <h2 class="text-3xl sm:text-4xl font-display font-black text-white">JÜBİLE & EFSANE MİRASI</h2>
-        <p class="text-slate-300 text-sm" id="txtRetirementSubtitle">
-          Kramponlarını astın! İşte sokaklardan dünya vitrinine uzanan 40 yıllık hayat hikayen.
+      <!-- Compact Title Header -->
+      <div class="space-y-1">
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs font-mono font-bold">
+          <span>🏆</span> <span>JÜBİLE & EFSANE MİRASI</span>
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-display font-black text-white">Kramponlar Duvara Asıldı!</h2>
+        <p class="text-slate-400 text-xs" id="txtRetirementSubtitle">
+          İşte sokaklardan dünya vitrinine uzanan 40 yıllık kariyer karnen.
         </p>
+      </div>
+
+      <!-- Action Buttons Row (Placed DIRECTLY ABOVE CARD for instant zero-scroll access) -->
+      <div class="flex items-center justify-center gap-2 max-w-md mx-auto px-1">
+        <button id="btnPlayAgainTop" class="flex-1 py-3 px-4 rounded-2xl bg-gradient-to-r from-emerald-500 via-emerald-600 to-lime-500 hover:from-emerald-400 hover:to-lime-400 text-pitch-950 font-display font-black text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 shadow-xl shadow-emerald-500/25 active:scale-95 transition">
+          <i class="fa-solid fa-rotate-right"></i>
+          <span id="txtPlayAgain">YENİDEN BİR HAYAT ÇEK</span>
+        </button>
+
+        <button id="btnShareWhatsApp" class="py-3 px-4 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-emerald-600/20 active:scale-95 transition shrink-0" title="WhatsApp Paylaş">
+          <i class="fa-brands fa-whatsapp text-sm"></i>
+          <span class="hidden sm:inline" id="txtShareWA">WhatsApp</span>
+        </button>
+
+        <button id="btnCopyResult" class="py-3 px-3.5 rounded-2xl bg-pitch-900 hover:bg-pitch-800 text-slate-300 hover:text-white font-bold text-xs border border-pitch-700 active:scale-95 transition shrink-0" title="Kopyala">
+          <i class="fa-solid fa-copy"></i>
+        </button>
       </div>
 
       <!-- The Digital Collectible Footballer Card (FUT Style Canvas & HTML) -->
       <div class="max-w-md mx-auto relative group">
-        <div class="p-6 rounded-3xl bg-gradient-to-b from-pitch-900 via-pitch-950 to-black border-2 border-amber-500/60 shadow-2xl relative overflow-hidden text-left space-y-5 gold-glow" id="jubileeCard">
+        <div class="p-5 sm:p-6 rounded-3xl bg-gradient-to-b from-pitch-900 via-pitch-950 to-black border-2 border-amber-500/60 shadow-2xl relative overflow-hidden text-left space-y-4 gold-glow" id="jubileeCard">
           
           <!-- Card Header Decor -->
-          <div class="flex items-center justify-between border-b border-pitch-800 pb-3">
-            <div class="flex items-center gap-2">
+          <div class="flex items-center justify-between border-b border-pitch-800 pb-2.5">
+            <div class="flex items-center gap-2.5">
               <span id="cardFlag" class="text-3xl">🇧🇷</span>
               <div>
                 <div id="cardPlayerName" class="font-display font-black text-lg text-white leading-tight">GABRIEL SILVA</div>
@@ -406,48 +426,48 @@
               </div>
             </div>
             <div class="text-right">
-              <div id="cardOvr" class="text-3xl font-display font-black text-amber-300">89</div>
-              <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">ZİRVE OVR</div>
+              <div id="cardOvr" class="text-3xl font-display font-black text-amber-300 leading-none">89</div>
+              <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">ZİRVE OVR</div>
             </div>
           </div>
 
           <!-- Career Badge & Archetype -->
-          <div class="p-3 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-between">
-            <div class="flex items-center gap-2.5">
+          <div class="p-2.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-between">
+            <div class="flex items-center gap-2">
               <span class="text-2xl" id="cardArchetypeIcon">🌟</span>
               <div>
-                <div class="text-[10px] text-amber-400 font-bold uppercase tracking-wider">Kariyer Kimliği</div>
-                <div class="text-sm font-bold text-white" id="cardArchetypeName">KULÜP EFSANESİ</div>
+                <div class="text-[9px] text-amber-400 font-bold uppercase tracking-wider">Kariyer Kimliği</div>
+                <div class="text-xs sm:text-sm font-bold text-white" id="cardArchetypeName">KULÜP EFSANESİ</div>
               </div>
             </div>
             <div class="text-right">
-              <div class="text-[10px] text-slate-400">Zirve Değeri</div>
+              <div class="text-[9px] text-slate-400">Zirve Değeri</div>
               <div class="text-xs font-display font-bold text-emerald-400" id="cardPeakValue">€85.000.000</div>
             </div>
           </div>
 
           <!-- Stats Grid -->
           <div class="grid grid-cols-4 gap-2 text-center">
-            <div class="p-2.5 rounded-xl bg-pitch-900/80 border border-pitch-800">
+            <div class="p-2 rounded-xl bg-pitch-900/80 border border-pitch-800">
               <div class="text-slate-400 text-[10px] uppercase font-bold">Maç</div>
-              <div class="text-base font-display font-black text-white" id="cardTotalMatches">620</div>
+              <div class="text-sm sm:text-base font-display font-black text-white" id="cardTotalMatches">620</div>
             </div>
-            <div class="p-2.5 rounded-xl bg-pitch-900/80 border border-pitch-800">
+            <div class="p-2 rounded-xl bg-pitch-900/80 border border-pitch-800">
               <div class="text-slate-400 text-[10px] uppercase font-bold">Gol</div>
-              <div class="text-base font-display font-black text-emerald-400" id="cardTotalGoals">310</div>
+              <div class="text-sm sm:text-base font-display font-black text-emerald-400" id="cardTotalGoals">310</div>
             </div>
-            <div class="p-2.5 rounded-xl bg-pitch-900/80 border border-pitch-800">
+            <div class="p-2 rounded-xl bg-pitch-900/80 border border-pitch-800">
               <div class="text-slate-400 text-[10px] uppercase font-bold">Asist</div>
-              <div class="text-base font-display font-black text-lime-400" id="cardTotalAssists">145</div>
+              <div class="text-sm sm:text-base font-display font-black text-lime-400" id="cardTotalAssists">145</div>
             </div>
-            <div class="p-2.5 rounded-xl bg-pitch-900/80 border border-pitch-800">
+            <div class="p-2 rounded-xl bg-pitch-900/80 border border-pitch-800">
               <div class="text-slate-400 text-[10px] uppercase font-bold">Kupa</div>
-              <div class="text-base font-display font-black text-yellow-300" id="cardTotalTrophies">7</div>
+              <div class="text-sm sm:text-base font-display font-black text-yellow-300" id="cardTotalTrophies">7</div>
             </div>
           </div>
 
           <!-- Club History Badges -->
-          <div class="space-y-1.5">
+          <div class="space-y-1">
             <div class="text-[10px] text-slate-400 uppercase font-semibold">Formasını Giydiği Kulüpler</div>
             <div class="flex flex-wrap gap-1.5" id="cardClubList">
               <!-- Dynamically populated -->
@@ -461,24 +481,6 @@
           </div>
 
         </div>
-      </div>
-
-      <!-- Action Buttons: Share, WhatsApp, Restart -->
-      <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
-        <button id="btnShareWhatsApp" class="px-5 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-emerald-600/20 transition">
-          <i class="fa-brands fa-whatsapp text-sm"></i>
-          <span id="txtShareWA">WhatsApp'ta Paylaş</span>
-        </button>
-
-        <button id="btnCopyResult" class="px-5 py-3 rounded-2xl bg-pitch-800 hover:bg-pitch-700 text-white font-bold text-xs flex items-center gap-2 border border-pitch-700 transition">
-          <i class="fa-solid fa-copy"></i>
-          <span id="txtCopyResult">Sonucu Kopyala</span>
-        </button>
-
-        <button id="btnPlayAgain" class="px-6 py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-lime-400 hover:from-emerald-400 hover:to-lime-300 text-pitch-950 font-display font-black text-xs uppercase tracking-wider flex items-center gap-2 shadow-xl shadow-emerald-500/25 transition">
-          <i class="fa-solid fa-rotate-right"></i>
-          <span id="txtPlayAgain">YENİDEN BİR HAYAT ÇEK</span>
-        </button>
       </div>
 
     </div>
@@ -1760,8 +1762,9 @@
       }
       player.archetype = archetype;
 
-      // Switch screen
+      // Switch screen: hide career and HUD, show jubilee
       document.getElementById('screenCareer').classList.add('hidden');
+      document.getElementById('careerHud').classList.add('hidden');
       document.getElementById('screenRetirement').classList.remove('hidden');
 
       // Populate Card
@@ -1888,8 +1891,7 @@
       // Auto Play
       document.getElementById('btnAutoPlay').addEventListener('click', toggleAutoPlay);
 
-      // Restart
-      document.getElementById('btnRestartDirect').addEventListener('click', () => {
+      const restartGame = () => {
         if (isAutoPlaying) toggleAutoPlay();
         document.getElementById('screenCareer').classList.add('hidden');
         document.getElementById('careerHud').classList.add('hidden');
@@ -1898,17 +1900,14 @@
         const btn = document.getElementById('btnSpinBorn');
         btn.disabled = false;
         btn.classList.remove('opacity-50', 'pointer-events-none');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      });
+        window.scrollTo({ top: 0, behavior: 'instant' });
+      };
 
-      document.getElementById('btnPlayAgain').addEventListener('click', () => {
-        document.getElementById('screenRetirement').classList.add('hidden');
-        document.getElementById('screenIntro').classList.remove('hidden');
-        const btn = document.getElementById('btnSpinBorn');
-        btn.disabled = false;
-        btn.classList.remove('opacity-50', 'pointer-events-none');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      });
+      document.getElementById('btnRestartDirect').addEventListener('click', restartGame);
+      const playAgainBtn = document.getElementById('btnPlayAgain');
+      if (playAgainBtn) playAgainBtn.addEventListener('click', restartGame);
+      const playAgainTopBtn = document.getElementById('btnPlayAgainTop');
+      if (playAgainTopBtn) playAgainTopBtn.addEventListener('click', restartGame);
 
       // Share to WhatsApp
       document.getElementById('btnShareWhatsApp').addEventListener('click', () => {
