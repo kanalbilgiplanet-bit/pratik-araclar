@@ -2727,201 +2727,484 @@
             stats: { happy: -3 } 
           }
         ]
-      },
-      22: {
-        sceneType: 'work_office',
-        title: { tr: "Aşk kapını çaldı", en: "Love Knocks at the Door" },
-        prompt: { tr: "Bir süredir tanıdığın biri: Esther Kalenga (kadın, 19 yaşında, girişken ve samimi). İş: küçük çiftçi (geçimlik tarım).", en: "Someone you have known for a while expresses romantic interest." },
-        citation: { tr: "Kongo Demokratik Cumhuriyeti'nde (ve gelişmekte olan ülkelerde) ilk evlilikteki ortalama yaşın yaklaşık 26 olduğu tahmin ediliyor (BM Nüfus Verileri).", en: "UN Population Data estimates the average age of first marriage in developing nations around 25-26." },
-        choices: [
-          { 
-            title: "Görüşmeyi dene", 
-            sub: "Birbirinizi tanıma zamanı · evlilik daha sonra", 
-            text: { tr: "Görüşmeyi dene (Birbirinizi tanıma zamanı · evlilik daha sonra)", en: "Start dating and get to know each other" }, 
-            stats: { social: +10, happy: +12 } 
-          },
-          { 
-            title: "İçinden gelmiyor", 
-            sub: "Kendi yolunda ilerle", 
-            text: { tr: "İçinden gelmiyor (Arkadaş kal)", en: "Politely decline" }, 
-            stats: { happy: +2 } 
-          }
-        ]
-      },
-      23: {
-        sceneType: 'wedding',
-        title: { tr: "Evlilik konuşması", en: "The Marriage Conversation" },
-        prompt: { tr: "Esther'le 1 yıldır birliktesiniz. Esther evlilik konusunu açıyor. Esther'in neredeyse hiç birikimi de borcu da yok.", en: "After a year together, your partner brings up marriage." },
-        citation: { tr: "ABD'de ve dünyada nişanlanan çiftlerin yarısından biraz fazlası (%53), nişanlanmadan önce iki ila beş yıl çıkmış (The Knot Küresel Raporu).", en: "Global relationship surveys show 53% of engaged couples date 2-5 years before formal marriage." },
-        choices: [
-          { 
-            title: "Evlen", 
-            sub: "İlişkiler↑ Mutluluk↑", 
-            text: { tr: "Evlen (İlişkiler↑ Mutluluk↑)", en: "Get married" }, 
-            stats: { social: +12, happy: +16 } 
-          },
-          { 
-            title: "Düğünü ertele, birlikte yaşa", 
-            sub: "Resmî nikâh yok · ileride evlenebilirsiniz", 
-            text: { tr: "Düğünü ertele, birlikte yaşa", en: "Postpone the wedding, cohabitate" }, 
-            stats: { social: +6, happy: +8 } 
-          },
-          { 
-            title: "Biraz daha çıkmaya devam et", 
-            sub: "Acele yok", 
-            text: { tr: "Biraz daha çıkmaya devam et (Acele yok)", en: "Continue dating without rush" }, 
-            stats: { social: +4, happy: +4 } 
-          },
-          { 
-            title: "Ayrıl", 
-            sub: "Yolları ayır", 
-            text: { tr: "Ayrıl (Yolları ayır)", en: "Break up" }, 
-            stats: { social: -6, happy: -8 } 
-          }
-        ]
-      },
-      
-      24: {
-        sceneType: 'newborn_baby',
-        title: { tr: "Bir kız çocuğu dünyaya geldi: Précieuse", en: "A Daughter is Born: Précieuse" },
-        prompt: { tr: "Bebek planlanmamıştı ancak vaktinden önce ve küçük doğdu. Sımsıkı kucağında tutarak sıcak tuttun ve ilk zor günleri atlattı. Artık bir babasın/annesin.", en: "Your daughter Précieuse is born small and premature. Holding her close, she survives the critical first days." },
-        citation: { tr: "UNFPA Dünya Nüfus Raporu'na göre dünyadaki gebeliklerin yaklaşık yarısı plansızdır; aile desteği ve sıcak temas bebek sağlığında hayati önem taşır.", en: "UNFPA reports nearly half of all pregnancies globally are unplanned; parental warmth and resilience are vital for neonatal survival." },
-        choices: [
-          { 
-            title: "Tüm gücünle bebeğe sarıl ve koru", 
-            sub: "İlk günleri sevgiyle atlatın", 
-            text: { tr: "Tüm gücünle bebeğe sarıl ve koru", en: "Hold her close and nurture her" }, 
-            stats: { social: +10, happy: +15 } 
-          },
-          { 
-            title: "Daha fazla çalışıp bebeğe süt ve ilaç sağla", 
-            sub: "Gece gündüz emek ver", 
-            text: { tr: "Daha fazla çalışıp bebeğe süt ve ilaç sağla", en: "Work tirelessly to afford nutrition and medicine" }, 
-            stats: { health: -2, social: +6, happy: +10 } 
-          }
-        ]
-      },
-      25: {
-        sceneType: 'home_baby',
-        title: { tr: "Kim Précieuse'ye bakacak?", en: "Who Will Care for Précieuse?" },
-        prompt: { tr: "Précieuse'nin ilk yaş günü yaklaşıyor. İkiniz de çalıştığınız için bebeğe kimin bakacağına karar vermeniz gerekiyor. Eşin Esther birkaç yıl işine ara verip bebeğe bakabileceğini söylüyor.", en: "Précieuse turns one. With both parents working, a childcare decision is necessary." },
-        citation: { tr: "Kongo Demokratik Cumhuriyeti'nde 15-64 yaş arası kadınların işgücüne katılım oranı yaklaşık %62 düzeyindedir (ILO tahmini).", en: "ILO estimates female labor force participation around 62% in Central Africa." },
-        choices: [
-          { 
-            title: "İşi bırak, bebeğe kendin bak", 
-            sub: "Gelir kesilir · çocuğunla geçen zaman", 
-            text: { tr: "İşi bırak, bebeğe kendin bak", en: "Leave work and care for the baby yourself" }, 
-            stats: { happy: +10, social: +6, incomeTL: -500 } 
-          },
-          { 
-            title: "Eşin işe ara verip bebeğe bakar", 
-            sub: "Eşinin geliri birkaç yıl kesilir", 
-            text: { tr: "Eşin işe ara verip bebeğe bakar", en: "Spouse takes temporary leave" }, 
-            stats: { social: +5, happy: +4 } 
-          },
-          { 
-            title: "Bebeği anne babana bırak", 
-            sub: "Neredeyse hiç masrafı yok · anne babanın desteğine yaslanırsın", 
-            text: { tr: "Bebeği anne babana bırak", en: "Leave baby with your parents" }, 
-            stats: { social: +8, happy: +6 } 
-          },
-          { 
-            title: "Bebeği kayınpederinin ve kayınvalidenin yanına bırak", 
-            sub: "Neredeyse hiç masraf yok · akraba desteği alırsın", 
-            text: { tr: "Bebeği kayınvalidene bırak", en: "Leave baby with in-laws" }, 
-            stats: { social: +6, happy: +4 } 
-          },
-          { 
-            title: "Bebeği yanında işe götür", 
-            sub: "Zor ama bebek yanında kalır", 
-            text: { tr: "Bebeği yanında işe götür", en: "Bring baby to work" }, 
-            stats: { health: -2, happy: +2 } 
-          }
-        ]
-      },
-      26: {
-        sceneType: 'work_office',
-        title: { tr: "Şehre taşınacak mısın?", en: "Will You Move to the City?" },
-        prompt: { tr: "Kırsal kesimde tarım geçimi zorlaştırıyor. Ülkenin büyük şehirlerinde ve başkentte daha çok iş var ama orada kimseyi tanımıyorsun.", en: "Rural subsistence farming is harsh. City centers offer more cash jobs, but you know nobody there." },
-        citation: { tr: "UN-Habitat verilerine göre Afrika ve Asya'da şehirlerde yaşayanların oranı her on yılda %5 artmaktadır (UN-Habitat Raporu).", en: "UN-Habitat reports urban population share expanding rapidly across developing nations." },
-        choices: [
-          { 
-            title: "Başkente / Şehre göç et (Kinşasa)", 
-            sub: "Gelir↑ İlişkiler↓ · Yeni bir hayat", 
-            text: { tr: "Başkente / Büyük şehre git (Gelir↑ İlişkiler↓)", en: "Migrate to the capital city" }, 
-            stats: { happy: -2, social: -4, incomeTL: 1800 } 
-          },
-          { 
-            title: "Memleketinde ve toprağında kal", 
-            sub: "Ailen ve sevdiklerin yanında", 
-            text: { tr: "Memleketinde kal", en: "Remain in your hometown" }, 
-            stats: { social: +6, happy: +4 } 
-          }
-        ]
-      },
-            27: {
-        sceneType: 'home_baby',
-        title: { tr: "2. Çocuğun olsun mu?", en: "Have a Second Child?" },
-        prompt: { tr: "Şu anda 1 çocuğun var. Eşin hanede bir çocuk daha olmasını istediğini söylüyor.", en: "You currently have 1 child. Your partner brings up having another child." },
-        citation: { tr: "UN WPP 2024 verilerine göre küresel doğurganlık hızı ülkeden ülkeye kadın başına 1.2 ila 6.1 çocuk arasında değişmektedir.", en: "UN WPP 2024 reports total fertility rates varying globally between 1.2 and 6.1 births per woman." },
-        choices: [
-          { 
-            title: "Çocuk sahibi ol", 
-            sub: "Mutluluk↑ Çocuk masrafı↑", 
-            text: { tr: "Çocuk sahibi ol (Mutluluk↑ Çocuk masrafı↑)", en: "Have a second child" }, 
-            stats: { happy: +12, social: +6, savingsTL: -850 } 
-          },
-          { 
-            title: "Şimdi değil", 
-            sub: "Şimdilik ertele", 
-            text: { tr: "Şimdi değil", en: "Not right now" }, 
-            stats: { happy: +1 } 
-          },
-          { 
-            title: "Artık çocuk yapma", 
-            sub: "Bir daha sormayacağız", 
-            text: { tr: "Artık çocuk yapma (Bir daha sormayacağız)", en: "No more children" }, 
-            stats: { happy: +2 } 
-          }
-        ]
-      },
-      30: {
-        sceneType: 'wedding',
-        title: { tr: "Yirmi beş yaş: Hayat Arkadaşı & Yuva", en: "Age Twenty-Five: Companionship & Foundation" },
-        prompt: { tr: "Yetişkinlik tüm gerçekliğiyle akıyor. Kariyer ve yuva kurma dengesi kuruluyor.", en: "You stand on your own feet. What guides your major life priorities?" },
-        citation: { tr: "Harvard Yetişkin Gelişimi Araştırması'na göre güçlü sevgi bağları, uzun yaşamın bir numaralı garantisidir.", en: "The Harvard Adult Development study proves warm relationships protect both brain and body." },
-        choices: [
-          { text: { tr: "Sevdiğin insanla evlenip yeni bir yuva kur", en: "Commit to a life partner and build a warm home" }, stats: { happy: +12, social: +8 } },
-          { text: { tr: "Kariyerinde hızla yükselmek için gece gündüz çalış", en: "Dedicate all energy to work promotions" }, stats: { edu: +8, health: -3 } },
-          { text: { tr: "Tasarruf yapıp ilk arabasını veya taşınmazını al", en: "Invest hard-earned savings into assets or a vehicle" }, stats: { happy: +8, edu: +4 } },
-          { text: { tr: "Dünyayı gez ve yeni kültürler keşfet", en: "Travel across frontiers and seek adventures" }, stats: { happy: +10, health: +4 } }
-        ]
-      },
-      38: {
-        sceneType: 'factory_business',
-        title: { tr: "Otuz sekiz yaş: Üretim, Fabrika & Yatırım", en: "Age Thirty-Eight: Enterprise & Growth" },
-        prompt: { tr: "Tecrübenin ve gücünün zirvesindesin. Gelecek nesillere aktaracağın miras şekilleniyor.", en: "You reach mature authority. How do you scale your endeavors?" },
-        citation: { tr: "Ekonomik sosyolojiye göre orta yaşta kurulan işletmeler en yüksek istihdam dayanıklılığına sahiptir.", en: "Mid-career entrepreneurial enterprises exhibit the highest long-term viability." },
-        choices: [
-          { text: { tr: "Kendi fabrikasını veya üretim atölyesini kur", en: "Establish a manufacturing plant or independent enterprise" }, stats: { edu: +10, happy: +8 } },
-          { text: { tr: "Ailene geniş bir ev satın alıp bahçesini donat", en: "Acquire a permanent family residence with a garden" }, stats: { happy: +10, social: +7 } },
-          { text: { tr: "Çocuklarının en iyi okullarda okumasına odaklan", en: "Direct all resources toward your children's schooling" }, stats: { social: +9, happy: +8 } },
-          { text: { tr: "Mesleğinde uzman danışman veya usta unvanını al", en: "Attain master practitioner or senior status" }, stats: { edu: +8, health: +4 } }
-        ]
-      },
-      65: {
-        sceneType: 'elder_garden',
-        title: { tr: "Altmış beş yaş: Emeklilik ve Huzur Çağı", en: "Age Sixty-Five: The Golden Years" },
-        prompt: { tr: "Yılların emeği geride kaldı. Artık ömrün meyvelerini toplama ve sevdiklerine vakit ayırma zamanı.", en: "Decades of toil bear fruit. Peace, reflections, and grandchildren beckon." },
-        citation: { tr: "Gerontolojiye göre ileri yaşta bahçe uğraşı ve torunlarla vakit geçirmek bilişsel berraklığı korur.", en: "Intergenerational contact and gardening sustain physical and mental longevity." },
-        choices: [
-          { text: { tr: "Bahçe işleriyle uğraş, çiçekler yetiştirip huzur bul", en: "Tend your flowers and embrace peaceful nature" }, stats: { health: +7, happy: +9 } },
-          { text: { tr: "Torunlarına hayat hikayelerini anlat ve sevgiyle sarıl", en: "Cherish grandchildren and impart ancestral wisdom" }, stats: { social: +10, happy: +10 } },
-          { text: { tr: "Anılarını kaleme al ve bir hatıra kitabı yaz", en: "Write your memoirs to leave behind for family" }, stats: { edu: +8, happy: +6 } },
-          { text: { tr: "Mahallenin bilge büyüğü olarak gençlere yol göster", en: "Act as a revered neighborhood mentor and elder" }, stats: { social: +8, happy: +7 } }
-        ]
       }
     };
+
+    // ------------------------------------------------------------------------
+    // DYNAMIC & RELATIONSHIP-AWARE MILESTONES ENGINE
+    // ------------------------------------------------------------------------
+    function getDynamicMilestone(age) {
+      if (!currentSim) return null;
+      const c = currentSim.country;
+      const cName = c[currentLang] || c.name;
+      const hasPartner = !!currentSim.partner;
+      const isMarried = !!currentSim.isMarried;
+      const hasChildren = currentSim.children && currentSim.children.length > 0;
+
+      // Static early milestones
+      if ([6, 12, 15, 18, 19].includes(age)) {
+        return MILESTONES[age] || null;
+      }
+
+      // Age 22: Love Knocks at the Door (Candidate matching user's country & opposite gender)
+      if (age === 22) {
+        if (!currentSim.candidatePartner) {
+          const pGender = currentSim.gender === 'female' ? 'male' : 'female';
+          const fList = pGender === 'female' ? c.femaleNames : c.maleNames;
+          const fName = fList[Math.floor(Math.random() * fList.length)];
+          const sName = c.surnames[Math.floor(Math.random() * c.surnames.length)];
+          const jTitle = c.jobs[Math.floor(Math.random() * c.jobs.length)];
+          currentSim.candidatePartner = { name: `${fName} ${sName}`, gender: pGender, job: jTitle };
+        }
+        const partner = currentSim.candidatePartner;
+        return {
+          sceneType: 'date_cafe',
+          title: { tr: "Aşk kapını çaldı", en: "Love Knocks at the Door" },
+          prompt: { 
+            tr: `${cName}'da samimi ve hoş sohbet biriyle tanıştın: ${partner.name} (${partner.job}). Aranızda sıcak bir yakınlaşma başladı.`, 
+            en: `You met someone warm and charming: ${partner.name} (${partner.job}). A spark begins to grow between you.` 
+          },
+          citation: { 
+            tr: `${cName}'da ve dünyada ilk birliktelik yaş ortalaması 22-26 arasındadır (BM Nüfus Verileri).`, 
+            en: "UN Population Data estimates early romantic partnerships average between ages 22-26 globally." 
+          },
+          choices: [
+            {
+              title: "Görüşmeyi dene (Flört et)",
+              sub: "Birbirinizi tanıma zamanı · evlilik daha sonra",
+              text: { tr: "Görüşmeyi dene (Birbirinizi tanıma zamanı · evlilik daha sonra)", en: "Start dating and get to know each other" },
+              action: () => {
+                currentSim.partner = { name: partner.name, gender: partner.gender, job: partner.job, status: 'dating' };
+                currentSim.relationshipStatus = 'dating';
+              },
+              stats: { social: +10, happy: +12 }
+            },
+            {
+              title: "İçinden gelmiyor (Bekar kal)",
+              sub: "Kendi yolunda ilerle · şu an aşka hazır değilsin",
+              text: { tr: "İçinden gelmiyor (Bekar kal ve kariyerine odaklan)", en: "Politely decline and remain single" },
+              action: () => {
+                currentSim.partner = null;
+                currentSim.relationshipStatus = 'single';
+              },
+              stats: { happy: +4 }
+            }
+          ]
+        };
+      }
+
+      // Age 23: The Marriage Conversation (if dating) OR Career Leap (if single)
+      if (age === 23) {
+        if (hasPartner && currentSim.relationshipStatus === 'dating') {
+          return {
+            sceneType: 'wedding',
+            title: { tr: "Evlilik ve Gelecek Konuşması", en: "The Marriage Conversation" },
+            prompt: { 
+              tr: `${currentSim.partner.name} ile 1 yıldır birliktesiniz. ${currentSim.partner.name} ciddi bir ilişki ve evlilik konusunu açıyor.`, 
+              en: `You have been together with ${currentSim.partner.name} for a year. They bring up marriage and building a future together.` 
+            },
+            citation: { 
+              tr: "Dünya genelinde çiftlerin %53'ü nişanlanmadan önce en az bir veya iki yıl flört dönemi geçirmektedir.", 
+              en: "Global surveys show 53% of couples date for 1-2 years before taking formal marriage steps." 
+            },
+            choices: [
+              {
+                title: "Evlen (Yeni bir yuva kur)",
+                sub: "Resmî birliktelik · Aileler tanışır",
+                text: { tr: "Evlen (Yeni bir yuva kur)", en: "Get married and unite your paths" },
+                action: () => {
+                  currentSim.isMarried = true;
+                  currentSim.relationshipStatus = 'married';
+                  currentSim.partner.status = 'married';
+                  currentSim.sceneOverride = 'wedding';
+                  currentSim.sceneOverrideAge = 23;
+                },
+                stats: { social: +14, happy: +18 }
+              },
+              {
+                title: "Düğünü ertele, biraz daha çıkın",
+                sub: "Acele yok · sevgili kalmaya devam edin",
+                text: { tr: "Düğünü ertele, biraz daha çıkın", en: "Postpone the wedding, keep dating comfortably" },
+                action: () => {
+                  currentSim.relationshipStatus = 'dating';
+                },
+                stats: { social: +5, happy: +5 }
+              },
+              {
+                title: "Yolları ayır (Ayrıl)",
+                sub: "Farklı hedefleriniz olduğunu fark edip ayrıl",
+                text: { tr: "Yolları ayır (Ayrıl)", en: "Break up amicably" },
+                action: () => {
+                  currentSim.partner = null;
+                  currentSim.relationshipStatus = 'single';
+                },
+                stats: { social: -6, happy: -8 }
+              }
+            ]
+          };
+        } else {
+          // Single: Career leap & Independence
+          return {
+            sceneType: 'work_office',
+            title: { tr: "23 Yaş: Mesleki Gelişim ve Bağımsızlık", en: "Age 23: Career Leap & Independence" },
+            prompt: { 
+              tr: "23 yaşındasın. Enerjini tamamen işine, üretkenliğe ve yeteneklerini geliştirmeye harcıyorsun.", 
+              en: "At 23, you pour your energy into personal mastery, skills, and financial autonomy." 
+            },
+            citation: { 
+              tr: "Kariyer araştırmalarına göre 20'li yaşların başındaki beceri yatırımları ömür boyu kazanç potansiyelini katlar.", 
+              en: "Skill investments in early twenties compound lifetime earning trajectories by up to 40%." 
+            },
+            choices: [
+              {
+                title: "İşine asıl ve yeni uzmanlık sertifikası al",
+                sub: "Kıdem ve tecrübe kazan",
+                text: { tr: "İşine asıl ve yeni uzmanlık sertifikası al", en: "Focus intensely on work and certifications" },
+                stats: { edu: +10, happy: +8, savingsTL: 500 }
+              },
+              {
+                title: "Dost çevreni genişlet ve şehri keşfet",
+                sub: "Sosyal çevre ve kültürel etkinlikler",
+                text: { tr: "Dost çevreni genişlet ve şehri keşfet", en: "Expand your social circle and explore the city" },
+                stats: { social: +12, happy: +10 }
+              },
+              {
+                title: "Sıkı tasarruf yap, birikim havuzunu büyüt",
+                sub: "Gelecek güvencesi",
+                text: { tr: "Sıkı tasarruf yap, birikim havuzunu büyüt", en: "Budget tightly and expand your cash reserves" },
+                stats: { happy: +5, savingsTL: 900 }
+              }
+            ]
+          };
+        }
+      }
+
+      // Age 24: Newborn Baby (ONLY if married or dating) OR Independence & Living Space (if single)
+      if (age === 24) {
+        if (isMarried || (hasPartner && currentSim.relationshipStatus === 'dating')) {
+          const babyGender = Math.random() < 0.5 ? 'female' : 'male';
+          const nameList = babyGender === 'female' ? c.femaleNames : c.maleNames;
+          const babyName = nameList[Math.floor(Math.random() * nameList.length)];
+          const partnerStr = currentSim.partner ? `${currentSim.partner.name} ile birlikte ` : '';
+          return {
+            sceneType: 'newborn_baby',
+            title: { tr: `Bir ${babyGender === 'female' ? 'kız' : 'erkek'} bebeğin dünyaya geldi: ${babyName}`, en: `A ${babyGender === 'female' ? 'Daughter' : 'Son'} is Born: ${babyName}` },
+            prompt: { 
+              tr: `${partnerStr}hastanede ilk kez bebeğinizi kucağınıza aldınız. Minik elleriyle parmağını tuttu. Artık bir ebeveynsin.`, 
+              en: `You hold your newborn ${babyName} in your arms for the first time. You are now a parent.` 
+            },
+            citation: { 
+              tr: "Dünya genelinde ilk ebeveynlik deneyimi bireylerin empati ve sorumluluk duygusunu en çok yükselten yaşam evresidir.", 
+              en: "Transition to parenthood globally reshapes life priorities and social bonds profoundly." 
+            },
+            choices: [
+              {
+                title: "Tüm sevginle bebeğe sarıl ve ilgilen",
+                sub: "Aile bağı en büyük zenginlik",
+                text: { tr: "Tüm gücünle bebeğe sarıl ve koru", en: "Hold them close and nurture them lovingly" },
+                action: () => {
+                  currentSim.children.push({ name: babyName, gender: babyGender, age: 0 });
+                  currentSim.sceneOverride = 'newborn_baby';
+                  currentSim.sceneOverrideAge = 24;
+                },
+                stats: { social: +12, happy: +18 }
+              },
+              {
+                title: "Daha fazla çalışıp bebeğin geleceğini hazırla",
+                sub: "Gece gündüz emek verip güvence sağla",
+                text: { tr: "Daha fazla çalışıp bebeğin geleceğini hazırla", en: "Work tirelessly to secure nutrition and future savings" },
+                action: () => {
+                  currentSim.children.push({ name: babyName, gender: babyGender, age: 0 });
+                  currentSim.sceneOverride = 'newborn_baby';
+                  currentSim.sceneOverrideAge = 24;
+                },
+                stats: { health: -2, social: +6, happy: +12 }
+              }
+            ]
+          };
+        } else {
+          // Completely single: ZERO baby! Living arrangement decision
+          return {
+            sceneType: 'work_office',
+            title: { tr: "24 Yaş: Kendi Düzenini Kurmak", en: "Age 24: Establishing Personal Independence" },
+            prompt: { 
+              tr: "24 yaşındasın. Kendi yaşam alanını ve bağımsız bütçeni düzenlemek istiyorsun.", 
+              en: "At 24, you evaluate your personal living arrangements and financial independence." 
+            },
+            citation: { 
+              tr: "20'li yaşlarda kendi bütçesini yöneten bireyler 30 yaşına ulaştığında çok daha yüksek finansal dayanıklılığa sahip olmaktadır.", 
+              en: "Early independent budgeting correlates with substantially higher financial resilience by age 30." 
+            },
+            choices: [
+              {
+                title: "Ayrı bir eve çık, kendi bağımsız düzenini kur",
+                sub: "Kişisel özgürlük ve alan",
+                text: { tr: "Ayrı bir eve çık, kendi bağımsız düzenini kur", en: "Rent an independent flat for total autonomy" },
+                stats: { happy: +12, social: +6 }
+              },
+              {
+                title: "Aile evinde kalıp birikimlerini katla",
+                sub: "Hızlı tasarruf ve güvenli liman",
+                text: { tr: "Aile evinde kalıp birikimlerini katla", en: "Remain with family to accelerate savings" },
+                stats: { happy: +5, savingsTL: 1000 }
+              },
+              {
+                title: "Kısa bir keşif gezisine çık, yeni şehirler gör",
+                sub: "Ufuk açıcı deneyim",
+                text: { tr: "Kısa bir keşif gezisine çık, yeni şehirler gör", en: "Take an exploratory journey to neighboring cities" },
+                stats: { happy: +12, health: +4 }
+              }
+            ]
+          };
+        }
+      }
+
+      // Age 25: Childcare (if has children) OR Quarter-Century Lifestyle (if no child)
+      if (age === 25) {
+        if (hasChildren) {
+          const firstChild = currentSim.children[0];
+          return {
+            sceneType: 'home_baby',
+            title: { tr: `Kim ${firstChild.name}'e baksın?`, en: `Childcare Decisions for ${firstChild.name}` },
+            prompt: { 
+              tr: `Çocuğun ${firstChild.name} 1 yaşına girdi. Çalışma hayatı ve bebek bakımı dengesi kuruluyor.`, 
+              en: `Your child ${firstChild.name} turns 1 year old. You navigate the delicate balance between work and childcare.` 
+            },
+            citation: { 
+              tr: "Erken çocuklukta aile büyüklerinin desteği ve nitelikli bakım, çocuğun bilişsel gelişimini olumlu etkiler.", 
+              en: "Early parental and extended family warmth provides foundational psychological security." 
+            },
+            choices: [
+              {
+                title: "Büyükanne ve aile desteğiyle büyütün",
+                sub: "Aile sıcaklığı ve geleneksel destek",
+                text: { tr: "Büyükanne ve aile desteğiyle büyütün", en: "Rely on grandparents and extended family warmth" },
+                stats: { social: +10, happy: +8 }
+              },
+              {
+                title: "Sen veya eşin işe biraz ara verip ilgilenin",
+                sub: "Birebir ebeveyn ilgisi",
+                text: { tr: "İşe biraz ara verip çocuğa kendin bak", en: "Take a temporary parental pause to care directly" },
+                stats: { social: +12, happy: +12, savingsTL: -300 }
+              },
+              {
+                title: "Mahalle kreşine / bakımevine yazdır",
+                sub: "Sosyal gelişim ve erken sosyalleşme",
+                text: { tr: "Mahalle kreşine yazdır", en: "Enroll in local community daycare" },
+                stats: { edu: +6, happy: +6 }
+              }
+            ]
+          };
+        } else {
+          return {
+            sceneType: 'work_office',
+            title: { tr: "25 Yaş: Çeyrek Asır & Kişisel Vizyon", en: "Age 25: Quarter-Century Milestone" },
+            prompt: { 
+              tr: "25 yaşına bastın. Çeyrek asrı geride bıraktın. Önündeki yıllarda odağın ne olacak?", 
+              en: "You reach age twenty-five. With mature clarity, what path will you prioritize?" 
+            },
+            citation: { 
+              tr: "Harvard Yetişkin Gelişimi Araştırması'na göre dengeli alışkanlıklar ve güçlü dostluklar uzun ömrün anahtarıdır.", 
+              en: "Harvard Adult Development study confirms lifestyle consistency in mid-twenties predicts longevity." 
+            },
+            choices: [
+              {
+                title: "Mesleğinde uzmanlığa ve yüksek gelire odaklan",
+                sub: "Kariyer basamakları",
+                text: { tr: "Mesleğinde uzmanlığa ve yüksek gelire odaklan", en: "Focus relentlessly on professional mastery and income" },
+                stats: { edu: +10, happy: +8, savingsTL: 700 }
+              },
+              {
+                title: "Sağlık, spor ve düzenli spor disiplini kazan",
+                sub: "Kuvvetli beden ve zindelik",
+                text: { tr: "Sağlık ve spor disiplini kazan", en: "Commit to daily fitness and wellness habits" },
+                stats: { health: +12, happy: +8 }
+              },
+              {
+                title: "Sosyal bağlarını güçlendir, vefalı dostlar edin",
+                sub: "Derin dostluklar",
+                text: { tr: "Sosyal bağlarını güçlendir, vefalı dostlar edin", en: "Cultivate deep, loyal friendships and social ties" },
+                stats: { social: +12, happy: +10 }
+              }
+            ]
+          };
+        }
+      }
+
+      // Age 26: Metropolis vs Hometown
+      if (age === 26) {
+        const bigCity = (c.cities && c.cities.length > 0) ? c.cities[0] : 'Metropol';
+        return {
+          sceneType: 'first_car',
+          title: { tr: "Büyük Şehir Fırsatları mı, Memleket Huzuru mu?", en: "Urban Migration or Hometown Roots?" },
+          prompt: { 
+            tr: `${bigCity} gibi büyük bir metropolde iş ve gelir olanakları daha geniş; memleketinde ise sevdiklerin ve sakin bir hayat var.`, 
+            en: `The major city of ${bigCity} offers higher economic prospects, while staying in your hometown preserves warm roots and quiet comfort.` 
+          },
+          citation: { 
+            tr: "UN-Habitat raporuna göre küresel kentleşme oranı her on yılda %5 oranında artış göstermektedir.", 
+            en: "UN-Habitat reports urban migration continues to drive economic mobility worldwide." 
+          },
+          choices: [
+            {
+              title: `Büyük şehre taşın (${bigCity})`,
+              sub: "Gelir fırsatı · Yeni bir sayfa",
+              text: { tr: `Büyük şehre taşın (${bigCity})`, en: `Relocate to the major city of ${bigCity}` },
+              stats: { happy: +4, edu: +8, social: -2, savingsTL: 600 }
+            },
+            {
+              title: "Memleketinde kal, sevdiklerinden ayrılma",
+              sub: "Aileni ve huzurunu koru",
+              text: { tr: "Memleketinde kal, sevdiklerinden ayrılma", en: "Remain rooted in your hometown among lifelong friends" },
+              stats: { social: +10, happy: +8 }
+            }
+          ]
+        };
+      }
+
+      // Age 27: Second child (if has child) OR Financial Assets (if no child)
+      if (age === 27) {
+        if (hasChildren) {
+          const partnerMention = currentSim.partner ? `${currentSim.partner.name} ile ` : '';
+          return {
+            sceneType: 'home_baby',
+            title: { tr: "2. Çocuk Planı", en: "Second Child Planning" },
+            prompt: { 
+              tr: `Şu anda ${currentSim.children.length} çocuğun var. ${partnerMention}aileye yeni bir üyenin katılıp katılmamasını konuşuyorsunuz.`, 
+              en: `You currently have ${currentSim.children.length} child(ren). You discuss expanding your family.` 
+            },
+            citation: { 
+              tr: "UN WPP verilerine göre küresel doğurganlık hızı aile planlaması ve ekonomik istikrarla yakından ilişkilidir.", 
+              en: "UN World Population Prospects report total fertility rates reflect household stability and resources." 
+            },
+            choices: [
+              {
+                title: "Bir çocuk daha dünyaya gelsin",
+                sub: "Evin neşesi ikiye katlansın",
+                text: { tr: "Bir çocuk daha sahibi ol", en: "Welcome another child into the family" },
+                action: () => {
+                  const bGender2 = Math.random() < 0.5 ? 'female' : 'male';
+                  const nList = bGender2 === 'female' ? c.femaleNames : c.maleNames;
+                  const bName2 = nList[Math.floor(Math.random() * nList.length)];
+                  currentSim.children.push({ name: bName2, gender: bGender2, age: 0 });
+                },
+                stats: { happy: +14, social: +8, savingsTL: -400 }
+              },
+              {
+                title: "Şimdilik ertele, mevcut düzene odaklan",
+                sub: "Daha sonra tekrar değerlendir",
+                text: { tr: "Şimdilik ertele, mevcut düzene odaklan", en: "Postpone for now, focus on current balance" },
+                stats: { happy: +2 }
+              },
+              {
+                title: "Artık çocuk düşünmüyoruz",
+                sub: "Aile planlamamız tamam",
+                text: { tr: "Artık çocuk düşünmüyoruz", en: "We are content with our current family size" },
+                stats: { happy: +2 }
+              }
+            ]
+          };
+        } else {
+          return {
+            sceneType: 'work_office',
+            title: { tr: "27 Yaş: Finansal Güç ve Yatırım", en: "Age 27: Asset Growth & Financial Security" },
+            prompt: { 
+              tr: "27 yaşındasın. Geleceğini güvence altına almak için birikimlerini değerlendirme arifesindesin.", 
+              en: "At 27, you weigh investment strategies to secure lasting financial freedom." 
+            },
+            citation: { 
+              tr: "Dünya Bankası verilerine göre erken yaşta edinilen varlıklar gelecekteki enflasyon karşısında en güçlü koruyucudur.", 
+              en: "Tangible asset ownership built before thirty shields households against economic volatility." 
+            },
+            choices: [
+              {
+                title: "Tasarruflarını gayrimenkul veya altına yatır",
+                sub: "Kalıcı değer",
+                text: { tr: "Tasarruflarını gayrimenkul veya altına yatır", en: "Invest savings into durable assets or gold" },
+                stats: { happy: +8, savingsTL: 1200 }
+              },
+              {
+                title: "Kendine yatırım yap; yeni yabancı dil veya dijital beceri öğren",
+                sub: "Entelektüel sermaye",
+                text: { tr: "Kendine yatırım yap; yabancı dil veya dijital beceri öğren", en: "Invest in high-income skills or languages" },
+                stats: { edu: +12, happy: +8 }
+              },
+              {
+                title: "Dünyayı gez; farklı kültürleri yerinde deneyimle",
+                sub: "Unutulmaz hayat tecrübesi",
+                text: { tr: "Dünyayı gez; farklı kültürleri yerinde deneyimle", en: "Travel abroad to discover foreign cultures" },
+                stats: { happy: +14, health: +4 }
+              }
+            ]
+          };
+        }
+      }
+
+      // Age 30: Crossroads (respecting single/married status)
+      if (age === 30) {
+        const choices = isMarried ? [
+          { text: { tr: "Ailen ve eşinle birlikte kalıcı bir ev sahibi ol", en: "Purchase a permanent family home with your partner" }, stats: { happy: +12, social: +8 } },
+          { text: { tr: "Kariyerinde yöneticiliğe terfi et, gece gündüz çalış", en: "Advance to executive ranks through dedication" }, stats: { edu: +10, health: -2, savingsTL: 1000 } },
+          { text: { tr: "Tasarruflarını yatırıma dönüştür, geleceği garantiye al", en: "Channel savings into long-term investments" }, stats: { happy: +8, savingsTL: 1500 } },
+          { text: { tr: "Ailece yeni bir ülkeye tatile çık", en: "Take an unforgettable family holiday abroad" }, stats: { happy: +12, health: +4 } }
+        ] : [
+          { text: { tr: "Mesleki uzmanlığa ve üretkenliğe odaklan", en: "Focus on professional mastery and output" }, stats: { edu: +10, happy: +6 } },
+          { text: { tr: "Sosyal bağlarını ve dostluklarını güçlendir", en: "Deepen friendships and community connections" }, stats: { social: +12, happy: +8 } },
+          { text: { tr: "Tasarruflarını değerlendir, geleceğini garantiye al", en: "Invest hard-earned savings into assets" }, stats: { happy: +6, edu: +4, savingsTL: 1200 } },
+          { text: { tr: "Yeni aşklara ve kültürlere kalbini aç, seyahat et", en: "Open your heart to new romance and travel" }, stats: { happy: +12, health: +4 } }
+        ];
+
+        return {
+          sceneType: isMarried ? 'family_home' : 'work_office',
+          title: { tr: "Otuz yaş: Yaşam Yolculuğunda Dönüm Noktası", en: "Age Thirty: Major Crossroads" },
+          prompt: { tr: "Otuz yaşındasın. Gençliğin heyecanları yerini hayatın gerçeklerine ve kalıcı hedeflere bırakıyor. Önceliğin ne olacak?", en: "At thirty, life enters mature rhythm. What guides your major priorities now?" },
+          citation: { tr: "Harvard Yetişkin Gelişimi Araştırması'na göre dengeli ilişkiler ve düzenli alışkanlıklar, uzun yaşamın en güçlü belirleyicisidir.", en: "The Harvard Adult Development study proves strong bonds and daily consistency protect wellbeing." },
+          choices: choices
+        };
+      }
+
+      // Age 38: Enterprise & Mid-Career (respecting hasChildren)
+      if (age === 38) {
+        const choices = [
+          { text: { tr: "Kendi fabrikasını veya üretim atölyesini kur", en: "Establish a manufacturing plant or independent enterprise" }, stats: { edu: +10, happy: +8 } },
+          { text: { tr: "Geniş bir ev satın alıp bahçesini donat", en: "Acquire a permanent residence with a lush garden" }, stats: { happy: +10, social: +7 } },
+          hasChildren 
+            ? { text: { tr: "Çocuklarının en iyi okullarda okumasına odaklan", en: "Direct all resources toward your children's schooling" }, stats: { social: +9, happy: +8 } }
+            : { text: { tr: "Gençlere ve öğrencilere burs / mentörlük desteği ver", en: "Provide mentorship and educational stipends to youth" }, stats: { social: +10, happy: +9 } },
+          { text: { tr: "Mesleğinde uzman danışman veya usta unvanını al", en: "Attain master practitioner or senior status" }, stats: { edu: +8, health: +4 } }
+        ];
+
+        return {
+          sceneType: 'factory_business',
+          title: { tr: "Otuz sekiz yaş: Üretim, Fabrika & Yatırım", en: "Age Thirty-Eight: Enterprise & Growth" },
+          prompt: { tr: "Tecrübenin ve gücünün zirvesindesin. Gelecek nesillere aktaracağın miras şekilleniyor.", en: "You reach mature authority. How do you scale your endeavors?" },
+          citation: { tr: "Ekonomik sosyolojiye göre orta yaşta kurulan işletmeler en yüksek istihdam dayanıklılığına sahiptir.", en: "Mid-career entrepreneurial enterprises exhibit the highest long-term viability." },
+          choices: choices
+        };
+      }
+
+      // Age 65: Golden Retirement (respecting hasChildren)
+      if (age === 65) {
+        const choices = [
+          { text: { tr: "Bahçe işleriyle uğraş, çiçekler yetiştirip huzur bul", en: "Tend your flowers and embrace peaceful nature" }, stats: { health: +7, happy: +9 } },
+          hasChildren
+            ? { text: { tr: "Torunlarına hayat hikayelerini anlat ve sevgiyle sarıl", en: "Cherish grandchildren and impart ancestral wisdom" }, stats: { social: +10, happy: +10 } }
+            : { text: { tr: "Genç komşulara ve çıraklara hayat tecrübelerini anlat", en: "Mentor young neighbors and pass on life wisdom" }, stats: { social: +10, happy: +10 } },
+          { text: { tr: "Anılarını kaleme al ve bir hatıra kitabı yaz", en: "Write your memoirs to leave behind for the community" }, stats: { edu: +8, happy: +6 } },
+          { text: { tr: "Mahallenin bilge büyüğü olarak insanlara yol göster", en: "Act as a revered neighborhood elder and peacemaker" }, stats: { social: +8, happy: +7 } }
+        ];
+
+        return {
+          sceneType: 'elder_garden',
+          title: { tr: "Altmış beş yaş: Emeklilik ve Huzur Çağı", en: "Age Sixty-Five: The Golden Years" },
+          prompt: { tr: "Yılların emeği geride kaldı. Artık ömrün meyvelerini toplama ve huzur bulma zamanı.", en: "Decades of toil bear fruit. Peace, reflections, and serenity beckon." },
+          citation: { tr: "Gerontolojiye göre ileri yaşta sosyal bağlar ve doğayla temas bilişsel berraklığı korur.", en: "Intergenerational contact and gardening sustain physical and mental longevity." },
+          choices: choices
+        };
+      }
+
+      return null;
+    }
 
     function renderProbabilityBars() {
       const container = document.getElementById('probabilityBarsContainer');
@@ -3574,7 +3857,8 @@
     function enableAutoDecideFromModal() {
       isAutoDecide = true;
       updateAutoDecideUI();
-      const options = MILESTONES[currentSim.currentAge]?.choices;
+      const milestone = currentSim._activeMilestone || getDynamicMilestone(currentSim.currentAge) || MILESTONES[currentSim.currentAge];
+      const options = milestone?.choices;
       if (options) {
         selectDecisionChoice(Math.floor(Math.random() * options.length));
       }
@@ -3582,8 +3866,8 @@
 
     function skipToNextDecision() {
       if (!currentSim || !currentSim.isAlive) return;
-      const ages = Object.keys(MILESTONES).map(Number).sort((a, b) => a - b);
-      const nextAge = ages.find(a => a > currentSim.currentAge);
+      const allMilestoneAges = [6, 12, 15, 18, 19, 22, 23, 24, 25, 26, 27, 30, 38, 65];
+      const nextAge = allMilestoneAges.find(a => a > currentSim.currentAge);
       if (nextAge) {
         while (currentSim.currentAge < nextAge && currentSim.isAlive) {
           simTickYear(true);
@@ -3640,13 +3924,15 @@
         return;
       }
 
-      if (MILESTONES[currentSim.currentAge]) {
-        currentSceneType = MILESTONES[currentSim.currentAge].sceneType;
+      const milestone = getDynamicMilestone(currentSim.currentAge);
+      if (milestone) {
+        currentSceneType = milestone.sceneType || 'work_office';
+        currentSim._activeMilestone = milestone;
         if (isAutoDecide) {
-          const choices = MILESTONES[currentSim.currentAge].choices;
+          const choices = milestone.choices;
           selectDecisionChoice(Math.floor(Math.random() * choices.length), true);
         } else {
-          showDecisionModal(currentSim.currentAge);
+          showDecisionModal(currentSim.currentAge, milestone);
           return;
         }
       }
@@ -3875,8 +4161,14 @@
       }
       // 34 YAŞ
       else if (age === 34) {
-        addTimelineEvent(34, 'Evin içinde çocuk sesleri ve neşeli koşuşturmacalar hayatına bambaşka bir anlam katıyor.');
-        addTimelineEvent(34, 'Çocukların okul hazırlıklarıyla ilgilendin; onların büyümesini izlemek en büyük mutluluğun.');
+        const hasChildren = currentSim.children && currentSim.children.length > 0;
+        if (hasChildren) {
+          addTimelineEvent(34, 'Evin içinde çocuk sesleri ve neşeli koşuşturmacalar hayatına bambaşka bir anlam katıyor.');
+          addTimelineEvent(34, 'Çocukların okul hazırlıklarıyla ilgilendin; onların büyümesini izlemek en büyük mutluluğun.');
+        } else {
+          addTimelineEvent(34, 'Kendi kurduğun bağımsız yaşam düzeninde huzurlu ve üretken bir yıl geçirdin.');
+          addTimelineEvent(34, 'Dostlarınla sık sık buluşup keyifli akşam yemekleri paylaştınız; hayatın tadını çıkardın.');
+        }
       }
       // 35 YAŞ
       else if (age === 35) {
@@ -3916,7 +4208,12 @@
       }
       // 44 YAŞ
       else if (age === 44) {
-        addTimelineEvent(44, 'Çocuğunun mezuniyet töreninde gözlerin gururla doldu; emeklerinin karşılığını görmek paha biçilemez.');
+        const hasChildren = currentSim.children && currentSim.children.length > 0;
+        if (hasChildren) {
+          addTimelineEvent(44, 'Çocuğunun mezuniyet töreninde gözlerin gururla doldu; emeklerinin karşılığını görmek paha biçilemez.');
+        } else {
+          addTimelineEvent(44, 'Mesleğinde zirve noktaya ulaştın; yılların emeğiyle saygın bir kıdem edinmenin gururunu yaşadın.');
+        }
       }
       // 45 YAŞ
       else if (age === 45) {
@@ -3924,11 +4221,20 @@
       }
       // 46 YAŞ
       else if (age === 46) {
-        addTimelineEvent(46, 'Çocukların üniversite ve iş için evden ayrılmaya başladı; ev biraz sessizleşti ama gururunuz taze.');
+        const hasChildren = currentSim.children && currentSim.children.length > 0;
+        if (hasChildren) {
+          addTimelineEvent(46, 'Çocukların üniversite ve iş için evden ayrılmaya başladı; ev biraz sessizleşti ama gururunuz taze.');
+        } else {
+          addTimelineEvent(46, 'Kendi emeğinle oluşturduğun yaşam alanında dingin ve huzurlu akşamlara şükrettin; yeni bir yaratıcı hobiye başladın.');
+        }
       }
       // 47 YAŞ
       else if (age === 47) {
-        addTimelineEvent(47, 'Eşinle baş başa kalarak gençlik günlerinizi yad ettiğiniz sakin akşam yürüyüşleri yaptınız.');
+        if (currentSim.partner) {
+          addTimelineEvent(47, 'Eşinle baş başa kalarak gençlik günlerinizi yad ettiğiniz sakin akşam yürüyüşleri yaptınız.');
+        } else {
+          addTimelineEvent(47, 'Kadim dostlarınla bir araya gelip gençlik günlerinizi yad ettiğiniz sakin akşam sohbetleri yaptınız.');
+        }
       }
       // 48 YAŞ
       else if (age === 48) {
@@ -3944,20 +4250,36 @@
       }
       // 51-54 YAŞ
       else if (age >= 51 && age <= 54) {
-        addTimelineEvent(age, `İş ve aile hayatında bir bilge gibi danışılan, saygı gören kıdemli bir döneme girdin (${age} yaş).`);
+        addTimelineEvent(age, `İş ve sosyal hayatında bir bilge gibi danışılan, saygı gören kıdemli bir döneme girdin (${age} yaş).`);
       }
       // 55 YAŞ
       else if (age === 55) {
-        addTimelineEvent(55, 'Büyük bir mucize: İlk torunun dünyaya geldi! Kucağına aldığında hissettiğin sevgi kelimelere sığmadı.');
-        currentSim.happiness = Math.min(100, currentSim.happiness + 20);
+        const hasChildren = currentSim.children && currentSim.children.length > 0;
+        if (hasChildren) {
+          addTimelineEvent(55, 'Büyük bir mucize: İlk torunun dünyaya geldi! Kucağına aldığında hissettiğin sevgi kelimelere sığmadı.');
+          currentSim.happiness = Math.min(100, currentSim.happiness + 20);
+        } else {
+          addTimelineEvent(55, '55. yaş dönümü: Hayatının en özgür ve bilge dönemindesin. Yeğenlerin ve genç dostların senin öğütlerine kulak veriyor.');
+          currentSim.happiness = Math.min(100, currentSim.happiness + 15);
+        }
       }
       // 56-59 YAŞ
       else if (age >= 56 && age <= 59) {
-        addTimelineEvent(age, 'Torununu parka götürmek, ona pamuk şeker almak ve masallar anlatmak en büyük neşen haline geldi.');
+        const hasChildren = currentSim.children && currentSim.children.length > 0;
+        if (hasChildren) {
+          addTimelineEvent(age, 'Torununu parka götürmek, ona pamuk şeker almak ve masallar anlatmak en büyük neşen haline geldi.');
+        } else {
+          addTimelineEvent(age, 'Sabah yürüyüşleri, sevdiğin kitaplar ve bahçe uğraşıyla geçen huzurlu ve saygın bir ömür ritmi...');
+        }
       }
       // 60 YAŞ
       else if (age === 60) {
-        addTimelineEvent(60, '60. yaş kutlaması: Bütün çocuklar, torunlar ve akrabalar senin etrafında sevgiyle kenetlendi.');
+        const hasChildren = currentSim.children && currentSim.children.length > 0;
+        if (hasChildren) {
+          addTimelineEvent(60, '60. yaş kutlaması: Bütün çocuklar, torunlar ve akrabalar senin etrafında sevgiyle kenetlendi.');
+        } else {
+          addTimelineEvent(60, '60. yaş kutlaması: Kadim dostların, komşuların ve tüm sevdiklerin seninle bu özel günü sevinçle kutladı.');
+        }
       }
       // 61-64 YAŞ
       else if (age >= 61 && age <= 64) {
@@ -3969,10 +4291,15 @@
       }
       // 66+ YAŞ
       else if (age >= 66) {
+        const hasChildren = currentSim.children && currentSim.children.length > 0;
+        const familyOrFriendEvent = hasChildren 
+          ? 'Torunların ziyarete geldi; evin içi neşeyle ve çocuk kahkahalarıyla doldu.'
+          : 'Genç komşular ve vefalı dostlar halini hatırını sormaya geldi; tatlı sohbetlerle gününüz şenlendi.';
+
         const elderEvents = [
           'Verandada sıcak çayını yudumlarken bahçedeki çiçekleri suladın.',
           'Eski bir fotoğraf albümünü açıp gençlik yıllarının tatlı anılarına daldın.',
-          'Torunların ziyarete geldi; evin içi neşeyle ve çocuk kahkahalarıyla doldu.',
+          familyOrFriendEvent,
           'Güneşli bir ikindi vaktinde mahalledeki eski dostlarla çınar altında sohbet ettin.',
           'Radyodan gelen nostaljik bir ezgi sana geçmiş yılların güzel günlerini hatırlattı.',
           'Hayatın boyunca biriktirdiğin dostluklar ve temiz bir vicdan sana sonsuz bir iç huzuru veriyor.'
@@ -4266,12 +4593,13 @@
       }
     }
 
-    function showDecisionModal(age) {
+    function showDecisionModal(age, milestoneParam = null) {
       isPlaying = false;
       updatePlayPauseButton();
 
-      const milestone = MILESTONES[age];
+      const milestone = milestoneParam || currentSim._activeMilestone || getDynamicMilestone(age) || MILESTONES[age];
       if (!milestone) return;
+      currentSim._activeMilestone = milestone;
 
       document.getElementById('modalAgeYearTag').textContent = `Yaş ${age} · ${currentSim.currentYear}`;
       document.getElementById('modalDecisionTitle').textContent = milestone.title[currentLang] || milestone.title.tr;
@@ -4279,7 +4607,7 @@
       const citeText = document.getElementById('modalCitationText'); 
       if (citeText) citeText.textContent = milestone.citation[currentLang] || milestone.citation.tr;
 
-      drawSceneToCanvas('modalSceneCanvas', milestone.sceneType);
+      drawSceneToCanvas('modalSceneCanvas', milestone.sceneType || 'work_office');
 
       const container = document.getElementById('modalOptionsContainer');
       container.innerHTML = '';
@@ -4319,17 +4647,32 @@
     }
 
     function selectDecisionChoice(idx, auto = false) {
-      const milestone = MILESTONES[currentSim.currentAge];
-      if (!milestone) return;
+      const milestone = currentSim._activeMilestone || getDynamicMilestone(currentSim.currentAge) || MILESTONES[currentSim.currentAge];
+      if (!milestone || !milestone.choices || !milestone.choices[idx]) return;
 
       const choice = milestone.choices[idx];
-      if (choice.stats.health) currentSim.health = Math.min(100, Math.max(10, currentSim.health + choice.stats.health));
-      if (choice.stats.happy) currentSim.happiness = Math.min(100, Math.max(10, currentSim.happiness + choice.stats.happy));
-      if (choice.stats.edu) currentSim.education = Math.min(100, currentSim.education + choice.stats.edu);
-      if (choice.stats.social) currentSim.social = Math.min(100, currentSim.social + choice.stats.social);
+      if (choice.stats) {
+        if (choice.stats.health) currentSim.health = Math.min(100, Math.max(10, currentSim.health + choice.stats.health));
+        if (choice.stats.happy) currentSim.happiness = Math.min(100, Math.max(10, currentSim.happiness + choice.stats.happy));
+        if (choice.stats.edu) currentSim.education = Math.min(100, currentSim.education + choice.stats.edu);
+        if (choice.stats.social) currentSim.social = Math.min(100, currentSim.social + choice.stats.social);
+        if (choice.stats.savingsTL) currentSim.savingsTL = (currentSim.savingsTL || 0) + choice.stats.savingsTL;
+        if (choice.stats.incomeTL) currentSim.annualIncomeTL = choice.stats.incomeTL;
+      }
 
-      addTimelineEvent(currentSim.currentAge, `Karar: "${choice.text[currentLang] || choice.text.tr}" seçildi.`);
+      // Execute custom action callback (setting partner, children, marital status, scene override)
+      if (typeof choice.action === 'function') {
+        try {
+          choice.action();
+        } catch(e) {
+          console.error('Error executing decision action:', e);
+        }
+      }
 
+      const choiceText = choice.title || (choice.text ? (choice.text[currentLang] || choice.text.tr) : '');
+      addTimelineEvent(currentSim.currentAge, `Karar: "${choiceText}" seçildi.`);
+
+      currentSim._activeMilestone = null;
       document.getElementById('decisionModal').classList.add('hidden');
 
       if (!auto) {
