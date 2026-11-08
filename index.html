@@ -99,6 +99,34 @@
     ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: #475569; }
   </style>
+  <style>
+    /* Hide Netlify platform badge iframe */
+    #nl-badge-frame, #nl-hud-frame, iframe[id*="nl-"], iframe[title*="Netlify"], #netlify-badge, .netlify-badge, [data-netlify-badge] {
+      display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+      width: 0 !important;
+      height: 0 !important;
+      position: absolute !important;
+      left: -9999px !important;
+      bottom: -9999px !important;
+      clip-path: circle(0) !important;
+    }
+  </style>
+  <script>
+    (function() {
+      const killBadge = () => {
+        const f = document.getElementById('nl-badge-frame') || document.getElementById('nl-hud-frame') || document.querySelector('iframe[title*="Netlify"]');
+        if (f) f.remove();
+      };
+      if (window.MutationObserver) {
+        new MutationObserver(killBadge).observe(document.documentElement, { childList: true, subtree: true });
+      }
+      window.addEventListener('DOMContentLoaded', killBadge);
+      window.addEventListener('load', killBadge);
+    })();
+  </script>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-indigo-500 selection:text-white">
 
