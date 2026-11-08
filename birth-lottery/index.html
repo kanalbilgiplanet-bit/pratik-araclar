@@ -3797,37 +3797,109 @@
         // ------------------------------------------------------------------------
     // 12. CHARMING COZY PIXEL ART & DYNAMIC SCENE ENGINE
     // ------------------------------------------------------------------------
+        // ------------------------------------------------------------------------
+    // 12. CONTINUOUS STORY-DRIVEN LIVING SCENE ENGINE & DYNAMIC VISUAL AGING
+    // ------------------------------------------------------------------------
+
+    // Determines the visual scene every year according to age, decisions and life milestones
+    function getStoryDrivenScene(sim) {
+      if (!sim) return 'home_baby';
+      const age = sim.currentAge;
+
+      // Temporary recent override (e.g. just married, just bought car, just had baby)
+      if (sim.sceneOverride && sim.sceneOverrideAge === age) {
+        return sim.sceneOverride;
+      }
+
+      // 0-1: Baby in nursery
+      if (age <= 1) return 'home_baby';
+
+      // 2-3: Toddler taking first steps in living room with toy blocks
+      if (age <= 3) return 'toddler_room';
+
+      // 4-5: Playground with slide, swings and sandbox
+      if (age <= 5) return 'playground';
+
+      // 6-10: Primary elementary school with bell tower
+      if (age <= 10) return 'school';
+
+      // 11-14: Middle school neighborhood street with bicycle & soccer ball
+      if (age <= 14) return 'middle_school_street';
+
+      // 15-17: Teen street with headphones & stores
+      if (age <= 17) return 'teen_hangout';
+
+      // 18-21: University campus OR early work apprenticeship
+      if (age <= 21) {
+        return (sim.education > 50) ? 'university_campus' : 'early_work';
+      }
+
+      // 22-25: Romance date cafe OR city career
+      if (age <= 25) {
+        if (sim.partner) return 'date_cafe';
+        return 'teen_hangout';
+      }
+
+      // 26-32: First car OR wedding OR family with baby
+      if (age <= 32) {
+        if (sim.assets?.hasCar && age <= 28) return 'first_car';
+        if (sim.isMarried && age <= 27) return 'wedding';
+        if (sim.children && sim.children.length > 0) return 'family_home';
+        if (sim.assets?.hasCar) return 'first_car';
+        return 'date_cafe';
+      }
+
+      // 33-44: Enterprise factory OR family home
+      if (age <= 44) {
+        if (sim.assets?.hasFactory) return 'factory_business';
+        if (sim.children && sim.children.length > 0) return 'family_home';
+        return 'teen_hangout';
+      }
+
+      // 45-64: Own house with garden OR family home
+      if (age <= 64) {
+        if (sim.assets?.hasHouse) return 'own_house';
+        if (sim.assets?.hasFactory) return 'factory_business';
+        return 'own_house';
+      }
+
+      // 65+: Peaceful retirement porch & garden
+      return 'elder_garden';
+    }
+
     function renderEvolvingScene() {
-      drawSceneToCanvas('pixelSceneCanvas', currentSceneType);
+      if (!currentSim) return;
+
+      // Always dynamically determine the scene according to current age and accomplishments
+      currentSceneType = getStoryDrivenScene(currentSim);
+
+      drawSceneToCanvas('pixelSceneCanvas', currentSceneType, currentSim.currentAge);
 
       const locText = document.getElementById('sceneLocationText');
       const countryName = currentSim.country[currentLang] || currentSim.country.name;
+      const city = currentSim.city || 'Merkez';
 
-      if (currentSceneType === 'home_baby') {
-        locText.textContent = `${currentSim.city}, ${countryName} · Bebek Odası & Beşik`;
-      } else if (currentSceneType === 'toddler_explore') {
-        locText.textContent = `${currentSim.city}, ${countryName} · Mahalle Parkı & Oyun Alanı`;
-      } else if (currentSceneType === 'school') {
-        locText.textContent = `${currentSim.city}, ${countryName} · Okul Bahçesi & Zil Sesi`;
-      } else if (currentSceneType === 'teen_street') {
-        locText.textContent = `${currentSim.city}, ${countryName} · Gençlik & Sokak Maceraları`;
-      } else if (currentSceneType === 'graduation') {
-        locText.textContent = `${currentSim.city}, ${countryName} · Akademi Mezuniyet Töreni`;
-      } else if (currentSceneType === 'first_car') {
-        locText.textContent = `${currentSim.city}, ${countryName} · İlk Arabanla Şehir Turu`;
-      } else if (currentSceneType === 'wedding') {
-        locText.textContent = `${currentSim.city}, ${countryName} · Düğün & Aile Kurma`;
-      } else if (currentSceneType === 'newborn_baby') {
-        locText.textContent = `${currentSim.city}, ${countryName} · İlk Çocuğunuz Kucağınızda`;
-      } else if (currentSceneType === 'factory_business') {
-        locText.textContent = `${currentSim.city}, ${countryName} · Kendi Üretim Fabrikan & Şirketin`;
-      } else if (currentSceneType === 'own_house') {
-        locText.textContent = `${currentSim.city}, ${countryName} · Bahçeli Kendi Müstakil Evin`;
-      } else if (currentSceneType === 'elder_garden') {
-        locText.textContent = `${currentSim.city}, ${countryName} · Verandada Huzurlu Emeklilik`;
-      } else {
-        locText.textContent = `${currentSim.city}, ${countryName} · Aile Evi`;
-      }
+      if (!locText) return;
+
+      const sceneDescriptions = {
+        home_baby: `${city}, ${countryName} · Bebek Odası & Beşik`,
+        toddler_room: `${city}, ${countryName} · Evin Salonu & İlk Adımlar`,
+        playground: `${city}, ${countryName} · Mahalle Parkı & Salıncak`,
+        school: `${city}, ${countryName} · İlkokul Bahçesi & Zil Sesi`,
+        middle_school_street: `${city}, ${countryName} · Mahalle Sokağı & Arkadaşlarla Maç`,
+        teen_hangout: `${city}, ${countryName} · Şehir Caddesi & Gençlik`,
+        university_campus: `${city}, ${countryName} · Üniversite Kampüsü & Kütüphane`,
+        early_work: `${city}, ${countryName} · İlk İşyeri & Alın Teri`,
+        date_cafe: `${city}, ${countryName} · Sevgiliyle Kafe Buluşması & Sohbet`,
+        first_car: `${city}, ${countryName} · İlk Arabanla Şehir Turu`,
+        wedding: `${city}, ${countryName} · Düğün & Aile Kurma`,
+        family_home: `${city}, ${countryName} · Çocuğunla Sıcak Aile Evi`,
+        factory_business: `${city}, ${countryName} · Kendi Üretim Fabrikan & Şirketin`,
+        own_house: `${city}, ${countryName} · Bahçeli Kendi Müstakil Evin`,
+        elder_garden: `${city}, ${countryName} · Verandada Huzurlu Emeklilik & Çay Saati`
+      };
+
+      locText.textContent = sceneDescriptions[currentSceneType] || `${city}, ${countryName} · Yaşam Alanı`;
     }
 
     // Helper: Draw fluffy cute cloud
@@ -3848,552 +3920,65 @@
       ctx.fill();
     }
 
-    // Helper: Draw cute fluffy tree
+    // Helper: Draw cute leafy tree with apples/berries
     function drawCuteTree(ctx, x, groundY) {
       // Trunk
       ctx.fillStyle = '#78350F';
-      ctx.fillRect(x + 8, groundY - 32, 8, 32);
+      ctx.fillRect(x - 6, groundY - 48, 12, 48);
 
-      // Leaves
+      // Lush foliage (overlapping green circles)
       ctx.fillStyle = '#15803D';
-      ctx.beginPath();
-      ctx.arc(x + 12, groundY - 45, 20, 0, Math.PI * 2);
-      ctx.fill();
-
+      ctx.beginPath(); ctx.arc(x, groundY - 60, 24, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#16A34A';
+      ctx.beginPath(); ctx.arc(x - 12, groundY - 66, 18, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(x + 12, groundY - 66, 18, 0, Math.PI * 2); ctx.fill();
       ctx.fillStyle = '#22C55E';
-      ctx.beginPath();
-      ctx.arc(x + 8, groundY - 48, 14, 0, Math.PI * 2);
-      ctx.arc(x + 18, groundY - 46, 12, 0, Math.PI * 2);
-      ctx.fill();
+      ctx.beginPath(); ctx.arc(x, groundY - 76, 16, 0, Math.PI * 2); ctx.fill();
 
-      // Red berries
+      // Red sweet berries
       ctx.fillStyle = '#EF4444';
-      ctx.fillRect(x + 6, groundY - 44, 3, 3);
-      ctx.fillRect(x + 16, groundY - 50, 3, 3);
-      ctx.fillRect(x + 14, groundY - 38, 3, 3);
+      ctx.beginPath(); ctx.arc(x - 8, groundY - 62, 3, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(x + 10, groundY - 70, 3, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(x + 2, groundY - 54, 3, 0, Math.PI * 2); ctx.fill();
     }
 
-    // Helper: Draw cute little dog or cat pet
+    // Helper: Draw cute pet (golden retriever or cat)
     function drawCutePet(ctx, x, y, isDog = true) {
       if (isDog) {
-        // Golden dog
-        ctx.fillStyle = '#D97706';
-        ctx.fillRect(x, y, 14, 10); // body
-        ctx.fillRect(x + 10, y - 6, 8, 8); // head
-        ctx.fillStyle = '#92400E';
-        ctx.fillRect(x + 8, y - 4, 3, 5); // ear
-        // eyes & nose
-        ctx.fillStyle = '#1F2937';
-        ctx.fillRect(x + 15, y - 4, 2, 2);
-        ctx.fillRect(x + 17, y - 2, 2, 2);
-        // legs & wagging tail
-        ctx.fillStyle = '#B45309';
-        ctx.fillRect(x + 2, y + 10, 3, 4);
-        ctx.fillRect(x + 9, y + 10, 3, 4);
-        ctx.fillRect(x - 3, y - 2, 3, 5); // tail
-      } else {
-        // Ginger cat
-        ctx.fillStyle = '#F97316';
-        ctx.fillRect(x, y + 2, 12, 8);
-        ctx.fillRect(x + 8, y - 4, 7, 7);
-        // pointy ears
-        ctx.fillRect(x + 8, y - 7, 2, 3);
-        ctx.fillRect(x + 13, y - 7, 2, 3);
-        ctx.fillStyle = '#1F2937';
-        ctx.fillRect(x + 12, y - 2, 2, 2);
-        ctx.fillStyle = '#EA580C';
-        ctx.fillRect(x - 3, y - 1, 3, 6); // tail
-      }
-    }
-
-    // MAIN CANVAS SCENE DRAWER
-    function drawSceneToCanvas(canvasId, sceneType) {
-      const canvas = document.getElementById(canvasId);
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-      ctx.imageSmoothingEnabled = false;
-
-      const w = canvas.width;
-      const h = canvas.height;
-      ctx.clearRect(0, 0, w, h);
-
-      // Sky Palette
-      let skyTop = '#BAE6FD';
-      let skyBottom = '#E0F2FE';
-      let groundColor = '#475569';
-      let isSunset = (sceneType === 'elder_garden' || sceneType === 'wedding');
-
-      if (isSunset) {
-        skyTop = '#FED7AA';
-        skyBottom = '#FDE68A';
-      }
-
-      // Draw Sky Gradient
-      const skyGrad = ctx.createLinearGradient(0, 0, 0, h * 0.68);
-      skyGrad.addColorStop(0, skyTop);
-      skyGrad.addColorStop(1, skyBottom);
-      ctx.fillStyle = skyGrad;
-      ctx.fillRect(0, 0, w, h * 0.68);
-
-      // Cute Sun or Sunset Glow
-      if (isSunset) {
-        ctx.fillStyle = '#F59E0B';
-        ctx.beginPath();
-        ctx.arc(w * 0.85, 36, 18, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = 'rgba(251, 191, 36, 0.3)';
-        ctx.beginPath();
-        ctx.arc(w * 0.85, 36, 26, 0, Math.PI * 2);
-        ctx.fill();
-      } else {
-        ctx.fillStyle = '#FBBF24';
-        ctx.beginPath();
-        ctx.arc(45, 30, 14, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      // Fluffy Clouds
-      drawCuteCloud(ctx, 80, 28, 0.85);
-      drawCuteCloud(ctx, 240, 22, 1.0);
-      drawCuteCloud(ctx, 390, 32, 0.75);
-
-      // Birds in sky
-      ctx.strokeStyle = '#475569';
-      ctx.lineWidth = 1.5;
-      ctx.beginPath();
-      ctx.arc(170, 28, 5, Math.PI, 0);
-      ctx.arc(180, 28, 5, Math.PI, 0);
-      ctx.stroke();
-
-      // Ground (Lawn / Pavement / Street)
-      const groundY = h * 0.68;
-      if (sceneType === 'own_house' || sceneType === 'elder_garden' || sceneType === 'toddler_explore') {
-        // Lush green grass lawn
-        ctx.fillStyle = '#22C55E';
-        ctx.fillRect(0, groundY, w, h - groundY);
-        // Grass texture dots
-        ctx.fillStyle = '#16A34A';
-        for (let gx = 10; gx < w; gx += 28) {
-          ctx.fillRect(gx, groundY + 6, 2, 5);
-          ctx.fillRect(gx + 4, groundY + 8, 2, 4);
-        }
-      } else if (sceneType === 'home_baby' || sceneType === 'newborn_baby') {
-        // Warm cozy wooden floorboards
-        ctx.fillStyle = '#D97706';
-        ctx.fillRect(0, groundY, w, h - groundY);
-        ctx.fillStyle = '#B45309';
-        for (let fx = 0; fx < w; fx += 35) {
-          ctx.fillRect(fx, groundY, 2, h - groundY);
-        }
-      } else {
-        // Cobblestone / Street & Sidewalk
-        ctx.fillStyle = '#94A3B8';
-        ctx.fillRect(0, groundY, w, 14); // curb
-        ctx.fillStyle = '#64748B';
-        ctx.fillRect(0, groundY + 14, w, h - (groundY + 14)); // asphalt
-        // White road dashes
-        ctx.fillStyle = '#F1F5F9';
-        for (let rx = 15; rx < w; rx += 45) {
-          ctx.fillRect(rx, groundY + 32, 22, 4);
-        }
-      }
-
-      // ======================================================================
-      // SCENE 1: KENDİ MÜSTAKİL EVİN (OWN HOUSE - CUTE COTTAGE WITH GARDEN)
-      // ======================================================================
-      if (sceneType === 'own_house') {
-        // Charming Cottage House
-        const hx = w * 0.12;
-        const hy = groundY - 78;
-
-        // Brick/Pastel Walls
-        ctx.fillStyle = '#FEF3C7';
-        ctx.fillRect(hx, hy + 24, 130, 54);
-
-        // Cute Red Pitched Roof
-        ctx.fillStyle = '#DC2626';
-        ctx.beginPath();
-        ctx.moveTo(hx - 10, hy + 24);
-        ctx.lineTo(hx + 65, hy - 14);
-        ctx.lineTo(hx + 140, hy + 24);
-        ctx.closePath();
-        ctx.fill();
-
-        // Brick Chimney with gentle smoke puffs
-        ctx.fillStyle = '#B91C1C';
-        ctx.fillRect(hx + 95, hy - 22, 18, 24);
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
-        ctx.beginPath();
-        ctx.arc(hx + 104, hy - 28, 5, 0, Math.PI * 2);
-        ctx.arc(hx + 109, hy - 36, 7, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Front Door with brass doorknob
-        ctx.fillStyle = '#78350F';
-        ctx.fillRect(hx + 50, hy + 42, 26, 36);
-        ctx.fillStyle = '#FBBF24';
-        ctx.fillRect(hx + 70, hy + 60, 3, 3); // knob
-
-        // Glowing Windows with White Frames & Flower Boxes
-        ctx.fillStyle = '#FDE047';
-        ctx.fillRect(hx + 14, hy + 38, 24, 24);
-        ctx.fillRect(hx + 88, hy + 38, 24, 24);
-        ctx.strokeStyle = '#FFFFFF';
-        ctx.lineWidth = 2;
-        ctx.strokeRect(hx + 14, hy + 38, 24, 24);
-        ctx.strokeRect(hx + 88, hy + 38, 24, 24);
-        // Flower boxes below windows
-        ctx.fillStyle = '#92400E';
-        ctx.fillRect(hx + 12, hy + 62, 28, 6);
-        ctx.fillRect(hx + 86, hy + 62, 28, 6);
-        ctx.fillStyle = '#F43F5E';
-        ctx.fillRect(hx + 14, hy + 60, 4, 3);
-        ctx.fillRect(hx + 22, hy + 59, 4, 3);
-        ctx.fillRect(hx + 90, hy + 60, 4, 3);
-        ctx.fillRect(hx + 98, hy + 59, 4, 3);
-
-        // White Picket Fence
-        ctx.fillStyle = '#FFFFFF';
-        for (let fx = hx - 20; fx < hx + 160; fx += 14) {
-          ctx.fillRect(fx, groundY - 18, 6, 18);
-          // fence point
-          ctx.beginPath();
-          ctx.moveTo(fx, groundY - 18);
-          ctx.lineTo(fx + 3, groundY - 24);
-          ctx.lineTo(fx + 6, groundY - 18);
-          ctx.fill();
-        }
-        ctx.fillRect(hx - 24, groundY - 12, 188, 3);
-
-        // Cute Trees
-        drawCuteTree(ctx, w * 0.48, groundY);
-        drawCuteTree(ctx, w * 0.56, groundY);
-
-        // Proud Homeowner standing happily in front of their home!
-        drawCutePerson(ctx, w * 0.72, groundY - 44, currentSim?.gender === 'female', '#BE185D');
-
-        // Cute Dog next to them!
-        drawCutePet(ctx, w * 0.82, groundY - 14, true);
-      }
-
-      // ======================================================================
-      // SCENE 2: İLK ARABA (FIRST CAR - CUTE VINTAGE BEETLE)
-      // ======================================================================
-      else if (sceneType === 'first_car') {
-        // Cute City buildings in background with colorful rooftops
-        ctx.fillStyle = '#94A3B8';
-        ctx.fillRect(30, groundY - 80, 65, 80);
-        ctx.fillStyle = '#CBD5E1';
-        ctx.fillRect(110, groundY - 100, 75, 100);
-        ctx.fillStyle = '#A5B4FC';
-        ctx.fillRect(200, groundY - 70, 70, 70);
-
-        // Windows with yellow lights
-        ctx.fillStyle = '#FEF08A';
-        for (let bx = 40; bx < 260; bx += 32) {
-          for (let by = groundY - 65; by < groundY - 15; by += 20) {
-            ctx.fillRect(bx, by, 10, 12);
-          }
-        }
-
-        // Cute Street Tree & Streetlamp
-        drawCuteTree(ctx, w * 0.62, groundY);
-
-        // Shiny Vintage Beetle Car
-        const carX = w * 0.22;
-        const carY = groundY - 22;
-        const carColor = currentSim?.gender === 'female' ? '#F43F5E' : '#2563EB';
-
-        // Car Body (rounded chassis)
-        ctx.fillStyle = carColor;
-        ctx.beginPath();
-        ctx.roundRect(carX, carY - 20, 115, 32, 10);
-        ctx.fill();
-        // Cabin
-        ctx.beginPath();
-        ctx.arc(carX + 60, carY - 18, 36, Math.PI, 0);
-        ctx.fill();
-
-        // Windows (cyan tint)
-        ctx.fillStyle = '#BAE6FD';
-        ctx.beginPath();
-        ctx.arc(carX + 50, carY - 20, 24, Math.PI, Math.PI * 1.5);
-        ctx.lineTo(carX + 50, carY - 20);
-        ctx.fill();
-        ctx.beginPath();
-        ctx.arc(carX + 72, carY - 20, 24, Math.PI * 1.5, Math.PI * 2);
-        ctx.lineTo(carX + 72, carY - 20);
-        ctx.fill();
-
-        // Shiny Headlights & Bumper
-        ctx.fillStyle = '#FEF08A';
-        ctx.fillRect(carX + 110, carY - 10, 6, 8);
-        ctx.fillStyle = '#E2E8F0';
-        ctx.fillRect(carX - 6, carY + 4, 126, 6); // bumper
-
-        // Wheels
-        ctx.fillStyle = '#1E293B';
-        ctx.beginPath(); ctx.arc(carX + 26, carY + 12, 12, 0, Math.PI * 2); ctx.fill();
-        ctx.beginPath(); ctx.arc(carX + 90, carY + 12, 12, 0, Math.PI * 2); ctx.fill();
-        // Chrome hubcaps
-        ctx.fillStyle = '#E2E8F0';
-        ctx.beginPath(); ctx.arc(carX + 26, carY + 12, 5, 0, Math.PI * 2); ctx.fill();
-        ctx.beginPath(); ctx.arc(carX + 90, carY + 12, 5, 0, Math.PI * 2); ctx.fill();
-
-        // Happy owner leaning on car with sunglasses / cool pose!
-        drawCutePerson(ctx, w * 0.78, groundY - 44, currentSim?.gender === 'female', '#059669');
-      }
-
-      // ======================================================================
-      // SCENE 3: KENDİ FABRİKASI / BÜYÜK İŞLETME (FACTORY / ENTERPRISE)
-      // ======================================================================
-      else if (sceneType === 'factory_business') {
-        const fx = w * 0.12;
-        const fy = groundY - 95;
-
-        // Brick Industrial Plant
-        ctx.fillStyle = '#991B1B';
-        ctx.fillRect(fx, fy + 25, 170, 70);
-
-        // Sawtooth Industrial Roof
-        ctx.fillStyle = '#7F1D1D';
-        ctx.beginPath();
-        ctx.moveTo(fx, fy + 25);
-        ctx.lineTo(fx + 40, fy);
-        ctx.lineTo(fx + 40, fy + 25);
-        ctx.lineTo(fx + 90, fy);
-        ctx.lineTo(fx + 90, fy + 25);
-        ctx.lineTo(fx + 140, fy);
-        ctx.lineTo(fx + 140, fy + 25);
-        ctx.lineTo(fx + 170, fy + 25);
-        ctx.fill();
-
-        // Tall Smoke Chimney with animated fluffy smoke
-        ctx.fillStyle = '#450A0A';
-        ctx.fillRect(fx + 142, fy - 26, 20, 52);
-        ctx.fillStyle = 'rgba(241, 245, 249, 0.85)';
-        ctx.beginPath();
-        ctx.arc(fx + 152, fy - 36, 10, 0, Math.PI * 2);
-        ctx.arc(fx + 160, fy - 48, 14, 0, Math.PI * 2);
-        ctx.arc(fx + 172, fy - 62, 18, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Yellow Grid Factory Windows
-        ctx.fillStyle = '#FEF08A';
-        for (let wx = fx + 15; wx < fx + 130; wx += 28) {
-          for (let wy = fy + 35; wy < fy + 80; wy += 26) {
-            ctx.fillRect(wx, wy, 18, 18);
-            ctx.strokeStyle = '#450A0A';
-            ctx.lineWidth = 1.5;
-            ctx.strokeRect(wx, wy, 18, 18);
-          }
-        }
-
-        // Modern Company Signboard
+        // Golden Retriever
+        ctx.fillStyle = '#F59E0B'; // body
+        ctx.beginPath(); ctx.roundRect(x, y - 10, 22, 14, 5); ctx.fill();
+        ctx.beginPath(); ctx.arc(x + 22, y - 8, 8, 0, Math.PI * 2); ctx.fill(); // head
+        ctx.fillStyle = '#D97706'; // floppy ear
+        ctx.beginPath(); ctx.arc(x + 20, y - 5, 5, 0, Math.PI * 2); ctx.fill();
+        // cute black eye & nose
         ctx.fillStyle = '#0F172A';
-        ctx.fillRect(fx + 25, fy + 78, 105, 16);
-        ctx.fillStyle = '#F59E0B';
-        ctx.font = 'bold 10px sans-serif';
-        ctx.fillText('ENTERPRISE / CO', fx + 30, fy + 90);
-
-        // CEO / Founder standing with briefcase & business suit!
-        drawCutePerson(ctx, w * 0.72, groundY - 44, currentSim?.gender === 'female', '#1E3A8A');
-
-        // Delivery Van on the side
-        ctx.fillStyle = '#F8FAFC';
-        ctx.fillRect(w * 0.54, groundY - 32, 50, 26);
-        ctx.fillStyle = '#0284C7';
-        ctx.fillRect(w * 0.54, groundY - 20, 50, 6); // stripe
-        ctx.fillStyle = '#1E293B';
-        ctx.beginPath(); ctx.arc(w * 0.58, groundY - 4, 7, 0, Math.PI * 2); ctx.fill();
-        ctx.beginPath(); ctx.arc(w * 0.94, groundY - 4, 7, 0, Math.PI * 2); ctx.fill();
-      }
-
-      // ======================================================================
-      // SCENE 4: DÜĞÜN / EVLİLİK (WEDDING - SWEET WEDDING ARCH & HEARTS)
-      // ======================================================================
-      else if (sceneType === 'wedding') {
-        // Romantic Floral Arch
-        const ax = w * 0.38;
-        const ay = groundY - 95;
-
-        ctx.strokeStyle = '#15803D';
-        ctx.lineWidth = 6;
-        ctx.beginPath();
-        ctx.arc(ax + 55, ay + 45, 50, Math.PI, 0);
-        ctx.stroke();
-
-        // Pink & Red Floral Blossoms on Arch
-        const flowers = [[ax + 10, ay + 40], [ax + 30, ay + 10], [ax + 55, ay], [ax + 80, ay + 10], [ax + 100, ay + 40]];
-        flowers.forEach(([fx, fy]) => {
-          ctx.fillStyle = '#F43F5E';
-          ctx.beginPath(); ctx.arc(fx, fy, 6, 0, Math.PI * 2); ctx.fill();
-          ctx.fillStyle = '#FBCFE8';
-          ctx.beginPath(); ctx.arc(fx, fy, 3, 0, Math.PI * 2); ctx.fill();
-        });
-
-        // Floating Cute Hearts in Air!
-        ctx.fillStyle = '#EF4444';
-        drawHeart(ctx, ax + 50, ay - 18, 10);
-        drawHeart(ctx, ax + 85, ay - 10, 8);
-        drawHeart(ctx, ax + 20, ay - 6, 7);
-
-        // Bride & Groom side by side holding hands!
-        drawCutePerson(ctx, ax + 25, groundY - 44, true, '#FFFFFF'); // Bride in white gown & veil
-        drawCutePerson(ctx, ax + 65, groundY - 44, false, '#0F172A'); // Groom in tuxedo
-
-        // Confetti dots
-        ctx.fillStyle = '#FBBF24'; ctx.fillRect(ax - 20, ay + 20, 4, 4);
-        ctx.fillStyle = '#EC4899'; ctx.fillRect(ax + 120, ay + 30, 4, 4);
-        ctx.fillStyle = '#3B82F6'; ctx.fillRect(ax + 40, ay - 25, 4, 4);
-      }
-
-      // ======================================================================
-      // SCENE 5: İLKOKUL ÇAĞI (PRIMARY SCHOOL)
-      // ======================================================================
-      else if (sceneType === 'school') {
-        // Red Brick School with Bell Tower
-        const sx = w * 0.12;
-        const sy = groundY - 88;
-
-        ctx.fillStyle = '#B91C1C';
-        ctx.fillRect(sx, sy + 25, 150, 63);
-
-        // Bell Tower
-        ctx.fillStyle = '#7F1D1D';
-        ctx.fillRect(sx + 55, sy - 15, 40, 40);
-        ctx.fillStyle = '#F59E0B';
-        ctx.beginPath(); ctx.arc(sx + 75, sy + 5, 8, 0, Math.PI * 2); ctx.fill(); // clock
-
-        // School Windows
-        ctx.fillStyle = '#BAE6FD';
-        ctx.fillRect(sx + 15, sy + 40, 24, 28);
-        ctx.fillRect(sx + 110, sy + 40, 24, 28);
-
-        // School Door
-        ctx.fillStyle = '#78350F';
-        ctx.fillRect(sx + 60, sy + 48, 30, 40);
-
-        // Trees
-        drawCuteTree(ctx, w * 0.52, groundY);
-        drawCuteTree(ctx, w * 0.60, groundY);
-
-        // Cute Schoolkid with backpack & little cap!
-        drawCutePerson(ctx, w * 0.74, groundY - 36, currentSim?.gender === 'female', '#F59E0B', true);
-      }
-
-      // ======================================================================
-      // SCENE 6: BEBEK ODASI (BABY ROOM / NURSERY)
-      // ======================================================================
-      else if (sceneType === 'home_baby' || sceneType === 'newborn_baby') {
-        // Wallpaper with pastel stripes
-        ctx.fillStyle = '#FEF3C7';
-        ctx.fillRect(0, 0, w, groundY);
-        ctx.fillStyle = '#FDE68A';
-        for (let bx = 0; bx < w; bx += 24) {
-          ctx.fillRect(bx, 0, 12, groundY);
-        }
-
-        // Window showing outside garden
-        ctx.fillStyle = '#38BDF8';
-        ctx.fillRect(w * 0.28, 20, 80, 65);
-        ctx.strokeStyle = '#FFFFFF';
-        ctx.lineWidth = 4;
-        ctx.strokeRect(w * 0.28, 20, 80, 65);
-
-        // Fluffy cloud in window
-        ctx.fillStyle = '#FFFFFF';
-        ctx.beginPath(); ctx.arc(w * 0.38, 45, 10, 0, Math.PI * 2); ctx.fill();
-
-        // Cute Wooden Baby Crib with Stars
-        const cx = w * 0.56;
-        const cy = groundY - 45;
-        ctx.fillStyle = '#FFFFFF';
-        ctx.fillRect(cx, cy, 60, 38);
-        // Slats
-        ctx.fillStyle = '#CBD5E1';
-        for (let sl = cx + 8; sl < cx + 55; sl += 10) {
-          ctx.fillRect(sl, cy + 6, 3, 26);
-        }
-        // Pink or blue baby blanket inside
-        ctx.fillStyle = currentSim?.gender === 'female' ? '#F472B6' : '#60A5FA';
-        ctx.fillRect(cx + 10, cy + 12, 22, 18);
-
-        // Cute Parent rocking the crib
-        drawCutePerson(ctx, w * 0.42, groundY - 44, currentSim?.gender === 'female', '#059669');
-
-        // Cute Toy Teddy Bear on the floor
-        ctx.fillStyle = '#B45309';
-        ctx.fillRect(cx + 70, groundY - 18, 12, 14);
-        ctx.fillRect(cx + 68, groundY - 26, 16, 12);
-      }
-
-      // ======================================================================
-      // SCENE 7: EMEKLİLİK (ELDER GARDEN - PORCH, FLOWERS & TEA)
-      // ======================================================================
-      else if (sceneType === 'elder_garden') {
-        // Cozy Wooden Cabin Porch
-        const px = w * 0.10;
-        const py = groundY - 80;
-
-        ctx.fillStyle = '#78350F';
-        ctx.fillRect(px, py + 20, 110, 60);
-        ctx.fillStyle = '#92400E';
-        ctx.fillRect(px - 10, py + 14, 130, 10); // roof
-
-        // Lush Blooming Flowerbed
-        const flowerCols = ['#F43F5E', '#EC4899', '#FBBF24', '#A855F7', '#3B82F6'];
-        for (let fx = w * 0.45; fx < w * 0.95; fx += 16) {
-          ctx.fillStyle = flowerCols[Math.floor((fx * 7) % flowerCols.length)];
-          ctx.beginPath(); ctx.arc(fx, groundY - 14, 6, 0, Math.PI * 2); ctx.fill();
-          ctx.fillStyle = '#16A34A';
-          ctx.fillRect(fx - 1, groundY - 8, 2, 8);
-        }
-
-        // Big Majestic Willow Tree
-        drawCuteTree(ctx, w * 0.38, groundY);
-
-        // Peaceful Elder Sitting with Cup of Tea
-        drawCutePerson(ctx, px + 45, groundY - 44, currentSim?.gender === 'female', '#64748B', false, true);
-
-        // Sleeping Kitty on the porch
-        drawCutePet(ctx, px + 80, groundY - 10, false);
-      }
-
-      // ======================================================================
-      // DEFAULT: VIBRANT LIVELY TOWN / NEIGHBORHOOD
-      // ======================================================================
-      else {
-        // Pastel Colorful Town Buildings
-        const bColors = ['#FCA5A5', '#FDE047', '#93C5FD', '#86EFAC', '#DDD6FE'];
-        let bx = 20;
-        for (let i = 0; i < 5; i++) {
-          const bw = 55 + (i % 2) * 20;
-          const bh = 65 + (i * 12) % 35;
-          ctx.fillStyle = bColors[i % bColors.length];
-          ctx.fillRect(bx, groundY - bh, bw, bh);
-
-          // Roof
-          ctx.fillStyle = '#334155';
-          ctx.fillRect(bx - 3, groundY - bh - 6, bw + 6, 7);
-
-          // Windows with cute flower pots
-          ctx.fillStyle = '#FEF08A';
-          for (let wx = bx + 8; wx < bx + bw - 12; wx += 20) {
-            for (let wy = groundY - bh + 14; wy < groundY - 14; wy += 22) {
-              ctx.fillRect(wx, wy, 12, 14);
-            }
-          }
-          bx += bw + 8;
-        }
-
-        // Trees & Lamp
-        drawCuteTree(ctx, w * 0.65, groundY);
-        drawCutePerson(ctx, w * 0.82, groundY - 44, currentSim?.gender === 'female', '#BE185D');
+        ctx.fillRect(x + 25, y - 9, 2, 2);
+        ctx.fillRect(x + 27, y - 7, 2, 2);
+        // wagging tail
+        ctx.strokeStyle = '#F59E0B';
+        ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.moveTo(x, y - 8); ctx.lineTo(x - 7, y - 16); ctx.stroke();
+        // legs
+        ctx.fillStyle = '#D97706';
+        ctx.fillRect(x + 3, y + 4, 3, 6);
+        ctx.fillRect(x + 16, y + 4, 3, 6);
+      } else {
+        // Ginger Cat
+        ctx.fillStyle = '#F97316';
+        ctx.beginPath(); ctx.roundRect(x, y - 8, 18, 12, 4); ctx.fill();
+        ctx.beginPath(); ctx.arc(x + 17, y - 6, 6, 0, Math.PI * 2); ctx.fill();
+        // pointed ears
+        ctx.fillStyle = '#C2410C';
+        ctx.beginPath(); ctx.moveTo(x + 14, y - 12); ctx.lineTo(x + 17, y - 17); ctx.lineTo(x + 20, y - 12); ctx.fill();
+        // tail
+        ctx.strokeStyle = '#F97316';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath(); ctx.moveTo(x, y - 4); ctx.quadraticCurveTo(x - 6, y - 10, x - 2, y - 14); ctx.stroke();
       }
     }
 
-    // Helper: Draw heart
+    // Helper: Draw cute heart
     function drawHeart(ctx, x, y, size) {
       ctx.beginPath();
       const topCurveHeight = size * 0.3;
@@ -4406,29 +3991,45 @@
       ctx.fill();
     }
 
-    // CUTE CHIBI CHARACTER RENDERER (SUPER ADORABLE!)
-    function drawCutePerson(ctx, x, y, isFemale, clothesColor, isChild = false, isElder = false) {
-      const scale = isChild ? 0.72 : 1.0;
+    // =========================================================================
+    // DYNAMIC PERSON DRAWING WITH VISUAL AGE PROGRESSION
+    // =========================================================================
+    function drawCutePerson(ctx, x, y, isFemale, clothesColor, age = 25) {
+      let scale = 1.0;
+      let isBaby = (age <= 1);
+      let isToddler = (age >= 2 && age <= 4);
+      let isChild = (age >= 5 && age <= 11);
+      let isTeen = (age >= 12 && age <= 18);
+      let isElder = (age >= 56);
+
+      if (isBaby) scale = 0.55;
+      else if (isToddler) scale = 0.70;
+      else if (isChild) scale = 0.85;
+      else if (isTeen) scale = 0.98;
+      else if (isElder) scale = 0.95;
+      else scale = 1.05;
+
       const headR = 9 * scale;
 
-      // Shoes
+      // 1. Shoes
       ctx.fillStyle = '#1E293B';
       ctx.fillRect(x + 2 * scale, y + 36 * scale, 5 * scale, 4 * scale);
       ctx.fillRect(x + 9 * scale, y + 36 * scale, 5 * scale, 4 * scale);
 
-      // Legs / Pants
+      // 2. Legs / Pants
       ctx.fillStyle = isFemale ? '#475569' : '#1E293B';
-      ctx.fillRect(x + 3 * scale, y + 26 * scale, 4 * scale, 10 * scale);
-      ctx.fillRect(x + 9 * scale, y + 26 * scale, 4 * scale, 10 * scale);
+      const legHeight = isBaby ? 4 * scale : (isToddler ? 6 * scale : 10 * scale);
+      ctx.fillRect(x + 3 * scale, y + (36 * scale - legHeight), 4 * scale, legHeight);
+      ctx.fillRect(x + 9 * scale, y + (36 * scale - legHeight), 4 * scale, legHeight);
 
-      // Torso / Cute Outfit
-      ctx.fillStyle = clothesColor;
+      // 3. Torso / Cute Outfit
+      ctx.fillStyle = clothesColor || (isFemale ? '#BE185D' : '#059669');
       ctx.beginPath();
       ctx.roundRect(x, y + 14 * scale, 16 * scale, 14 * scale, 4 * scale);
       ctx.fill();
 
       // Arms & Hands
-      ctx.fillStyle = clothesColor;
+      ctx.fillStyle = clothesColor || '#059669';
       ctx.fillRect(x - 3 * scale, y + 16 * scale, 3 * scale, 10 * scale);
       ctx.fillRect(x + 16 * scale, y + 16 * scale, 3 * scale, 10 * scale);
       // Skin hands
@@ -4436,26 +4037,34 @@
       ctx.fillRect(x - 3 * scale, y + 25 * scale, 3 * scale, 3 * scale);
       ctx.fillRect(x + 16 * scale, y + 25 * scale, 3 * scale, 3 * scale);
 
-      // Head / Face (Round cute chibi)
+      // If child/teen has backpack
+      if (isChild || isTeen) {
+        ctx.fillStyle = '#DC2626';
+        ctx.fillRect(x - 5 * scale, y + 16 * scale, 4 * scale, 10 * scale);
+      }
+
+      // 4. Head / Face
       ctx.fillStyle = isElder ? '#FED7AA' : '#FDBA74';
       ctx.beginPath();
       ctx.arc(x + 8 * scale, y + 8 * scale, headR, 0, Math.PI * 2);
       ctx.fill();
 
-      // Hair
-      const hairColor = isElder ? '#94A3B8' : (isFemale ? '#78350F' : '#1C1917');
+      // 5. Hair
+      let hairColor = isElder ? '#CBD5E1' : (isFemale ? '#78350F' : '#1C1917');
+      if (age > 45 && age < 56) hairColor = '#64748B'; // touch of grey
+
       ctx.fillStyle = hairColor;
       ctx.beginPath();
       ctx.arc(x + 8 * scale, y + 5 * scale, headR + 1 * scale, Math.PI, Math.PI * 2);
       ctx.fill();
 
       if (isFemale && !isElder) {
-        // Cute pigtails / long locks
+        // Cute pigtails / hair locks
         ctx.fillRect(x - 2 * scale, y + 5 * scale, 3 * scale, 12 * scale);
         ctx.fillRect(x + 15 * scale, y + 5 * scale, 3 * scale, 12 * scale);
       }
 
-      // Cute Eyes with Sparkle!
+      // 6. Cute Eyes with Sparkle!
       ctx.fillStyle = '#0F172A';
       ctx.beginPath();
       ctx.arc(x + 5 * scale, y + 8 * scale, 1.8 * scale, 0, Math.PI * 2);
@@ -4467,34 +4076,675 @@
       ctx.fillRect(x + 4.5 * scale, y + 7 * scale, 1 * scale, 1 * scale);
       ctx.fillRect(x + 10.5 * scale, y + 7 * scale, 1 * scale, 1 * scale);
 
-      // Blushing Cheeks (Cute Pink)
+      // 7. Blushing Cheeks
       ctx.fillStyle = 'rgba(244, 63, 94, 0.45)';
       ctx.beginPath();
-      ctx.arc(x + 3.5 * scale, y + 10.5 * scale, 2 * scale, 0, Math.PI * 2);
-      ctx.arc(x + 12.5 * scale, y + 10.5 * scale, 2 * scale, 0, Math.PI * 2);
+      ctx.arc(x + 3.5 * scale, y + 10.5 * scale, 2.2 * scale, 0, Math.PI * 2);
+      ctx.arc(x + 12.5 * scale, y + 10.5 * scale, 2.2 * scale, 0, Math.PI * 2);
       ctx.fill();
 
-      // Cute Smile
-      ctx.strokeStyle = '#78350F';
+      // 8. Cute Smiling Mouth
+      ctx.strokeStyle = '#991B1B';
       ctx.lineWidth = 1 * scale;
       ctx.beginPath();
-      ctx.arc(x + 8 * scale, y + 10 * scale, 2.5 * scale, 0.2, Math.PI - 0.2);
+      ctx.arc(x + 8 * scale, y + 10.5 * scale, 2.2 * scale, 0, Math.PI);
       ctx.stroke();
 
-      // Glasses if elder
+      // Glasses for elders
       if (isElder) {
         ctx.strokeStyle = '#475569';
         ctx.lineWidth = 1.2;
-        ctx.strokeRect(x + 3 * scale, y + 6 * scale, 4 * scale, 4 * scale);
-        ctx.strokeRect(x + 9 * scale, y + 6 * scale, 4 * scale, 4 * scale);
-        ctx.beginPath();
-        ctx.moveTo(x + 7 * scale, y + 8 * scale);
-        ctx.lineTo(x + 9 * scale, y + 8 * scale);
-        ctx.stroke();
+        ctx.strokeRect(x + 2.5 * scale, y + 5.5 * scale, 4.5 * scale, 4.5 * scale);
+        ctx.strokeRect(x + 9 * scale, y + 5.5 * scale, 4.5 * scale, 4.5 * scale);
+        ctx.beginPath(); ctx.moveTo(x + 7 * scale, y + 7.5 * scale); ctx.lineTo(x + 9 * scale, y + 7.5 * scale); ctx.stroke();
+      }
+
+      // Toddler toy balloon
+      if (isToddler) {
+        ctx.strokeStyle = '#94A3B8';
+        ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(x + 18 * scale, y + 25 * scale); ctx.lineTo(x + 24 * scale, y - 8 * scale); ctx.stroke();
+        ctx.fillStyle = '#EF4444';
+        ctx.beginPath(); ctx.arc(x + 24 * scale, y - 14 * scale, 6 * scale, 0, Math.PI * 2); ctx.fill();
       }
     }
 
-    // CUTE ID AVATAR RENDERER
+    // =========================================================================
+    // MAIN CANVAS SCENE DRAWER (SUPPORTING ALL STORY AGES & PHASES)
+    // =========================================================================
+    function drawSceneToCanvas(canvasId, sceneType, age = 25) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      ctx.imageSmoothingEnabled = false;
+
+      const w = canvas.width;
+      const h = canvas.height;
+      ctx.clearRect(0, 0, w, h);
+
+      const isFemale = currentSim?.gender === 'female';
+      const clothesColor = isFemale ? '#BE185D' : '#059669';
+
+      // Determine environment (Indoor room vs Outdoor)
+      const isIndoor = (sceneType === 'home_baby' || sceneType === 'toddler_room' || sceneType === 'family_home');
+      const isSunset = (sceneType === 'elder_garden' || sceneType === 'wedding');
+
+      if (!isIndoor) {
+        // SKY GRADIENT
+        let skyTop = '#BAE6FD';
+        let skyBottom = '#E0F2FE';
+        if (isSunset) {
+          skyTop = '#FED7AA';
+          skyBottom = '#FDE68A';
+        }
+
+        const skyGrad = ctx.createLinearGradient(0, 0, 0, h * 0.68);
+        skyGrad.addColorStop(0, skyTop);
+        skyGrad.addColorStop(1, skyBottom);
+        ctx.fillStyle = skyGrad;
+        ctx.fillRect(0, 0, w, h * 0.68);
+
+        // Sun or Sunset Glow
+        if (isSunset) {
+          ctx.fillStyle = '#F59E0B';
+          ctx.beginPath(); ctx.arc(w * 0.85, 36, 18, 0, Math.PI * 2); ctx.fill();
+          ctx.fillStyle = 'rgba(251, 191, 36, 0.3)';
+          ctx.beginPath(); ctx.arc(w * 0.85, 36, 26, 0, Math.PI * 2); ctx.fill();
+        } else {
+          ctx.fillStyle = '#FBBF24';
+          ctx.beginPath(); ctx.arc(45, 30, 14, 0, Math.PI * 2); ctx.fill();
+        }
+
+        // Clouds
+        drawCuteCloud(ctx, 80, 26, 0.85);
+        drawCuteCloud(ctx, 250, 20, 1.0);
+        drawCuteCloud(ctx, 395, 30, 0.75);
+
+        // Birds in sky
+        ctx.strokeStyle = '#475569';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.arc(170, 26, 5, Math.PI, 0); ctx.arc(180, 26, 5, Math.PI, 0); ctx.stroke();
+      }
+
+      const groundY = h * 0.68;
+
+      // Ground (Lawn vs Wooden floor vs Cobblestone)
+      if (isIndoor) {
+        // Cozy wooden floorboards
+        ctx.fillStyle = '#D97706';
+        ctx.fillRect(0, groundY, w, h - groundY);
+        ctx.fillStyle = '#B45309';
+        for (let fx = 0; fx < w; fx += 35) {
+          ctx.fillRect(fx, groundY, 2, h - groundY);
+        }
+      } else if (sceneType === 'own_house' || sceneType === 'elder_garden' || sceneType === 'playground' || sceneType === 'university_campus') {
+        // Lush green lawn
+        ctx.fillStyle = '#22C55E';
+        ctx.fillRect(0, groundY, w, h - groundY);
+        ctx.fillStyle = '#16A34A';
+        for (let gx = 10; gx < w; gx += 28) {
+          ctx.fillRect(gx, groundY + 6, 2, 5);
+          ctx.fillRect(gx + 4, groundY + 8, 2, 4);
+        }
+      } else {
+        // Paved Street & Sidewalk
+        ctx.fillStyle = '#94A3B8';
+        ctx.fillRect(0, groundY, w, 14); // curb
+        ctx.fillStyle = '#64748B';
+        ctx.fillRect(0, groundY + 14, w, h - (groundY + 14)); // asphalt
+        // White road dashes
+        ctx.fillStyle = '#F1F5F9';
+        for (let rx = 15; rx < w; rx += 45) {
+          ctx.fillRect(rx, groundY + 32, 22, 4);
+        }
+      }
+
+      // ======================================================================
+      // 1. BEBEK ODASI (HOME_BABY - 0-1 YAŞ)
+      // ======================================================================
+      if (sceneType === 'home_baby') {
+        // Pastel Yellow Striped Wallpaper
+        ctx.fillStyle = '#FEF3C7';
+        ctx.fillRect(0, 0, w, groundY);
+        ctx.fillStyle = '#FDE68A';
+        for (let bx = 0; bx < w; bx += 24) {
+          ctx.fillRect(bx, 0, 12, groundY);
+        }
+
+        // Window showing sky & cloud
+        ctx.fillStyle = '#38BDF8';
+        ctx.fillRect(w * 0.28, 20, 80, 65);
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.lineWidth = 4;
+        ctx.strokeRect(w * 0.28, 20, 80, 65);
+        ctx.fillStyle = '#FFFFFF';
+        ctx.beginPath(); ctx.arc(w * 0.38, 45, 10, 0, Math.PI * 2); ctx.fill();
+
+        // White Baby Crib
+        const cx = w * 0.58;
+        const cy = groundY - 45;
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(cx, cy, 60, 38);
+        ctx.fillStyle = '#CBD5E1';
+        for (let sl = cx + 8; sl < cx + 55; sl += 10) {
+          ctx.fillRect(sl, cy + 6, 3, 26);
+        }
+        ctx.fillStyle = isFemale ? '#F472B6' : '#60A5FA';
+        ctx.fillRect(cx + 10, cy + 12, 22, 18);
+
+        // Parent watching over crib
+        drawCutePerson(ctx, w * 0.44, groundY - 44, !isFemale, '#059669', 28);
+
+        // Cute baby sitting in front
+        drawCutePerson(ctx, cx - 18, groundY - 26, isFemale, clothesColor, 0);
+
+        // Teddy bear on floor
+        ctx.fillStyle = '#B45309';
+        ctx.fillRect(cx + 70, groundY - 18, 12, 14);
+      }
+
+      // ======================================================================
+      // 2. OTURMA ODASI & OYUNCAKLAR (TODDLER_ROOM - 2-3 YAŞ)
+      // ======================================================================
+      else if (sceneType === 'toddler_room') {
+        // Warm peach living room wallpaper
+        ctx.fillStyle = '#FFEDD5';
+        ctx.fillRect(0, 0, w, groundY);
+        ctx.fillStyle = '#FED7AA';
+        for (let bx = 0; bx < w; bx += 32) {
+          ctx.fillRect(bx, 0, 16, groundY);
+        }
+
+        // Green cozy rug on wooden floor
+        ctx.fillStyle = '#86EFAC';
+        ctx.beginPath();
+        ctx.ellipse(w * 0.5, groundY + 12, 90, 20, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Window with warm daylight
+        ctx.fillStyle = '#BAE6FD';
+        ctx.fillRect(w * 0.15, 20, 70, 60);
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.lineWidth = 3;
+        ctx.strokeRect(w * 0.15, 20, 70, 60);
+
+        // Colorful toy building blocks on floor (Red, Blue, Yellow, Green cubes)
+        ctx.fillStyle = '#EF4444'; ctx.fillRect(w * 0.32, groundY - 14, 12, 12);
+        ctx.fillStyle = '#3B82F6'; ctx.fillRect(w * 0.35, groundY - 26, 12, 12);
+        ctx.fillStyle = '#FBBF24'; ctx.fillRect(w * 0.38, groundY - 14, 12, 12);
+        ctx.fillStyle = '#10B981'; ctx.fillRect(w * 0.44, groundY - 10, 10, 10);
+
+        // Toddler walking with balloon!
+        drawCutePerson(ctx, w * 0.56, groundY - 34, isFemale, clothesColor, age);
+
+        // Sleeping ginger cat on rug
+        drawCutePet(ctx, w * 0.76, groundY - 4, false);
+      }
+
+      // ======================================================================
+      // 3. ÇOCUK PARKI (PLAYGROUND - 4-5 YAŞ)
+      // ======================================================================
+      else if (sceneType === 'playground') {
+        // Park Trees
+        drawCuteTree(ctx, w * 0.18, groundY);
+        drawCuteTree(ctx, w * 0.82, groundY);
+
+        // Bright Red Slide
+        const slX = w * 0.32;
+        const slY = groundY - 55;
+        // Ladder
+        ctx.fillStyle = '#78350F';
+        ctx.fillRect(slX, slY, 4, 55);
+        ctx.fillRect(slX - 8, slY + 14, 12, 3);
+        ctx.fillRect(slX - 8, slY + 28, 12, 3);
+        ctx.fillRect(slX - 8, slY + 42, 12, 3);
+        // Slide ramp
+        ctx.fillStyle = '#EF4444';
+        ctx.beginPath();
+        ctx.moveTo(slX, slY);
+        ctx.quadraticCurveTo(slX + 25, slY + 20, slX + 50, groundY);
+        ctx.lineTo(slX + 56, groundY);
+        ctx.quadraticCurveTo(slX + 28, slY + 15, slX + 6, slY);
+        ctx.fill();
+
+        // Wooden Swing Set
+        const swX = w * 0.65;
+        ctx.fillStyle = '#78350F';
+        ctx.fillRect(swX, groundY - 60, 4, 60);
+        ctx.fillRect(swX + 45, groundY - 60, 4, 60);
+        ctx.fillRect(swX - 6, groundY - 60, 57, 5); // top beam
+        // Ropes & Seat
+        ctx.strokeStyle = '#475569';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.moveTo(swX + 16, groundY - 55); ctx.lineTo(swX + 16, groundY - 18); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(swX + 32, groundY - 55); ctx.lineTo(swX + 32, groundY - 18); ctx.stroke();
+        ctx.fillStyle = '#D97706';
+        ctx.fillRect(swX + 12, groundY - 18, 24, 4);
+
+        // Happy 4-5 year old kid running in park!
+        drawCutePerson(ctx, w * 0.48, groundY - 34, isFemale, clothesColor, age);
+
+        // Golden retriever puppy running alongside
+        drawCutePet(ctx, w * 0.58, groundY - 10, true);
+      }
+
+      // ======================================================================
+      // 4. İLKOKUL (SCHOOL - 6-10 YAŞ)
+      // ======================================================================
+      else if (sceneType === 'school') {
+        const sx = w * 0.12;
+        const sy = groundY - 88;
+
+        // Red brick schoolhouse
+        ctx.fillStyle = '#B91C1C';
+        ctx.fillRect(sx, sy + 25, 150, 63);
+
+        // Bell Tower with Clock
+        ctx.fillStyle = '#7F1D1D';
+        ctx.fillRect(sx + 55, sy - 15, 40, 40);
+        ctx.fillStyle = '#F59E0B';
+        ctx.beginPath(); ctx.arc(sx + 75, sy + 5, 8, 0, Math.PI * 2); ctx.fill();
+
+        // Windows with blue reflection
+        ctx.fillStyle = '#BAE6FD';
+        ctx.fillRect(sx + 15, sy + 40, 24, 28);
+        ctx.fillRect(sx + 110, sy + 40, 24, 28);
+
+        // School Door
+        ctx.fillStyle = '#78350F';
+        ctx.fillRect(sx + 60, sy + 48, 30, 40);
+
+        // Trees & Flag
+        drawCuteTree(ctx, w * 0.52, groundY);
+        drawCuteTree(ctx, w * 0.60, groundY);
+
+        // Cute Schoolkid with backpack & hat!
+        drawCutePerson(ctx, w * 0.74, groundY - 36, isFemale, '#F59E0B', age);
+      }
+
+      // ======================================================================
+      // 5. ORTAOKUL & MAHALLE SOKAĞI (MIDDLE_SCHOOL_STREET - 11-14 YAŞ)
+      // ======================================================================
+      else if (sceneType === 'middle_school_street') {
+        // Neighborhood houses
+        ctx.fillStyle = '#94A3B8';
+        ctx.fillRect(20, groundY - 70, 70, 70);
+        ctx.fillStyle = '#CBD5E1';
+        ctx.fillRect(100, groundY - 85, 80, 85);
+        ctx.fillStyle = '#E2E8F0';
+        ctx.fillRect(190, groundY - 65, 65, 65);
+
+        // Windows with lights
+        ctx.fillStyle = '#FEF08A';
+        for (let bx = 30; bx < 240; bx += 32) {
+          ctx.fillRect(bx, groundY - 50, 10, 12);
+        }
+
+        // Parked Bicycle leaning against tree
+        drawCuteTree(ctx, w * 0.60, groundY);
+        ctx.strokeStyle = '#2563EB';
+        ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.arc(w * 0.65, groundY - 8, 8, 0, Math.PI * 2); ctx.stroke();
+        ctx.beginPath(); ctx.arc(w * 0.72, groundY - 8, 8, 0, Math.PI * 2); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(w * 0.65, groundY - 8); ctx.lineTo(w * 0.69, groundY - 18); ctx.lineTo(w * 0.72, groundY - 8); ctx.stroke();
+
+        // Soccer ball on ground
+        ctx.fillStyle = '#FFFFFF';
+        ctx.beginPath(); ctx.arc(w * 0.42, groundY - 6, 6, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#0F172A';
+        ctx.beginPath(); ctx.arc(w * 0.42, groundY - 6, 2, 0, Math.PI * 2); ctx.fill();
+
+        // 12-14 year old student
+        drawCutePerson(ctx, w * 0.48, groundY - 40, isFemale, clothesColor, age);
+      }
+
+      // ======================================================================
+      // 6. GENÇLİK & ŞEHİR CADDESİ (TEEN_HANGOUT - 15-17 YAŞ)
+      // ======================================================================
+      else if (sceneType === 'teen_hangout') {
+        // Storefronts with Striped Awnings
+        ctx.fillStyle = '#64748B';
+        ctx.fillRect(25, groundY - 90, 95, 90);
+        ctx.fillStyle = '#475569';
+        ctx.fillRect(130, groundY - 105, 110, 105);
+
+        // Red & White Striped Awning
+        const awX = 35;
+        const awY = groundY - 50;
+        ctx.fillStyle = '#EF4444';
+        ctx.fillRect(awX, awY, 75, 12);
+        ctx.fillStyle = '#FFFFFF';
+        for (let ax = awX; ax < awX + 75; ax += 15) {
+          ctx.fillRect(ax, awY, 7, 12);
+        }
+
+        // Streetlamp
+        ctx.fillStyle = '#334155';
+        ctx.fillRect(w * 0.70, groundY - 75, 3, 75);
+        ctx.fillStyle = '#FDE047';
+        ctx.beginPath(); ctx.arc(w * 0.705, groundY - 75, 7, 0, Math.PI * 2); ctx.fill();
+
+        // Cool Teen with headphones
+        drawCutePerson(ctx, w * 0.52, groundY - 42, isFemale, clothesColor, age);
+      }
+
+      // ======================================================================
+      // 7. ÜNİVERSİTE KAMPÜSÜ (UNIVERSITY_CAMPUS - 18-21 YAŞ)
+      // ======================================================================
+      else if (sceneType === 'university_campus') {
+        const ux = w * 0.12;
+        const uy = groundY - 85;
+
+        // Classical Faculty Building with Columns
+        ctx.fillStyle = '#F8FAFC';
+        ctx.fillRect(ux, uy + 20, 160, 65);
+        // Pediment (Triangle roof)
+        ctx.fillStyle = '#E2E8F0';
+        ctx.beginPath();
+        ctx.moveTo(ux - 10, uy + 20);
+        ctx.lineTo(ux + 80, uy - 10);
+        ctx.lineTo(ux + 170, uy + 20);
+        ctx.fill();
+
+        // Columns
+        ctx.fillStyle = '#CBD5E1';
+        for (let col = ux + 15; col < ux + 150; col += 28) {
+          ctx.fillRect(col, uy + 20, 10, 65);
+        }
+
+        // Campus Trees & Benches
+        drawCuteTree(ctx, w * 0.58, groundY);
+
+        // Young Scholar with books
+        drawCutePerson(ctx, w * 0.74, groundY - 44, isFemale, clothesColor, age);
+      }
+
+      // ======================================================================
+      // 8. ERKEN ÇALIŞMA / TARLA / ATÖLYE (EARLY_WORK - 18-21 YAŞ)
+      // ======================================================================
+      else if (sceneType === 'early_work') {
+        // Workshop / Farm Barn
+        const bx = w * 0.15;
+        const by = groundY - 80;
+        ctx.fillStyle = '#9A3412';
+        ctx.fillRect(bx, by + 20, 130, 60);
+        ctx.fillStyle = '#7C2D12';
+        ctx.beginPath();
+        ctx.moveTo(bx - 10, by + 20);
+        ctx.lineTo(bx + 65, by - 6);
+        ctx.lineTo(bx + 140, by + 20);
+        ctx.fill();
+
+        // Wooden Crates & Tools
+        ctx.fillStyle = '#D97706';
+        ctx.fillRect(w * 0.50, groundY - 18, 18, 18);
+        ctx.fillRect(w * 0.56, groundY - 12, 14, 12);
+
+        // Young Worker with rolled up sleeves
+        drawCutePerson(ctx, w * 0.72, groundY - 44, isFemale, '#1E3A8A', age);
+      }
+
+      // ======================================================================
+      // 9. ROMANTİK KAFE BULUŞMASI (DATE_CAFE - 22-25 YAŞ)
+      // ======================================================================
+      else if (sceneType === 'date_cafe') {
+        // Cafe Facade & Striped Burgundy Awning
+        const cfx = w * 0.10;
+        const cfy = groundY - 90;
+        ctx.fillStyle = '#FEF2F2';
+        ctx.fillRect(cfx, cfy + 15, 140, 75);
+
+        // Burgundy & Cream Awning
+        ctx.fillStyle = '#991B1B';
+        ctx.fillRect(cfx - 5, cfy + 25, 150, 16);
+        ctx.fillStyle = '#FEF2F2';
+        for (let ax = cfx - 5; ax < cfx + 140; ax += 20) {
+          ctx.fillRect(ax, cfy + 25, 10, 16);
+        }
+
+        // Bistro Table with 2 Steaming Coffee Cups
+        const tblX = w * 0.52;
+        ctx.fillStyle = '#334155';
+        ctx.fillRect(tblX + 16, groundY - 26, 3, 26);
+        ctx.fillRect(tblX, groundY - 28, 35, 4); // table top
+        // Coffee cups
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(tblX + 6, groundY - 36, 6, 8);
+        ctx.fillRect(tblX + 22, groundY - 36, 6, 8);
+        // Steam
+        ctx.strokeStyle = '#CBD5E1';
+        ctx.lineWidth = 1.2;
+        ctx.beginPath(); ctx.moveTo(tblX + 9, groundY - 37); ctx.lineTo(tblX + 7, groundY - 43); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(tblX + 25, groundY - 37); ctx.lineTo(tblX + 23, groundY - 43); ctx.stroke();
+
+        // Floating Cute Hearts!
+        ctx.fillStyle = '#EF4444';
+        drawHeart(ctx, tblX + 12, groundY - 60, 9);
+        drawHeart(ctx, tblX + 28, groundY - 50, 7);
+
+        // Couple side by side
+        drawCutePerson(ctx, tblX - 25, groundY - 44, isFemale, clothesColor, age);
+        drawCutePerson(ctx, tblX + 42, groundY - 44, !isFemale, '#1E3A8A', age);
+      }
+
+      // ======================================================================
+      // 10. İLK ARABA (FIRST_CAR - 26-29 YAŞ)
+      // ======================================================================
+      else if (sceneType === 'first_car') {
+        // Buildings in background
+        ctx.fillStyle = '#94A3B8'; ctx.fillRect(30, groundY - 80, 65, 80);
+        ctx.fillStyle = '#CBD5E1'; ctx.fillRect(110, groundY - 100, 75, 100);
+        ctx.fillStyle = '#A5B4FC'; ctx.fillRect(200, groundY - 70, 70, 70);
+
+        // Street Tree
+        drawCuteTree(ctx, w * 0.62, groundY);
+
+        // Vintage Beetle Car
+        const carX = w * 0.20;
+        const carY = groundY - 22;
+        const carColor = isFemale ? '#F43F5E' : '#2563EB';
+
+        ctx.fillStyle = carColor;
+        ctx.beginPath(); ctx.roundRect(carX, carY - 20, 115, 32, 10); ctx.fill();
+        ctx.beginPath(); ctx.arc(carX + 60, carY - 18, 36, Math.PI, 0); ctx.fill();
+
+        // Windows
+        ctx.fillStyle = '#BAE6FD';
+        ctx.beginPath(); ctx.arc(carX + 50, carY - 20, 24, Math.PI, Math.PI * 1.5); ctx.lineTo(carX + 50, carY - 20); ctx.fill();
+        ctx.beginPath(); ctx.arc(carX + 72, carY - 20, 24, Math.PI * 1.5, Math.PI * 2); ctx.lineTo(carX + 72, carY - 20); ctx.fill();
+
+        // Headlights & Bumper
+        ctx.fillStyle = '#FEF08A'; ctx.fillRect(carX + 110, carY - 10, 6, 8);
+        ctx.fillStyle = '#E2E8F0'; ctx.fillRect(carX - 6, carY + 4, 126, 6);
+
+        // Wheels
+        ctx.fillStyle = '#1E293B';
+        ctx.beginPath(); ctx.arc(carX + 26, carY + 12, 12, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(carX + 90, carY + 12, 12, 0, Math.PI * 2); ctx.fill();
+
+        // Proud Owner leaning on car
+        drawCutePerson(ctx, w * 0.76, groundY - 44, isFemale, clothesColor, age);
+      }
+
+      // ======================================================================
+      // 11. DÜĞÜN (WEDDING)
+      // ======================================================================
+      else if (sceneType === 'wedding') {
+        const ax = w * 0.38;
+        const ay = groundY - 95;
+
+        // Romantic Floral Arch
+        ctx.strokeStyle = '#15803D';
+        ctx.lineWidth = 6;
+        ctx.beginPath(); ctx.arc(ax + 55, ay + 45, 50, Math.PI, 0); ctx.stroke();
+
+        // Flowers on Arch
+        const flowers = [[ax + 10, ay + 40], [ax + 30, ay + 10], [ax + 55, ay], [ax + 80, ay + 10], [ax + 100, ay + 40]];
+        flowers.forEach(([fx, fy]) => {
+          ctx.fillStyle = '#F43F5E'; ctx.beginPath(); ctx.arc(fx, fy, 6, 0, Math.PI * 2); ctx.fill();
+        });
+
+        // Floating Hearts
+        ctx.fillStyle = '#EF4444';
+        drawHeart(ctx, ax + 50, ay - 18, 10);
+        drawHeart(ctx, ax + 85, ay - 10, 8);
+
+        // Bride & Groom
+        drawCutePerson(ctx, ax + 25, groundY - 44, true, '#FFFFFF', 25);
+        drawCutePerson(ctx, ax + 65, groundY - 44, false, '#0F172A', 25);
+      }
+
+      // ======================================================================
+      // 12. SICAK AİLE EVİ (FAMILY_HOME - 30-44 YAŞ)
+      // ======================================================================
+      else if (sceneType === 'family_home') {
+        // Warm living room wallpaper
+        ctx.fillStyle = '#FEF3C7';
+        ctx.fillRect(0, 0, w, groundY);
+        ctx.fillStyle = '#FDE68A';
+        for (let bx = 0; bx < w; bx += 28) {
+          ctx.fillRect(bx, 0, 14, groundY);
+        }
+
+        // Family Couch
+        const couchX = w * 0.20;
+        const couchY = groundY - 32;
+        ctx.fillStyle = '#BE123C';
+        ctx.beginPath(); ctx.roundRect(couchX, couchY, 110, 32, 6); ctx.fill();
+        ctx.fillRect(couchX, couchY - 14, 110, 16);
+
+        // Partner sitting on couch holding little baby
+        drawCutePerson(ctx, couchX + 25, couchY - 24, !isFemale, '#1E3A8A', 30);
+        // Little child/baby next to them
+        drawCutePerson(ctx, couchX + 65, couchY - 14, true, '#F472B6', 2);
+
+        // Window with garden view
+        ctx.fillStyle = '#38BDF8';
+        ctx.fillRect(w * 0.65, 20, 75, 60);
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.lineWidth = 3;
+        ctx.strokeRect(w * 0.65, 20, 75, 60);
+
+        // Character standing warmly
+        drawCutePerson(ctx, w * 0.75, groundY - 44, isFemale, clothesColor, age);
+      }
+
+      // ======================================================================
+      // 13. KENDİ FABRİKASI / BÜYÜK İŞLETME (FACTORY_BUSINESS - 35-49 YAŞ)
+      // ======================================================================
+      else if (sceneType === 'factory_business') {
+        const fx = w * 0.12;
+        const fy = groundY - 95;
+
+        // Brick Industrial Plant & Sawtooth Roof
+        ctx.fillStyle = '#991B1B';
+        ctx.fillRect(fx, fy + 25, 170, 70);
+        ctx.fillStyle = '#7F1D1D';
+        ctx.beginPath();
+        ctx.moveTo(fx, fy + 25);
+        ctx.lineTo(fx + 40, fy); ctx.lineTo(fx + 40, fy + 25);
+        ctx.lineTo(fx + 90, fy); ctx.lineTo(fx + 90, fy + 25);
+        ctx.lineTo(fx + 140, fy); ctx.lineTo(fx + 140, fy + 25);
+        ctx.lineTo(fx + 170, fy + 25);
+        ctx.fill();
+
+        // Chimney & Smoke
+        ctx.fillStyle = '#450A0A'; ctx.fillRect(fx + 142, fy - 26, 20, 52);
+        ctx.fillStyle = 'rgba(241, 245, 249, 0.85)';
+        ctx.beginPath(); ctx.arc(fx + 152, fy - 36, 10, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(fx + 160, fy - 48, 14, 0, Math.PI * 2); ctx.fill();
+
+        // Signboard
+        ctx.fillStyle = '#0F172A';
+        ctx.fillRect(fx + 25, fy + 78, 105, 16);
+        ctx.fillStyle = '#F59E0B';
+        ctx.font = 'bold 10px sans-serif';
+        ctx.fillText('ENTERPRISE / CO', fx + 30, fy + 90);
+
+        // Founder in Suit
+        drawCutePerson(ctx, w * 0.72, groundY - 44, isFemale, '#1E3A8A', age);
+      }
+
+      // ======================================================================
+      // 14. KENDİ MÜSTAKİL EVİN (OWN_HOUSE - 50-64 YAŞ)
+      // ======================================================================
+      else if (sceneType === 'own_house') {
+        const hx = w * 0.12;
+        const hy = groundY - 78;
+
+        // Brick/Pastel Walls
+        ctx.fillStyle = '#FEF3C7'; ctx.fillRect(hx, hy + 24, 130, 54);
+        // Red Pitched Roof
+        ctx.fillStyle = '#DC2626';
+        ctx.beginPath(); ctx.moveTo(hx - 10, hy + 24); ctx.lineTo(hx + 65, hy - 14); ctx.lineTo(hx + 140, hy + 24); ctx.fill();
+        // Chimney
+        ctx.fillStyle = '#B91C1C'; ctx.fillRect(hx + 95, hy - 22, 18, 24);
+        // Smoke
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+        ctx.beginPath(); ctx.arc(hx + 104, hy - 28, 5, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(hx + 109, hy - 36, 7, 0, Math.PI * 2); ctx.fill();
+
+        // Door & Windows with flower boxes
+        ctx.fillStyle = '#78350F'; ctx.fillRect(hx + 50, hy + 42, 26, 36);
+        ctx.fillStyle = '#FDE047';
+        ctx.fillRect(hx + 14, hy + 38, 24, 24);
+        ctx.fillRect(hx + 88, hy + 38, 24, 24);
+        ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 2;
+        ctx.strokeRect(hx + 14, hy + 38, 24, 24);
+        ctx.strokeRect(hx + 88, hy + 38, 24, 24);
+
+        // White Picket Fence
+        ctx.fillStyle = '#FFFFFF';
+        for (let fx = hx - 20; fx < hx + 160; fx += 14) {
+          ctx.fillRect(fx, groundY - 18, 6, 18);
+        }
+        ctx.fillRect(hx - 24, groundY - 12, 188, 3);
+
+        // Garden Trees
+        drawCuteTree(ctx, w * 0.48, groundY);
+
+        // Mature homeowner
+        drawCutePerson(ctx, w * 0.72, groundY - 44, isFemale, clothesColor, age);
+
+        // Golden retriever pet
+        drawCutePet(ctx, w * 0.82, groundY - 14, true);
+      }
+
+      // ======================================================================
+      // 15. EMEKLİLİK (ELDER_GARDEN - 65+ YAŞ)
+      // ======================================================================
+      else if (sceneType === 'elder_garden') {
+        // Wooden Cabin Porch
+        const px = w * 0.10;
+        const py = groundY - 75;
+        ctx.fillStyle = '#78350F';
+        ctx.fillRect(px, py + 20, 120, 55);
+        ctx.fillStyle = '#451A03';
+        ctx.beginPath(); ctx.moveTo(px - 10, py + 20); ctx.lineTo(px + 60, py - 6); ctx.lineTo(px + 130, py + 20); ctx.fill();
+
+        // Rocking Chair with Elder sitting
+        const rcX = w * 0.52;
+        ctx.fillStyle = '#B45309';
+        ctx.fillRect(rcX, groundY - 28, 28, 28);
+        // Tea table with steaming teapot
+        ctx.fillStyle = '#D97706';
+        ctx.fillRect(rcX + 35, groundY - 20, 22, 20);
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(rcX + 42, groundY - 26, 7, 7);
+
+        // Blooming Rose Garden
+        for (let fl = w * 0.75; fl < w * 0.95; fl += 18) {
+          ctx.fillStyle = '#F43F5E'; ctx.beginPath(); ctx.arc(fl, groundY - 10, 5, 0, Math.PI * 2); ctx.fill();
+        }
+
+        // Silver-haired elder in cozy cardigan
+        drawCutePerson(ctx, w * 0.40, groundY - 44, isFemale, '#475569', age);
+
+        // Sleeping cat by the porch
+        drawCutePet(ctx, w * 0.65, groundY - 6, false);
+      }
+    }
+
     function drawPixelAvatar() {
       const canvas = document.getElementById('pixelAvatarCanvas');
       if (!canvas) return;
