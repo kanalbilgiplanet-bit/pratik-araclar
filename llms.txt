@@ -98,3 +98,23 @@
 - URL: https://pratik-araclar.netlify.app/etiket-okuyucu/
 - Açıklama: Ambalajlı market gıdalarının arka yüzündeki 100g besin değerleri tablosunu fotoğraftan okuyan (istemci tarafı Tesseract.js OCR) veya kullanıcının girdiği değerlerle analiz eden sağlıklı beslenme ve gıda dedektifi aracı. Dünya Sağlık Örgütü (DSÖ) ve Gıda Standartları Ajansı (FSA) trafik ışığı sistemine göre şeker, doymuş yağ ve tuz/sodyum oranlarını yeşil, sarı ve kırmızı risk seviyelerinde derecelendirir. 1 porsiyonda kaç küp şekere denk geldiğini görselleştirir, resmi A-B-C-D-E Nutri-Score harfini hesaplar, 100 üzerinden gıda temizlik skoru üretir, Chart.js makro besin donut grafiğini çizer ve tek tıkla WhatsApp raporu oluşturur. %100 istemci tarafında çalışır, görseller sunucuya yüklenmez (KVKK uyumlu).
 - Hedef Kitle: Sağlıklı beslenenler, diyet yapanlar, diyabet ve tansiyon hastaları, bebekli ve çocuklu ebeveynler, sporcular ve market alışverişinde bilinçli gıda tercihi yapmak isteyen tüm tüketiciler.
+
+### 20. The Birth Lottery – 8 Milyarda 1 Yaşam Simülasyonu
+- URL: https://pratik-araclar.netlify.app/birth-lottery/
+- Açıklama: 195 ülkenin gerçek demografi, yaşam süresi, kişi başı milli gelir ve eğitim verilerini kullanan küresel insan kaderi simülasyonu. 10 dilde çok dilli destek, yaşam döngüsü kararları, interaktif anıt duvarı ve sosyal medya paylaşım kartları.
+- Hedef Kitle: Dünya nüfus istatistikleri ve yaşam koşullarını merak edenler, felsefi ve eğitsel simülasyon severler.
+
+### 21. The Football Lottery – Futbolcu Doğum Piyangosu (0-40 Yaş Kariyer Simülatörü)
+- URL: https://pratik-araclar.netlify.app/football-lottery/
+- Açıklama: Doğduğun ülke ve genetik yeteneğinle sokaklardan dünya vitrinine uzanan 40 yıllık futbol kariyeri simülatörü. Gerçekçi lig sıralamaları, Altın Ayakkabı, Ballon d'Or, süper spor araba/malikane yatırımları, batık fon riskleri, jübile kartı ve topluluk Efsaneler Duvarı (Hall of Fame).
+- Hedef Kitle: Futbolseverler, FM/FIFA kariyer modu tutkunları, spor oyunları ve interaktif hikaye meraklıları.
+
+### 22. Kredi Kartı Aidat İadesi Dilekçesi Hazırlayıcı
+- URL: https://pratik-araclar.netlify.app/kredi-karti-aidat-iadesi/
+- Açıklama: Tüketicinin Korunması Hakkında Kanun ve Yargıtay Hukuk Genel Kurulu kararlarına uygun olarak bankalardan haksız kesilen yıllık kart aidatlarının iadesini talep eden resmi ihtar ve başvuru dilekçesi motoru.
+- Hedef Kitle: Kredi kartından yıllık üyelik ücreti/aidat kesilen tüketiciler ve kart sahipleri.
+
+### 23. Tüketici Hakem Heyeti Başvuru & Şikayet Dilekçesi
+- URL: https://pratik-araclar.netlify.app/tuketici-hakem-heyeti-dilekcesi/
+- Açıklama: Ayıplı mal ve hizmetler, garanti kapsamı uyuşmazlıkları ve haksız kesintiler için e-Devlet TÜBİS sistemine uyumlu resmi Tüketici Hakem Heyeti dilekçesi oluşturan hukuki kılavuz aracı.
+- Hedef Kitle: Satıcı veya sağlayıcı ile tüketici uyuşmazlığı yaşayan vatandaşlar.
