@@ -5,116 +5,116 @@
 ## Araçlar
 
 ### 1. İstanbul & Marmara Sel ve Taşkın Riski Haritası
-- URL: https://pratik-araclar.netlify.app/sel-haritasi/
+- URL: https://pratikbase.com/sel-haritasi/
 - Açıklama: İstanbul'un 39 ilçesinde kritik dere yatakları (Haramidere, Ayamama, Kurbağalıdere, Cendere, Alibeyköy vb.), kot farkları ve tarihsel su baskınlarına dayalı interaktif afet risk analizi haritası.
 - Hedef Kitle: İstanbul'da yaşayanlar, ev/işyeri kiralayacaklar, şiddetli yağış anında güvenli bölge arayanlar.
 
 ### 2. Net-Brüt Maaş & Vergi Dilimi Hesaplayıcı (2026 - 2027)
-- URL: https://pratik-araclar.netlify.app/maas-hesaplayici/
+- URL: https://pratikbase.com/maas-hesaplayici/
 - Açıklama: 2026, 2025, 2024 ve 2027 taslak tarifelerine göre brüt'ten net'e ve net'ten brüt'e maaş hesaplama. 12 aylık kümülatif vergi bordrosu simülasyonu, asgari ücret vergi istisnası, SGK kesintileri ve işveren toplam maliyeti.
 - Hedef Kitle: Çalışanlar, maaş zammı hesaplayanlar, insan kaynakları uzmanları, işverenler.
 
 ### 3. Kıdem ve İhbar Tazminatı Hesaplayıcı (2026)
-- URL: https://pratik-araclar.netlify.app/tazminat-hesaplayici/
+- URL: https://pratikbase.com/tazminat-hesaplayici/
 - Açıklama: 4857 Sayılı İş Kanunu'na göre son brüt maaş, yan haklar (yol, yemek, prim), 2026 kıdem tazminatı tavanı, hizmet süresi (yıl, ay, gün) ve yasal bildirim önelleriyle net kıdem ve ihbar tazminatı hesaplama aracı.
 - Hedef Kitle: İşten ayrılanlar, istifa veya fesih sürecindekiler, muhasebeciler, İK yöneticileri.
 
 ### 4. Elektrik Sayacı Değişim & 10 Yıl Muayene Sorgulama
-- URL: https://pratik-araclar.netlify.app/sayac-sorgulama/
+- URL: https://pratikbase.com/sayac-sorgulama/
 - Açıklama: 3516 Sayılı Ölçüler ve Ayar Kanunu gereğince elektrik sayacı 10 yıllık periyodik muayene ve zorunlu akıllı sayaç dönüşüm sorgulama aracı. 81 ilin yetkili elektrik dağıtım şirketleri (EDAŞ 186), ücretsiz değişim hakları ve Google/Apple takvim hatırlatıcısı entegrasyonu.
 - Hedef Kitle: Konut ve ticarethane elektrik aboneleri, sayacı 10 yılı doldurmuş kiracı/ev sahipleri, kaçak/ceza riskini kontrol etmek isteyenler.
 
 ### 5. Kira Artış Oranı Hesaplayıcı (Resmi TÜİK TÜFE Tavanı)
-- URL: https://pratik-araclar.netlify.app/kira-artisi-hesaplayici/
+- URL: https://pratikbase.com/kira-artisi-hesaplayici/
 - Açıklama: Türk Borçlar Kanunu Madde 344 ve resmi TÜİK 12 aylık ortalamalara göre TÜFE tavan oranıyla konut ve çatılı işyeri kira artış hesaplayıcı. Aylık ve yıllık artış tutarları, 5 yıl kuralı / kira tespit uyarısı ve tek tıkla ev sahibine veya kiracıya resmi WhatsApp bildirim metni hazırlama motoru.
 - Hedef Kitle: Kiracılar, ev sahipleri, gayrimenkul danışmanları, işyeri sahipleri.
 
 ### 6. AcilDurumRadar – Türkiye Canlı Afet, Deprem & Fay Hattı Haritası
-- URL: https://pratik-araclar.netlify.app/acil-durum-radar/
+- URL: https://pratikbase.com/acil-durum-radar/
 - Açıklama: Türkiye ve çevresinde meydana gelen son depremleri (büyüklük, derinlik, anlık konum) canlı çeken, Kuzey ve Doğu Anadolu diri fay hatlarını gösteren, GPS en yakın risk tespiti, 112 Acil arama, acil durum düdüğü (SOS sireni) ve WhatsApp güvendeyim/yardım mesajı sunan ulusal afet radarı.
 - Hedef Kitle: Deprem veya acil durum anında anlık bilgi arayanlar, afet bölgesindekiler, toplanma alanı arayan vatandaşlar.
 
 ### 7. Boru Bükme & Offset Büküm Hesaplayıcı
-- URL: https://pratik-araclar.netlify.app/boru-bukme-hesaplayici/
+- URL: https://pratikbase.com/boru-bukme-hesaplayici/
 - Açıklama: Metal, elektrik (EMT) ve tesisat boruları için hassas büküm hesaplama aracı. Trigonometrik offset (engel aşma), 90 derece dirsek ve 3 noktalı eyer bükümü hesapları. İki işaret arası mesafe, kısalma (shrink) payı, açınım yay boyu, canlı ölçekli SVG şematik çizim ve standart büküm çarpanları cetveli.
 - Hedef Kitle: Elektrik teknisyenleri, tesisatçılar, boru büküm atölyeleri, CNC büküm operatörleri, şantiye ustaları ve makine mühendisliği öğrencileri.
 
 ### 8. Canlı Sel Uyarısı & Meteorolojik Yağış Radarı
-- URL: https://pratik-araclar.netlify.app/sel-uyarisi/
+- URL: https://pratikbase.com/sel-uyarisi/
 - Açıklama: Türkiye geneli anlık meteorolojik Doppler yağış radarı (RainViewer) ve Open-Meteo gerçek zamanlı tahmin motoru entegrasyonu. Canlı sağanak bulut akışı animasyonu (son 2 saat), il/ilçe bazında anlık yağış debisi (kg/m²), 6 saatlik yağış projeksiyonu, sarı ve kırmızı sel/su baskını alarm seviyeleri, acil sel güvenlik rehberi ve tek tıkla WhatsApp konumlu afet uyarısı paylaşımı.
 - Hedef Kitle: Şiddetli sağanak ve fırtına anında canlı yağış ve sel tehlikesi arayanlar, araç sahipleri, zemin/bodrum kat sakinleri, afet bölgesinde seyahat eden sürücüler.
 
 ### 9. Fon Tasfiye & İtfa Net Tutar Hesaplayıcı
-- URL: https://pratik-araclar.netlify.app/fon-tasfiye-hesapla/
+- URL: https://pratikbase.com/fon-tasfiye-hesapla/
 - Açıklama: SPK mevzuatına uygun olarak tasfiyeye giren veya itfa edilen yatırım fonları (TEFAS), BES emeklilik fonları ve serbest/girişim sermayesi (GSYF) fonlarında yatırımcının eline geçecek net nakit tutarı simüle eden finans aracı. Kâr üzerinden gelir vergisi stopajı (%0 - %15), BES kademeli hakediş süreleri (%0 - %100), fon gider ve tasfiye komisyonu kesintileri, interaktif Chart.js donut grafik dağılımı, tarayıcıda kayıtlı geçmiş hesabı ve belirgin YTD (Yatırım Tavsiyesi Değildir) yasal bilgilendirmesi.
 - Hedef Kitle: Tasfiye sürecindeki fon yatırımcıları, fonunu bozdurmak isteyenler, BES katılımcıları, finansal danışmanlar ve portföy yöneticileri.
 
 ### 10. En Yakın Nöbetçi Eczane Haritası & Yol Tarifi
-- URL: https://pratik-araclar.netlify.app/nobetci-eczane/
+- URL: https://pratikbase.com/nobetci-eczane/
 - Açıklama: Türkiye genelinde 81 il ve ilçeler için kullanıcının GPS konumuna en yakın nöbetçi eczaneleri mesafesine göre (metre ve km cinsinden) sıralayan harita tabanlı arama motoru. Canlı OpenStreetMap eczane verisi, tek tıkla doğrudan arama (tel:), Google Maps ve Apple Maps ile canlı navigasyon/yol tarifi başlatma, WhatsApp ile konum ve adres paylaşımı ve 81 il Eczacı Odaları resmi nöbet listesi doğrulama bağlantıları.
 - Hedef Kitle: Gece, hafta sonu veya tatil günlerinde acil ilaç arayan hastalar, hasta yakınları, bebekli aileler, nöbetçi eczane adresi ve telefonunu teyit etmek isteyen vatandaşlar.
 
 ### 11. Akaryakıt, Zam & Enerji Hesaplayıcı
-- URL: https://pratik-araclar.netlify.app/akaryakit-zam-hesaplayici/
+- URL: https://pratikbase.com/akaryakit-zam-hesaplayici/
 - Açıklama: Benzin (95 Oktan), motorin (dizel), LPG otogaz, mutfak/piknik tüpü (12 kg ve 2 kg) ile konut doğalgazı (m³ tüketim) zam ve indirimlerini anında hesaplayan çok modüllü enerji simülatörü. İl bazında (İstanbul Avrupa/Anadolu, Ankara, İzmir, Bursa, Antalya vb.) güncel EPDK tavan fiyatları, gece yarısı (00:01) zammı geri sayım sayacı, araç depo kapasitesine göre (40L, 45L, 50L, 60L) zam öncesi depo fulletme kâr/tasarruf hesabı, aylık kilometre ve yakıt tüketimine göre bütçe ek masrafı, Chart.js ile 1 litre benzindeki vergi dağılımı (ÖTV, KDV, rafineri, bayi kârı), popüler şehirlerarası seyahat (İstanbul-Ankara, İstanbul-İzmir vb.) yakıt maliyeti analizi ve tek tıkla WhatsApp zam raporu paylaşımı.
 - Hedef Kitle: Araç sahipleri, sürücüler, filo yöneticileri, kuryeler, tüp gaz kullanan haneler ve kış doğalgaz faturasını bütçelemek isteyen tüm tüketiciler.
 
 ### 12. Sel Hasar Tazminat Hesaplayıcı & Fotoğraflı Sigorta İhbar Dosyası
-- URL: https://pratik-araclar.netlify.app/sel-hasar-tazminat/
+- URL: https://pratikbase.com/sel-hasar-tazminat/
 - Açıklama: Sel, su baskını ve taşkın afetleri sonrasında konut, ticari işyeri ve kaskolu araçlar için su derinliği (cm), etkilenen alan (m²), kat seviyesi ve zarar gören demirbaş/eşyalara göre kalem kalem hasar ve sigortadan talep edilebilir net tazminat tutarını hesaplayan afet & sigorta aracı. Çekilen hasar fotoğraflarından otomatik EXIF zaman ve GPS enlem/boylam koordinatlarını okuyarak delil niteliğinde konum doğrulaması yapar. 6102 sayılı Türk Ticaret Kanunu (TTK md. 1446) 5 iş günü yasal ihbar süresine tam uyumlu, kalem kalem hasar tablosunu, delil fotoğraflarını ve sigortalı beyanını içeren resmi Sigorta İhbar ve Eksper Talep Dosyasını tek tıkla doğrudan PDF olarak istemci tarafında üretip indirir.
 - Hedef Kitle: Selden veya su baskınından etkilenen ev sahipleri, kiracılar, dükkân ve depo işletmecileri, kaskolu araç sahipleri, sigorta acenteleri ve eksperler.
 
 ### 13. 2027 Yeniden Değerleme Oranı (YDO) & Harç, Ceza, IMEI Zam ve Tasarruf Hesaplayıcı
-- URL: https://pratik-araclar.netlify.app/ydo-harc-zam-hesaplayici/
+- URL: https://pratikbase.com/ydo-harc-zam-hesaplayici/
 - Açıklama: 2027 yılı tahmini Yeniden Değerleme Oranına (YDO - TÜİK ÜFE ortalaması ~%41,50) göre yurt dışı telefon kayıt harcı (IMEI), pasaport harçları (6 ay, 1 yıl, 2 yıl, 3 yıl, 10 yıl ve defter bedeli), ehliyet harçları (A ve B sınıfı harç, değerli kâğıt, vakıf payı), Motorlu Taşıtlar Vergisi (MTV) ve en çok karşılaşılan trafik cezalarını (kırmızı ışık, hız aşımı, emniyet kemeri, telefon, drift) 2026 yürürlükteki fiyatlar ile 2027 zamlı fiyatlarını kıyaslayan finansal simülasyon aracı. Kullanıcının seçtiği kalemleri kümülatif sepette toplayarak 1 Ocak 2027'den önce ödeme yapıldığında elde edilecek toplam net kârı ve tasarrufu dev sayaçla hesaplar. Nüfus randevusu bulamayanlar için 31 Aralık öncesi harç sabitleme, IMEI e-Devlet kayıt süresi ve Cumhurbaşkanı MTV indirim yetkisi gibi yasal tüyolar içerir.
 - Hedef Kitle: Yılbaşından önce pasaport veya ehliyet almak isteyen vatandaşlar, yurt dışından akıllı telefon getirenler, araç sahipleri, sürücüler ve 2027 zam dalgasından önce tasarruf etmek isteyen tüm mükellefler.
 
 ### 14. MEB Öğretmen Ek Ders Hesaplayıcı (2026 - 2027 Güncel Katsayılar)
-- URL: https://pratik-araclar.netlify.app/ek-ders-hesaplayici/
+- URL: https://pratikbase.com/ek-ders-hesaplayici/
 - Açıklama: 2026 ve 2027 MEB memur maaş katsayılarına göre öğretmenlerin aylık net ek ders ücretini kuruşu kuruşuna hesaplayan puantaj robotu. Sınıf öğretmeni (18 saat), branş öğretmeni (15 saat), okul öncesi, meslek lisesi, rehberlik ve yöneticiler için maaş karşılığı hesaplama sihirbazı. Hazırlık ve planlama (10'a 1 kuralı), haftalık nöbet görevi (+3 saat), sınıf rehberliği/kulüp (+2 saat), DYK kursları (%100 artırımlı, 2 kat), İYEP ve destek eğitim odası eklemeleri. Yüksek lisans (%7 artırımlı) ve doktora (%20 artırımlı) unvan tazminatları ile %15, %20 ve %27 gelir vergisi dilimi ve damga vergisi kesintilerini içeren resmi KBS uyumlu puantaj dökümü. Tek tıkla WhatsApp zümre paylaşımı ve A4 yazdır/PDF çıktı desteği.
 - Hedef Kitle: Türkiye'deki 1.2 milyondan fazla kadrolu, sözleşmeli ve ücretli MEB öğretmeni, okul müdürleri, müdür yardımcıları ve eğitim çalışanları.
 
 ### 15. e-Okul, MEBBİS & Biyometrik Fotoğraf Küçültücü / Kırpıcı (133x171 px)
-- URL: https://pratik-araclar.netlify.app/eokul-mebbis-fotograf-kucultucu/
+- URL: https://pratikbase.com/eokul-mebbis-fotograf-kucultucu/
 - Açıklama: Öğrenci ve öğretmen fotoğraflarını 6698 sayılı KVKK'ya %100 uygun olarak hiçbir sunucuya yüklemeden doğrudan tarayıcıda (HTML5 Canvas) e-Okul (133x171 px, 10-150 KB arası JPG), MEBBİS personel ve ÖSYM/Biyometrik (50x60 mm / 413x531 px) standartlarına otomatik kırpan ve dosya boyutunu küçülten görsel işleme aracı. Toplu sınıf fotoğrafı yükleme ve tüm sınıfı tek tıkla ZIP arşivi olarak indirme desteği.
 - Hedef Kitle: Sınıf ve branş öğretmenleri, okul müdür yardımcıları, öğrenciler, veliler ve e-Devlet/ÖSYM/MEBBİS başvurusu yapan vatandaşlar.
 
 ### 16. 2026 - 2027 MTV & TÜVTÜRK Araç Muayene Ücreti / Gecikme Cezası Hesaplayıcı
-- URL: https://pratik-araclar.netlify.app/mtv-arac-muayene-hesaplayici/
+- URL: https://pratikbase.com/mtv-arac-muayene-hesaplayici/
 - Açıklama: 2026 yılı resmi TÜVTÜRK araç muayene ücretleri (Otomobil/Minibüs/Kamyonet 3.288 TL, Otobüs/Kamyon/Çekici 4.446 TL, Motosiklet/Traktör 1.674 TL), egzoz gazı emisyon ölçüm bedeli (460 TL) ve 2918 sayılı KTK gereği her geciken ay için %5 muayene gecikme cezası hesaplayıcı. Ayrıca içten yanmalı (cc) ve elektrikli araçlar (kW - Togg T10X, Tesla Model Y vb.) için yaş ve motor gücüne göre 2026 yıllık MTV, Ocak/Temmuz taksitleri ve 2027 YDO tahmini MTV simülasyonu.
 - Hedef Kitle: Türkiye'deki 30 milyondan fazla otomobil, motosiklet, ticari ve elektrikli araç sahibi sürücüler, filo yöneticileri ve oto galeriler.
 
 ### 17. 2026 Tapu Harcı, Döner Sermaye & Emlakçı Komisyonu Hesaplayıcı
-- URL: https://pratik-araclar.netlify.app/tapu-harci-emlak-hesaplayici/
+- URL: https://pratikbase.com/tapu-harci-emlak-hesaplayici/
 - Açıklama: Konut, işyeri ve arsa alım-satım işlemlerinde 492 sayılı Harçlar Kanunu uyarınca %4 tapu harcı (%2 alıcı + %2 satıcı veya tek taraf anlaşmalı), 2026 TKGM döner sermaye ücreti (6.681 TL) ve Taşınmaz Ticareti Yönetmeliği'ne göre %4 + %20 KDV emlak danışmanlık hizmet bedelini kuruşu kuruşuna hesaplayan gayrimenkul finans aracı. Alıcı ve satıcı maliyet kartları ile tek tıkla WhatsApp tablosu paylaşımı.
 - Hedef Kitle: Ev, arsa veya işyeri alıp satan vatandaşlar, gayrimenkul danışmanları, emlak ofisleri, müteahhitler ve konut kredisi kullanan yatırımcılar.
 
 ### 18. Yeşil Sertifika (YeS-TR) Uyum Testi & Bina Enerji Puanı
-- URL: https://pratik-araclar.netlify.app/yesil-sertifika-uyum/
+- URL: https://pratikbase.com/yesil-sertifika-uyum/
 - Açıklama: Çevre, Şehircilik ve İklim Değişikliği Bakanlığı'nın YeS-TR Binalar için Yeşil Sertifika ve Enerji Kimlik Belgesi (EKB) kriterlerine göre binaların sürdürülebilirlik puanını (0 - 100) hesaplayan simülasyon ve değerlendirme aracı. Konut, ofis/ticari, kamu ve sanayi binaları için enerji tüketimi, çatı GES/ısı pompası payı, dış cephe yalıtımı, yağmur suyu hasadı, gri su arıtma, EPD belgeli malzeme, iç hava kalitesi (düşük VOC), EV şarj altyapısı ve toplu taşıma yakınlığı gibi 5 ana başlıkta anlık puanlama yapar. Bronz, Gümüş, Altın ve Platin YeS-TR sertifika derecesini, interaktif Chart.js radar dağılım grafiğini, puan yükseltme rehberini, tek tıkla WhatsApp raporu ve resmi A4/PDF çıktısını sunar.
 - Hedef Kitle: Ev sahipleri, apartman ve site yöneticileri, mimarlar, inşaat mühendisleri, müteahhitler, gayrimenkul değerleme uzmanları ve yeşil bina sertifikası almak isteyen tüm mülk sahipleri.
 
 ### 19. Besin Etiketi Okuyucu, Şeker/Tuz Analizi & Nutri-Score Sağlık Puanı
-- URL: https://pratik-araclar.netlify.app/etiket-okuyucu/
+- URL: https://pratikbase.com/etiket-okuyucu/
 - Açıklama: Ambalajlı market gıdalarının arka yüzündeki 100g besin değerleri tablosunu fotoğraftan okuyan (istemci tarafı Tesseract.js OCR) veya kullanıcının girdiği değerlerle analiz eden sağlıklı beslenme ve gıda dedektifi aracı. Dünya Sağlık Örgütü (DSÖ) ve Gıda Standartları Ajansı (FSA) trafik ışığı sistemine göre şeker, doymuş yağ ve tuz/sodyum oranlarını yeşil, sarı ve kırmızı risk seviyelerinde derecelendirir. 1 porsiyonda kaç küp şekere denk geldiğini görselleştirir, resmi A-B-C-D-E Nutri-Score harfini hesaplar, 100 üzerinden gıda temizlik skoru üretir, Chart.js makro besin donut grafiğini çizer ve tek tıkla WhatsApp raporu oluşturur. %100 istemci tarafında çalışır, görseller sunucuya yüklenmez (KVKK uyumlu).
 - Hedef Kitle: Sağlıklı beslenenler, diyet yapanlar, diyabet ve tansiyon hastaları, bebekli ve çocuklu ebeveynler, sporcular ve market alışverişinde bilinçli gıda tercihi yapmak isteyen tüm tüketiciler.
 
 ### 20. The Birth Lottery – 8 Milyarda 1 Yaşam Simülasyonu
-- URL: https://pratik-araclar.netlify.app/birth-lottery/
+- URL: https://pratikbase.com/birth-lottery/
 - Açıklama: 195 ülkenin gerçek demografi, yaşam süresi, kişi başı milli gelir ve eğitim verilerini kullanan küresel insan kaderi simülasyonu. 10 dilde çok dilli destek, yaşam döngüsü kararları, interaktif anıt duvarı ve sosyal medya paylaşım kartları.
 - Hedef Kitle: Dünya nüfus istatistikleri ve yaşam koşullarını merak edenler, felsefi ve eğitsel simülasyon severler.
 
 ### 21. The Football Lottery – Futbolcu Doğum Piyangosu (0-40 Yaş Kariyer Simülatörü)
-- URL: https://pratik-araclar.netlify.app/football-lottery/
+- URL: https://pratikbase.com/football-lottery/
 - Açıklama: Doğduğun ülke ve genetik yeteneğinle sokaklardan dünya vitrinine uzanan 40 yıllık futbol kariyeri simülatörü. Gerçekçi lig sıralamaları, Altın Ayakkabı, Ballon d'Or, süper spor araba/malikane yatırımları, batık fon riskleri, jübile kartı ve topluluk Efsaneler Duvarı (Hall of Fame).
 - Hedef Kitle: Futbolseverler, FM/FIFA kariyer modu tutkunları, spor oyunları ve interaktif hikaye meraklıları.
 
 ### 22. Kredi Kartı Aidat İadesi Dilekçesi Hazırlayıcı
-- URL: https://pratik-araclar.netlify.app/kredi-karti-aidat-iadesi/
+- URL: https://pratikbase.com/kredi-karti-aidat-iadesi/
 - Açıklama: Tüketicinin Korunması Hakkında Kanun ve Yargıtay Hukuk Genel Kurulu kararlarına uygun olarak bankalardan haksız kesilen yıllık kart aidatlarının iadesini talep eden resmi ihtar ve başvuru dilekçesi motoru.
 - Hedef Kitle: Kredi kartından yıllık üyelik ücreti/aidat kesilen tüketiciler ve kart sahipleri.
 
 ### 23. Tüketici Hakem Heyeti Başvuru & Şikayet Dilekçesi
-- URL: https://pratik-araclar.netlify.app/tuketici-hakem-heyeti-dilekcesi/
+- URL: https://pratikbase.com/tuketici-hakem-heyeti-dilekcesi/
 - Açıklama: Ayıplı mal ve hizmetler, garanti kapsamı uyuşmazlıkları ve haksız kesintiler için e-Devlet TÜBİS sistemine uyumlu resmi Tüketici Hakem Heyeti dilekçesi oluşturan hukuki kılavuz aracı.
 - Hedef Kitle: Satıcı veya sağlayıcı ile tüketici uyuşmazlığı yaşayan vatandaşlar.

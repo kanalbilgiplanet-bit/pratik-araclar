@@ -30,4 +30,4 @@ Allow: /
 User-agent: Applebot-Extended
 Allow: /
 
-Sitemap: https://pratik-araclar.netlify.app/sitemap.xml
+Sitemap: https://pratikbase.com/sitemap.xml
