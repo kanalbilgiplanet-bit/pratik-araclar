@@ -731,9 +731,9 @@
     </div>
   </footer>
 
-  <!-- Google Firebase App & Cloud Firestore (Real-Time Live Tribün Chat Sync) -->
+  <!-- Google Firebase App & Realtime Database (Real-Time Live Tribün Chat WebSocket Sync) -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
   <!-- DYNAMIC FIXTURE ENGINE & LIVE CONTROLLER -->
   <script>
@@ -1413,18 +1413,20 @@
     ];
 
     // ========================================================
-    // GOOGLE FIREBASE CLOUD FIRESTORE CANLI TARAFTAR SOHBETİ
+    // GOOGLE FIREBASE REALTIME DATABASE CANLI TARAFTAR SOHBETİ
+    // WebSocket Protokolü ile Anlık Senkronizasyon (PC <-> Mobil)
     // ========================================================
     const firebaseConfig = {
       apiKey: "AIzaSyCtJnLhmovXwRDNjHFhvAQZHd43KK74itE",
       authDomain: "pratikbase.firebaseapp.com",
+      databaseURL: "https://pratikbase-default-rtdb.firebaseio.com",
       projectId: "pratikbase",
       storageBucket: "pratikbase.firebasestorage.app",
       messagingSenderId: "873155695530",
       appId: "1:873155695530:web:b995d7b211289d74b4d1d3"
     };
 
-    let firestoreDb = null;
+    let rtdb = null;
     let liveMessages = [];
     let sessionChatList = [];
 
@@ -1433,43 +1435,43 @@
         if (!firebase.apps.length) {
           firebase.initializeApp(firebaseConfig);
         }
-        firestoreDb = firebase.firestore();
+        rtdb = firebase.database();
       }
     } catch (e) {
-      console.debug("Firebase başlatma:", e);
+      console.warn("Firebase başlatma hatası:", e);
     }
 
-    // Canlı Firestore Dinleyicisi (Gerçek Zamanlı Senkronizasyon)
-    if (firestoreDb) {
+    // Canlı Realtime Database Dinleyicisi (WebSocket Gerçek Zamanlı Senkronizasyon)
+    if (rtdb) {
       try {
-        firestoreDb.collection("tribun_chat")
-          .orderBy("createdMs", "asc")
-          .limitToLast(50)
-          .onSnapshot((snapshot) => {
+        rtdb.ref("tribun_chat").limitToLast(50).on("value", (snapshot) => {
+          const val = snapshot.val();
+          if (val) {
             const fetched = [];
-            snapshot.forEach(doc => {
-              const d = doc.data();
-              fetched.push({
-                id: doc.id,
-                nick: d.nick || "Taraftar",
-                time: d.time || "",
-                text: d.text || "",
-                badge: d.badge || "Taraftar",
-                createdMs: d.createdMs || 0
-              });
+            Object.keys(val).forEach(key => {
+              const d = val[key];
+              if (d && typeof d === 'object') {
+                fetched.push({
+                  id: key,
+                  nick: d.nick || "Taraftar",
+                  time: d.time || "",
+                  text: d.text || "",
+                  badge: d.badge || "Taraftar",
+                  createdMs: d.createdMs || 0
+                });
+              }
             });
-            if (fetched.length > 0) {
-              liveMessages = fetched;
-            }
-            renderChatMessages();
-          }, (err) => {
-            console.warn("Firestore dinleme:", err.message);
-            if (err && (err.code === 'permission-denied' || (err.message && err.message.includes('not been used')))) {
-              showChatWarning("Firebase Firestore henüz aktif edilmemiş! Konsoldan 'Create database' yapılmalı.");
-            }
-          });
+            fetched.sort((a, b) => (a.createdMs || 0) - (b.createdMs || 0));
+            liveMessages = fetched;
+          } else {
+            liveMessages = [];
+          }
+          renderChatMessages();
+        }, (err) => {
+          console.warn("Realtime Database dinleme hatası:", err.message);
+        });
       } catch (err) {
-        console.warn("Firestore dinleyici hatası:", err);
+        console.warn("Realtime Database bağlantı hatası:", err);
       }
     }
 
@@ -1589,19 +1591,18 @@
           badge: "Taraftar"
         };
 
-        // Firebase Cloud Firestore Canlı Senkronizasyon
-        if (firestoreDb) {
-          firestoreDb.collection("tribun_chat").add({
+        // Firebase Realtime Database Canlı Senkronizasyon (WebSocket)
+        if (rtdb) {
+          rtdb.ref("tribun_chat").push({
             nick: nick,
             time: timeStr,
             text: text,
             badge: "Taraftar",
             createdMs: Date.now()
           }).then(() => {
-            // Başarılı: Firestore buluta yazıldı, tüm bağlı cihazlara anında yansıyacak
+            // Başarılı: Realtime Database bulutuna kaydedildi, tüm bağlı cihazlara (mobil/PC) anında canlı iletildi
           }).catch(err => {
-            console.warn("Firestore yazma hatası:", err);
-            showChatWarning("Canlı veritabanı aktif değil (Firebase Console'da 'Firestore Database -> Create database' gerekli).");
+            console.warn("Realtime Database yazma hatası:", err);
             sessionChatList.push(newMsg);
             renderChatMessages();
           });
