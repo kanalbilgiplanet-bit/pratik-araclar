@@ -1,8 +1,24 @@
 <!DOCTYPE html>
-<html lang="tr" class="dark">
+<html lang="tr" class="dark" style="background-color: #020617; color: #f8fafc;">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Critical Anti-Flash Dark Background (Instant Paint for Safari & Mobile) -->
+  <style>
+    html, body {
+      background-color: #020617 !important;
+      color: #f8fafc;
+      margin: 0;
+      padding: 0;
+    }
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+  </style>
+
   <!-- Speed & Preconnect Resource Hints -->
   <link rel="preload" href="/assets/app.min.css" as="style">
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
@@ -12,7 +28,7 @@
   <meta name="description" content="Kıdem tazminatı hesaplama, brütten nete maaş, kredi kartı aidat iadesi dilekçesi, THH şikayet dilekçesi, The Football Lottery, The Birth Lottery ve 24 ücretsiz mikro araç PratikBase'de.">
   <meta name="keywords" content="pratikbase, pratik base, kıdem tazminatı hesaplama, ihbar tazminatı hesaplama, brütten nete maaş hesaplama, kredi kartı aidat iadesi dilekçesi, tüketici hakem heyeti dilekçesi, the football lottery, the birth lottery, doğum piyangosu, halı saha kadro kurucu, nöbetçi eczane, mtv hesaplama 2026, tapu harcı hesaplama, akaryakıt zam hesaplama">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-  <meta name="theme-color" content="#0b0f19">
+  <meta name="theme-color" content="#020617">
   <link rel="canonical" href="https://pratikbase.com/">
   <link rel="manifest" href="/manifest.json">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -144,52 +160,17 @@
     ]
   }
   </script>
-  <!-- Production Compiled Tailwind CSS (Fast, Static, Zero Runtime Lag) -->
+  <!-- Production Compiled Tailwind CSS -->
   <link rel="stylesheet" href="/assets/app.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"></noscript>
-  <style>
-    /* Custom scrollbar */
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: #0f172a; }
-    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: #475569; }
-  </style>
-  <style>
-    /* Hide Netlify platform badge iframe */
-    #nl-badge-frame, #nl-hud-frame, iframe[id*="nl-"], iframe[title*="Netlify"], #netlify-badge, .netlify-badge, [data-netlify-badge] {
-      display: none !important;
-      visibility: hidden !important;
-      opacity: 0 !important;
-      pointer-events: none !important;
-      width: 0 !important;
-      height: 0 !important;
-      position: absolute !important;
-      left: -9999px !important;
-      bottom: -9999px !important;
-      clip-path: circle(0) !important;
-    }
-  </style>
-  <script>
-    (function() {
-      const killBadge = () => {
-        const f = document.getElementById('nl-badge-frame') || document.getElementById('nl-hud-frame') || document.querySelector('iframe[title*="Netlify"]');
-        if (f) f.remove();
-      };
-      if (window.MutationObserver) {
-        new MutationObserver(killBadge).observe(document.documentElement, { childList: true, subtree: true });
-      }
-      window.addEventListener('DOMContentLoaded', killBadge);
-      window.addEventListener('load', killBadge);
-    })();
-  </script>
+  <!-- Clean FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-indigo-500 selection:text-white">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-indigo-500 selection:text-white" style="background-color: #020617; color: #f8fafc;">
 
-  <!-- Glow Background Effect -->
+  <!-- Lightweight Glow Background (Mobile GPU Optimized, Low Blur to Prevent Stutter) -->
   <div class="fixed inset-0 overflow-hidden pointer-events-none -z-10">
-    <div class="absolute -top-40 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-indigo-600/15 blur-[120px] rounded-full"></div>
-    <div class="absolute top-1/2 -right-40 w-[400px] h-[400px] bg-blue-600/10 blur-[140px] rounded-full"></div>
+    <div class="absolute -top-32 left-1/2 -translate-x-1/2 w-[500px] h-[250px] bg-indigo-600/10 blur-[60px] rounded-full"></div>
+    <div class="absolute top-1/2 -right-32 w-[300px] h-[300px] bg-blue-600/10 blur-[60px] rounded-full"></div>
   </div>
 
   <!-- Header / Navbar -->
@@ -1769,19 +1750,27 @@
       searchInput.focus();
     });
 
+    // Safari Private Browsing Safe Storage
+    function safeStorageGet(key) {
+      try { return localStorage.getItem(key); } catch (e) { return null; }
+    }
+    function safeStorageSet(key, value) {
+      try { localStorage.setItem(key, value); } catch (e) {}
+    }
+
     // Cookie Consent Banner Logic
     const cookieBanner = document.getElementById('cookieBanner');
     const btnAcceptCookies = document.getElementById('btnAcceptCookies');
     const btnRejectCookies = document.getElementById('btnRejectCookies');
 
-    if (cookieBanner && !localStorage.getItem('pratik_cookie_consent')) {
+    if (cookieBanner && !safeStorageGet('pratik_cookie_consent')) {
       setTimeout(() => {
         cookieBanner.classList.remove('translate-y-32', 'opacity-0', 'pointer-events-none');
       }, 800);
     }
 
     function closeCookieBanner(status) {
-      localStorage.setItem('pratik_cookie_consent', status);
+      safeStorageSet('pratik_cookie_consent', status);
       if (cookieBanner) {
         cookieBanner.classList.add('translate-y-32', 'opacity-0', 'pointer-events-none');
       }
@@ -1817,12 +1806,12 @@
 
     const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-    const pwaDismissed = localStorage.getItem('pratik_pwa_dismissed');
+    const pwaDismissed = safeStorageGet('pratik_pwa_dismissed');
 
     function showPwaBanner() {
       if (isStandalone || pwaDismissed) return;
       // Don't collide with cookie banner on mobile screens
-      if (!localStorage.getItem('pratik_cookie_consent')) return;
+      if (!safeStorageGet('pratik_cookie_consent')) return;
       setTimeout(() => {
         if (pwaBanner) {
           pwaBanner.classList.remove('translate-y-40', 'opacity-0', 'pointer-events-none');
@@ -1860,7 +1849,7 @@
         pwaBanner.classList.add('translate-y-40', 'opacity-0', 'pointer-events-none');
       }
       if (permanent) {
-        localStorage.setItem('pratik_pwa_dismissed', 'true');
+        safeStorageSet('pratik_pwa_dismissed', 'true');
       }
     }
 
