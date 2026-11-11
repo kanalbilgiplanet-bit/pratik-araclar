@@ -147,7 +147,7 @@
   </header>
 
   <!-- Main Container -->
-  <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full space-y-8">
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full space-y-8">
 
     <!-- FIXTURE QUICK SELECTOR (Otomatik Fikstür & Maç Seçici Bar) -->
     <div class="flex items-center justify-between gap-3 p-3.5 rounded-2xl bg-slate-900/80 border border-slate-800 text-xs">
@@ -174,124 +174,174 @@
       </div>
     </div>
 
-    <!-- MATCH HERO: Dynamic Scoreboard Card -->
-    <section class="relative overflow-hidden rounded-3xl bg-gradient-to-b from-slate-900/90 via-slate-900/70 to-slate-950 border border-slate-800 shadow-2xl p-6 sm:p-8">
-      
-      <!-- Top Badge Bar -->
-      <div class="flex flex-wrap items-center justify-between gap-3 pb-6 border-b border-slate-800/80">
-        <div class="flex items-center gap-2">
-          <span id="tournamentBadge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/40 text-xs font-bold uppercase tracking-wider">
-            <span class="w-2 h-2 rounded-full bg-rose-400 animate-pulse"></span>
-            UEFA Uluslar A Ligi
-          </span>
-          <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-800 text-slate-300 text-xs font-medium">
-            <i class="fa-regular fa-calendar text-rose-400 mr-1"></i> <span id="matchDateText">12 Kasım Perşembe</span>
-          </span>
-        </div>
+    <!-- HERO SECTION: MATCH SCOREBOARD (LEFT) & LIVE TRIBUNE CHAT (RIGHT) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
 
-        <div class="flex items-center gap-2 text-xs text-slate-400">
-          <i class="fa-solid fa-location-dot text-rose-400"></i>
-          <span id="matchVenueText">İzmir Gürsel Aksel Stadyumu</span>
-        </div>
-      </div>
-
-      <!-- Teams & Score Grid -->
-      <div class="py-8 grid grid-cols-3 items-center justify-items-center gap-2 sm:gap-6 text-center">
+      <!-- LEFT (lg:col-span-7): Match Scoreboard Hero Card -->
+      <section class="lg:col-span-7 relative overflow-hidden rounded-3xl bg-gradient-to-b from-slate-900/90 via-slate-900/70 to-slate-950 border border-slate-800 shadow-2xl p-5 sm:p-7 flex flex-col justify-between">
         
-        <!-- Team 1: HOME TEAM -->
-        <div class="flex flex-col items-center space-y-3">
-          <div id="homeCardBox" class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gradient-to-tr from-rose-600 to-red-600 border-2 border-rose-400/50 flex items-center justify-center shadow-xl shadow-rose-600/30 transform hover:scale-105 transition-transform">
-            <span id="homeFlag" class="text-4xl sm:text-5xl">🇹🇷</span>
+        <!-- Top Badge Bar -->
+        <div class="flex flex-wrap items-center justify-between gap-3 pb-5 border-b border-slate-800/80">
+          <div class="flex items-center gap-2">
+            <span id="tournamentBadge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/40 text-xs font-bold uppercase tracking-wider">
+              <span class="w-2 h-2 rounded-full bg-rose-400 animate-pulse"></span>
+              UEFA Uluslar A Ligi
+            </span>
+            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-800 text-slate-300 text-xs font-medium">
+              <i class="fa-regular fa-calendar text-rose-400 mr-1"></i> <span id="matchDateText">12 Kasım Perşembe</span>
+            </span>
           </div>
-          <div>
-            <h2 id="homeName" class="text-lg sm:text-2xl font-black text-white tracking-wide">TÜRKİYE</h2>
-            <span id="homeSub" class="text-xs text-rose-400 font-semibold">Ev Sahibi (Ay-Yıldızlılar)</span>
+
+          <div class="flex items-center gap-2 text-xs text-slate-400">
+            <i class="fa-solid fa-location-dot text-rose-400"></i>
+            <span id="matchVenueText">İzmir Gürsel Aksel Stadyumu</span>
           </div>
         </div>
 
-        <!-- Center: SCORE / COUNTDOWN -->
-        <div class="flex flex-col items-center justify-center space-y-2">
-          <div class="px-4 py-2 sm:px-6 sm:py-3 rounded-2xl bg-slate-950/80 border border-slate-700/80 shadow-inner flex items-center gap-3">
-            <span id="scoreHome" class="text-3xl sm:text-5xl font-black text-white">0</span>
-            <span class="text-2xl sm:text-3xl font-bold text-slate-500">-</span>
-            <span id="scoreAway" class="text-3xl sm:text-5xl font-black text-white">0</span>
+        <!-- Teams & Score Grid -->
+        <div class="py-6 sm:py-8 grid grid-cols-3 items-center justify-items-center gap-2 sm:gap-4 text-center">
+          
+          <!-- Team 1: HOME TEAM -->
+          <div class="flex flex-col items-center space-y-2.5">
+            <div id="homeCardBox" class="w-16 h-16 sm:w-22 sm:h-22 rounded-2xl bg-gradient-to-tr from-rose-600 to-red-600 border-2 border-rose-400/50 flex items-center justify-center shadow-xl shadow-rose-600/30 transform hover:scale-105 transition-transform">
+              <span id="homeFlag" class="text-3xl sm:text-4xl">🇹🇷</span>
+            </div>
+            <div>
+              <h2 id="homeName" class="text-base sm:text-xl font-black text-white tracking-wide">TÜRKİYE</h2>
+              <span id="homeSub" class="text-[11px] sm:text-xs text-rose-400 font-semibold">Ev Sahibi (Ay-Yıldız)</span>
+            </div>
           </div>
-          <div id="matchStatusText" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/20 text-xs font-semibold">
-            <i class="fa-solid fa-stopwatch text-amber-400"></i>
-            <span id="matchClock">Maç Başlamadı</span>
+
+          <!-- Center: SCORE / COUNTDOWN -->
+          <div class="flex flex-col items-center justify-center space-y-2">
+            <div class="px-4 py-2 sm:px-5 sm:py-3 rounded-2xl bg-slate-950/80 border border-slate-700/80 shadow-inner flex items-center gap-2.5 sm:gap-3">
+              <span id="scoreHome" class="text-3xl sm:text-4xl font-black text-white">0</span>
+              <span class="text-xl sm:text-2xl font-bold text-slate-500">-</span>
+              <span id="scoreAway" class="text-3xl sm:text-4xl font-black text-white">0</span>
+            </div>
+            <div id="matchStatusText" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/20 text-xs font-semibold">
+              <i class="fa-solid fa-stopwatch text-amber-400"></i>
+              <span id="matchClock">Maç Başlamadı</span>
+            </div>
+            <!-- Live Countdown Timer -->
+            <div id="countdownBox" class="text-[10px] sm:text-[11px] text-slate-400 font-mono pt-0.5">
+              Geri Sayım: <span id="countdownTimer" class="text-white font-bold">Hesaplanıyor...</span>
+            </div>
           </div>
-          <!-- Live Countdown Timer -->
-          <div id="countdownBox" class="text-[11px] text-slate-400 font-mono pt-1">
-            Geri Sayım: <span id="countdownTimer" class="text-white font-bold">Hesaplanıyor...</span>
+
+          <!-- Team 2: AWAY TEAM -->
+          <div class="flex flex-col items-center space-y-2.5">
+            <div id="awayCardBox" class="w-16 h-16 sm:w-22 sm:h-22 rounded-2xl bg-gradient-to-tr from-slate-900 to-amber-950 border-2 border-amber-500/40 flex items-center justify-center shadow-xl shadow-amber-950/50 transform hover:scale-105 transition-transform">
+              <span id="awayFlag" class="text-3xl sm:text-4xl">🇧🇪</span>
+            </div>
+            <div>
+              <h2 id="awayName" class="text-base sm:text-xl font-black text-white tracking-wide">BELÇİKA</h2>
+              <span id="awaySub" class="text-[11px] sm:text-xs text-amber-400 font-semibold">Deplasman Ekibi</span>
+            </div>
           </div>
+
         </div>
 
-        <!-- Team 2: AWAY TEAM -->
-        <div class="flex flex-col items-center space-y-3">
-          <div id="awayCardBox" class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gradient-to-tr from-slate-900 to-amber-950 border-2 border-amber-500/40 flex items-center justify-center shadow-xl shadow-amber-950/50 transform hover:scale-105 transition-transform">
-            <span id="awayFlag" class="text-4xl sm:text-5xl">🇧🇪</span>
+        <!-- Broadcast Info & In-Page Engagement Controls -->
+        <div class="pt-5 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-2.5 text-xs">
+          
+          <!-- Yasal Yayın Bilgi Rozeti -->
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-950/70 border border-slate-800 text-slate-300 text-xs">
+            <span class="flex items-center gap-1 font-medium">
+              <i class="fa-solid fa-tv text-red-500"></i>
+              <span>TV: <strong id="broadcastTvName" class="text-white">TRT 1</strong></span>
+            </span>
+            <span class="text-slate-700">|</span>
+            <span class="flex items-center gap-1 font-medium">
+              <i class="fa-solid fa-radio text-amber-400"></i>
+              <span>Radyo: <strong id="broadcastRadioName" class="text-white">TRT Radyo 1</strong></span>
+            </span>
           </div>
-          <div>
-            <h2 id="awayName" class="text-lg sm:text-2xl font-black text-white tracking-wide">BELÇİKA</h2>
-            <span id="awaySub" class="text-xs text-amber-400 font-semibold">Deplasman Ekibi</span>
+
+          <!-- Sitede Tutucu İnteraktif Kontroller -->
+          <div class="flex items-center gap-2">
+            <!-- Gol Sesi Alarmı -->
+            <button id="btnSoundAlert" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold transition border border-slate-700 flex items-center gap-1.5 shadow-sm text-xs" title="Gol olduğunda anlık sesli bildirim verir">
+              <i class="fa-solid fa-volume-high text-emerald-400"></i>
+              <span>Gol Sesi Açık</span>
+            </button>
           </div>
+
         </div>
 
-      </div>
+      </section>
 
-      <!-- Broadcast Info & In-Page Engagement Controls -->
-      <div class="pt-6 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-3 text-xs sm:text-sm">
+      <!-- RIGHT (lg:col-span-5): Live Fan Tribün Chat Stream (Anlık Canlı Sohbet) -->
+      <aside class="lg:col-span-5 rounded-3xl bg-gradient-to-b from-slate-900/95 via-slate-900/80 to-slate-950 border border-slate-800 shadow-2xl p-4 sm:p-5 flex flex-col justify-between">
         
-        <!-- Yasal Yayın Bilgi Rozeti (Siteden kovmayan, sade bilgilendirme) -->
-        <div class="inline-flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-slate-950/70 border border-slate-800 text-slate-300 text-xs shadow-inner">
-          <span class="flex items-center gap-1.5 font-medium">
-            <i class="fa-solid fa-tv text-red-500"></i>
-            <span>TV: <strong id="broadcastTvName" class="text-white">TRT 1</strong> (Şifresiz)</span>
-          </span>
-          <span class="text-slate-700">|</span>
-          <span class="flex items-center gap-1.5 font-medium">
-            <i class="fa-solid fa-radio text-amber-400"></i>
-            <span>Radyo: <strong id="broadcastRadioName" class="text-white">TRT Radyo 1</strong></span>
+        <!-- Chat Header -->
+        <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-rose-600 to-red-500 flex items-center justify-center text-white shadow-md shadow-rose-600/30 text-sm shrink-0">
+              <i class="fa-solid fa-comments"></i>
+            </div>
+            <div>
+              <h3 class="text-xs sm:text-sm font-bold text-white flex items-center gap-1.5">
+                <span>Canlı Tribün Sohbeti</span>
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              </h3>
+              <span class="text-[10px] text-slate-400">Diğer taraftarlarla canlı yorumlaşın</span>
+            </div>
+          </div>
+          <span class="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-slate-700/60 flex items-center gap-1 shrink-0">
+            <i class="fa-solid fa-shield-halved text-rose-400"></i> Filtreli
           </span>
         </div>
 
-        <!-- Sitede Tutucu İnteraktif Kontroller -->
-        <div class="flex items-center gap-2">
-          <!-- Otomatik Canlı Takip Rozeti -->
-          <span class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-semibold">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span>Otomatik Canlı Takip Aktif</span>
-          </span>
-
-          <!-- Gol Sesi Alarmı (Ana Odak) -->
-          <button id="btnSoundAlert" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold transition border border-slate-700 flex items-center gap-1.5 shadow-sm" title="Gol olduğunda anlık sesli bildirim verir">
-            <i class="fa-solid fa-volume-high text-emerald-400"></i>
-            <span>Gol Sesi Açık</span>
-          </button>
+        <!-- Chat Messages Stream -->
+        <div id="chatMessages" class="my-3 h-56 sm:h-64 lg:h-72 overflow-y-auto space-y-2 pr-1.5 scrollbar-thin scrollbar-thumb-slate-700/80">
+          <!-- Dynamically populated via JS -->
         </div>
 
-      </div>
+        <!-- Warning / Error Box -->
+        <div id="chatWarning" class="hidden mb-2 p-2 rounded-xl bg-rose-500/15 border border-rose-500/40 text-[11px] text-rose-300 flex items-center gap-1.5">
+          <i class="fa-solid fa-triangle-exclamation text-rose-400 shrink-0"></i>
+          <span id="chatWarningText" class="truncate">Lütfen saygılı bir dil kullanınız.</span>
+        </div>
 
-    </section>
+        <!-- Chat Input Form (Zero Overflow Guaranteed on Desktop & Mobile) -->
+        <form id="chatForm" class="pt-2 border-t border-slate-800/80 space-y-2">
+          <!-- Row 1: Nickname & Char Count -->
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center gap-1.5 flex-1 max-w-[170px]">
+              <i class="fa-regular fa-user text-slate-500 text-xs shrink-0"></i>
+              <input type="text" id="chatNickInput" maxlength="16" placeholder="Rumuz (örn: Barış)" required class="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-800 focus:border-rose-500 text-white text-xs placeholder:text-slate-500 outline-none transition">
+            </div>
+            <span id="chatCharCount" class="text-[10px] text-slate-500 font-mono">150 k.</span>
+          </div>
+
+          <!-- Row 2: Message Input + Send Button -->
+          <div class="flex items-center gap-1.5 w-full">
+            <input type="text" id="chatMsgInput" maxlength="150" placeholder="Düşüncenizi yazın..." required class="flex-1 min-w-0 px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 focus:border-rose-500 text-white text-xs placeholder:text-slate-500 outline-none transition">
+            <button type="submit" id="chatSubmitBtn" class="px-3.5 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition shadow-md shadow-rose-600/30 flex items-center gap-1 shrink-0">
+              <span>Yolla</span>
+              <i class="fa-solid fa-paper-plane text-[10px]"></i>
+            </button>
+          </div>
+        </form>
+
+      </aside>
+
+    </div>
 
     <!-- LEGAL SAFEGUARD & BROADCAST NOTICE -->
     <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 text-xs text-slate-400 leading-relaxed flex items-start gap-3">
       <i class="fa-solid fa-shield-halved text-emerald-400 text-sm mt-0.5 shrink-0"></i>
       <div>
         <strong class="text-slate-200">Yasal Yayın Bilgilendirmesi & Telif Uyumu:</strong>
-        PratikBase, 5846 Sayılı Fikir ve Sanat Eserleri Kanunu ve RTÜK kurallarına %100 uyar. Sitemizde korsan veya yetkisiz IPTV video yayını yapılmamaktadır. Karşılaşmayı resmi yayıncı kuruluşun (<strong>TRT 1</strong>) şifresiz ulusal TV frekansından veya tabii üzerinden canlı izleyebilir, <strong>TRT Radyo 1</strong> resmi frekansından dinleyebilir ve sayfamızdan <strong>anlık canlı skor, dakika dakika yazılı canlı anlatım ve analizlerle</strong> takip edebilirsiniz.
+        PratikBase, 5846 Sayılı Fikir ve Sanat Eserleri Kanunu ve RTÜK kurallarına %100 uyar. Sitemizde korsan veya yetkisiz IPTV video yayını yapılmamaktadır. Karşılaşmayı resmi yayıncı kuruluşun (<strong>TRT 1</strong>) şifresiz ulusal TV frekansından veya tabii üzerinden canlı izleyebilir, <strong>TRT Radyo 1</strong> resmi frekansından dinleyebilir ve sayfamızdan <strong>anlık canlı skor, dakika dakika yazılı canlı anlatım ve tribün sohbetiyle</strong> takip edebilirsiniz.
       </div>
     </div>
 
-    <!-- TABS NAVIGATION: Canlı Anlatım | İstatistikler | Kadrolar | Puan Durumu | Canlı Sohbet -->
+    <!-- TABS NAVIGATION: Canlı Anlatım | İstatistikler | Kadrolar | Puan Durumu -->
     <div class="flex items-center gap-2 border-b border-slate-800 pb-2 overflow-x-auto text-xs sm:text-sm font-semibold">
       <button class="match-tab active px-4 py-2 rounded-xl bg-rose-600 text-white shadow-md shadow-rose-600/30 transition-all flex items-center gap-1.5 whitespace-nowrap" data-tab="tabAnlatim">
         <i class="fa-solid fa-comment-dots"></i> Canlı Anlatım
-      </button>
-      <button class="match-tab px-4 py-2 rounded-xl bg-slate-900/80 text-slate-400 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-1.5 whitespace-nowrap" data-tab="tabSohbet">
-        <i class="fa-solid fa-comments text-amber-400"></i>
-        <span>Taraftar Sohbeti</span>
-        <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
       </button>
       <button class="match-tab px-4 py-2 rounded-xl bg-slate-900/80 text-slate-400 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-1.5 whitespace-nowrap" data-tab="tabIstatistik">
         <i class="fa-solid fa-chart-simple"></i> Maç İstatistikleri
@@ -454,66 +504,6 @@
         </div>
       </div>
 
-    </section>
-
-    <!-- TAB 5: TARAFTAR CANLI SOHBET ODASI -->
-    <section id="tabSohbet" class="tab-pane hidden space-y-4">
-      <div class="rounded-3xl bg-slate-900/90 border border-slate-800 p-4 sm:p-6 space-y-4 shadow-xl">
-        
-        <!-- Chat Header & Rules Notice -->
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-rose-600 to-red-500 flex items-center justify-center text-white shadow-lg shadow-rose-600/30 shrink-0">
-              <i class="fa-solid fa-comments text-lg"></i>
-            </div>
-            <div>
-              <h3 class="text-sm sm:text-base font-bold text-white flex items-center gap-2">
-                <span>Milli Takım Canlı Tribün Sohbeti</span>
-                <span class="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-semibold">
-                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block animate-pulse mr-1"></span>Canlı Tribün
-                </span>
-              </h3>
-              <p class="text-xs text-slate-400">Görüşlerinizi paylaşın, pozisyonları ve golleri diğer taraftarlarla tartışın.</p>
-            </div>
-          </div>
-
-          <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-950 text-slate-400 text-[11px] border border-slate-800 shrink-0">
-            <i class="fa-solid fa-shield-halved text-rose-400"></i>
-            <span>Küfür, Argo & Reklam Filtrelenir</span>
-          </div>
-        </div>
-
-        <!-- Chat Messages Container -->
-        <div id="chatMessages" class="h-80 sm:h-96 overflow-y-auto space-y-3 pr-2 scrollbar-thin scrollbar-thumb-slate-700">
-          <!-- Dynamically populated messages -->
-        </div>
-
-        <!-- Chat Warning / Feedback Box -->
-        <div id="chatWarning" class="hidden p-3 rounded-xl bg-rose-500/15 border border-rose-500/40 text-xs text-rose-300 flex items-center gap-2">
-          <i class="fa-solid fa-triangle-exclamation text-rose-400"></i>
-          <span id="chatWarningText">Lütfen saygılı bir dil kullanınız.</span>
-        </div>
-
-        <!-- Message Input Box -->
-        <form id="chatForm" class="flex flex-col sm:flex-row gap-2 pt-2 border-t border-slate-800">
-          <div class="w-full sm:w-44 shrink-0">
-            <input type="text" id="chatNickInput" maxlength="18" placeholder="Rumuz (örn: Barış)" required class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-rose-500 text-white text-xs placeholder:text-slate-500 outline-none transition">
-          </div>
-          <div class="flex-1 flex gap-2">
-            <input type="text" id="chatMsgInput" maxlength="150" placeholder="Mesajınızı yazın (örn: Haydi çocuklar, bugün galibiyet bizim!)..." required class="flex-1 px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-rose-500 text-white text-xs placeholder:text-slate-500 outline-none transition">
-            <button type="submit" id="chatSubmitBtn" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-500 hover:to-red-500 text-white text-xs font-bold transition shadow-md shadow-rose-600/30 flex items-center gap-1.5 shrink-0">
-              <span>Gönder</span>
-              <i class="fa-solid fa-paper-plane text-[10px]"></i>
-            </button>
-          </div>
-        </form>
-
-        <div class="flex items-center justify-between text-[11px] text-slate-500 pt-1">
-          <span>🛡️ Topluluk Kuralları: Hakaret, küfür, reklam, link ve nefret söylemi kesinlikle yasaktır.</span>
-          <span id="chatCharCount" class="font-mono">150 karakter</span>
-        </div>
-
-      </div>
     </section>
 
     <!-- INTERACTIVE COMMUNITY POLL (TARAFTAR MAÇ TAHMİNİ ANKETİ) -->
