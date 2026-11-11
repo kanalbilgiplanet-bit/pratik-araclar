@@ -203,9 +203,9 @@
           
           <!-- Team 1: HOME TEAM -->
           <div class="flex flex-col items-center space-y-2.5">
-            <div id="homeCardBox" class="w-16 h-16 sm:w-22 sm:h-22 rounded-2xl bg-gradient-to-tr from-rose-600 to-red-600 border-2 border-rose-400/50 flex items-center justify-center shadow-xl shadow-rose-600/30 transform hover:scale-105 transition-transform p-2">
+            <div id="homeCardBox" class="w-16 h-16 sm:w-22 sm:h-22 rounded-2xl bg-slate-900/95 border-2 border-slate-700/80 hover:border-rose-500/70 flex items-center justify-center shadow-2xl shadow-rose-600/15 transform hover:scale-105 transition-all p-2">
               <span id="homeFlag" class="flex items-center justify-center w-full h-full">
-                <svg class="w-10 h-7 sm:w-14 sm:h-9.5 rounded-md shadow-md" viewBox="0 0 1200 800"><rect width="1200" height="800" fill="#E30A17"/><circle cx="425" cy="400" r="200" fill="#ffffff"/><circle cx="475" cy="400" r="160" fill="#E30A17"/><polygon fill="#ffffff" points="583.33,400 706.42,439.99 630.34,335.31 630.34,464.69 706.42,360.01"/></svg>
+                <svg class="w-11 h-7 sm:w-15 sm:h-10 rounded-md shadow-lg border border-white/20" viewBox="0 0 1200 800"><rect width="1200" height="800" fill="#E30A17"/><circle cx="425" cy="400" r="200" fill="#ffffff"/><circle cx="475" cy="400" r="160" fill="#E30A17"/><polygon fill="#ffffff" points="583.33,400 706.42,439.99 630.34,335.31 630.34,464.69 706.42,360.01"/></svg>
               </span>
             </div>
             <div>
@@ -233,9 +233,9 @@
 
           <!-- Team 2: AWAY TEAM -->
           <div class="flex flex-col items-center space-y-2.5">
-            <div id="awayCardBox" class="w-16 h-16 sm:w-22 sm:h-22 rounded-2xl bg-gradient-to-tr from-slate-900 to-amber-950 border-2 border-amber-500/40 flex items-center justify-center shadow-xl shadow-amber-950/50 transform hover:scale-105 transition-transform p-2">
+            <div id="awayCardBox" class="w-16 h-16 sm:w-22 sm:h-22 rounded-2xl bg-slate-900/95 border-2 border-slate-700/80 hover:border-amber-500/70 flex items-center justify-center shadow-2xl shadow-amber-500/15 transform hover:scale-105 transition-all p-2">
               <span id="awayFlag" class="flex items-center justify-center w-full h-full">
-                <svg class="w-10 h-7 sm:w-14 sm:h-9.5 rounded-md shadow-md" viewBox="0 0 30 20"><rect width="10" height="20" fill="#000000"/><rect x="10" width="10" height="20" fill="#FDDA24"/><rect x="20" width="10" height="20" fill="#EF3340"/></svg>
+                <svg class="w-11 h-7 sm:w-15 sm:h-10 rounded-md shadow-lg border border-white/20" viewBox="0 0 30 20"><rect width="10" height="20" fill="#000000"/><rect x="10" width="10" height="20" fill="#FDDA24"/><rect x="20" width="10" height="20" fill="#EF3340"/></svg>
               </span>
             </div>
             <div>
@@ -748,7 +748,7 @@
           short: "TUR",
           flag: "🇹🇷",
           sub: "Ev Sahibi (Ay-Yıldızlılar)",
-          colorClass: "from-rose-600 to-red-600 border-rose-400/50 shadow-rose-600/30",
+          colorClass: "bg-slate-900/95 border-slate-700/80 hover:border-rose-500/70 shadow-rose-600/15",
           coach: "Vincenzo Montella",
           formation: "4-2-3-1",
           lineup: [
@@ -764,7 +764,7 @@
           short: "BEL",
           flag: "🇧🇪",
           sub: "Deplasman (Kırmızı Şeytanlar)",
-          colorClass: "from-slate-900 to-amber-950 border-amber-500/40 shadow-amber-950/50",
+          colorClass: "bg-slate-900/95 border-slate-700/80 hover:border-amber-500/70 shadow-amber-500/15",
           coach: "Domenico Tedesco",
           formation: "4-3-3",
           lineup: [
@@ -805,7 +805,7 @@
           short: "FRA",
           flag: "🇫🇷",
           sub: "Ev Sahibi (Horozlar / Les Bleus)",
-          colorClass: "from-blue-950 to-blue-800 border-blue-500/40 shadow-blue-900/50",
+          colorClass: "bg-slate-900/95 border-slate-700/80 hover:border-blue-500/70 shadow-blue-500/15",
           coach: "Didier Deschamps",
           formation: "4-2-3-1",
           lineup: [
@@ -821,7 +821,7 @@
           short: "TUR",
           flag: "🇹🇷",
           sub: "Deplasman (Bizim Çocuklar)",
-          colorClass: "from-rose-600 to-red-600 border-rose-400/50 shadow-rose-600/30",
+          colorClass: "bg-slate-900/95 border-slate-700/80 hover:border-rose-500/70 shadow-rose-600/15",
           coach: "Vincenzo Montella",
           formation: "4-2-3-1",
           lineup: [
@@ -870,26 +870,26 @@
 
     function getScoreboardFlagSvg(flagCode) {
       if (flagCode === "🇹🇷" || flagCode === "TUR") {
-        return `<svg class="w-10 h-7 sm:w-14 sm:h-9.5 rounded-md shadow-md shrink-0" viewBox="0 0 1200 800"><rect width="1200" height="800" fill="#E30A17"/><circle cx="425" cy="400" r="200" fill="#ffffff"/><circle cx="475" cy="400" r="160" fill="#E30A17"/><polygon fill="#ffffff" points="583.33,400 706.42,439.99 630.34,335.31 630.34,464.69 706.42,360.01"/></svg>`;
+        return `<svg class="w-11 h-7 sm:w-15 sm:h-10 rounded-md shadow-lg border border-white/20 shrink-0" viewBox="0 0 1200 800"><rect width="1200" height="800" fill="#E30A17"/><circle cx="425" cy="400" r="200" fill="#ffffff"/><circle cx="475" cy="400" r="160" fill="#E30A17"/><polygon fill="#ffffff" points="583.33,400 706.42,439.99 630.34,335.31 630.34,464.69 706.42,360.01"/></svg>`;
       }
       if (flagCode === "🇧🇪" || flagCode === "BEL") {
-        return `<svg class="w-10 h-7 sm:w-14 sm:h-9.5 rounded-md shadow-md shrink-0" viewBox="0 0 30 20"><rect width="10" height="20" fill="#000000"/><rect x="10" width="10" height="20" fill="#FDDA24"/><rect x="20" width="10" height="20" fill="#EF3340"/></svg>`;
+        return `<svg class="w-11 h-7 sm:w-15 sm:h-10 rounded-md shadow-lg border border-white/20 shrink-0" viewBox="0 0 30 20"><rect width="10" height="20" fill="#000000"/><rect x="10" width="10" height="20" fill="#FDDA24"/><rect x="20" width="10" height="20" fill="#EF3340"/></svg>`;
       }
       if (flagCode === "🇫🇷" || flagCode === "FRA") {
-        return `<svg class="w-10 h-7 sm:w-14 sm:h-9.5 rounded-md shadow-md shrink-0" viewBox="0 0 30 20"><rect width="10" height="20" fill="#002395"/><rect x="10" width="10" height="20" fill="#ffffff"/><rect x="20" width="10" height="20" fill="#ED2939"/></svg>`;
+        return `<svg class="w-11 h-7 sm:w-15 sm:h-10 rounded-md shadow-lg border border-white/20 shrink-0" viewBox="0 0 30 20"><rect width="10" height="20" fill="#002395"/><rect x="10" width="10" height="20" fill="#ffffff"/><rect x="20" width="10" height="20" fill="#ED2939"/></svg>`;
       }
       return flagCode;
     }
 
     function getMiniFlagSvg(flagCode) {
       if (flagCode === "🇹🇷" || flagCode === "TUR") {
-        return `<svg class="w-3.5 h-2.5 rounded-[2px] shadow-xs inline-block shrink-0" viewBox="0 0 1200 800"><rect width="1200" height="800" fill="#E30A17"/><circle cx="425" cy="400" r="200" fill="#ffffff"/><circle cx="475" cy="400" r="160" fill="#E30A17"/><polygon fill="#ffffff" points="583.33,400 706.42,439.99 630.34,335.31 630.34,464.69 706.42,360.01"/></svg>`;
+        return `<svg class="w-4 h-2.5 rounded-[2px] shadow-sm border border-white/30 inline-block shrink-0" viewBox="0 0 1200 800"><rect width="1200" height="800" fill="#E30A17"/><circle cx="425" cy="400" r="200" fill="#ffffff"/><circle cx="475" cy="400" r="160" fill="#E30A17"/><polygon fill="#ffffff" points="583.33,400 706.42,439.99 630.34,335.31 630.34,464.69 706.42,360.01"/></svg>`;
       }
       if (flagCode === "🇧🇪" || flagCode === "BEL") {
-        return `<svg class="w-3.5 h-2.5 rounded-[2px] shadow-xs inline-block shrink-0" viewBox="0 0 30 20"><rect width="10" height="20" fill="#000000"/><rect x="10" width="10" height="20" fill="#FDDA24"/><rect x="20" width="10" height="20" fill="#EF3340"/></svg>`;
+        return `<svg class="w-4 h-2.5 rounded-[2px] shadow-sm border border-white/30 inline-block shrink-0" viewBox="0 0 30 20"><rect width="10" height="20" fill="#000000"/><rect x="10" width="10" height="20" fill="#FDDA24"/><rect x="20" width="10" height="20" fill="#EF3340"/></svg>`;
       }
       if (flagCode === "🇫🇷" || flagCode === "FRA") {
-        return `<svg class="w-3.5 h-2.5 rounded-[2px] shadow-xs inline-block shrink-0" viewBox="0 0 30 20"><rect width="10" height="20" fill="#002395"/><rect x="10" width="10" height="20" fill="#ffffff"/><rect x="20" width="10" height="20" fill="#ED2939"/></svg>`;
+        return `<svg class="w-4 h-2.5 rounded-[2px] shadow-sm border border-white/30 inline-block shrink-0" viewBox="0 0 30 20"><rect width="10" height="20" fill="#002395"/><rect x="10" width="10" height="20" fill="#ffffff"/><rect x="20" width="10" height="20" fill="#ED2939"/></svg>`;
       }
       return flagCode;
     }
@@ -902,8 +902,8 @@
 
       FIXTURES.forEach((m, idx) => {
         const btn = document.createElement('button');
-        btn.className = `px-2.5 py-1 rounded-xl text-xs font-semibold transition border flex items-center gap-1.5 ${idx === currentMatchIndex ? 'bg-rose-600 text-white border-rose-500 shadow-sm' : 'bg-slate-800 text-slate-400 hover:text-white border-slate-700'}`;
-        btn.innerHTML = `<span>${getMiniFlagSvg(m.home.flag)}</span><span>vs</span><span>${getMiniFlagSvg(m.away.flag)}</span>`;
+        btn.className = `px-3 py-1.5 rounded-xl text-xs font-semibold transition-all border flex items-center gap-2 ${idx === currentMatchIndex ? 'bg-slate-900 text-white border-rose-500 ring-2 ring-rose-500/40 shadow-lg' : 'bg-slate-800/80 text-slate-400 hover:text-white border-slate-700/80 hover:bg-slate-800'}`;
+        btn.innerHTML = `<span>${getMiniFlagSvg(m.home.flag)}</span><span class="text-slate-400 font-bold">vs</span><span>${getMiniFlagSvg(m.away.flag)}</span>`;
         btn.title = `${m.home.name} vs ${m.away.name} (${m.displayDate})`;
         btn.onclick = () => {
           currentMatchIndex = idx;
@@ -925,13 +925,13 @@
       document.getElementById('homeFlag').innerHTML = getScoreboardFlagSvg(m.home.flag);
       document.getElementById('homeName').textContent = m.home.name;
       document.getElementById('homeSub').textContent = m.home.sub;
-      document.getElementById('homeCardBox').className = `w-16 h-16 sm:w-22 sm:h-22 rounded-2xl bg-gradient-to-tr border-2 flex items-center justify-center shadow-xl transform hover:scale-105 transition-transform p-2 ${m.home.colorClass}`;
+      document.getElementById('homeCardBox').className = `w-16 h-16 sm:w-22 sm:h-22 rounded-2xl border-2 flex items-center justify-center shadow-2xl transform hover:scale-105 transition-all p-2 ${m.home.colorClass}`;
 
       // Away Team Flag & Details
       document.getElementById('awayFlag').innerHTML = getScoreboardFlagSvg(m.away.flag);
       document.getElementById('awayName').textContent = m.away.name;
       document.getElementById('awaySub').textContent = m.away.sub;
-      document.getElementById('awayCardBox').className = `w-16 h-16 sm:w-22 sm:h-22 rounded-2xl bg-gradient-to-tr border-2 flex items-center justify-center shadow-xl transform hover:scale-105 transition-transform p-2 ${m.away.colorClass}`;
+      document.getElementById('awayCardBox').className = `w-16 h-16 sm:w-22 sm:h-22 rounded-2xl border-2 flex items-center justify-center shadow-2xl transform hover:scale-105 transition-all p-2 ${m.away.colorClass}`;
 
       // Broadcast Names
       const tvEl = document.getElementById('broadcastTvName');
