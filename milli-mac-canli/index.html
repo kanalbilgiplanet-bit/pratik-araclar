@@ -155,6 +155,17 @@
       </div>
     </div>
 
+    <!-- GOAL TOAST NOTIFICATION -->
+    <div id="goalToast" class="fixed top-20 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 scale-90 transition-all duration-500 ease-out">
+      <div class="px-6 py-4 rounded-2xl bg-gradient-to-r from-red-600 via-rose-600 to-red-600 text-white font-black text-base sm:text-xl shadow-2xl border-2 border-white/30 flex items-center gap-3 shadow-rose-600/50">
+        <span class="text-3xl sm:text-4xl animate-bounce">⚽</span>
+        <div>
+          <div id="goalToastTitle" class="tracking-wider uppercase font-black text-white">GÖZÜN AYDIN TÜRKİYE! GOOOOOL!</div>
+          <div id="goalToastSub" class="text-xs sm:text-sm text-rose-100 font-medium">Skor Güncellendi</div>
+        </div>
+      </div>
+    </div>
+
     <!-- MATCH HERO: Dynamic Scoreboard Card -->
     <section class="relative overflow-hidden rounded-3xl bg-gradient-to-b from-slate-900/90 via-slate-900/70 to-slate-950 border border-slate-800 shadow-2xl p-6 sm:p-8">
       
@@ -939,7 +950,7 @@
       });
     });
 
-    // Ses Uyarısı Butonu
+    // Ses Uyarısı Butonu & Web Audio API Gol Sesi
     const btnSound = document.getElementById('btnSoundAlert');
     let soundEnabled = true;
     if (btnSound) {
@@ -948,7 +959,184 @@
         btnSound.innerHTML = soundEnabled 
           ? '<i class="fa-solid fa-volume-high text-emerald-400"></i><span>Gol Sesi Açık</span>'
           : '<i class="fa-solid fa-volume-xmark text-slate-500"></i><span>Gol Sesi Kapalı</span>';
+        if (soundEnabled) {
+          playGoalChime(); // Kullanıcı sesi açınca kısa teyit sesi çalar
+        }
       });
+    }
+
+    // Gerçek Zamanlı Gol Melodisi (Web Audio API Synthesizer - 0 Bayt, 0 Gecikme)
+    function playGoalChime() {
+      if (!soundEnabled) return;
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        if (ctx.state === 'suspended') {
+          ctx.resume();
+        }
+        // Zafer / Gol Arpej Melodisi: C5 -> E5 -> G5 -> C6
+        const notes = [523.25, 659.25, 783.99, 1046.50];
+        notes.forEach((freq, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.12);
+          gain.gain.setValueAtTime(0.25, ctx.currentTime + idx * 0.12);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.12 + 0.35);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(ctx.currentTime + idx * 0.12);
+          osc.stop(ctx.currentTime + idx * 0.12 + 0.35);
+        });
+      } catch (e) {
+        console.warn('AudioContext uyarısı:', e);
+      }
+    }
+
+    // Gol Bildirimi Pop-up Gösterici
+    function showGoalToast(title, subtitle) {
+      const toast = document.getElementById('goalToast');
+      const titleEl = document.getElementById('goalToastTitle');
+      const subEl = document.getElementById('goalToastSub');
+      if (!toast) return;
+
+      if (title && titleEl) titleEl.textContent = title;
+      if (subtitle && subEl) subEl.textContent = subtitle;
+
+      toast.classList.remove('opacity-0', 'scale-90', 'pointer-events-none');
+      toast.classList.add('opacity-100', 'scale-100');
+
+      setTimeout(() => {
+        toast.classList.remove('opacity-100', 'scale-100');
+        toast.classList.add('opacity-0', 'scale-90', 'pointer-events-none');
+      }, 5000);
+    }
+
+    // Skorboard Animasyonu
+    function animateScoreChange(elementId) {
+      const el = document.getElementById(elementId);
+      if (!el) return;
+      el.classList.add('scale-150', 'text-rose-400', 'transition-transform', 'duration-300');
+      setTimeout(() => {
+        el.classList.remove('scale-150', 'text-rose-400');
+      }, 1000);
+    }
+
+    // ========================================================
+    // CANLI SKOR VE OLAY YOKLAMA MOTORU (POLLING ENGINE)
+    // ========================================================
+    let currentScore = { home: 0, away: 0 };
+    let initialScoreLoaded = false;
+
+    async function checkLiveScore() {
+      try {
+        const res = await fetch(`./data/live_score.json?_t=${Date.now()}`, { cache: 'no-store' });
+        if (!res.ok) return;
+        const data = await res.json();
+
+        const activeMatch = FIXTURES[currentMatchIndex];
+        // Sadece aktif maç ID'si eşleşiyorsa güncelle
+        if (data.matchId && activeMatch && data.matchId !== activeMatch.id) {
+          return;
+        }
+
+        const scoreHomeEl = document.getElementById('scoreHome');
+        const scoreAwayEl = document.getElementById('scoreAway');
+        const clockEl = document.getElementById('matchClock');
+
+        const newHome = typeof data.scoreHome === 'number' ? data.scoreHome : 0;
+        const newAway = typeof data.scoreAway === 'number' ? data.scoreAway : 0;
+
+        // İlk yüklemeden sonra skor arttıysa gol alarmı ver!
+        if (initialScoreLoaded) {
+          if (newHome > currentScore.home) {
+            playGoalChime();
+            showGoalToast(`⚽ GOOOOOL! ${activeMatch.home.name}!`, data.lastGoalText || 'Skor Güncellendi');
+            animateScoreChange('scoreHome');
+          } else if (newAway > currentScore.away) {
+            playGoalChime();
+            showGoalToast(`⚽ GOL (${activeMatch.away.name})`, data.lastGoalText || 'Skor Güncellendi');
+            animateScoreChange('scoreAway');
+          }
+        }
+
+        // Skorları ata
+        currentScore.home = newHome;
+        currentScore.away = newAway;
+        if (scoreHomeEl) scoreHomeEl.textContent = newHome;
+        if (scoreAwayEl) scoreAwayEl.textContent = newAway;
+
+        // Maç durumu / dakikası
+        if (data.statusText && clockEl && data.status !== 'not_started') {
+          clockEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-rose-500 animate-ping mr-1"></span> ${data.statusText}`;
+        }
+
+        // Canlı olaylar varsa timeline'a ekle
+        if (data.events && Array.isArray(data.events) && data.events.length > 0) {
+          const container = document.getElementById('liveTimeline');
+          if (container) {
+            const eventsHtml = data.events.map(ev => `
+              <div class="timeline-item p-4 rounded-2xl bg-slate-900/90 border border-rose-500/50 flex items-start gap-3 shadow-lg">
+                <div class="w-10 h-10 rounded-xl bg-rose-600 text-white flex items-center justify-center font-bold text-xs shrink-0 mt-0.5 shadow-md shadow-rose-600/40">
+                  ${ev.minute || 'Canlı'}
+                </div>
+                <div class="flex-1 space-y-1">
+                  <span class="font-bold text-white text-xs flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-rose-400 animate-ping"></span> ${ev.title}
+                  </span>
+                  <p class="text-xs sm:text-sm text-slate-200 leading-relaxed">${ev.text}</p>
+                </div>
+              </div>
+            `).join('');
+            container.innerHTML = eventsHtml + container.innerHTML;
+          }
+        }
+
+        initialScoreLoaded = true;
+      } catch (err) {
+        // Sessiz yakala
+        console.debug('Canlı skor yoklama kontrolü:', err);
+      }
+    }
+
+    // İlk skor kontrolü ve her 15 saniyede bir otomatik sorgulama
+    checkLiveScore();
+    setInterval(checkLiveScore, 15000);
+
+    // Canlı Simülasyon Test Fonksiyonu (Konsoldan veya URL'den test için)
+    window.testGoal = function(home, away, goalText) {
+      initialScoreLoaded = true;
+      const fakeData = {
+        scoreHome: home,
+        scoreAway: away,
+        lastGoalText: goalText || '34\' Arda Güler ceza sahası dışından müthiş vurdu!',
+        status: 'live',
+        statusText: '34\' Canlı'
+      };
+      const scoreHomeEl = document.getElementById('scoreHome');
+      const scoreAwayEl = document.getElementById('scoreAway');
+      
+      if (home > currentScore.home) {
+        playGoalChime();
+        showGoalToast(`⚽ GOOOOOL! TÜRKİYE!`, fakeData.lastGoalText);
+        animateScoreChange('scoreHome');
+      } else if (away > currentScore.away) {
+        playGoalChime();
+        showGoalToast(`⚽ GOL (BELÇİKA)`, fakeData.lastGoalText);
+        animateScoreChange('scoreAway');
+      }
+      currentScore.home = home;
+      currentScore.away = away;
+      if (scoreHomeEl) scoreHomeEl.textContent = home;
+      if (scoreAwayEl) scoreAwayEl.textContent = away;
+    };
+
+    // URL'de ?demo=goal varsa anında gol animasyonunu test et
+    if (window.location.search.includes('demo=goal')) {
+      setTimeout(() => {
+        window.testGoal(1, 0, "34' Arda Güler 90'a astı!");
+      }, 1500);
     }
 
     // Akış Yenile Butonu
@@ -956,9 +1144,11 @@
     if (btnRefresh) {
       btnRefresh.addEventListener('click', () => {
         btnRefresh.querySelector('i').classList.add('fa-spin');
-        setTimeout(() => {
-          btnRefresh.querySelector('i').classList.remove('fa-spin');
-        }, 800);
+        checkLiveScore().finally(() => {
+          setTimeout(() => {
+            btnRefresh.querySelector('i').classList.remove('fa-spin');
+          }, 600);
+        });
       });
     }
   </script>
