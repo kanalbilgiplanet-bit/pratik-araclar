@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://cdn.tailwindcss.com">
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 
-  <title>Buluşma & Etkinlik Davetiyesi Hazırlayıcı (WhatsApp & Google Takvim) | Pratik Araçlar</title>
+  <title>Buluşma & Etkinlik Davetiyesi Hazırlayıcı (WhatsApp & Google Takvim) | PratikBase</title>
   <meta name="description" content="Halı saha, 'bir ara görüşelim' buluşmaları, doğum günü ve toplantılar için tek tıkla emojili WhatsApp davetiyesi, Google Takvim linki ve .ics dosyası oluşturun.">
   <meta name="keywords" content="etkinlik davetiye hazırlayıcı, whatsapp davet mesajı, halı saha davet metni, buluşma planlayıcı, google takvim etkinlik linki oluşturma, ical oluşturucu, doğum günü whatsapp davetiyesi">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
@@ -21,7 +21,7 @@
   <meta property="og:description" content="Artık 'bir ara görüşelim' deyip ertelemek yok! Emojili hazır WhatsApp daveti ve tek tıkla takvim linki oluştur.">
   <meta property="og:image" content="https://pratikbase.com/assets/og-banner.png">
   <meta property="og:locale" content="tr_TR">
-  <meta property="og:site_name" content="Pratik Araçlar">
+  <meta property="og:site_name" content="PratikBase">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
@@ -126,7 +126,7 @@
   <header class="border-b border-slate-800/80 bg-slate-900/80 backdrop-blur-md sticky top-0 z-40">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
       <div class="flex items-center gap-3">
-        <a href="../" class="flex items-center gap-2.5 group transition" title="Pratik Araçlar Vitrinine Dön">
+        <a href="../" class="flex items-center gap-2.5 group transition" title="PratikBase Vitrinine Dön">
           <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-500 to-cyan-500 flex items-center justify-center text-slate-950 font-black shadow-lg shadow-emerald-900/30 group-hover:scale-105 transition">
             <i class="fa-solid fa-calendar-check text-sm"></i>
           </div>
@@ -466,7 +466,7 @@
     <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
       <div class="flex items-center gap-2">
         <div class="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs font-bold">PA</div>
-        <span>© 2026 PratikAraçlar - Buluşma & Etkinlik Davetiyesi Hazırlayıcı</span>
+        <span>© 2026 PratikBase - Buluşma & Etkinlik Davetiyesi Hazırlayıcı</span>
       </div>
       <div class="flex items-center gap-4 text-slate-400">
         <a href="../" class="hover:text-emerald-300 transition">Tüm Araçlar</a>
@@ -671,7 +671,7 @@
         const endDt = new Date(dt.getTime() + durationMins * 60000);
         const startIso = toGoogleCalendarDate(dt);
         const endIso = toGoogleCalendarDate(endDt);
-        const details = `${note}\n\nOrganize eden: ${organizer || 'Arkadaş Grubu'}\nPratikAraçlar ile hazırlandı: https://pratikbase.com/etkinlik-davet/`;
+        const details = `${note}\n\nOrganize eden: ${organizer || 'Arkadaş Grubu'}\nPratikBase ile hazırlandı: https://pratikbase.com/etkinlik-davet/`;
         calLink = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${startIso}/${endIso}&details=${encodeURIComponent(details)}&location=${encodeURIComponent(location)}`;
       }
 
