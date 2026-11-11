@@ -309,12 +309,12 @@
         </div>
 
         <!-- Chat Input Form (Zero Overflow Guaranteed on Desktop & Mobile) -->
-        <form id="chatForm" class="pt-2 border-t border-slate-800/80 space-y-2">
+        <form id="chatForm" class="pt-2 border-t border-slate-800/80 space-y-2" autocomplete="off">
           <!-- Row 1: Nickname & Quick Emoji Bar -->
           <div class="flex items-center justify-between gap-2">
             <div class="flex items-center gap-1.5 flex-1 max-w-[150px]">
               <i class="fa-regular fa-user text-slate-500 text-xs shrink-0"></i>
-              <input type="text" id="chatNickInput" maxlength="16" placeholder="Rumuz (örn: Barış)" required class="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-800 focus:border-rose-500 text-white text-xs placeholder:text-slate-500 outline-none transition">
+              <input type="text" id="chatNickInput" maxlength="16" placeholder="Rumuz (örn: Barış)" autocomplete="off" required class="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-800 focus:border-rose-500 text-white text-xs placeholder:text-slate-500 outline-none transition">
             </div>
 
             <!-- Quick Match Emojis (Sık Kullanılan Milli Emojiler) -->
@@ -331,7 +331,7 @@
 
           <!-- Row 2: Message Input + Send Button -->
           <div class="flex items-center gap-1.5 w-full">
-            <input type="text" id="chatMsgInput" maxlength="150" placeholder="Mesajınızı yazın..." required class="flex-1 min-w-0 px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 focus:border-rose-500 text-white text-xs placeholder:text-slate-500 outline-none transition">
+            <input type="text" id="chatMsgInput" maxlength="150" placeholder="Mesajınızı yazın..." autocomplete="off" required class="flex-1 min-w-0 px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 focus:border-rose-500 text-white text-xs placeholder:text-slate-500 outline-none transition">
             <button type="submit" id="chatSubmitBtn" class="px-3.5 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition shadow-md shadow-rose-600/30 flex items-center gap-1 shrink-0">
               <span>Yolla</span>
               <i class="fa-solid fa-paper-plane text-[10px]"></i>
