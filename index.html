@@ -1521,61 +1521,114 @@
   </main>
 
   <!-- Footer -->
-  <footer class="border-t border-slate-800/80 bg-slate-900/60 mt-12 py-8 text-xs text-slate-400">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
-      <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div class="flex items-center gap-2">
-          <span class="font-bold text-white tracking-tight">Pratik<span class="text-indigo-400">Araçlar</span></span>
-          <span>•</span>
-          <span class="text-slate-400">Günlük & Acil İhtiyaçlar İçin Hızlı Mikro Araçlar Portalı</span>
+  <footer class="border-t border-slate-800/80 bg-slate-900/80 mt-16 pt-12 pb-8 text-xs text-slate-400">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+
+      <!-- 4-Column Organized Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+        
+        <!-- Col 1: Brand & Identity (2 cols on large screen) -->
+        <div class="lg:col-span-2 space-y-4">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-cyan-400 flex items-center justify-center text-white shadow-md shadow-indigo-500/20">
+              <i class="fa-solid fa-bolt text-sm"></i>
+            </div>
+            <a href="/" class="text-xl font-bold tracking-tight text-white hover:text-indigo-300 transition-colors">
+              Pratik<span class="text-indigo-400">Base</span>
+            </a>
+          </div>
+          <p class="text-slate-400 text-xs sm:text-sm leading-relaxed max-w-sm">
+            Karmaşık programlar kurmadan, üyelik veya ücret gerekmeden çalışan 24 ücretsiz mikro web aracı ve interaktif simülasyon portalı.
+          </p>
+          <div class="flex flex-wrap items-center gap-2 pt-1">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-semibold border border-emerald-500/20">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              24 Araç Aktif & Ücretsiz
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-300 text-xs font-semibold border border-indigo-500/20">
+              <i class="fa-solid fa-shield-halved text-[10px]"></i>
+              %100 Gizlilik Odaklı
+            </span>
+          </div>
         </div>
-        <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px] sm:text-xs">
-          <span class="text-slate-500">© 2026 PratikAraçlar</span>
-          <a href="birth-lottery/" class="hover:text-amber-300 transition text-amber-400 font-black">The Birth Lottery (8 Milyarda 1)</a>
-          <a href="football-lottery/" class="hover:text-emerald-300 transition text-emerald-400 font-black">The Football Lottery (Futbolcu Piyangosu)</a>
-          <a href="aidat-iade-dilekcesi/" class="hover:text-amber-300 transition text-amber-400 font-extrabold">Kart Aidat İadesi</a>
-          <a href="tuketici-sikayet-dilekce/" class="hover:text-amber-300 transition text-amber-400 font-extrabold">THH Şikayet Dilekçesi</a>
-          <a href="hali-saha-kadro/" class="hover:text-emerald-300 transition text-emerald-400 font-bold">Halı Saha Kadro</a>
-          <a href="etkinlik-davet/" class="hover:text-emerald-300 transition text-emerald-300 font-bold">Buluşma & Davet</a>
-          <a href="etiket-okuyucu/" class="hover:text-emerald-300 transition text-emerald-300 font-semibold">Besin Etiketi Okuyucu</a>
-          <a href="yesil-sertifika-uyum/" class="hover:text-emerald-300 transition text-slate-300">Yeşil Sertifika</a>
-          <a href="ydo-harc-zam-hesaplayici/" class="hover:text-amber-300 transition text-amber-300 font-semibold">2027 YDO Zamları</a>
-          <a href="ek-ders-hesaplayici/" class="hover:text-indigo-300 transition text-indigo-300 font-semibold">MEB Ek Ders</a>
-          <a href="eokul-mebbis-fotograf-kucultucu/" class="hover:text-cyan-300 transition text-cyan-300 font-semibold">e-Okul Fotoğraf Küçültücü</a>
-          <a href="mtv-arac-muayene-hesaplayici/" class="hover:text-amber-300 transition text-slate-300">MTV & Araç Muayene</a>
-          <a href="tapu-harci-emlak-hesaplayici/" class="hover:text-emerald-300 transition text-slate-300">Tapu Harcı & Emlak</a>
-          <a href="maas-hesaplayici/" class="hover:text-sky-300 transition text-slate-300">Maaş & Vergi</a>
-          <a href="kira-artisi-hesaplayici/" class="hover:text-emerald-300 transition text-slate-300">Kira Artışı</a>
-          <a href="tazminat-hesaplayici/" class="hover:text-indigo-300 transition text-slate-300">Tazminat</a>
-          <a href="sayac-sorgulama/" class="hover:text-amber-400 transition text-slate-300">Elektrik / Doğalgaz Sayaç</a>
-          <a href="fon-tasfiye-hesapla/" class="hover:text-emerald-300 transition text-slate-300">Fon Tasfiye</a>
-          <a href="akaryakit-zam-hesaplayici/" class="hover:text-amber-400 transition text-slate-300">Akaryakıt Zam</a>
-          <a href="nobetci-eczane/" class="hover:text-rose-400 transition text-slate-300">Nöbetçi Eczane</a>
-          <a href="sel-hasar-tazminat/" class="hover:text-cyan-400 transition text-slate-300">Sel Hasar & Sigorta</a>
-          <a href="sel-uyarisi/" class="hover:text-sky-300 transition text-slate-300">Canlı Sel Radarı</a>
-          <a href="acil-durum-radar/" class="hover:text-rose-400 transition text-slate-300">Acil Durum Radarı</a>
-          <a href="sel-haritasi/" class="hover:text-cyan-300 transition text-slate-300">Sel Haritası</a>
-          <a href="boru-bukme-hesaplayici/" class="hover:text-amber-400 transition text-slate-300">Boru Büküm</a>
-          <span class="text-slate-600">|</span>
-          <a href="https://play.google.com/store/apps/details?id=com.eymenefe.popndodge" target="_blank" rel="noopener noreferrer" class="hover:text-violet-300 transition text-violet-400 font-semibold inline-flex items-center gap-1">
-            <i class="fa-solid fa-gamepad text-xs"></i>
-            <span>PopNDodge: Balon Patlatma</span>
-          </a>
+
+        <!-- Col 2: Popüler Simülasyon & Oyunlar -->
+        <div class="space-y-3">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-white flex items-center gap-1.5">
+            <i class="fa-solid fa-gamepad text-violet-400"></i> Popüler & Oyunlar
+          </h4>
+          <ul class="space-y-2 text-xs">
+            <li><a href="football-lottery/" class="text-slate-300 hover:text-emerald-400 transition font-medium">The Football Lottery</a></li>
+            <li><a href="birth-lottery/" class="text-slate-300 hover:text-amber-400 transition font-medium">The Birth Lottery (8 Mrd)</a></li>
+            <li><a href="hali-saha-kadro/" class="text-slate-400 hover:text-white transition">Halı Saha Kadro Kurucu</a></li>
+            <li><a href="etkinlik-davet/" class="text-slate-400 hover:text-white transition">Etkinlik & Davet Şablonu</a></li>
+            <li>
+              <a href="https://play.google.com/store/apps/details?id=com.eymenefe.popndodge" target="_blank" rel="noopener noreferrer" class="text-violet-400 hover:text-violet-300 transition font-semibold inline-flex items-center gap-1">
+                <span>PopNDodge: Balon Patlatma</span>
+                <i class="fa-solid fa-arrow-up-right-from-square text-[9px] opacity-70"></i>
+              </a>
+            </li>
+          </ul>
         </div>
+
+        <!-- Col 3: Finans & Resmi Dilekçeler -->
+        <div class="space-y-3">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-white flex items-center gap-1.5">
+            <i class="fa-solid fa-scale-balanced text-amber-400"></i> Finans & Dilekçeler
+          </h4>
+          <ul class="space-y-2 text-xs">
+            <li><a href="tazminat-hesaplayici/" class="text-slate-300 hover:text-indigo-400 transition font-medium">Kıdem ve İhbar Tazminatı</a></li>
+            <li><a href="maas-hesaplayici/" class="text-slate-300 hover:text-sky-400 transition font-medium">Net-Brüt Maaş & Vergi</a></li>
+            <li><a href="aidat-iade-dilekcesi/" class="text-slate-300 hover:text-amber-400 transition font-medium">Kredi Kartı Aidat İadesi</a></li>
+            <li><a href="tuketici-sikayet-dilekce/" class="text-slate-400 hover:text-white transition">Tüketici Hakem Heyeti (THH)</a></li>
+            <li><a href="ydo-harc-zam-hesaplayici/" class="text-slate-400 hover:text-white transition">2027 YDO Zamları</a></li>
+            <li><a href="mtv-arac-muayene-hesaplayici/" class="text-slate-400 hover:text-white transition">MTV & Muayene Hesapla</a></li>
+            <li><a href="kira-artisi-hesaplayici/" class="text-slate-400 hover:text-white transition">Kira Artışı Hesaplayıcı</a></li>
+            <li><a href="tapu-harci-emlak-hesaplayici/" class="text-slate-400 hover:text-white transition">Tapu Harcı & Emlak</a></li>
+            <li><a href="ek-ders-hesaplayici/" class="text-slate-400 hover:text-white transition">MEB Öğretmen Ek Ders</a></li>
+            <li><a href="fon-tasfiye-hesaplayici/" class="text-slate-400 hover:text-white transition">Fon Tasfiye & Portföy</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 4: Afet, Sağlık & Yaşam -->
+        <div class="space-y-3">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-white flex items-center gap-1.5">
+            <i class="fa-solid fa-heart-pulse text-rose-400"></i> Afet, Sağlık & Yaşam
+          </h4>
+          <ul class="space-y-2 text-xs">
+            <li><a href="nobetci-eczane/" class="text-slate-300 hover:text-rose-400 transition font-medium">Nöbetçi Eczane Bulucu</a></li>
+            <li><a href="acil-durum-radar/" class="text-slate-300 hover:text-red-400 transition font-medium">Canlı Afet & Fay Radarı</a></li>
+            <li><a href="sel-uyarisi/" class="text-slate-400 hover:text-white transition">Canlı Sel & Yağış Radarı</a></li>
+            <li><a href="sel-hasar-tazminat/" class="text-slate-400 hover:text-white transition">Sel Hasar Sigorta Dosyası</a></li>
+            <li><a href="sayac-sorgulama/" class="text-slate-400 hover:text-white transition">Elektrik/Gaz Sayaç</a></li>
+            <li><a href="akaryakit-zam-hesaplayici/" class="text-slate-400 hover:text-white transition">Akaryakıt & Zam Hesapla</a></li>
+            <li><a href="eokul-mebbis-fotograf-kucultucu/" class="text-slate-400 hover:text-white transition">e-Okul Fotoğraf Küçültücü</a></li>
+            <li><a href="etiket-okuyucu/" class="text-slate-400 hover:text-white transition">Besin Etiketi & Şeker/Tuz</a></li>
+            <li><a href="yesil-sertifika-uyum/" class="text-slate-400 hover:text-white transition">Yeşil Sertifika Uyumu</a></li>
+            <li><a href="boru-bukum-hesaplayici/" class="text-slate-400 hover:text-white transition">Boru Büküm & Sanayi</a></li>
+          </ul>
+        </div>
+
       </div>
       
-      <!-- Legal Notice & Policy Links -->
-      <div class="pt-4 border-t border-slate-800/60 text-[11px] text-slate-400 leading-relaxed text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-3">
-        <div class="flex items-center gap-2">
-          <i class="fa-solid fa-scale-balanced text-amber-400 text-xs shrink-0"></i>
-          <span><strong>Yasal Bilgilendirme:</strong> Bu platformdaki tüm mikro araçlar, afet haritaları ve hesaplamalar yalnızca genel farkındalık ve bilgilendirme amaçlıdır; resmi veya hukuki bağlayıcılığı yoktur. Acil ve resmi durumlarda yetkili kamu kurumlarının (AFAD, Valilik, MGM) duyurularını dikkate alınız.</span>
+      <!-- Legal Notice Box -->
+      <div class="p-4 rounded-2xl bg-slate-950/70 border border-slate-800/80 text-[11px] text-slate-400 leading-relaxed flex items-start gap-3">
+        <i class="fa-solid fa-scale-balanced text-amber-400 text-sm mt-0.5 shrink-0"></i>
+        <span><strong>Yasal Bilgilendirme:</strong> Bu platformdaki tüm mikro araçlar, simülatörler ve resmi dilekçe motorları bilgilendirme ve rehberlik amacıyla sunulmuştur. Yasal ve acil durumlarda ilgili resmi kamu kurumlarının (T.C. Adalet Bakanlığı, Kaymakamlık THH, AFAD, MGM) güncel mevzuat ve duyurularını dikkate alınız.</span>
+      </div>
+
+      <!-- Bottom Bar: Copyright & Policy Links -->
+      <div class="pt-4 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+        <div class="text-slate-500 text-center sm:text-left">
+          © 2026 <strong class="text-slate-300 font-semibold">PratikBase</strong>. Tüm hakları saklıdır. %100 Ücretsiz ve Bağımsız Dijital Araçlar Portalı.
         </div>
-        <div class="flex items-center gap-3 shrink-0 text-xs">
-          <a href="/gizlilik-politikasi/" class="text-indigo-400 hover:text-indigo-300 underline font-medium">Gizlilik & KVKK</a>
-          <span>•</span>
-          <a href="/kullanim-kosullari/" class="text-indigo-400 hover:text-indigo-300 underline font-medium">Kullanım Koşulları</a>
+        <div class="flex items-center gap-4 text-xs shrink-0">
+          <a href="/gizlilik-politikasi/" class="text-slate-400 hover:text-indigo-400 transition font-medium">Gizlilik & KVKK</a>
+          <span class="text-slate-700">•</span>
+          <a href="/kullanim-kosullari/" class="text-slate-400 hover:text-indigo-400 transition font-medium">Kullanım Koşulları</a>
         </div>
       </div>
+
     </div>
   </footer>
 
