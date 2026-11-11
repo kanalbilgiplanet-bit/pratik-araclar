@@ -339,56 +339,81 @@
 
     </section>
 
-    <!-- TAB 2: İSTATİSTİKLER (LIVE STATS) -->
+    <!-- TAB 2: İSTATİSTİKLER (TAKIM KARŞILAŞTIRMASI & CANLI VERİ MERKEZİ) -->
     <section id="tabIstatistik" class="tab-pane hidden space-y-6">
       
-      <div class="p-6 rounded-3xl bg-slate-900/80 border border-slate-800 space-y-6">
-        <h3 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-          <i class="fa-solid fa-chart-pie text-rose-400"></i> Maç İçi Canlı Veriler
-        </h3>
+      <!-- Pre-Match Live Notice -->
+      <div class="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-between text-xs">
+        <div class="flex items-center gap-2 text-amber-300">
+          <i class="fa-solid fa-clock text-amber-400"></i>
+          <span><strong>Maç Başlamadı:</strong> Karşılaşma başladığında (Yarın 20:00) anlık maç içi şut, topla oynama ve korner verileri bu alanda canlı akacaktır.</span>
+        </div>
+        <span class="hidden sm:inline-flex px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-semibold text-[10px]">
+          ÖN BAKIŞ
+        </span>
+      </div>
 
-        <!-- Stat 1: Topla Oynama -->
+      <!-- Turnuva Karşılaştırma Tablosu -->
+      <div class="p-6 rounded-3xl bg-slate-900/80 border border-slate-800 space-y-6">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <h3 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+            <i class="fa-solid fa-chart-simple text-rose-400"></i> UEFA Uluslar A Ligi: Takım Karşılaştırması
+          </h3>
+          <span class="text-xs text-slate-400">Grup Aşaması Verileri</span>
+        </div>
+
+        <!-- Topla Oynama / Grup Hakimiyeti -->
         <div class="space-y-2">
           <div class="flex items-center justify-between text-xs font-bold">
-            <span class="text-rose-400">%58 (Türkiye)</span>
-            <span class="text-slate-400">Topla Oynama</span>
-            <span class="text-slate-300">%42 (Rakip)</span>
+            <span class="text-rose-400">🇹🇷 Türkiye</span>
+            <span class="text-slate-400">Grup Genel Topla Oynama Ort.</span>
+            <span class="text-amber-400">Belçika 🇧🇪</span>
           </div>
           <div class="w-full h-3 rounded-full bg-slate-800 overflow-hidden flex">
-            <div class="h-full bg-gradient-to-r from-rose-600 to-red-500" style="width: 58%"></div>
-            <div class="h-full bg-slate-600" style="width: 42%"></div>
+            <div class="h-full bg-rose-600" style="width: 49%"></div>
+            <div class="h-full bg-amber-500" style="width: 51%"></div>
+          </div>
+          <div class="flex justify-between text-[11px] text-slate-400 font-mono">
+            <span>%49</span>
+            <span>%51</span>
           </div>
         </div>
 
-        <!-- Stat Grid -->
+        <!-- Stat Grid (Gerçek Grup Verileri) -->
+        <div class="grid grid-cols-3 items-center justify-items-center py-3 border-t border-slate-800 text-xs">
+          <span class="font-bold text-rose-400 text-sm">26. Sıra</span>
+          <span class="text-slate-300 font-semibold">FIFA Dünya Sıralaması</span>
+          <span class="font-bold text-amber-400 text-sm">6. Sıra</span>
+        </div>
+
+        <div class="grid grid-cols-3 items-center justify-items-center py-3 border-t border-slate-800 text-xs">
+          <span class="font-bold text-white text-sm">4</span>
+          <span class="text-slate-400 font-semibold">Oynanan Maç</span>
+          <span class="font-bold text-white text-sm">4</span>
+        </div>
+
+        <div class="grid grid-cols-3 items-center justify-items-center py-3 border-t border-slate-800 text-xs">
+          <span class="font-bold text-white text-sm">2</span>
+          <span class="text-slate-400 font-semibold">Grupta Atılan Gol</span>
+          <span class="font-bold text-white text-sm">6</span>
+        </div>
+
         <div class="grid grid-cols-3 items-center justify-items-center py-3 border-t border-slate-800 text-xs">
           <span class="font-bold text-white text-sm">11</span>
-          <span class="text-slate-400 font-semibold">Toplam Şut</span>
-          <span class="font-bold text-slate-300 text-sm">6</span>
-        </div>
-
-        <div class="grid grid-cols-3 items-center justify-items-center py-3 border-t border-slate-800 text-xs">
+          <span class="text-slate-400 font-semibold">Yenilen Gol</span>
           <span class="font-bold text-white text-sm">5</span>
-          <span class="text-slate-400 font-semibold">İsabetli Şut</span>
-          <span class="font-bold text-slate-300 text-sm">2</span>
         </div>
 
         <div class="grid grid-cols-3 items-center justify-items-center py-3 border-t border-slate-800 text-xs">
-          <span class="font-bold text-white text-sm">6</span>
-          <span class="text-slate-400 font-semibold">Köşe Vuruşu (Korner)</span>
-          <span class="font-bold text-slate-300 text-sm">2</span>
+          <span class="font-bold text-white text-sm">%84</span>
+          <span class="text-slate-400 font-semibold">Ortalama Pas İsabeti</span>
+          <span class="font-bold text-white text-sm">%88</span>
         </div>
 
         <div class="grid grid-cols-3 items-center justify-items-center py-3 border-t border-slate-800 text-xs">
-          <span class="font-bold text-white text-sm">8</span>
-          <span class="text-slate-400 font-semibold">Faul</span>
-          <span class="font-bold text-slate-300 text-sm">11</span>
-        </div>
-
-        <div class="grid grid-cols-3 items-center justify-items-center py-3 border-t border-slate-800 text-xs">
-          <span class="font-bold text-white text-sm">1</span>
-          <span class="text-slate-400 font-semibold">Sarı Kart</span>
-          <span class="font-bold text-slate-300 text-sm">2</span>
+          <span class="font-bold text-white text-sm">295 M €</span>
+          <span class="text-slate-400 font-semibold">Toplam Kadro Değeri</span>
+          <span class="font-bold text-white text-sm">540 M €</span>
         </div>
 
       </div>
