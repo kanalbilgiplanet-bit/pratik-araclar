@@ -723,6 +723,10 @@
     </div>
   </footer>
 
+  <!-- Google Firebase App & Cloud Firestore (Real-Time Live Tribün Chat Sync) -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
   <!-- DYNAMIC FIXTURE ENGINE & LIVE CONTROLLER -->
   <script>
     // ========================================================
@@ -1400,12 +1404,66 @@
       { id: 4, nick: "Selin (Bursa)", time: "21:26", text: "Belçika güçlü ama İzmir'de taraftarın coşkusuyla 3 puan bizim olacak inşallah 🇹🇷❤️", badge: "Ay-Yıldız" }
     ];
 
-    // Mesajları ve form alanlarını tarayıcıda kalıcı depolama (Yazılanlar hafızada tutulmaz, her girişte taze açılır)
+    // ========================================================
+    // GOOGLE FIREBASE CLOUD FIRESTORE CANLI TARAFTAR SOHBETİ
+    // ========================================================
+    const firebaseConfig = {
+      apiKey: "AIzaSyCtJnLhmovXwRDNjHFhvAQZHd43KK74itE",
+      authDomain: "pratikbase.firebaseapp.com",
+      projectId: "pratikbase",
+      storageBucket: "pratikbase.firebasestorage.app",
+      messagingSenderId: "873155695530",
+      appId: "1:873155695530:web:b995d7b211289d74b4d1d3"
+    };
+
+    let firestoreDb = null;
+    let liveMessages = [];
+    let sessionChatList = [];
+
+    try {
+      if (typeof firebase !== 'undefined') {
+        if (!firebase.apps.length) {
+          firebase.initializeApp(firebaseConfig);
+        }
+        firestoreDb = firebase.firestore();
+      }
+    } catch (e) {
+      console.debug("Firebase başlatma:", e);
+    }
+
+    // Canlı Firestore Dinleyicisi (Gerçek Zamanlı Senkronizasyon)
+    if (firestoreDb) {
+      try {
+        firestoreDb.collection("tribun_chat")
+          .orderBy("timestamp", "asc")
+          .limitToLast(50)
+          .onSnapshot((snapshot) => {
+            const fetched = [];
+            snapshot.forEach(doc => {
+              const d = doc.data();
+              fetched.push({
+                id: doc.id,
+                nick: d.nick || "Taraftar",
+                time: d.time || "",
+                text: d.text || "",
+                badge: d.badge || "Taraftar"
+              });
+            });
+            liveMessages = fetched;
+            renderChatMessages();
+          }, (err) => {
+            console.debug("Firestore dinleme:", err.message);
+          });
+      } catch (err) {
+        console.debug("Firestore dinleyici hatası:", err);
+      }
+    }
+
+    // Mesajları ve form alanlarını tarayıcıda kalıcı depolama (Yazılanlar hafızada tutulmaz)
     try {
       localStorage.removeItem('pratik_live_chat_v1');
       localStorage.removeItem('pratik_chat_nick');
     } catch (_) {}
-    let sessionChatList = [];
 
     // Rumuz kutusunu temiz tut
     if (nickInput) {
@@ -1427,7 +1485,9 @@
     // Mesajları Ekrana Bas
     function renderChatMessages() {
       if (!chatContainer) return;
-      const allMessages = [...DEFAULT_MESSAGES, ...sessionChatList];
+      const allMessages = (liveMessages && liveMessages.length > 0) 
+        ? liveMessages 
+        : [...DEFAULT_MESSAGES, ...sessionChatList];
       
       chatContainer.innerHTML = allMessages.map(msg => `
         <div class="p-3 rounded-2xl bg-slate-950/70 border border-slate-800/80 hover:border-slate-700 transition space-y-1">
@@ -1517,15 +1577,28 @@
           badge: "Taraftar"
         };
 
-        sessionChatList.push(newMsg);
-        if (sessionChatList.length > 50) sessionChatList.shift();
-
-        // Kalıcı depolama yapılmıyor (sayfa yenilendiğinde hiçbir veri tutulmaz)
+        // Firebase Cloud Firestore Canlı Senkronizasyon
+        if (firestoreDb) {
+          firestoreDb.collection("tribun_chat").add({
+            nick: nick,
+            time: timeStr,
+            text: text,
+            badge: "Taraftar",
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            createdMs: Date.now()
+          }).catch(err => {
+            console.debug("Firestore yazma hatası, yerel akışa alınıyor:", err);
+            sessionChatList.push(newMsg);
+            renderChatMessages();
+          });
+        } else {
+          sessionChatList.push(newMsg);
+          renderChatMessages();
+        }
 
         lastPostTime = now;
         msgInput.value = '';
         if (charCountEl) charCountEl.textContent = '150 k.';
-        renderChatMessages();
       });
     }
 
