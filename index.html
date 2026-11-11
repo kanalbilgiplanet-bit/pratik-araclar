@@ -1446,14 +1446,18 @@
       </article>
 
       <!-- YENİ ARAÇ ÖNER KARTI -->
-      <article class="border border-dashed border-slate-800 rounded-3xl p-6 flex flex-col items-center justify-center text-center hover:border-indigo-500/40 hover:bg-slate-900/30 transition-all duration-300">
-        <div class="w-12 h-12 rounded-2xl bg-slate-800 text-slate-400 flex items-center justify-center text-xl mb-4">
+      <article class="border border-dashed border-slate-800 rounded-3xl p-6 flex flex-col items-center justify-center text-center hover:border-indigo-500/50 hover:bg-slate-900/40 transition-all duration-300">
+        <div class="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center text-xl mb-3">
           <i class="fa-solid fa-lightbulb"></i>
         </div>
-        <h3 class="text-lg font-semibold text-white mb-2">Yeni Bir Araç mı Lazım?</h3>
-        <p class="text-slate-400 text-xs leading-relaxed max-w-xs">
+        <h3 class="text-lg font-bold text-white mb-2">Yeni Bir Araç mı Lazım?</h3>
+        <p class="text-slate-400 text-xs leading-relaxed max-w-xs mb-4">
           Portalımız kullanıcı ihtiyaçlarına ve TrendRadar analizlerine göre düzenli olarak yeni pratik araçlar eklenerek büyümeye devam etmektedir.
         </p>
+        <a id="suggestToolBtn" href="mailto:iletisim@pratikbase.com?subject=Yeni%20Ara%C3%A7%20%C3%96nerisi%20-%20PratikBase" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white font-bold text-xs transition shadow-lg shadow-indigo-600/25 group">
+          <i class="fa-regular fa-paper-plane text-xs group-hover:translate-x-0.5 transition-transform"></i>
+          <span>Araç Önerisinde Bulun (<span class="contact-email-text font-mono font-medium">iletisim@pratikbase.com</span>)</span>
+        </a>
       </article>
 
     </div>
@@ -1655,6 +1659,8 @@
           <a href="/gizlilik-politikasi/" class="text-slate-400 hover:text-indigo-400 transition font-medium">Gizlilik & KVKK</a>
           <span class="text-slate-700">•</span>
           <a href="/kullanim-kosullari/" class="text-slate-400 hover:text-indigo-400 transition font-medium">Kullanım Koşulları</a>
+          <span class="text-slate-700">•</span>
+          <a href="mailto:iletisim@pratikbase.com" class="dynamic-contact-link text-slate-300 hover:text-indigo-400 transition font-medium flex items-center gap-1.5"><i class="fa-regular fa-envelope text-xs"></i><span class="contact-email-text">iletisim@pratikbase.com</span></a>
         </div>
       </div>
 
@@ -1904,6 +1910,20 @@
     if (pwaInstallBtn) pwaInstallBtn.addEventListener('click', handleInstallClick);
     if (pwaNavInstallBtn) pwaNavInstallBtn.addEventListener('click', handleInstallClick);
     if (pwaDismissBtn) pwaDismissBtn.addEventListener('click', () => hidePwaBanner(true));
+
+    // Akıllı Yurtiçi / Yurtdışı E-posta Algılayıcı (TR: iletisim@, Yurtdışı: info@)
+    try {
+      const userLang = (navigator.language || navigator.userLanguage || 'tr').toLowerCase();
+      const isTurkish = userLang.startsWith('tr');
+      const dynamicEmail = isTurkish ? 'iletisim@pratikbase.com' : 'info@pratikbase.com';
+      
+      document.querySelectorAll('.contact-email-text').forEach(el => el.textContent = dynamicEmail);
+      document.querySelectorAll('.dynamic-contact-link').forEach(el => el.href = `mailto:${dynamicEmail}`);
+      const suggestBtn = document.getElementById('suggestToolBtn');
+      if (suggestBtn) {
+        suggestBtn.href = `mailto:${dynamicEmail}?subject=${encodeURIComponent(isTurkish ? 'Yeni Araç Önerisi - PratikBase' : 'New Tool Suggestion - PratikBase')}`;
+      }
+    } catch (_) {}
   </script>
 </body>
 </html>
