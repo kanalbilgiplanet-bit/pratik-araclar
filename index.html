@@ -1,22 +1,389 @@
 <!DOCTYPE html>
-<html lang="tr" class="dark" style="background-color: #020617; color: #f8fafc;">
+<html lang="tr" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <!-- Critical Anti-Flash Dark Background (Instant Paint for Safari & Mobile) -->
-  <style>
-    html, body {
+  <!-- Critical Anti-Flash Theme Engine (Zero FOUC for Mobile & Desktop) -->
+  <script>
+    (function() {
+      try {
+        var saved = localStorage.getItem('pratikbase_theme');
+        var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = saved || (prefersDark ? 'dark' : 'light');
+        if (theme === 'light') {
+          document.documentElement.classList.remove('dark');
+          document.documentElement.classList.add('light');
+          document.documentElement.style.backgroundColor = '#f8fafc';
+          document.documentElement.style.color = '#0f172a';
+        } else {
+          document.documentElement.classList.remove('light');
+          document.documentElement.classList.add('dark');
+          document.documentElement.style.backgroundColor = '#020617';
+          document.documentElement.style.color = '#f8fafc';
+        }
+      } catch (e) {}
+    })();
+  </script>
+
+  <!-- Critical Theme Styles & Custom Scrollbar -->
+  <style id="lightThemeStyles">
+    html.dark, html.dark body {
       background-color: #020617 !important;
       color: #f8fafc;
       margin: 0;
       padding: 0;
     }
+    html.light, html.light body {
+      background-color: #f8fafc !important;
+      color: #0f172a !important;
+      margin: 0;
+      padding: 0;
+    }
+
     /* Custom scrollbar */
     ::-webkit-scrollbar { width: 8px; }
     ::-webkit-scrollbar-track { background: #0f172a; }
     ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+    /* Theme Toggle Button */
+    .theme-toggle-btn {
+      background-color: rgba(30, 41, 59, 0.85);
+      border-color: rgba(51, 65, 85, 0.8);
+      color: #e2e8f0;
+    }
+    .theme-toggle-btn:hover {
+      background-color: rgba(51, 65, 85, 0.95);
+      border-color: rgba(100, 116, 139, 0.8);
+    }
+    .theme-toggle-btn .theme-sun-icon {
+      display: flex;
+    }
+    .theme-toggle-btn .theme-moon-icon {
+      display: none;
+    }
+
+    /* Smooth Transition between themes */
+    body, header, footer, .tool-card, input, .category-btn, .theme-toggle-btn {
+      transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    /* ========================================================
+       PRATIKBASE BESPOKE LIGHT THEME (ÖZEL AÇIK TEMA)
+       Modern, ferah, göz yormayan lüks minimalist palet
+       ======================================================== */
+    html.light {
+      color-scheme: light;
+    }
+
+    /* Ambient Glow Blobs in Light Mode */
+    html.light .glow-blob-1 {
+      background-color: rgba(99, 102, 241, 0.08) !important;
+    }
+    html.light .glow-blob-2 {
+      background-color: rgba(14, 165, 233, 0.08) !important;
+    }
+
+    /* Navbar in Light Mode */
+    html.light header {
+      background-color: rgba(255, 255, 255, 0.88) !important;
+      border-bottom-color: rgba(226, 232, 240, 0.9) !important;
+      box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.04) !important;
+    }
+    html.light header a.text-white {
+      color: #0f172a !important;
+    }
+    html.light header a.text-white:hover {
+      color: #4f46e5 !important;
+    }
+
+    /* Toggle Button in Light Mode */
+    html.light .theme-toggle-btn {
+      background-color: #ffffff !important;
+      border-color: #e2e8f0 !important;
+      color: #334155 !important;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+    }
+    html.light .theme-toggle-btn:hover {
+      background-color: #f1f5f9 !important;
+      border-color: #cbd5e1 !important;
+    }
+    html.light .theme-toggle-btn .theme-sun-icon {
+      display: none !important;
+    }
+    html.light .theme-toggle-btn .theme-moon-icon {
+      display: flex !important;
+    }
+
+    /* Hero in Light Mode */
+    html.light section h1.text-white {
+      color: #0f172a !important;
+    }
+    html.light section p.text-slate-400 {
+      color: #475569 !important;
+    }
+    html.light .hero-pill {
+      background-color: #eef2ff !important;
+      border-color: #c7d2fe !important;
+      color: #4338ca !important;
+    }
+
+    /* Search Input in Light Mode */
+    html.light #searchInput {
+      background-color: #ffffff !important;
+      border-color: #cbd5e1 !important;
+      color: #0f172a !important;
+      box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.05), 0 8px 10px -6px rgba(15, 23, 42, 0.03) !important;
+    }
+    html.light #searchInput::placeholder {
+      color: #94a3b8 !important;
+    }
+    html.light #searchInput:focus {
+      border-color: #6366f1 !important;
+      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15), 0 10px 25px -5px rgba(15, 23, 42, 0.05) !important;
+    }
+    html.light #clearSearch {
+      color: #64748b !important;
+    }
+    html.light #clearSearch:hover {
+      color: #0f172a !important;
+    }
+
+    /* Category Filter Buttons in Light Mode */
+    html.light .category-btn {
+      background-color: #ffffff !important;
+      border-color: #e2e8f0 !important;
+      color: #475569 !important;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+    }
+    html.light .category-btn:hover {
+      background-color: #f1f5f9 !important;
+      color: #0f172a !important;
+      border-color: #cbd5e1 !important;
+    }
+    html.light .category-btn.active {
+      background-color: #4f46e5 !important;
+      color: #ffffff !important;
+      border-color: #4f46e5 !important;
+      box-shadow: 0 4px 14px 0 rgba(79, 70, 229, 0.3) !important;
+    }
+
+    /* Tool Cards in Light Mode */
+    html.light .tool-card {
+      background: #ffffff !important;
+      border-color: rgba(226, 232, 240, 0.9) !important;
+      box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.03) !important;
+    }
+    html.light .tool-card:hover {
+      box-shadow: 0 20px 35px -5px rgba(99, 102, 241, 0.12), 0 10px 10px -5px rgba(15, 23, 42, 0.04) !important;
+      border-color: #a5b4fc !important;
+    }
+    html.light .tool-card h2,
+    html.light .tool-card h3 {
+      color: #0f172a !important;
+    }
+    html.light .tool-card p {
+      color: #475569 !important;
+    }
+    /* Meta tags & chips on tool cards */
+    html.light .tool-card span.bg-slate-800\/80,
+    html.light .tool-card span.bg-slate-800,
+    html.light .tool-card span.bg-slate-900,
+    html.light .tool-card span.bg-slate-900\/80,
+    html.light .tool-card span.bg-slate-950\/60 {
+      background-color: #f1f5f9 !important;
+      border-color: #e2e8f0 !important;
+      color: #334155 !important;
+    }
+
+    /* Soft tint for specialized category tags in Light Mode */
+    html.light .tool-card span.bg-rose-950\/60 {
+      background-color: #fff1f2 !important;
+      border-color: #fecdd3 !important;
+      color: #be123c !important;
+    }
+    html.light .tool-card span.bg-amber-950\/60 {
+      background-color: #fffbeb !important;
+      border-color: #fde68a !important;
+      color: #b45309 !important;
+    }
+    html.light .tool-card span.bg-emerald-950\/60 {
+      background-color: #ecfdf5 !important;
+      border-color: #a7f3d0 !important;
+      color: #047857 !important;
+    }
+    html.light .tool-card span.bg-cyan-950\/60 {
+      background-color: #ecfeff !important;
+      border-color: #a5f3fc !important;
+      color: #0e7490 !important;
+    }
+
+    /* Featured: Milli Maç Card in Light Mode */
+    html.light article[data-keywords*="milli maç"] {
+      background: linear-gradient(180deg, #fff1f2 0%, #ffffff 100%) !important;
+      border-color: #fda4af !important;
+      box-shadow: 0 8px 30px -4px rgba(225, 29, 72, 0.12) !important;
+    }
+    html.light article[data-keywords*="milli maç"]:hover {
+      border-color: #fb7185 !important;
+      box-shadow: 0 20px 40px -4px rgba(225, 29, 72, 0.18) !important;
+    }
+
+    /* Featured: The Birth Lottery Card in Light Mode */
+    html.light article[data-keywords*="the birth lottery"] {
+      background: linear-gradient(180deg, #fffbeb 0%, #ffffff 100%) !important;
+      border-color: #fde68a !important;
+      box-shadow: 0 8px 30px -4px rgba(217, 119, 6, 0.12) !important;
+    }
+    html.light article[data-keywords*="the birth lottery"]:hover {
+      border-color: #fcd34d !important;
+      box-shadow: 0 20px 40px -4px rgba(217, 119, 6, 0.18) !important;
+    }
+
+    /* "Yeni Bir Araç mı Lazım?" Card in Light Mode */
+    html.light article.border-dashed {
+      background: linear-gradient(135deg, #eef2ff 0%, #f0fdfa 100%) !important;
+      border-color: #c7d2fe !important;
+    }
+    html.light article.border-dashed h3 {
+      color: #1e1b4b !important;
+    }
+    html.light article.border-dashed p {
+      color: #475569 !important;
+    }
+    html.light article.border-dashed .w-12.h-12 {
+      background-color: #ffffff !important;
+      border-color: #c7d2fe !important;
+      box-shadow: 0 2px 8px rgba(99, 102, 241, 0.1) !important;
+    }
+
+    /* FAQ Section in Light Mode */
+    html.light #faqSection {
+      border-top-color: #e2e8f0 !important;
+    }
+    html.light #faqSection h2 {
+      color: #0f172a !important;
+    }
+    html.light #faqSection p {
+      color: #475569 !important;
+    }
+    html.light #faqSection .rounded-2xl {
+      background-color: #ffffff !important;
+      border-color: #e2e8f0 !important;
+      box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03) !important;
+    }
+    html.light #faqSection .rounded-2xl:hover {
+      border-color: #cbd5e1 !important;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06) !important;
+    }
+    html.light #faqSection .rounded-2xl h3 {
+      color: #0f172a !important;
+    }
+    html.light #faqSection .rounded-2xl p {
+      color: #475569 !important;
+    }
+
+    /* No Results Placeholder */
+    html.light #noResults .w-16 {
+      background-color: #ffffff !important;
+      border-color: #e2e8f0 !important;
+      color: #94a3b8 !important;
+    }
+    html.light #noResults h3 {
+      color: #0f172a !important;
+    }
+    html.light #noResults p {
+      color: #64748b !important;
+    }
+
+    /* Footer in Light Mode */
+    html.light footer {
+      background-color: #ffffff !important;
+      border-top-color: #e2e8f0 !important;
+      color: #64748b !important;
+    }
+    html.light footer h4 {
+      color: #0f172a !important;
+    }
+    html.light footer a {
+      color: #475569 !important;
+    }
+    html.light footer a:hover {
+      color: #4f46e5 !important;
+    }
+    html.light footer a.text-rose-400 {
+      color: #e11d48 !important;
+    }
+    html.light footer a.text-rose-400:hover {
+      color: #be123c !important;
+    }
+    html.light footer .p-4.rounded-2xl {
+      background-color: #f8fafc !important;
+      border-color: #e2e8f0 !important;
+      color: #64748b !important;
+    }
+    html.light footer .p-4.rounded-2xl strong {
+      color: #0f172a !important;
+    }
+    html.light footer .border-slate-800\/80 {
+      border-color: #e2e8f0 !important;
+    }
+    html.light footer strong.text-slate-300 {
+      color: #0f172a !important;
+    }
+
+    /* Floating Banners (Cookie & PWA) */
+    html.light #cookieBanner,
+    html.light #pwaInstallBanner {
+      background-color: rgba(255, 255, 255, 0.95) !important;
+      border-color: #e2e8f0 !important;
+      color: #334155 !important;
+      box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.15) !important;
+    }
+    html.light #cookieBanner p,
+    html.light #pwaInstallBanner p {
+      color: #475569 !important;
+    }
+    html.light #cookieBanner h4,
+    html.light #pwaInstallBanner h4 {
+      color: #0f172a !important;
+    }
+    html.light #btnRejectCookies {
+      background-color: #f1f5f9 !important;
+      border-color: #cbd5e1 !important;
+      color: #475569 !important;
+    }
+    html.light #btnRejectCookies:hover {
+      background-color: #e2e8f0 !important;
+      color: #0f172a !important;
+    }
+    html.light #pwaDismissBtn {
+      background-color: #f1f5f9 !important;
+      color: #64748b !important;
+    }
+    html.light #pwaDismissBtn:hover {
+      background-color: #e2e8f0 !important;
+      color: #0f172a !important;
+    }
+    html.light #iosInstallGuide {
+      border-top-color: #e2e8f0 !important;
+      color: #475569 !important;
+    }
+    html.light #iosInstallGuide strong {
+      color: #0f172a !important;
+    }
+
+    /* Scrollbars in Light Mode */
+    html.light ::-webkit-scrollbar-track {
+      background: #f1f5f9 !important;
+    }
+    html.light ::-webkit-scrollbar-thumb {
+      background: #cbd5e1 !important;
+    }
+    html.light ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8 !important;
+    }
   </style>
 
   <!-- Speed & Preconnect Resource Hints -->
@@ -165,12 +532,12 @@
   <!-- Clean FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-indigo-500 selection:text-white" style="background-color: #020617; color: #f8fafc;">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-indigo-500 selection:text-white">
 
   <!-- Lightweight Glow Background (Mobile GPU Optimized, Low Blur to Prevent Stutter) -->
   <div class="fixed inset-0 overflow-hidden pointer-events-none -z-10">
-    <div class="absolute -top-32 left-1/2 -translate-x-1/2 w-[500px] h-[250px] bg-indigo-600/10 blur-[60px] rounded-full"></div>
-    <div class="absolute top-1/2 -right-32 w-[300px] h-[300px] bg-blue-600/10 blur-[60px] rounded-full"></div>
+    <div class="glow-blob-1 absolute -top-32 left-1/2 -translate-x-1/2 w-[500px] h-[250px] bg-indigo-600/10 blur-[60px] rounded-full"></div>
+    <div class="glow-blob-2 absolute top-1/2 -right-32 w-[300px] h-[300px] bg-blue-600/10 blur-[60px] rounded-full"></div>
   </div>
 
   <!-- Header / Navbar -->
@@ -185,31 +552,31 @@
         </a>
       </div>
 
-      <nav class="flex items-center gap-1.5 sm:gap-3">
+      <nav class="flex items-center gap-2 sm:gap-3">
         <!-- PWA Install Button (Always visible on mobile & desktop) -->
         <button id="pwaNavInstallBtn" class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-500 hover:from-indigo-500 hover:to-cyan-400 text-white border border-indigo-400/30 text-xs font-bold transition shadow-sm shadow-indigo-500/25 active:scale-95" title="Uygulamayı Cihazınıza Yükleyin">
           <i class="fa-solid fa-cloud-arrow-down text-xs"></i>
           <span class="hidden sm:inline">Uygulamayı </span><span>Yükle</span>
         </button>
 
-        <!-- Live Tool Count Badge (Hidden on mobile to preserve space) -->
-        <div class="hidden md:inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-800/90 border border-slate-700/80 text-xs font-semibold text-slate-200 shadow-sm">
-          <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-          <span>24 Aktif Araç & Oyun</span>
-        </div>
-
-        <!-- Emergency Disaster Radar Quick Link -->
-        <a href="acil-durum-radar/" class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-red-500/15 hover:bg-red-500 text-red-400 hover:text-white border border-red-500/30 text-xs font-bold transition shadow-sm">
-          <i class="fa-solid fa-tower-broadcast text-xs"></i>
-          <span>Canlı Radar</span>
-        </a>
+        <!-- Theme Toggle Button (Açık / Koyu Tema Geçişi) -->
+        <button id="themeToggleBtn" type="button" aria-label="Görünüm Modunu Değiştir" class="theme-toggle-btn inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-semibold transition-all shadow-sm active:scale-95 group" title="Açık / Koyu Tema">
+          <span class="theme-sun-icon flex items-center gap-1.5 text-amber-400">
+            <i class="fa-solid fa-sun text-sm transition-transform duration-300 group-hover:rotate-45"></i>
+            <span class="hidden sm:inline font-medium">Açık</span>
+          </span>
+          <span class="theme-moon-icon hidden items-center gap-1.5 text-indigo-600">
+            <i class="fa-solid fa-moon text-sm transition-transform duration-300 group-hover:-rotate-12"></i>
+            <span class="hidden sm:inline font-medium">Koyu</span>
+          </span>
+        </button>
       </nav>
     </div>
   </header>
 
   <!-- Hero Section -->
   <section class="relative pt-12 pb-8 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center">
-    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 mb-6 text-xs font-semibold rounded-full bg-indigo-500/10 border border-indigo-500/25 text-indigo-300 backdrop-blur-sm">
+    <div class="hero-pill inline-flex items-center gap-2 px-3.5 py-1.5 mb-6 text-xs font-semibold rounded-full bg-indigo-500/10 border border-indigo-500/25 text-indigo-300 backdrop-blur-sm">
       <i class="fa-solid fa-bolt text-indigo-400"></i>
       <span>Hızlı, %100 Ücretsiz & Reklamsız Çözümler</span>
     </div>
@@ -1924,6 +2291,39 @@
         suggestBtn.href = `mailto:${dynamicEmail}?subject=${encodeURIComponent(isTurkish ? 'Yeni Araç Önerisi - PratikBase' : 'New Tool Suggestion - PratikBase')}`;
       }
     } catch (_) {}
+
+    // ==========================================
+    // Tema Değiştirme Motoru (Açık / Koyu Tema)
+    // ==========================================
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    
+    function applyTheme(theme) {
+      const isLight = (theme === 'light');
+      if (isLight) {
+        document.documentElement.classList.remove('dark');
+        document.documentElement.classList.add('light');
+        document.documentElement.style.backgroundColor = '#f8fafc';
+        document.documentElement.style.color = '#0f172a';
+        const metaTheme = document.querySelector('meta[name="theme-color"]');
+        if (metaTheme) metaTheme.setAttribute('content', '#f8fafc');
+      } else {
+        document.documentElement.classList.remove('light');
+        document.documentElement.classList.add('dark');
+        document.documentElement.style.backgroundColor = '#020617';
+        document.documentElement.style.color = '#f8fafc';
+        const metaTheme = document.querySelector('meta[name="theme-color"]');
+        if (metaTheme) metaTheme.setAttribute('content', '#020617');
+      }
+      safeStorageSet('pratikbase_theme', theme);
+    }
+
+    if (themeToggleBtn) {
+      themeToggleBtn.addEventListener('click', () => {
+        const currentTheme = document.documentElement.classList.contains('light') ? 'light' : 'dark';
+        const nextTheme = (currentTheme === 'light') ? 'dark' : 'light';
+        applyTheme(nextTheme);
+      });
+    }
   </script>
 </body>
 </html>
