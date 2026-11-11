@@ -306,22 +306,35 @@
 
         <!-- Chat Input Form (Zero Overflow Guaranteed on Desktop & Mobile) -->
         <form id="chatForm" class="pt-2 border-t border-slate-800/80 space-y-2">
-          <!-- Row 1: Nickname & Char Count -->
+          <!-- Row 1: Nickname & Quick Emoji Bar -->
           <div class="flex items-center justify-between gap-2">
-            <div class="flex items-center gap-1.5 flex-1 max-w-[170px]">
+            <div class="flex items-center gap-1.5 flex-1 max-w-[150px]">
               <i class="fa-regular fa-user text-slate-500 text-xs shrink-0"></i>
               <input type="text" id="chatNickInput" maxlength="16" placeholder="Rumuz (örn: Barış)" required class="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-800 focus:border-rose-500 text-white text-xs placeholder:text-slate-500 outline-none transition">
             </div>
-            <span id="chatCharCount" class="text-[10px] text-slate-500 font-mono">150 k.</span>
+
+            <!-- Quick Match Emojis (Sık Kullanılan Milli Emojiler) -->
+            <div class="flex items-center gap-1 shrink-0" id="quickEmojiBar">
+              <button type="button" class="quick-emoji px-1.5 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 text-xs transition active:scale-90" data-emoji="🇹🇷" title="Türk Bayrağı">🇹🇷</button>
+              <button type="button" class="quick-emoji px-1.5 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 text-xs transition active:scale-90" data-emoji="⚽" title="Futbol Topu">⚽</button>
+              <button type="button" class="quick-emoji px-1.5 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 text-xs transition active:scale-90" data-emoji="🔥" title="Ateş">🔥</button>
+              <button type="button" class="quick-emoji px-1.5 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 text-xs transition active:scale-90" data-emoji="👏" title="Alkış">👏</button>
+              <button type="button" class="quick-emoji px-1.5 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 text-xs transition active:scale-90" data-emoji="❤️" title="Kırmızı Kalp">❤️</button>
+            </div>
           </div>
 
           <!-- Row 2: Message Input + Send Button -->
           <div class="flex items-center gap-1.5 w-full">
-            <input type="text" id="chatMsgInput" maxlength="150" placeholder="Düşüncenizi yazın..." required class="flex-1 min-w-0 px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 focus:border-rose-500 text-white text-xs placeholder:text-slate-500 outline-none transition">
+            <input type="text" id="chatMsgInput" maxlength="150" placeholder="Mesajınızı yazın..." required class="flex-1 min-w-0 px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 focus:border-rose-500 text-white text-xs placeholder:text-slate-500 outline-none transition">
             <button type="submit" id="chatSubmitBtn" class="px-3.5 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition shadow-md shadow-rose-600/30 flex items-center gap-1 shrink-0">
               <span>Yolla</span>
               <i class="fa-solid fa-paper-plane text-[10px]"></i>
             </button>
+          </div>
+
+          <div class="flex items-center justify-between text-[10px] text-slate-500 pt-0.5">
+            <span>🛡️ Küfür, argo ve reklam filtrelenir</span>
+            <span id="chatCharCount" class="font-mono">150 k.</span>
           </div>
         </form>
 
@@ -1396,9 +1409,22 @@
     if (msgInput) {
       msgInput.addEventListener('input', () => {
         const remaining = 150 - msgInput.value.length;
-        if (charCountEl) charCountEl.textContent = `${remaining} karakter`;
+        if (charCountEl) charCountEl.textContent = `${remaining} k.`;
       });
     }
+
+    // Hızlı Emoji Tıklama
+    document.querySelectorAll('.quick-emoji').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const emoji = btn.getAttribute('data-emoji');
+        if (msgInput && emoji) {
+          msgInput.value = (msgInput.value || '') + emoji;
+          msgInput.focus();
+          const remaining = 150 - msgInput.value.length;
+          if (charCountEl) charCountEl.textContent = `${remaining} k.`;
+        }
+      });
+    });
 
     if (chatForm) {
       chatForm.addEventListener('submit', (e) => {
@@ -1449,7 +1475,7 @@
 
         lastPostTime = now;
         msgInput.value = '';
-        if (charCountEl) charCountEl.textContent = '150 karakter';
+        if (charCountEl) charCountEl.textContent = '150 k.';
         renderChatMessages();
       });
     }
