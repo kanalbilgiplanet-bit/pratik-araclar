@@ -1235,41 +1235,6 @@
     checkLiveScore();
     setInterval(checkLiveScore, 20000);
 
-    // Canlı Simülasyon Test Fonksiyonu (Konsoldan veya URL'den test için)
-    window.testGoal = function(home, away, goalText) {
-      initialScoreLoaded = true;
-      const fakeData = {
-        scoreHome: home,
-        scoreAway: away,
-        lastGoalText: goalText || '34\' Arda Güler ceza sahası dışından müthiş vurdu!',
-        status: 'live',
-        statusText: '34\' Canlı'
-      };
-      const scoreHomeEl = document.getElementById('scoreHome');
-      const scoreAwayEl = document.getElementById('scoreAway');
-      
-      if (home > currentScore.home) {
-        playGoalChime();
-        showGoalToast(`⚽ GOOOOOL! TÜRKİYE!`, fakeData.lastGoalText);
-        animateScoreChange('scoreHome');
-      } else if (away > currentScore.away) {
-        playGoalChime();
-        showGoalToast(`⚽ GOL (BELÇİKA)`, fakeData.lastGoalText);
-        animateScoreChange('scoreAway');
-      }
-      currentScore.home = home;
-      currentScore.away = away;
-      if (scoreHomeEl) scoreHomeEl.textContent = home;
-      if (scoreAwayEl) scoreAwayEl.textContent = away;
-    };
-
-    // URL'de ?demo=goal varsa anında gol animasyonunu test et
-    if (window.location.search.includes('demo=goal')) {
-      setTimeout(() => {
-        window.testGoal(1, 0, "34' Arda Güler 90'a astı!");
-      }, 1500);
-    }
-
     // Akış Yenile Butonu
     const btnRefresh = document.getElementById('btnRefreshFeed');
     if (btnRefresh) {
