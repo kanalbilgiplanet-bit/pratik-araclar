@@ -315,7 +315,9 @@
 
             <!-- Quick Match Emojis (Sık Kullanılan Milli Emojiler) -->
             <div class="flex items-center gap-1 shrink-0" id="quickEmojiBar">
-              <button type="button" class="quick-emoji px-1.5 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 text-xs transition active:scale-90" data-emoji="🇹🇷" title="Türk Bayrağı">🇹🇷</button>
+              <button type="button" class="quick-emoji px-2 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 text-xs transition active:scale-90 flex items-center justify-center" data-emoji="🇹🇷" title="Türk Bayrağı">
+                <svg class="w-4 h-2.5 rounded-[2px] shadow-xs" viewBox="0 0 1200 800"><rect width="1200" height="800" fill="#E30A17"/><circle cx="425" cy="400" r="200" fill="#ffffff"/><circle cx="475" cy="400" r="160" fill="#E30A17"/><polygon fill="#ffffff" points="583.33,400 706.42,439.99 630.34,335.31 630.34,464.69 706.42,360.01"/></svg>
+              </button>
               <button type="button" class="quick-emoji px-1.5 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 text-xs transition active:scale-90" data-emoji="⚽" title="Futbol Topu">⚽</button>
               <button type="button" class="quick-emoji px-1.5 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 text-xs transition active:scale-90" data-emoji="🔥" title="Ateş">🔥</button>
               <button type="button" class="quick-emoji px-1.5 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 text-xs transition active:scale-90" data-emoji="👏" title="Alkış">👏</button>
@@ -1345,6 +1347,9 @@
     const PROFANITY_PATTERN = /\b(amk|aq|sik|siki|sikerim|sikeyim|siktir|piç|orospu|oç|göt|götlek|yarrak|yarram|yarak|ibne|kahpe|pezevenk|ananı|bacını|taşak|taşşak|hassiktir|amcık|puşt|şerefsiz|salak|aptal|gerizekalı|kaşar|fahişe|dalyarak|mal|ahmak)\b/i;
     const LINK_PATTERN = /(https?:\/\/|www\.|\.com|\.net|\.org|\.xyz|\.bet|\.casino|t\.me\/|wa\.me\/|bit\.ly)/i;
 
+    // Gerçek Kırmızı Türk Bayrağı SVG (Windows ve tüm cihazlarda TR yazısı yerine gerçek bayrak çıkar)
+    const TR_FLAG_HTML = `<span class="inline-flex items-center align-middle mr-1.5 shrink-0"><svg class="w-4 h-2.5 rounded-[2px] shadow-xs inline-block" viewBox="0 0 1200 800"><rect width="1200" height="800" fill="#E30A17"/><circle cx="425" cy="400" r="200" fill="#ffffff"/><circle cx="475" cy="400" r="160" fill="#E30A17"/><polygon fill="#ffffff" points="583.33,400 706.42,439.99 630.34,335.31 630.34,464.69 706.42,360.01"/></svg></span>`;
+
     // Varsayılan Başlangıç Taraftar Mesajları (Canlılık ve etkileşim için)
     const DEFAULT_MESSAGES = [
       { id: 1, nick: "Barış (İzmir)", time: "20:45", text: "Gürsel Aksel'de atmosfer yıkılıyor, tribünler kıpkırmızı bayraklarla donatıldı! 🇹🇷", badge: "Ev Sahibi" },
@@ -1353,17 +1358,16 @@
       { id: 4, nick: "Selin (Bursa)", time: "21:26", text: "Belçika güçlü ama İzmir'de taraftarın coşkusuyla 3 puan bizim olacak inşallah 🇹🇷❤️", badge: "Ay-Yıldız" }
     ];
 
-    let localChatList = [];
+    // Mesajları ve form alanlarını tarayıcıda kalıcı depolama (Yazılanlar hafızada tutulmaz, her girişte taze açılır)
     try {
-      const saved = localStorage.getItem('pratik_live_chat_v1');
-      if (saved) {
-        localChatList = JSON.parse(saved);
-      }
+      localStorage.removeItem('pratik_live_chat_v1');
+      localStorage.removeItem('pratik_chat_nick');
     } catch (_) {}
+    let sessionChatList = [];
 
-    // Kayıtlı rumuz varsa yükle
-    if (nickInput && localStorage.getItem('pratik_chat_nick')) {
-      nickInput.value = localStorage.getItem('pratik_chat_nick');
+    // Rumuz kutusunu temiz tut
+    if (nickInput) {
+      nickInput.value = '';
     }
 
     function escapeHtml(str) {
@@ -1372,22 +1376,28 @@
       })[m]);
     }
 
+    function formatChatMessage(text) {
+      const safe = escapeHtml(text);
+      // Windows'ta 'TR' çıkmaması için emoji bayrağı veya yalnız 'TR' kelimesini gerçek Türk Bayrağı SVG'sine dönüştür
+      return safe.replace(/🇹🇷/g, TR_FLAG_HTML).replace(/\bTR\b/g, TR_FLAG_HTML);
+    }
+
     // Mesajları Ekrana Bas
     function renderChatMessages() {
       if (!chatContainer) return;
-      const allMessages = [...DEFAULT_MESSAGES, ...localChatList];
+      const allMessages = [...DEFAULT_MESSAGES, ...sessionChatList];
       
       chatContainer.innerHTML = allMessages.map(msg => `
         <div class="p-3 rounded-2xl bg-slate-950/70 border border-slate-800/80 hover:border-slate-700 transition space-y-1">
           <div class="flex items-center justify-between text-xs">
-            <div class="flex items-center gap-1.5 font-bold text-white">
-              <span class="text-rose-400">🇹🇷</span>
+            <div class="flex items-center font-bold text-white">
+              ${TR_FLAG_HTML}
               <span>${escapeHtml(msg.nick)}</span>
-              ${msg.badge ? `<span class="px-1.5 py-0.5 rounded text-[10px] bg-rose-500/15 text-rose-300 font-normal border border-rose-500/20">${msg.badge}</span>` : ''}
+              ${msg.badge ? `<span class="ml-1.5 px-1.5 py-0.5 rounded text-[10px] bg-rose-500/15 text-rose-300 font-normal border border-rose-500/20">${msg.badge}</span>` : ''}
             </div>
             <span class="text-[10px] text-slate-500 font-mono">${msg.time}</span>
           </div>
-          <p class="text-xs sm:text-sm text-slate-200 leading-relaxed break-words">${escapeHtml(msg.text)}</p>
+          <p class="text-xs sm:text-sm text-slate-200 leading-relaxed break-words">${formatChatMessage(msg.text)}</p>
         </div>
       `).join('');
 
@@ -1465,13 +1475,10 @@
           badge: "Taraftar"
         };
 
-        localChatList.push(newMsg);
-        if (localChatList.length > 50) localChatList.shift();
+        sessionChatList.push(newMsg);
+        if (sessionChatList.length > 50) sessionChatList.shift();
 
-        try {
-          localStorage.setItem('pratik_live_chat_v1', JSON.stringify(localChatList));
-          localStorage.setItem('pratik_chat_nick', nick);
-        } catch (_) {}
+        // Kalıcı depolama yapılmıyor (sayfa yenilendiğinde hiçbir veri tutulmaz)
 
         lastPostTime = now;
         msgInput.value = '';
