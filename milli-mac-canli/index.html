@@ -203,8 +203,10 @@
           
           <!-- Team 1: HOME TEAM -->
           <div class="flex flex-col items-center space-y-2.5">
-            <div id="homeCardBox" class="w-16 h-16 sm:w-22 sm:h-22 rounded-2xl bg-gradient-to-tr from-rose-600 to-red-600 border-2 border-rose-400/50 flex items-center justify-center shadow-xl shadow-rose-600/30 transform hover:scale-105 transition-transform">
-              <span id="homeFlag" class="text-3xl sm:text-4xl">🇹🇷</span>
+            <div id="homeCardBox" class="w-16 h-16 sm:w-22 sm:h-22 rounded-2xl bg-gradient-to-tr from-rose-600 to-red-600 border-2 border-rose-400/50 flex items-center justify-center shadow-xl shadow-rose-600/30 transform hover:scale-105 transition-transform p-2">
+              <span id="homeFlag" class="flex items-center justify-center w-full h-full">
+                <svg class="w-10 h-7 sm:w-14 sm:h-9.5 rounded-md shadow-md" viewBox="0 0 1200 800"><rect width="1200" height="800" fill="#E30A17"/><circle cx="425" cy="400" r="200" fill="#ffffff"/><circle cx="475" cy="400" r="160" fill="#E30A17"/><polygon fill="#ffffff" points="583.33,400 706.42,439.99 630.34,335.31 630.34,464.69 706.42,360.01"/></svg>
+              </span>
             </div>
             <div>
               <h2 id="homeName" class="text-base sm:text-xl font-black text-white tracking-wide">TÜRKİYE</h2>
@@ -231,8 +233,10 @@
 
           <!-- Team 2: AWAY TEAM -->
           <div class="flex flex-col items-center space-y-2.5">
-            <div id="awayCardBox" class="w-16 h-16 sm:w-22 sm:h-22 rounded-2xl bg-gradient-to-tr from-slate-900 to-amber-950 border-2 border-amber-500/40 flex items-center justify-center shadow-xl shadow-amber-950/50 transform hover:scale-105 transition-transform">
-              <span id="awayFlag" class="text-3xl sm:text-4xl">🇧🇪</span>
+            <div id="awayCardBox" class="w-16 h-16 sm:w-22 sm:h-22 rounded-2xl bg-gradient-to-tr from-slate-900 to-amber-950 border-2 border-amber-500/40 flex items-center justify-center shadow-xl shadow-amber-950/50 transform hover:scale-105 transition-transform p-2">
+              <span id="awayFlag" class="flex items-center justify-center w-full h-full">
+                <svg class="w-10 h-7 sm:w-14 sm:h-9.5 rounded-md shadow-md" viewBox="0 0 30 20"><rect width="10" height="20" fill="#000000"/><rect x="10" width="10" height="20" fill="#FDDA24"/><rect x="20" width="10" height="20" fill="#EF3340"/></svg>
+              </span>
             </div>
             <div>
               <h2 id="awayName" class="text-base sm:text-xl font-black text-white tracking-wide">BELÇİKA</h2>
@@ -455,7 +459,7 @@
             <tr class="hover:bg-slate-800/30">
               <td class="py-3 px-3"><span class="w-5 h-5 rounded-full bg-emerald-600 flex items-center justify-center text-xs text-white">1</span></td>
               <td class="py-3 px-3 flex items-center gap-2">
-                <span>🇫🇷</span> <strong>Fransa</strong>
+                <svg class="w-4 h-2.5 rounded-[2px] shadow-xs inline-block shrink-0" viewBox="0 0 30 20"><rect width="10" height="20" fill="#002395"/><rect x="10" width="10" height="20" fill="#ffffff"/><rect x="20" width="10" height="20" fill="#ED2939"/></svg> <strong>Fransa</strong>
                 <span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400">Lider</span>
               </td>
               <td class="py-3 px-2 text-center">4</td>
@@ -470,7 +474,7 @@
             <!-- 2. İtalya -->
             <tr class="hover:bg-slate-800/30">
               <td class="py-3 px-3"><span class="w-5 h-5 rounded-full bg-sky-600 flex items-center justify-center text-xs text-white">2</span></td>
-              <td class="py-3 px-3"><span>🇮🇹</span> <strong>İtalya</strong></td>
+              <td class="py-3 px-3 flex items-center gap-2"><svg class="w-4 h-2.5 rounded-[2px] shadow-xs inline-block shrink-0" viewBox="0 0 30 20"><rect width="10" height="20" fill="#009246"/><rect x="10" width="10" height="20" fill="#ffffff"/><rect x="20" width="10" height="20" fill="#ce2b37"/></svg> <strong>İtalya</strong></td>
               <td class="py-3 px-2 text-center">4</td>
               <td class="py-3 px-2 text-center">2</td>
               <td class="py-3 px-2 text-center">1</td>
@@ -484,7 +488,7 @@
             <tr class="bg-amber-500/10 hover:bg-amber-500/15">
               <td class="py-3 px-3"><span class="w-5 h-5 rounded-full bg-amber-600 flex items-center justify-center text-xs text-white">3</span></td>
               <td class="py-3 px-3 flex items-center gap-2">
-                <span>🇧🇪</span> <strong>Belçika</strong>
+                <svg class="w-4 h-2.5 rounded-[2px] shadow-xs inline-block shrink-0" viewBox="0 0 30 20"><rect width="10" height="20" fill="#000000"/><rect x="10" width="10" height="20" fill="#FDDA24"/><rect x="20" width="10" height="20" fill="#EF3340"/></svg> <strong>Belçika</strong>
               </td>
               <td class="py-3 px-2 text-center">4</td>
               <td class="py-3 px-2 text-center">2</td>
@@ -499,7 +503,7 @@
             <tr class="bg-rose-500/10 hover:bg-rose-500/15">
               <td class="py-3 px-3"><span class="w-5 h-5 rounded-full bg-rose-600 flex items-center justify-center text-xs text-white">4</span></td>
               <td class="py-3 px-3 flex items-center gap-2">
-                <span>🇹🇷</span> <strong>Türkiye</strong>
+                <svg class="w-4 h-2.5 rounded-[2px] shadow-xs inline-block shrink-0" viewBox="0 0 1200 800"><rect width="1200" height="800" fill="#E30A17"/><circle cx="425" cy="400" r="200" fill="#ffffff"/><circle cx="475" cy="400" r="160" fill="#E30A17"/><polygon fill="#ffffff" points="583.33,400 706.42,439.99 630.34,335.31 630.34,464.69 706.42,360.01"/></svg> <strong>Türkiye</strong>
                 <span class="text-[10px] px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300">Ay-Yıldızlılar</span>
               </td>
               <td class="py-3 px-2 text-center">4</td>
@@ -534,7 +538,10 @@
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <button id="voteHome" class="vote-btn p-3.5 rounded-2xl bg-slate-800/80 hover:bg-rose-600/20 border border-slate-700 hover:border-rose-500 text-left transition space-y-1">
           <div class="flex items-center justify-between text-xs font-bold text-white">
-            <span id="labelVoteHome">🇹🇷 Türkiye Kazanır</span>
+            <span id="labelVoteHome" class="flex items-center gap-1.5">
+              <svg class="w-3.5 h-2.5 rounded-[2px] shadow-xs shrink-0" viewBox="0 0 1200 800"><rect width="1200" height="800" fill="#E30A17"/><circle cx="425" cy="400" r="200" fill="#ffffff"/><circle cx="475" cy="400" r="160" fill="#E30A17"/><polygon fill="#ffffff" points="583.33,400 706.42,439.99 630.34,335.31 630.34,464.69 706.42,360.01"/></svg>
+              <span>Türkiye Kazanır</span>
+            </span>
             <span id="pctHome" class="text-rose-400">%62</span>
           </div>
           <div class="w-full h-2 rounded-full bg-slate-950 overflow-hidden">
@@ -554,7 +561,10 @@
 
         <button id="voteAway" class="vote-btn p-3.5 rounded-2xl bg-slate-800/80 hover:bg-slate-700 border border-slate-700 text-left transition space-y-1">
           <div class="flex items-center justify-between text-xs font-bold text-white">
-            <span id="labelVoteAway">🇧🇪 Belçika Kazanır</span>
+            <span id="labelVoteAway" class="flex items-center gap-1.5">
+              <svg class="w-3.5 h-2.5 rounded-[2px] shadow-xs shrink-0" viewBox="0 0 30 20"><rect width="10" height="20" fill="#000000"/><rect x="10" width="10" height="20" fill="#FDDA24"/><rect x="20" width="10" height="20" fill="#EF3340"/></svg>
+              <span>Belçika Kazanır</span>
+            </span>
             <span id="pctAway" class="text-slate-400">%20</span>
           </div>
           <div class="w-full h-2 rounded-full bg-slate-950 overflow-hidden">
@@ -586,7 +596,13 @@
           <div class="p-4 space-y-2.5">
             <div class="flex items-center justify-between">
               <span class="text-slate-400">Karşılaşma:</span>
-              <strong class="text-white font-bold">Türkiye 🇹🇷 vs 🇧🇪 Belçika</strong>
+              <strong class="text-white font-bold flex items-center gap-1.5">
+                <span>Türkiye</span>
+                <svg class="w-3.5 h-2.5 rounded-[2px] shadow-xs inline-block shrink-0" viewBox="0 0 1200 800"><rect width="1200" height="800" fill="#E30A17"/><circle cx="425" cy="400" r="200" fill="#ffffff"/><circle cx="475" cy="400" r="160" fill="#E30A17"/><polygon fill="#ffffff" points="583.33,400 706.42,439.99 630.34,335.31 630.34,464.69 706.42,360.01"/></svg>
+                <span>vs</span>
+                <svg class="w-3.5 h-2.5 rounded-[2px] shadow-xs inline-block shrink-0" viewBox="0 0 30 20"><rect width="10" height="20" fill="#000000"/><rect x="10" width="10" height="20" fill="#FDDA24"/><rect x="20" width="10" height="20" fill="#EF3340"/></svg>
+                <span>Belçika</span>
+              </strong>
             </div>
             <div class="flex items-center justify-between">
               <span class="text-slate-400">Tarih:</span>
@@ -848,6 +864,32 @@
 
     currentMatchIndex = determineActiveMatchIndex();
 
+    function getScoreboardFlagSvg(flagCode) {
+      if (flagCode === "🇹🇷" || flagCode === "TUR") {
+        return `<svg class="w-10 h-7 sm:w-14 sm:h-9.5 rounded-md shadow-md shrink-0" viewBox="0 0 1200 800"><rect width="1200" height="800" fill="#E30A17"/><circle cx="425" cy="400" r="200" fill="#ffffff"/><circle cx="475" cy="400" r="160" fill="#E30A17"/><polygon fill="#ffffff" points="583.33,400 706.42,439.99 630.34,335.31 630.34,464.69 706.42,360.01"/></svg>`;
+      }
+      if (flagCode === "🇧🇪" || flagCode === "BEL") {
+        return `<svg class="w-10 h-7 sm:w-14 sm:h-9.5 rounded-md shadow-md shrink-0" viewBox="0 0 30 20"><rect width="10" height="20" fill="#000000"/><rect x="10" width="10" height="20" fill="#FDDA24"/><rect x="20" width="10" height="20" fill="#EF3340"/></svg>`;
+      }
+      if (flagCode === "🇫🇷" || flagCode === "FRA") {
+        return `<svg class="w-10 h-7 sm:w-14 sm:h-9.5 rounded-md shadow-md shrink-0" viewBox="0 0 30 20"><rect width="10" height="20" fill="#002395"/><rect x="10" width="10" height="20" fill="#ffffff"/><rect x="20" width="10" height="20" fill="#ED2939"/></svg>`;
+      }
+      return flagCode;
+    }
+
+    function getMiniFlagSvg(flagCode) {
+      if (flagCode === "🇹🇷" || flagCode === "TUR") {
+        return `<svg class="w-3.5 h-2.5 rounded-[2px] shadow-xs inline-block shrink-0" viewBox="0 0 1200 800"><rect width="1200" height="800" fill="#E30A17"/><circle cx="425" cy="400" r="200" fill="#ffffff"/><circle cx="475" cy="400" r="160" fill="#E30A17"/><polygon fill="#ffffff" points="583.33,400 706.42,439.99 630.34,335.31 630.34,464.69 706.42,360.01"/></svg>`;
+      }
+      if (flagCode === "🇧🇪" || flagCode === "BEL") {
+        return `<svg class="w-3.5 h-2.5 rounded-[2px] shadow-xs inline-block shrink-0" viewBox="0 0 30 20"><rect width="10" height="20" fill="#000000"/><rect x="10" width="10" height="20" fill="#FDDA24"/><rect x="20" width="10" height="20" fill="#EF3340"/></svg>`;
+      }
+      if (flagCode === "🇫🇷" || flagCode === "FRA") {
+        return `<svg class="w-3.5 h-2.5 rounded-[2px] shadow-xs inline-block shrink-0" viewBox="0 0 30 20"><rect width="10" height="20" fill="#002395"/><rect x="10" width="10" height="20" fill="#ffffff"/><rect x="20" width="10" height="20" fill="#ED2939"/></svg>`;
+      }
+      return flagCode;
+    }
+
     // Fikstür Pill Butonlarını Oluştur
     function renderFixturePills() {
       const container = document.getElementById('fixturePills');
@@ -856,8 +898,8 @@
 
       FIXTURES.forEach((m, idx) => {
         const btn = document.createElement('button');
-        btn.className = `px-2.5 py-1 rounded-xl text-xs font-semibold transition border ${idx === currentMatchIndex ? 'bg-rose-600 text-white border-rose-500 shadow-sm' : 'bg-slate-800 text-slate-400 hover:text-white border-slate-700'}`;
-        btn.innerHTML = `${m.home.flag} vs ${m.away.flag}`;
+        btn.className = `px-2.5 py-1 rounded-xl text-xs font-semibold transition border flex items-center gap-1.5 ${idx === currentMatchIndex ? 'bg-rose-600 text-white border-rose-500 shadow-sm' : 'bg-slate-800 text-slate-400 hover:text-white border-slate-700'}`;
+        btn.innerHTML = `<span>${getMiniFlagSvg(m.home.flag)}</span><span>vs</span><span>${getMiniFlagSvg(m.away.flag)}</span>`;
         btn.title = `${m.home.name} vs ${m.away.name} (${m.displayDate})`;
         btn.onclick = () => {
           currentMatchIndex = idx;
@@ -875,17 +917,17 @@
       document.getElementById('matchDateText').textContent = m.displayDate;
       document.getElementById('matchVenueText').textContent = m.venue;
 
-      // Home Team
-      document.getElementById('homeFlag').textContent = m.home.flag;
+      // Home Team Flag & Details
+      document.getElementById('homeFlag').innerHTML = getScoreboardFlagSvg(m.home.flag);
       document.getElementById('homeName').textContent = m.home.name;
       document.getElementById('homeSub').textContent = m.home.sub;
-      document.getElementById('homeCardBox').className = `w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gradient-to-tr border-2 flex items-center justify-center shadow-xl transform hover:scale-105 transition-transform ${m.home.colorClass}`;
+      document.getElementById('homeCardBox').className = `w-16 h-16 sm:w-22 sm:h-22 rounded-2xl bg-gradient-to-tr border-2 flex items-center justify-center shadow-xl transform hover:scale-105 transition-transform p-2 ${m.home.colorClass}`;
 
-      // Away Team
-      document.getElementById('awayFlag').textContent = m.away.flag;
+      // Away Team Flag & Details
+      document.getElementById('awayFlag').innerHTML = getScoreboardFlagSvg(m.away.flag);
       document.getElementById('awayName').textContent = m.away.name;
       document.getElementById('awaySub').textContent = m.away.sub;
-      document.getElementById('awayCardBox').className = `w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gradient-to-tr border-2 flex items-center justify-center shadow-xl transform hover:scale-105 transition-transform ${m.away.colorClass}`;
+      document.getElementById('awayCardBox').className = `w-16 h-16 sm:w-22 sm:h-22 rounded-2xl bg-gradient-to-tr border-2 flex items-center justify-center shadow-xl transform hover:scale-105 transition-transform p-2 ${m.away.colorClass}`;
 
       // Broadcast Names
       const tvEl = document.getElementById('broadcastTvName');
