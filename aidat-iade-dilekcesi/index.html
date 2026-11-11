@@ -3,9 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kredi Kartı Aidat İade Dilekçesi Hazırlayıcı (Ücretsiz) – PratikAraçlar</title>
+  <title>Kredi Kartı Aidat İade Dilekçesi Hazırlayıcı (Ücretsiz) – PratikBase</title>
   <meta name="description" content="Bankaların kestiği kredi kartı aidatını ve yıllık üyelik ücretini geri almak için 6502 sayılı kanuna ve Yargıtay kararlarına uygun resmi itiraz ve THH dilekçenizi 1 dakikada ücretsiz oluşturun. PDF indirin veya mobil bankacılığa kopyalayın!">
   <meta name="keywords" content="kredi kartı aidat iadesi dilekçesi, banka kart aidatı geri alma, kart aidatı iptali e-devlet, aidat iade talep şablonu, 6502 sayılı kanun madde 31 kart aidatı, yargıtay kart aidatı kararı">
+  <meta name="theme-color" content="#0b0f19">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="/assets/icon-192.png">
+  <link rel="manifest" href="/manifest.json">
   <link rel="canonical" href="https://pratikbase.com/aidat-iade-dilekcesi/">
 
   <!-- Open Graph / Facebook -->
@@ -682,6 +687,12 @@
       toast.classList.remove('hidden');
       clearTimeout(window._t);
       window._t = setTimeout(() => toast.classList.add('hidden'), 3500);
+    }
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      });
     }
   </script>
 </body>
