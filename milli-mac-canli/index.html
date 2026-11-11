@@ -2,15 +2,23 @@
 <html lang="tr" class="dark" style="background-color: #020617; color: #f8fafc;">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   
-  <!-- Critical Anti-Flash Dark Background -->
+  <!-- Critical Anti-Flash Dark Background & Mobile Input Zoom Prevention -->
   <style>
     html, body {
       background-color: #020617 !important;
       color: #f8fafc;
       margin: 0;
       padding: 0;
+      overflow-x: hidden;
+      touch-action: manipulation;
+    }
+    /* Mobil cihazlarda input odaklanınca sayfanın otomatik yakınlaşmasını (auto-zoom) ve formun sağa kaymasını önler */
+    @media (max-width: 768px) {
+      #chatNickInput, #chatMsgInput, input[type="text"], input[type="search"] {
+        font-size: 16px !important;
+      }
     }
     ::-webkit-scrollbar { width: 8px; }
     ::-webkit-scrollbar-track { background: #0f172a; }
@@ -309,30 +317,30 @@
         </div>
 
         <!-- Chat Input Form (Zero Overflow Guaranteed on Desktop & Mobile) -->
-        <form id="chatForm" class="pt-2 border-t border-slate-800/80 space-y-2" autocomplete="off">
+        <form id="chatForm" class="pt-2 border-t border-slate-800/80 space-y-2 w-full max-w-full overflow-hidden" autocomplete="off">
           <!-- Row 1: Nickname & Quick Emoji Bar -->
-          <div class="flex items-center justify-between gap-2">
-            <div class="flex items-center gap-1.5 flex-1 max-w-[150px]">
+          <div class="flex items-center justify-between gap-1.5 w-full">
+            <div class="flex items-center gap-1.5 flex-1 min-w-0">
               <i class="fa-regular fa-user text-slate-500 text-xs shrink-0"></i>
-              <input type="text" id="chatNickInput" maxlength="16" placeholder="Rumuz (örn: Barış)" autocomplete="off" required class="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-800 focus:border-rose-500 text-white text-xs placeholder:text-slate-500 outline-none transition">
+              <input type="text" id="chatNickInput" maxlength="16" placeholder="Rumuz (örn: Barış)" autocomplete="off" required class="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-800 focus:border-rose-500 text-white text-base sm:text-xs placeholder:text-slate-500 outline-none transition">
             </div>
 
             <!-- Quick Match Emojis (Sık Kullanılan Milli Emojiler) -->
             <div class="flex items-center gap-1 shrink-0" id="quickEmojiBar">
-              <button type="button" class="quick-emoji px-2 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 text-xs transition active:scale-90 flex items-center justify-center" data-emoji="🇹🇷" title="Türk Bayrağı">
+              <button type="button" class="quick-emoji px-2 py-1.5 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 text-xs transition active:scale-90 flex items-center justify-center shrink-0" data-emoji="🇹🇷" title="Türk Bayrağı">
                 <svg class="w-4 h-2.5 rounded-[2px] shadow-xs" viewBox="0 0 1200 800"><rect width="1200" height="800" fill="#E30A17"/><circle cx="425" cy="400" r="200" fill="#ffffff"/><circle cx="475" cy="400" r="160" fill="#E30A17"/><polygon fill="#ffffff" points="583.33,400 706.42,439.99 630.34,335.31 630.34,464.69 706.42,360.01"/></svg>
               </button>
-              <button type="button" class="quick-emoji px-1.5 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 text-xs transition active:scale-90" data-emoji="⚽" title="Futbol Topu">⚽</button>
-              <button type="button" class="quick-emoji px-1.5 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 text-xs transition active:scale-90" data-emoji="🔥" title="Ateş">🔥</button>
-              <button type="button" class="quick-emoji px-1.5 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 text-xs transition active:scale-90" data-emoji="👏" title="Alkış">👏</button>
-              <button type="button" class="quick-emoji px-1.5 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 text-xs transition active:scale-90" data-emoji="❤️" title="Kırmızı Kalp">❤️</button>
+              <button type="button" class="quick-emoji px-1.5 py-1.5 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 text-xs transition active:scale-90 shrink-0" data-emoji="⚽" title="Futbol Topu">⚽</button>
+              <button type="button" class="quick-emoji px-1.5 py-1.5 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 text-xs transition active:scale-90 shrink-0" data-emoji="🔥" title="Ateş">🔥</button>
+              <button type="button" class="quick-emoji px-1.5 py-1.5 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 text-xs transition active:scale-90 shrink-0" data-emoji="👏" title="Alkış">👏</button>
+              <button type="button" class="quick-emoji px-1.5 py-1.5 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 text-xs transition active:scale-90 shrink-0" data-emoji="❤️" title="Kırmızı Kalp">❤️</button>
             </div>
           </div>
 
           <!-- Row 2: Message Input + Send Button -->
           <div class="flex items-center gap-1.5 w-full">
-            <input type="text" id="chatMsgInput" maxlength="150" placeholder="Mesajınızı yazın..." autocomplete="off" required class="flex-1 min-w-0 px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 focus:border-rose-500 text-white text-xs placeholder:text-slate-500 outline-none transition">
-            <button type="submit" id="chatSubmitBtn" class="px-3.5 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition shadow-md shadow-rose-600/30 flex items-center gap-1 shrink-0">
+            <input type="text" id="chatMsgInput" maxlength="150" placeholder="Mesajınızı yazın..." autocomplete="off" required class="flex-1 min-w-0 px-3 py-2 sm:py-2 rounded-xl bg-slate-950 border border-slate-800 focus:border-rose-500 text-white text-base sm:text-xs placeholder:text-slate-500 outline-none transition">
+            <button type="submit" id="chatSubmitBtn" class="px-3.5 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition shadow-md shadow-rose-600/30 flex items-center justify-center gap-1 shrink-0">
               <span>Yolla</span>
               <i class="fa-solid fa-paper-plane text-[10px]"></i>
             </button>
@@ -1435,7 +1443,7 @@
     if (firestoreDb) {
       try {
         firestoreDb.collection("tribun_chat")
-          .orderBy("timestamp", "asc")
+          .orderBy("createdMs", "asc")
           .limitToLast(50)
           .onSnapshot((snapshot) => {
             const fetched = [];
@@ -1446,16 +1454,22 @@
                 nick: d.nick || "Taraftar",
                 time: d.time || "",
                 text: d.text || "",
-                badge: d.badge || "Taraftar"
+                badge: d.badge || "Taraftar",
+                createdMs: d.createdMs || 0
               });
             });
-            liveMessages = fetched;
+            if (fetched.length > 0) {
+              liveMessages = fetched;
+            }
             renderChatMessages();
           }, (err) => {
-            console.debug("Firestore dinleme:", err.message);
+            console.warn("Firestore dinleme:", err.message);
+            if (err && (err.code === 'permission-denied' || (err.message && err.message.includes('not been used')))) {
+              showChatWarning("Firebase Firestore henüz aktif edilmemiş! Konsoldan 'Create database' yapılmalı.");
+            }
           });
       } catch (err) {
-        console.debug("Firestore dinleyici hatası:", err);
+        console.warn("Firestore dinleyici hatası:", err);
       }
     }
 
@@ -1485,9 +1499,7 @@
     // Mesajları Ekrana Bas
     function renderChatMessages() {
       if (!chatContainer) return;
-      const allMessages = (liveMessages && liveMessages.length > 0) 
-        ? liveMessages 
-        : [...DEFAULT_MESSAGES, ...sessionChatList];
+      const allMessages = [...DEFAULT_MESSAGES, ...(liveMessages || []), ...sessionChatList];
       
       chatContainer.innerHTML = allMessages.map(msg => `
         <div class="p-3 rounded-2xl bg-slate-950/70 border border-slate-800/80 hover:border-slate-700 transition space-y-1">
@@ -1513,7 +1525,7 @@
       warningBox.classList.remove('hidden');
       setTimeout(() => {
         warningBox.classList.add('hidden');
-      }, 4000);
+      }, 7000);
     }
 
     let lastPostTime = 0;
@@ -1584,10 +1596,12 @@
             time: timeStr,
             text: text,
             badge: "Taraftar",
-            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
             createdMs: Date.now()
+          }).then(() => {
+            // Başarılı: Firestore buluta yazıldı, tüm bağlı cihazlara anında yansıyacak
           }).catch(err => {
-            console.debug("Firestore yazma hatası, yerel akışa alınıyor:", err);
+            console.warn("Firestore yazma hatası:", err);
+            showChatWarning("Canlı veritabanı aktif değil (Firebase Console'da 'Firestore Database -> Create database' gerekli).");
             sessionChatList.push(newMsg);
             renderChatMessages();
           });

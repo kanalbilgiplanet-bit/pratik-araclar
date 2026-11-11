@@ -8,9 +8,9 @@
   <script>
     (function() {
       try {
-        var saved = localStorage.getItem('pratikbase_theme');
-        var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        var theme = saved || (prefersDark ? 'dark' : 'light');
+        var saved = localStorage.getItem('pratikbase_theme_v2');
+        // Varsayılan tema her zaman KOYU (Dark). Sadece kullanıcı özellikle açık tema seçmişse açık açılır.
+        var theme = (saved === 'light') ? 'light' : 'dark';
         if (theme === 'light') {
           document.documentElement.classList.remove('dark');
           document.documentElement.classList.add('light');
@@ -2316,7 +2316,8 @@
         const metaTheme = document.querySelector('meta[name="theme-color"]');
         if (metaTheme) metaTheme.setAttribute('content', '#020617');
       }
-      safeStorageSet('pratikbase_theme', theme);
+      safeStorageSet('pratikbase_theme_v2', theme);
+      try { localStorage.removeItem('pratikbase_theme'); } catch (_) {}
     }
 
     if (themeToggleBtn) {
