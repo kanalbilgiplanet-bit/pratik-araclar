@@ -1,44 +1,58 @@
 {
-  "name": "Pratik Araçlar",
-  "short_name": "PratikAraçlar",
-  "description": "Günlük ve acil ihtiyaçlar için hızlı, ücretsiz ve reklamsız 12 mikro web aracı.",
-  "start_url": "/",
+  "name": "PratikBase - Hızlı ve Ücretsiz Web Araçları",
+  "short_name": "PratikBase",
+  "description": "Futbol ve Doğum Piyangosu, Kıdem Tazminatı, Maaş Hesaplayıcı, Nöbetçi Eczane ve günlük yaşam araçları.",
+  "start_url": "/?source=pwa",
+  "scope": "/",
   "display": "standalone",
+  "orientation": "portrait-primary",
   "background_color": "#0b0f19",
-  "theme_color": "#0b0f19",
+  "theme_color": "#4f46e5",
   "lang": "tr",
   "icons": [
     {
-      "src": "/favicon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml"
+      "src": "/assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
-      "src": "/assets/og-banner.png",
-      "sizes": "1200x630",
-      "type": "image/png"
+      "src": "/assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
     }
   ],
   "shortcuts": [
     {
-      "name": "Akaryakıt Zam Hesaplayıcı",
-      "url": "/akaryakit-zam-hesaplayici/",
-      "description": "Benzin, motorin, LPG ve tüp gaz zamlarını anlık hesaplayın."
+      "name": "Futbol Piyangosu",
+      "short_name": "Futbol",
+      "url": "/football-lottery/?source=pwa_shortcut",
+      "description": "Rastgele futbolcu ve transfer piyango oyunu."
     },
     {
-      "name": "Canlı Sel Radarı",
-      "url": "/sel-uyarisi/",
-      "description": "Doppler yağış kütleleri ve ani sel uyarısı."
+      "name": "Doğum Piyangosu",
+      "short_name": "Doğum",
+      "url": "/birth-lottery/?source=pwa_shortcut",
+      "description": "Dünyaya geliş şansınızı simüle edin."
     },
     {
-      "name": "Sel Hasar Tazminatı",
-      "url": "/sel-hasar-tazminat/",
-      "description": "Fotoğraflı resmi sigorta ihbar dosyası hazırlama."
+      "name": "Kıdem Tazminatı",
+      "short_name": "Tazminat",
+      "url": "/tazminat-hesaplayici/?source=pwa_shortcut",
+      "description": "Güncel tavan ile kıdem ve ihbar tazminatı hesaplama."
     },
     {
-      "name": "En Yakın Nöbetçi Eczane",
-      "url": "/nobetci-eczane/",
-      "description": "GPS konumuna en yakın nöbetçi eczane ve yol tarifi."
+      "name": "Maaş Hesaplayıcı",
+      "short_name": "Maaş",
+      "url": "/maas-hesaplayici/?source=pwa_shortcut",
+      "description": "Brütten nete ve netten brüte maaş hesaplama."
     }
   ]
 }

@@ -7,6 +7,11 @@
   <meta name="description" content="Rastgele bir ülkede, rastgele yetenek genetiğiyle doğ! Sokak maçlarından Şampiyonlar Turnuvası finaline 0-40 yaş arası interaktif futbol kariyeri simülatörü. %100 telifsiz ve ücretsiz.">
   <meta name="keywords" content="futbolcu piyangosu, futbol kariyeri simülatörü, football lottery, the football lottery, new star soccer oyna, futbol menajerlik oyunu, rastgele futbolcu yarat, 8 milyarda bir futbolcu, soccer career simulator">
   <link rel="canonical" href="https://pratikbase.com/football-lottery/">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0b0f19">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="/assets/icon-192.png">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
@@ -2942,6 +2947,12 @@
       renderHallOfFame();
       checkSharedCareerUrl();
     });
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      });
+    }
   </script>
 </body>
 </html>

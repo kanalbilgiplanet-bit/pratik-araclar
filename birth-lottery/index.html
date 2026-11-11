@@ -7,6 +7,11 @@
   <meta name="description" content="Nerede, kimin çocuğu olarak doğacağını seçemezsin. 8 milyar insan ve BM demografi verilerine dayalı, yıl yıl akan özgün ve gerçekçi küresel yaşam simülatörü.">
   <meta name="keywords" content="the birth lottery, birth lottery game, 1 in 8 billion, 1in8b life simulator, 8 milyarda 1, doğum piyangosu, 8 milyarda 1 simülasyonu, world life simulator, where were you born">
   <link rel="canonical" href="https://pratikbase.com/birth-lottery/">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0b0f19">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="/assets/icon-192.png">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
@@ -6925,5 +6930,12 @@
     </div>
   </div>
 
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      });
+    }
+  </script>
 </body>
 </html>
