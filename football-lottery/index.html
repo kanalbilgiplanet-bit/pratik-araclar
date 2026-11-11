@@ -96,36 +96,13 @@
   }
   </script>
 
-  <!-- Tailwind & Fonts -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- Production Compiled Tailwind CSS (Fast, Static, Zero Runtime Lag) -->
+  <link rel="stylesheet" href="/assets/app.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"></noscript>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;1,700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            display: ['"Chakra Petch"', 'sans-serif']
-          },
-          colors: {
-            pitch: {
-              950: '#06130b',
-              900: '#0a2315',
-              800: '#0f3821',
-              700: '#165331',
-              500: '#22c55e',
-              400: '#4ade80'
-            }
-          }
-        }
-      }
-    }
-  </script>
 
   <style>
     /* Custom scrollbar */
