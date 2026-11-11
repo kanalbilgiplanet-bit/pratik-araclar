@@ -102,6 +102,20 @@
   <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"></noscript>
 
   <style>
+    /* Hide Netlify platform badge iframe */
+    #nl-badge-frame, #nl-hud-frame, iframe[id*="nl-"], iframe[title*="Netlify"], #netlify-badge, .netlify-badge, [data-netlify-badge], div[class*="netlify-badge"], div[id*="netlify-badge"], div[class*="netlify-feedback"], iframe[src*="netlify"] {
+      display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+      width: 0 !important;
+      height: 0 !important;
+      position: absolute !important;
+      left: -9999px !important;
+      bottom: -9999px !important;
+      clip-path: circle(0) !important;
+    }
+
     body {
       background-color: #FAF7F2;
       color: #1F1A15;

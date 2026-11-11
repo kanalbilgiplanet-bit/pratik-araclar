@@ -36,6 +36,20 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 
   <style>
+    /* Hide Netlify platform badge iframe */
+    #nl-badge-frame, #nl-hud-frame, iframe[id*="nl-"], iframe[title*="Netlify"], #netlify-badge, .netlify-badge, [data-netlify-badge], div[class*="netlify-badge"], div[id*="netlify-badge"], div[class*="netlify-feedback"], iframe[src*="netlify"] {
+      display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+      width: 0 !important;
+      height: 0 !important;
+      position: absolute !important;
+      left: -9999px !important;
+      bottom: -9999px !important;
+      clip-path: circle(0) !important;
+    }
+
     /* A4 Document Styling */
     .a4-paper {
       background: #ffffff;
@@ -123,7 +137,7 @@
           </div>
           <div>
             <span class="text-base font-extrabold tracking-tight text-white flex items-center gap-1.5">
-              PratikAraçlar
+              Pratik<span class="text-amber-400">Base</span>
               <span class="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400 border border-amber-500/30">Aidat İade</span>
             </span>
           </div>
