@@ -231,22 +231,37 @@
 
       </div>
 
-      <!-- Action Buttons (Yasal & Telifsiz Doğrudan Yayın Kanalları) -->
-      <div class="pt-6 border-t border-slate-800/80 flex flex-wrap items-center justify-center gap-3 text-xs sm:text-sm font-semibold">
-        <a id="btnLiveTv" href="https://www.tabii.com/tr/watch/live/trt1" target="_blank" rel="noopener noreferrer" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-bold transition shadow-lg shadow-rose-600/25 flex items-center gap-2">
-          <i class="fa-solid fa-tv"></i>
-          <span>TRT 1 Canlı İzle (Şifresiz HD)</span>
-          <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-75"></i>
-        </a>
-        <a id="btnLiveRadio" href="https://radyo.trt.net.tr/" target="_blank" rel="noopener noreferrer" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white transition border border-slate-700 flex items-center gap-2">
-          <i class="fa-solid fa-radio text-amber-400"></i>
-          <span>TRT Radyo 1 Canlı Dinle</span>
-          <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-75"></i>
-        </a>
-        <button id="btnSoundAlert" class="px-3.5 py-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white transition border border-slate-700 flex items-center gap-1.5" title="Gol sesli bildirimini aç/kapat">
-          <i class="fa-solid fa-volume-high text-emerald-400"></i>
-          <span>Gol Sesi Açık</span>
-        </button>
+      <!-- Broadcast Info & In-Page Engagement Controls -->
+      <div class="pt-6 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-3 text-xs sm:text-sm">
+        
+        <!-- Yasal Yayın Bilgi Rozeti (Siteden kovmayan, sade bilgilendirme) -->
+        <div class="inline-flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-slate-950/70 border border-slate-800 text-slate-300 text-xs shadow-inner">
+          <span class="flex items-center gap-1.5 font-medium">
+            <i class="fa-solid fa-tv text-red-500"></i>
+            <span>TV: <strong id="broadcastTvName" class="text-white">TRT 1</strong> (Şifresiz)</span>
+          </span>
+          <span class="text-slate-700">|</span>
+          <span class="flex items-center gap-1.5 font-medium">
+            <i class="fa-solid fa-radio text-amber-400"></i>
+            <span>Radyo: <strong id="broadcastRadioName" class="text-white">TRT Radyo 1</strong></span>
+          </span>
+        </div>
+
+        <!-- Sitede Tutucu İnteraktif Kontroller -->
+        <div class="flex items-center gap-2">
+          <!-- Otomatik Canlı Takip Rozeti -->
+          <span class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-semibold">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>Otomatik Canlı Takip Aktif</span>
+          </span>
+
+          <!-- Gol Sesi Alarmı (Ana Odak) -->
+          <button id="btnSoundAlert" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold transition border border-slate-700 flex items-center gap-1.5 shadow-sm" title="Gol olduğunda anlık sesli bildirim verir">
+            <i class="fa-solid fa-volume-high text-emerald-400"></i>
+            <span>Gol Sesi Açık</span>
+          </button>
+        </div>
+
       </div>
 
     </section>
@@ -473,6 +488,64 @@
       <p id="voteFeedback" class="text-[11px] text-emerald-400 hidden pt-1">
         <i class="fa-solid fa-check"></i> Oyunuz başarıyla kaydedildi!
       </p>
+    </section>
+
+    <!-- PRATİKBASE ARAÇLAR VİTRİNİ: TRAFİĞİ DÖNÜŞTÜRÜCÜ KARTLAR -->
+    <section class="p-6 rounded-3xl bg-gradient-to-r from-slate-900 via-indigo-950/30 to-slate-900 border border-slate-800 space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800/80 pb-3">
+        <div>
+          <h3 class="text-sm font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-toolbox text-rose-400"></i>
+            <span>Maç Beklerken & Devre Arasında: PratikBase Popüler Araçları</span>
+          </h3>
+          <p class="text-xs text-slate-400">Kurulumsuz, ücretsiz ve tarayıcınızda anında çalışan pratik web araçlarımız</p>
+        </div>
+        <a href="/" class="text-xs font-semibold text-rose-400 hover:text-rose-300 inline-flex items-center gap-1 transition">
+          Tümünü Gör (28+ Araç) <i class="fa-solid fa-arrow-right text-[10px]"></i>
+        </a>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+        <a href="/kelime-sayaci/" class="p-3.5 rounded-2xl bg-slate-950/60 hover:bg-slate-800 border border-slate-800/80 hover:border-slate-700 transition group flex flex-col justify-between space-y-2">
+          <div class="w-8 h-8 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold">
+            <i class="fa-solid fa-font"></i>
+          </div>
+          <div>
+            <div class="font-bold text-white group-hover:text-rose-400 transition">Kelime Sayacı</div>
+            <div class="text-[11px] text-slate-500">Metin ve karakter analizi</div>
+          </div>
+        </a>
+
+        <a href="/sifre-olusturucu/" class="p-3.5 rounded-2xl bg-slate-950/60 hover:bg-slate-800 border border-slate-800/80 hover:border-slate-700 transition group flex flex-col justify-between space-y-2">
+          <div class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
+            <i class="fa-solid fa-key"></i>
+          </div>
+          <div>
+            <div class="font-bold text-white group-hover:text-rose-400 transition">Şifre Oluşturucu</div>
+            <div class="text-[11px] text-slate-500">Güvenli rastgele parola</div>
+          </div>
+        </a>
+
+        <a href="/qr-kod-olusturucu/" class="p-3.5 rounded-2xl bg-slate-950/60 hover:bg-slate-800 border border-slate-800/80 hover:border-slate-700 transition group flex flex-col justify-between space-y-2">
+          <div class="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold">
+            <i class="fa-solid fa-qrcode"></i>
+          </div>
+          <div>
+            <div class="font-bold text-white group-hover:text-rose-400 transition">QR Kod Oluşturucu</div>
+            <div class="text-[11px] text-slate-500">Hızlı ve pratik karekod</div>
+          </div>
+        </a>
+
+        <a href="/yuzde-hesaplama/" class="p-3.5 rounded-2xl bg-slate-950/60 hover:bg-slate-800 border border-slate-800/80 hover:border-slate-700 transition group flex flex-col justify-between space-y-2">
+          <div class="w-8 h-8 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold">
+            <i class="fa-solid fa-percent"></i>
+          </div>
+          <div>
+            <div class="font-bold text-white group-hover:text-rose-400 transition">Yüzde Hesaplama</div>
+            <div class="text-[11px] text-slate-500">KDV ve oran hesaplayıcı</div>
+          </div>
+        </a>
+      </div>
     </section>
 
     <!-- FAQ SECTION (SEO & GOOGLE ARAMA SORULARI) -->
@@ -717,9 +790,11 @@
       document.getElementById('awaySub').textContent = m.away.sub;
       document.getElementById('awayCardBox').className = `w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gradient-to-tr border-2 flex items-center justify-center shadow-xl transform hover:scale-105 transition-transform ${m.away.colorClass}`;
 
-      // Links
-      document.getElementById('btnLiveTv').href = m.tvUrl;
-      document.getElementById('btnLiveRadio').href = m.radioUrl;
+      // Broadcast Names
+      const tvEl = document.getElementById('broadcastTvName');
+      const radioEl = document.getElementById('broadcastRadioName');
+      if (tvEl) tvEl.textContent = m.channel || 'TRT 1';
+      if (radioEl) radioEl.textContent = 'TRT Radyo 1';
 
       // Kadrolar (Tab 3)
       renderLineups(m);
@@ -1024,39 +1099,96 @@
     }
 
     // ========================================================
-    // CANLI SKOR VE OLAY YOKLAMA MOTORU (POLLING ENGINE)
+    // TAM OTOMATİK CANLI SKOR MOTORU (Sıfır Manuel Müdahale)
     // ========================================================
     let currentScore = { home: 0, away: 0 };
     let initialScoreLoaded = false;
 
+    // Harici Açık Spor API'sinden Canlı Maç Verisi Çekici (ESPN Public Feed)
+    async function fetchExternalLiveScore() {
+      try {
+        const res = await fetch('https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/scoreboard', {
+          headers: { 'Accept': 'application/json' },
+          cache: 'no-store'
+        });
+        if (!res.ok) return null;
+        const json = await res.json();
+        if (!json.events || !Array.isArray(json.events)) return null;
+
+        // Türkiye'nin müsabakasını tespit et
+        const turkeyEvent = json.events.find(ev => {
+          const comps = ev.competitions?.[0]?.competitors || [];
+          return comps.some(c => {
+            const n = (c.team?.displayName || c.team?.name || '').toLowerCase();
+            return n.includes('turkey') || n.includes('türkiye');
+          });
+        });
+
+        if (!turkeyEvent) return null;
+
+        const comp = turkeyEvent.competitions[0];
+        const homeComp = comp.competitors.find(c => c.homeAway === 'home');
+        const awayComp = comp.competitors.find(c => c.homeAway === 'away');
+        const statusType = comp.status?.type || {};
+        const isLive = statusType.state === 'in';
+        const isFinished = statusType.completed || statusType.state === 'post';
+        const clockDisplay = comp.status?.displayClock || '';
+
+        return {
+          source: 'espn',
+          scoreHome: parseInt(homeComp?.score, 10) || 0,
+          scoreAway: parseInt(awayComp?.score, 10) || 0,
+          statusText: isLive ? (clockDisplay ? `${clockDisplay} Canlı` : 'Canlı Yayında') : (isFinished ? 'Maç Sonu' : 'Maç Başlamadı'),
+          isLive,
+          isFinished
+        };
+      } catch (e) {
+        return null;
+      }
+    }
+
     async function checkLiveScore() {
       try {
-        const res = await fetch(`./data/live_score.json?_t=${Date.now()}`, { cache: 'no-store' });
-        if (!res.ok) return;
-        const data = await res.json();
-
         const activeMatch = FIXTURES[currentMatchIndex];
-        // Sadece aktif maç ID'si eşleşiyorsa güncelle
-        if (data.matchId && activeMatch && data.matchId !== activeMatch.id) {
-          return;
+        let liveData = null;
+
+        // 1. Önce canlı uluslararası API'yi kontrol et
+        const externalData = await fetchExternalLiveScore();
+        if (externalData && (externalData.isLive || externalData.scoreHome > 0 || externalData.scoreAway > 0)) {
+          liveData = externalData;
         }
+
+        // 2. Canlı API yoksa veya henüz başlamadıysa yerel veri dosyasını kontrol et
+        if (!liveData) {
+          try {
+            const res = await fetch(`./data/live_score.json?_t=${Date.now()}`, { cache: 'no-store' });
+            if (res.ok) {
+              const localData = await res.json();
+              if (!localData.matchId || localData.matchId === activeMatch?.id) {
+                liveData = localData;
+              }
+            }
+          } catch (_) {}
+        }
+
+        if (!liveData) return;
 
         const scoreHomeEl = document.getElementById('scoreHome');
         const scoreAwayEl = document.getElementById('scoreAway');
         const clockEl = document.getElementById('matchClock');
 
-        const newHome = typeof data.scoreHome === 'number' ? data.scoreHome : 0;
-        const newAway = typeof data.scoreAway === 'number' ? data.scoreAway : 0;
+        const newHome = typeof liveData.scoreHome === 'number' ? liveData.scoreHome : 0;
+        const newAway = typeof liveData.scoreAway === 'number' ? liveData.scoreAway : 0;
 
-        // İlk yüklemeden sonra skor arttıysa gol alarmı ver!
+        // İlk yüklemeden sonra skor arttıysa gol alarmı ve tebriği patlat!
         if (initialScoreLoaded) {
           if (newHome > currentScore.home) {
             playGoalChime();
-            showGoalToast(`⚽ GOOOOOL! ${activeMatch.home.name}!`, data.lastGoalText || 'Skor Güncellendi');
+            showGoalToast(`⚽ GOOOOOL! ${activeMatch.home.name}!`, liveData.lastGoalText || 'Skor Güncellendi');
             animateScoreChange('scoreHome');
           } else if (newAway > currentScore.away) {
             playGoalChime();
-            showGoalToast(`⚽ GOL (${activeMatch.away.name})`, data.lastGoalText || 'Skor Güncellendi');
+            showGoalToast(`⚽ GOL (${activeMatch.away.name})`, liveData.lastGoalText || 'Skor Güncellendi');
             animateScoreChange('scoreAway');
           }
         }
@@ -1068,15 +1200,15 @@
         if (scoreAwayEl) scoreAwayEl.textContent = newAway;
 
         // Maç durumu / dakikası
-        if (data.statusText && clockEl && data.status !== 'not_started') {
-          clockEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-rose-500 animate-ping mr-1"></span> ${data.statusText}`;
+        if (liveData.statusText && clockEl && liveData.status !== 'not_started') {
+          clockEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-rose-500 animate-ping mr-1"></span> ${liveData.statusText}`;
         }
 
         // Canlı olaylar varsa timeline'a ekle
-        if (data.events && Array.isArray(data.events) && data.events.length > 0) {
+        if (liveData.events && Array.isArray(liveData.events) && liveData.events.length > 0) {
           const container = document.getElementById('liveTimeline');
           if (container) {
-            const eventsHtml = data.events.map(ev => `
+            const eventsHtml = liveData.events.map(ev => `
               <div class="timeline-item p-4 rounded-2xl bg-slate-900/90 border border-rose-500/50 flex items-start gap-3 shadow-lg">
                 <div class="w-10 h-10 rounded-xl bg-rose-600 text-white flex items-center justify-center font-bold text-xs shrink-0 mt-0.5 shadow-md shadow-rose-600/40">
                   ${ev.minute || 'Canlı'}
@@ -1095,14 +1227,13 @@
 
         initialScoreLoaded = true;
       } catch (err) {
-        // Sessiz yakala
         console.debug('Canlı skor yoklama kontrolü:', err);
       }
     }
 
-    // İlk skor kontrolü ve her 15 saniyede bir otomatik sorgulama
+    // İlk skor kontrolü ve her 20 saniyede bir otomatik sorgulama
     checkLiveScore();
-    setInterval(checkLiveScore, 15000);
+    setInterval(checkLiveScore, 20000);
 
     // Canlı Simülasyon Test Fonksiyonu (Konsoldan veya URL'den test için)
     window.testGoal = function(home, away, goalText) {
