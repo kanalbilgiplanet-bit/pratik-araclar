@@ -225,13 +225,12 @@
           <!-- Center: SCORE / COUNTDOWN -->
           <div class="flex flex-col items-center justify-center space-y-2">
             <div class="px-4 py-2 sm:px-5 sm:py-3 rounded-2xl bg-slate-950/80 border border-slate-700/80 shadow-inner flex items-center gap-2.5 sm:gap-3">
-              <span id="scoreHome" class="text-3xl sm:text-4xl font-black text-rose-500">1</span>
+              <span id="scoreHome" class="text-3xl sm:text-4xl font-black text-rose-500">0</span>
               <span class="text-xl sm:text-2xl font-bold text-slate-500">-</span>
-              <span id="scoreAway" class="text-3xl sm:text-4xl font-black text-white">2</span>
+              <span id="scoreAway" class="text-3xl sm:text-4xl font-black text-white">0</span>
             </div>
-            <div id="matchStatusText" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-500/15 text-rose-400 border border-rose-500/30 text-xs font-semibold">
-              <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping mr-0.5"></span>
-              <span id="matchClock">1. Yarı Canlı</span>
+            <div id="matchStatusText" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-800 text-slate-300 border border-slate-700 text-xs font-semibold">
+              <span id="matchClock">Yükleniyor...</span>
             </div>
             <!-- Live Countdown Timer -->
             <div id="countdownBox" class="text-[10px] sm:text-[11px] text-slate-400 font-mono pt-0.5">
@@ -876,7 +875,10 @@
     // ========================================================
     // OTOMATİK ZAMAN VE MAÇ ALGILAYICI MOTOR
     // ========================================================
+    let currentScore = { home: 0, away: 0 };
+    let initialScoreLoaded = false;
     let currentMatchIndex = 0;
+    let userManuallySelectedFixture = false;
 
     function determineActiveMatchIndex() {
       const now = new Date();
@@ -918,8 +920,6 @@
       }
       return flagCode;
     }
-
-    let userManuallySelectedFixture = false;
 
     // Fikstür Pill Butonlarını Oluştur
     function renderFixturePills() {
@@ -1359,9 +1359,6 @@
     // ========================================================
     // TAM OTOMATİK CANLI SKOR MOTORU (Sıfır Manuel Müdahale)
     // ========================================================
-    let currentScore = { home: 0, away: 0 };
-    let initialScoreLoaded = false;
-
     function formatMatchText(text) {
       if (!text) return '';
       return text
