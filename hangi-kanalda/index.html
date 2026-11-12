@@ -561,7 +561,9 @@
         radio: "Radyo Trafik",
         notes: "TV8.5 Türksat uydusunda tamamen şifresiz.",
         liveLink: null,
-        isLiveNow: false,
+        isLiveNow: true,
+        liveScore: "0 - 0",
+        liveClock: "12'",
         isFeatured: false
       },
       {
@@ -1048,23 +1050,40 @@
         let hasChanges = false;
         const allEvents = [];
 
-        // 1. UEFA Uluslar Ligi ve Açık Lig Skorboardları
+        // 0. Saat Bazlı Canlı Algılama (Ağ veya API gecikmesinde bile anında Canlı gösterir)
+        const now = new Date();
+        const currentTotalMins = now.getHours() * 60 + now.getMinutes();
+        MATCHES_DB.forEach(m => {
+          if (m.dateCategory === 'today' && m.time && !m.isFinished) {
+            const [h, min] = m.time.split(':').map(Number);
+            const startMins = h * 60 + min;
+            const endMins = startMins + 115;
+            if (currentTotalMins >= startMins && currentTotalMins <= endMins) {
+              if (!m.isLiveNow) {
+                m.isLiveNow = true;
+                if (!m.liveScore) m.liveScore = "0 - 0";
+                if (!m.liveClock) m.liveClock = `${Math.min(90, Math.max(1, currentTotalMins - startMins))}'`;
+                hasChanges = true;
+              }
+            }
+          }
+        });
+
+        // 1. UEFA Uluslar Ligi ve Açık Lig Skorboardları (Paralel Sorgulama)
         const FEEDS = [
           'https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/scoreboard',
           'https://site.api.espn.com/apis/site/v2/sports/soccer/tur.1/scoreboard'
         ];
 
-        for (const url of FEEDS) {
-          try {
-            const res = await fetch(url, { cache: 'no-store' });
-            if (res.ok) {
-              const json = await res.json();
-              if (json.events && Array.isArray(json.events)) {
-                allEvents.push(...json.events);
-              }
-            }
-          } catch (_) {}
-        }
+        const results = await Promise.allSettled(
+          FEEDS.map(url => fetch(url, { cache: 'no-store' }).then(r => r.ok ? r.json() : null))
+        );
+
+        results.forEach(res => {
+          if (res.status === 'fulfilled' && res.value && Array.isArray(res.value.events)) {
+            allEvents.push(...res.value.events);
+          }
+        });
 
         // 2. Listedeki Tüm Maçları Canlı Akışla Eşleştir
         MATCHES_DB.forEach(m => {
