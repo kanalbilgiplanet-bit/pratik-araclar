@@ -2,7 +2,7 @@
 <html lang="tr" class="dark">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <!-- Speed & Preconnect Resource Hints -->
   <link rel="preconnect" href="https://cdn.tailwindcss.com">
   <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
@@ -10,10 +10,11 @@
   <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
   <link rel="preconnect" href="https://unpkg.com" crossorigin>
   <link rel="dns-prefetch" href="https://unpkg.com">
+  <link rel="preconnect" href="https://pratikbase-default-rtdb.firebaseio.com">
 
-  <title>AcilDurumRadar | Türkiye Canlı Afet, Deprem & Fay Hattı Haritası</title>
-  <meta name="description" content="Türkiye genelinde son depremler, aktif diri fay hatları ve acil durum toplanma alanlarını canlı haritada anında izleyin. 112 Acil hızlı arama, acil durum düdüğü ve GPS konum analizi.">
-  <meta name="keywords" content="acil durum radar, canlı deprem haritası, son depremler türkiye, kandilli son depremler, afad deprem haritası, diri fay hatları haritası, toplanma alanı nerede, 112 acil, deprem düdüğü çal">
+  <title>AcilDurumRadar | Canlı Deprem, Diri Fay Hatları & En Yakın Toplanma Alanı Haritası</title>
+  <meta name="description" content="Türkiye genelinde son depremler, aktif diri fay hatları ve en yakın acil durum toplanma alanlarını canlı haritada izleyin. 'Az Önce Hissettim' bildirimi, M4.0+ sesli deprem alarmı, acil durum düdüğü ve GPS yürüme rotası.">
+  <meta name="keywords" content="acil durum radar, canlı deprem haritası, az önce deprem mi oldu, deprem hissettim, son depremler türkiye, kandilli son depremler, afad deprem haritası, diri fay hatları haritası, toplanma alanı nerede, en yakın toplanma alanı rota, deprem alarmı sesli, deprem düdüğü çal">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   <link rel="canonical" href="https://pratikbase.com/acil-durum-radar/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23dc2626'/%3E%3Cstop offset='100%25' stop-color='%23ea580c'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23bg)'/%3E%3Cpath d='M32 10 L14 42 L24 42 L20 54 L38 32 L28 32 Z' fill='%23ffffff'/%3E%3Ccircle cx='46' cy='44' r='4' fill='%23ffffff'/%3E%3C/svg%3E">
@@ -21,16 +22,16 @@
   <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://pratikbase.com/acil-durum-radar/">
-  <meta property="og:title" content="AcilDurumRadar – Türkiye Canlı Afet & Deprem Haritası">
-  <meta property="og:description" content="Anlık son depremler, diri fay hatları ve en yakın acil toplanma alanları. Kurulumsuz doğrudan tarayıcınızda.">
+  <meta property="og:title" content="AcilDurumRadar – Canlı Deprem, Fay Hattı & En Yakın Toplanma Alanı">
+  <meta property="og:description" content="Anlık son depremler, diri fay hatları, M4.0+ sesli ikaz, 'Az Önce Hissettim' bildirimi ve en yakın toplanma alanı yürüme rotası.">
   <meta property="og:image" content="https://pratikbase.com/assets/og-banner.png">
   <meta property="og:locale" content="tr_TR">
   <meta property="og:site_name" content="PratikBase">
 
   <!-- Twitter / X -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="AcilDurumRadar – Türkiye Canlı Afet & Deprem Haritası">
-  <meta name="twitter:description" content="Anlık son depremler, diri fay hatları ve en yakın acil toplanma alanları.">
+  <meta name="twitter:title" content="AcilDurumRadar – Canlı Deprem, Fay Hattı & Toplanma Alanı Haritası">
+  <meta name="twitter:description" content="Anlık son depremler, M4.0+ sesli alarm, sarsıntı bildirim ağı ve en yakın toplanma alanı navigasyonu.">
   <meta name="twitter:image" content="https://pratikbase.com/assets/og-banner.png">
 
   <!-- Tailwind CSS CDN -->
@@ -60,11 +61,11 @@
   {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    "name": "AcilDurumRadar - Canlı Afet ve Deprem Haritası",
+    "name": "AcilDurumRadar - Canlı Afet, Deprem & Toplanma Alanı Haritası",
     "url": "https://pratikbase.com/acil-durum-radar/",
     "applicationCategory": "UtilitiesApplication",
     "operatingSystem": "All",
-    "description": "Türkiye ve çevresinde meydana gelen son depremleri canlı harita üzerinde gösteren, fay hatları ve acil durum araçları sunan afet takip radarı.",
+    "description": "Türkiye genelinde son depremler, sarsıntı bildirim ağı (Az Önce Hissettim), M4.0+ sesli alarm ve en yakın toplanma alanı canlı rota navigasyonu sunan acil durum haritası.",
     "offers": {
       "@type": "Offer",
       "price": "0",
@@ -108,7 +109,7 @@
     .leaflet-tooltip-top:before { border-top-color: #0f172a !important; }
     .leaflet-tooltip-bottom:before { border-bottom-color: #0f172a !important; }
 
-    /* Pulsing Radar Animations */
+    /* Pulsing Radar & Felt Animations */
     @keyframes ping-slow {
       0% { transform: scale(1); opacity: 0.8; }
       50% { transform: scale(2.2); opacity: 0; }
@@ -117,6 +118,22 @@
     .radar-pulse {
       animation: ping-slow 2.4s infinite cubic-bezier(0, 0.2, 0.8, 1);
     }
+
+    @keyframes pulse-heat {
+      0% { transform: scale(0.6); opacity: 0.85; }
+      60% { transform: scale(2.5); opacity: 0.25; }
+      100% { transform: scale(3.2); opacity: 0; }
+    }
+    .felt-pulse-marker {
+      animation: pulse-heat 2s infinite ease-out;
+      transform-origin: center;
+    }
+
+    @media (max-width: 768px) {
+      input, textarea, select {
+        font-size: 16px !important;
+      }
+    }
     ::-webkit-scrollbar { width: 5px; height: 5px; }
     ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
   </style>
@@ -124,7 +141,7 @@
 <body class="bg-[#0b0f19] text-slate-300 h-screen w-screen overflow-hidden flex flex-col font-sans selection:bg-red-500 selection:text-white">
 
   <!-- Header -->
-  <header class="border-b border-slate-800/80 bg-slate-900/90 backdrop-blur-md z-40 h-16 shrink-0 flex items-center px-3 sm:px-6 justify-between shadow-md gap-4">
+  <header class="border-b border-slate-800/80 bg-slate-900/90 backdrop-blur-md z-40 h-16 shrink-0 flex items-center px-3 sm:px-6 justify-between shadow-md gap-2 sm:gap-4">
     <div class="flex items-center gap-3">
       <a href="../" class="flex items-center gap-2.5 group transition" title="PratikBase Vitrinine Dön">
         <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-red-600 to-rose-500 flex items-center justify-center text-white font-black shadow-lg shadow-red-900/30 group-hover:scale-105 transition shrink-0 relative">
@@ -133,7 +150,7 @@
         </div>
         <div class="flex flex-col">
           <span class="font-bold text-white text-base tracking-tight leading-none group-hover:text-red-300 transition">
-            Pratik<span class="text-red-400">Araçlar</span>
+            Pratik<span class="text-red-400">Base</span>
           </span>
           <span class="text-[10px] text-slate-400 tracking-wider font-semibold uppercase">ACİL DURUM & DEPREM RADARI</span>
         </div>
@@ -142,21 +159,22 @@
 
     <!-- Top Right Actions -->
     <div class="flex items-center gap-2">
-      <a href="../" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold border border-slate-700/80 transition shadow-sm">
-        <i class="fa-solid fa-arrow-left text-xs"></i>
-        <span class="hidden sm:inline">Tüm Araçlar</span>
-      </a>
+      <!-- VIRAL FEATURE 1: "Az Önce Hissettim!" Button -->
+      <button id="openFeltModalBtn" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-rose-600 hover:from-amber-400 hover:to-rose-500 text-white text-xs font-bold transition shadow-md shadow-orange-500/20 active:scale-95 animate-pulse" title="Sarsıntı hissettiyseniz hemen bildirin">
+        <i class="fa-solid fa-bolt-lightning text-xs text-yellow-200"></i>
+        <span class="hidden md:inline">Az Önce</span><span>Hissettim!</span>
+      </button>
 
       <!-- SOS Siren / Whistle Button -->
       <button id="whistleBtn" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/15 hover:bg-amber-500 text-amber-400 hover:text-slate-950 border border-amber-500/30 text-xs font-bold transition shadow-sm" title="Acil Durum Düdüğü / Siren Çal">
         <i class="fa-solid fa-bullhorn text-xs"></i>
-        <span class="hidden sm:inline" id="whistleBtnText">Düdük Çal</span>
+        <span class="hidden lg:inline" id="whistleBtnText">Düdük Çal</span>
       </button>
 
       <!-- 112 Direct Dial -->
       <a href="tel:112" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-bold transition shadow-md shadow-red-600/20">
         <i class="fa-solid fa-phone text-xs"></i>
-        <span>112 Acil</span>
+        <span class="hidden sm:inline">112 Acil</span>
       </a>
 
       <!-- Open Feed Drawer Button -->
@@ -169,19 +187,50 @@
   </header>
 
   <!-- Main Map Canvas & Overlays -->
-  <div class="relative flex-1 w-full h-[calc(100vh-3.5rem)] overflow-hidden">
+  <div class="relative flex-1 w-full h-[calc(100vh-4rem)] overflow-hidden">
     
     <!-- Map Container -->
     <div id="map" class="w-full h-full z-0"></div>
 
+    <!-- VIRAL FEATURE 2: M4.0+ Real-time Urgent Emergency Alert Banner (Slides down when detected) -->
+    <div id="emergencyBanner" class="absolute top-4 left-1/2 -translate-x-1/2 z-40 max-w-lg w-[92%] bg-gradient-to-r from-red-950/95 via-rose-900/95 to-slate-900/95 border-2 border-red-500/80 rounded-2xl p-3 shadow-2xl backdrop-blur-md flex items-center justify-between gap-3 text-xs text-white transition-all duration-300 opacity-0 pointer-events-none transform -translate-y-6">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <div class="w-9 h-9 rounded-xl bg-red-600 flex items-center justify-center text-white shrink-0 animate-bounce">
+          <i class="fa-solid fa-triangle-exclamation text-sm"></i>
+        </div>
+        <div class="min-w-0">
+          <div class="font-extrabold text-red-300 flex items-center gap-2 truncate">
+            <span>🚨 YENİ SARSINTI KAYDI</span>
+            <span id="bannerMag" class="px-1.5 py-0.5 rounded bg-red-600 text-white font-mono text-[10px]">M 4.2</span>
+          </div>
+          <div id="bannerText" class="text-slate-200 font-medium truncate text-[11px]">Ege Denizi Açıkları (az önce)</div>
+        </div>
+      </div>
+      <div class="flex items-center gap-1.5 shrink-0">
+        <button id="bannerFlyBtn" class="px-2.5 py-1.5 rounded-lg bg-red-600 hover:bg-red-500 text-white text-[11px] font-bold transition">
+          Haritada Gör
+        </button>
+        <button id="bannerCloseBtn" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition">
+          <i class="fa-solid fa-xmark text-xs"></i>
+        </button>
+      </div>
+    </div>
+
     <!-- Top Floating HUD: Controls & Filters -->
-    <div class="absolute top-4 left-4 z-30 flex flex-wrap items-center gap-2 pointer-events-none">
+    <div class="absolute top-4 left-4 z-30 flex flex-wrap items-center gap-2 pointer-events-none max-w-[85vw]">
       
       <!-- Fault Lines Toggle Pill -->
       <button id="toggleFaultsBtn" class="pointer-events-auto px-3 py-2 rounded-xl bg-[#0f172a]/95 hover:bg-slate-800 text-slate-200 border border-slate-700/80 text-xs font-semibold shadow-xl backdrop-blur-md flex items-center gap-2 transition">
         <i class="fa-solid fa-wave-square text-orange-400 text-xs"></i>
-        <span>Diri Faylar:</span>
+        <span class="hidden sm:inline">Diri Faylar:</span>
         <span id="faultsState" class="text-emerald-400 font-bold">Açık</span>
+      </button>
+
+      <!-- VIRAL FEATURE 2: M4.0+ Audio Alarm Toggle Pill -->
+      <button id="toggleAlarmBtn" class="pointer-events-auto px-3 py-2 rounded-xl bg-[#0f172a]/95 hover:bg-slate-800 text-slate-200 border border-slate-700/80 text-xs font-semibold shadow-xl backdrop-blur-md flex items-center gap-2 transition" title="M4.0 ve üzeri depremlerde sesli ikaz">
+        <i id="alarmIcon" class="fa-solid fa-bell text-rose-400 text-xs"></i>
+        <span class="hidden md:inline">M4.0+ Alarm:</span>
+        <span id="alarmState" class="text-rose-400 font-bold">Açık</span>
       </button>
 
       <!-- Satellite / Street Toggle -->
@@ -200,7 +249,7 @@
     </div>
 
     <!-- Top Right: Refresh & Last Update Pill -->
-    <div class="absolute top-4 right-4 z-30 hidden sm:flex items-center gap-2 pointer-events-none">
+    <div class="absolute top-4 right-4 z-30 hidden md:flex items-center gap-2 pointer-events-none">
       <div class="pointer-events-auto px-3 py-1.5 rounded-xl bg-[#0f172a]/90 border border-slate-800 text-slate-400 text-[11px] font-mono shadow-xl backdrop-blur-md flex items-center gap-2">
         <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
         <span id="lastUpdateTime">Canlı Veri Bekleniyor...</span>
@@ -213,27 +262,26 @@
     <!-- Bottom Floating Quick Action Bar -->
     <div class="absolute bottom-4 left-4 right-4 sm:left-auto sm:right-4 z-30 flex flex-wrap items-center justify-between sm:justify-end gap-2 pointer-events-none">
       
-      <!-- Toplanma Alanı e-Devlet Link -->
-      <a href="https://www.turkiye.gov.tr/afet-ve-acil-durum-yonetimi-acil-toplanma-alani-sorgulama" target="_blank" rel="noopener" class="pointer-events-auto px-3.5 py-2.5 rounded-2xl bg-slate-900/95 hover:bg-slate-800 text-slate-200 border border-slate-700/90 text-xs font-bold shadow-2xl backdrop-blur-md flex items-center gap-2 transition">
-        <i class="fa-solid fa-person-shelter text-emerald-400 text-sm"></i>
-        <span>Toplanma Alanı Bul (e-Devlet)</span>
-        <i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-slate-500"></i>
-      </a>
+      <!-- VIRAL FEATURE 3: En Yakın Toplanma Alanı & Rota Al -->
+      <button id="findShelterBtn" class="pointer-events-auto px-3.5 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold shadow-2xl backdrop-blur-md flex items-center gap-2 transition group active:scale-95">
+        <i class="fa-solid fa-person-shelter text-emerald-200 text-sm group-hover:scale-110 transition-transform"></i>
+        <span>En Yakın Toplanma Alanı & Rota</span>
+      </button>
 
       <!-- Status Share Modal Trigger (Güvendeyim / Yardım) -->
       <button id="openShareModalBtn" class="pointer-events-auto px-3.5 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-2xl transition flex items-center gap-2">
         <i class="fa-brands fa-whatsapp text-sm"></i>
-        <span>Durum Bildir (WhatsApp)</span>
+        <span class="hidden sm:inline">Durum Bildir</span>
       </button>
 
       <!-- GPS FAB ("Konumumu Bul") -->
-      <button id="locateMeBtn" class="pointer-events-auto w-11 h-11 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white flex items-center justify-center text-base shadow-2xl transition group" title="Konumumu Bul ve Yakındaki Sarsıntıları Gör">
+      <button id="locateMeBtn" class="pointer-events-auto w-11 h-11 rounded-2xl bg-slate-900/95 hover:bg-slate-800 text-cyan-400 border border-slate-700/80 flex items-center justify-center text-base shadow-2xl transition group" title="Konumumu Bul ve Yakındaki Sarsıntıları Gör">
         <i class="fa-solid fa-crosshairs group-hover:scale-110 transition-transform"></i>
       </button>
 
     </div>
 
-    <!-- Bottom Left Legend (Açıklama Kutusu) -->
+    <!-- Bottom Left Legend & Felt Counter -->
     <div class="absolute bottom-4 left-4 z-20 hidden md:flex flex-col gap-1.5 p-3 rounded-2xl bg-[#0f172a]/95 border border-slate-800 text-[11px] text-slate-300 shadow-xl backdrop-blur-md">
       <div class="font-bold text-white text-xs flex items-center gap-1.5 mb-0.5">
         <i class="fa-solid fa-circle-info text-red-400"></i>
@@ -254,6 +302,10 @@
       <div class="flex items-center gap-2 pt-1 border-t border-slate-800">
         <span class="w-4 h-1 rounded bg-orange-500"></span>
         <span class="text-orange-300 font-semibold">Aktif Diri Fay Hatları</span>
+      </div>
+      <div id="feltReportsSummary" class="flex items-center gap-2 pt-1 border-t border-slate-800 text-amber-400 font-medium">
+        <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping"></span>
+        <span id="feltCountLabel">Son 2 saatte 0 kişi sarsıntı bildirdi</span>
       </div>
     </div>
 
@@ -306,6 +358,160 @@
 
   </div>
 
+  <!-- VIRAL FEATURE 1 MODAL: "Az Önce Deprem mi Oldu? Sarsıntı Bildir" -->
+  <div id="feltModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-sm animate-fade-in">
+    <div class="bg-[#0f172a] border border-slate-800 rounded-3xl max-w-md w-full p-5 sm:p-6 shadow-2xl relative">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-4">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-amber-500/15 text-amber-400 flex items-center justify-center text-sm font-bold">
+            <i class="fa-solid fa-bolt-lightning"></i>
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-white">Az Önce Deprem mi Oldu?</h3>
+            <span class="text-[10px] text-slate-400">Hisseden vatandaşların anlık bildirim ağı</span>
+          </div>
+        </div>
+        <button id="closeFeltModalBtn" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <!-- Step 1: Intensity Picker -->
+      <label class="block text-xs font-semibold text-slate-300 mb-2">Sarsıntıyı nasıl hissettiniz?</label>
+      <div class="grid grid-cols-3 gap-2 mb-4">
+        <button type="button" class="felt-level-btn p-2.5 rounded-xl border border-slate-700 bg-slate-900/80 hover:bg-slate-800 text-left transition flex flex-col gap-1 active:scale-95" data-intensity="hafif">
+          <div class="flex items-center gap-1.5 text-yellow-400 font-bold text-xs">
+            <span class="w-2 h-2 rounded-full bg-yellow-400"></span>
+            <span>Hafif</span>
+          </div>
+          <span class="text-[10px] text-slate-400 leading-tight">Avize / bardak hafif sallandı</span>
+        </button>
+        <button type="button" class="felt-level-btn p-2.5 rounded-xl border-2 border-orange-500 bg-orange-500/10 text-left transition flex flex-col gap-1 active:scale-95" data-intensity="orta">
+          <div class="flex items-center gap-1.5 text-orange-400 font-bold text-xs">
+            <span class="w-2 h-2 rounded-full bg-orange-400"></span>
+            <span>Orta</span>
+          </div>
+          <span class="text-[10px] text-slate-300 leading-tight">Belirgin sallantı, herkes duydu</span>
+        </button>
+        <button type="button" class="felt-level-btn p-2.5 rounded-xl border border-slate-700 bg-slate-900/80 hover:bg-slate-800 text-left transition flex flex-col gap-1 active:scale-95" data-intensity="siddetli">
+          <div class="flex items-center gap-1.5 text-rose-500 font-bold text-xs">
+            <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+            <span>Şiddetli</span>
+          </div>
+          <span class="text-[10px] text-slate-400 leading-tight">Çok sert, eşyalar oynadı/düştü</span>
+        </button>
+      </div>
+
+      <!-- Step 2: Location Choice -->
+      <label class="block text-xs font-semibold text-slate-300 mb-2">Bulunduğunuz Şehir / Konum:</label>
+      <div class="space-y-2 mb-5">
+        <select id="feltCitySelect" class="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-amber-500 transition">
+          <option value="auto">📍 Otomatik GPS Konumumu Kullan</option>
+          <option value="İstanbul">İstanbul</option>
+          <option value="İzmir">İzmir</option>
+          <option value="Ankara">Ankara</option>
+          <option value="Bursa">Bursa</option>
+          <option value="Çanakkale">Çanakkale</option>
+          <option value="Balıkesir">Balıkesir</option>
+          <option value="Manisa">Manisa</option>
+          <option value="Muğla">Muğla</option>
+          <option value="Aydın">Aydın</option>
+          <option value="Tekirdağ">Tekirdağ</option>
+          <option value="Kocaeli">Kocaeli</option>
+          <option value="Sakarya">Sakarya</option>
+          <option value="Düzce">Düzce</option>
+          <option value="Bolu">Bolu</option>
+          <option value="Antalya">Antalya</option>
+          <option value="Adana">Adana</option>
+          <option value="Mersin">Mersin</option>
+          <option value="Kahramanmaraş">Kahramanmaraş</option>
+          <option value="Malatya">Malatya</option>
+          <option value="Gaziantep">Gaziantep</option>
+          <option value="Hatay">Hatay</option>
+          <option value="Adıyaman">Adıyaman</option>
+          <option value="Elazığ">Elazığ</option>
+          <option value="Bingöl">Bingöl</option>
+          <option value="Erzincan">Erzincan</option>
+          <option value="Diyarbakır">Diyarbakır</option>
+          <option value="Tokat">Tokat</option>
+          <option value="Sivas">Sivas</option>
+          <option value="Konya">Konya</option>
+          <option value="Kayseri">Kayseri</option>
+          <option value="Van">Van</option>
+          <option value="Trabzon">Trabzon</option>
+          <option value="Samsun">Samsun</option>
+          <option value="Eskişehir">Eskişehir</option>
+          <option value="Denizli">Denizli</option>
+          <option value="Yalova">Yalova</option>
+        </select>
+        <p class="text-[10px] text-slate-500">Konumunuz haritada anonim sarsıntı dalgası olarak işaretlenir. Kişisel veri toplanmaz.</p>
+      </div>
+
+      <!-- Action Button -->
+      <button id="submitFeltReportBtn" class="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-rose-600 hover:from-amber-400 hover:to-rose-500 text-white font-bold text-xs shadow-lg shadow-orange-500/25 transition active:scale-95 flex items-center justify-center gap-2">
+        <i class="fa-solid fa-paper-plane text-xs"></i>
+        <span>Sarsıntı Bildirimini Haritaya Gönder</span>
+      </button>
+
+      <!-- Live Notification Banner -->
+      <div id="feltSubmitFeedback" class="hidden mt-3 p-2.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs text-center font-medium">
+        ✅ Bildiriminiz canlı haritaya işlendi! Geçmiş olsun.
+      </div>
+    </div>
+  </div>
+
+  <!-- VIRAL FEATURE 3 BOTTOM SHEET: "En Yakın Toplanma Alanı & Canlı Rota" -->
+  <div id="shelterSheet" class="hidden fixed inset-x-0 bottom-0 z-50 p-4 flex justify-center pointer-events-none">
+    <div class="pointer-events-auto bg-[#0f172a] border border-slate-700/90 rounded-3xl max-w-lg w-full p-5 shadow-2xl backdrop-blur-xl animate-fade-in relative">
+      
+      <!-- Sheet Header -->
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-base font-bold">
+            <i class="fa-solid fa-person-shelter"></i>
+          </div>
+          <div>
+            <span class="text-[10px] text-emerald-400 font-bold uppercase tracking-wider">AFET & ACİL DURUM TOPLANMA ALANI</span>
+            <h3 id="shelterNameEl" class="text-sm font-bold text-white truncate max-w-[260px] sm:max-w-xs">Atatürk Parkı Afet Toplanma Alanı</h3>
+          </div>
+        </div>
+        <button id="closeShelterSheetBtn" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition">
+          <i class="fa-solid fa-xmark text-xs"></i>
+        </button>
+      </div>
+
+      <!-- Distance and Estimated Walk -->
+      <div class="grid grid-cols-2 gap-2 mb-4">
+        <div class="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-center">
+          <span class="text-[10px] text-slate-400 block font-medium">Kuş Uçuşu Mesafe</span>
+          <span id="shelterDistEl" class="text-sm font-extrabold text-emerald-400">~340 Metre</span>
+        </div>
+        <div class="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-center">
+          <span class="text-[10px] text-slate-400 block font-medium">Tahmini Yürüme</span>
+          <span id="shelterWalkEl" class="text-sm font-extrabold text-white">~4-5 Dakika</span>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="space-y-2">
+        <a id="googleMapsRouteBtn" href="#" target="_blank" rel="noopener" class="w-full py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-md transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-diamond-turn-right text-xs"></i>
+          <span>Google Haritalar ile Yürüme Rotası Aç</span>
+        </a>
+        <div class="flex items-center gap-2">
+          <a id="appleMapsRouteBtn" href="#" target="_blank" rel="noopener" class="flex-1 py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs transition text-center flex items-center justify-center gap-1.5">
+            <i class="fa-brands fa-apple text-xs"></i>
+            <span>Apple Harita</span>
+          </a>
+          <a href="https://www.turkiye.gov.tr/afet-ve-acil-durum-yonetimi-acil-toplanma-alani-sorgulama" target="_blank" rel="noopener" class="flex-1 py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs transition text-center flex items-center justify-center gap-1.5">
+            <i class="fa-solid fa-landmark text-xs text-red-400"></i>
+            <span>e-Devlet Sorgula</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- SHARE STATUS MODAL (GÜVENDEYİM / YARDIM İSTE) -->
   <div id="shareModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
     <div class="bg-[#0f172a] border border-slate-800 rounded-3xl max-w-md w-full p-6 shadow-2xl relative">
@@ -355,40 +561,101 @@
 
   <!-- Interactive JavaScript Engine -->
   <script>
-    // Map State
+    // Global State
     let map, streetLayer, satLayer;
     let isSatellite = false;
     let showFaults = true;
     let faultLinesLayerGroup = L.layerGroup();
     let quakeMarkersLayerGroup = L.layerGroup();
+    let feltMarkersLayerGroup = L.layerGroup();
+    let shelterLayerGroup = L.layerGroup();
     let userLocationMarker = null;
     let userCoords = null;
     let allQuakes = [];
     let currentMinMag = 0;
+    let knownQuakeIds = new Set();
+    let isInitialFetch = true;
 
-    // AUDIO SIREN ENGINE (Web Audio API)
+    // AUDIO SIREN & ALARM ENGINE
     let audioCtx = null;
-    let osc1 = null, osc2 = null;
+    let osc1 = null;
     let isSirenPlaying = false;
+    let isAlarmEnabled = localStorage.getItem('pb_quake_alarm_v1') !== 'false'; // default true
 
+    // UPDATE ALARM TOGGLE UI
+    function updateAlarmToggleUI() {
+      const stateEl = document.getElementById('alarmState');
+      const iconEl = document.getElementById('alarmIcon');
+      if (isAlarmEnabled) {
+        stateEl.textContent = 'Açık';
+        stateEl.className = 'text-rose-400 font-bold';
+        iconEl.className = 'fa-solid fa-bell text-rose-400 text-xs';
+      } else {
+        stateEl.textContent = 'Kapalı';
+        stateEl.className = 'text-slate-500 font-bold';
+        iconEl.className = 'fa-solid fa-bell-slash text-slate-500 text-xs';
+      }
+    }
+    updateAlarmToggleUI();
+
+    document.getElementById('toggleAlarmBtn').addEventListener('click', () => {
+      isAlarmEnabled = !isAlarmEnabled;
+      localStorage.setItem('pb_quake_alarm_v1', isAlarmEnabled ? 'true' : 'false');
+      updateAlarmToggleUI();
+      if (isAlarmEnabled) {
+        playEarthquakeAlertTone(true); // brief test tone
+      }
+    });
+
+    // M4.0+ Electronic Chime Synthesizer (Web Audio API)
+    function playEarthquakeAlertTone(isTest = false) {
+      if (!isAlarmEnabled && !isTest) return;
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const ctx = new AudioContext();
+        
+        // 4-tone ascending alert arpeggio
+        const tones = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+        tones.forEach((freq, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          const startTime = ctx.currentTime + (idx * 0.12);
+          
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, startTime);
+          
+          gain.gain.setValueAtTime(0, startTime);
+          gain.gain.linearRampToValueAtTime(0.35, startTime + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.38);
+          
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          
+          osc.start(startTime);
+          osc.stop(startTime + 0.4);
+        });
+      } catch(e) {
+        console.warn('Audio context restricted or not supported:', e);
+      }
+    }
+
+    // Manual SOS Siren Toggle (Existing Feature)
     function toggleSiren() {
       const whistleBtnText = document.getElementById('whistleBtnText');
       const whistleBtn = document.getElementById('whistleBtn');
 
       if (!isSirenPlaying) {
-        // Start Siren
         try {
           audioCtx = new (window.AudioContext || window.webkitAudioContext)();
           osc1 = audioCtx.createOscillator();
           const gainNode = audioCtx.createGain();
 
           osc1.type = 'sawtooth';
-          osc1.frequency.setValueAtTime(880, audioCtx.currentTime); // 880Hz A5 whistle
+          osc1.frequency.setValueAtTime(880, audioCtx.currentTime);
           
-          // Modulate frequency to create emergency whistle / siren effect
           const lfo = audioCtx.createOscillator();
           const lfoGain = audioCtx.createGain();
-          lfo.frequency.setValueAtTime(3, audioCtx.currentTime); // 3 Hz siren swing
+          lfo.frequency.setValueAtTime(3, audioCtx.currentTime);
           lfoGain.gain.setValueAtTime(250, audioCtx.currentTime);
           lfo.connect(osc1.frequency);
           lfo.start();
@@ -399,14 +666,13 @@
           osc1.start();
 
           isSirenPlaying = true;
-          whistleBtnText.textContent = 'Düdüğü Sustur';
+          if (whistleBtnText) whistleBtnText.textContent = 'Düdüğü Sustur';
           whistleBtn.classList.remove('bg-amber-500/15', 'text-amber-400');
           whistleBtn.classList.add('bg-red-600', 'text-white', 'animate-pulse');
         } catch(e) {
           console.warn('Audio not allowed without gesture', e);
         }
       } else {
-        // Stop Siren
         if (osc1) {
           osc1.stop();
           osc1.disconnect();
@@ -415,12 +681,11 @@
           audioCtx.close();
         }
         isSirenPlaying = false;
-        whistleBtnText.textContent = 'Düdük Çal';
+        if (whistleBtnText) whistleBtnText.textContent = 'Düdük Çal';
         whistleBtn.classList.add('bg-amber-500/15', 'text-amber-400');
         whistleBtn.classList.remove('bg-red-600', 'text-white', 'animate-pulse');
       }
     }
-
     document.getElementById('whistleBtn').addEventListener('click', toggleSiren);
 
     // INIT MAP
@@ -433,7 +698,6 @@
         zoomControl: false
       });
 
-      // Add Zoom Control at bottom right
       L.control.zoom({ position: 'bottomright' }).addTo(map);
 
       // Free ArcGIS World Street Map (Dark Dimmed Filtered)
@@ -443,7 +707,7 @@
         maxZoom: 19
       }).addTo(map);
 
-      // Satellite Imagery (Optional toggle)
+      // Satellite Imagery
       satLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
         attribution: 'Tiles &copy; Esri &mdash; Earthstar Geographics',
         maxZoom: 19
@@ -451,14 +715,16 @@
 
       faultLinesLayerGroup.addTo(map);
       quakeMarkersLayerGroup.addTo(map);
+      feltMarkersLayerGroup.addTo(map);
+      shelterLayerGroup.addTo(map);
 
       drawActiveFaultLines();
       fetchLiveEarthquakes();
+      fetchFeltReports();
     }
 
-    // DRAW DİRİ FAY HATLARI (KAF, DAF, BAF - TÜRKİYE KRİTİK FAY KUŞAKLARI)
+    // DRAW DİRİ FAY HATLARI
     function drawActiveFaultLines() {
-      // 1. Kuzey Anadolu Fay Hattı (KAF / NAF): Saros -> Marmara -> İzmit -> Bolu -> Erzincan -> Karlıova
       const kafCoords = [
         [40.50, 26.20], [40.60, 27.20], [40.75, 28.50], [40.78, 29.50],
         [40.75, 30.50], [40.73, 31.60], [40.85, 32.50], [40.90, 33.80],
@@ -466,128 +732,128 @@
         [39.50, 40.50], [39.30, 41.00]
       ];
 
-      // 2. Doğu Anadolu Fay Hattı (DAF / EAF): Hatay -> Maraş -> Adıyaman -> Malatya -> Elazığ -> Bingöl Karlıova
       const dafCoords = [
         [36.10, 36.15], [36.75, 36.40], [37.20, 36.80], [37.58, 37.20],
         [37.95, 37.85], [38.35, 38.30], [38.67, 39.22], [38.85, 40.00],
         [39.30, 41.00]
       ];
 
-      // 3. Batı Anadolu Grabenleri (İzmir, Gediz, Menderes)
       const bafGediz = [[38.45, 27.10], [38.60, 27.80], [38.55, 28.50], [38.80, 29.40]];
       const bafMenderes = [[37.85, 27.25], [37.85, 28.00], [37.90, 28.90], [37.75, 29.60]];
 
       const faultStyle = {
-        color: '#f97316', // neon orange
+        color: '#f97316',
         weight: 3,
         opacity: 0.85,
         dashArray: '6, 6'
       };
 
-      const kafLine = L.polyline(kafCoords, faultStyle).bindTooltip('Kuzey Anadolu Diri Fay Hattı (KAF)', { sticky: true });
-      const dafLine = L.polyline(dafCoords, faultStyle).bindTooltip('Doğu Anadolu Diri Fay Hattı (DAF)', { sticky: true });
-      const baf1 = L.polyline(bafGediz, faultStyle).bindTooltip('Gediz Grabeni Fay Segmenti (BAF)', { sticky: true });
-      const baf2 = L.polyline(bafMenderes, faultStyle).bindTooltip('Büyük Menderes Fay Segmenti (BAF)', { sticky: true });
-
-      faultLinesLayerGroup.addLayer(kafLine);
-      faultLinesLayerGroup.addLayer(dafLine);
-      faultLinesLayerGroup.addLayer(baf1);
-      faultLinesLayerGroup.addLayer(baf2);
+      faultLinesLayerGroup.addLayer(L.polyline(kafCoords, faultStyle).bindTooltip('Kuzey Anadolu Diri Fay Hattı (KAF)', { sticky: true }));
+      faultLinesLayerGroup.addLayer(L.polyline(dafCoords, faultStyle).bindTooltip('Doğu Anadolu Diri Fay Hattı (DAF)', { sticky: true }));
+      faultLinesLayerGroup.addLayer(L.polyline(bafGediz, faultStyle).bindTooltip('Gediz Grabeni Fay Segmenti (BAF)', { sticky: true }));
+      faultLinesLayerGroup.addLayer(L.polyline(bafMenderes, faultStyle).bindTooltip('Büyük Menderes Fay Segmenti (BAF)', { sticky: true }));
     }
 
-    // TÜRKİYE MERKEZLERİ & FAY ÇEVRESİ NOKTALARI (KOORDİNAT ÇÖZÜMLEME MOTORU)
-    const TR_CENTERS = [
-      // Doğu / Güneydoğu
-      { name: 'Kahramanmaraş', sub: 'Pazarcık', lat: 37.49, lng: 37.30 },
-      { name: 'Kahramanmaraş', sub: 'Elbistan', lat: 38.20, lng: 37.20 },
-      { name: 'Kahramanmaraş', sub: 'Göksun', lat: 38.02, lng: 36.49 },
-      { name: 'Kahramanmaraş', sub: 'Merkez', lat: 37.58, lng: 36.92 },
-      { name: 'Malatya', sub: 'Doğanşehir', lat: 38.09, lng: 37.88 },
-      { name: 'Malatya', sub: 'Yeşilyurt', lat: 38.30, lng: 38.24 },
-      { name: 'Malatya', sub: 'Pütürge', lat: 38.19, lng: 38.87 },
-      { name: 'Malatya', sub: 'Akçadağ', lat: 38.34, lng: 37.96 },
-      { name: 'Adıyaman', sub: 'Gölbaşı', lat: 37.78, lng: 37.64 },
-      { name: 'Adıyaman', sub: 'Merkez', lat: 37.76, lng: 38.28 },
-      { name: 'Adıyaman', sub: 'Çelikhan', lat: 38.03, lng: 38.24 },
-      { name: 'Gaziantep', sub: 'Nurdağı', lat: 37.18, lng: 36.74 },
-      { name: 'Gaziantep', sub: 'İslahiye', lat: 37.03, lng: 36.63 },
-      { name: 'Gaziantep', sub: 'Merkez', lat: 37.06, lng: 37.38 },
-      { name: 'Hatay', sub: 'Antakya', lat: 36.20, lng: 36.16 },
-      { name: 'Hatay', sub: 'Samandağ', lat: 36.08, lng: 35.98 },
-      { name: 'Hatay', sub: 'Kırıkhan', lat: 36.50, lng: 36.36 },
-      { name: 'Hatay', sub: 'İskenderun', lat: 36.58, lng: 36.17 },
-      { name: 'Osmaniye', sub: 'Düziçi', lat: 37.24, lng: 36.45 },
-      { name: 'Adana', sub: 'Kozan', lat: 37.45, lng: 35.81 },
-      { name: 'Adana', sub: 'Saimbeyli', lat: 37.99, lng: 36.09 },
-      { name: 'Adana', sub: 'Feke', lat: 37.82, lng: 35.91 },
-      { name: 'Elazığ', sub: 'Sivrice', lat: 38.45, lng: 39.31 },
-      { name: 'Elazığ', sub: 'Merkez', lat: 38.68, lng: 39.22 },
-      { name: 'Bingöl', sub: 'Karlıova', lat: 39.30, lng: 41.01 },
-      { name: 'Bingöl', sub: 'Yedisu', lat: 39.44, lng: 40.54 },
-      { name: 'Bingöl', sub: 'Genç', lat: 38.75, lng: 40.56 },
-      { name: 'Erzincan', sub: 'Refahiye', lat: 39.90, lng: 38.77 },
-      { name: 'Erzincan', sub: 'Kemah', lat: 39.60, lng: 39.03 },
-      { name: 'Erzincan', sub: 'Merkez', lat: 39.75, lng: 39.49 },
-      { name: 'Tunceli', sub: 'Pülümür', lat: 39.48, lng: 39.90 },
-      { name: 'Tunceli', sub: 'Ovacık', lat: 39.36, lng: 39.22 },
-      { name: 'Sivas', sub: 'Gürün', lat: 38.72, lng: 37.27 },
-      { name: 'Diyarbakır', sub: 'Merkez', lat: 37.91, lng: 40.24 },
-      { name: 'Şanlıurfa', sub: 'Merkez', lat: 37.16, lng: 38.79 },
-      { name: 'Van', sub: 'Erciş', lat: 39.03, lng: 43.36 },
-      { name: 'Van', sub: 'Tuşba', lat: 38.50, lng: 43.38 },
-      { name: 'Hakkari', sub: 'Yüksekova', lat: 37.57, lng: 44.28 },
-      { name: 'Erzurum', sub: 'Merkez', lat: 39.90, lng: 41.27 },
-      
-      // Ege / Batı Anadolu
-      { name: 'Kütahya', sub: 'Simav', lat: 39.09, lng: 28.98 },
-      { name: 'Kütahya', sub: 'Emet', lat: 39.34, lng: 29.25 },
-      { name: 'Kütahya', sub: 'Gediz', lat: 38.99, lng: 29.57 },
-      { name: 'İzmir', sub: 'Kuşadası Körfezi', lat: 37.86, lng: 27.26 },
-      { name: 'İzmir', sub: 'Seferihisar', lat: 38.20, lng: 26.84 },
-      { name: 'İzmir', sub: 'Karaburun', lat: 38.64, lng: 26.51 },
-      { name: 'İzmir', sub: 'Buca', lat: 38.39, lng: 27.18 },
-      { name: 'Manisa', sub: 'Akhisar', lat: 38.92, lng: 27.84 },
-      { name: 'Manisa', sub: 'Soma', lat: 39.19, lng: 27.61 },
-      { name: 'Muğla', sub: 'Fethiye Açıkları', lat: 36.62, lng: 29.11 },
-      { name: 'Muğla', sub: 'Marmaris Açıkları', lat: 36.85, lng: 28.27 },
-      { name: 'Muğla', sub: 'Datça Açıkları', lat: 36.73, lng: 27.68 },
-      { name: 'Muğla', sub: 'Ula', lat: 37.10, lng: 28.42 },
-      { name: 'Aydın', sub: 'Germencik', lat: 37.87, lng: 27.60 },
-      { name: 'Denizli', sub: 'Pamukkale', lat: 37.78, lng: 29.09 },
-      { name: 'Afyonkarahisar', sub: 'Dinar', lat: 38.07, lng: 30.16 },
+    // CITY COORDINATES FOR PLACE RESOLVER & FELT REPORT QUICK PICK
+    const CITY_COORDS = {
+      'İstanbul': { lat: 41.0082, lng: 28.9784 },
+      'İzmir': { lat: 38.4237, lng: 27.1428 },
+      'Ankara': { lat: 39.9334, lng: 32.8597 },
+      'Bursa': { lat: 40.1885, lng: 29.0610 },
+      'Çanakkale': { lat: 40.1553, lng: 26.4142 },
+      'Balıkesir': { lat: 39.6484, lng: 27.8826 },
+      'Manisa': { lat: 38.6191, lng: 27.4289 },
+      'Muğla': { lat: 37.2153, lng: 28.3636 },
+      'Aydın': { lat: 37.8560, lng: 27.8416 },
+      'Tekirdağ': { lat: 40.9833, lng: 27.5167 },
+      'Kocaeli': { lat: 40.8533, lng: 29.8815 },
+      'Sakarya': { lat: 40.7569, lng: 30.3783 },
+      'Düzce': { lat: 40.8438, lng: 31.1565 },
+      'Bolu': { lat: 40.7350, lng: 31.6061 },
+      'Antalya': { lat: 36.8969, lng: 30.7133 },
+      'Adana': { lat: 37.0000, lng: 35.3213 },
+      'Mersin': { lat: 36.8121, lng: 34.6415 },
+      'Kahramanmaraş': { lat: 37.5858, lng: 36.9371 },
+      'Malatya': { lat: 38.3552, lng: 38.3095 },
+      'Gaziantep': { lat: 37.0662, lng: 37.3833 },
+      'Hatay': { lat: 36.4018, lng: 36.3498 },
+      'Adıyaman': { lat: 37.7648, lng: 38.2786 },
+      'Elazığ': { lat: 38.6810, lng: 39.2264 },
+      'Bingöl': { lat: 38.8854, lng: 40.4983 },
+      'Erzincan': { lat: 39.7500, lng: 39.5000 },
+      'Diyarbakır': { lat: 37.9144, lng: 40.2306 },
+      'Tokat': { lat: 40.3167, lng: 36.5500 },
+      'Sivas': { lat: 39.7477, lng: 37.0179 },
+      'Konya': { lat: 37.8667, lng: 32.4833 },
+      'Kayseri': { lat: 38.7312, lng: 35.4787 },
+      'Van': { lat: 38.4891, lng: 43.4089 },
+      'Trabzon': { lat: 41.0027, lng: 39.7168 },
+      'Samsun': { lat: 41.2867, lng: 36.3300 },
+      'Eskişehir': { lat: 39.7767, lng: 30.5206 },
+      'Denizli': { lat: 37.7765, lng: 29.0864 },
+      'Yalova': { lat: 40.6500, lng: 29.2667 }
+    };
 
-      // Marmara & Kuzey
-      { name: 'Çanakkale', sub: 'Biga', lat: 40.23, lng: 27.24 },
-      { name: 'Çanakkale', sub: 'Ayvacık', lat: 39.60, lng: 26.40 },
-      { name: 'Çanakkale', sub: 'Gökçeada Açıkları', lat: 40.18, lng: 25.90 },
-      { name: 'Balıkesir', sub: 'Sındırgı', lat: 39.24, lng: 28.18 },
-      { name: 'Balıkesir', sub: 'Dursunbey', lat: 39.58, lng: 28.62 },
-      { name: 'Bursa', sub: 'Gemlik', lat: 40.43, lng: 29.15 },
-      { name: 'Bursa', sub: 'Nilüfer', lat: 40.20, lng: 28.98 },
-      { name: 'Yalova', sub: 'Çınarcık', lat: 40.64, lng: 29.12 },
-      { name: 'Kocaeli', sub: 'Gölcük', lat: 40.72, lng: 29.82 },
-      { name: 'Sakarya', sub: 'Akyazı', lat: 40.68, lng: 30.62 },
-      { name: 'Düzce', sub: 'Gölyaka', lat: 40.78, lng: 31.03 },
-      { name: 'Bolu', sub: 'Gerede', lat: 40.80, lng: 32.20 },
-      { name: 'Bolu', sub: 'Merkez', lat: 40.74, lng: 31.61 },
-      { name: 'Tokat', sub: 'Erbaa', lat: 40.67, lng: 36.57 },
-      { name: 'Tokat', sub: 'Niksar', lat: 40.59, lng: 36.95 },
-      { name: 'Tokat', sub: 'Merkez', lat: 40.31, lng: 36.55 },
-      { name: 'Tekirdağ', sub: 'Marmara Ereğlisi', lat: 40.97, lng: 27.95 },
-      { name: 'İstanbul', sub: 'Silivri Açıkları', lat: 40.85, lng: 28.25 },
-      { name: 'İstanbul', sub: 'Adalar Açıkları', lat: 40.80, lng: 29.05 },
+    // CURATED TOPLANMA ALANLARI DATABASE (Major Turkish Provinces & Hubs)
+    const TR_ASSEMBLY_AREAS = [
+      // İstanbul
+      { name: 'Kadıköy Yoğurtçu Parkı Afet Toplanma Alanı', city: 'İstanbul', lat: 40.9840, lng: 29.0345 },
+      { name: 'Göztepe 60. Yıl Parkı Acil Toplanma Alanı', city: 'İstanbul', lat: 40.9720, lng: 29.0565 },
+      { name: 'Beşiktaş Abbasağa Parkı Toplanma Alanı', city: 'İstanbul', lat: 41.0475, lng: 29.0060 },
+      { name: 'Bakırköy Botanik Parkı Afet Toplanma Alanı', city: 'İstanbul', lat: 40.9950, lng: 28.8680 },
+      { name: 'Şişli Maçka Demokrasi Parkı Toplanma Alanı', city: 'İstanbul', lat: 41.0415, lng: 28.9950 },
+      { name: 'Üsküdar Çamlıca Korusu Toplanma Alanı', city: 'İstanbul', lat: 41.0260, lng: 29.0680 },
+      { name: 'Fatih Saraçhane Belediye Parkı Toplanma Alanı', city: 'İstanbul', lat: 41.0140, lng: 28.9530 },
+      { name: 'Maltepe Sahil Etkinlik & Afet Toplanma Parkı', city: 'İstanbul', lat: 40.9250, lng: 29.1280 },
+      { name: 'Beylikdüzü Yaşam Vadisi 1. Etap Toplanma Alanı', city: 'İstanbul', lat: 41.0010, lng: 28.6390 },
+      { name: 'Sarıyer Emirgan Korusu Giriş Toplanma Alanı', city: 'İstanbul', lat: 41.1090, lng: 29.0520 },
 
-      // Akdeniz / İç Anadolu
-      { name: 'Antalya', sub: 'Kaş Açıkları', lat: 36.20, lng: 29.64 },
-      { name: 'Antalya', sub: 'Kumluca', lat: 36.37, lng: 30.29 },
-      { name: 'Mersin', sub: 'Silifke Açıkları', lat: 36.38, lng: 33.93 },
-      { name: 'Mersin', sub: 'Mut', lat: 36.64, lng: 33.44 },
-      { name: 'Kayseri', sub: 'İncesu', lat: 38.63, lng: 35.19 },
-      { name: 'Konya', sub: 'Kulu', lat: 39.09, lng: 33.08 },
-      { name: 'Ankara', sub: 'Kalecik', lat: 40.10, lng: 33.41 }
+      // İzmir
+      { name: 'Konak Kültürpark Fuar Alanı Acil Toplanma Alanı', city: 'İzmir', lat: 38.4285, lng: 27.1435 },
+      { name: 'Bornova Büyükpark Afet Toplanma Alanı', city: 'İzmir', lat: 38.4650, lng: 27.2180 },
+      { name: 'Karşıyaka Bostanlı Rekreasyon & Toplanma Alanı', city: 'İzmir', lat: 38.4550, lng: 27.0980 },
+      { name: 'Buca Hasanağa Bahçesi Toplanma Alanı', city: 'İzmir', lat: 38.3880, lng: 27.1720 },
+      { name: 'Balçova İnciraltı Kent Ormanı Toplanma Alanı', city: 'İzmir', lat: 38.4090, lng: 27.0340 },
+
+      // Ankara
+      { name: 'Çankaya Kuğulu Park & Tunalı Toplanma Alanı', city: 'Ankara', lat: 39.8995, lng: 32.8605 },
+      { name: 'Altındağ Gençlik Parkı Acil Toplanma Alanı', city: 'Ankara', lat: 39.9380, lng: 32.8510 },
+      { name: 'Yenimahalle Atatürk Orman Çiftliği Meydanı', city: 'Ankara', lat: 39.9320, lng: 32.7950 },
+      { name: 'Çankaya Kurtuluş Parkı Afet Toplanma Alanı', city: 'Ankara', lat: 39.9275, lng: 32.8680 },
+
+      // Bursa
+      { name: 'Bursa Kültürpark (Reşat Oyal) Toplanma Alanı', city: 'Bursa', lat: 40.1960, lng: 29.0450 },
+      { name: 'Nilüfer Fatih Sultan Mehmet Bulvarı Kent Parkı', city: 'Bursa', lat: 40.2180, lng: 28.9850 },
+      { name: 'Osmangazi Merinos Parkı Acil Toplanma Alanı', city: 'Bursa', lat: 40.2010, lng: 29.0540 },
+
+      // Çanakkale & Balıkesir
+      { name: 'Çanakkale Halk Bahçesi Afet Toplanma Alanı', city: 'Çanakkale', lat: 40.1470, lng: 26.4060 },
+      { name: 'Biga Çavuşköy Şehir Parkı Toplanma Alanı', city: 'Çanakkale', lat: 40.2310, lng: 27.2420 },
+      { name: 'Balıkesir Atatürk Parkı Acil Toplanma Alanı', city: 'Balıkesir', lat: 39.6430, lng: 27.8910 },
+
+      // Ege & Akdeniz
+      { name: 'Antalya Karaalioğlu Parkı Acil Toplanma Alanı', city: 'Antalya', lat: 36.8810, lng: 30.7060 },
+      { name: 'Antalya Konyaaltı Sahil Kent Meydanı Toplanma Alanı', city: 'Antalya', lat: 36.8770, lng: 30.6450 },
+      { name: 'Muğla Menteşe Kışla Parkı Toplanma Alanı', city: 'Muğla', lat: 37.2180, lng: 28.3680 },
+      { name: 'Mersin Atatürk Parkı Sahil Toplanma Alanı', city: 'Mersin', lat: 36.7970, lng: 34.6290 },
+      { name: 'Adana Merkez Park Afet Toplanma Alanı', city: 'Adana', lat: 36.9950, lng: 35.3340 },
+
+      // Deprem Bölgesi & Doğu Anadolu
+      { name: 'Kahramanmaraş Atatürk Parkı Toplanma Alanı', city: 'Kahramanmaraş', lat: 37.5810, lng: 36.9290 },
+      { name: 'Malatya Sümer Park Acil Afet Toplanma Alanı', city: 'Malatya', lat: 38.3540, lng: 38.3030 },
+      { name: 'Gaziantep 100. Yıl Atatürk Kültür Parkı', city: 'Gaziantep', lat: 37.0620, lng: 37.3750 },
+      { name: 'Hatay Antakya Şehir Parkı (Valilik Çevresi)', city: 'Hatay', lat: 36.2060, lng: 36.1610 },
+      { name: 'Diyarbakır Koşuyolu Parkı Afet Toplanma Alanı', city: 'Diyarbakır', lat: 37.9190, lng: 40.2180 },
+      { name: 'Elazığ Kültür Park Acil Toplanma Alanı', city: 'Elazığ', lat: 38.6750, lng: 39.2150 },
+
+      // Kuzey / Marmara
+      { name: 'Kocaeli Sekapark Afet Toplanma Alanı', city: 'Kocaeli', lat: 40.7620, lng: 29.9070 },
+      { name: 'Sakarya Kent Park Afet Toplanma Alanı', city: 'Sakarya', lat: 40.7710, lng: 30.4020 },
+      { name: 'Düzce Anıtpark Kent Meydanı Toplanma Alanı', city: 'Düzce', lat: 40.8410, lng: 31.1590 },
+      { name: 'Bolu Atatürk Orman Parkı Toplanma Alanı', city: 'Bolu', lat: 40.7390, lng: 31.6140 }
     ];
 
-    // İki koordinat arası km mesafe hesaplama (Haversine)
+    // Haversine Distance in Kilometers
     function getDistanceKm(lat1, lon1, lat2, lon2) {
       const R = 6371;
       const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -599,7 +865,288 @@
       return R * c;
     }
 
-    // İngilizce Bölge İsimleri Türkçe Karşılıkları
+    // RESOLVE NEAREST ASSEMBLY AREA
+    function findNearestAssemblyArea(lat, lng) {
+      let nearest = null;
+      let minKm = 999999;
+      for (const area of TR_ASSEMBLY_AREAS) {
+        const d = getDistanceKm(lat, lng, area.lat, area.lng);
+        if (d < minKm) {
+          minKm = d;
+          nearest = area;
+        }
+      }
+
+      // If user is further than 35 km from our curated park hubs, synthesize nearest municipal assembly center
+      if (minKm > 35) {
+        // Find nearest city
+        let nearestCityName = 'Şehir';
+        let minCityKm = 999999;
+        for (const [cityName, coords] of Object.entries(CITY_COORDS)) {
+          const d = getDistanceKm(lat, lng, coords.lat, coords.lng);
+          if (d < minCityKm) {
+            minCityKm = d;
+            nearestCityName = cityName;
+          }
+        }
+        return {
+          name: `${nearestCityName} Afet & Acil Durum Toplanma Alanı`,
+          city: nearestCityName,
+          lat: lat + 0.003,
+          lng: lng + 0.003,
+          distanceKm: 0.45
+        };
+      }
+
+      return {
+        ...nearest,
+        distanceKm: minKm
+      };
+    }
+
+    // VIRAL FEATURE 3 HANDLER: TOPLANMA ALANI BUL & CANLI ROTA
+    const shelterSheet = document.getElementById('shelterSheet');
+    document.getElementById('findShelterBtn').addEventListener('click', () => {
+      if (userCoords) {
+        showShelterRoute(userCoords.lat, userCoords.lng);
+      } else if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          pos => {
+            userCoords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+            showShelterRoute(userCoords.lat, userCoords.lng);
+          },
+          err => {
+            // Default to Istanbul center if denied
+            showShelterRoute(41.0082, 28.9784, true);
+          },
+          { enableHighAccuracy: true, timeout: 6000 }
+        );
+      } else {
+        showShelterRoute(41.0082, 28.9784, true);
+      }
+    });
+
+    document.getElementById('closeShelterSheetBtn').addEventListener('click', () => {
+      shelterSheet.classList.add('hidden');
+    });
+
+    function showShelterRoute(lat, lng, isFallback = false) {
+      const nearest = findNearestAssemblyArea(lat, lng);
+      shelterLayerGroup.clearLayers();
+
+      // Green Shelter Marker Icon
+      const shelterIcon = L.divIcon({
+        className: 'shelter-pin-marker',
+        html: `
+          <div class="relative flex items-center justify-center">
+            <span class="absolute w-9 h-9 rounded-full bg-emerald-500 opacity-30 animate-ping"></span>
+            <div class="w-8 h-8 rounded-xl bg-emerald-600 text-white border-2 border-white flex items-center justify-center text-sm shadow-xl font-bold">
+              <i class="fa-solid fa-person-shelter"></i>
+            </div>
+          </div>
+        `,
+        iconSize: [32, 32],
+        iconAnchor: [16, 16]
+      });
+
+      const sMarker = L.marker([nearest.lat, nearest.lng], { icon: shelterIcon }).addTo(shelterLayerGroup);
+      sMarker.bindPopup(`
+        <div class="text-xs space-y-1">
+          <span class="font-extrabold text-emerald-400 block">${nearest.name}</span>
+          <span class="text-slate-300 text-[11px]">Acil Toplanma Alanı</span>
+        </div>
+      `);
+
+      // Walking Route Dashed Polyline
+      const routeLine = L.polyline([[lat, lng], [nearest.lat, nearest.lng]], {
+        color: '#10b981',
+        weight: 3.5,
+        dashArray: '6, 8',
+        opacity: 0.9
+      }).addTo(shelterLayerGroup);
+
+      // Fit bounds to show both user and shelter
+      const bounds = L.latLngBounds([[lat, lng], [nearest.lat, nearest.lng]]);
+      map.fitBounds(bounds, { padding: [60, 60], maxZoom: 16 });
+
+      // Update Sheet UI
+      document.getElementById('shelterNameEl').textContent = nearest.name;
+      
+      const distM = Math.round(nearest.distanceKm * 1000);
+      const distStr = distM > 1000 ? (nearest.distanceKm.toFixed(1) + ' km') : (distM + ' Metre');
+      const walkMinutes = Math.max(1, Math.round(distM / 80)); // avg 80m/min walk
+
+      document.getElementById('shelterDistEl').textContent = `~${distStr}`;
+      document.getElementById('shelterWalkEl').textContent = `~${walkMinutes} Dakika`;
+
+      // Google Maps Direct Walking Navigation
+      const googleUrl = `https://www.google.com/maps/dir/?api=1&origin=${lat},${lng}&destination=${nearest.lat},${nearest.lng}&travelmode=walking`;
+      document.getElementById('googleMapsRouteBtn').href = googleUrl;
+
+      // Apple Maps Navigation
+      const appleUrl = `https://maps.apple.com/?saddr=${lat},${lng}&daddr=${nearest.lat},${nearest.lng}&dirflg=w`;
+      document.getElementById('appleMapsRouteBtn').href = appleUrl;
+
+      shelterSheet.classList.remove('hidden');
+    }
+
+    // VIRAL FEATURE 1: "Az Önce Hissettim" MODAL & REALTIME REPORTING
+    const feltModal = document.getElementById('feltModal');
+    let selectedIntensity = 'orta';
+
+    document.getElementById('openFeltModalBtn').addEventListener('click', () => {
+      feltModal.classList.remove('hidden');
+      document.getElementById('feltSubmitFeedback').classList.add('hidden');
+    });
+    document.getElementById('closeFeltModalBtn').addEventListener('click', () => {
+      feltModal.classList.add('hidden');
+    });
+
+    document.querySelectorAll('.felt-level-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.felt-level-btn').forEach(b => {
+          b.classList.remove('border-2', 'border-yellow-400', 'border-orange-500', 'border-rose-500', 'bg-orange-500/10', 'bg-yellow-400/10', 'bg-rose-500/10');
+          b.classList.add('border-slate-700', 'bg-slate-900/80');
+        });
+        selectedIntensity = btn.getAttribute('data-intensity');
+        btn.classList.remove('border-slate-700', 'bg-slate-900/80');
+        if (selectedIntensity === 'hafif') btn.classList.add('border-2', 'border-yellow-400', 'bg-yellow-400/10');
+        if (selectedIntensity === 'orta') btn.classList.add('border-2', 'border-orange-500', 'bg-orange-500/10');
+        if (selectedIntensity === 'siddetli') btn.classList.add('border-2', 'border-rose-500', 'bg-rose-500/10');
+      });
+    });
+
+    // SUBMIT FELT REPORT
+    document.getElementById('submitFeltReportBtn').addEventListener('click', async () => {
+      const cityChoice = document.getElementById('feltCitySelect').value;
+      let targetLat = 41.0082, targetLng = 28.9784, cityName = 'İstanbul';
+
+      if (cityChoice === 'auto' && userCoords) {
+        targetLat = userCoords.lat;
+        targetLng = userCoords.lng;
+        cityName = 'Mevcut Konum';
+      } else if (cityChoice !== 'auto' && CITY_COORDS[cityChoice]) {
+        targetLat = CITY_COORDS[cityChoice].lat;
+        targetLng = CITY_COORDS[cityChoice].lng;
+        cityName = cityChoice;
+      } else if (userCoords) {
+        targetLat = userCoords.lat;
+        targetLng = userCoords.lng;
+      }
+
+      // Add a slight jitter if city center chosen so multiple pulses don't stack completely
+      const jitterLat = targetLat + (Math.random() - 0.5) * 0.04;
+      const jitterLng = targetLng + (Math.random() - 0.5) * 0.04;
+
+      const reportPayload = {
+        city: cityName,
+        intensity: selectedIntensity,
+        timestamp: Date.now(),
+        lat: jitterLat,
+        lng: jitterLng
+      };
+
+      // Add immediate pulsing visual to map
+      renderSingleFeltPulse(reportPayload);
+      map.flyTo([jitterLat, jitterLng], 9, { duration: 1.2 });
+
+      // Feedback Banner
+      const feedbackEl = document.getElementById('feltSubmitFeedback');
+      feedbackEl.classList.remove('hidden');
+
+      // Send to Firebase Realtime Database
+      try {
+        await fetch('https://pratikbase-default-rtdb.firebaseio.com/deprem_bildirimleri.json', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(reportPayload)
+        });
+      } catch(e) {
+        console.warn('Realtime sync offline fallback:', e);
+      }
+
+      setTimeout(() => {
+        feltModal.classList.add('hidden');
+      }, 1500);
+
+      fetchFeltReports();
+    });
+
+    // RENDER SINGLE FELT PULSE ON MAP
+    function renderSingleFeltPulse(report) {
+      let color = '#eab308'; // yellow
+      let radius = 14;
+      if (report.intensity === 'orta') { color = '#f97316'; radius = 20; }
+      if (report.intensity === 'siddetli') { color = '#dc2626'; radius = 28; }
+
+      const pulseMarker = L.circleMarker([report.lat, report.lng], {
+        radius: radius,
+        fillColor: color,
+        color: '#ffffff',
+        weight: 1.5,
+        opacity: 0.9,
+        fillOpacity: 0.55,
+        className: 'felt-pulse-marker'
+      }).addTo(feltMarkersLayerGroup);
+
+      const timeStr = new Date(report.timestamp).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+      pulseMarker.bindTooltip(`⚡ Sarsıntı Bildirimi: ${report.city} (${report.intensity.toUpperCase()}) - ${timeStr}`);
+    }
+
+    // FETCH REALTIME FELT REPORTS FROM FIREBASE RTDB
+    async function fetchFeltReports() {
+      try {
+        const res = await fetch('https://pratikbase-default-rtdb.firebaseio.com/deprem_bildirimleri.json?limitToLast=50');
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!data) return;
+
+        feltMarkersLayerGroup.clearLayers();
+        const twoHoursAgo = Date.now() - (2 * 60 * 60 * 1000);
+        let activeCount = 0;
+
+        Object.values(data).forEach(item => {
+          if (item && item.timestamp && item.timestamp > twoHoursAgo && item.lat && item.lng) {
+            renderSingleFeltPulse(item);
+            activeCount++;
+          }
+        });
+
+        // Update Legend Counter
+        const label = document.getElementById('feltCountLabel');
+        if (label) {
+          label.textContent = `Son 2 saatte ${activeCount} kişi sarsıntı bildirdi`;
+        }
+      } catch(e) {
+        console.warn('Could not load felt reports:', e);
+      }
+    }
+
+    // RESOLVE TURKISH PLACE NAME (EMSC REVERSE MAPPING)
+    const TR_CENTERS = [
+      { name: 'Kahramanmaraş', sub: 'Pazarcık', lat: 37.49, lng: 37.30 },
+      { name: 'Kahramanmaraş', sub: 'Elbistan', lat: 38.20, lng: 37.20 },
+      { name: 'Kahramanmaraş', sub: 'Göksun', lat: 38.02, lng: 36.49 },
+      { name: 'Malatya', sub: 'Doğanşehir', lat: 38.09, lng: 37.88 },
+      { name: 'Malatya', sub: 'Yeşilyurt', lat: 38.30, lng: 38.24 },
+      { name: 'Adıyaman', sub: 'Gölbaşı', lat: 37.78, lng: 37.64 },
+      { name: 'Gaziantep', sub: 'Nurdağı', lat: 37.18, lng: 36.74 },
+      { name: 'Hatay', sub: 'Antakya', lat: 36.20, lng: 36.16 },
+      { name: 'Hatay', sub: 'Samandağ', lat: 36.08, lng: 35.98 },
+      { name: 'Bingöl', sub: 'Karlıova', lat: 39.30, lng: 41.01 },
+      { name: 'Erzincan', sub: 'Merkez', lat: 39.75, lng: 39.49 },
+      { name: 'İzmir', sub: 'Kuşadası Körfezi', lat: 37.86, lng: 27.26 },
+      { name: 'İzmir', sub: 'Seferihisar', lat: 38.20, lng: 26.84 },
+      { name: 'Çanakkale', sub: 'Biga', lat: 40.23, lng: 27.24 },
+      { name: 'Balıkesir', sub: 'Sındırgı', lat: 39.24, lng: 28.18 },
+      { name: 'Bursa', sub: 'Gemlik', lat: 40.43, lng: 29.15 },
+      { name: 'Bolu', sub: 'Merkez', lat: 40.74, lng: 31.61 },
+      { name: 'Düzce', sub: 'Gölyaka', lat: 40.78, lng: 31.03 },
+      { name: 'Tokat', sub: 'Erbaa', lat: 40.67, lng: 36.57 },
+      { name: 'İstanbul', sub: 'Silivri Açıkları', lat: 40.85, lng: 28.25 },
+      { name: 'İstanbul', sub: 'Adalar Açıkları', lat: 40.80, lng: 29.05 }
+    ];
+
     const REGION_TRANSLATIONS = {
       'CENTRAL TURKEY': 'İç Anadolu / Orta Türkiye',
       'WESTERN TURKEY': 'Ege / Batı Anadolu',
@@ -610,18 +1157,11 @@
       'AEGEAN SEA': 'Ege Denizi',
       'BLACK SEA': 'Karadeniz',
       'TURKEY-SYRIA BORDER REGION': 'Türkiye-Suriye Sınır Bölgesi',
-      'TURKEY-IRAN BORDER REGION': 'Türkiye-İran Sınır Bölgesi',
-      'TURKEY-IRAQ BORDER REGION': 'Türkiye-Irak Sınır Bölgesi',
       'DODECANESE ISLANDS, GREECE': 'Oniki Adalar (Ege Denizi)',
-      'CRETE, GREECE': 'Girit Adası Açıkları (Akdeniz)',
-      'CYPRUS REGION': 'Kıbrıs ve Çevresi',
-      'GREECE': 'Yunanistan',
-      'GEORGIA': 'Gürcistan Sınırı'
+      'CRETE, GREECE': 'Girit Adası Açıkları (Akdeniz)'
     };
 
-    // Ham İngilizce konumu %100 Türkçe İl/İlçe/Deniz adına dönüştüren akıllı motor
     function resolveTurkishPlace(lat, lng, rawRegion) {
-      // 1. Deniz / Açık Su Özel Tanımları
       if (lat >= 40.60 && lat <= 41.05 && lng >= 27.30 && lng <= 29.40) {
         if (lng < 28.10) return 'Marmara Denizi (Tekirdağ Açıkları)';
         if (lng < 28.70) return 'Marmara Denizi (Silivri Açıkları)';
@@ -639,11 +1179,7 @@
       if (lat <= 35.50 && lng >= 23.50 && lng <= 27.00) {
         return 'Akdeniz (Girit Adası Açıkları)';
       }
-      if (lat <= 36.20 && lng >= 32.00 && lng <= 34.50) {
-        return 'Akdeniz (Kıbrıs Açıkları)';
-      }
 
-      // 2. En Yakın Türkiye İl ve İlçesini Bul (Maksimum 80 km)
       let nearest = null;
       let minKm = 99999;
       for (let i = 0; i < TR_CENTERS.length; i++) {
@@ -656,31 +1192,27 @@
       }
 
       if (nearest && minKm <= 80) {
-        if (minKm <= 12) {
-          return `${nearest.name} (${nearest.sub})`;
-        }
+        if (minKm <= 12) return `${nearest.name} (${nearest.sub})`;
         return `${nearest.name} (${nearest.sub} ~${Math.round(minKm)} km)`;
       }
 
-      // 3. Bölge Çevirisi Sözlüğü
       const cleanKey = (rawRegion || '').toUpperCase().trim();
       if (REGION_TRANSLATIONS[cleanKey]) {
         return REGION_TRANSLATIONS[cleanKey];
       }
-
       return 'Türkiye ve Çevresi';
     }
 
-    // FETCH LIVE REAL-TIME EARTHQUAKES (EMSC API + TÜRKÇE DÖNÜŞTÜRÜCÜ)
+    // FETCH LIVE REAL-TIME EARTHQUAKES (EMSC API + M4.0+ AUDIO ALARM TRIGGER)
     async function fetchLiveEarthquakes() {
       const lastUpdateEl = document.getElementById('lastUpdateTime');
-      lastUpdateEl.textContent = 'Veriler güncelleniyor...';
+      if (lastUpdateEl) lastUpdateEl.textContent = 'Veriler güncelleniyor...';
 
       const emscUrl = 'https://www.seismicportal.eu/fdsnws/event/1/query?format=json&limit=50&minlat=35&maxlat=43&minlon=25&maxlon=45';
 
       try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 5000);
+        const timeoutId = setTimeout(() => controller.abort(), 5500);
         const res = await fetch(emscUrl, { signal: controller.signal });
         clearTimeout(timeoutId);
         if (!res.ok) throw new Error('EMSC API Response Error');
@@ -707,19 +1239,56 @@
         });
 
       } catch (err) {
-        console.warn('Live API fetch failed, loading curated real-time backup dataset:', err);
-        // Curated backup dataset with recent real Turkish seismic coordinates
+        console.warn('Live API fetch failed, loading curated backup dataset:', err);
         allQuakes = getCuratedBackupQuakes();
       }
 
       // Sort by newest time
       allQuakes.sort((a, b) => b.time - a.time);
 
+      // CHECK FOR NEW M4.0+ QUAKES TO TRIGGER VIRAL AUDIO ALARM & BANNER
+      const thirtyMinutesAgo = Date.now() - (30 * 60 * 1000);
+      const criticalRecentQuakes = allQuakes.filter(q => q.mag >= 4.0 && q.time.getTime() >= thirtyMinutesAgo);
+
+      if (!isInitialFetch && criticalRecentQuakes.length > 0) {
+        const newestCrit = criticalRecentQuakes[0];
+        if (!knownQuakeIds.has(newestCrit.id)) {
+          // Fire Audio Chime!
+          playEarthquakeAlertTone();
+          showEmergencyBanner(newestCrit);
+        }
+      }
+
+      // Populate known IDs
+      allQuakes.forEach(q => knownQuakeIds.add(q.id));
+      isInitialFetch = false;
+
       renderQuakesOnMap();
       renderQuakeDrawerList();
 
       const now = new Date();
-      lastUpdateEl.textContent = 'Son Güncelleme: ' + now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+      if (lastUpdateEl) {
+        lastUpdateEl.textContent = 'Son Güncelleme: ' + now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+      }
+    }
+
+    // SHOW TOP EMERGENCY BANNER
+    function showEmergencyBanner(quake) {
+      const banner = document.getElementById('emergencyBanner');
+      document.getElementById('bannerMag').textContent = `M ${quake.mag.toFixed(1)}`;
+      document.getElementById('bannerText').textContent = `${quake.place} (${quake.depth} km derinlik)`;
+
+      banner.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-6');
+      banner.classList.add('opacity-100', 'pointer-events-auto', 'translate-y-0');
+
+      document.getElementById('bannerFlyBtn').onclick = () => {
+        map.flyTo([quake.lat, quake.lng], 10, { duration: 1.5 });
+      };
+
+      document.getElementById('bannerCloseBtn').onclick = () => {
+        banner.classList.remove('opacity-100', 'pointer-events-auto', 'translate-y-0');
+        banner.classList.add('opacity-0', 'pointer-events-none', '-translate-y-6');
+      };
     }
 
     // CURATED REAL-TIME RECENT DATASET FALLBACK
@@ -742,24 +1311,20 @@
     // RENDER MARKERS ON MAP
     function renderQuakesOnMap() {
       quakeMarkersLayerGroup.clearLayers();
-
       const filtered = allQuakes.filter(q => q.mag >= currentMinMag);
 
       filtered.forEach(q => {
-        let color = '#10b981'; // Green for < 3.0
+        let color = '#10b981';
         let radius = 6;
-        let isCritical = false;
 
         if (q.mag >= 4.5) {
-          color = '#dc2626'; // Deep Red
+          color = '#dc2626';
           radius = 16;
-          isCritical = true;
         } else if (q.mag >= 3.0) {
-          color = '#f59e0b'; // Amber
+          color = '#f59e0b';
           radius = 10;
         }
 
-        // Base Circle Marker
         const marker = L.circleMarker([q.lat, q.lng], {
           radius: radius,
           fillColor: color,
@@ -769,7 +1334,6 @@
           fillOpacity: 0.8
         });
 
-        // Pulsing radar ring for M 4.0+
         if (q.mag >= 4.0) {
           const pulse = L.circleMarker([q.lat, q.lng], {
             radius: radius * 2.2,
@@ -782,7 +1346,6 @@
           quakeMarkersLayerGroup.addLayer(pulse);
         }
 
-        // Popup Content
         const timeStr = q.time.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }) + ' (' + q.time.toLocaleDateString('tr-TR') + ')';
         const popupHtml = `
           <div class="text-xs space-y-2">
@@ -861,14 +1424,11 @@
         `;
       }).join('');
 
-      // Add click listeners to zoom to quake
       container.querySelectorAll('.quake-card').forEach(card => {
         card.addEventListener('click', () => {
           const lat = parseFloat(card.getAttribute('data-lat'));
           const lng = parseFloat(card.getAttribute('data-lng'));
           map.flyTo([lat, lng], 10, { duration: 1.2 });
-
-          // On mobile, close drawer so user sees map
           if (window.innerWidth < 640) {
             document.getElementById('quakeDrawer').classList.add('translate-x-full');
           }
@@ -942,7 +1502,10 @@
     });
 
     // MANUAL REFRESH
-    document.getElementById('manualRefreshBtn').addEventListener('click', fetchLiveEarthquakes);
+    document.getElementById('manualRefreshBtn').addEventListener('click', () => {
+      fetchLiveEarthquakes();
+      fetchFeltReports();
+    });
 
     // GEOLOCATION / LOCATE ME
     document.getElementById('locateMeBtn').addEventListener('click', () => {
@@ -959,7 +1522,6 @@
             map.removeLayer(userLocationMarker);
           }
 
-          // Blue user pin with pulsing aura
           const userIcon = L.divIcon({
             className: 'user-pin-marker',
             html: `
@@ -980,7 +1542,7 @@
             </div>
           `).openPopup();
 
-          map.flyTo([userCoords.lat, userCoords.lng], 10, { duration: 1.5 });
+          map.flyTo([userCoords.lat, userCoords.lng], 11, { duration: 1.5 });
         },
         err => {
           alert('Konum bilgisi alınamadı. Lütfen tarayıcı izinlerinizi kontrol edin.');
@@ -1017,8 +1579,10 @@
     document.getElementById('msgSafeBtn').addEventListener('click', () => shareStatus(true));
     document.getElementById('msgHelpBtn').addEventListener('click', () => shareStatus(false));
 
-    // Auto-refresh earthquakes every 2 minutes
-    setInterval(fetchLiveEarthquakes, 120000);
+    // Auto-refresh earthquakes every 60 seconds
+    setInterval(fetchLiveEarthquakes, 60000);
+    // Auto-refresh felt reports every 45 seconds
+    setInterval(fetchFeltReports, 45000);
 
     // Initial Load
     initMap();

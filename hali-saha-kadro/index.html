@@ -2,17 +2,17 @@
 <html lang="tr" class="dark">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Halı Saha Kadro Kurucu & Taktik Tahtası – PratikBase</title>
-  <meta name="description" content="Ücretsiz halı saha kadro kurucu ve taktik dağıtıcı. 5v5, 6v6, 7v7, 8v8 takımları kurun, otomatik dengeli kura çekin, yeşil saha görseli indirin ve tek tıkla WhatsApp kadrosu paylaşın!">
-  <meta name="keywords" content="halı saha kadro kurucu, halı saha taktik tahtası, halı saha takım dağıtıcı, halı saha kura çekme, halı saha kadrosu whatsapp, futbol kadro yapma">
+  <meta name="description" content="Ücretsiz halı saha kadro kurucu ve taktik tahtası. 5v5, 6v6, 7v7, 8v8 takımları kurun, yapay zeka rating dengeli takım oluşturun, kişi başı ücret ve kasa hesaplayın, 9:16 Instagram Story PNG indirin ve tek tıkla WhatsApp kadrosu paylaşın!">
+  <meta name="keywords" content="halı saha kadro kurucu, halı saha taktik tahtası, halı saha takım dağıtıcı, halı saha kura çekme, halı saha kadrosu whatsapp, halı saha story indir, halı saha ücret hesaplama, futbol kadro yapma">
   <link rel="canonical" href="https://pratikbase.com/hali-saha-kadro/">
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://pratikbase.com/hali-saha-kadro/">
-  <meta property="og:title" content="Halı Saha Kadro Kurucu & Taktik Dağıtıcı">
-  <meta property="og:description" content="Halı saha kadronu 30 saniyede kur, takımları otomatik dengele, taktik görselini al ve WhatsApp grubuna tek tıkla gönder!">
+  <meta property="og:title" content="Halı Saha Kadro Kurucu, Story İndirici & Kasa Hesaplayıcı">
+  <meta property="og:description" content="Halı saha kadronu 30 saniyede kur, rating ile dengeli takım kur, 9:16 Story görselini al ve WhatsApp grubuna tek tıkla gönder!">
   <meta property="og:image" content="https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=1200&q=80">
 
   <!-- Twitter -->
@@ -71,6 +71,13 @@
       cursor: grabbing;
       transform: scale(1.08);
     }
+    @media (max-width: 768px) {
+      input, select, textarea {
+        font-size: 16px !important;
+      }
+    }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
   </style>
 
   <!-- Schema.org WebApplication -->
@@ -84,7 +91,7 @@
         "url": "https://pratikbase.com/hali-saha-kadro/",
         "applicationCategory": "SportsApplication",
         "operatingSystem": "All",
-        "description": "5v5, 6v6, 7v7 ve 8v8 halı saha kadrolarını oluşturan, dengeli takım dağıtan ve WhatsApp için hazır kadro metni ile taktik görseli üreten ücretsiz araç.",
+        "description": "5v5, 6v6, 7v7 ve 8v8 halı saha kadrolarını oluşturan, rating puanına göre dengeli takım dağıtan, kişi başı kasa ücreti hesaplayan ve 9:16 Instagram Story PNG görseli üreten ücretsiz araç.",
         "offers": {
           "@type": "Offer",
           "price": "0",
@@ -96,18 +103,18 @@
         "mainEntity": [
           {
             "@type": "Question",
-            "name": "Halı saha için en ideal kadro boyutu nedir?",
+            "name": "Yapay zeka rating tabanlı dengeli takım kurucu nasıl çalışır?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Türkiye'deki standart halı sahaların büyük çoğunluğu 7'ye 7 (toplam 14 oyuncu) maçlar için uygundur. Küçük ebatlı salon sahalarında 6v6, büyük nizamiye yakın sahalarda ise 8v8 tercih edilir."
+              "text": "Her oyuncunun 1-10 arası güç puanını ve mevkisini (Kaleci, Defans, Orta Saha, Forvet) dikkate alarak iki takımın toplam güç puanını birbirine tam eşit (50%-50%) olacak şekilde otomatik eşleştirir."
             }
           },
           {
             "@type": "Question",
-            "name": "Otomatik dengeli takım dağıtıcı nasıl çalışır?",
+            "name": "Kişi başı ücret ve kasa hesaplayıcı nasıl çalışır?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "14 oyuncunun adını girdiğinizde veya oyuncuların yıldız/seviye puanlarını belirlediğinizde, algoritma her iki takımın toplam gücünü birbirine en yakın olacak şekilde iki dengeli takıma (A Takımı ve B Takımı) otomatik olarak böler."
+              "text": "Toplam saha kirası ve ekstra masrafları (su/meşrubat) girip 'Kaleciler Ücretsiz' kutusunu işaretlediğinizde, ödeyen oyuncu sayısına göre kişi başı tam tutarı hesaplar ve kaptan IBAN'ı ile birlikte WhatsApp mesajına ekler."
             }
           }
         ]
@@ -122,13 +129,13 @@
   <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur-md sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <a href="/" class="flex items-center gap-2 group">
+        <a href="../" class="flex items-center gap-2 group">
           <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-600 to-green-400 flex items-center justify-center text-white shadow-lg shadow-emerald-900/40 group-hover:scale-105 transition">
             <i class="fa-solid fa-futbol text-lg"></i>
           </div>
           <div>
             <span class="text-base font-extrabold tracking-tight text-white flex items-center gap-1.5">
-              PratikBase
+              Pratik<span class="text-emerald-400">Base</span>
               <span class="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Halı Saha</span>
             </span>
           </div>
@@ -136,13 +143,20 @@
       </div>
 
       <div class="flex items-center gap-2 sm:gap-3">
-        <a href="/" class="text-xs sm:text-sm font-semibold text-slate-400 hover:text-white px-3 py-2 rounded-lg hover:bg-slate-800 transition flex items-center gap-1.5">
+        <a href="../" class="text-xs sm:text-sm font-semibold text-slate-400 hover:text-white px-3 py-2 rounded-lg hover:bg-slate-800 transition flex items-center gap-1.5">
           <i class="fa-solid fa-arrow-left"></i>
           <span class="hidden sm:inline">Portala Dön</span>
         </a>
+
+        <!-- VIRAL UPGRADE 1: Instagram Story Export Button in Header -->
+        <button onclick="openStoryModal()" class="text-xs sm:text-sm font-bold bg-gradient-to-r from-fuchsia-600 to-pink-600 hover:from-fuchsia-500 hover:to-pink-500 text-white px-3 sm:px-3.5 py-2 rounded-xl shadow-lg shadow-pink-950/50 flex items-center gap-1.5 transition active:scale-95">
+          <i class="fa-brands fa-instagram text-sm"></i>
+          <span>Story İndir</span>
+        </button>
+
         <button onclick="shareWhatsApp()" class="text-xs sm:text-sm font-bold bg-emerald-600 hover:bg-emerald-500 text-white px-3.5 py-2 rounded-xl shadow-lg shadow-emerald-900/50 flex items-center gap-2 transition active:scale-95">
           <i class="fa-brands fa-whatsapp text-base"></i>
-          <span>WhatsApp'a At</span>
+          <span class="hidden sm:inline">WhatsApp'a At</span>
         </button>
       </div>
     </div>
@@ -165,40 +179,71 @@
         <div class="flex items-center gap-2 mb-1.5">
           <span class="px-2 py-0.5 rounded text-[10px] font-bold tracking-wide uppercase bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">VİRAL TAKTİK TAHTASI</span>
           <span class="text-xs text-slate-400 flex items-center gap-1">
-            <i class="fa-solid fa-users"></i> Otomatik Dengeli Takım & WhatsApp Kadro Dağıtıcı
+            <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i> AI Rating Dengeleyici, Kasa Hesabı & Story
           </span>
         </div>
         <h1 class="text-xl sm:text-2xl font-black text-white tracking-tight">
           Halı Saha Kadro & Taktik Kurucu
         </h1>
         <p class="text-xs sm:text-sm text-slate-400 mt-1 max-w-2xl">
-          Oyuncuları yazın, şansına veya güçlerine göre 2 dengeli takıma ayırın, yeşil saha görselini indirin veya tek tıkla WhatsApp grubuna gönderin!
+          Oyuncuları puanlarına göre %50-%50 eşit güçte iki takıma dağıtın, kişi başı saha ücretini hesaplayın, 9:16 Instagram Story görselini indirin veya tek tıkla WhatsApp grubuna gönderin!
         </p>
       </div>
 
       <!-- Quick Actions -->
       <div class="flex flex-wrap items-center gap-2">
-        <button onclick="autoBalanceTeams()" class="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs flex items-center gap-2 shadow-lg shadow-amber-950/40 transition">
-          <i class="fa-solid fa-shuffle"></i>
-          <span>Dengeli Kura Çek</span>
+        <!-- VIRAL UPGRADE 3: AI Rating Balancer -->
+        <button onclick="aiBalanceTeams()" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-slate-950 font-black text-xs flex items-center gap-2 shadow-lg shadow-amber-950/40 transition active:scale-95" title="Oyuncu puanlarına göre takımları eşit güçte dağıt">
+          <i class="fa-solid fa-bolt-lightning text-xs"></i>
+          <span>Rating Dengeli Takım Kur</span>
         </button>
-        <button onclick="downloadPitchImage()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold text-xs flex items-center gap-2 transition">
-          <i class="fa-solid fa-camera"></i>
-          <span>Görsel İndir (PNG)</span>
+
+        <button onclick="autoBalanceTeams()" class="px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs flex items-center gap-1.5 border border-slate-700 transition" title="Rastgele kura çek">
+          <i class="fa-solid fa-shuffle text-xs"></i>
+          <span>Kura Çek</span>
+        </button>
+
+        <!-- VIRAL UPGRADE 1: Story Modal Trigger -->
+        <button onclick="openStoryModal()" class="px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-fuchsia-600 to-pink-600 hover:from-fuchsia-500 hover:to-pink-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-md shadow-pink-950 transition active:scale-95">
+          <i class="fa-solid fa-mobile-screen text-xs"></i>
+          <span>Story PNG (9:16)</span>
         </button>
       </div>
     </div>
 
-    <!-- Match Matchday Details Settings (Time, Pitch, Fee, IBAN) -->
-    <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 sm:p-5">
+    <!-- VIRAL UPGRADE 3 POWER BALANCE BAR: Live Team Strength Indicator -->
+    <div id="balanceBarContainer" class="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col gap-2 shadow-sm">
+      <div class="flex items-center justify-between text-xs font-bold">
+        <span class="flex items-center gap-1.5 text-white">
+          <span class="w-3 h-3 rounded-full bg-white border border-slate-400"></span>
+          <span id="labelTeamAPower">BEYAZ TAKIM GÜCÜ: 50 Puan (%50)</span>
+        </span>
+        <span id="labelDiffBadge" class="px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+          Mükemmel Denge (Fark: 0)
+        </span>
+        <span class="flex items-center gap-1.5 text-red-400">
+          <span id="labelTeamBPower">KIRMIZI TAKIM GÜCÜ: 50 Puan (%50)</span>
+          <span class="w-3 h-3 rounded-full bg-red-600 border border-red-400"></span>
+        </span>
+      </div>
+
+      <!-- Two-Color Progress Bar -->
+      <div class="w-full h-3 rounded-full bg-slate-800 overflow-hidden flex shadow-inner">
+        <div id="barTeamA" class="h-full bg-white transition-all duration-500" style="width: 50%"></div>
+        <div id="barTeamB" class="h-full bg-red-600 transition-all duration-500" style="width: 50%"></div>
+      </div>
+    </div>
+
+    <!-- VIRAL UPGRADE 2: KİŞİ BAŞI ÜCRET & KASA HESAPLAYICI (Kasa Derdine Son!) -->
+    <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-5">
       <div class="flex items-center justify-between cursor-pointer" onclick="toggleDetailsCollapse()">
         <span class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
-          <i class="fa-solid fa-calendar-days text-emerald-400"></i> Maç Detayları (WhatsApp Mesajında Görünür)
+          <i class="fa-solid fa-coins text-amber-400"></i> Maç Detayları & Kişi Başı Kasa Hesaplayıcı
         </span>
         <i id="detailsCollapseIcon" class="fa-solid fa-chevron-up text-slate-400 text-xs transition"></i>
       </div>
 
-      <div id="detailsCollapseContent" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 mt-4">
+      <div id="detailsCollapseContent" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3 mt-4">
         <div>
           <label class="block text-[11px] font-semibold text-slate-400 mb-1">Tarih & Saat</label>
           <input type="text" id="matchDateTime" value="Bu Çarşamba 22:00 - 23:00" class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
@@ -208,12 +253,37 @@
           <input type="text" id="matchPitchName" value="Şampiyon Halı Saha" class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
         </div>
         <div>
-          <label class="block text-[11px] font-semibold text-slate-400 mb-1">Kişi Başı Ücret (TL)</label>
-          <input type="text" id="matchFee" value="200 TL" class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+          <label class="block text-[11px] font-semibold text-slate-400 mb-1">Toplam Saha Kirası (TL)</label>
+          <input type="number" id="totalPitchCost" value="2800" step="50" class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 font-mono">
+        </div>
+        <div>
+          <label class="block text-[11px] font-semibold text-slate-400 mb-1">Ek Masraf (Su/İçecek TL)</label>
+          <input type="number" id="extraCost" value="200" step="10" class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 font-mono">
         </div>
         <div>
           <label class="block text-[11px] font-semibold text-slate-400 mb-1">Kaptan IBAN (Opsiyonel)</label>
           <input type="text" id="matchIban" placeholder="TR..." value="" class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+        </div>
+
+        <!-- Calculated Summary Banner -->
+        <div class="sm:col-span-2 md:col-span-5 p-3 rounded-xl bg-slate-950/70 border border-slate-800 flex flex-wrap items-center justify-between gap-3 text-xs">
+          <div class="flex items-center gap-3">
+            <label class="flex items-center gap-2 cursor-pointer select-none text-slate-300 font-medium">
+              <input type="checkbox" id="chkGkFree" checked class="w-4 h-4 rounded text-emerald-600 focus:ring-0 bg-slate-900 border-slate-700">
+              <span>🧤 Kaleciler Ücretsiz (Muaf)</span>
+            </label>
+            <span class="text-slate-600">|</span>
+            <span class="text-slate-400">
+              Ödeyen: <b id="payingCountText" class="text-white">12 Kişi</b> (Toplam: <span id="totalPlayersText">14</span>)
+            </span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <span class="text-slate-400">Kişi Başı Tutar:</span>
+            <span id="calculatedFeeBadge" class="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 font-mono font-extrabold text-sm">
+              250 TL
+            </span>
+          </div>
         </div>
       </div>
     </div>
@@ -256,7 +326,7 @@
         </div>
 
         <div class="pt-2 border-t border-slate-800 text-center">
-          <span class="text-[11px] text-slate-500">Oyuncuları sahada sürükleyebilir veya mevkilerini değiştirebilirsiniz.</span>
+          <span class="text-[11px] text-slate-500">⭐ Puanı ve mevkisi girilen oyuncular otomatik dengelenir.</span>
         </div>
       </div>
 
@@ -287,7 +357,7 @@
 
           <!-- Watermark Brand -->
           <div class="absolute bottom-4 right-4 z-10 text-[10px] font-bold text-white/40 tracking-wider flex items-center gap-1 pointer-events-none">
-            <i class="fa-solid fa-futbol"></i> PratikBase
+            <i class="fa-solid fa-futbol"></i> pratikbase.com/hali-saha-kadro
           </div>
 
           <!-- Team A Half (Top) Player Tokens Container -->
@@ -342,10 +412,10 @@
         <div>
           <h2 class="text-base font-extrabold text-white flex items-center gap-2">
             <i class="fa-brands fa-whatsapp text-emerald-400 text-lg"></i>
-            Hazır WhatsApp Maç & Kadro Duyurusu
+            Hazır WhatsApp Maç, Kasa & Kadro Duyurusu
           </h2>
           <p class="text-xs text-slate-400 mt-0.5">
-            Bu metin otomatik güncellenir. "WhatsApp'ta Paylaş"a basarak doğrudan maçı kurduğunuz gruba gönderebilirsiniz.
+            Bu metin otomatik güncellenir. "Gruba Gönder"e basarak maçı kurduğunuz WhatsApp grubuna tek tıkla iletebilirsiniz.
           </p>
         </div>
         <div class="flex items-center gap-2">
@@ -361,11 +431,48 @@
       </div>
 
       <!-- Preview Textarea -->
-      <textarea id="whatsappPreviewArea" rows="9" readonly class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs sm:text-sm font-mono text-emerald-300 focus:outline-none resize-none leading-relaxed"></textarea>
+      <textarea id="whatsappPreviewArea" rows="10" readonly class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs sm:text-sm font-mono text-emerald-300 focus:outline-none resize-none leading-relaxed"></textarea>
     </div>
 
-    <!-- Hidden Canvas for Pitch Image Generation -->
+    <!-- Hidden Canvases for Image Generation -->
     <canvas id="pitchCanvas" width="900" height="1200" class="hidden"></canvas>
+    <canvas id="storyCanvas" width="1080" height="1920" class="hidden"></canvas>
+
+    <!-- VIRAL UPGRADE 1: INSTAGRAM STORY PREVIEW & DOWNLOAD MODAL -->
+    <div id="storyModal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+      <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-5 shadow-2xl flex flex-col gap-4">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-xl bg-pink-500/15 text-pink-400 flex items-center justify-center text-sm font-bold">
+              <i class="fa-brands fa-instagram"></i>
+            </div>
+            <div>
+              <h3 class="text-sm font-bold text-white">Instagram & WhatsApp Story</h3>
+              <span class="text-[10px] text-slate-400">9:16 Dikey Format (1080x1920 px)</span>
+            </div>
+          </div>
+          <button onclick="closeStoryModal()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition">
+            <i class="fa-solid fa-xmark text-sm"></i>
+          </button>
+        </div>
+
+        <!-- Story Preview Image Container -->
+        <div class="relative w-full aspect-[9/16] max-h-[380px] rounded-2xl overflow-hidden border border-slate-700 bg-slate-950 flex items-center justify-center mx-auto shadow-inner">
+          <img id="storyPreviewImg" src="" alt="Story Preview" class="w-full h-full object-contain">
+        </div>
+
+        <div class="space-y-2">
+          <button onclick="downloadStoryPng()" class="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-600 hover:from-fuchsia-500 hover:to-rose-500 text-white font-bold text-xs shadow-lg shadow-pink-950/40 transition active:scale-95 flex items-center justify-center gap-2">
+            <i class="fa-solid fa-download text-xs"></i>
+            <span>Story Görselini İndir (PNG)</span>
+          </button>
+          <button onclick="shareStoryNative()" class="w-full py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs transition text-center flex items-center justify-center gap-2">
+            <i class="fa-solid fa-share-nodes text-xs text-pink-400"></i>
+            <span>Telefonda Doğrudan Paylaş</span>
+          </button>
+        </div>
+      </div>
+    </div>
 
     <!-- Quick Paste List Modal (Popup) -->
     <div id="quickListModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
@@ -380,7 +487,7 @@
           </button>
         </div>
         <p class="text-xs text-slate-400 leading-relaxed">
-          WhatsApp'tan kopyaladığınız isim listesini alt alta buraya yapıştırın. Sistem isimleri otomatik temizler ve takımlara eşit dağıtır:
+          WhatsApp'tan kopyaladığınız isim listesini alt alta buraya yapıştırın. Sistem numaraları temizler ve takımlara dağıtır:
         </p>
         <textarea id="quickNamesInput" rows="7" placeholder="Ahmet&#10;Mehmet&#10;Ali&#10;Can&#10;Burak&#10;Emre&#10;Hakan..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs font-mono text-white focus:outline-none focus:border-emerald-500"></textarea>
         
@@ -400,17 +507,23 @@
         <i class="fa-solid fa-circle-question text-emerald-400"></i>
         Halı Saha Kadro & Taktik Dağıtıcı Hakkında Sıkça Sorulanlar
       </h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-slate-400 leading-relaxed mt-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-slate-400 leading-relaxed mt-4">
         <div class="bg-slate-900/90 border border-slate-800 p-4 rounded-xl">
-          <h3 class="font-bold text-slate-200 text-sm mb-1">Dengeli Kura Çekme Nasıl Çalışır?</h3>
+          <h3 class="font-bold text-slate-200 text-sm mb-1">Rating Dengeli Takım Kurma Nedir?</h3>
           <p>
-            Arkadaşlarınızın isimlerini girdiğinizde "Dengeli Kura Çek" butonuna basarak oyuncuları rastgele ve eşit olarak iki takıma bölebilirsiniz. Böylece maç öncesi "Takımlar adil olmadı" tartışmalarının önüne geçilir.
+            Her oyuncunun 1-10 puanı ve mevki bilgisi işlenir. Algoritma kalecileri ayırır ve kalan oyuncuları iki takımın toplam puanı %50-%50 eşit olacak şekilde sahaya dizer. Maç öncesi kavgalar biter.
           </p>
         </div>
         <div class="bg-slate-900/90 border border-slate-800 p-4 rounded-xl">
-          <h3 class="font-bold text-slate-200 text-sm mb-1">Yeşil Saha Taktik Görseli Nasıl İndirilir?</h3>
+          <h3 class="font-bold text-slate-200 text-sm mb-1">Halı Saha Kasa Hesabı Nasıl Çalışır?</h3>
           <p>
-            "Görsel İndir (PNG)" butonuna tıkladığınızda sistem anlık olarak yüksek çözünürlüklü bir yeşil saha taktik görseli (900x1200 px) oluşturur. Bu görseli doğrudan Instagram hikayenizde veya WhatsApp durumunda paylaşabilirsiniz.
+            Toplam saha ücretini ve ekstra su/içecek masrafını girdiğinizde kaleciler hariç kişi başı düşen tutarı anında hesaplar. IBAN numaranızla birlikte WhatsApp'a hazır metin döker.
+          </p>
+        </div>
+        <div class="bg-slate-900/90 border border-slate-800 p-4 rounded-xl">
+          <h3 class="font-bold text-slate-200 text-sm mb-1">9:16 Instagram Story PNG İndirme</h3>
+          <p>
+            Telefon ekranına tam oturan (1080x1920 piksel) yüksek çözünürlüklü yeşil saha taktik görselini tek tıkla oluşturur. Skor tahmin kutusu ile Instagram ve WhatsApp durumunda paylaşabilirsiniz.
           </p>
         </div>
       </div>
@@ -426,10 +539,10 @@
         <span class="font-bold text-slate-400">PratikBase Halı Saha Kadro Kurucu</span>
       </div>
       <div class="flex items-center gap-4 text-[11px]">
-        <a href="/" class="hover:text-slate-300">Tüm Araçlar</a>
-        <a href="/etkinlik-davet/" class="hover:text-slate-300">Etkinlik Davet</a>
-        <a href="/nobetci-eczane/" class="hover:text-slate-300">Nöbetçi Eczane</a>
-        <a href="/kira-artisi-hesaplayici/" class="hover:text-slate-300">Kira Artışı</a>
+        <a href="../" class="hover:text-slate-300">Tüm Araçlar</a>
+        <a href="../hangi-kanalda/" class="hover:text-slate-300">Hangi Kanalda?</a>
+        <a href="../acil-durum-radar/" class="hover:text-slate-300">Deprem Radarı</a>
+        <a href="../nobetci-eczane/" class="hover:text-slate-300">Nöbetçi Eczane</a>
       </div>
       <span>&copy; 2026 PratikBase • Sıfır Maliyetli Mikro Araçlar Portalı</span>
     </div>
@@ -453,103 +566,103 @@
     let colorIndexA = 0; // Beyaz
     let colorIndexB = 1; // Kırmızı
 
-    // Initial Default Squad Data
+    // Initial Default Squad Data with Ratings & Positions
     let teamA = [
-      { id: 'a1', name: 'Ahmet (K)', pos: 'Kaleci', x: 50, y: 15 },
-      { id: 'a2', name: 'Mehmet', pos: 'Defans Sol', x: 25, y: 40 },
-      { id: 'a3', name: 'Can', pos: 'Defans', x: 50, y: 36 },
-      { id: 'a4', name: 'Burak', pos: 'Defans Sağ', x: 75, y: 40 },
-      { id: 'a5', name: 'Emre', pos: 'Orta Saha', x: 35, y: 70 },
-      { id: 'a6', name: 'Ali', pos: 'Orta Saha', x: 65, y: 70 },
-      { id: 'a7', name: 'Hakan', pos: 'Forvet', x: 50, y: 90 }
+      { id: 'a1', name: 'Ahmet (K)', pos: 'GK', rating: 8, x: 50, y: 15 },
+      { id: 'a2', name: 'Mehmet', pos: 'DEF', rating: 7, x: 25, y: 40 },
+      { id: 'a3', name: 'Can', pos: 'DEF', rating: 8, x: 50, y: 36 },
+      { id: 'a4', name: 'Burak', pos: 'DEF', rating: 6, x: 75, y: 40 },
+      { id: 'a5', name: 'Emre', pos: 'MID', rating: 9, x: 35, y: 70 },
+      { id: 'a6', name: 'Ali', pos: 'MID', rating: 7, x: 65, y: 70 },
+      { id: 'a7', name: 'Hakan', pos: 'FOR', rating: 8, x: 50, y: 90 }
     ];
 
     let teamB = [
-      { id: 'b1', name: 'Mert (K)', pos: 'Kaleci', x: 50, y: 85 },
-      { id: 'b2', name: 'Serkan', pos: 'Defans Sol', x: 25, y: 60 },
-      { id: 'b3', name: 'Volkan', pos: 'Defans', x: 50, y: 64 },
-      { id: 'b4', name: 'Kemal', pos: 'Defans Sağ', x: 75, y: 60 },
-      { id: 'b5', name: 'Oğuz', pos: 'Orta Saha', x: 35, y: 30 },
-      { id: 'b6', name: 'Selim', pos: 'Orta Saha', x: 65, y: 30 },
-      { id: 'b7', name: 'Tolga', pos: 'Forvet', x: 50, y: 10 }
+      { id: 'b1', name: 'Mert (K)', pos: 'GK', rating: 8, x: 50, y: 85 },
+      { id: 'b2', name: 'Serkan', pos: 'DEF', rating: 7, x: 25, y: 60 },
+      { id: 'b3', name: 'Volkan', pos: 'DEF', rating: 8, x: 50, y: 64 },
+      { id: 'b4', name: 'Kemal', pos: 'DEF', rating: 6, x: 75, y: 60 },
+      { id: 'b5', name: 'Oğuz', pos: 'MID', rating: 8, x: 35, y: 30 },
+      { id: 'b6', name: 'Selim', pos: 'MID', rating: 8, x: 65, y: 30 },
+      { id: 'b7', name: 'Tolga', pos: 'FOR', rating: 8, x: 50, y: 10 }
     ];
 
     // Tactical formation blueprints based on format
     const formationDefaults = {
       5: {
         A: [
-          { pos: 'Kaleci', x: 50, y: 15 },
-          { pos: 'Defans Sol', x: 30, y: 45 },
-          { pos: 'Defans Sağ', x: 70, y: 45 },
-          { pos: 'Orta Saha', x: 50, y: 70 },
-          { pos: 'Forvet', x: 50, y: 90 }
+          { pos: 'GK', x: 50, y: 15 },
+          { pos: 'DEF', x: 30, y: 45 },
+          { pos: 'DEF', x: 70, y: 45 },
+          { pos: 'MID', x: 50, y: 70 },
+          { pos: 'FOR', x: 50, y: 90 }
         ],
         B: [
-          { pos: 'Kaleci', x: 50, y: 85 },
-          { pos: 'Defans Sol', x: 30, y: 55 },
-          { pos: 'Defans Sağ', x: 70, y: 55 },
-          { pos: 'Orta Saha', x: 50, y: 30 },
-          { pos: 'Forvet', x: 50, y: 10 }
+          { pos: 'GK', x: 50, y: 85 },
+          { pos: 'DEF', x: 30, y: 55 },
+          { pos: 'DEF', x: 70, y: 55 },
+          { pos: 'MID', x: 50, y: 30 },
+          { pos: 'FOR', x: 50, y: 10 }
         ]
       },
       6: {
         A: [
-          { pos: 'Kaleci', x: 50, y: 15 },
-          { pos: 'Defans Sol', x: 25, y: 45 },
-          { pos: 'Defans Sağ', x: 75, y: 45 },
-          { pos: 'Orta Saha Sol', x: 35, y: 72 },
-          { pos: 'Orta Saha Sağ', x: 65, y: 72 },
-          { pos: 'Forvet', x: 50, y: 92 }
+          { pos: 'GK', x: 50, y: 15 },
+          { pos: 'DEF', x: 25, y: 45 },
+          { pos: 'DEF', x: 75, y: 45 },
+          { pos: 'MID', x: 35, y: 72 },
+          { pos: 'MID', x: 65, y: 72 },
+          { pos: 'FOR', x: 50, y: 92 }
         ],
         B: [
-          { pos: 'Kaleci', x: 50, y: 85 },
-          { pos: 'Defans Sol', x: 25, y: 55 },
-          { pos: 'Defans Sağ', x: 75, y: 55 },
-          { pos: 'Orta Saha Sol', x: 35, y: 28 },
-          { pos: 'Orta Saha Sağ', x: 65, y: 28 },
-          { pos: 'Forvet', x: 50, y: 8 }
+          { pos: 'GK', x: 50, y: 85 },
+          { pos: 'DEF', x: 25, y: 55 },
+          { pos: 'DEF', x: 75, y: 55 },
+          { pos: 'MID', x: 35, y: 28 },
+          { pos: 'MID', x: 65, y: 28 },
+          { pos: 'FOR', x: 50, y: 8 }
         ]
       },
       7: {
         A: [
-          { pos: 'Kaleci', x: 50, y: 15 },
-          { pos: 'Defans Sol', x: 25, y: 40 },
-          { pos: 'Defans', x: 50, y: 36 },
-          { pos: 'Defans Sağ', x: 75, y: 40 },
-          { pos: 'Orta Saha Sol', x: 35, y: 70 },
-          { pos: 'Orta Saha Sağ', x: 65, y: 70 },
-          { pos: 'Forvet', x: 50, y: 90 }
+          { pos: 'GK', x: 50, y: 15 },
+          { pos: 'DEF', x: 25, y: 40 },
+          { pos: 'DEF', x: 50, y: 36 },
+          { pos: 'DEF', x: 75, y: 40 },
+          { pos: 'MID', x: 35, y: 70 },
+          { pos: 'MID', x: 65, y: 70 },
+          { pos: 'FOR', x: 50, y: 90 }
         ],
         B: [
-          { pos: 'Kaleci', x: 50, y: 85 },
-          { pos: 'Defans Sol', x: 25, y: 60 },
-          { pos: 'Defans', x: 50, y: 64 },
-          { pos: 'Defans Sağ', x: 75, y: 60 },
-          { pos: 'Orta Saha Sol', x: 35, y: 30 },
-          { pos: 'Orta Saha Sağ', x: 65, y: 30 },
-          { pos: 'Forvet', x: 50, y: 10 }
+          { pos: 'GK', x: 50, y: 85 },
+          { pos: 'DEF', x: 25, y: 60 },
+          { pos: 'DEF', x: 50, y: 64 },
+          { pos: 'DEF', x: 75, y: 60 },
+          { pos: 'MID', x: 35, y: 30 },
+          { pos: 'MID', x: 65, y: 30 },
+          { pos: 'FOR', x: 50, y: 10 }
         ]
       },
       8: {
         A: [
-          { pos: 'Kaleci', x: 50, y: 15 },
-          { pos: 'Defans Sol', x: 20, y: 40 },
-          { pos: 'Stoper Sol', x: 40, y: 36 },
-          { pos: 'Stoper Sağ', x: 60, y: 36 },
-          { pos: 'Defans Sağ', x: 80, y: 40 },
-          { pos: 'Orta Saha', x: 50, y: 65 },
-          { pos: 'Forvet Sol', x: 35, y: 90 },
-          { pos: 'Forvet Sağ', x: 65, y: 90 }
+          { pos: 'GK', x: 50, y: 15 },
+          { pos: 'DEF', x: 20, y: 40 },
+          { pos: 'DEF', x: 40, y: 36 },
+          { pos: 'DEF', x: 60, y: 36 },
+          { pos: 'DEF', x: 80, y: 40 },
+          { pos: 'MID', x: 50, y: 65 },
+          { pos: 'FOR', x: 35, y: 90 },
+          { pos: 'FOR', x: 65, y: 90 }
         ],
         B: [
-          { pos: 'Kaleci', x: 50, y: 85 },
-          { pos: 'Defans Sol', x: 20, y: 60 },
-          { pos: 'Stoper Sol', x: 40, y: 64 },
-          { pos: 'Stoper Sağ', x: 60, y: 64 },
-          { pos: 'Defans Sağ', x: 80, y: 60 },
-          { pos: 'Orta Saha', x: 50, y: 35 },
-          { pos: 'Forvet Sol', x: 35, y: 10 },
-          { pos: 'Forvet Sağ', x: 65, y: 10 }
+          { pos: 'GK', x: 50, y: 85 },
+          { pos: 'DEF', x: 20, y: 60 },
+          { pos: 'DEF', x: 40, y: 64 },
+          { pos: 'DEF', x: 60, y: 64 },
+          { pos: 'DEF', x: 80, y: 60 },
+          { pos: 'MID', x: 50, y: 35 },
+          { pos: 'FOR', x: 35, y: 10 },
+          { pos: 'FOR', x: 65, y: 10 }
         ]
       }
     };
@@ -558,14 +671,48 @@
     window.addEventListener('DOMContentLoaded', () => {
       renderSquads();
       setupPitchDraggables();
-      updateWhatsAppPreview();
+      calculateFees();
 
-      // Listen for text changes
-      ['matchDateTime', 'matchPitchName', 'matchFee', 'matchIban', 'teamAName', 'teamBName'].forEach(id => {
+      // Listen for text & fee changes
+      ['matchDateTime', 'matchPitchName', 'totalPitchCost', 'extraCost', 'matchIban', 'teamAName', 'teamBName'].forEach(id => {
         const el = document.getElementById(id);
-        if (el) el.addEventListener('input', updateWhatsAppPreview);
+        if (el) el.addEventListener('input', () => {
+          calculateFees();
+          updateWhatsAppPreview();
+        });
+      });
+
+      document.getElementById('chkGkFree').addEventListener('change', () => {
+        calculateFees();
+        updateWhatsAppPreview();
       });
     });
+
+    // VIRAL UPGRADE 2: KASA & KİŞİ BAŞI ÜCRET HESAPLAMA MOTORU
+    function calculateFees() {
+      const pitchRent = parseFloat(document.getElementById('totalPitchCost').value) || 0;
+      const extra = parseFloat(document.getElementById('extraCost').value) || 0;
+      const totalCost = pitchRent + extra;
+      const totalPlayers = currentFormat * 2;
+      const isGkFree = document.getElementById('chkGkFree').checked;
+
+      const payingCount = isGkFree ? Math.max(1, totalPlayers - 2) : totalPlayers;
+      const perPerson = Math.ceil(totalCost / payingCount);
+
+      document.getElementById('payingCountText').textContent = `${payingCount} Kişi`;
+      document.getElementById('totalPlayersText').textContent = totalPlayers;
+      document.getElementById('calculatedFeeBadge').textContent = `${perPerson} TL`;
+
+      return {
+        pitchRent,
+        extra,
+        totalCost,
+        totalPlayers,
+        payingCount,
+        perPerson,
+        isGkFree
+      };
+    }
 
     // Change Match Format (5v5, 6v6, 7v7, 8v8)
     function setFormat(size) {
@@ -580,22 +727,23 @@
         }
       });
 
-      // Adjust teams length
       adjustTeamSize(teamA, 'a', size);
       adjustTeamSize(teamB, 'b', size);
 
       resetPositions();
+      calculateFees();
     }
 
     function adjustTeamSize(team, prefix, targetSize) {
       const defaults = formationDefaults[targetSize][prefix.toUpperCase()];
       while (team.length < targetSize) {
         const i = team.length + 1;
-        const blueprint = defaults[i - 1] || { pos: 'Oyuncu', x: 50, y: 50 };
+        const blueprint = defaults[i - 1] || { pos: 'MID', x: 50, y: 50 };
         team.push({
           id: `${prefix}${i}`,
           name: `Oyuncu ${i}`,
           pos: blueprint.pos,
+          rating: 7,
           x: blueprint.x,
           y: blueprint.y
         });
@@ -605,7 +753,6 @@
       }
     }
 
-    // Reset player positions on pitch
     function resetPositions() {
       const defsA = formationDefaults[currentFormat].A;
       const defsB = formationDefaults[currentFormat].B;
@@ -627,10 +774,8 @@
       });
 
       renderSquads();
-      updateWhatsAppPreview();
     }
 
-    // Cycle Team Color
     function cycleTeamColor(teamKey) {
       if (teamKey === 'A') {
         colorIndexA = (colorIndexA + 1) % availableColors.length;
@@ -644,30 +789,61 @@
       renderSquads();
     }
 
+    // VIRAL UPGRADE 3: UPDATE POWER BALANCE BAR
+    function updatePowerBalance() {
+      const powerA = teamA.reduce((sum, p) => sum + (p.rating || 7), 0);
+      const powerB = teamB.reduce((sum, p) => sum + (p.rating || 7), 0);
+      const total = powerA + powerB;
+
+      const pctA = Math.round((powerA / total) * 100);
+      const pctB = 100 - pctA;
+      const diff = Math.abs(powerA - powerB);
+
+      const nameA = document.getElementById('teamAName').value || 'BEYAZ';
+      const nameB = document.getElementById('teamBName').value || 'KIRMIZI';
+
+      document.getElementById('labelTeamAPower').textContent = `${nameA.toUpperCase()}: ${powerA} Puan (%${pctA})`;
+      document.getElementById('labelTeamBPower').textContent = `${nameB.toUpperCase()}: ${powerB} Puan (%${pctB})`;
+
+      document.getElementById('barTeamA').style.width = `${pctA}%`;
+      document.getElementById('barTeamB').style.width = `${pctB}%`;
+
+      const badge = document.getElementById('labelDiffBadge');
+      if (diff <= 1) {
+        badge.className = "px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
+        badge.textContent = `Mükemmel Denge (Fark: ${diff} Puan)`;
+      } else if (diff <= 3) {
+        badge.className = "px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-amber-500/20 text-amber-400 border border-amber-500/30";
+        badge.textContent = `Dengeli (Fark: ${diff} Puan)`;
+      } else {
+        badge.className = "px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-rose-500/20 text-rose-400 border border-rose-500/30";
+        badge.textContent = `Güç Farkı Var (Fark: ${diff} Puan)`;
+      }
+    }
+
     // Render Squads on Lists and Pitch
     function renderSquads() {
       const colA = availableColors[colorIndexA];
       const colB = availableColors[colorIndexB];
 
-      // Badges
       document.getElementById('teamACountBadge').innerText = `${teamA.length} Oyuncu`;
       document.getElementById('teamBCountBadge').innerText = `${teamB.length} Oyuncu`;
 
-      // 1. Render Team A List
+      // 1. Team A List
       const listA = document.getElementById('teamAList');
       listA.innerHTML = '';
       teamA.forEach((player, idx) => {
         listA.appendChild(createPlayerListRow(player, 'A', idx));
       });
 
-      // 2. Render Team B List
+      // 2. Team B List
       const listB = document.getElementById('teamBList');
       listB.innerHTML = '';
       teamB.forEach((player, idx) => {
         listB.appendChild(createPlayerListRow(player, 'B', idx));
       });
 
-      // 3. Render Pitch Tokens
+      // 3. Pitch Tokens
       const pitchA = document.getElementById('pitchTeamA');
       pitchA.innerHTML = '';
       teamA.forEach((player, idx) => {
@@ -680,12 +856,13 @@
         pitchB.appendChild(createPitchToken(player, colB, 'B', idx));
       });
 
+      updatePowerBalance();
       updateWhatsAppPreview();
     }
 
     function createPlayerListRow(player, teamKey, index) {
       const row = document.createElement('div');
-      row.className = "flex items-center gap-2 bg-slate-950/70 border border-slate-800 rounded-xl px-2.5 py-1.5";
+      row.className = "flex items-center gap-2 bg-slate-950/70 border border-slate-800 rounded-xl px-2.5 py-1.5 shadow-sm";
 
       const num = document.createElement('span');
       num.className = "text-[11px] font-bold text-slate-500 w-4 text-center shrink-0";
@@ -694,7 +871,7 @@
       const nameInput = document.createElement('input');
       nameInput.type = "text";
       nameInput.value = player.name;
-      nameInput.className = "flex-1 bg-transparent text-xs font-semibold text-white focus:outline-none focus:border-b focus:border-emerald-500";
+      nameInput.className = "flex-1 min-w-0 bg-transparent text-xs font-semibold text-white focus:outline-none focus:border-b focus:border-emerald-500 truncate";
       nameInput.oninput = (e) => {
         player.name = e.target.value;
         const tokenLabel = document.getElementById(`token-label-${player.id}`);
@@ -702,14 +879,48 @@
         updateWhatsAppPreview();
       };
 
+      // Position Selector
+      const posSelect = document.createElement('select');
+      posSelect.className = "bg-slate-900 border border-slate-800 text-[10px] font-bold rounded px-1 py-0.5 text-slate-300 focus:outline-none";
+      ['GK', 'DEF', 'MID', 'FOR'].forEach(pos => {
+        const opt = document.createElement('option');
+        opt.value = pos;
+        opt.textContent = pos;
+        if (player.pos === pos) opt.selected = true;
+        posSelect.appendChild(opt);
+      });
+      posSelect.onchange = (e) => {
+        player.pos = e.target.value;
+        updateWhatsAppPreview();
+      };
+
+      // Rating Selector (1-10)
+      const ratingSelect = document.createElement('select');
+      ratingSelect.className = "bg-amber-500/10 border border-amber-500/30 text-[10px] font-extrabold rounded px-1 py-0.5 text-amber-400 focus:outline-none";
+      for (let r = 5; r <= 10; r++) {
+        const opt = document.createElement('option');
+        opt.value = r;
+        opt.textContent = `${r}★`;
+        if (player.rating === r) opt.selected = true;
+        ratingSelect.appendChild(opt);
+      }
+      ratingSelect.onchange = (e) => {
+        player.rating = parseInt(e.target.value);
+        updatePowerBalance();
+        updateWhatsAppPreview();
+      };
+
+      // Swap Team Button
       const swapBtn = document.createElement('button');
-      swapBtn.className = "text-slate-500 hover:text-amber-400 text-xs px-1.5 transition";
+      swapBtn.className = "text-slate-500 hover:text-amber-400 text-xs px-1 transition";
       swapBtn.title = "Karşı Takıma Geçir";
-      swapBtn.innerHTML = '<i class="fa-solid fa-arrow-right-arrow-left text-[11px]"></i>';
+      swapBtn.innerHTML = '<i class="fa-solid fa-arrow-right-arrow-left text-[10px]"></i>';
       swapBtn.onclick = () => swapPlayerTeam(teamKey, index);
 
       row.appendChild(num);
       row.appendChild(nameInput);
+      row.appendChild(posSelect);
+      row.appendChild(ratingSelect);
       row.appendChild(swapBtn);
       return row;
     }
@@ -724,7 +935,7 @@
       token.innerHTML = `
         <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center font-black text-xs shadow-xl border-2 cursor-grab transition-transform" 
              style="background-color: ${colorObj.bg}; color: ${colorObj.text}; border-color: ${colorObj.border};">
-          ${index === 0 ? '<i class="fa-solid fa-mitten text-xs"></i>' : index + 1}
+          ${player.pos === 'GK' ? '<i class="fa-solid fa-mitten text-xs"></i>' : index + 1}
         </div>
         <span id="token-label-${player.id}" class="mt-1 px-1.5 py-0.5 rounded text-[10px] font-bold tracking-tight bg-slate-950/90 text-white border border-slate-700/60 shadow whitespace-nowrap max-w-[85px] truncate">
           ${player.name}
@@ -797,37 +1008,106 @@
       window.addEventListener('touchend', onPointerUp);
     }
 
-    // Swap Player between Team A and B
     function swapPlayerTeam(fromTeam, index) {
       if (fromTeam === 'A') {
         if (teamB.length > 0) {
-          const temp = teamA[index].name;
-          teamA[index].name = teamB[index % teamB.length].name;
-          teamB[index % teamB.length].name = temp;
+          const temp = teamA[index];
+          teamA[index] = teamB[index % teamB.length];
+          teamB[index % teamB.length] = temp;
         }
       } else {
         if (teamA.length > 0) {
-          const temp = teamB[index].name;
-          teamB[index].name = teamA[index % teamA.length].name;
-          teamA[index % teamA.length].name = temp;
+          const temp = teamB[index];
+          teamB[index] = teamA[index % teamA.length];
+          teamA[index % teamA.length] = temp;
         }
       }
       renderSquads();
       showToast('Oyuncuların takımları değiştirildi!');
     }
 
-    // Auto-balance teams (Kura Çekme)
-    function autoBalanceTeams() {
-      // Gather all player names
-      const allNames = [...teamA.map(p => p.name), ...teamB.map(p => p.name)];
+    // VIRAL UPGRADE 3: AI & RATING-BASED TEAM BALANCER
+    function aiBalanceTeams() {
+      // 1. Gather all players
+      const allPlayers = [...teamA, ...teamB];
 
-      // Fisher-Yates shuffle
+      // 2. Separate Goalkeepers
+      const gks = allPlayers.filter(p => p.pos === 'GK');
+      const outfield = allPlayers.filter(p => p.pos !== 'GK');
+
+      // Sort outfield players by rating descending
+      outfield.sort((a, b) => (b.rating || 7) - (a.rating || 7));
+
+      const newA = [];
+      const newB = [];
+      let sumA = 0;
+      let sumB = 0;
+
+      // Distribute Goalkeepers
+      if (gks.length >= 2) {
+        newA.push(gks[0]); sumA += (gks[0].rating || 7);
+        newB.push(gks[1]); sumB += (gks[1].rating || 7);
+        for (let i = 2; i < gks.length; i++) {
+          outfield.push(gks[i]);
+        }
+      } else if (gks.length === 1) {
+        newA.push(gks[0]); sumA += (gks[0].rating || 7);
+      }
+
+      // Greedy Snake Partition on Outfield Players
+      const targetPerTeam = currentFormat;
+      outfield.forEach(p => {
+        const canAddToA = newA.length < targetPerTeam;
+        const canAddToB = newB.length < targetPerTeam;
+
+        if (canAddToA && canAddToB) {
+          if (sumA <= sumB) {
+            newA.push(p);
+            sumA += (p.rating || 7);
+          } else {
+            newB.push(p);
+            sumB += (p.rating || 7);
+          }
+        } else if (canAddToA) {
+          newA.push(p);
+          sumA += (p.rating || 7);
+        } else {
+          newB.push(p);
+          sumB += (p.rating || 7);
+        }
+      });
+
+      // Apply formations to pitch coordinates
+      const defsA = formationDefaults[currentFormat].A;
+      const defsB = formationDefaults[currentFormat].B;
+
+      teamA = newA.map((p, idx) => ({
+        ...p,
+        id: `a${idx + 1}`,
+        x: defsA[idx] ? defsA[idx].x : 50,
+        y: defsA[idx] ? defsA[idx].y : 50
+      }));
+
+      teamB = newB.map((p, idx) => ({
+        ...p,
+        id: `b${idx + 1}`,
+        x: defsB[idx] ? defsB[idx].x : 50,
+        y: defsB[idx] ? defsB[idx].y : 50
+      }));
+
+      renderSquads();
+      const diff = Math.abs(sumA - sumB);
+      showToast(`⚡ Rating dengeli kadro kuruldu! Güç farkı sadece ${diff} puan.`);
+    }
+
+    // Classic Random Balance Teams (Kura)
+    function autoBalanceTeams() {
+      const allNames = [...teamA.map(p => p.name), ...teamB.map(p => p.name)];
       for (let i = allNames.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [allNames[i], allNames[j]] = [allNames[j], allNames[i]];
       }
 
-      // Reassign to teams
       const half = currentFormat;
       teamA.forEach((p, idx) => {
         p.name = allNames[idx] || `Oyuncu ${idx + 1}`;
@@ -837,7 +1117,7 @@
       });
 
       renderSquads();
-      showToast('🎲 Takımlar rastgele kura ile dengeli olarak yeniden dağıtıldı!');
+      showToast('🎲 Takımlar rastgele kura ile yeniden dağıtıldı!');
     }
 
     // Quick Paste List Modal
@@ -864,7 +1144,6 @@
         return;
       }
 
-      // Check format recommendation
       if (lines.length >= 16 && currentFormat < 8) setFormat(8);
       else if (lines.length >= 14 && currentFormat < 7) setFormat(7);
       else if (lines.length >= 12 && currentFormat < 6) setFormat(6);
@@ -886,28 +1165,31 @@
     function getWhatsAppMessageText() {
       const dt = document.getElementById('matchDateTime').value.trim();
       const pitch = document.getElementById('matchPitchName').value.trim();
-      const fee = document.getElementById('matchFee').value.trim();
+      const feeInfo = calculateFees();
       const iban = document.getElementById('matchIban').value.trim();
       const nameA = document.getElementById('teamAName').value.trim() || 'BEYAZ TAKIM';
       const nameB = document.getElementById('teamBName').value.trim() || 'KIRMIZI TAKIM';
 
-      let msg = `⚽ *HALI SAHA MAÇ KADROSU & TAKTİK DİZİLİŞİ* ⚽\n\n`;
+      let msg = `⚽ *HALI SAHA MAÇ KADROSU & KASA DUYURUSU* ⚽\n\n`;
       if (dt) msg += `📅 *Tarih & Saat:* ${dt}\n`;
       if (pitch) msg += `📍 *Halı Saha:* ${pitch}\n`;
-      if (fee) msg += `💰 *Kişi Başı Ücret:* ${fee}\n`;
-      if (iban) msg += `💳 *Kaptan IBAN:* ${iban}\n`;
+      msg += `💰 *Kişi Başı Ücret:* ${feeInfo.perPerson} TL (${feeInfo.isGkFree ? 'Kaleciler Muaf' : 'Eşit Bölüşüm'})\n`;
+      if (iban) msg += `💳 *Kaptan IBAN:* ${iban} *(Açıklamaya adınızı yazınız)*\n`;
       msg += `\n`;
 
-      msg += `⚪ *${nameA.toUpperCase()} (${teamA.length} Kişi):*\n`;
+      const powerA = teamA.reduce((sum, p) => sum + (p.rating || 7), 0);
+      const powerB = teamB.reduce((sum, p) => sum + (p.rating || 7), 0);
+
+      msg += `⚪ *${nameA.toUpperCase()} (${teamA.length} Kişi • Güç: ${powerA}):*\n`;
       teamA.forEach((p, i) => {
-        const icon = i === 0 ? '🧤' : (i <= 3 ? '🛡️' : (i < teamA.length - 1 ? '⚡' : '🎯'));
-        msg += `${icon} ${i + 1}. ${p.name}\n`;
+        const icon = p.pos === 'GK' ? '🧤' : (p.pos === 'DEF' ? '🛡️' : (p.pos === 'MID' ? '⚡' : '🎯'));
+        msg += `${icon} ${i + 1}. ${p.name} (${p.rating || 7}★)\n`;
       });
 
-      msg += `\n🔴 *${nameB.toUpperCase()} (${teamB.length} Kişi):*\n`;
+      msg += `\n🔴 *${nameB.toUpperCase()} (${teamB.length} Kişi • Güç: ${powerB}):*\n`;
       teamB.forEach((p, i) => {
-        const icon = i === 0 ? '🧤' : (i <= 3 ? '🛡️' : (i < teamB.length - 1 ? '⚡' : '🎯'));
-        msg += `${icon} ${i + 1}. ${p.name}\n`;
+        const icon = p.pos === 'GK' ? '🧤' : (p.pos === 'DEF' ? '🛡️' : (p.pos === 'MID' ? '⚡' : '🎯'));
+        msg += `${icon} ${i + 1}. ${p.name} (${p.rating || 7}★)\n`;
       });
 
       msg += `\n📋 *Taktik tahtasında gör & kadronu kur:* https://pratikbase.com/hali-saha-kadro/`;
@@ -934,7 +1216,6 @@
       window.open(url, '_blank');
     }
 
-    // Toggle match details collapse
     function toggleDetailsCollapse() {
       const content = document.getElementById('detailsCollapseContent');
       const icon = document.getElementById('detailsCollapseIcon');
@@ -947,7 +1228,6 @@
       }
     }
 
-    // Toast helper
     function showToast(msg) {
       const toast = document.getElementById('toastNotification');
       const msgEl = document.getElementById('toastMessage');
@@ -959,29 +1239,202 @@
       }, 3500);
     }
 
-    // Download pitch canvas image as high-res PNG
+    // VIRAL UPGRADE 1: 9:16 INSTAGRAM STORY & WHATSAPP DURUM GENERATOR
+    function generateStoryCanvas() {
+      const canvas = document.getElementById('storyCanvas');
+      const ctx = canvas.getContext('2d');
+      const w = 1080;
+      const h = 1920;
+      canvas.width = w;
+      canvas.height = h;
+
+      // 1. Dark Stadium Background Vignette
+      const bgGrad = ctx.createRadialGradient(w/2, h/2, 200, w/2, h/2, 1100);
+      bgGrad.addColorStop(0, '#0f2916');
+      bgGrad.addColorStop(1, '#060d08');
+      ctx.fillStyle = bgGrad;
+      ctx.fillRect(0, 0, w, h);
+
+      // 2. Story Header (Date & Venue Pill)
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.9)';
+      ctx.beginPath();
+      ctx.roundRect(80, 100, w - 160, 180, 24);
+      ctx.fill();
+      ctx.strokeStyle = '#10b981';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+
+      ctx.fillStyle = '#10b981';
+      ctx.font = '800 24px "Plus Jakarta Sans", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('PRATIKBASE • HALI SAHA MAÇ KADROSU', w / 2, 145);
+
+      const dt = document.getElementById('matchDateTime').value || 'Halı Saha Maçı';
+      const pitchName = document.getElementById('matchPitchName').value || 'Şampiyon Halı Saha';
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '900 36px "Plus Jakarta Sans", sans-serif';
+      ctx.fillText(pitchName.toUpperCase(), w / 2, 205);
+
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '600 22px "Plus Jakarta Sans", sans-serif';
+      ctx.fillText(`📅 ${dt}`, w / 2, 250);
+
+      // 3. Football Pitch Field (Center 9:16)
+      const fieldX = 80;
+      const fieldY = 320;
+      const fieldW = w - 160;
+      const fieldH = 1260;
+
+      // Pitch Grass Stripes
+      const stripeH = 70;
+      for (let y = fieldY; y < fieldY + fieldH; y += stripeH) {
+        ctx.fillStyle = (Math.floor((y - fieldY) / stripeH) % 2 === 0) ? '#14381b' : '#18421f';
+        ctx.fillRect(fieldX, y, fieldW, Math.min(stripeH, fieldY + fieldH - y));
+      }
+
+      // Outer Pitch Line
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+      ctx.lineWidth = 6;
+      ctx.beginPath();
+      ctx.roundRect(fieldX, fieldY, fieldW, fieldH, 16);
+      ctx.stroke();
+
+      // Halfway Line & Center Circle
+      const midY = fieldY + (fieldH / 2);
+      ctx.beginPath();
+      ctx.moveTo(fieldX, midY);
+      ctx.lineTo(fieldX + fieldW, midY);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(w / 2, midY, 130, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(w / 2, midY, 8, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Top Goal Box
+      ctx.strokeRect(w/2 - 220, fieldY, 440, 180);
+      ctx.strokeRect(w/2 - 100, fieldY, 200, 70);
+
+      // Bottom Goal Box
+      ctx.strokeRect(w/2 - 220, fieldY + fieldH - 180, 440, 180);
+      ctx.strokeRect(w/2 - 100, fieldY + fieldH - 70, 200, 70);
+
+      // 4. Draw Players on Story Canvas
+      const colA = availableColors[colorIndexA];
+      teamA.forEach((pl, i) => {
+        const px = fieldX + (fieldW * (pl.x / 100));
+        const py = fieldY + 40 + (((fieldH / 2) - 80) * (pl.y / 100));
+        drawPlayerOnCanvas(ctx, pl.name, i, px, py, colA, 28, 18);
+      });
+
+      const colB = availableColors[colorIndexB];
+      teamB.forEach((pl, i) => {
+        const px = fieldX + (fieldW * (pl.x / 100));
+        const py = midY + 40 + (((fieldH / 2) - 80) * (pl.y / 100));
+        drawPlayerOnCanvas(ctx, pl.name, i, px, py, colB, 28, 18);
+      });
+
+      // 5. Score Prediction Banner (Center of Pitch)
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.92)';
+      ctx.beginPath();
+      ctx.roundRect(w/2 - 190, midY - 32, 380, 64, 16);
+      ctx.fill();
+      ctx.strokeStyle = '#f59e0b';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      ctx.fillStyle = '#f59e0b';
+      ctx.font = '800 16px "Plus Jakarta Sans", sans-serif';
+      ctx.fillText('SKOR TAHMİNİNİ YORUMA YAZ', w / 2, midY - 8);
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '900 24px "Plus Jakarta Sans", sans-serif';
+      ctx.fillText('[  _  -  _  ]', w / 2, midY + 18);
+
+      // 6. Story Footer (Fee & Watermark)
+      const feeInfo = calculateFees();
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.9)';
+      ctx.beginPath();
+      ctx.roundRect(80, 1610, w - 160, 130, 24);
+      ctx.fill();
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      ctx.fillStyle = '#10b981';
+      ctx.font = '800 24px "Plus Jakarta Sans", sans-serif';
+      ctx.fillText(`💰 KİŞİ BAŞI: ${feeInfo.perPerson} TL (${feeInfo.isGkFree ? 'Kaleciler Muaf' : 'Eşit'})`, w / 2, 1660);
+
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '700 20px "Plus Jakarta Sans", sans-serif';
+      ctx.fillText('pratikbase.com/hali-saha-kadro', w / 2, 1705);
+
+      return canvas;
+    }
+
+    function openStoryModal() {
+      const canvas = generateStoryCanvas();
+      const previewImg = document.getElementById('storyPreviewImg');
+      previewImg.src = canvas.toDataURL('image/png');
+      document.getElementById('storyModal').classList.remove('hidden');
+    }
+
+    function closeStoryModal() {
+      document.getElementById('storyModal').classList.add('hidden');
+    }
+
+    function downloadStoryPng() {
+      const canvas = generateStoryCanvas();
+      const link = document.createElement('a');
+      link.download = `hali-saha-story-${Date.now()}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      showToast('📸 9:16 Story görseli başarıyla indirildi!');
+    }
+
+    async function shareStoryNative() {
+      const canvas = generateStoryCanvas();
+      canvas.toBlob(async (blob) => {
+        const file = new File([blob], 'hali-saha-story.png', { type: 'image/png' });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          try {
+            await navigator.share({
+              files: [file],
+              title: 'Halı Saha Maç Kadrosu',
+              text: 'Bu haftaki halı saha maç kadromuz belli oldu!'
+            });
+            showToast('📲 Paylaşım ekranı açıldı!');
+          } catch(e) {
+            console.log('Share canceled');
+          }
+        } else {
+          downloadStoryPng();
+        }
+      });
+    }
+
+    // Classic Canvas Export (900x1200)
     function downloadPitchImage() {
       const canvas = document.getElementById('pitchCanvas');
       const ctx = canvas.getContext('2d');
       const w = canvas.width;
       const h = canvas.height;
 
-      // 1. Draw Field Background Grass Stripes
       const stripeHeight = 60;
       for (let y = 0; y < h; y += stripeHeight) {
         ctx.fillStyle = (Math.floor(y / stripeHeight) % 2 === 0) ? '#14381b' : '#18421f';
         ctx.fillRect(0, y, w, stripeHeight);
       }
 
-      // 2. White Pitch Lines
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.65)';
       ctx.lineWidth = 6;
-
-      // Boundary
       const p = 40;
       ctx.strokeRect(p, p, w - 2*p, h - 2*p);
 
-      // Halfway line & center circle
       ctx.beginPath();
       ctx.moveTo(p, h / 2);
       ctx.lineTo(w - p, h / 2);
@@ -996,15 +1449,12 @@
       ctx.arc(w / 2, h / 2, 8, 0, Math.PI * 2);
       ctx.fill();
 
-      // Top Goal Box
       ctx.strokeRect(w/2 - 200, p, 400, 160);
       ctx.strokeRect(w/2 - 90, p, 180, 60);
 
-      // Bottom Goal Box
       ctx.strokeRect(w/2 - 200, h - p - 160, 400, 160);
       ctx.strokeRect(w/2 - 90, h - p - 60, 180, 60);
 
-      // Header Banner (Match Date & Pitch)
       ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
       ctx.fillRect(p + 10, p + 10, w - 2*p - 20, 70);
       ctx.strokeStyle = '#334155';
@@ -1018,38 +1468,33 @@
       const pitchName = document.getElementById('matchPitchName').value || 'PratikBase';
       ctx.fillText(`⚽ ${pitchName.toUpperCase()} • ${dt}`, w / 2, p + 52);
 
-      // Draw Team A Players (Top Half)
       const colA = availableColors[colorIndexA];
       teamA.forEach((pl, i) => {
         const px = p + ((w - 2*p) * (pl.x / 100));
         const py = p + 80 + (((h / 2) - p - 100) * (pl.y / 100));
-        drawPlayerOnCanvas(ctx, pl.name, i, px, py, colA);
+        drawPlayerOnCanvas(ctx, pl.name, i, px, py, colA, 26, 16);
       });
 
-      // Draw Team B Players (Bottom Half)
       const colB = availableColors[colorIndexB];
       teamB.forEach((pl, i) => {
         const px = p + ((w - 2*p) * (pl.x / 100));
         const py = (h / 2) + 20 + (((h / 2) - p - 100) * (pl.y / 100));
-        drawPlayerOnCanvas(ctx, pl.name, i, px, py, colB);
+        drawPlayerOnCanvas(ctx, pl.name, i, px, py, colB, 26, 16);
       });
 
-      // Footer Watermark
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
       ctx.font = 'bold 18px "Plus Jakarta Sans", sans-serif';
       ctx.textAlign = 'right';
-      ctx.fillText('pratik-araclar.../hali-saha-kadro/', w - p - 20, h - p - 15);
+      ctx.fillText('pratikbase.com/hali-saha-kadro', w - p - 20, h - p - 15);
 
-      // Export & Download
       const link = document.createElement('a');
       link.download = `hali-saha-kadro-${Date.now()}.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
-      showToast('📸 Taktik görseli başarıyla indirildi!');
+      showToast('📸 Klasik taktik görseli indirildi!');
     }
 
-    function drawPlayerOnCanvas(ctx, name, index, x, y, colorObj) {
-      // Token Circle
+    function drawPlayerOnCanvas(ctx, name, index, x, y, colorObj, radius = 26, fontSize = 16) {
       ctx.save();
       ctx.shadowColor = 'rgba(0, 0, 0, 0.4)';
       ctx.shadowBlur = 10;
@@ -1057,7 +1502,7 @@
 
       ctx.fillStyle = colorObj.bg;
       ctx.beginPath();
-      ctx.arc(x, y, 26, 0, Math.PI * 2);
+      ctx.arc(x, y, radius, 0, Math.PI * 2);
       ctx.fill();
 
       ctx.strokeStyle = colorObj.border;
@@ -1065,22 +1510,20 @@
       ctx.stroke();
       ctx.restore();
 
-      // Number or Goalkeeper Text
       ctx.fillStyle = colorObj.text;
-      ctx.font = '900 16px "Plus Jakarta Sans", sans-serif';
+      ctx.font = `900 ${fontSize}px "Plus Jakarta Sans", sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText(index === 0 ? 'K' : `${index + 1}`, x, y);
 
-      // Name Label Pill
-      ctx.font = 'bold 16px "Plus Jakarta Sans", sans-serif';
+      ctx.font = `bold ${fontSize}px "Plus Jakarta Sans", sans-serif`;
       const textMetrics = ctx.measureText(name);
       const pillWidth = Math.max(70, textMetrics.width + 18);
-      const pillHeight = 26;
+      const pillHeight = fontSize + 10;
 
       ctx.fillStyle = 'rgba(15, 23, 42, 0.9)';
       ctx.beginPath();
-      ctx.roundRect(x - (pillWidth / 2), y + 32, pillWidth, pillHeight, 6);
+      ctx.roundRect(x - (pillWidth / 2), y + radius + 6, pillWidth, pillHeight, 6);
       ctx.fill();
 
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
@@ -1089,7 +1532,7 @@
 
       ctx.fillStyle = '#ffffff';
       ctx.textBaseline = 'middle';
-      ctx.fillText(name, x, y + 45);
+      ctx.fillText(name, x, y + radius + 6 + (pillHeight / 2));
     }
   </script>
 </body>

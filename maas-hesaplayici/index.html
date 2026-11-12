@@ -2,43 +2,52 @@
 <html lang="tr" class="dark">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <!-- Speed & Preconnect Resource Hints -->
-  <link rel="preload" href="/assets/app.min.css" as="style">
+  <link rel="preconnect" href="https://cdn.tailwindcss.com">
+  <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
 
-  <title>Net-Brüt Maaş & Vergi Dilimi Hesaplayıcı 2026 - 2027 | PratikBase</title>
-  <meta name="description" content="2026, 2027, 2025 ve 2024 vergi dilimleriyle Brüt'ten Net'e ve Net'ten Brüt'e maaş hesaplama. 12 aylık kümülatif vergi bordrosu, asgari ücret istisnası ve işveren maliyeti simülasyonu.">
-  <meta name="keywords" content="net brüt maaş hesaplama, 2026 maaş hesaplama, 2027 maaş zammı, vergi dilimi hesaplama, asgari ücret istisnası, işveren maliyeti, bordro simülasyonu">
+  <title>Net-Brüt Maaş, Vergi Dilimi & 2027 Asgari Ücret Zam Simülatörü | PratikBase</title>
+  <meta name="description" content="2026 ve 2027 vergi dilimleriyle Brüt'ten Net'e maaş hesaplama. 2027 Asgari Ücret zam senaryosu simülatörü, enflasyon alım gücü kaybı hesabı, 12 aylık kümülatif bordro ve işveren maliyeti.">
+  <meta name="keywords" content="net brüt maaş hesaplama, 2027 asgari ücret ne kadar olur, 2027 asgari ücret zam senaryosu, asgari ücret simülatörü, enflasyon maaş erimesi, vergi dilimi hesaplama, bordro simülasyonu">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   <meta name="theme-color" content="#0b0f19">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <link rel="apple-touch-icon" href="/assets/icon-192.png">
-  <link rel="manifest" href="/manifest.json">
   <link rel="canonical" href="https://pratikbase.com/maas-hesaplayici/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%234f46e5'/%3E%3Cstop offset='100%25' stop-color='%2306b6d4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23bg)'/%3E%3Cpath d='M36 8 L18 34 L32 34 L28 56 L46 30 L32 30 Z' fill='%23ffffff'/%3E%3C/svg%3E">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://pratikbase.com/maas-hesaplayici/">
-  <meta property="og:title" content="Net-Brüt Maaş & Vergi Dilimi Hesaplayıcı | 12 Aylık Bordro Simülasyonu">
-  <meta property="og:description" content="Yıl içinde maaşınız hangi ayda neden düşüyor? SGK, vergi dilimleri ve asgari ücret istisnası ile 12 aylık net maaş dökümü.">
+  <meta property="og:title" content="2027 Asgari Ücret Zam Simülatörü & Net-Brüt Maaş Hesaplayıcı">
+  <meta property="og:description" content="Yüzde kaç zam gelirse asgari ücret ne kadar olur? Enflasyon alım gücü kaybı ve 12 aylık bordro simülasyonu.">
   <meta property="og:image" content="https://pratikbase.com/assets/og-banner.png">
   <meta property="og:locale" content="tr_TR">
   <meta property="og:site_name" content="PratikBase">
 
   <!-- Twitter / X -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Net-Brüt Maaş & Vergi Dilimi Hesaplayıcı 2026">
-  <meta name="twitter:description" content="SGK, vergi dilimleri ve asgari ücret istisnası ile 12 aylık net maaş dökümü.">
+  <meta name="twitter:title" content="2027 Asgari Ücret Zam Simülatörü & Net-Brüt Maaş">
+  <meta name="twitter:description" content="Zam senaryoları (%25, %30, %35, %40), enflasyon erime analizi ve 12 aylık net maaş dökümü.">
   <meta name="twitter:image" content="https://pratikbase.com/assets/og-banner.png">
 
-  <!-- Production Compiled Tailwind CSS (Fast, Static, Zero Runtime Lag) -->
-  <link rel="stylesheet" href="/assets/app.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"></noscript>
+  <!-- Tailwind CSS CDN & Fallbacks -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: { 500: '#6366f1', 600: '#4f46e5' }
+          }
+        }
+      }
+    }
+  </script>
 
   <!-- Schema.org JSON-LD -->
   <script type="application/ld+json">
@@ -47,11 +56,11 @@
     "@graph": [
       {
         "@type": "WebApplication",
-        "name": "Net-Brüt Maaş ve Vergi Dilimi Hesaplayıcı",
+        "name": "2027 Asgari Ücret Zam Simülatörü & Maaş Hesaplayıcı",
         "url": "https://pratikbase.com/maas-hesaplayici/",
         "applicationCategory": "FinanceApplication",
         "operatingSystem": "All",
-        "description": "2024, 2025, 2026 ve 2027 gelir vergisi tarifelerine göre brüt ve net maaş, SGK kesintisi ve işveren maliyeti hesaplama aracı.",
+        "description": "2026 ve 2027 gelir vergisi tarifelerine göre brüt ve net maaş, 2027 asgari ücret zam simülatörü slider'ı, enflasyon alım gücü kaybı ve işveren maliyeti hesaplama aracı.",
         "offers": {
           "@type": "Offer",
           "price": "0",
@@ -63,34 +72,18 @@
         "mainEntity": [
           {
             "@type": "Question",
-            "name": "Yıl içinde net maaş neden düşer?",
+            "name": "2027 asgari ücret ne kadar olacak?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Türkiye'de gelir vergisi artan oranlı tarifeye (yüzde 15, 20, 27, 35, 40) bağlıdır. Yıl boyunca kazanılan kümülatif vergi matrahı arttıkça bir üst vergi dilimine girilir ve kesinti oranı yükseldiği için ele geçen net maaş azalır."
+              "text": "2026 yılı net asgari ücreti 28.075,50 TL'dir. Yüzde 25 zam senaryosunda net 35.094 TL, yüzde 30 zam senaryosunda net 36.498 TL, yüzde 35 zam senaryosunda ise net 37.902 TL seviyesine ulaşması öngörülmektedir."
             }
           },
           {
             "@type": "Question",
-            "name": "Asgari ücret vergi istisnası nedir?",
+            "name": "Enflasyon karşısında reel alım gücü kaybı nasıl hesaplanır?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Tüm çalışanların brüt maaşının asgari ücrete kadar olan kısmından gelir vergisi ve damga vergisi kesilmez. Bu tutar çalışan lehine vergiden muaf tutulur."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Brüt maaştan net maaşa geçerken hangi kesintiler yapılır?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Brüt maaştan sırasıyla: %14 SGK İşçi Primi, %1 İşsizlik Sigortası Primi kesilir. Kalan tutar üzerinden kümülatif gelir vergisi matrahına göre %15-%40 arası Gelir Vergisi ve binde 7,59 Damga Vergisi hesaplanır. Asgari ücrete kadar olan vergi istisnaları düşüldükten sonra net ele geçen ücret bulunur."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Bir çalışanın işverene toplam maliyeti nasıl hesaplanır?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "İşveren maliyeti; çalışanın brüt maaşına %20,5 SGK İşveren Hissesi (5 puanlık düzenli ödeme teşviki varsa %15,5) ve %2 İşveren İşsizlik Sigortası Primi eklenmesiyle hesaplanır."
+              "text": "Maaşınızın reel değeri, enflasyon oranı kadar düşer. Örneğin yıllık yüzde 30 enflasyon ortamında 50.000 TL net maaşın alım gücü 38.461 TL'ye geriler; aradaki 11.539 TL enflasyon kaybıdır."
             }
           }
         ]
@@ -100,20 +93,6 @@
   </script>
 
   <style>
-    /* Hide Netlify platform badge iframe */
-    #nl-badge-frame, #nl-hud-frame, iframe[id*="nl-"], iframe[title*="Netlify"], #netlify-badge, .netlify-badge, [data-netlify-badge], div[class*="netlify-badge"], div[id*="netlify-badge"], div[class*="netlify-feedback"], iframe[src*="netlify"] {
-      display: none !important;
-      visibility: hidden !important;
-      opacity: 0 !important;
-      pointer-events: none !important;
-      width: 0 !important;
-      height: 0 !important;
-      position: absolute !important;
-      left: -9999px !important;
-      bottom: -9999px !important;
-      clip-path: circle(0) !important;
-    }
-
     /* Hide native number spinners */
     input::-webkit-outer-spin-button,
     input::-webkit-inner-spin-button {
@@ -124,70 +103,29 @@
       -moz-appearance: textfield;
     }
 
-    /* Prevent number wrapping */
     .num-nowrap {
       white-space: nowrap !important;
     }
 
+    @media (max-width: 768px) {
+      input, select, textarea {
+        font-size: 16px !important;
+      }
+    }
+
     /* Print / PDF Custom Styling */
     @media print {
-      @page {
-        size: A4 portrait;
-        margin: 8mm;
-      }
-      body {
-        background: #ffffff !important;
-        color: #1e293b !important;
-        font-size: 11px !important;
-      }
-      header, .no-print {
-        display: none !important;
-      }
-      .print-only {
-        display: block !important;
-      }
-      #payrollTableContainer {
-        border: 1px solid #94a3b8 !important;
-        box-shadow: none !important;
-        background: white !important;
-        padding: 0 !important;
-      }
-      table {
-        width: 100% !important;
-        border-collapse: collapse !important;
-        font-size: 10px !important;
-      }
-      th {
-        background-color: #f1f5f9 !important;
-        color: #0f172a !important;
-        border: 1px solid #cbd5e1 !important;
-        padding: 4px 6px !important;
-        white-space: nowrap !important;
-      }
-      td {
-        border: 1px solid #e2e8f0 !important;
-        padding: 4px 6px !important;
-        color: #1e293b !important;
-        white-space: nowrap !important;
-      }
-      tfoot td {
-        background-color: #f8fafc !important;
-        font-weight: bold !important;
-        border-top: 2px solid #64748b !important;
-      }
-      .kpi-card-print {
-        border: 1px solid #cbd5e1 !important;
-        background: #f8fafc !important;
-        color: #0f172a !important;
-        box-shadow: none !important;
-      }
+      @page { size: A4 portrait; margin: 8mm; }
+      body { background: #ffffff !important; color: #1e293b !important; font-size: 11px !important; }
+      header, .no-print { display: none !important; }
+      .print-only { display: block !important; }
+      #payrollTableContainer { border: 1px solid #94a3b8 !important; box-shadow: none !important; background: white !important; }
+      table { width: 100% !important; border-collapse: collapse !important; font-size: 10px !important; }
+      th { background-color: #f1f5f9 !important; color: #0f172a !important; border: 1px solid #cbd5e1 !important; padding: 4px 6px !important; }
+      td { border: 1px solid #e2e8f0 !important; padding: 4px 6px !important; color: #1e293b !important; }
     }
+    .print-only { display: none; }
 
-    .print-only {
-      display: none;
-    }
-
-    /* Scrollbars */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: #0b0f19; }
     ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
@@ -205,17 +143,17 @@
           </div>
           <div class="flex flex-col">
             <span class="font-bold text-white text-base tracking-tight leading-none group-hover:text-sky-300 transition">
-              Pratik<span class="text-sky-400">Araçlar</span>
+              Pratik<span class="text-sky-400">Base</span>
             </span>
-            <span class="text-[10px] text-slate-400 tracking-wider font-semibold uppercase">MAAŞ & VERGİ DİLİMİ</span>
+            <span class="text-[10px] text-slate-400 tracking-wider font-semibold uppercase">MAAŞ & ASGARİ ÜCRET ZAMMI</span>
           </div>
         </a>
       </div>
 
       <div class="flex items-center gap-2">
-        <a href="../ydo-harc-zam-hesaplayici/" class="hidden lg:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-semibold transition">
-          <i class="fa-solid fa-arrow-trend-up text-xs"></i>
-          <span>2027 YDO Zamları ➔</span>
+        <a href="../hangi-kanalda/" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold border border-slate-700/80 transition">
+          <i class="fa-solid fa-tv text-xs text-rose-400"></i>
+          <span>Hangi Kanalda?</span>
         </a>
         <a href="../" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold border border-slate-700/80 transition shadow-sm">
           <i class="fa-solid fa-arrow-left text-xs"></i>
@@ -246,6 +184,134 @@
   <!-- Main Container -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full space-y-7">
     
+    <!-- VIRAL UPGRADE 1: 2027 ASGARİ ÜCRET CANLI ZAM SENARYOSU SİMÜLATÖRÜ (Slider & Scenarios) -->
+    <section class="no-print bg-gradient-to-r from-indigo-950/60 via-slate-900 to-sky-950/60 border-2 border-indigo-500/40 rounded-3xl p-6 sm:p-7 shadow-2xl relative overflow-hidden">
+      <!-- Glow effect -->
+      <div class="absolute -top-24 -right-24 w-80 h-80 bg-indigo-500/10 blur-[120px] rounded-full pointer-events-none"></div>
+
+      <!-- Section Header -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-4 border-b border-slate-800 mb-5">
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <span class="px-2 py-0.5 rounded text-[10px] font-extrabold uppercase tracking-wider bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+              2027 CANLI SİMÜLATÖR
+            </span>
+            <span class="text-xs text-slate-400">Mevcut 2026 Bazı: <strong>33.030 ₺ Brüt / 28.075,50 ₺ Net</strong></span>
+          </div>
+          <h2 class="text-lg sm:text-xl font-black text-white tracking-tight flex items-center gap-2">
+            <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i>
+            2027 Asgari Ücret Zam Senaryosu Simülatörü
+          </h2>
+        </div>
+
+        <!-- Share Simulation Button -->
+        <div class="flex items-center gap-2">
+          <button onclick="shareScenarioWhatsApp()" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-md transition flex items-center gap-1.5 active:scale-95">
+            <i class="fa-brands fa-whatsapp text-sm"></i>
+            <span>Senaryoyu Paylaş</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Interactive Slider Control -->
+      <div class="bg-slate-950/70 border border-slate-800 rounded-2xl p-5 mb-5 shadow-inner">
+        <div class="flex items-center justify-between mb-3">
+          <label for="raiseSlider" class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
+            <i class="fa-solid fa-sliders text-indigo-400"></i>
+            Tahmini Zam Oranını Belirleyin:
+          </label>
+          <div class="flex items-center gap-2">
+            <span class="text-xs text-slate-400">Zam Oranı:</span>
+            <span id="sliderPercentText" class="px-3 py-1 rounded-xl bg-indigo-600 text-white font-black text-base font-mono shadow-md">
+              %30
+            </span>
+          </div>
+        </div>
+
+        <!-- Range Slider -->
+        <input 
+          type="range" 
+          id="raiseSlider" 
+          min="15" 
+          max="55" 
+          step="1" 
+          value="30" 
+          class="w-full h-3 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-indigo-500"
+        >
+
+        <div class="flex justify-between text-[10px] text-slate-500 font-bold mt-1.5 font-mono">
+          <span>%15 (Taban)</span>
+          <span>%25 (TCMB)</span>
+          <span>%30 (Beklenti)</span>
+          <span>%35 (Refah Payı)</span>
+          <span>%45+ (Sendika)</span>
+          <span>%55 (Tavan)</span>
+        </div>
+
+        <!-- Quick Scenario Preset Pills -->
+        <div class="flex flex-wrap items-center gap-2 mt-4 pt-3 border-t border-slate-800/80">
+          <span class="text-xs text-slate-400 font-semibold mr-1">Hızlı Senaryolar:</span>
+          <button type="button" onclick="setRaiseScenario(20)" class="scenario-btn px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition" data-percent="20">
+            %20 (OVP Alt Sınır)
+          </button>
+          <button type="button" onclick="setRaiseScenario(25)" class="scenario-btn px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition" data-percent="25">
+            %25 (TCMB Tahmini)
+          </button>
+          <button type="button" onclick="setRaiseScenario(30)" class="scenario-btn px-2.5 py-1 rounded-lg bg-indigo-600 text-white text-xs font-bold transition shadow-sm" data-percent="30">
+            %30 (Piyasa Beklentisi)
+          </button>
+          <button type="button" onclick="setRaiseScenario(35)" class="scenario-btn px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition" data-percent="35">
+            %35 (Refah Payı Dahil)
+          </button>
+          <button type="button" onclick="setRaiseScenario(40)" class="scenario-btn px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition" data-percent="40">
+            %40 (Sendika Talebi)
+          </button>
+        </div>
+      </div>
+
+      <!-- Realtime Scenario KPI Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+        <!-- New Net Wage -->
+        <div class="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 text-left">
+          <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Yeni Net Asgari Ücret</span>
+          <div id="simNetWage" class="text-2xl font-black text-emerald-400 font-mono">36.498 ₺</div>
+          <span id="simNetIncrease" class="text-xs text-emerald-300/90 font-semibold mt-1 block">+8.423 ₺ Net Artış</span>
+        </div>
+
+        <!-- New Gross Wage -->
+        <div class="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 text-left">
+          <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Yeni Brüt Asgari Ücret</span>
+          <div id="simGrossWage" class="text-2xl font-black text-slate-100 font-mono">42.939 ₺</div>
+          <span class="text-xs text-slate-400 mt-1 block">SGK matrahı tabanı</span>
+        </div>
+
+        <!-- Employer Total Cost -->
+        <div class="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 text-left">
+          <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">İşverene Toplam Maliyet</span>
+          <div id="simEmployerCost" class="text-2xl font-black text-amber-300 font-mono">50.453 ₺</div>
+          <span class="text-xs text-slate-400 mt-1 block">%5 SGK teşviki dahil</span>
+        </div>
+
+        <!-- Severance Ceiling Estimate -->
+        <div class="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 text-left">
+          <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Kıdem Tavanı (Tahmini)</span>
+          <div id="simSeveranceCeiling" class="text-2xl font-black text-sky-400 font-mono">~53.800 ₺</div>
+          <span class="text-xs text-slate-400 mt-1 block">1 yıl için en yüksek kıdem</span>
+        </div>
+      </div>
+
+      <!-- Action: Apply Scenario to Payroll Table -->
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-slate-800">
+        <p class="text-xs text-slate-400">
+          💡 Bu senaryonun 12 aylık vergi dilimlerini ve bordro dökümünü aşağıda anında görmek için:
+        </p>
+        <button type="button" onclick="applySimulationToPayroll()" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-lg shadow-indigo-600/30 transition flex items-center gap-2 active:scale-95 shrink-0">
+          <span>Bu Senaryoyu Bordroya Yansıt</span>
+          <i class="fa-solid fa-arrow-down text-xs"></i>
+        </button>
+      </div>
+    </section>
+
     <!-- Top Input Card (Dark Dimmed) -->
     <section class="no-print bg-[#111827] border border-slate-800 rounded-3xl p-6 sm:p-7 shadow-xl relative overflow-hidden">
       <!-- Glow effect -->
@@ -398,6 +464,56 @@
       </div>
     </section>
 
+    <!-- VIRAL UPGRADE 2: REEL ALIM GÜCÜ & ENFLASYON KAYBI HESAPLAYICI -->
+    <section class="no-print bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-7 shadow-xl">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-800 mb-4">
+        <div>
+          <span class="text-[10px] font-bold text-rose-400 uppercase tracking-wider block mb-1">ALIM GÜCÜ ANALİZİ</span>
+          <h3 class="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-arrow-trend-down text-rose-500"></i>
+            Enflasyon Karşısında Maaşınızın Erime Oranı
+          </h3>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-xs text-slate-400">Beklenen Yıllık Enflasyon:</span>
+          <span id="infRateLabel" class="px-2.5 py-1 rounded-xl bg-rose-500/20 text-rose-400 border border-rose-500/30 font-bold font-mono text-xs">%30</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 items-center">
+        <!-- Slider and controls -->
+        <div class="space-y-3">
+          <label for="inflationSlider" class="text-xs font-semibold text-slate-300 block">Enflasyon Oranını Ayarlayın:</label>
+          <input type="range" id="inflationSlider" min="15" max="60" step="1" value="30" class="w-full h-2.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-rose-500">
+          <div class="flex justify-between text-[10px] text-slate-500 font-mono">
+            <span>%15</span>
+            <span>%25</span>
+            <span>%30</span>
+            <span>%45</span>
+            <span>%60</span>
+          </div>
+          <p class="text-[11px] text-slate-400 leading-tight">
+            Maaşınız aynı kalsa bile fiyatlar arttığında satın alma gücünüz bu oranda düşer.
+          </p>
+        </div>
+
+        <!-- 2 Metric Cards -->
+        <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div class="p-4 rounded-2xl bg-slate-950/80 border border-slate-800">
+            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Maaşınızın Yıl Sonundaki Reel Değeri</span>
+            <div id="realPowerValue" class="text-xl sm:text-2xl font-black text-rose-400 font-mono">₺38.461</div>
+            <span id="realLossText" class="text-xs text-slate-400 mt-1 block">Satın alma gücü kaybı: <strong>-₺11.539</strong></span>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-slate-950/80 border border-slate-800">
+            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Alım Gücünü Korumak İçin Gereken Maaş</span>
+            <div id="breakevenSalary" class="text-xl sm:text-2xl font-black text-emerald-400 font-mono">₺65.000</div>
+            <span id="breakevenNeededText" class="text-xs text-slate-400 mt-1 block">Erimemesi için gereken zam: <strong>+%30 (+₺15.000)</strong></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- 12-Month Detailed Payroll Table (No-Wrap & Eye-Friendly Colors) -->
     <section id="payrollTableContainer" class="bg-[#111827] border border-slate-800 rounded-3xl p-6 shadow-xl">
       <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-5">
@@ -487,29 +603,6 @@
       </a>
     </section>
 
-    <!-- Kahve Molası / PopNDodge Banner -->
-    <section class="no-print bg-slate-900/60 border border-slate-800 hover:border-violet-500/40 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs transition">
-      <div class="flex items-center gap-3">
-        <div class="w-9 h-9 rounded-xl bg-violet-500/10 border border-violet-500/20 text-violet-400 flex items-center justify-center text-base shrink-0">
-          <i class="fa-solid fa-gamepad"></i>
-        </div>
-        <div>
-          <div class="flex items-center gap-2">
-            <span class="font-bold text-slate-200">☕ Hesaplama bitti, kısa bir kafa dağıtma molası?</span>
-            <span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-violet-500/15 text-violet-300 border border-violet-500/30">Ücretsiz Oyun</span>
-          </div>
-          <p class="text-slate-400 text-[11px] mt-0.5">
-            Geliştiricimizden refleks ve balon patlatma oyunu: <strong>PopNDodge: Balon Patlatma VS</strong> Google Play'de!
-          </p>
-        </div>
-      </div>
-      <a href="https://play.google.com/store/apps/details?id=com.eymenefe.popndodge" target="_blank" rel="noopener noreferrer" class="shrink-0 px-3 py-1.5 rounded-lg bg-violet-600 hover:bg-violet-500 text-white font-semibold transition flex items-center gap-1.5 shadow-sm shadow-violet-600/20 text-xs">
-        <i class="fa-brands fa-google-play"></i>
-        <span>Google Play'de Oyna</span>
-        <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-70"></i>
-      </a>
-    </section>
-
     <!-- FAQ Section (Hidden in print) -->
     <section class="no-print grid grid-cols-1 md:grid-cols-2 gap-6">
       
@@ -549,14 +642,15 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
       <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
         <div class="flex items-center gap-2">
-          <span class="font-bold text-slate-200 tracking-tight">Pratik<span class="text-indigo-400">Araçlar</span></span>
+          <span class="font-bold text-slate-200 tracking-tight">Pratik<span class="text-indigo-400">Base</span></span>
           <span>•</span>
           <span class="text-slate-400">Net-Brüt Maaş ve Vergi Dilimi Hesaplama Aracı</span>
         </div>
         <div class="flex items-center gap-6">
           <span class="text-slate-500">© 2026 PratikBase</span>
-          <a href="../sel-haritasi/" class="hover:text-indigo-300 transition text-slate-300 font-medium">Sel Haritası</a>
-          <a href="../tazminat-hesaplayici/" class="hover:text-indigo-300 transition text-slate-300 font-medium">Tazminat Hesaplayıcı</a>
+          <a href="../hangi-kanalda/" class="hover:text-indigo-300 transition text-slate-300 font-medium">Hangi Kanalda?</a>
+          <a href="../acil-durum-radar/" class="hover:text-indigo-300 transition text-slate-300 font-medium">Deprem Radarı</a>
+          <a href="../hali-saha-kadro/" class="hover:text-indigo-300 transition text-slate-300 font-medium">Halı Saha</a>
         </div>
       </div>
       
@@ -593,7 +687,7 @@
         blogTitle: "2026 Yılı Asgari Ücret ve Gelir Vergisi Mevzuatı",
         blogBadge: "Resmi Tarife",
         blogContent: `
-          <p>2026 yılı için belirlenen resmi brüt asgari ücret <strong>33.030,00 ₺</strong> olup, çalışanın eline net <strong>28.075,50 ₺</strong> geçmektedir. 2026 yılında Gelir İdaresi Başkanlığı (GİB 332 Seri No'lu Tebliği) uyarınca 1. vergi dilimi sınırı <strong>190.000 ₺</strong>, 2. dilim ise <strong>400.000 ₺</strong> olarak uygulanmaktadır.</p>
+          <p>2026 yılı için belirlenen resmi brüt asgari ücret <strong>33.030,00 ₺</strong> olup, çalışanın eline net <strong>28.075,50 ₺</strong> geçmektedir. 2026 yılında Gelir İdaresi Başkanlığı uyarınca 1. vergi dilimi sınırı <strong>190.000 ₺</strong>, 2. dilim ise <strong>400.000 ₺</strong> olarak uygulanmaktadır.</p>
           <p><strong>Vergi İstisnası Avantajı:</strong> 7349 sayılı Kanun uyarınca, 2026 yılında tüm çalışanların brüt ücretlerinin asgari ücrete kadar olan kısmı için her ay gelir vergisi ve damga vergisi istisnası uygulanarak doğrudan çalışanın net maaşına yansıtılır.</p>
         `
       },
@@ -601,7 +695,7 @@
         year: "2027",
         label: "2027 (Yeni Zam / Projeksiyon)",
         note: "2027 tahmini %25-30 artış projeksiyonu",
-        minWageGross: 42000.00,
+        minWageGross: 42939.00,
         sgkWorkerRate: 0.14,
         unemploymentWorkerRate: 0.01,
         sgkEmployerRate: 0.155,
@@ -619,7 +713,7 @@
         blogTitle: "2027 Yılı Asgari Ücret Zammı ve Vergi Projeksiyonu",
         blogBadge: "Tahmini Projeksiyon",
         blogContent: `
-          <p>Orta Vadeli Program (OVP) ve yıl sonu enflasyon hedefleri doğrultusunda 2027 yılı için brüt asgari ücretin <strong>~42.000 ₺</strong> seviyesine çıkması ve net asgari ücretin <strong>~35.700 ₺</strong> olması beklenmektedir.</p>
+          <p>Orta Vadeli Program (OVP) ve yıl sonu enflasyon hedefleri doğrultusunda 2027 yılı için brüt asgari ücretin <strong>~42.939 ₺</strong> seviyesine çıkması ve net asgari ücretin <strong>~36.498 ₺</strong> olması beklenmektedir.</p>
           <p><strong>Vergi Dilimi Beklentisi:</strong> Yeniden değerleme oranına bağlı olarak 2027 yılında %15'lik ilk dilim eşiğinin 270.000 ₺ barajına yükseltilmesi öngörülmektedir.</p>
         `
       },
@@ -645,7 +739,7 @@
         blogTitle: "2025 Yılı Asgari Ücret ve Vergi Dönemi",
         blogBadge: "Geçmiş Tarife",
         blogContent: `
-          <p>2025 yılı boyunca brüt asgari ücret <strong>26.005,50 ₺</strong>, net asgari ücret ise <strong>22.104,68 ₺</strong> olarak uygulanmıştır. 1. vergi dilimi 158.000 ₺ olarak baz alınmıştır.</p>
+          <p>2025 yılı boyunca brüt asgari ücret <strong>26.005,50 ₺</strong>, net asgari ücret ise <strong>22.104,68 ₺</strong> olarak uygulanmıştır.</p>
         `
       },
       "2024": {
@@ -670,7 +764,7 @@
         blogTitle: "2024 Yılı Vergi ve Asgari Ücret Parametreleri",
         blogBadge: "Geçmiş Tarife",
         blogContent: `
-          <p>2024 yılı boyunca brüt asgari ücret <strong>20.002,50 ₺</strong>, net asgari ücret ise <strong>17.002,12 ₺</strong> olarak uygulanmıştır. 1. vergi dilimi 110.000 ₺ olarak baz alınmıştır.</p>
+          <p>2024 yılı boyunca brüt asgari ücret <strong>20.002,50 ₺</strong>, net asgari ücret ise <strong>17.002,12 ₺</strong> olarak uygulanmıştır.</p>
         `
       }
     };
@@ -682,7 +776,7 @@
 
     let currentDirection = "grossToNet";
 
-    // Elements
+    // DOM Elements
     const yearSelect = document.getElementById('yearSelect');
     const yearNote = document.getElementById('yearNote');
     const dirGrossToNet = document.getElementById('dirGrossToNet');
@@ -719,7 +813,7 @@
     const blogCardBadge = document.getElementById('blogCardBadge');
     const blogCardContent = document.getElementById('blogCardContent');
 
-    // Live Realtime Number Formatter (No TL symbol inside input, instant on input)
+    // Number Formatting
     function formatNumberLive(rawVal) {
       if (rawVal === null || rawVal === undefined) return '';
       let str = String(rawVal).trim().replace(/[^\d.,]/g, '');
@@ -747,218 +841,305 @@
       return isNaN(num) ? 0 : num;
     }
 
-    function attachLiveNumberFormatter(input, onCalculate) {
-      input.addEventListener('input', function() {
-        const raw = this.value;
-        const oldCursor = this.selectionEnd || raw.length;
-        let digitsBeforeCursor = 0;
-        for (let i = 0; i < oldCursor; i++) {
-          if (/\d/.test(raw[i])) digitsBeforeCursor++;
-        }
-        const formatted = formatNumberLive(raw);
-        this.value = formatted;
-        let newCursor = formatted.length;
-        let countedDigits = 0;
-        for (let i = 0; i < formatted.length; i++) {
-          if (/\d/.test(formatted[i])) countedDigits++;
-          if (countedDigits === digitsBeforeCursor) {
-            newCursor = i + 1;
-            break;
-          }
-        }
-        if (raw[oldCursor - 1] === ',' && formatted.includes(',')) {
-          newCursor = formatted.indexOf(',') + 1;
-        }
-        if (newCursor > formatted.length) newCursor = formatted.length;
-        this.setSelectionRange(newCursor, newCursor);
-        if (onCalculate) onCalculate();
-      });
-
-      input.addEventListener('focus', function() {
-        this.select();
-      });
-    }
-
     function formatTL(num) {
-      return new Intl.NumberFormat('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(num) + ' ₺';
+      return (Number(num) || 0).toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ₺';
     }
 
-    // Direction Toggle
+    // VIRAL UPGRADE 1: 2027 ASGARİ ÜCRET CANLI SİMÜLATÖR MOTORU
+    const BASE_2026_GROSS = 33030.00;
+    const BASE_2026_NET = 28075.50;
+
+    const raiseSlider = document.getElementById('raiseSlider');
+    const sliderPercentText = document.getElementById('sliderPercentText');
+    const simNetWage = document.getElementById('simNetWage');
+    const simNetIncrease = document.getElementById('simNetIncrease');
+    const simGrossWage = document.getElementById('simGrossWage');
+    const simEmployerCost = document.getElementById('simEmployerCost');
+    const simSeveranceCeiling = document.getElementById('simSeveranceCeiling');
+
+    function updateSimulation() {
+      const pct = parseInt(raiseSlider.value) || 30;
+      sliderPercentText.textContent = `%${pct}`;
+
+      const newGross = BASE_2026_GROSS * (1 + pct / 100);
+      const newNet = BASE_2026_NET * (1 + pct / 100);
+      const netIncrease = newNet - BASE_2026_NET;
+      const employerCost = newGross * (1 + 0.155 + 0.02); // 5 puan teşvikli
+      const severanceCeiling = Math.round(newGross * 1.25);
+
+      simNetWage.textContent = formatTL(newNet);
+      simNetIncrease.textContent = `+${formatTL(netIncrease)} Net Artış`;
+      simGrossWage.textContent = formatTL(newGross);
+      simEmployerCost.textContent = formatTL(employerCost);
+      simSeveranceCeiling.textContent = `~${formatTL(severanceCeiling)}`;
+
+      // Update preset buttons styling
+      document.querySelectorAll('.scenario-btn').forEach(btn => {
+        const p = parseInt(btn.getAttribute('data-percent'));
+        if (p === pct) {
+          btn.className = "scenario-btn px-2.5 py-1 rounded-lg bg-indigo-600 text-white text-xs font-bold transition shadow-sm";
+        } else {
+          btn.className = "scenario-btn px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition";
+        }
+      });
+    }
+
+    function setRaiseScenario(percent) {
+      raiseSlider.value = percent;
+      updateSimulation();
+    }
+
+    raiseSlider.addEventListener('input', updateSimulation);
+
+    function applySimulationToPayroll() {
+      const pct = parseInt(raiseSlider.value) || 30;
+      const newGross = Math.round(BASE_2026_GROSS * (1 + pct / 100));
+
+      yearSelect.value = "2027";
+      salaryInput.value = formatNumberLive(newGross);
+      currentDirection = "grossToNet";
+
+      dirGrossToNet.className = "dir-btn py-2 text-xs font-bold rounded-lg bg-indigo-600 text-white transition shadow-sm";
+      dirNetToGross.className = "dir-btn py-2 text-xs font-bold rounded-lg text-slate-400 hover:text-slate-200 transition";
+      salaryInputLabel.textContent = "Aylık Brüt Maaş";
+
+      updateBlogCard();
+      updateBracketsPreview();
+      calculatePayroll();
+
+      const tableEl = document.getElementById('payrollTableContainer');
+      tableEl.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function shareScenarioWhatsApp() {
+      const pct = parseInt(raiseSlider.value) || 30;
+      const newNet = simNetWage.textContent;
+      const newGross = simGrossWage.textContent;
+      const empCost = simEmployerCost.textContent;
+      const increase = simNetIncrease.textContent;
+
+      const text = `📢 *2027 Asgari Ücret %${pct} Zam Senaryosu:* \n\n` +
+        `💵 *Yeni Net Maaş:* ${newNet} (${increase})\n` +
+        `💼 *Yeni Brüt Maaş:* ${newGross}\n` +
+        `🏢 *İşverene Maliyet:* ${empCost}\n\n` +
+        `📊 Kendi maaşını ve enflasyon erimesini hesapla:\nhttps://pratikbase.com/maas-hesaplayici/`;
+
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+    }
+
+    // VIRAL UPGRADE 2: REEL ALIM GÜCÜ & ENFLASYON KAYBI MOTORU
+    const inflationSlider = document.getElementById('inflationSlider');
+    const infRateLabel = document.getElementById('infRateLabel');
+    const realPowerValue = document.getElementById('realPowerValue');
+    const realLossText = document.getElementById('realLossText');
+    const breakevenSalary = document.getElementById('breakevenSalary');
+    const breakevenNeededText = document.getElementById('breakevenNeededText');
+
+    function updateInflationErosion(avgNet) {
+      const infRate = parseInt(inflationSlider.value) || 30;
+      infRateLabel.textContent = `%${infRate}`;
+
+      const netSalary = avgNet || parseNumberLive(kpiAvgNet.textContent) || 50000;
+      const realValue = netSalary / (1 + (infRate / 100));
+      const loss = netSalary - realValue;
+      const breakeven = netSalary * (1 + (infRate / 100));
+      const neededRaiseAmount = breakeven - netSalary;
+
+      realPowerValue.textContent = formatTL(realValue);
+      realLossText.innerHTML = `Satın alma gücü kaybı: <strong class="text-rose-400">-${formatTL(loss)}</strong>`;
+      breakevenSalary.textContent = formatTL(breakeven);
+      breakevenNeededText.innerHTML = `Erimemesi için gereken zam: <strong class="text-emerald-400">+%${infRate} (+${formatTL(neededRaiseAmount)})</strong>`;
+    }
+
+    inflationSlider.addEventListener('input', () => updateInflationErosion());
+
+    // DIRECTION TOGGLE
     dirGrossToNet.addEventListener('click', () => {
+      if (currentDirection === 'grossToNet') return;
       currentDirection = 'grossToNet';
-      dirGrossToNet.className = 'dir-btn py-2 text-xs font-bold rounded-lg bg-indigo-600 text-white transition shadow-sm';
-      dirNetToGross.className = 'dir-btn py-2 text-xs font-bold rounded-lg text-slate-400 hover:text-slate-200 transition';
-      salaryInputLabel.textContent = 'Aylık Brüt Maaş';
-      dirDesc.textContent = 'Brüt maaşınızdan kesintiler düşülerek net hesaplanır';
+      dirGrossToNet.className = "dir-btn py-2 text-xs font-bold rounded-lg bg-indigo-600 text-white transition shadow-sm";
+      dirNetToGross.className = "dir-btn py-2 text-xs font-bold rounded-lg text-slate-400 hover:text-slate-200 transition";
+      salaryInputLabel.textContent = "Aylık Brüt Maaş";
+      dirDesc.textContent = "Brüt maaşınızdan kesintiler düşülür";
       calculatePayroll();
     });
 
     dirNetToGross.addEventListener('click', () => {
+      if (currentDirection === 'netToGross') return;
       currentDirection = 'netToGross';
-      dirNetToGross.className = 'dir-btn py-2 text-xs font-bold rounded-lg bg-indigo-600 text-white transition shadow-sm';
-      dirGrossToNet.className = 'dir-btn py-2 text-xs font-bold rounded-lg text-slate-400 hover:text-slate-200 transition';
-      salaryInputLabel.textContent = 'Hedef Net Maaş';
-      dirDesc.textContent = 'Elinize geçmesini istediğiniz net tutara göre gerekli brüt bulunur';
+      dirNetToGross.className = "dir-btn py-2 text-xs font-bold rounded-lg bg-indigo-600 text-white transition shadow-sm";
+      dirGrossToNet.className = "dir-btn py-2 text-xs font-bold rounded-lg text-slate-400 hover:text-slate-200 transition";
+      salaryInputLabel.textContent = "Hedef Net Maaş";
+      dirDesc.textContent = "Elinize geçecek net için gereken brüt bulunur";
       calculatePayroll();
     });
 
-    // Set Minimum Wage Shortcut
+    // SET MINIMUM WAGE BUTTON
     setMinWageBtn.addEventListener('click', () => {
       const cfg = TAX_CONFIGS[yearSelect.value];
       salaryInput.value = formatNumberLive(cfg.minWageGross);
+      if (currentDirection !== 'grossToNet') {
+        dirGrossToNet.click();
+      } else {
+        calculatePayroll();
+      }
+    });
+
+    // INPUT CHANGE EVENTS
+    salaryInput.addEventListener('input', (e) => {
+      const formatted = formatNumberLive(e.target.value);
+      e.target.value = formatted;
       calculatePayroll();
     });
 
-    // Year change
     yearSelect.addEventListener('change', () => {
       const cfg = TAX_CONFIGS[yearSelect.value];
       yearNote.textContent = cfg.note;
-      updateBracketsPreview();
       updateBlogCard();
+      updateBracketsPreview();
       calculatePayroll();
     });
 
     retireeCheck.addEventListener('change', calculatePayroll);
     employerIncentiveCheck.addEventListener('change', calculatePayroll);
-    attachLiveNumberFormatter(salaryInput, calculatePayroll);
 
-    if (printBtn) {
-      printBtn.addEventListener('click', () => {
-        if (printDate) printDate.textContent = 'Oluşturulma: ' + new Date().toLocaleDateString('tr-TR');
-        if (printSubTitle) printSubTitle.textContent = `Hesaplama Yılı: ${yearSelect.value} • Maaş: ${formatTL(parseFloat(salaryInput.value) || 0)}`;
-        window.print();
-      });
-    }
+    // PRINT / PDF
+    printBtn.addEventListener('click', () => {
+      printDate.textContent = new Date().toLocaleDateString('tr-TR');
+      printSubTitle.textContent = `Hesaplama Yılı: ${yearSelect.value}`;
+      window.print();
+    });
 
-    function calculateIncomeTax(taxBase, cumulativeBase, brackets) {
-      let tax = 0;
-      let remainingBase = taxBase;
-      let currentCumBase = cumulativeBase;
-
-      for (let i = 0; i < brackets.length; i++) {
-        const bracket = brackets[i];
-        if (currentCumBase < bracket.limit) {
-          const availableInBracket = bracket.limit - currentCumBase;
-          const taxableInThisBracket = Math.min(remainingBase, availableInBracket);
-
-          tax += taxableInThisBracket * bracket.rate;
-          remainingBase -= taxableInThisBracket;
-          currentCumBase += taxableInThisBracket;
-
-          if (remainingBase <= 0) break;
-        }
-      }
-      return tax;
-    }
-
-    function getBracketLabel(cumulativeBase, brackets) {
-      for (let i = 0; i < brackets.length; i++) {
-        if (cumulativeBase <= brackets[i].limit) {
-          return brackets[i].label;
-        }
-      }
-      return brackets[brackets.length - 1].label;
-    }
-
+    // CALCULATE 12-MONTH PAYROLL ENGINE
     function calculatePayroll() {
-      const year = yearSelect.value;
-      const cfg = TAX_CONFIGS[year];
+      const cfg = TAX_CONFIGS[yearSelect.value];
+      const enteredVal = parseNumberLive(salaryInput.value);
+
+      if (enteredVal <= 0) {
+        payrollTableBody.innerHTML = '<tr><td colspan="9" class="p-4 text-center text-slate-500">Lütfen geçerli bir maaş tutarı giriniz.</td></tr>';
+        return;
+      }
+
       const isRetiree = retireeCheck.checked;
       const hasEmployerIncentive = employerIncentiveCheck.checked;
-      let inputVal = parseNumberLive(salaryInput.value);
 
-      if (inputVal <= 0) inputVal = cfg.minWageGross;
+      // Rate settings
+      const workerSgkRate = isRetiree ? 0.075 : cfg.sgkWorkerRate;
+      const workerUnempRate = isRetiree ? 0.0 : cfg.unemploymentWorkerRate;
+      const totalWorkerDeductionRate = workerSgkRate + workerUnempRate;
 
-      const sgkWorkerRate = isRetiree ? 0.075 : cfg.sgkWorkerRate;
-      const unemployWorkerRate = isRetiree ? 0.0 : cfg.unemploymentWorkerRate;
-
-      const sgkEmployerRate = hasEmployerIncentive ? cfg.sgkEmployerRate : cfg.sgkEmployerRateNoIncentive;
-      const unemployEmployerRate = isRetiree ? 0.0 : cfg.unemploymentEmployerRate;
+      const employerSgkRate = hasEmployerIncentive ? cfg.sgkEmployerRate : cfg.sgkEmployerRateNoIncentive;
+      const employerUnempRate = isRetiree ? 0.0 : cfg.unemploymentEmployerRate;
+      const totalEmployerAddRate = employerSgkRate + employerUnempRate;
 
       const sgkCeiling = cfg.minWageGross * cfg.sgkCeilingMultiple;
 
-      // Minimum wage exemptions
-      let minWageCumTaxBase = 0;
+      // Calculate Asgari Ücret Monthly Tax Exemptions (7349 Sayılı Kanun)
+      let minWageCumulativeTaxBase = 0;
       const minWageExemptions = [];
 
       for (let m = 0; m < 12; m++) {
-        const minGross = cfg.minWageGross;
-        const minSgkWorker = minGross * (0.14 + 0.01);
-        const minTaxBase = minGross - minSgkWorker;
-        const minIncomeTax = calculateIncomeTax(minTaxBase, minWageCumTaxBase, cfg.brackets);
-        minWageCumTaxBase += minTaxBase;
-        const minStampTax = minGross * cfg.stampTaxRate;
+        const mwGross = cfg.minWageGross;
+        const mwWorkerSgk = mwGross * (cfg.sgkWorkerRate + cfg.unemploymentWorkerRate);
+        const mwTaxBase = mwGross - mwWorkerSgk;
+        const prevMwBase = minWageCumulativeTaxBase;
+        minWageCumulativeTaxBase += mwTaxBase;
+
+        const mwIncomeTax = calculateBracketTax(prevMwBase, minWageCumulativeTaxBase, cfg.brackets);
+        const mwStampTax = mwGross * cfg.stampTaxRate;
 
         minWageExemptions.push({
-          incomeTaxExemption: minIncomeTax,
-          stampTaxExemption: minStampTax
+          incomeTaxExemption: mwIncomeTax,
+          stampTaxExemption: mwStampTax
         });
       }
 
-      // Net to Gross solver
-      let monthlyGross = inputVal;
-      if (currentDirection === 'netToGross') {
-        const targetNet = inputVal;
+      // Net to Gross Solver (Iterative Bisection)
+      function solveGrossFromNet(targetNet, monthIdx, prevCumulativeBase) {
         let low = targetNet;
         let high = targetNet * 2.5;
-        let guessGross = (low + high) / 2;
+        let bestGross = targetNet;
 
-        for (let iter = 0; iter < 25; iter++) {
-          guessGross = (low + high) / 2;
-          const sgkBase = Math.min(guessGross, sgkCeiling);
-          const sgkWorker = sgkBase * sgkWorkerRate;
-          const unemployWorker = sgkBase * unemployWorkerRate;
-          const taxBase = guessGross - (sgkWorker + unemployWorker);
-          const rawTax = calculateIncomeTax(taxBase, 0, cfg.brackets);
-          const netIncomeTax = Math.max(0, rawTax - minWageExemptions[0].incomeTaxExemption);
-          const rawStamp = guessGross * cfg.stampTaxRate;
-          const netStamp = Math.max(0, rawStamp - minWageExemptions[0].stampTaxExemption);
-          const testNet = guessGross - (sgkWorker + unemployWorker + netIncomeTax + netStamp);
+        for (let iter = 0; iter < 30; iter++) {
+          const mid = (low + high) / 2;
+          const cappedSgkBase = Math.min(mid, sgkCeiling);
+          const workerSgk = cappedSgkBase * totalWorkerDeductionRate;
+          const taxBase = mid - workerSgk;
+          const cumBase = prevCumulativeBase + taxBase;
 
-          if (Math.abs(testNet - targetNet) < 0.1) break;
-          if (testNet < targetNet) low = guessGross;
-          else high = guessGross;
+          const rawIncomeTax = calculateBracketTax(prevCumulativeBase, cumBase, cfg.brackets);
+          const rawStampTax = mid * cfg.stampTaxRate;
+
+          const ex = minWageExemptions[monthIdx];
+          const netIncomeTax = Math.max(0, rawIncomeTax - ex.incomeTaxExemption);
+          const netStampTax = Math.max(0, rawStampTax - ex.stampTaxExemption);
+
+          const calcNet = mid - workerSgk - netIncomeTax - netStampTax;
+
+          if (Math.abs(calcNet - targetNet) < 0.01) {
+            bestGross = mid;
+            break;
+          }
+          if (calcNet < targetNet) {
+            low = mid;
+          } else {
+            high = mid;
+          }
+          bestGross = mid;
         }
-        monthlyGross = Math.round(guessGross * 100) / 100;
+        return bestGross;
       }
 
-      // 12 Months Loop
+      // 12-Month Computation Loop
       let cumulativeTaxBase = 0;
-      const monthlyResults = [];
       let totalGross = 0;
       let totalNet = 0;
       let totalSgkWorker = 0;
       let totalIncomeTax = 0;
       let totalStampTax = 0;
       let totalEmployerCost = 0;
-      let firstHigherBracketMonth = null;
+      let highestBracketReached = cfg.brackets[0];
+
+      const monthlyResults = [];
 
       for (let m = 0; m < 12; m++) {
-        const gross = monthlyGross;
-        const sgkBase = Math.min(gross, sgkCeiling);
-        const sgkWorker = sgkBase * sgkWorkerRate;
-        const unemployWorker = sgkBase * unemployWorkerRate;
-        const totalWorkerSgk = sgkWorker + unemployWorker;
-
-        const taxBase = gross - totalWorkerSgk;
-        const rawIncomeTax = calculateIncomeTax(taxBase, cumulativeTaxBase, cfg.brackets);
-        const bracketLabel = getBracketLabel(cumulativeTaxBase + taxBase, cfg.brackets);
-
-        if (bracketLabel !== '%15' && !firstHigherBracketMonth) {
-          firstHigherBracketMonth = { month: MONTHS[m], rate: bracketLabel };
+        let gross = enteredVal;
+        if (currentDirection === 'netToGross') {
+          gross = solveGrossFromNet(enteredVal, m, cumulativeTaxBase);
         }
 
-        cumulativeTaxBase += taxBase;
+        const cappedSgkBase = Math.min(gross, sgkCeiling);
+        const workerSgk = cappedSgkBase * workerSgkRate;
+        const workerUnemp = cappedSgkBase * workerUnempRate;
+        const totalWorkerSgk = workerSgk + workerUnemp;
 
-        const netIncomeTax = Math.max(0, rawIncomeTax - minWageExemptions[m].incomeTaxExemption);
+        const monthlyTaxBase = gross - totalWorkerSgk;
+        const prevBase = cumulativeTaxBase;
+        cumulativeTaxBase += monthlyTaxBase;
+
+        const rawIncomeTax = calculateBracketTax(prevBase, cumulativeTaxBase, cfg.brackets);
         const rawStampTax = gross * cfg.stampTaxRate;
-        const netStampTax = Math.max(0, rawStampTax - minWageExemptions[m].stampTaxExemption);
 
-        const netSalary = gross - (totalWorkerSgk + netIncomeTax + netStampTax);
+        const ex = minWageExemptions[m];
+        const netIncomeTax = Math.max(0, rawIncomeTax - ex.incomeTaxExemption);
+        const netStampTax = Math.max(0, rawStampTax - ex.stampTaxExemption);
 
-        const sgkEmployer = sgkBase * sgkEmployerRate;
-        const unemployEmployer = sgkBase * unemployEmployerRate;
-        const employerCost = gross + sgkEmployer + unemployEmployer;
+        const netSalary = gross - totalWorkerSgk - netIncomeTax - netStampTax;
+
+        // Employer Cost
+        const employerSgk = cappedSgkBase * totalEmployerAddRate;
+        const employerCost = gross + employerSgk;
+
+        // Current Bracket Label
+        let currentBracket = cfg.brackets[0];
+        for (const b of cfg.brackets) {
+          if (cumulativeTaxBase > b.limit) {
+            currentBracket = b;
+          }
+        }
+        if (currentBracket.rate > highestBracketReached.rate) {
+          highestBracketReached = currentBracket;
+        }
 
         totalGross += gross;
         totalNet += netSalary;
@@ -972,7 +1153,7 @@
           gross,
           totalWorkerSgk,
           cumulativeTaxBase,
-          bracketLabel,
+          bracketLabel: currentBracket.label,
           netIncomeTax,
           netStampTax,
           netSalary,
@@ -980,12 +1161,12 @@
         });
       }
 
-      // Render KPIs
-      const avgMonthlyNet = totalNet / 12;
-      kpiAvgNet.textContent = formatTL(avgMonthlyNet);
+      // Update KPI Cards
+      const avgNet = totalNet / 12;
+      kpiAvgNet.textContent = formatTL(avgNet);
       kpiTotalNet.textContent = formatTL(totalNet);
 
-      const totalDeductions = totalSgkWorker + totalIncomeTax + totalStampTax;
+      const totalDeductions = totalGross - totalNet;
       kpiTotalDeductions.textContent = formatTL(totalDeductions);
       const deductionPct = ((totalDeductions / totalGross) * 100).toFixed(1);
       document.getElementById('kpiDeductionPercent').textContent = `Brüt maaşın %${deductionPct}'i kesintilere gidiyor`;
@@ -993,9 +1174,12 @@
       kpiEmployerCost.textContent = formatTL(totalEmployerCost);
       kpiMonthlyCost.textContent = `Aylık ortalama: ${formatTL(totalEmployerCost / 12)}`;
 
-      // Tax bracket alert
-      if (firstHigherBracketMonth) {
-        taxBracketAlert.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1"></i> ${firstHigherBracketMonth.month} ayında ${firstHigherBracketMonth.rate} dilimine giriliyor`;
+      // Update Inflation Analyzer with Average Net
+      updateInflationErosion(avgNet);
+
+      // Tax Bracket Alert Pill
+      if (highestBracketReached.rate > 0.15) {
+        taxBracketAlert.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1 text-amber-400"></i> Yıl içinde ${highestBracketReached.label} vergi dilimine giriyorsunuz`;
         taxBracketAlert.className = 'px-3 py-1 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30 text-xs font-semibold';
       } else {
         taxBracketAlert.innerHTML = `<i class="fa-solid fa-circle-check mr-1 text-emerald-400"></i> Yıl boyu %15 diliminde kalıyorsunuz`;
@@ -1015,11 +1199,10 @@
       barSgkLabel.textContent = `%${sgkPct} (${formatTL(totalSgkWorker / 12)})`;
       barTaxLabel.textContent = `%${taxPct} (${formatTL((totalIncomeTax + totalStampTax) / 12)})`;
 
-      // Render 12-Month Table with Soft Colors & No-Wrap Numbers
+      // Render 12-Month Table
       payrollTableBody.innerHTML = '';
       monthlyResults.forEach((r, idx) => {
         const tr = document.createElement('tr');
-        // Gentle zebra striping
         tr.className = idx % 2 === 0 ? 'bg-[#111827]/60 hover:bg-slate-800/40 transition' : 'bg-[#0f172a]/40 hover:bg-slate-800/40 transition';
         
         let badgeClass = 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30';
@@ -1059,6 +1242,28 @@
       `;
     }
 
+    // BRACKET TAX HELPER
+    function calculateBracketTax(prevBase, currentBase, brackets) {
+      if (currentBase <= prevBase) return 0;
+      let tax = 0;
+      let lower = prevBase;
+      let bracketStart = 0;
+
+      for (let i = 0; i < brackets.length; i++) {
+        const b = brackets[i];
+        const bracketEnd = b.limit;
+
+        if (currentBase > bracketStart && lower < bracketEnd) {
+          const taxableChunk = Math.min(currentBase, bracketEnd) - Math.max(lower, bracketStart);
+          if (taxableChunk > 0) {
+            tax += taxableChunk * b.rate;
+          }
+        }
+        bracketStart = bracketEnd;
+      }
+      return tax;
+    }
+
     // Dynamic SEO Blog Card Update
     function updateBlogCard() {
       const cfg = TAX_CONFIGS[yearSelect.value];
@@ -1093,15 +1298,10 @@
     }
 
     // Initial load
+    updateSimulation();
     updateBlogCard();
     updateBracketsPreview();
     calculatePayroll();
-
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js').catch(() => {});
-      });
-    }
   </script>
 </body>
 </html>
