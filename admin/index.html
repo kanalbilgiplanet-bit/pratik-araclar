@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>PratikBase - Canlı Ziyaretçi & Geçmiş Analitik Paneli</title>
+  <title>PratikBase - Canlı Radar & Yönetici Kontrol Merkezi</title>
   <meta name="robots" content="noindex, nofollow, noarchive">
   <link rel="icon" type="image/png" href="/assets/icon-192.png">
   <script src="https://cdn.tailwindcss.com"></script>
@@ -60,7 +60,7 @@
           <i class="fa-solid fa-chart-line text-2xl font-black"></i>
         </div>
         <h1 class="text-2xl font-bold tracking-tight text-white">PratikBase Admin</h1>
-        <p class="text-slate-400 text-sm mt-1">Canlı Radar & Geçmiş Analitik Merkezi</p>
+        <p class="text-slate-400 text-sm mt-1">Canlı Radar & Yönetici Kontrol Merkezi</p>
       </div>
 
       <div id="loginError" class="hidden mb-5 p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 text-sm flex items-center gap-2.5">
@@ -127,7 +127,7 @@
 
     <!-- Üst Bar (Navbar) -->
     <header class="sticky top-0 z-30 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-4 lg:px-8 py-3.5">
-      <div class="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-3">
         
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-3">
@@ -138,38 +138,57 @@
               <div>
                 <span class="font-bold text-white tracking-tight flex items-center gap-1.5">
                   PratikBase
-                  <span class="text-[10px] uppercase font-black tracking-wider px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Admin</span>
+                  <span class="text-[10px] uppercase font-black tracking-wider px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Admin Pro</span>
                 </span>
-                <p class="text-[11px] text-slate-400 hidden sm:block">Canlı Radar & Geçmiş İstatistik Merkezi</p>
+                <p class="text-[11px] text-slate-400 hidden sm:block">Canlı Radar, Duyuru & Moderasyon Merkezi</p>
               </div>
             </a>
           </div>
 
-          <!-- Mobil Çıkış -->
-          <button onclick="handleLogout()" class="sm:hidden px-2.5 py-1 rounded-lg bg-slate-800 text-slate-400 text-xs border border-slate-700">
-            <i class="fa-solid fa-arrow-right-from-bracket"></i>
-          </button>
+          <!-- Mobil Hızlı Aksiyonlar -->
+          <div class="flex md:hidden items-center gap-2">
+            <button onclick="toggleAudioAlert()" id="audioToggleBtnMobile"
+              class="px-2.5 py-1.5 rounded-lg bg-slate-800 text-slate-400 text-xs border border-slate-700">
+              <i class="fa-solid fa-bell-slash"></i>
+            </button>
+            <button onclick="handleLogout()" class="px-2.5 py-1.5 rounded-lg bg-slate-800 text-slate-400 text-xs border border-slate-700">
+              <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            </button>
+          </div>
         </div>
 
-        <!-- Sekmeler & Çıkış -->
-        <div class="flex items-center justify-between sm:justify-end gap-2 sm:gap-3">
-          <!-- Sekme Butonları -->
-          <div class="bg-slate-950/80 p-1 rounded-xl border border-slate-800 flex items-center text-xs">
+        <!-- Sekmeler, Ses Bildirimi ve Çıkış -->
+        <div class="flex items-center justify-between md:justify-end gap-2 sm:gap-3 flex-wrap">
+          
+          <!-- 3 Ana Sekme -->
+          <div class="bg-slate-950/80 p-1 rounded-xl border border-slate-800 flex items-center text-xs overflow-x-auto">
             <button id="tabLiveBtn" onclick="switchTab('live')"
-              class="px-3.5 py-1.5 rounded-lg font-bold transition flex items-center gap-2 bg-emerald-500 text-slate-950 shadow">
+              class="px-3 py-1.5 rounded-lg font-bold transition flex items-center gap-1.5 bg-emerald-500 text-slate-950 shadow whitespace-nowrap">
               <span class="w-2 h-2 rounded-full bg-slate-950 animate-pulse"></span>
               <span>Canlı Radar</span>
             </button>
+            <button id="tabManageBtn" onclick="switchTab('manage')"
+              class="px-3 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-white transition flex items-center gap-1.5 whitespace-nowrap">
+              <i class="fa-solid fa-bullhorn text-amber-400"></i>
+              <span>Duyuru & Moderasyon</span>
+            </button>
             <button id="tabHistoryBtn" onclick="switchTab('history')"
-              class="px-3.5 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-white transition flex items-center gap-2">
-              <i class="fa-solid fa-clock-rotate-left"></i>
+              class="px-3 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-white transition flex items-center gap-1.5 whitespace-nowrap">
+              <i class="fa-solid fa-chart-line text-blue-400"></i>
               <span>Geçmiş & Raporlar</span>
             </button>
           </div>
 
+          <!-- Sesli Ziyaretçi Bildirimi Butonu (Masaüstü) -->
+          <button onclick="toggleAudioAlert()" id="audioToggleBtn" title="Yeni Ziyaretçi Geldiğinde Ses Çal"
+            class="hidden md:flex px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 text-xs font-semibold border border-slate-700/60 transition items-center gap-1.5">
+            <i id="audioIcon" class="fa-solid fa-bell-slash"></i>
+            <span id="audioText">Ses: Kapalı</span>
+          </button>
+
           <!-- Masaüstü Çıkış Butonu -->
           <button onclick="handleLogout()" title="Güvenli Çıkış"
-            class="hidden sm:flex px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-rose-500/20 hover:text-rose-400 text-slate-400 text-xs font-semibold border border-slate-700/60 transition items-center gap-1.5">
+            class="hidden md:flex px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-rose-500/20 hover:text-rose-400 text-slate-400 text-xs font-semibold border border-slate-700/60 transition items-center gap-1.5">
             <i class="fa-solid fa-arrow-right-from-bracket"></i>
             <span>Çıkış</span>
           </button>
@@ -394,7 +413,179 @@
 
 
     <!-- ========================================== -->
-    <!-- TAB 2: GEÇMİŞ İSTATİSTİKLER & RAPORLAR -->
+    <!-- TAB 2: CANLI YÖNETİM & DUYURU & MODERASYON -->
+    <!-- ========================================== -->
+    <main id="manageViewTab" class="hidden flex-1 max-w-7xl w-full mx-auto p-4 lg:p-8 space-y-6">
+
+      <!-- 1. SİTE GENELİ CANLI DUYURU BANDI YÖNETİCİSİ -->
+      <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 shadow-xl">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 border-b border-slate-800 pb-4">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs font-semibold mb-2">
+              <i class="fa-solid fa-bullhorn"></i>
+              <span>Site Geneli Canlı Ticker / Kayan Duyuru</span>
+            </div>
+            <h2 class="text-xl font-bold text-white">Canlı Acil Duyuru & Yönlendirme Panosu</h2>
+            <p class="text-xs text-slate-400 mt-1">Buradan yayınlayacağınız duyuru tüm sitedeki (43 sayfa) ziyaretçilerin en üstünde anında belirir.</p>
+          </div>
+
+          <div id="announcementStatusBadge" class="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold font-mono bg-slate-800 text-slate-400 border border-slate-700">
+            <span class="w-2 h-2 rounded-full bg-slate-500"></span>
+            <span>Duyuru: Pasif (Kapalı)</span>
+          </div>
+        </div>
+
+        <!-- Duyuru Formu -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="md:col-span-2 space-y-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Duyuru Metni</label>
+              <input type="text" id="annText" placeholder="Örn: 🔴 Bu akşam 20:45 Türkiye - Belçika maçı canlı tribün sohbeti ve anlatımı başladı!"
+                class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white placeholder-slate-500 focus:border-amber-500 focus:outline-none text-sm">
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Rozet (Badge) Metni</label>
+                <input type="text" id="annBadge" placeholder="Örn: CANLI YAYIN veya ÖNEMLİ"
+                  class="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white placeholder-slate-500 focus:border-amber-500 focus:outline-none text-sm">
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Yönlendirme Linki (Hedef URL)</label>
+                <input type="text" id="annLink" placeholder="Örn: /milli-mac-canli/ veya /acil-durum-radar/"
+                  class="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white placeholder-slate-500 focus:border-amber-500 focus:outline-none text-sm font-mono">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Tema / Renk</label>
+              <div class="flex items-center gap-3">
+                <label class="flex items-center gap-2 cursor-pointer text-xs">
+                  <input type="radio" name="annTheme" value="red" checked class="text-rose-500">
+                  <span class="text-rose-400 font-semibold">🔴 Kırmızı (Acil / Canlı Maç)</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer text-xs">
+                  <input type="radio" name="annTheme" value="emerald" class="text-emerald-500">
+                  <span class="text-emerald-400 font-semibold">🟢 Yeşil (Yeni Araç / Pozitif)</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer text-xs">
+                  <input type="radio" name="annTheme" value="amber" class="text-amber-500">
+                  <span class="text-amber-400 font-semibold">🟡 Turuncu (Uyarı / Hatırlatma)</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Aksiyon Butonları -->
+            <div class="flex items-center gap-3 pt-2">
+              <button onclick="publishAnnouncement()" class="px-5 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs flex items-center gap-2 shadow-lg shadow-amber-500/20 transition">
+                <i class="fa-solid fa-paper-plane"></i>
+                <span>Tüm Sitede Canlı Yayınla</span>
+              </button>
+
+              <button onclick="removeAnnouncement()" class="px-4 py-3 rounded-xl bg-slate-800 hover:bg-rose-500/20 hover:text-rose-400 text-slate-300 font-semibold text-xs flex items-center gap-2 border border-slate-700 transition">
+                <i class="fa-solid fa-power-off"></i>
+                <span>Duyuruyu Kapat (Kaldır)</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Canlı Önizleme Kartı -->
+          <div class="bg-slate-950/70 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between">
+            <div>
+              <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2 flex items-center gap-1.5">
+                <i class="fa-solid fa-eye text-emerald-400"></i> Ziyaretçilerin Göreceği Bant:
+              </span>
+              <div id="annPreviewBox" class="p-3 rounded-xl bg-gradient-to-r from-red-800 to-rose-700 text-white text-xs text-center shadow-lg">
+                <span id="annPreviewBadge" class="bg-white text-slate-900 font-black text-[10px] px-2 py-0.5 rounded-full uppercase mr-1">CANLI YAYIN</span>
+                <span id="annPreviewText">Bu alanda yazdığınız duyuru metni belirecektir.</span>
+                <span class="underline font-bold text-yellow-300 ml-1.5">İncele &rarr;</span>
+              </div>
+            </div>
+            <div class="text-[11px] text-slate-500 mt-4">
+              💡 Ziyaretçilerin ekranında sayfanın en üstünde yapışkan (sticky) bant olarak görünür.
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- 2. CANLI TRİBÜN SOHBET MODERASYONU & MESAJ SİLME -->
+      <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 shadow-xl">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 border-b border-slate-800 pb-4">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs font-semibold mb-2">
+              <i class="fa-solid fa-comments"></i>
+              <span>Canlı Tribün Sohbet Denetimi</span>
+            </div>
+            <h2 class="text-xl font-bold text-white">Canlı Maç & Sohbet Yorum Moderasyonu</h2>
+            <p class="text-xs text-slate-400 mt-1">Ziyaretçilerin maç sayfalarında yazdığı mesajları anında görün, uygunsuz olanları tek tıkla silin veya resmi yönetici mesajı gönderin.</p>
+          </div>
+
+          <button onclick="fetchChatMessages()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold border border-slate-700 transition flex items-center gap-1.5">
+            <i class="fa-solid fa-arrows-rotate"></i>
+            <span>Yenile</span>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+          <!-- Sol: Canlı Yorum Akışı & Silme Butonları (2 Kolon) -->
+          <div class="lg:col-span-2">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-xs font-bold text-slate-300 uppercase tracking-wider">Son Ziyaretçi Mesajları</span>
+              <span id="chatCountBadge" class="text-xs bg-slate-800 text-slate-400 px-2.5 py-0.5 rounded-full font-mono">0 Mesaj</span>
+            </div>
+
+            <div id="chatMessagesList" class="space-y-2.5 custom-scroll max-h-[380px] overflow-y-auto pr-1">
+              <div class="text-center py-12 text-slate-500 text-sm">
+                Sohbet mesajları taranıyor...
+              </div>
+            </div>
+          </div>
+
+          <!-- Sağ: Resmi Yönetici Mesajı Paylaşma -->
+          <div class="bg-slate-950/70 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between">
+            <div>
+              <span class="text-xs font-bold text-white flex items-center gap-2 mb-2">
+                <i class="fa-solid fa-shield-halved text-emerald-400"></i>
+                Yönetici Olarak Mesaj Gönder
+              </span>
+              <p class="text-xs text-slate-400 mb-4">Sohbet akışında [YÖNETİCİ 🛡️] altın rozetiyle resmi bilgilendirme yapın.</p>
+
+              <form onsubmit="sendAdminMessage(event)" class="space-y-3">
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-400 uppercase mb-1">Görünecek İsim</label>
+                  <input type="text" id="adminMsgNick" value="PratikBase Yönetim 🛡️" required
+                    class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-white text-xs">
+                </div>
+
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-400 uppercase mb-1">Mesajınız</label>
+                  <textarea id="adminMsgText" rows="3" required placeholder="Örn: Değerli taraftarlarımız, lütfen küfürsüz ve saygılı sohbet edelim. Türkiye - Belçika canlı yayını başlamıştır!"
+                    class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-white placeholder-slate-500 text-xs resize-none"></textarea>
+                </div>
+
+                <button type="submit" class="w-full py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs rounded-xl shadow-md transition flex items-center justify-center gap-2">
+                  <i class="fa-solid fa-paper-plane"></i>
+                  <span>Sohbete Gönder</span>
+                </button>
+              </form>
+            </div>
+
+            <div class="pt-4 border-t border-slate-800/80 text-[11px] text-slate-500 mt-4">
+              📌 Gönderdiğiniz mesaj hem [milli-mac-canli] hem [hangi-kanalda] sohbetinde anında görünür.
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+
+
+    <!-- ========================================== -->
+    <!-- TAB 3: GEÇMİŞ İSTATİSTİKLER & RAPORLAR -->
     <!-- ========================================== -->
     <main id="historyViewTab" class="hidden flex-1 max-w-7xl w-full mx-auto p-4 lg:p-8 space-y-6">
 
@@ -408,16 +599,24 @@
           <p class="text-xs text-slate-400 mt-0.5">Hangi gün kaç kişi girdi, hangi sayfalar kaçar kez görüntülendi?</p>
         </div>
 
-        <!-- Dönem Seçici -->
-        <div class="flex items-center gap-1.5 bg-slate-950 p-1.5 rounded-xl border border-slate-800 text-xs">
-          <button onclick="loadHistoricalStats('today')" id="filterTodayBtn"
-            class="px-3 py-1.5 rounded-lg font-bold bg-emerald-500 text-slate-950 transition">Bugün</button>
-          <button onclick="loadHistoricalStats('week')" id="filterWeekBtn"
-            class="px-3 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-white transition">Son 7 Gün</button>
-          <button onclick="loadHistoricalStats('month')" id="filterMonthBtn"
-            class="px-3 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-white transition">Son 30 Gün</button>
-          <button onclick="loadHistoricalStats('all')" id="filterAllBtn"
-            class="px-3 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-white transition">Tümü</button>
+        <div class="flex items-center gap-2 flex-wrap">
+          <!-- Dönem Seçici -->
+          <div class="flex items-center gap-1.5 bg-slate-950 p-1.5 rounded-xl border border-slate-800 text-xs">
+            <button onclick="loadHistoricalStats('today')" id="filterTodayBtn"
+              class="px-3 py-1.5 rounded-lg font-bold bg-emerald-500 text-slate-950 transition">Bugün</button>
+            <button onclick="loadHistoricalStats('week')" id="filterWeekBtn"
+              class="px-3 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-white transition">Son 7 Gün</button>
+            <button onclick="loadHistoricalStats('month')" id="filterMonthBtn"
+              class="px-3 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-white transition">Son 30 Gün</button>
+            <button onclick="loadHistoricalStats('all')" id="filterAllBtn"
+              class="px-3 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-white transition">Tümü</button>
+          </div>
+
+          <!-- Excel/CSV İndir Butonu -->
+          <button onclick="exportStatsToCSV()" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1.5 shadow transition">
+            <i class="fa-solid fa-file-excel"></i>
+            <span>Excel / CSV İndir</span>
+          </button>
         </div>
       </div>
 
@@ -495,7 +694,6 @@
       <!-- Geçmiş Sayfa Dağılımı & Kaynak Dağılımı Tablosu -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-        <!-- Sayfa Sıralaması (2 Kolon) -->
         <div class="lg:col-span-2 bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-lg">
           <div class="flex items-center justify-between mb-4">
             <div>
@@ -528,7 +726,6 @@
           </div>
         </div>
 
-        <!-- Kaynak Sıralaması (1 Kolon) -->
         <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col">
           <div class="flex items-center justify-between mb-4">
             <div>
@@ -555,7 +752,7 @@
 
 
   <!-- ========================================== -->
-  <!-- 3. JAVASCRIPT MANTIĞI & GÜVENLİK -->
+  <!-- 4. JAVASCRIPT MANTIĞI & GÜVENLİK -->
   <!-- ========================================== -->
   <script>
     const EXPECTED_AUTH_HASH = '16e27e9e326bfa2bb43414b95fac0b2c7f67ef9945863b5d8f5606a33481951b';
@@ -563,7 +760,63 @@
     let pollInterval = null;
     let currentFilter = 'today';
     let cachedDailyStats = null;
+    let previousOnlineCount = 0;
+    let audioAlertEnabled = localStorage.getItem('pb_audio_alert') === 'true';
 
+    // Ses Bildirimi Başlangıç Ayarı
+    function updateAudioButtonUI() {
+      const btn = document.getElementById('audioToggleBtn');
+      const btnMobile = document.getElementById('audioToggleBtnMobile');
+      const icon = document.getElementById('audioIcon');
+      const text = document.getElementById('audioText');
+
+      if (audioAlertEnabled) {
+        if (icon) icon.className = 'fa-solid fa-bell text-emerald-400';
+        if (text) text.innerText = 'Ses: Açık 🔔';
+        if (btn) btn.className = 'hidden md:flex px-3 py-1.5 rounded-xl bg-emerald-500/20 text-emerald-400 text-xs font-semibold border border-emerald-500/30 transition items-center gap-1.5';
+        if (btnMobile) btnMobile.className = 'px-2.5 py-1.5 rounded-lg bg-emerald-500/20 text-emerald-400 text-xs border border-emerald-500/30';
+      } else {
+        if (icon) icon.className = 'fa-solid fa-bell-slash text-slate-400';
+        if (text) text.innerText = 'Ses: Kapalı';
+        if (btn) btn.className = 'hidden md:flex px-3 py-1.5 rounded-xl bg-slate-800 text-slate-400 text-xs font-semibold border border-slate-700/60 transition items-center gap-1.5';
+        if (btnMobile) btnMobile.className = 'px-2.5 py-1.5 rounded-lg bg-slate-800 text-slate-400 text-xs border border-slate-700';
+      }
+    }
+
+    function toggleAudioAlert() {
+      audioAlertEnabled = !audioAlertEnabled;
+      localStorage.setItem('pb_audio_alert', audioAlertEnabled.toString());
+      updateAudioButtonUI();
+      if (audioAlertEnabled) {
+        playVisitorChime(); // Test sesi çal
+      }
+    }
+
+    // Web Audio API ile Hafif Hoş Çan Sesi
+    function playVisitorChime() {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
+        osc.frequency.setValueAtTime(880, ctx.currentTime + 0.08); // A5
+
+        gain.gain.setValueAtTime(0.18, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+
+        osc.start();
+        osc.stop(ctx.currentTime + 0.35);
+      } catch(e) {}
+    }
+
+    // Güvenli Giriş Doğrulama (Salted SHA-256)
     async function computeSaltedHash(username, password) {
       const plain = `pb_salt_2026_pratikbase:${username.trim()}:${password.trim()}`;
       const encoder = new TextEncoder();
@@ -634,8 +887,11 @@
     function showDashboard() {
       document.getElementById('loginSection').classList.add('hidden');
       document.getElementById('dashboardSection').classList.remove('hidden');
+      updateAudioButtonUI();
       fetchLiveData(true);
       fetchActivityFeed();
+      loadCurrentAnnouncement();
+      fetchChatMessages();
 
       if (pollInterval) clearInterval(pollInterval);
       pollInterval = setInterval(() => {
@@ -652,29 +908,41 @@
       }
     }
 
-    // Sekme Değiştirme (Canlı vs Geçmiş)
+    // Sekmeler Arası Geçiş
     function switchTab(tab) {
       const liveBtn = document.getElementById('tabLiveBtn');
+      const manageBtn = document.getElementById('tabManageBtn');
       const histBtn = document.getElementById('tabHistoryBtn');
       const liveTab = document.getElementById('liveViewTab');
+      const manageTab = document.getElementById('manageViewTab');
       const histTab = document.getElementById('historyViewTab');
+
+      // Hepsini gizle
+      liveTab.classList.add('hidden');
+      manageTab.classList.add('hidden');
+      histTab.classList.add('hidden');
+
+      liveBtn.className = 'px-3 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-white transition flex items-center gap-1.5 whitespace-nowrap';
+      manageBtn.className = 'px-3 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-white transition flex items-center gap-1.5 whitespace-nowrap';
+      histBtn.className = 'px-3 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-white transition flex items-center gap-1.5 whitespace-nowrap';
 
       if (tab === 'live') {
         liveTab.classList.remove('hidden');
-        histTab.classList.add('hidden');
-        liveBtn.className = 'px-3.5 py-1.5 rounded-lg font-bold transition flex items-center gap-2 bg-emerald-500 text-slate-950 shadow';
-        histBtn.className = 'px-3.5 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-white transition flex items-center gap-2';
-      } else {
-        liveTab.classList.add('hidden');
+        liveBtn.className = 'px-3 py-1.5 rounded-lg font-bold transition flex items-center gap-1.5 bg-emerald-500 text-slate-950 shadow whitespace-nowrap';
+      } else if (tab === 'manage') {
+        manageTab.classList.remove('hidden');
+        manageBtn.className = 'px-3 py-1.5 rounded-lg font-bold transition flex items-center gap-1.5 bg-amber-500 text-slate-950 shadow whitespace-nowrap';
+        loadCurrentAnnouncement();
+        fetchChatMessages();
+      } else if (tab === 'history') {
         histTab.classList.remove('hidden');
-        histBtn.className = 'px-3.5 py-1.5 rounded-lg font-bold transition flex items-center gap-2 bg-emerald-500 text-slate-950 shadow';
-        liveBtn.className = 'px-3.5 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-white transition flex items-center gap-2';
+        histBtn.className = 'px-3 py-1.5 rounded-lg font-bold transition flex items-center gap-1.5 bg-blue-500 text-white shadow whitespace-nowrap';
         loadHistoricalStats(currentFilter);
       }
     }
 
     // ==========================================
-    // CANLI VERİ ÇEKME & İŞLEME (TAB 1)
+    // CANLI VERİ ÇEKME & SESLİ BİLDİRİM (TAB 1)
     // ==========================================
     async function fetchLiveData(isManual = false) {
       const refreshIcon = document.getElementById('refreshIcon');
@@ -716,6 +984,13 @@
           }
         }
 
+        // Yeni Ziyaretçi Geldi mi Kontrolü (Ses Bildirimi)
+        const currentCount = activeSessions.length;
+        if (currentCount > previousOnlineCount && previousOnlineCount >= 0 && audioAlertEnabled) {
+          playVisitorChime();
+        }
+        previousOnlineCount = currentCount;
+
         renderDashboard(activeSessions, pageCounts, referrerCounts, mobileCount, desktopCount);
 
       } catch (err) {
@@ -729,7 +1004,6 @@
 
     function renderDashboard(sessions, pages, referrers, mobileCount, desktopCount) {
       const totalLive = sessions.length;
-
       document.getElementById('kpiOnlineCount').innerText = totalLive;
 
       if (totalLive > 0) {
@@ -963,7 +1237,7 @@
         }
 
         await Promise.all(deletePromises);
-        alert(`Temizlik tamamlandı! ${deletePromises.length} eski oturum kaydı hafızadan kaldırıldı.`);
+        alert(`Temizlik tamamlandı! ${deletePromises.length} eski oturum kaydı kaldırıldı.`);
         fetchLiveData(true);
       } catch(err) {
         alert('Hata: ' + err.message);
@@ -974,12 +1248,186 @@
     }
 
     // ==========================================
-    // GEÇMİŞ İSTATİSTİKLER & RAPORLAR (TAB 2)
+    // CANLI DUYURU & SOHBET MODERASYONU (TAB 2)
+    // ==========================================
+    async function loadCurrentAnnouncement() {
+      try {
+        const res = await fetch(`${RTDB_URL}/site_announcement.json?t=${Date.now()}`);
+        const data = await res.json();
+        const statusBadge = document.getElementById('announcementStatusBadge');
+
+        if (data && data.active && data.text) {
+          document.getElementById('annText').value = data.text || '';
+          document.getElementById('annBadge').value = data.badge || '';
+          document.getElementById('annLink').value = data.link || '';
+          
+          const themeRadios = document.getElementsByName('annTheme');
+          themeRadios.forEach(r => { if (r.value === data.theme) r.checked = true; });
+
+          statusBadge.className = 'flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold font-mono bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
+          statusBadge.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span><span>Duyuru: Canlıda Yayında! 🟢</span>';
+          updateAnnouncementPreview();
+        } else {
+          statusBadge.className = 'flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold font-mono bg-slate-800 text-slate-400 border border-slate-700';
+          statusBadge.innerHTML = '<span class="w-2 h-2 rounded-full bg-slate-500"></span><span>Duyuru: Pasif (Kapalı)</span>';
+        }
+      } catch(e) {}
+    }
+
+    function updateAnnouncementPreview() {
+      const text = document.getElementById('annText').value || 'Bu alanda yazdığınız duyuru metni belirecektir.';
+      const badge = document.getElementById('annBadge').value || 'CANLI YAYIN';
+      const themeRadios = document.getElementsByName('annTheme');
+      let selectedTheme = 'red';
+      themeRadios.forEach(r => { if (r.checked) selectedTheme = r.value; });
+
+      const box = document.getElementById('annPreviewBox');
+      const badgeEl = document.getElementById('annPreviewBadge');
+      const textEl = document.getElementById('annPreviewText');
+
+      badgeEl.innerText = badge;
+      textEl.innerText = text;
+
+      if (selectedTheme === 'emerald') {
+        box.className = 'p-3 rounded-xl bg-gradient-to-r from-emerald-800 to-teal-700 text-white text-xs text-center shadow-lg';
+      } else if (selectedTheme === 'amber') {
+        box.className = 'p-3 rounded-xl bg-gradient-to-r from-amber-800 to-yellow-700 text-white text-xs text-center shadow-lg';
+      } else {
+        box.className = 'p-3 rounded-xl bg-gradient-to-r from-red-800 to-rose-700 text-white text-xs text-center shadow-lg';
+      }
+    }
+
+    ['annText', 'annBadge'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener('input', updateAnnouncementPreview);
+    });
+
+    async function publishAnnouncement() {
+      const text = document.getElementById('annText').value.trim();
+      const badge = document.getElementById('annBadge').value.trim();
+      const link = document.getElementById('annLink').value.trim();
+      const themeRadios = document.getElementsByName('annTheme');
+      let theme = 'red';
+      themeRadios.forEach(r => { if (r.checked) theme = r.value; });
+
+      if (!text) {
+        alert('Lütfen bir duyuru metni girin!');
+        return;
+      }
+
+      const payload = {
+        active: true,
+        text: text,
+        badge: badge,
+        link: link,
+        theme: theme,
+        updatedAt: Date.now()
+      };
+
+      await fetch(`${RTDB_URL}/site_announcement.json`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      alert('Duyuru başarıyla tüm sitede yayına alındı!');
+      loadCurrentAnnouncement();
+    }
+
+    async function removeAnnouncement() {
+      if (confirm('Yayındaki duyuruyu tüm siteden kaldırmak istiyor musunuz?')) {
+        await fetch(`${RTDB_URL}/site_announcement.json`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ active: false, text: '', badge: '', link: '' })
+        });
+        alert('Duyuru kapatıldı ve siteden kaldırıldı.');
+        loadCurrentAnnouncement();
+      }
+    }
+
+    // Sohbet Moderasyonu
+    async function fetchChatMessages() {
+      try {
+        const res = await fetch(`${RTDB_URL}/tribun_chat.json?orderBy="createdMs"&limitToLast=35`);
+        const data = await res.json() || {};
+        const container = document.getElementById('chatMessagesList');
+        const entries = Object.entries(data).sort((a, b) => (b[1].createdMs || 0) - (a[1].createdMs || 0));
+
+        document.getElementById('chatCountBadge').innerText = `${entries.length} Mesaj`;
+
+        if (entries.length === 0) {
+          container.innerHTML = '<div class="text-center py-8 text-slate-500 text-xs">Henüz mesaj kaydı bulunamadı.</div>';
+          return;
+        }
+
+        container.innerHTML = entries.map(([id, m]) => {
+          const isAdmin = m.badge && m.badge.includes('Yönetim');
+          return `
+            <div class="p-3 bg-slate-950/60 border border-slate-800/80 rounded-xl flex items-center justify-between gap-3 text-xs">
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="font-bold ${isAdmin ? 'text-amber-400' : 'text-emerald-400'}">${m.nick || 'Taraftar'}</span>
+                  <span class="text-[10px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded font-mono">${m.time || ''}</span>
+                  ${isAdmin ? '<span class="text-[10px] bg-amber-500/20 text-amber-400 px-1.5 py-0.5 rounded font-bold">YÖNETİCİ</span>' : ''}
+                </div>
+                <div class="text-slate-200 text-xs break-words">${m.text || ''}</div>
+              </div>
+
+              <button onclick="deleteChatMessage('${id}')" title="Bu mesajı sohbetten sil"
+                class="shrink-0 px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-rose-500/20 text-slate-400 hover:text-rose-400 border border-slate-700/60 transition flex items-center gap-1 text-xs">
+                <i class="fa-solid fa-trash-can"></i>
+                <span class="hidden sm:inline">Sil</span>
+              </button>
+            </div>
+          `;
+        }).join('');
+      } catch(e) {
+        console.warn('Sohbet mesajları okunamadı:', e);
+      }
+    }
+
+    async function deleteChatMessage(id) {
+      if (confirm('Bu yorumu sohbetten kalıcı olarak silmek istiyor musunuz?')) {
+        await fetch(`${RTDB_URL}/tribun_chat/${id}.json`, { method: 'DELETE' });
+        fetchChatMessages();
+      }
+    }
+
+    async function sendAdminMessage(e) {
+      e.preventDefault();
+      const nick = document.getElementById('adminMsgNick').value.trim();
+      const text = document.getElementById('adminMsgText').value.trim();
+      if (!text) return;
+
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+
+      const newMsg = {
+        nick: nick,
+        text: text,
+        badge: 'Yönetim 🛡️',
+        time: timeStr,
+        createdMs: Date.now()
+      };
+
+      await fetch(`${RTDB_URL}/tribun_chat.json`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newMsg)
+      });
+
+      document.getElementById('adminMsgText').value = '';
+      alert('Yönetici mesajı başarıyla canlı sohbete gönderildi!');
+      fetchChatMessages();
+    }
+
+    // ==========================================
+    // GEÇMİŞ İSTATİSTİKLER & CSV EXPORT (TAB 3)
     // ==========================================
     async function loadHistoricalStats(period = 'today') {
       currentFilter = period;
 
-      // Buton renklerini güncelle
       const filters = ['today', 'week', 'month', 'all'];
       filters.forEach(f => {
         const b = document.getElementById('filter' + f.charAt(0).toUpperCase() + f.slice(1) + 'Btn');
@@ -995,7 +1443,6 @@
       try {
         const res = await fetch(`${RTDB_URL}/stats/daily.json?t=${Date.now()}`);
         cachedDailyStats = await res.json() || {};
-
         processAndRenderHistory(period, cachedDailyStats);
       } catch(e) {
         console.warn('Geçmiş verisi okunamadı:', e);
@@ -1005,8 +1452,7 @@
     function processAndRenderHistory(period, allDays) {
       const todayStr = new Date().toISOString().split('T')[0];
       const selectedDates = [];
-
-      const dayKeys = Object.keys(allDays).sort(); // örn: ['2026-11-12', ...]
+      const dayKeys = Object.keys(allDays).sort();
 
       if (period === 'today') {
         selectedDates.push(todayStr);
@@ -1031,7 +1477,7 @@
       let mobileHits = 0;
       const pageTotals = {};
       const sourceTotals = {};
-      const dailyTrend = []; // { date, hits, users }
+      const dailyTrend = [];
 
       selectedDates.forEach(date => {
         const dayData = allDays[date];
@@ -1039,14 +1485,12 @@
         let dayUsers = 0;
 
         if (dayData) {
-          // Tekil kullanıcılar
           if (dayData.unique_users) {
             const users = Object.values(dayData.unique_users);
             dayUsers = users.length;
             totalUniqueUsers += dayUsers;
           }
 
-          // Sayfa tıklamaları
           if (dayData.hits) {
             const hits = Object.values(dayData.hits);
             dayHits = hits.length;
@@ -1070,7 +1514,6 @@
         dailyTrend.push({ date, hits: dayHits, users: dayUsers });
       });
 
-      // KPI Kartlarını Doldur
       document.getElementById('histUniqueUsers').innerText = totalUniqueUsers;
       document.getElementById('histTotalHits').innerText = totalHits;
       const mobRatio = totalHits > 0 ? Math.round((mobileHits / totalHits) * 100) : 0;
@@ -1085,13 +1528,8 @@
         document.getElementById('histTopSourceCount').innerText = 'Kayıt bekleniyor';
       }
 
-      // Günlük Trend Çubuk Grafiği (Bar Chart)
       renderTrendChart(dailyTrend);
-
-      // Sayfa Sıralaması Tablosu
       renderHistoryPagesTable(pageTotals, totalHits);
-
-      // Kaynak Listesi
       renderHistorySourcesList(sortedSources, totalHits);
     }
 
@@ -1106,7 +1544,7 @@
 
       container.innerHTML = trend.map(t => {
         const heightPct = Math.max(12, Math.round((t.hits / maxHits) * 100));
-        const dayLabel = t.date.slice(5); // MM-DD
+        const dayLabel = t.date.slice(5);
 
         return `
           <div class="flex flex-col items-center gap-1.5 flex-1 min-w-[36px] sm:min-w-[48px] group">
@@ -1194,6 +1632,40 @@
           </div>
         `;
       }).join('');
+    }
+
+    // CSV / Excel Dışa Aktarma
+    function exportStatsToCSV() {
+      if (!cachedDailyStats || Object.keys(cachedDailyStats).length === 0) {
+        alert('İndirilecek istatistik verisi bulunamadı.');
+        return;
+      }
+
+      let csv = '\uFEFFTarih,Sayfa Yolu,Sayfa Basligi,Cihaz,Trafik Kaynagi,Saat\n';
+
+      for (const [date, dayData] of Object.entries(cachedDailyStats)) {
+        if (dayData && dayData.hits) {
+          for (const hit of Object.values(dayData.hits)) {
+            const row = [
+              date,
+              `"${hit.page || ''}"`,
+              `"${(hit.title || '').replace(/"/g, '""')}"`,
+              hit.device || 'Mobil',
+              `"${hit.referrer || 'Dogrudan'}"`,
+              hit.time || ''
+            ];
+            csv += row.join(',') + '\n';
+          }
+        }
+      }
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `pratikbase_ziyaretci_raporu_${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
     }
 
     // Test Ziyaretçisi Ekleme

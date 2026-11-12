@@ -1,6 +1,6 @@
 /**
- * PratikBase.com - Real-Time & Historical Visitor Analytics Tracker
- * Canlı izleme + Geçmişe dönük gün gün sayfa ve ziyaretçi kaydı.
+ * PratikBase.com - Real-Time & Historical Visitor Analytics Tracker + Live Announcement Receiver
+ * Canlı izleme + Geçmişe dönük gün gün sayfa ve ziyaretçi kaydı + Site geneli acil duyuru bandı.
  */
 (function() {
   if (window.location.pathname.startsWith('/admin')) {
@@ -133,14 +133,14 @@
       timestamp: Date.now()
     };
 
-    // A. Günlük sayfa görüntüleme kaydı (Geçmiş raporlar için)
+    // A. Günlük sayfa görüntüleme kaydı
     fetch(`${RTDB_URL}/stats/daily/${dateStr}/hits/${hitId}.json`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(hitData)
     }).catch(() => {});
 
-    // B. Günlük tekil kullanıcı kaydı (Günde 1 kez yazar)
+    // B. Günlük tekil kullanıcı kaydı
     const dailyUserKey = `pb_v_${dateStr}`;
     if (!sessionStorage.getItem(dailyUserKey)) {
       sessionStorage.setItem(dailyUserKey, '1');
@@ -167,14 +167,49 @@
     }).catch(() => {});
   }
 
+  // 7. Site Geneli Canlı Duyuru Bandı (Admin Yönetimli)
+  function checkSiteAnnouncement() {
+    fetch(`${RTDB_URL}/site_announcement.json?t=${Date.now()}`)
+      .then(r => r.json())
+      .then(data => {
+        const bannerId = 'pb-global-announcement-bar';
+        const existing = document.getElementById(bannerId);
+
+        if (data && data.active && data.text) {
+          if (!existing) {
+            const banner = document.createElement('div');
+            banner.id = bannerId;
+            const bgGradient = data.theme === 'emerald' 
+              ? 'linear-gradient(90deg, #065f46, #047857)' 
+              : data.theme === 'amber'
+              ? 'linear-gradient(90deg, #92400e, #b45309)'
+              : 'linear-gradient(90deg, #991b1b, #b91c1c)';
+
+            banner.style.cssText = `position:sticky;top:0;z-index:99999;background:${bgGradient};color:#fff;padding:8px 16px;font-size:13px;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 3px 12px rgba(0,0,0,0.35);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;text-align:center;line-height:1.4;`;
+
+            const badgeHtml = data.badge ? `<span style="background:#fff;color:#0f172a;padding:2px 8px;border-radius:9999px;font-weight:800;font-size:10px;letter-spacing:0.5px;text-transform:uppercase;box-shadow:0 1px 3px rgba(0,0,0,0.2);">${data.badge}</span>` : '';
+            const linkHtml = data.link ? `<a href="${data.link}" style="color:#fef08a;text-decoration:underline;font-weight:700;margin-left:6px;display:inline-flex;align-items:center;gap:3px;">İncele &rarr;</a>` : '';
+
+            banner.innerHTML = `${badgeHtml} <span style="font-weight:500;">${data.text}</span> ${linkHtml}`;
+            document.body.insertBefore(banner, document.body.firstChild);
+          }
+        } else if (existing) {
+          existing.remove();
+        }
+      })
+      .catch(() => {});
+  }
+
   sendHeartbeat();
   recordPageEnter();
+  checkSiteAnnouncement();
 
   let heartbeatTimer = setInterval(sendHeartbeat, HEARTBEAT_INTERVAL);
 
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') {
       sendHeartbeat();
+      checkSiteAnnouncement();
       if (!heartbeatTimer) heartbeatTimer = setInterval(sendHeartbeat, HEARTBEAT_INTERVAL);
     } else {
       sendHeartbeat();
