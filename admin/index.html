@@ -417,72 +417,6 @@
     <!-- ========================================== -->
     <main id="manageViewTab" class="hidden flex-1 max-w-7xl w-full mx-auto p-4 lg:p-8 space-y-6">
 
-      <!-- 0. CANLI MAÇ SKORU & YAYIN KONTROL PANELİ -->
-      <div class="bg-gradient-to-br from-slate-900 to-slate-900/90 border border-rose-500/40 rounded-3xl p-6 shadow-xl relative overflow-hidden">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 border-b border-slate-800 pb-4">
-          <div>
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/15 text-rose-400 border border-rose-500/30 text-xs font-semibold mb-2">
-              <i class="fa-solid fa-futbol text-rose-500"></i>
-              <span>Canlı Skor Motoru</span>
-            </div>
-            <h2 class="text-xl font-bold text-white">Milli Maç Canlı Skor & Yayın Kontrolü</h2>
-            <p class="text-xs text-slate-400 mt-1">Buradan skoru değiştirdiğiniz an milli-mac-canli sayfasındaki tüm ziyaretçilerin ekranı anında güncellenir ve gol sesi çalar!</p>
-          </div>
-
-          <div class="flex items-center gap-2">
-            <span class="px-3 py-1.5 rounded-full text-xs font-bold font-mono bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center gap-1.5">
-              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-              <span>Canlı Senkronizasyon</span>
-            </span>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
-          <!-- Skor Kutusu: Türkiye -->
-          <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 text-center">
-            <span class="text-xs font-bold text-rose-400 block mb-1">🇹🇷 TÜRKİYE</span>
-            <div class="flex items-center justify-center gap-3">
-              <button onclick="adjustMatchScore('home', -1)" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-bold text-sm">-</button>
-              <span id="adminScoreHome" class="text-3xl font-black text-white font-mono">1</span>
-              <button onclick="adjustMatchScore('home', 1)" class="w-8 h-8 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-bold text-sm">+</button>
-            </div>
-          </div>
-
-          <!-- Skor Kutusu: Belçika -->
-          <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 text-center">
-            <span class="text-xs font-bold text-amber-400 block mb-1">🇧🇪 BELÇİKA</span>
-            <div class="flex items-center justify-center gap-3">
-              <button onclick="adjustMatchScore('away', -1)" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-bold text-sm">-</button>
-              <span id="adminScoreAway" class="text-3xl font-black text-white font-mono">0</span>
-              <button onclick="adjustMatchScore('away', 1)" class="w-8 h-8 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-bold text-sm">+</button>
-            </div>
-          </div>
-
-          <!-- Yayın Kanalı & Durum -->
-          <div class="space-y-2">
-            <div>
-              <label class="block text-[11px] font-semibold text-slate-400 uppercase mb-1">Yayın Kanalı</label>
-              <input type="text" id="adminMatchChannel" value="ATV (Şifresiz HD)"
-                class="w-full px-3 py-1.5 bg-slate-950 border border-slate-800 rounded-xl text-white text-xs">
-            </div>
-            <div>
-              <label class="block text-[11px] font-semibold text-slate-400 uppercase mb-1">Maç Durumu / Dakika</label>
-              <input type="text" id="adminMatchStatus" value="1. Yarı Canlı"
-                class="w-full px-3 py-1.5 bg-slate-950 border border-slate-800 rounded-xl text-white text-xs">
-            </div>
-          </div>
-
-          <!-- Kaydet Butonu -->
-          <div class="flex flex-col justify-end h-full pt-2">
-            <button onclick="updateLiveMatchScore()" class="w-full py-3.5 px-4 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-rose-600/30 transition">
-              <i class="fa-solid fa-bolt"></i>
-              <span>Skoru Canlıda Güncelle</span>
-            </button>
-            <span class="text-[10px] text-slate-500 text-center mt-2">Ziyaretçilerde anında güncellenir</span>
-          </div>
-        </div>
-      </div>
-
       <!-- 1. SİTE GENELİ CANLI DUYURU BANDI YÖNETİCİSİ -->
       <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 shadow-xl">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 border-b border-slate-800 pb-4">
@@ -964,7 +898,6 @@
       fetchActivityFeed();
       loadCurrentAnnouncement();
       fetchChatMessages();
-      loadLiveMatchAdmin();
 
       if (pollInterval) clearInterval(pollInterval);
       pollInterval = setInterval(() => {
@@ -1007,7 +940,6 @@
         manageBtn.className = 'px-3 py-1.5 rounded-lg font-bold transition flex items-center gap-1.5 bg-amber-500 text-slate-950 shadow whitespace-nowrap';
         loadCurrentAnnouncement();
         fetchChatMessages();
-        loadLiveMatchAdmin();
       } else if (tab === 'history') {
         histTab.classList.remove('hidden');
         histBtn.className = 'px-3 py-1.5 rounded-lg font-bold transition flex items-center gap-1.5 bg-blue-500 text-white shadow whitespace-nowrap';
@@ -1322,69 +1254,6 @@
     }
 
     // ==========================================
-    // CANLI MAÇ SKORU & YAYIN KONTROLÜ (TAB 2)
-    // ==========================================
-    let liveMatchState = { scoreHome: 1, scoreAway: 0 };
-
-    async function loadLiveMatchAdmin() {
-      try {
-        const res = await fetch(`${RTDB_URL}/live_match.json?t=${Date.now()}`);
-        const data = await res.json();
-        if (data) {
-          liveMatchState.scoreHome = data.scoreHome ?? 1;
-          liveMatchState.scoreAway = data.scoreAway ?? 0;
-          const hEl = document.getElementById('adminScoreHome');
-          const aEl = document.getElementById('adminScoreAway');
-          if (hEl) hEl.innerText = liveMatchState.scoreHome;
-          if (aEl) aEl.innerText = liveMatchState.scoreAway;
-          if (data.channel) {
-            const chEl = document.getElementById('adminMatchChannel');
-            if (chEl) chEl.value = data.channel;
-          }
-          if (data.statusText) {
-            const stEl = document.getElementById('adminMatchStatus');
-            if (stEl) stEl.value = data.statusText;
-          }
-        }
-      } catch(e) {}
-    }
-
-    function adjustMatchScore(team, delta) {
-      if (team === 'home') {
-        liveMatchState.scoreHome = Math.max(0, liveMatchState.scoreHome + delta);
-        document.getElementById('adminScoreHome').innerText = liveMatchState.scoreHome;
-      } else {
-        liveMatchState.scoreAway = Math.max(0, liveMatchState.scoreAway + delta);
-        document.getElementById('adminScoreAway').innerText = liveMatchState.scoreAway;
-      }
-    }
-
-    async function updateLiveMatchScore() {
-      const channel = document.getElementById('adminMatchChannel').value.trim();
-      const statusText = document.getElementById('adminMatchStatus').value.trim();
-
-      const payload = {
-        matchId: 'tur-bel-2026',
-        homeName: 'Türkiye',
-        awayName: 'Belçika',
-        scoreHome: liveMatchState.scoreHome,
-        scoreAway: liveMatchState.scoreAway,
-        statusText: statusText,
-        channel: channel,
-        lastGoalText: `${liveMatchState.scoreHome}-${liveMatchState.scoreAway} Skor Güncellendi!`,
-        updatedAt: Date.now()
-      };
-
-      await fetch(`${RTDB_URL}/live_match.json`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-
-      alert(`Canlı maç skoru ${liveMatchState.scoreHome} - ${liveMatchState.scoreAway} (${channel}) olarak tüm sitede güncellendi!`);
-    }
-
-    // ==========================================
     // CANLI DUYURU & SOHBET MODERASYONU (TAB 2)
     // ==========================================
     async function loadCurrentAnnouncement() {
@@ -1486,10 +1355,21 @@
     // Sohbet Moderasyonu
     async function fetchChatMessages() {
       try {
-        const res = await fetch(`${RTDB_URL}/tribun_chat.json?orderBy="createdMs"&limitToLast=35`);
+        const res = await fetch(`${RTDB_URL}/tribun_chat.json?_t=${Date.now()}`);
         const data = await res.json() || {};
         const container = document.getElementById('chatMessagesList');
-        const entries = Object.entries(data).sort((a, b) => (b[1].createdMs || 0) - (a[1].createdMs || 0));
+        if (!container) return;
+
+        if (data.error || typeof data !== 'object') {
+          container.innerHTML = '<div class="text-center py-8 text-slate-500 text-xs">Henüz mesaj kaydı bulunamadı.</div>';
+          document.getElementById('chatCountBadge').innerText = '0 Mesaj';
+          return;
+        }
+
+        const entries = Object.entries(data)
+          .filter(([id, m]) => m && typeof m === 'object' && m.text)
+          .sort((a, b) => (b[1].createdMs || 0) - (a[1].createdMs || 0))
+          .slice(0, 50);
 
         document.getElementById('chatCountBadge').innerText = `${entries.length} Mesaj`;
 

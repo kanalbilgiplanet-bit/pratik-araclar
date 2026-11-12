@@ -177,12 +177,11 @@
               <span>TÜRKİYE</span>
             </div>
             <div id="spotlightTimeBox" class="flex flex-col items-center">
-              <span id="spotlightScoreBadge" class="px-2.5 py-1 rounded-xl bg-rose-600 text-white font-black text-xs animate-pulse flex items-center gap-1.5 shadow-md shadow-rose-600/40">
-                <span class="w-2 h-2 rounded-full bg-white animate-ping"></span>
-                <span>CANLI</span>
+              <span id="spotlightScoreBadge" class="px-2.5 py-1 rounded-xl bg-slate-800 text-slate-200 font-bold text-xs flex items-center gap-1.5 border border-slate-700">
+                <span>MS</span>
                 <span id="spotlightLiveScore" class="font-mono text-sm font-black">1 - 2</span>
               </span>
-              <span id="spotlightMatchMinute" class="text-[10px] text-rose-300 font-semibold pt-0.5">1. Yarı Canlı</span>
+              <span id="spotlightMatchMinute" class="text-[10px] text-slate-400 font-semibold pt-0.5">Maç Sonu (FT)</span>
             </div>
             <div class="flex items-center gap-2 font-bold text-white text-sm sm:text-base">
               <span>BELÇİKA</span>
@@ -519,7 +518,10 @@
         radio: "A Spor Radyo",
         notes: "Ulusal açık kanal ATV & atv.com.tr canlı yayın. Şifresiz.",
         liveLink: "/milli-mac-canli/",
-        isLiveNow: true,
+        isLiveNow: false,
+        isFinished: true,
+        liveScore: "1 - 2",
+        liveClock: "FT",
         isFeatured: true
       },
       {
@@ -1064,33 +1066,8 @@
           } catch (_) {}
         }
 
-        // 2. Firebase RTDB (Türkiye maçı veya admin manuel override için)
-        let rtdbData = null;
-        try {
-          const rtdbRes = await fetch(`https://pratikbase-default-rtdb.firebaseio.com/live_match.json?_t=${Date.now()}`);
-          if (rtdbRes.ok) {
-            rtdbData = await rtdbRes.json();
-          }
-        } catch (_) {}
-
-        // 3. Listedeki Tüm Maçları Canlı Akışla Eşleştir
+        // 2. Listedeki Tüm Maçları Canlı Akışla Eşleştir
         MATCHES_DB.forEach(m => {
-          // Özel: Türkiye - Belçika maçı
-          if (m.id === 'm1' && rtdbData && rtdbData.scoreHome !== undefined) {
-            const prevScore = m.liveScore;
-            m.isLiveNow = true;
-            m.liveScore = `${rtdbData.scoreHome} - ${rtdbData.scoreAway}`;
-            m.liveClock = rtdbData.statusText || 'Canlı';
-            if (prevScore !== m.liveScore) hasChanges = true;
-
-            const spotScore = document.getElementById('spotlightLiveScore');
-            if (spotScore) spotScore.textContent = m.liveScore;
-            const spotMin = document.getElementById('spotlightMatchMinute');
-            if (spotMin) spotMin.textContent = m.liveClock;
-            return;
-          }
-
-          // Diğer tüm maçlar (Fransa-İtalya, İngiltere, vs.)
           const ev = allEvents.find(e => matchEventWithGame(m, e));
           if (ev) {
             const comp = ev.competitions?.[0];
@@ -1108,7 +1085,7 @@
               const scoreH = homeIsH ? (h.score || 0) : (a.score || 0);
               const scoreA = homeIsH ? (a.score || 0) : (h.score || 0);
               const newScore = `${scoreH} - ${scoreA}`;
-              const newClock = comp.status?.displayClock || (isLive ? 'Canlı' : (isFinished ? 'MS' : ''));
+              const newClock = comp?.status?.displayClock || (isLive ? 'Canlı' : (isFinished ? 'MS' : ''));
 
               if (m.isLiveNow !== isLive || m.liveScore !== newScore || m.isFinished !== isFinished) {
                 m.isLiveNow = isLive;
@@ -1116,6 +1093,35 @@
                 m.liveScore = newScore;
                 m.liveClock = newClock;
                 hasChanges = true;
+              }
+
+              // Günün Öne Çıkan Maçı (Spotlight) Bilgilerini Senkronize Et
+              if (m.id === 'm1') {
+                const spotBadge = document.getElementById('spotlightScoreBadge');
+                const spotScore = document.getElementById('spotlightLiveScore');
+                const spotMin = document.getElementById('spotlightMatchMinute');
+
+                if (spotScore) spotScore.textContent = newScore;
+
+                if (isFinished) {
+                  if (spotBadge) {
+                    spotBadge.className = 'px-2.5 py-1 rounded-xl bg-slate-800 text-slate-200 font-bold text-xs flex items-center gap-1.5 border border-slate-700';
+                    spotBadge.innerHTML = `<span>MS</span> <span id="spotlightLiveScore" class="font-mono text-sm font-black">${newScore}</span>`;
+                  }
+                  if (spotMin) {
+                    spotMin.textContent = 'Maç Sonu (FT)';
+                    spotMin.className = 'text-[10px] text-slate-400 font-semibold pt-0.5';
+                  }
+                } else if (isLive) {
+                  if (spotBadge) {
+                    spotBadge.className = 'px-2.5 py-1 rounded-xl bg-rose-600 text-white font-black text-xs animate-pulse flex items-center gap-1.5 shadow-md shadow-rose-600/40';
+                    spotBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-white animate-ping"></span> <span>CANLI</span> <span id="spotlightLiveScore" class="font-mono text-sm font-black">${newScore}</span>`;
+                  }
+                  if (spotMin) {
+                    spotMin.textContent = newClock || 'Canlı';
+                    spotMin.className = 'text-[10px] text-rose-300 font-semibold pt-0.5';
+                  }
+                }
               }
             }
           }

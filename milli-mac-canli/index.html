@@ -749,8 +749,13 @@
         tournament: "UEFA Uluslar A Ligi • 5. Maç",
         venue: "İzmir Gürsel Aksel Stadyumu",
         channel: "ATV",
+        radioName: "A Spor Radyo",
         tvUrl: "https://www.atv.com.tr/canli-yayin",
         radioUrl: "https://radyo.trt.net.tr/",
+        isFinished: true,
+        scoreHome: 1,
+        scoreAway: 2,
+        statusText: "Maç Sonu (MS)",
         home: {
           name: "TÜRKİYE",
           short: "TUR",
@@ -792,6 +797,9 @@
           valueHome: "295 M €", valueAway: "540 M €"
         },
         timeline: [
+          { minute: "90'+4'", type: "info", title: "Maç Sona Erdi", text: "Karşılaşma hakemin son düdüğüyle bitti: Türkiye 1 - 2 Belçika. Millilerimiz İzmir'de 3 puanı hanesine yazdıramadı." },
+          { minute: "88'", type: "card", title: "🟨 Sarı Kart (Merih Demiral)", text: "Merih Demiral hakeme itirazları sebebiyle sarı kart gördü." },
+          { minute: "75'", type: "info", title: "Oyuncu Değişikliği", text: "Enes Ünal oyundan çıkarken Kenan Yıldız oyuna dahil oldu." },
           { minute: "46'", type: "info", title: "İkinci Yarı Başladı", text: "İkinci 45 dakika hakemin düdüğüyle başladı. Sergen Yalçın ve A Milli Takımımıza başarılar!" },
           { minute: "45'", type: "info", title: "İlk Yarı Sona Erdi", text: "İlk yarı sonucu: Türkiye 1 - 2 Belçika. Millilerimiz Arda Güler'in harika frikik golüyle öne geçti, Belçika De Bruyne ve De Ketelaere ile karşılık verdi." },
           { minute: "32'", type: "card", title: "🟨 Sarı Kart (Ozan Kabak)", text: "Ozan Kabak orta sahadaki sert müdahalesi nedeniyle sarı kart gördü." },
@@ -810,8 +818,13 @@
         tournament: "UEFA Uluslar A Ligi • 6. Maç (Grup Finali)",
         venue: "Matmut Atlantique Stadyumu, Bordeaux (Fransa)",
         channel: "TRT 1",
+        radioName: "TRT Radyo 1",
         tvUrl: "https://www.tabii.com/tr/watch/live/trt1",
         radioUrl: "https://radyo.trt.net.tr/",
+        isFinished: false,
+        scoreHome: 0,
+        scoreAway: 0,
+        statusText: "Maç Başlamadı",
         home: {
           name: "FRANSA",
           short: "FRA",
@@ -906,6 +919,8 @@
       return flagCode;
     }
 
+    let userManuallySelectedFixture = false;
+
     // Fikstür Pill Butonlarını Oluştur
     function renderFixturePills() {
       const container = document.getElementById('fixturePills');
@@ -918,9 +933,11 @@
         btn.innerHTML = `<span>${getMiniFlagSvg(m.home.flag)}</span><span class="text-slate-400 font-bold">vs</span><span>${getMiniFlagSvg(m.away.flag)}</span>`;
         btn.title = `${m.home.name} vs ${m.away.name} (${m.displayDate})`;
         btn.onclick = () => {
+          userManuallySelectedFixture = true;
           currentMatchIndex = idx;
           loadMatch(FIXTURES[currentMatchIndex]);
           renderFixturePills();
+          checkLiveScore();
         };
         container.appendChild(btn);
       });
@@ -945,11 +962,30 @@
       document.getElementById('awaySub').textContent = m.away.sub;
       document.getElementById('awayCardBox').className = `w-16 h-16 sm:w-22 sm:h-22 rounded-2xl border-2 flex items-center justify-center shadow-2xl transform hover:scale-105 transition-all p-2 ${m.away.colorClass}`;
 
+      // Skor & Durum Resetle
+      currentScore.home = m.scoreHome !== undefined ? m.scoreHome : 0;
+      currentScore.away = m.scoreAway !== undefined ? m.scoreAway : 0;
+      const scoreHomeEl = document.getElementById('scoreHome');
+      const scoreAwayEl = document.getElementById('scoreAway');
+      if (scoreHomeEl) scoreHomeEl.textContent = currentScore.home;
+      if (scoreAwayEl) scoreAwayEl.textContent = currentScore.away;
+
+      const clockEl = document.getElementById('matchClock');
+      if (clockEl) {
+        if (m.isFinished) {
+          clockEl.innerHTML = '<span class="text-slate-300 font-bold">Maç Sonu (MS)</span>';
+        } else if (m.statusText) {
+          clockEl.innerHTML = m.statusText;
+        } else {
+          clockEl.innerHTML = '<span class="text-slate-400">Maç Başlamadı</span>';
+        }
+      }
+
       // Broadcast Names
       const tvEl = document.getElementById('broadcastTvName');
       const radioEl = document.getElementById('broadcastRadioName');
-      if (tvEl) tvEl.textContent = m.channel || 'ATV (Şifresiz HD)';
-      if (radioEl) radioEl.textContent = 'A Spor Radyo';
+      if (tvEl) tvEl.textContent = m.channel || 'TRT 1';
+      if (radioEl) radioEl.textContent = m.radioName || 'TRT Radyo 1';
 
       // Kadrolar (Tab 3)
       renderLineups(m);
@@ -1181,6 +1217,7 @@
     // Geri Sayım Motoru (Aktif Maça Göre Otomatik)
     function runCountdown() {
       const activeMatch = FIXTURES[currentMatchIndex];
+      if (!activeMatch) return;
       const matchDate = new Date(activeMatch.date);
       const matchEndDate = new Date(activeMatch.endDate);
       const now = new Date();
@@ -1190,19 +1227,23 @@
 
       if (now >= matchDate && now < matchEndDate) {
         if (countdownEl) countdownEl.textContent = 'Müsabaka Oynanıyor!';
-        if (clockEl) clockEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-rose-500 animate-ping mr-1"></span> CANLI YAYINDA';
+        if (clockEl && !activeMatch.isFinished) {
+          clockEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-rose-500 animate-ping mr-1"></span> CANLI YAYINDA';
+        }
         return;
       }
 
-      if (now >= matchEndDate) {
+      if (now >= matchEndDate || activeMatch.isFinished) {
         if (countdownEl) countdownEl.textContent = 'Karşılaşma Tamamlandı';
-        if (clockEl) clockEl.textContent = 'Maç Sonu';
-        // Otomatik bir sonraki maça geçiş kontrolü
-        const nextIdx = determineActiveMatchIndex();
-        if (nextIdx !== currentMatchIndex) {
-          currentMatchIndex = nextIdx;
-          loadMatch(FIXTURES[currentMatchIndex]);
-          renderFixturePills();
+        if (clockEl) clockEl.innerHTML = '<span class="text-slate-300 font-bold">Maç Sonu (MS)</span>';
+        // Kullanıcı manuel fikstür seçmediyse otomatik sıradaki maça ilerle
+        if (!userManuallySelectedFixture) {
+          const nextIdx = determineActiveMatchIndex();
+          if (nextIdx !== currentMatchIndex) {
+            currentMatchIndex = nextIdx;
+            loadMatch(FIXTURES[currentMatchIndex]);
+            renderFixturePills();
+          }
         }
         return;
       }
@@ -1345,7 +1386,8 @@
     }
 
     // Harici Açık Spor API'sinden Canlı Maç Verisi Çekici (ESPN Public Feed & Summary)
-    async function fetchExternalLiveScore() {
+    async function fetchExternalLiveScore(activeMatch) {
+      if (!activeMatch) return null;
       try {
         const res = await fetch('https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/scoreboard', {
           headers: { 'Accept': 'application/json' },
@@ -1355,20 +1397,28 @@
         const json = await res.json();
         if (!json.events || !Array.isArray(json.events)) return null;
 
-        // Türkiye'nin müsabakasını tespit et
-        const turkeyEvent = json.events.find(ev => {
+        const homeNameNorm = (activeMatch.home?.name || '').toLowerCase();
+        const awayNameNorm = (activeMatch.away?.name || '').toLowerCase();
+
+        // Aktif fikstürün iki takımını da içeren ESPN karşılaşmasını tespit et
+        const matchedEvent = json.events.find(ev => {
           const comps = ev.competitions?.[0]?.competitors || [];
-          return comps.some(c => {
-            const n = (c.team?.displayName || c.team?.name || '').toLowerCase();
-            return n.includes('turkey') || n.includes('türkiye');
-          });
+          const compNames = comps.map(c => (c.team?.displayName || c.team?.name || '').toLowerCase());
+          const hasHome = compNames.some(n => n.includes(homeNameNorm) || (homeNameNorm.includes('türkiye') && (n.includes('turkey') || n.includes('türkiye'))) || (homeNameNorm.includes('fransa') && n.includes('france')) || (homeNameNorm.includes('belçika') && n.includes('belgium')));
+          const hasAway = compNames.some(n => n.includes(awayNameNorm) || (awayNameNorm.includes('türkiye') && (n.includes('turkey') || n.includes('türkiye'))) || (awayNameNorm.includes('fransa') && n.includes('france')) || (awayNameNorm.includes('belçika') && n.includes('belgium')));
+          return hasHome && hasAway;
         });
 
-        if (!turkeyEvent) return null;
+        if (!matchedEvent) return null;
 
-        const comp = turkeyEvent.competitions[0];
-        const homeComp = comp.competitors.find(c => c.homeAway === 'home');
-        const awayComp = comp.competitors.find(c => c.homeAway === 'away');
+        const comp = matchedEvent.competitions[0];
+        const hComp = comp.competitors.find(c => c.homeAway === 'home');
+        const aComp = comp.competitors.find(c => c.homeAway === 'away');
+        const hName = (hComp?.team?.displayName || hComp?.team?.name || '').toLowerCase();
+        const homeIsH = hName.includes(homeNameNorm) || (homeNameNorm.includes('türkiye') && (hName.includes('turkey') || hName.includes('türkiye')));
+        const scoreHome = homeIsH ? (parseInt(hComp?.score, 10) || 0) : (parseInt(aComp?.score, 10) || 0);
+        const scoreAway = homeIsH ? (parseInt(aComp?.score, 10) || 0) : (parseInt(hComp?.score, 10) || 0);
+
         const statusType = comp.status?.type || {};
         const isLive = statusType.state === 'in';
         const isFinished = statusType.completed || statusType.state === 'post';
@@ -1381,7 +1431,7 @@
 
         // Canlı Detay & Özet API'si (Olaylar, İstatistikler, Kadrolar, Puan Durumu)
         try {
-          const eventId = turkeyEvent.id || '401861145';
+          const eventId = matchedEvent.id || '401861145';
           const sumRes = await fetch(`https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/summary?event=${eventId}`, {
             headers: { 'Accept': 'application/json' },
             cache: 'no-store'
@@ -1435,8 +1485,8 @@
 
         return {
           source: 'espn',
-          scoreHome: parseInt(homeComp?.score, 10) || 0,
-          scoreAway: parseInt(awayComp?.score, 10) || 0,
+          scoreHome: scoreHome,
+          scoreAway: scoreAway,
           statusText: isLive ? (clockDisplay ? `${clockDisplay} Canlı` : 'Canlı Yayında') : (isFinished ? 'Maç Sonu' : 'Maç Başlamadı'),
           isLive,
           isFinished,
@@ -1645,11 +1695,12 @@
     async function checkLiveScore() {
       try {
         const activeMatch = FIXTURES[currentMatchIndex];
+        if (!activeMatch) return;
         let liveData = null;
 
         // 1. ÖNCELİKLİ: Uluslararası Canlı Spor API'si (Tam Otomatik ESPN Feed)
         try {
-          const externalData = await fetchExternalLiveScore();
+          const externalData = await fetchExternalLiveScore(activeMatch);
           if (externalData && (externalData.isLive || externalData.scoreHome > 0 || externalData.scoreAway > 0 || externalData.isFinished)) {
             liveData = externalData;
           }
@@ -1657,13 +1708,13 @@
           console.debug('Harici API sorgu hatası:', e);
         }
 
-        // 2. YEDEK / OVERRIDE: Harici API ulaşılamazsa veya özel durum varsa Firebase RTDB
+        // 2. YEDEK: Sadece bu aktif maça ait Firebase RTDB kaydı varsa
         if (!liveData) {
           try {
             const rtdbRes = await fetch(`https://pratikbase-default-rtdb.firebaseio.com/live_match.json?_t=${Date.now()}`);
             if (rtdbRes.ok) {
               const rtdbData = await rtdbRes.json();
-              if (rtdbData && (rtdbData.scoreHome !== undefined || rtdbData.scoreAway !== undefined)) {
+              if (rtdbData && rtdbData.matchId === activeMatch.id && (rtdbData.scoreHome !== undefined || rtdbData.scoreAway !== undefined)) {
                 liveData = rtdbData;
               }
             }
@@ -1676,18 +1727,34 @@
             const res = await fetch(`./data/live_score.json?_t=${Date.now()}`, { cache: 'no-store' });
             if (res.ok) {
               const localData = await res.json();
-              if (!localData.matchId || localData.matchId === activeMatch?.id) {
+              if (localData && localData.matchId === activeMatch.id) {
                 liveData = localData;
               }
             }
           } catch (_) {}
         }
 
-        if (!liveData) return;
-
         const scoreHomeEl = document.getElementById('scoreHome');
         const scoreAwayEl = document.getElementById('scoreAway');
         const clockEl = document.getElementById('matchClock');
+
+        // Bu maç için canlı veri yoksa (örn. henüz oynanmamış gelecek maç)
+        if (!liveData) {
+          if (activeMatch.isFinished) {
+            currentScore.home = activeMatch.scoreHome ?? 0;
+            currentScore.away = activeMatch.scoreAway ?? 0;
+            if (scoreHomeEl) scoreHomeEl.textContent = currentScore.home;
+            if (scoreAwayEl) scoreAwayEl.textContent = currentScore.away;
+            if (clockEl) clockEl.innerHTML = '<span class="text-slate-300 font-bold">Maç Sonu (MS)</span>';
+          } else {
+            currentScore.home = 0;
+            currentScore.away = 0;
+            if (scoreHomeEl) scoreHomeEl.textContent = 0;
+            if (scoreAwayEl) scoreAwayEl.textContent = 0;
+            if (clockEl) clockEl.textContent = 'Maç Başlamadı';
+          }
+          return;
+        }
 
         const newHome = typeof liveData.scoreHome === 'number' ? liveData.scoreHome : 0;
         const newAway = typeof liveData.scoreAway === 'number' ? liveData.scoreAway : 0;
@@ -1712,8 +1779,14 @@
         if (scoreAwayEl) scoreAwayEl.textContent = newAway;
 
         // Maç durumu / dakikası
-        if (liveData.statusText && clockEl && liveData.status !== 'not_started') {
-          clockEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-rose-500 animate-ping mr-1"></span> ${liveData.statusText}`;
+        if (clockEl) {
+          if (liveData.isFinished) {
+            clockEl.innerHTML = '<span class="text-slate-300 font-bold">Maç Sonu (MS)</span>';
+          } else if (liveData.isLive) {
+            clockEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-rose-500 animate-ping mr-1"></span> ${liveData.statusText || 'Canlı Yayında'}`;
+          } else if (liveData.statusText) {
+            clockEl.textContent = liveData.statusText;
+          }
         }
 
         // TV Kanalı
