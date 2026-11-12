@@ -176,7 +176,14 @@
               </span>
               <span>TÜRKİYE</span>
             </div>
-            <span class="text-xs font-mono font-bold text-slate-400 bg-slate-950 px-2 py-1 rounded-lg">20:00</span>
+            <div id="spotlightTimeBox" class="flex flex-col items-center">
+              <span id="spotlightScoreBadge" class="px-2.5 py-1 rounded-xl bg-rose-600 text-white font-black text-xs animate-pulse flex items-center gap-1.5 shadow-md shadow-rose-600/40">
+                <span class="w-2 h-2 rounded-full bg-white animate-ping"></span>
+                <span>CANLI</span>
+                <span id="spotlightLiveScore" class="font-mono text-sm font-black">1 - 2</span>
+              </span>
+              <span id="spotlightMatchMinute" class="text-[10px] text-rose-300 font-semibold pt-0.5">1. Yarı Canlı</span>
+            </div>
             <div class="flex items-center gap-2 font-bold text-white text-sm sm:text-base">
               <span>BELÇİKA</span>
               <span class="w-6 h-4 inline-flex items-center shrink-0">
@@ -851,10 +858,18 @@
               <span class="font-extrabold text-sm sm:text-base text-white truncate">${m.home.name}</span>
             </div>
 
-            <!-- VS Badge -->
-            <div class="px-2.5 py-1 rounded-lg bg-slate-950 border border-slate-800 text-[11px] font-bold text-slate-400 shrink-0">
-              VS
-            </div>
+            <!-- VS / Live Score Badge -->
+            ${m.isLiveNow ? `
+              <div class="px-2.5 py-1 rounded-xl bg-rose-600/20 border border-rose-500/40 text-rose-400 text-xs font-black shrink-0 flex items-center gap-1.5 animate-pulse shadow-md shadow-rose-950/40">
+                <span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping"></span>
+                <span>CANLI</span>
+                <span class="match-card-live-score font-mono font-bold text-white">1 - 2</span>
+              </div>
+            ` : `
+              <div class="px-2.5 py-1 rounded-lg bg-slate-950 border border-slate-800 text-[11px] font-bold text-slate-400 shrink-0">
+                VS
+              </div>
+            `}
 
             <!-- Away Team -->
             <div class="flex items-center gap-2.5 flex-1 min-w-0 justify-end text-right">
@@ -963,6 +978,67 @@
     if (btnOpenFrequencies) btnOpenFrequencies.addEventListener('click', openModal);
     if (btnCloseFreqModal) btnCloseFreqModal.addEventListener('click', closeModal);
     if (btnCloseFreqModalBtn) btnCloseFreqModalBtn.addEventListener('click', closeModal);
+
+    // ========================================================
+    // OTOMATİK CANLI SKOR VE MAÇ DURUMU DİNLEYİCİSİ (15 sn)
+    // ========================================================
+    async function updateHangiKanaldaLiveScore() {
+      try {
+        let liveScoreText = null;
+        let liveStatusText = null;
+
+        // 1. Önce açık canlı spor API'si (ESPN)
+        try {
+          const res = await fetch('https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/scoreboard', { cache: 'no-store' });
+          if (res.ok) {
+            const json = await res.json();
+            const turEv = json.events?.find(e => (e.name || '').toLowerCase().includes('tur'));
+            if (turEv) {
+              const comp = turEv.competitions?.[0];
+              const home = comp?.competitors?.find(c => c.homeAway === 'home');
+              const away = comp?.competitors?.find(c => c.homeAway === 'away');
+              const clock = comp?.status?.displayClock || '';
+              const state = comp?.status?.type?.state;
+              if (home && away) {
+                liveScoreText = `${home.score || 0} - ${away.score || 0}`;
+                liveStatusText = state === 'in' ? (clock ? `${clock} Canlı` : 'Canlı') : (comp?.status?.type?.detail || 'Canlı');
+              }
+            }
+          }
+        } catch (_) {}
+
+        // 2. Yedek Firebase RTDB
+        if (!liveScoreText) {
+          try {
+            const rtdb = await fetch(`https://pratikbase-default-rtdb.firebaseio.com/live_match.json?_t=${Date.now()}`);
+            if (rtdb.ok) {
+              const data = await rtdb.json();
+              if (data && data.scoreHome !== undefined) {
+                liveScoreText = `${data.scoreHome} - ${data.scoreAway}`;
+                liveStatusText = data.statusText || 'Canlı';
+              }
+            }
+          } catch (_) {}
+        }
+
+        if (liveScoreText) {
+          const spotScore = document.getElementById('spotlightLiveScore');
+          if (spotScore) spotScore.textContent = liveScoreText;
+
+          const spotMin = document.getElementById('spotlightMatchMinute');
+          if (spotMin && liveStatusText) spotMin.textContent = liveStatusText;
+
+          document.querySelectorAll('.match-card-live-score').forEach(el => {
+            el.textContent = liveScoreText;
+          });
+        }
+      } catch (err) {
+        console.debug('Hangi kanalda canlı skor kontrolü:', err);
+      }
+    }
+
+    updateHangiKanaldaLiveScore();
+    setInterval(updateHangiKanaldaLiveScore, 15000);
 
     // ========================================================
     // TARAFTAR CANLI SOHBET MOTORU (Firebase Realtime Database)

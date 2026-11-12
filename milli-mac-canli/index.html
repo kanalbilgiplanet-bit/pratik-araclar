@@ -413,13 +413,13 @@
     <section id="tabIstatistik" class="tab-pane hidden space-y-6">
       
       <!-- Pre-Match Live Notice -->
-      <div class="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-between text-xs">
-        <div class="flex items-center gap-2 text-amber-300">
-          <i class="fa-solid fa-clock text-amber-400"></i>
-          <span><strong>Maç Başlamadı:</strong> Karşılaşma başladığında anlık topla oynama, şut ve korner verileri bu alanda canlı akacaktır.</span>
+      <div id="statsLiveNotice" class="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-between text-xs">
+        <div class="flex items-center gap-2 text-rose-300">
+          <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
+          <span><strong>CANLI MAÇ VERİLERİ:</strong> Resmi UEFA / ESPN verileri her 15 saniyede bir güncellenmektedir.</span>
         </div>
-        <span class="hidden sm:inline-flex px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-semibold text-[10px]">
-          ÖN BAKIŞ
+        <span class="inline-flex px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 font-bold text-[10px]">
+          CANLI
         </span>
       </div>
 
@@ -462,7 +462,7 @@
               <th class="py-2.5 px-3 text-center font-bold text-white">Puan</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-slate-800/60 text-slate-300">
+          <tbody id="standingsTableBody" class="divide-y divide-slate-800/60 text-slate-300">
             <!-- 1. Fransa -->
             <tr class="hover:bg-slate-800/30">
               <td class="py-3 px-3"><span class="w-5 h-5 rounded-full bg-emerald-600 flex items-center justify-center text-xs text-white">1</span></td>
@@ -1254,8 +1254,32 @@
     // ========================================================
     let currentScore = { home: 0, away: 0 };
     let initialScoreLoaded = false;
+    let activeTimelineFilter = 'all';
 
-    // Harici Açık Spor API'sinden Canlı Maç Verisi Çekici (ESPN Public Feed)
+    function formatMatchText(text) {
+      if (!text) return '';
+      return text
+        .replace(/Goal!/gi, '⚽ GOL!')
+        .replace(/from a free kick with a left footed shot to the top left corner/gi, 'frikikten sol üst köşeye muazzam bir gol attı')
+        .replace(/right footed shot from the centre of the box to the high centre of the goal/gi, 'ceza sahası içinden sağ ayakla fileleri havalandırdı')
+        .replace(/left footed shot from very close range to the bottom left corner/gi, 'yakın mesafeden sol ayakla topu ağlara yolladı')
+        .replace(/Assisted by/gi, 'Asist:')
+        .replace(/is shown the yellow card for a bad foul/gi, 'sert faulü nedeniyle sarı kart gördü')
+        .replace(/is shown the yellow card/gi, 'sarı kart gördü')
+        .replace(/is shown the red card/gi, 'kırmızı kart gördü')
+        .replace(/Attempt missed/gi, 'Kaçan Şut')
+        .replace(/Attempt saved/gi, 'Kaleci Kurtardı')
+        .replace(/wins a free kick/gi, 'serbest vuruş kazandı')
+        .replace(/Foul by/gi, 'Faul:')
+        .replace(/Corner, /gi, 'Korner: ')
+        .replace(/Offside, /gi, 'Ofsayt: ')
+        .replace(/Substitution, /gi, 'Oyuncu Değişikliği: ')
+        .replace(/First Half ends/gi, 'İlk Yarı Sona Erdi')
+        .replace(/Second Half begins/gi, 'İkinci Yarı Başladı')
+        .replace(/Match ends/gi, 'Maç Sona Erdi');
+    }
+
+    // Harici Açık Spor API'sinden Canlı Maç Verisi Çekici (ESPN Public Feed & Summary)
     async function fetchExternalLiveScore() {
       try {
         const res = await fetch('https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/scoreboard', {
@@ -1285,17 +1309,287 @@
         const isFinished = statusType.completed || statusType.state === 'post';
         const clockDisplay = comp.status?.displayClock || '';
 
+        let liveEvents = [];
+        let boxStats = null;
+        let rostersData = null;
+        let standingsData = null;
+
+        // Canlı Detay & Özet API'si (Olaylar, İstatistikler, Kadrolar, Puan Durumu)
+        try {
+          const eventId = turkeyEvent.id || '401861145';
+          const sumRes = await fetch(`https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/summary?event=${eventId}`, {
+            headers: { 'Accept': 'application/json' },
+            cache: 'no-store'
+          });
+          if (sumRes.ok) {
+            const sum = await sumRes.json();
+            boxStats = sum.boxscore?.teams;
+            rostersData = sum.rosters;
+            standingsData = sum.standings;
+
+            // Key Events (Goller, Kartlar)
+            if (sum.keyEvents && Array.isArray(sum.keyEvents)) {
+              sum.keyEvents.forEach(k => {
+                const isGoal = k.scoringPlay || k.type?.type?.includes('goal');
+                const isCard = k.type?.type?.includes('card') || (k.type?.text && k.type.text.toLowerCase().includes('card'));
+                const isYellow = isCard && !k.type?.text?.toLowerCase().includes('red');
+                let customTitle = 'Maç Olayı';
+                if (isGoal) customTitle = '⚽ GOOOL!';
+                else if (isCard) customTitle = isYellow ? '🟨 Sarı Kart' : '🟥 Kırmızı Kart';
+                else if (k.type?.text) customTitle = k.type.text;
+
+                liveEvents.push({
+                  minute: k.clock?.displayValue || 'Canlı',
+                  type: isGoal ? 'goal' : (isCard ? 'card' : 'info'),
+                  title: customTitle,
+                  text: formatMatchText(k.text || k.shortText || '')
+                });
+              });
+            }
+
+            // Commentary'den son önemli pozisyonları ekle
+            if (sum.commentary && Array.isArray(sum.commentary)) {
+              const recentPlays = sum.commentary.slice(-6).reverse();
+              recentPlays.forEach(c => {
+                const playText = c.text || '';
+                const playTime = c.time?.displayValue || '';
+                if (playText && !liveEvents.some(e => e.minute === playTime && e.text.includes(playText.slice(0, 15)))) {
+                  liveEvents.push({
+                    minute: playTime || 'Canlı',
+                    type: 'info',
+                    title: 'Canlı Pozisyon',
+                    text: formatMatchText(playText)
+                  });
+                }
+              });
+            }
+          }
+        } catch (detailErr) {
+          console.debug('Canlı maç detay API sorgusu:', detailErr);
+        }
+
         return {
           source: 'espn',
           scoreHome: parseInt(homeComp?.score, 10) || 0,
           scoreAway: parseInt(awayComp?.score, 10) || 0,
           statusText: isLive ? (clockDisplay ? `${clockDisplay} Canlı` : 'Canlı Yayında') : (isFinished ? 'Maç Sonu' : 'Maç Başlamadı'),
           isLive,
-          isFinished
+          isFinished,
+          events: liveEvents,
+          stats: boxStats,
+          rosters: rostersData,
+          standings: standingsData
         };
       } catch (e) {
         return null;
       }
+    }
+
+    function renderLiveTimeline(events) {
+      const container = document.getElementById('liveTimeline');
+      if (!container || !events || events.length === 0) return;
+
+      container.innerHTML = events.map(ev => {
+        const isGoal = ev.type === 'goal';
+        const isCard = ev.type === 'card';
+        const badgeBg = isGoal ? 'bg-gradient-to-r from-red-600 to-rose-600 shadow-rose-600/40 text-white' : (isCard ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' : 'bg-slate-800 text-slate-300');
+        const cardBorder = isGoal ? 'border-rose-500/60 bg-gradient-to-r from-rose-950/30 to-slate-900/90 shadow-lg shadow-rose-950/20' : (isCard ? 'border-amber-500/30 bg-slate-900/80' : 'border-slate-800 bg-slate-900/80');
+
+        return `
+          <div class="timeline-item p-4 rounded-2xl border ${cardBorder} flex items-start gap-3 transition-all" data-type="${ev.type || 'info'}">
+            <div class="w-10 h-10 rounded-xl ${badgeBg} flex items-center justify-center font-bold text-xs shrink-0 mt-0.5 shadow-md">
+              ${ev.minute || 'Canlı'}
+            </div>
+            <div class="flex-1 space-y-1">
+              <span class="font-bold ${isGoal ? 'text-white flex items-center gap-1.5' : (isCard ? 'text-amber-400' : 'text-slate-300')} text-xs">
+                ${isGoal ? '<span class="w-2 h-2 rounded-full bg-rose-400 animate-ping"></span>' : ''}
+                ${ev.title}
+              </span>
+              <p class="text-xs sm:text-sm text-slate-200 leading-relaxed">${ev.text}</p>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      applyTimelineFilter(activeTimelineFilter);
+    }
+
+    function applyTimelineFilter(filter) {
+      activeTimelineFilter = filter;
+      const items = document.querySelectorAll('#liveTimeline .timeline-item');
+      items.forEach(item => {
+        const itemType = item.getAttribute('data-type') || 'info';
+        if (filter === 'all') {
+          item.style.display = '';
+        } else if (filter === 'goal') {
+          item.style.display = (itemType === 'goal') ? '' : 'none';
+        } else if (filter === 'card') {
+          item.style.display = (itemType === 'card') ? '' : 'none';
+        }
+      });
+    }
+
+    function renderLiveStats(teamsStats) {
+      const container = document.getElementById('statsContainer');
+      if (!container || !teamsStats) return;
+
+      const getStat = (list, key) => {
+        const it = list.find(s => s.name === key);
+        return it ? it.displayValue : '-';
+      };
+
+      const homeStats = teamsStats[0]?.statistics || [];
+      const awayStats = teamsStats[1]?.statistics || [];
+
+      const possessionHome = getStat(homeStats, 'possessionPct') || '50';
+      const possessionAway = getStat(awayStats, 'possessionPct') || '50';
+      const shotsHome = getStat(homeStats, 'totalShots') || '0';
+      const shotsAway = getStat(awayStats, 'totalShots') || '0';
+      const targetHome = getStat(homeStats, 'shotsOnTarget') || '0';
+      const targetAway = getStat(awayStats, 'shotsOnTarget') || '0';
+      const cornersHome = getStat(homeStats, 'wonCorners') || '0';
+      const cornersAway = getStat(awayStats, 'wonCorners') || '0';
+      const foulsHome = getStat(homeStats, 'foulsCommitted') || '0';
+      const foulsAway = getStat(awayStats, 'foulsCommitted') || '0';
+      const yellowHome = getStat(homeStats, 'yellowCards') || '0';
+      const yellowAway = getStat(awayStats, 'yellowCards') || '0';
+      const passHome = (parseFloat(getStat(homeStats, 'passPct') || '0') * 100).toFixed(0) + '%';
+      const passAway = (parseFloat(getStat(awayStats, 'passPct') || '0') * 100).toFixed(0) + '%';
+
+      const rows = [
+        { label: 'Topla Oynama', h: `%${possessionHome}`, a: `%${possessionAway}`, hVal: parseFloat(possessionHome), aVal: parseFloat(possessionAway) },
+        { label: 'Toplam Şut', h: shotsHome, a: shotsAway, hVal: parseInt(shotsHome) || 1, aVal: parseInt(shotsAway) || 1 },
+        { label: 'İsabetli Şut', h: targetHome, a: targetAway, hVal: parseInt(targetHome) || 0, aVal: parseInt(targetAway) || 0 },
+        { label: 'Pas İsabeti', h: passHome, a: passAway, hVal: parseFloat(passHome) || 50, aVal: parseFloat(passAway) || 50 },
+        { label: 'Köşe Vuruşu (Korner)', h: cornersHome, a: cornersAway, hVal: parseInt(cornersHome) || 0, aVal: parseInt(cornersAway) || 0 },
+        { label: 'Fauller', h: foulsHome, a: foulsAway, hVal: parseInt(foulsHome) || 0, aVal: parseInt(foulsAway) || 0 },
+        { label: 'Sarı Kartlar', h: yellowHome, a: yellowAway, hVal: parseInt(yellowHome) || 0, aVal: parseInt(yellowAway) || 0 }
+      ];
+
+      container.innerHTML = `
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <h3 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
+            <i class="fa-solid fa-chart-simple text-rose-400"></i> TÜRKİYE vs BELÇİKA: Canlı Maç İstatistikleri
+          </h3>
+          <span class="text-xs text-rose-400 font-bold px-2.5 py-0.5 rounded-full bg-rose-500/10 border border-rose-500/20">CANLI VERİ</span>
+        </div>
+
+        <div class="space-y-4 pt-2">
+          ${rows.map(r => {
+            const total = (r.hVal + r.aVal) || 1;
+            const pctH = Math.round((r.hVal / total) * 100);
+            const pctA = 100 - pctH;
+            return `
+              <div class="space-y-1.5 text-xs">
+                <div class="flex items-center justify-between font-semibold">
+                  <span class="font-bold text-rose-400 text-sm">${r.h}</span>
+                  <span class="text-slate-300 font-medium">${r.label}</span>
+                  <span class="font-bold text-amber-400 text-sm">${r.a}</span>
+                </div>
+                <div class="w-full h-2 rounded-full bg-slate-950 flex overflow-hidden border border-slate-800">
+                  <div class="bg-rose-500 h-full transition-all duration-500" style="width: ${pctH}%"></div>
+                  <div class="bg-amber-400 h-full transition-all duration-500" style="width: ${pctA}%"></div>
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+    }
+
+    function renderLiveLineups(rosters) {
+      const container = document.getElementById('lineupContainer');
+      if (!container || !rosters || rosters.length < 2) return;
+
+      const turTeam = rosters.find(r => (r.team?.displayName || '').toLowerCase().includes('tur')) || rosters[0];
+      const belTeam = rosters.find(r => (r.team?.displayName || '').toLowerCase().includes('bel')) || rosters[1];
+
+      const renderTeamRoster = (teamData, flag, isHome) => {
+        const starters = teamData.roster?.filter(p => p.starter) || [];
+        const subs = teamData.roster?.filter(p => !p.starter) || [];
+
+        return `
+          <div class="p-6 rounded-3xl bg-slate-900/80 border ${isHome ? 'border-rose-500/40' : 'border-slate-800'} space-y-4 shadow-xl">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+              <div class="flex items-center gap-2">
+                <span class="text-2xl">${flag}</span>
+                <div>
+                  <h4 class="font-bold text-white text-base">${teamData.team?.displayName || (isHome ? 'TÜRKİYE' : 'BELÇİKA')}</h4>
+                  <span class="text-[11px] ${isHome ? 'text-rose-400' : 'text-amber-400'} font-semibold">Resmi Sahadaki 11</span>
+                </div>
+              </div>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">SAHADA</span>
+            </div>
+
+            <div>
+              <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">Başlangıç 11'i</div>
+              <ul class="space-y-1.5 text-xs text-slate-200">
+                ${starters.map(p => `
+                  <li class="flex items-center justify-between py-1 border-b border-slate-800/40 hover:bg-slate-800/40 px-2 rounded-lg transition">
+                    <span class="font-bold flex items-center gap-2">
+                      <span class="w-5 text-center font-mono text-slate-500 text-[11px]">${p.athlete?.jersey || '•'}</span>
+                      <span class="text-white">${p.athlete?.displayName || p.athlete?.name}</span>
+                    </span>
+                    <span class="text-slate-400 text-[11px] font-medium bg-slate-950 px-2 py-0.5 rounded border border-slate-800">${p.position?.displayName || p.position?.abbreviation || 'Oyuncu'}</span>
+                  </li>
+                `).join('')}
+              </ul>
+            </div>
+
+            ${subs.length > 0 ? `
+              <div class="pt-2">
+                <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">Yedekler Kulübesi</div>
+                <div class="flex flex-wrap gap-1.5 text-[11px]">
+                  ${subs.map(p => `
+                    <span class="px-2 py-1 rounded-lg bg-slate-950 border border-slate-800 text-slate-300">
+                      <strong class="text-slate-500 font-mono">${p.athlete?.jersey || ''}</strong> ${p.athlete?.displayName || p.athlete?.name}
+                    </span>
+                  `).join('')}
+                </div>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      };
+
+      container.innerHTML = `
+        ${renderTeamRoster(turTeam, '🇹🇷', true)}
+        ${renderTeamRoster(belTeam, '🇧🇪', false)}
+      `;
+    }
+
+    function renderLiveStandings(standingsData) {
+      const tbody = document.getElementById('standingsTableBody');
+      if (!tbody || !standingsData) return;
+
+      const entries = standingsData.groups?.[0]?.standings?.entries || [];
+      if (entries.length === 0) return;
+
+      tbody.innerHTML = entries.map((entry, idx) => {
+        const stats = {};
+        entry.stats?.forEach(s => stats[s.name] = s.displayValue);
+        const isTurkey = (entry.team || '').toLowerCase().includes('tur');
+        const rank = idx + 1;
+
+        return `
+          <tr class="${isTurkey ? 'bg-rose-500/10 font-bold border-l-4 border-l-rose-500' : 'hover:bg-slate-800/40'} transition">
+            <td class="py-3 px-3 font-mono font-bold ${rank <= 2 ? 'text-emerald-400' : 'text-slate-400'}">${rank}</td>
+            <td class="py-3 px-3">
+              <div class="flex items-center gap-2">
+                <span class="font-bold text-white">${entry.team}</span>
+                ${isTurkey ? '<span class="text-[10px] px-1.5 py-0.2 rounded bg-rose-600 text-white font-extrabold">BİZİM ÇOCUKLAR</span>' : ''}
+              </div>
+            </td>
+            <td class="py-3 px-2 text-center text-slate-300">${stats.gamesPlayed || '4'}</td>
+            <td class="py-3 px-2 text-center text-slate-300">${stats.wins || '0'}</td>
+            <td class="py-3 px-2 text-center text-slate-300">${stats.ties || '0'}</td>
+            <td class="py-3 px-2 text-center text-slate-300">${stats.losses || '0'}</td>
+            <td class="py-3 px-2 text-center text-slate-300">${stats.pointDifferential || '0'}</td>
+            <td class="py-3 px-3 text-center font-black text-rose-400 text-base">${stats.points || '0'}</td>
+          </tr>
+        `;
+      }).join('');
     }
 
     async function checkLiveScore() {
@@ -1378,25 +1672,24 @@
           if (tvEl) tvEl.textContent = liveData.channel;
         }
 
-        // Canlı olaylar varsa timeline'a ekle
+        // 1. Canlı Anlatım Timeline
         if (liveData.events && Array.isArray(liveData.events) && liveData.events.length > 0) {
-          const container = document.getElementById('liveTimeline');
-          if (container) {
-            const eventsHtml = liveData.events.map(ev => `
-              <div class="timeline-item p-4 rounded-2xl bg-slate-900/90 border border-rose-500/50 flex items-start gap-3 shadow-lg">
-                <div class="w-10 h-10 rounded-xl bg-rose-600 text-white flex items-center justify-center font-bold text-xs shrink-0 mt-0.5 shadow-md shadow-rose-600/40">
-                  ${ev.minute || 'Canlı'}
-                </div>
-                <div class="flex-1 space-y-1">
-                  <span class="font-bold text-white text-xs flex items-center gap-1.5">
-                    <span class="w-2 h-2 rounded-full bg-rose-400 animate-ping"></span> ${ev.title}
-                  </span>
-                  <p class="text-xs sm:text-sm text-slate-200 leading-relaxed">${ev.text}</p>
-                </div>
-              </div>
-            `).join('');
-            container.innerHTML = eventsHtml + container.innerHTML;
-          }
+          renderLiveTimeline(liveData.events);
+        }
+
+        // 2. Canlı İstatistikler
+        if (liveData.stats && Array.isArray(liveData.stats)) {
+          renderLiveStats(liveData.stats);
+        }
+
+        // 3. Canlı Kadrolar
+        if (liveData.rosters && Array.isArray(liveData.rosters)) {
+          renderLiveLineups(liveData.rosters);
+        }
+
+        // 4. Canlı Puan Durumu
+        if (liveData.standings) {
+          renderLiveStandings(liveData.standings);
         }
 
         initialScoreLoaded = true;
@@ -1404,6 +1697,39 @@
         console.debug('Canlı skor yoklama kontrolü:', err);
       }
     }
+
+    // Filtreleri kur ve başlat
+    function setupTimelineFilters() {
+      const filterBtns = document.querySelectorAll('.timeline-filter');
+      filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          filterBtns.forEach(b => {
+            b.classList.remove('active', 'bg-rose-600', 'text-white', 'font-bold');
+            b.classList.add('bg-slate-800', 'text-slate-300');
+          });
+          btn.classList.add('active', 'bg-rose-600', 'text-white', 'font-bold');
+          btn.classList.remove('bg-slate-800', 'text-slate-300');
+
+          const filter = btn.getAttribute('data-filter') || 'all';
+          applyTimelineFilter(filter);
+        });
+      });
+
+      const btnRefreshFeed = document.getElementById('btnRefreshFeed');
+      if (btnRefreshFeed) {
+        btnRefreshFeed.addEventListener('click', () => {
+          const icon = btnRefreshFeed.querySelector('i');
+          if (icon) icon.classList.add('fa-spin');
+          checkLiveScore().finally(() => {
+            setTimeout(() => {
+              if (icon) icon.classList.remove('fa-spin');
+            }, 600);
+          });
+        });
+      }
+    }
+
+    setupTimelineFilters();
 
     // İlk skor kontrolü ve her 15 saniyede bir tam otomatik sorgulama
     checkLiveScore();
