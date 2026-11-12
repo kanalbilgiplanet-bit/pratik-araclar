@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="tr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>PratikBase - Canlı Ziyaretçi & Yönetim Paneli</title>
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <link rel="icon" type="image/png" href="/assets/icon-192.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: { 500: '#10b981', 600: '#059669', 700: '#047857' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.15); opacity: 0.4; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+    .pulse-ring {
+      animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    /* Mobile input zoom prevention */
+    @media (max-width: 768px) {
+      input, select, textarea { font-size: 16px !important; }
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.6);
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: rgba(51, 65, 85, 0.8);
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans selection:bg-emerald-500 selection:text-white">
+
+  <!-- ========================================== -->
+  <!-- 1. GİRİŞ EKRANI (LOGIN VIEW) -->
+  <!-- ========================================== -->
+  <div id="loginSection" class="min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-md bg-slate-900/90 backdrop-blur-xl border border-slate-800/80 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
+      <!-- Glow arka plan efekti -->
+      <div class="absolute -top-24 -left-24 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -bottom-24 -right-24 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+      <!-- Logo & Başlık -->
+      <div class="text-center mb-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-slate-950 shadow-lg shadow-emerald-500/20 mb-4">
+          <i class="fa-solid fa-chart-line text-2xl font-black"></i>
+        </div>
+        <h1 class="text-2xl font-bold tracking-tight text-white">PratikBase Admin</h1>
+        <p class="text-slate-400 text-sm mt-1">Canlı Ziyaretçi & Trafik Takip Paneli</p>
+      </div>
+
+      <!-- Hata Mesajı -->
+      <div id="loginError" class="hidden mb-5 p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 text-sm flex items-center gap-2.5">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <span id="loginErrorMsg">Kullanıcı adı veya şifre hatalı!</span>
+      </div>
+
+      <!-- Form -->
+      <form id="loginForm" class="space-y-4" onsubmit="handleLogin(event)">
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Kullanıcı Adı</label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-500">
+              <i class="fa-regular fa-user"></i>
+            </span>
+            <input type="text" id="usernameInput" required autocomplete="username"
+              class="w-full pl-10 pr-4 py-3 bg-slate-950/60 border border-slate-800 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
+              placeholder="Kullanıcı adınızı girin">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Şifre</label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-500">
+              <i class="fa-solid fa-lock"></i>
+            </span>
+            <input type="password" id="passwordInput" required autocomplete="current-password"
+              class="w-full pl-10 pr-11 py-3 bg-slate-950/60 border border-slate-800 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
+              placeholder="••••••••">
+            <button type="button" onclick="togglePasswordVisibility()" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-500 hover:text-slate-300 transition-colors">
+              <i id="passwordToggleIcon" class="fa-regular fa-eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between text-xs text-slate-400 pt-1">
+          <label class="flex items-center gap-2 cursor-pointer select-none">
+            <input type="checkbox" id="rememberMe" checked class="rounded border-slate-700 bg-slate-950 text-emerald-500 focus:ring-emerald-500/20">
+            <span>Beni bu tarayıcıda hatırla</span>
+          </label>
+          <span class="text-emerald-400/80 text-[11px] flex items-center gap-1">
+            <i class="fa-solid fa-shield-halved"></i> SHA-256 Korumalı
+          </span>
+        </div>
+
+        <button type="submit" id="loginBtn"
+          class="w-full py-3.5 px-4 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-xl shadow-lg shadow-emerald-500/20 active:scale-[0.99] transition-all flex items-center justify-center gap-2 text-sm mt-2">
+          <span>Paneli Aç</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </form>
+
+      <div class="mt-6 pt-5 border-t border-slate-800/60 text-center text-slate-500 text-xs">
+        &copy; 2026 PratikBase &bull; Güvenli Yönetici Erişimi
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ========================================== -->
+  <!-- 2. ANALİTİK PANELİ (DASHBOARD VIEW) -->
+  <!-- ========================================== -->
+  <div id="dashboardSection" class="hidden min-h-screen flex flex-col">
+
+    <!-- Üst Bar (Navbar) -->
+    <header class="sticky top-0 z-30 bg-slate-900/80 backdrop-blur-md border-b border-slate-800 px-4 lg:px-8 py-3.5">
+      <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <a href="/" target="_blank" class="flex items-center gap-2.5 group">
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-slate-950 flex items-center justify-center font-black shadow-md">
+              <i class="fa-solid fa-bolt text-sm"></i>
+            </div>
+            <div>
+              <span class="font-bold text-white tracking-tight flex items-center gap-1.5">
+                PratikBase
+                <span class="text-[10px] uppercase font-black tracking-wider px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Admin Radar</span>
+              </span>
+              <p class="text-[11px] text-slate-400 hidden sm:block">Canlı Ziyaretçi & Analitik Merkezi</p>
+            </div>
+          </a>
+        </div>
+
+        <!-- Canlı Durum & Çıkış -->
+        <div class="flex items-center gap-3 sm:gap-4">
+          <div class="flex items-center gap-2 bg-slate-950/70 border border-slate-800 px-3 py-1.5 rounded-full text-xs">
+            <span class="relative flex h-2.5 w-2.5">
+              <span class="pulse-ring absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+            </span>
+            <span class="text-slate-300 font-medium">Canlı Radar</span>
+            <span id="livePulseText" class="text-emerald-400 font-mono font-bold ml-1">Aktif</span>
+          </div>
+
+          <button onclick="handleLogout()" title="Güvenli Çıkış"
+            class="px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-rose-500/20 hover:text-rose-400 text-slate-400 text-xs font-semibold border border-slate-700/60 transition-all flex items-center gap-1.5">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            <span class="hidden sm:inline">Çıkış</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Ana İçerik -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 lg:p-8 space-y-6">
+
+      <!-- 1. ÜST KPI KARTLARI (METRİKLER) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        
+        <!-- Kart 1: Şu Anda Canlı Ziyaretçi -->
+        <div class="bg-gradient-to-br from-slate-900 to-slate-900/80 border border-emerald-500/30 rounded-2xl p-5 shadow-xl shadow-emerald-950/20 relative overflow-hidden">
+          <div class="absolute -right-4 -bottom-4 text-emerald-500/5 text-8xl font-black pointer-events-none select-none">
+            <i class="fa-solid fa-users"></i>
+          </div>
+          <div class="flex items-center justify-between text-slate-400 text-xs font-semibold mb-2">
+            <span class="uppercase tracking-wider flex items-center gap-1.5 text-emerald-400">
+              <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+              Canlı Aktif Kullanıcı
+            </span>
+            <span class="text-[11px] bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded-full font-mono">Gerçek Zamanlı</span>
+          </div>
+          <div class="flex items-baseline gap-2 mt-1">
+            <span id="kpiOnlineCount" class="text-4xl lg:text-5xl font-black text-white font-mono">0</span>
+            <span class="text-sm text-slate-400">kişi şu an sitede</span>
+          </div>
+          <p class="text-xs text-slate-400 mt-2 flex items-center gap-1">
+            <i class="fa-regular fa-clock text-slate-500"></i> Son 45 saniyede hareket görüldü
+          </p>
+        </div>
+
+        <!-- Kart 2: Cihaz Dağılımı -->
+        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-lg">
+          <div class="flex items-center justify-between text-slate-400 text-xs font-semibold mb-2">
+            <span class="uppercase tracking-wider">Cihaz Türü</span>
+            <i class="fa-solid fa-mobile-screen text-slate-500"></i>
+          </div>
+          <div class="flex items-baseline justify-between mt-1">
+            <div>
+              <span id="kpiMobilePct" class="text-3xl font-bold text-white font-mono">%0</span>
+              <span class="text-xs text-slate-400 ml-1">Mobil</span>
+            </div>
+            <div class="text-right">
+              <span id="kpiDesktopPct" class="text-2xl font-bold text-slate-400 font-mono">%0</span>
+              <span class="text-xs text-slate-500 ml-1">Masaüstü</span>
+            </div>
+          </div>
+          <!-- Bar -->
+          <div class="w-full bg-slate-800 h-2.5 rounded-full mt-3 overflow-hidden flex">
+            <div id="kpiMobileBar" class="bg-emerald-500 h-full transition-all duration-500" style="width: 50%"></div>
+            <div id="kpiDesktopBar" class="bg-blue-500 h-full transition-all duration-500" style="width: 50%"></div>
+          </div>
+        </div>
+
+        <!-- Kart 3: En Çok Gezilen Sayfa -->
+        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-lg">
+          <div class="flex items-center justify-between text-slate-400 text-xs font-semibold mb-2">
+            <span class="uppercase tracking-wider">En Popüler Sayfa</span>
+            <i class="fa-solid fa-fire-flame-curved text-amber-500"></i>
+          </div>
+          <div class="mt-1">
+            <div id="kpiTopPage" class="text-base font-bold text-emerald-400 truncate font-mono">Bekleniyor...</div>
+            <div id="kpiTopPageUsers" class="text-xs text-slate-400 mt-1">Henüz ziyaretçi yok</div>
+          </div>
+          <div class="mt-3 text-[11px] text-slate-500 flex items-center gap-1.5">
+            <i class="fa-solid fa-arrow-trend-up text-emerald-500"></i> Anlık en yoğun araç
+          </div>
+        </div>
+
+        <!-- Kart 4: Birincil Kaynak -->
+        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-lg">
+          <div class="flex items-center justify-between text-slate-400 text-xs font-semibold mb-2">
+            <span class="uppercase tracking-wider">Trafik Kaynağı</span>
+            <i class="fa-solid fa-share-nodes text-blue-400"></i>
+          </div>
+          <div class="mt-1">
+            <div id="kpiTopReferrer" class="text-lg font-bold text-white truncate">Doğrudan / Organik</div>
+            <div id="kpiTopReferrerDetail" class="text-xs text-slate-400 mt-1">Ziyaretçi kaynakları taranıyor</div>
+          </div>
+          <div class="mt-3 text-[11px] text-slate-500 flex items-center gap-1.5">
+            <i class="fa-brands fa-whatsapp text-emerald-400"></i> WhatsApp & Google öncelikli takip
+          </div>
+        </div>
+
+      </div>
+
+
+      <!-- 2. ORTA BÖLÜM: AKTİF SAYFALAR & TRAFİK DAĞILIMI -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <!-- Sol (2 Kolon): Hangi Sayfadalar? -->
+        <div class="lg:col-span-2 bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h2 class="text-base font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-compass text-emerald-400"></i>
+                Şu An Kim Hangi Sayfada?
+              </h2>
+              <p class="text-xs text-slate-400 mt-0.5">Ziyaretçilerin gezindiği araçlar ve aktif kullanıcı sayıları</p>
+            </div>
+            <span id="pageBreakdownBadge" class="text-xs bg-slate-800 text-slate-300 px-2.5 py-1 rounded-full font-mono">0 Sayfa</span>
+          </div>
+
+          <div id="activePagesList" class="space-y-2.5 flex-1 custom-scroll max-h-[380px] overflow-y-auto pr-1">
+            <div class="text-center py-12 text-slate-500 text-sm">
+              <i class="fa-regular fa-compass text-3xl mb-2 opacity-50 block"></i>
+              Şu an aktif ziyaretçi bekleniyor...
+            </div>
+          </div>
+        </div>
+
+        <!-- Sağ (1 Kolon): Trafik Kaynakları Dağılımı -->
+        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h2 class="text-base font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-chart-pie text-blue-400"></i>
+                Trafik Kaynakları
+              </h2>
+              <p class="text-xs text-slate-400 mt-0.5">Ziyaretçiler siteye nereden ulaştı?</p>
+            </div>
+          </div>
+
+          <div id="trafficSourcesList" class="space-y-3 flex-1 custom-scroll max-h-[380px] overflow-y-auto pr-1">
+            <div class="text-center py-12 text-slate-500 text-sm">
+              <i class="fa-solid fa-chart-pie text-3xl mb-2 opacity-50 block"></i>
+              Kaynak verisi bekleniyor...
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+
+      <!-- 3. DETAYLI ZİYARETÇİ TABLOSU (CANLI OTURUMLAR) -->
+      <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-lg">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+          <div>
+            <h2 class="text-base font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-signal text-emerald-400"></i>
+              Canlı Aktif Oturum Detayları
+            </h2>
+            <p class="text-xs text-slate-400 mt-0.5">Sitede bulunan her bir kullanıcının anlık durumu</p>
+          </div>
+          
+          <div class="flex items-center gap-2">
+            <button onclick="cleanOldSessions()" title="15 dakikadan eski oturumları temizle"
+              class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs rounded-xl border border-slate-700/60 transition flex items-center gap-1.5">
+              <i class="fa-solid fa-broom"></i>
+              <span>Hafızayı Temizle</span>
+            </button>
+            <button onclick="fetchLiveData(true)" title="Verileri hemen güncelle"
+              class="px-3 py-1.5 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 text-xs rounded-xl border border-emerald-500/30 transition flex items-center gap-1.5">
+              <i id="refreshIcon" class="fa-solid fa-arrows-rotate"></i>
+              <span>Yenile</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto custom-scroll">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-950/60 text-slate-400 uppercase tracking-wider font-semibold border-b border-slate-800">
+              <tr>
+                <th class="py-3 px-3.5">Durum</th>
+                <th class="py-3 px-3.5">Cihaz & İşletim Sistemi</th>
+                <th class="py-3 px-3.5">Bulunduğu Sayfa</th>
+                <th class="py-3 px-3.5">Kaynak (Referrer)</th>
+                <th class="py-3 px-3.5">Süre & Son Hareket</th>
+                <th class="py-3 px-3.5 text-right">İşlem</th>
+              </tr>
+            </thead>
+            <tbody id="liveSessionsTableBody" class="divide-y divide-slate-800/60">
+              <tr>
+                <td colspan="6" class="text-center py-8 text-slate-500">
+                  Şu an sitede aktif kullanıcı bulunmuyor veya bekleniyor...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+
+      <!-- 4. CANLI AKTİVİTE AKIŞI (SON GİRİŞLER) -->
+      <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-lg">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h2 class="text-base font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-list-check text-indigo-400"></i>
+              Canlı Ziyaret Akışı (Son Giriş Olayları)
+            </h2>
+            <p class="text-xs text-slate-400 mt-0.5">Siteye yeni giriş yapan veya araç değiştiren ziyaretçilerin kronolojik akışı</p>
+          </div>
+          <span id="feedCountBadge" class="text-xs bg-slate-800 text-slate-400 px-2.5 py-1 rounded-full font-mono">0 Olay</span>
+        </div>
+
+        <div id="activityFeedList" class="space-y-2.5 custom-scroll max-h-72 overflow-y-auto pr-1">
+          <div class="text-center py-8 text-slate-500 text-sm">
+            Giriş kayıtları bekleniyor...
+          </div>
+        </div>
+      </div>
+
+
+      <!-- 5. YÖNETİCİ HIZLI BAĞLANTILARI & YARDIMCI BUTONLAR -->
+      <div class="bg-slate-900/50 border border-slate-800/60 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-shield-cat text-emerald-400 text-base"></i>
+          <span>PratikBase Güvenli Canlı Analitik &bull; Firebase RTDB Bağlantısı Aktif</span>
+        </div>
+
+        <div class="flex items-center gap-2 flex-wrap">
+          <button onclick="simulateTestVisitor()" class="px-3 py-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 transition flex items-center gap-1.5 font-medium">
+            <i class="fa-solid fa-flask"></i>
+            <span>Test Ziyaretçisi Ekle (Simülasyon)</span>
+          </button>
+          <a href="https://search.google.com/search-console" target="_blank" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition flex items-center gap-1.5">
+            <i class="fa-brands fa-google"></i>
+            <span>Google Search Console</span>
+          </a>
+          <a href="/" target="_blank" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition flex items-center gap-1.5">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            <span>Siteyi Aç</span>
+          </a>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+
+  <!-- ========================================== -->
+  <!-- 3. JAVASCRIPT MANTIĞI & GÜVENLİK -->
+  <!-- ========================================== -->
+  <script>
+    // Salted SHA-256 Hash'imiz:
+    // SHA256('pb_salt_2026_pratikbase:admin:Efe1417')
+    const EXPECTED_AUTH_HASH = '16e27e9e326bfa2bb43414b95fac0b2c7f67ef9945863b5d8f5606a33481951b';
+    const RTDB_URL = 'https://pratikbase-default-rtdb.firebaseio.com';
+    let pollInterval = null;
+
+    // Web Crypto API ile Salted Hash Hesaplama
+    async function computeSaltedHash(username, password) {
+      const plain = `pb_salt_2026_pratikbase:${username.trim()}:${password.trim()}`;
+      const encoder = new TextEncoder();
+      const data = encoder.encode(plain);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    // Şifre Göster/Gizle
+    function togglePasswordVisibility() {
+      const input = document.getElementById('passwordInput');
+      const icon = document.getElementById('passwordToggleIcon');
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.className = 'fa-regular fa-eye-slash';
+      } else {
+        input.type = 'password';
+        icon.className = 'fa-regular fa-eye';
+      }
+    }
+
+    // Giriş Kontrolü
+    async function handleLogin(e) {
+      e.preventDefault();
+      const u = document.getElementById('usernameInput').value;
+      const p = document.getElementById('passwordInput').value;
+      const remember = document.getElementById('rememberMe').checked;
+      const errorDiv = document.getElementById('loginError');
+      const loginBtn = document.getElementById('loginBtn');
+
+      loginBtn.disabled = true;
+      loginBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Doğrulanıyor...';
+
+      try {
+        const hash = await computeSaltedHash(u, p);
+        if (hash === EXPECTED_AUTH_HASH) {
+          // Başarılı Giriş
+          errorDiv.classList.add('hidden');
+          if (remember) {
+            localStorage.setItem('pb_admin_token', hash);
+          } else {
+            sessionStorage.setItem('pb_admin_token', hash);
+          }
+          showDashboard();
+        } else {
+          // Hatalı Giriş
+          errorDiv.classList.remove('hidden');
+          document.getElementById('loginErrorMsg').innerText = 'Kullanıcı adı veya şifre hatalı!';
+          document.getElementById('passwordInput').value = '';
+          document.getElementById('passwordInput').focus();
+        }
+      } catch (err) {
+        errorDiv.classList.remove('hidden');
+        document.getElementById('loginErrorMsg').innerText = 'Giriş sırasında hata oluştu: ' + err.message;
+      } finally {
+        loginBtn.disabled = false;
+        loginBtn.innerHTML = '<span>Paneli Aç</span><i class="fa-solid fa-arrow-right"></i>';
+      }
+    }
+
+    // Oturum Kontrolü (Sayfa Yüklenirken)
+    function checkAuth() {
+      const token = localStorage.getItem('pb_admin_token') || sessionStorage.getItem('pb_admin_token');
+      if (token === EXPECTED_AUTH_HASH) {
+        showDashboard();
+      } else {
+        document.getElementById('loginSection').classList.remove('hidden');
+        document.getElementById('dashboardSection').classList.add('hidden');
+      }
+    }
+
+    // Dashboard'u Göster
+    function showDashboard() {
+      document.getElementById('loginSection').classList.add('hidden');
+      document.getElementById('dashboardSection').classList.remove('hidden');
+      fetchLiveData(true);
+      fetchActivityFeed();
+
+      if (pollInterval) clearInterval(pollInterval);
+      pollInterval = setInterval(() => {
+        fetchLiveData(false);
+      }, 3500); // Her 3.5 saniyede bir canlı veriyi tazele
+    }
+
+    // Güvenli Çıkış
+    function handleLogout() {
+      if (confirm('Yönetici panelinden çıkış yapmak istediğinize emin misiniz?')) {
+        localStorage.removeItem('pb_admin_token');
+        sessionStorage.removeItem('pb_admin_token');
+        if (pollInterval) clearInterval(pollInterval);
+        location.reload();
+      }
+    }
+
+    // ==========================================
+    // CANLI VERİ ÇEKME & İŞLEME (REALTIME SYNC)
+    // ==========================================
+    async function fetchLiveData(isManual = false) {
+      const refreshIcon = document.getElementById('refreshIcon');
+      if (isManual && refreshIcon) refreshIcon.classList.add('fa-spin');
+
+      try {
+        const res = await fetch(`${RTDB_URL}/live_presence.json?t=${Date.now()}`);
+        const data = await res.json() || {};
+
+        const now = Date.now();
+        const activeWindow = 45000; // Son 45 saniyede görülenler aktif sayılır
+
+        const activeSessions = [];
+        const pageCounts = {};
+        const referrerCounts = {};
+        let mobileCount = 0;
+        let desktopCount = 0;
+
+        for (const [id, s] of Object.entries(data)) {
+          if (!s || typeof s !== 'object') continue;
+          
+          const timeSinceLastSeen = now - (s.lastSeen || 0);
+          const isLive = timeSinceLastSeen <= activeWindow && !s.isExiting;
+
+          if (isLive) {
+            activeSessions.push({ ...s, id, timeSinceLastSeen });
+
+            // Cihaz sayımı
+            if (s.device === 'Mobil') mobileCount++;
+            else desktopCount++;
+
+            // Sayfa sayımı
+            const p = s.page || '/';
+            if (!pageCounts[p]) {
+              pageCounts[p] = { count: 0, title: s.title || p };
+            }
+            pageCounts[p].count++;
+
+            // Kaynak sayımı
+            const ref = s.referrer || 'Doğrudan';
+            referrerCounts[ref] = (referrerCounts[ref] || 0) + 1;
+          }
+        }
+
+        renderDashboard(activeSessions, pageCounts, referrerCounts, mobileCount, desktopCount);
+
+      } catch (err) {
+        console.warn('Veri çekilemedi:', err);
+      } finally {
+        if (isManual && refreshIcon) {
+          setTimeout(() => refreshIcon.classList.remove('fa-spin'), 600);
+        }
+      }
+    }
+
+    // Dashboard UI Render
+    function renderDashboard(sessions, pages, referrers, mobileCount, desktopCount) {
+      const totalLive = sessions.length;
+
+      // 1. Canlı Ziyaretçi Sayacı
+      document.getElementById('kpiOnlineCount').innerText = totalLive;
+      document.getElementById('livePulseText').innerText = totalLive > 0 ? `${totalLive} Kişi Çevrimiçi` : 'Beklemede';
+
+      // 2. Cihaz Yüzdeleri
+      if (totalLive > 0) {
+        const mobPct = Math.round((mobileCount / totalLive) * 100);
+        const dskPct = 100 - mobPct;
+        document.getElementById('kpiMobilePct').innerText = `%${mobPct}`;
+        document.getElementById('kpiDesktopPct').innerText = `%${dskPct}`;
+        document.getElementById('kpiMobileBar').style.width = `${mobPct}%`;
+        document.getElementById('kpiDesktopBar').style.width = `${dskPct}%`;
+      } else {
+        document.getElementById('kpiMobilePct').innerText = `%0`;
+        document.getElementById('kpiDesktopPct').innerText = `%0`;
+        document.getElementById('kpiMobileBar').style.width = `50%`;
+        document.getElementById('kpiDesktopBar').style.width = `50%`;
+      }
+
+      // 3. En Çok Gezilen Sayfa
+      const sortedPages = Object.entries(pages).sort((a, b) => b[1].count - a[1].count);
+      if (sortedPages.length > 0) {
+        const [topPath, topInfo] = sortedPages[0];
+        document.getElementById('kpiTopPage').innerText = topPath;
+        document.getElementById('kpiTopPageUsers').innerText = `${topInfo.count} aktif ziyaretçi (${topInfo.title})`;
+      } else {
+        document.getElementById('kpiTopPage').innerText = 'Henüz yok';
+        document.getElementById('kpiTopPageUsers').innerText = 'Ziyaretçi bekleniyor';
+      }
+
+      // 4. Birincil Trafik Kaynağı
+      const sortedRefs = Object.entries(referrers).sort((a, b) => b[1] - a[1]);
+      if (sortedRefs.length > 0) {
+        const [topRef, refCount] = sortedRefs[0];
+        document.getElementById('kpiTopReferrer').innerText = topRef;
+        document.getElementById('kpiTopReferrerDetail').innerText = `${refCount} kişi bu kaynaktan geldi`;
+      } else {
+        document.getElementById('kpiTopReferrer').innerText = 'Doğrudan / Organik';
+        document.getElementById('kpiTopReferrerDetail').innerText = 'Henüz tespit edilmedi';
+      }
+
+      // 5. Sayfa Dağılım Listesi
+      const pagesContainer = document.getElementById('activePagesList');
+      document.getElementById('pageBreakdownBadge').innerText = `${sortedPages.length} Sayfa`;
+
+      if (sortedPages.length === 0) {
+        pagesContainer.innerHTML = `
+          <div class="text-center py-12 text-slate-500 text-sm">
+            <i class="fa-regular fa-compass text-3xl mb-2 opacity-50 block"></i>
+            Şu an hiçbir sayfada aktif kullanıcı yok.
+          </div>
+        `;
+      } else {
+        pagesContainer.innerHTML = sortedPages.map(([path, info]) => {
+          const pct = Math.round((info.count / totalLive) * 100);
+          return `
+            <div class="p-3 bg-slate-950/50 hover:bg-slate-950/80 border border-slate-800/80 rounded-xl transition flex items-center justify-between gap-3">
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center gap-2">
+                  <span class="font-mono text-xs font-bold text-emerald-400 truncate">${path}</span>
+                  <a href="${path}" target="_blank" class="text-slate-500 hover:text-slate-300 transition text-[11px]" title="Sayfayı Yeni Sekmede Aç">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                  </a>
+                </div>
+                <div class="text-[11px] text-slate-400 truncate mt-0.5">${info.title}</div>
+                <!-- Mini Progress -->
+                <div class="w-full bg-slate-800 h-1.5 rounded-full mt-2 overflow-hidden">
+                  <div class="bg-emerald-500 h-full rounded-full" style="width: ${pct}%"></div>
+                </div>
+              </div>
+              <div class="text-right shrink-0">
+                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 font-bold font-mono text-xs border border-emerald-500/20">
+                  <i class="fa-solid fa-user text-[10px]"></i> ${info.count} kişi
+                </span>
+                <div class="text-[10px] text-slate-500 mt-1 font-mono">%${pct} pay</div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // 6. Trafik Kaynakları Listesi
+      const refsContainer = document.getElementById('trafficSourcesList');
+      if (sortedRefs.length === 0) {
+        refsContainer.innerHTML = `
+          <div class="text-center py-12 text-slate-500 text-sm">
+            <i class="fa-solid fa-chart-pie text-3xl mb-2 opacity-50 block"></i>
+            Kaynak verisi bekleniyor...
+          </div>
+        `;
+      } else {
+        refsContainer.innerHTML = sortedRefs.map(([refName, count]) => {
+          const pct = Math.round((count / totalLive) * 100);
+          let iconClass = 'fa-solid fa-link text-slate-400';
+          if (/whatsapp/i.test(refName)) iconClass = 'fa-brands fa-whatsapp text-emerald-400';
+          else if (/google/i.test(refName)) iconClass = 'fa-brands fa-google text-blue-400';
+          else if (/instagram/i.test(refName)) iconClass = 'fa-brands fa-instagram text-pink-400';
+          else if (/twitter|x/i.test(refName)) iconClass = 'fa-brands fa-x-twitter text-slate-300';
+          else if (/kampanya/i.test(refName)) iconClass = 'fa-solid fa-bullhorn text-amber-400';
+
+          return `
+            <div class="p-3 bg-slate-950/50 border border-slate-800/80 rounded-xl">
+              <div class="flex items-center justify-between text-xs mb-1.5">
+                <span class="font-medium text-slate-200 flex items-center gap-2">
+                  <i class="${iconClass}"></i>
+                  ${refName}
+                </span>
+                <span class="font-bold text-white font-mono">${count} kişi (%${pct})</span>
+              </div>
+              <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                <div class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full rounded-full" style="width: ${pct}%"></div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // 7. Canlı Oturumlar Tablosu
+      const tableBody = document.getElementById('liveSessionsTableBody');
+      if (sessions.length === 0) {
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="6" class="text-center py-8 text-slate-500 text-xs">
+              Şu an sitede aktif kullanıcı bulunmuyor veya bekleniyor...
+            </td>
+          </tr>
+        `;
+      } else {
+        tableBody.innerHTML = sessions.map(s => {
+          const secondsAgo = Math.floor(s.timeSinceLastSeen / 1000);
+          const durationMins = Math.floor((Date.now() - (s.startedAt || s.lastSeen)) / 60000);
+          const durationSecs = Math.floor(((Date.now() - (s.startedAt || s.lastSeen)) % 60000) / 1000);
+          const durationText = durationMins > 0 ? `${durationMins} dk ${durationSecs} sn` : `${durationSecs} sn`;
+
+          const deviceIcon = s.device === 'Mobil' ? 'fa-solid fa-mobile-screen text-emerald-400' : 'fa-solid fa-laptop text-blue-400';
+
+          return `
+            <tr class="hover:bg-slate-900/50 transition">
+              <td class="py-3 px-3.5 whitespace-nowrap">
+                <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-[11px] font-semibold border border-emerald-500/20">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                  Canlı
+                </span>
+              </td>
+              <td class="py-3 px-3.5">
+                <div class="flex items-center gap-2">
+                  <i class="${deviceIcon} text-sm"></i>
+                  <span class="font-semibold text-slate-200">${s.device || 'Bilinmiyor'}</span>
+                  <span class="text-[11px] text-slate-500 font-mono">(${s.os || 'OS'})</span>
+                </div>
+                <div class="text-[10px] text-slate-500 mt-0.5 font-mono">${s.screen || ''} &bull; ${s.timezone || ''}</div>
+              </td>
+              <td class="py-3 px-3.5">
+                <a href="${s.page || '/'}" target="_blank" class="font-mono text-emerald-400 hover:underline font-bold text-xs flex items-center gap-1">
+                  ${s.page || '/'}
+                  <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                </a>
+                <div class="text-[11px] text-slate-400 truncate max-w-xs mt-0.5">${s.title || ''}</div>
+              </td>
+              <td class="py-3 px-3.5">
+                <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 text-[11px] font-medium border border-slate-700/60 inline-block">
+                  ${s.referrer || 'Doğrudan'}
+                </span>
+              </td>
+              <td class="py-3 px-3.5 whitespace-nowrap font-mono">
+                <div class="text-slate-300 text-xs">${durationText}</div>
+                <div class="text-[10px] text-slate-500">${secondsAgo} sn önce aktif</div>
+              </td>
+              <td class="py-3 px-3.5 text-right whitespace-nowrap">
+                <button onclick="kickSession('${s.id}')" title="Bu oturumu sonlandır"
+                  class="px-2 py-1 text-[11px] rounded bg-slate-800 hover:bg-rose-500/20 hover:text-rose-400 text-slate-400 border border-slate-700 transition">
+                  <i class="fa-solid fa-xmark"></i>
+                </button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+    }
+
+    // ==========================================
+    // AKTİVİTE AKIŞI (FEED)
+    // ==========================================
+    async function fetchActivityFeed() {
+      try {
+        const res = await fetch(`${RTDB_URL}/activity_feed.json?orderBy="timestamp"&limitToLast=25`);
+        const data = await res.json() || {};
+
+        const entries = Object.values(data).sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+        const feedContainer = document.getElementById('activityFeedList');
+        document.getElementById('feedCountBadge').innerText = `${entries.length} Olay`;
+
+        if (entries.length === 0) {
+          feedContainer.innerHTML = `
+            <div class="text-center py-8 text-slate-500 text-sm">
+              Henüz aktivite kaydı bulunmuyor.
+            </div>
+          `;
+        } else {
+          feedContainer.innerHTML = entries.map(e => {
+            const devIcon = e.device === 'Mobil' ? 'fa-mobile-screen text-emerald-400' : 'fa-laptop text-blue-400';
+            return `
+              <div class="p-2.5 bg-slate-950/40 border border-slate-800/80 rounded-xl flex items-center justify-between gap-3 text-xs">
+                <div class="flex items-center gap-2.5 min-w-0">
+                  <span class="font-mono text-[11px] text-slate-500 bg-slate-900 px-2 py-0.5 rounded border border-slate-800">${e.time || '--:--'}</span>
+                  <i class="fa-solid ${devIcon}"></i>
+                  <span class="text-slate-300 truncate">
+                    <strong class="text-white">${e.device || 'Kullanıcı'}</strong>
+                    <span class="text-emerald-400 font-mono font-bold">${e.page || '/'}</span> sayfasına giriş yaptı
+                  </span>
+                </div>
+                <span class="shrink-0 text-[11px] bg-slate-800/80 text-slate-400 px-2 py-0.5 rounded border border-slate-700/50">
+                  ${e.referrer || 'Doğrudan'}
+                </span>
+              </div>
+            `;
+          }).join('');
+        }
+      } catch(err) {
+        console.warn('Aktivite akışı alınamadı:', err);
+      }
+    }
+
+    // Tekil Oturumu Sonlandır
+    async function kickSession(id) {
+      if (confirm('Bu oturumu canlı listeden kaldırmak istiyor musunuz?')) {
+        await fetch(`${RTDB_URL}/live_presence/${id}.json`, { method: 'DELETE' });
+        fetchLiveData(true);
+      }
+    }
+
+    // Eski Hareketsiz Oturumları Temizle
+    async function cleanOldSessions() {
+      const btn = event.currentTarget;
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Temizleniyor...';
+
+      try {
+        const res = await fetch(`${RTDB_URL}/live_presence.json`);
+        const data = await res.json() || {};
+        const now = Date.now();
+        const deletePromises = [];
+
+        for (const [id, s] of Object.entries(data)) {
+          // 2 dakikadan eski veya çıkış yapmış kayıtları sil
+          if (!s || (now - (s.lastSeen || 0) > 120000) || s.isExiting) {
+            deletePromises.push(fetch(`${RTDB_URL}/live_presence/${id}.json`, { method: 'DELETE' }));
+          }
+        }
+
+        await Promise.all(deletePromises);
+        alert(`Temizlik tamamlandı! ${deletePromises.length} eski oturum kaydı hafızadan kaldırıldı.`);
+        fetchLiveData(true);
+      } catch(err) {
+        alert('Hafıza temizlenirken hata: ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-broom"></i> Hafızayı Temizle';
+      }
+    }
+
+    // Test Ziyaretçisi Simülasyonu
+    async function simulateTestVisitor() {
+      const testId = 'test_' + Date.now();
+      const demoPages = ['/milli-mac-canli/', '/hangi-kanalda/', '/acil-durum-radar/', '/hali-saha-kadro/', '/maas-hesaplayici/'];
+      const demoRefs = ['WhatsApp', 'Google Arama', 'Instagram', 'Doğrudan'];
+      const randomPage = demoPages[Math.floor(Math.random() * demoPages.length)];
+      const randomRef = demoRefs[Math.floor(Math.random() * demoRefs.length)];
+
+      const payload = {
+        id: testId,
+        page: randomPage,
+        title: 'Test Ziyaretçi Denemesi',
+        device: Math.random() > 0.3 ? 'Mobil' : 'Masaüstü',
+        os: 'Android',
+        referrer: randomRef,
+        screen: '390x844',
+        timezone: 'Europe/Istanbul',
+        lastSeen: Date.now(),
+        startedAt: Date.now() - 35000,
+        isExiting: false
+      };
+
+      await fetch(`${RTDB_URL}/live_presence/${testId}.json`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      // Aktivite akışına da yaz
+      const eventId = 'evt_' + Date.now();
+      await fetch(`${RTDB_URL}/activity_feed/${eventId}.json`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: eventId,
+          time: new Date().toLocaleTimeString('tr-TR'),
+          date: new Date().toISOString().split('T')[0],
+          page: randomPage,
+          title: 'Test Ziyaretçi Denemesi',
+          device: payload.device,
+          referrer: randomRef,
+          timestamp: Date.now()
+        })
+      });
+
+      fetchLiveData(true);
+      fetchActivityFeed();
+    }
+
+    // Başlangıç
+    checkAuth();
+  </script>
+</body>
+</html>
