@@ -361,7 +361,7 @@
       <i class="fa-solid fa-shield-halved text-emerald-400 text-sm mt-0.5 shrink-0"></i>
       <div>
         <strong class="text-slate-200">Yasal Yayın Bilgilendirmesi & Telif Uyumu:</strong>
-        PratikBase, 5846 Sayılı Fikir ve Sanat Eserleri Kanunu ve RTÜK kurallarına %100 uyar. Sitemizde korsan veya yetkisiz IPTV video yayını yapılmamaktadır. Karşılaşmayı resmi yayıncı kuruluşun (<strong>TRT 1</strong>) şifresiz ulusal TV frekansından veya tabii üzerinden canlı izleyebilir, <strong>TRT Radyo 1</strong> resmi frekansından dinleyebilir ve sayfamızdan <strong>anlık canlı skor, dakika dakika yazılı canlı anlatım ve tribün sohbetiyle</strong> takip edebilirsiniz.
+        PratikBase, 5846 Sayılı Fikir ve Sanat Eserleri Kanunu ve RTÜK kurallarına %100 uyar. Sitemizde korsan veya yetkisiz IPTV video yayını yapılmamaktadır. Karşılaşmayı resmi yayıncı kuruluşun (<strong>ATV</strong>) şifresiz ulusal TV frekansından veya atv.com.tr üzerinden canlı izleyebilir, <strong>A Spor Radyo</strong> resmi frekansından dinleyebilir ve sayfamızdan <strong>anlık canlı skor, dakika dakika yazılı canlı anlatım ve tribün sohbetiyle</strong> takip edebilirsiniz.
       </div>
     </div>
 
@@ -374,7 +374,7 @@
         <i class="fa-solid fa-chart-simple"></i> Maç İstatistikleri
       </button>
       <button class="match-tab px-4 py-2 rounded-xl bg-slate-900/80 text-slate-400 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-1.5 whitespace-nowrap" data-tab="tabKadrolar">
-        <i class="fa-solid fa-users"></i> Muhtemel 11'ler
+        <i class="fa-solid fa-users"></i> İlk 11'ler &amp; Kadrolar
       </button>
       <button class="match-tab px-4 py-2 rounded-xl bg-slate-900/80 text-slate-400 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-1.5 whitespace-nowrap" data-tab="tabPuan">
         <i class="fa-solid fa-ranking-star"></i> Puan Durumu
@@ -757,14 +757,14 @@
           flag: "🇹🇷",
           sub: "Ev Sahibi (Ay-Yıldızlılar)",
           colorClass: "bg-slate-900/95 border-slate-700/80 hover:border-rose-500/70 shadow-rose-600/15",
-          coach: "Vincenzo Montella",
+          coach: "Sergen Yalçın",
           formation: "4-2-3-1",
           lineup: [
             { pos: "Kaleci", name: "Uğurcan Çakır" },
-            { pos: "Defans", name: "Mert Müldür - Merih Demiral - Abdülkerim - Ferdi" },
-            { pos: "Ön Libero", name: "Hakan Çalhanoğlu (K) - İsmail Yüksek" },
-            { pos: "Hücum Hattı", name: "Arda Güler - Orkun Kökçü - Kerem Aktürkoğlu" },
-            { pos: "Santrfor", name: "Kenan Yıldız / Barış Alper Yılmaz" }
+            { pos: "Defans", name: "Mert Müldür - Merih Demiral - Ozan Kabak - Ferdi Kadıoğlu" },
+            { pos: "Ön Libero", name: "İsmail Yüksek - Orkun Kökçü" },
+            { pos: "Hücum Hattı", name: "Oğuz Aydın - Arda Güler - Barış Alper Yılmaz" },
+            { pos: "Santrfor", name: "Enes Ünal" }
           ]
         },
         away: {
@@ -776,12 +776,12 @@
           coach: "Domenico Tedesco",
           formation: "4-3-3",
           lineup: [
-            { pos: "Kaleci", name: "Koen Casteels" },
-            { pos: "Defans", name: "T. Castagne - W. Faes - A. Theate - M. De Cuyper" },
-            { pos: "Merkez Orta Saha", name: "Amadou Onana - Youri Tielemans" },
+            { pos: "Kaleci", name: "Senne Lammens" },
+            { pos: "Defans", name: "Timothy Castagne - Brandon Mechele - Nathan Ngoy - Maxim De Cuyper" },
+            { pos: "Merkez Orta Saha", name: "Nicolas Raskin - Youri Tielemans" },
             { pos: "10 Numara / Forvet Arkası", name: "Kevin De Bruyne (K)" },
-            { pos: "Kanatlar", name: "Dodi Lukebakio - Jérémy Doku" },
-            { pos: "Santrfor", name: "Loïs Openda / Romelu Lukaku" }
+            { pos: "Kanatlar", name: "Diego Moreira - Jérémy Doku" },
+            { pos: "Santrfor", name: "Charles De Ketelaere" }
           ]
         },
         stats: {
@@ -792,9 +792,13 @@
           valueHome: "295 M €", valueAway: "540 M €"
         },
         timeline: [
-          { minute: "00'", title: "Karşılaşma Öncesi", text: "Milli Takımımız Belçika karşısına mutlak galibiyet parolasıyla çıkıyor. İzmir Gürsel Aksel Stadyumu'nda tüm biletler tükendi, tribünler kırmızı-beyaz bayraklarla donatıldı." },
-          { minute: "Hakem", title: "İzmir Gürsel Aksel", text: "Müsabaka İzmir Gürsel Aksel Stadyumu'nda oynanacak. Canlı yayın TRT 1 ve tabii üzerinden şifresiz, radyo yayını ise TRT Radyo 1'den aktarılacak." },
-          { minute: "Taktik", title: "Ön Alan Baskısı", text: "Teknik Direktör Montella, Arda Güler ve Kerem Aktürkoğlu kanat varyasyonlarıyla Belçika savunmasının arkasına sarkmayı planlıyor." }
+          { minute: "46'", type: "info", title: "İkinci Yarı Başladı", text: "İkinci 45 dakika hakemin düdüğüyle başladı. Sergen Yalçın ve A Milli Takımımıza başarılar!" },
+          { minute: "45'", type: "info", title: "İlk Yarı Sona Erdi", text: "İlk yarı sonucu: Türkiye 1 - 2 Belçika. Millilerimiz Arda Güler'in harika frikik golüyle öne geçti, Belçika De Bruyne ve De Ketelaere ile karşılık verdi." },
+          { minute: "32'", type: "card", title: "🟨 Sarı Kart (Ozan Kabak)", text: "Ozan Kabak orta sahadaki sert müdahalesi nedeniyle sarı kart gördü." },
+          { minute: "30'", type: "goal", title: "⚽ Gol (De Ketelaere - Belçika)", text: "Charles De Ketelaere ceza sahası içinden sol ayakla fileleri havalandırdı (1-2)." },
+          { minute: "27'", type: "goal", title: "⚽ Gol (Kevin De Bruyne - Belçika)", text: "Kevin De Bruyne ceza sahası merkezinden sağ ayakla skoru 1-1'e getirdi." },
+          { minute: "20'", type: "goal", title: "⚽ GOOOOOL! ARDA GÜLER! (TÜRKİYE)", text: "Arda Güler serbest vuruştan sol üst köşeye muazzam bir frikik golü attı! Türkiye 1 - 0 Belçika!" },
+          { minute: "01'", type: "info", title: "Maç Başladı", text: "İzmir Gürsel Aksel Stadyumu'nda dev mücadele hakemin düdüğüyle başladı. Haydi Türkiye!" }
         ],
         pollVotes: { home: 1120, draw: 204, away: 240 }
       },
@@ -830,7 +834,7 @@
           flag: "🇹🇷",
           sub: "Deplasman (Bizim Çocuklar)",
           colorClass: "bg-slate-900/95 border-slate-700/80 hover:border-rose-500/70 shadow-rose-600/15",
-          coach: "Vincenzo Montella",
+          coach: "Sergen Yalçın",
           formation: "4-2-3-1",
           lineup: [
             { pos: "Kaleci", name: "Uğurcan Çakır" },
@@ -944,8 +948,8 @@
       // Broadcast Names
       const tvEl = document.getElementById('broadcastTvName');
       const radioEl = document.getElementById('broadcastRadioName');
-      if (tvEl) tvEl.textContent = m.channel || 'TRT 1';
-      if (radioEl) radioEl.textContent = 'TRT Radyo 1';
+      if (tvEl) tvEl.textContent = m.channel || 'ATV (Şifresiz HD)';
+      if (radioEl) radioEl.textContent = 'A Spor Radyo';
 
       // Kadrolar (Tab 3)
       renderLineups(m);
@@ -1051,21 +1055,82 @@
       `;
     }
 
+    let activeTimelineFilter = 'all';
+
+    function applyTimelineFilter(filter) {
+      activeTimelineFilter = filter;
+      const items = document.querySelectorAll('#liveTimeline .timeline-item');
+      items.forEach(item => {
+        const itemType = item.getAttribute('data-type') || 'info';
+        if (filter === 'all') {
+          item.style.display = '';
+        } else if (filter === 'goal') {
+          item.style.display = (itemType === 'goal') ? '' : 'none';
+        } else if (filter === 'card') {
+          item.style.display = (itemType === 'card') ? '' : 'none';
+        }
+      });
+    }
+
+    function setupTimelineFilters() {
+      const filterBtns = document.querySelectorAll('.timeline-filter');
+      filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          filterBtns.forEach(b => {
+            b.classList.remove('active', 'bg-rose-600', 'text-white', 'font-bold');
+            b.classList.add('bg-slate-800', 'text-slate-300');
+          });
+          btn.classList.add('active', 'bg-rose-600', 'text-white', 'font-bold');
+          btn.classList.remove('bg-slate-800', 'text-slate-300');
+
+          const filter = btn.getAttribute('data-filter') || 'all';
+          applyTimelineFilter(filter);
+        });
+      });
+
+      const btnRefreshFeed = document.getElementById('btnRefreshFeed');
+      if (btnRefreshFeed) {
+        btnRefreshFeed.addEventListener('click', () => {
+          const icon = btnRefreshFeed.querySelector('i');
+          if (icon) icon.classList.add('fa-spin');
+          if (typeof checkLiveScore === 'function') {
+            checkLiveScore().finally(() => {
+              setTimeout(() => {
+                if (icon) icon.classList.remove('fa-spin');
+              }, 600);
+            });
+          }
+        });
+      }
+    }
+
     // Canlı Anlatım Timeline
     function renderTimeline(m) {
       const container = document.getElementById('liveTimeline');
-      if (!container) return;
-      container.innerHTML = m.timeline.map(item => `
-        <div class="timeline-item p-4 rounded-2xl bg-slate-900/80 border border-slate-800 hover:border-slate-700 transition flex items-start gap-3" data-type="info">
-          <div class="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
-            ${item.minute}
+      if (!container || !m || !m.timeline) return;
+      container.innerHTML = m.timeline.map(item => {
+        const isGoal = item.type === 'goal';
+        const isCard = item.type === 'card';
+        const badgeBg = isGoal ? 'bg-gradient-to-r from-red-600 to-rose-600 shadow-rose-600/40 text-white' : (isCard ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' : 'bg-slate-800 text-slate-300');
+        const cardBorder = isGoal ? 'border-rose-500/60 bg-gradient-to-r from-rose-950/30 to-slate-900/90 shadow-lg shadow-rose-950/20' : (isCard ? 'border-amber-500/30 bg-slate-900/80' : 'border-slate-800 bg-slate-900/80');
+
+        return `
+          <div class="timeline-item p-4 rounded-2xl border ${cardBorder} flex items-start gap-3 transition-all" data-type="${item.type || 'info'}">
+            <div class="w-10 h-10 rounded-xl ${badgeBg} flex items-center justify-center font-bold text-xs shrink-0 mt-0.5 shadow-md">
+              ${item.minute || 'Canlı'}
+            </div>
+            <div class="flex-1 space-y-1">
+              <span class="font-bold ${isGoal ? 'text-white flex items-center gap-1.5' : (isCard ? 'text-amber-400' : 'text-slate-300')} text-xs">
+                ${isGoal ? '<span class="w-2 h-2 rounded-full bg-rose-400 animate-ping"></span>' : ''}
+                ${item.title}
+              </span>
+              <p class="text-xs sm:text-sm text-slate-200 leading-relaxed">${item.text}</p>
+            </div>
           </div>
-          <div class="flex-1 space-y-1">
-            <span class="font-bold text-rose-400 text-xs">${item.title}</span>
-            <p class="text-xs sm:text-sm text-slate-200 leading-relaxed">${item.text}</p>
-          </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
+
+      applyTimelineFilter(activeTimelineFilter || 'all');
     }
 
     // Anket Kurulumu
@@ -1154,6 +1219,7 @@
     // Başlat
     renderFixturePills();
     loadMatch(FIXTURES[currentMatchIndex]);
+    setupTimelineFilters();
     setInterval(runCountdown, 1000);
     runCountdown();
 
@@ -1254,7 +1320,6 @@
     // ========================================================
     let currentScore = { home: 0, away: 0 };
     let initialScoreLoaded = false;
-    let activeTimelineFilter = 'all';
 
     function formatMatchText(text) {
       if (!text) return '';
@@ -1414,21 +1479,6 @@
       applyTimelineFilter(activeTimelineFilter);
     }
 
-    function applyTimelineFilter(filter) {
-      activeTimelineFilter = filter;
-      const items = document.querySelectorAll('#liveTimeline .timeline-item');
-      items.forEach(item => {
-        const itemType = item.getAttribute('data-type') || 'info';
-        if (filter === 'all') {
-          item.style.display = '';
-        } else if (filter === 'goal') {
-          item.style.display = (itemType === 'goal') ? '' : 'none';
-        } else if (filter === 'card') {
-          item.style.display = (itemType === 'card') ? '' : 'none';
-        }
-      });
-    }
-
     function renderLiveStats(teamsStats) {
       const container = document.getElementById('statsContainer');
       if (!container || !teamsStats) return;
@@ -1516,7 +1566,7 @@
                 <span class="text-2xl">${flag}</span>
                 <div>
                   <h4 class="font-bold text-white text-base">${teamData.team?.displayName || (isHome ? 'TÜRKİYE' : 'BELÇİKA')}</h4>
-                  <span class="text-[11px] ${isHome ? 'text-rose-400' : 'text-amber-400'} font-semibold">Resmi Sahadaki 11</span>
+                  <span class="text-[11px] ${isHome ? 'text-rose-400' : 'text-amber-400'} font-semibold">T.D: ${isHome ? 'Sergen Yalçın' : 'Domenico Tedesco'} • Sahadaki Resmi 11</span>
                 </div>
               </div>
               <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">SAHADA</span>
@@ -1697,39 +1747,6 @@
         console.debug('Canlı skor yoklama kontrolü:', err);
       }
     }
-
-    // Filtreleri kur ve başlat
-    function setupTimelineFilters() {
-      const filterBtns = document.querySelectorAll('.timeline-filter');
-      filterBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-          filterBtns.forEach(b => {
-            b.classList.remove('active', 'bg-rose-600', 'text-white', 'font-bold');
-            b.classList.add('bg-slate-800', 'text-slate-300');
-          });
-          btn.classList.add('active', 'bg-rose-600', 'text-white', 'font-bold');
-          btn.classList.remove('bg-slate-800', 'text-slate-300');
-
-          const filter = btn.getAttribute('data-filter') || 'all';
-          applyTimelineFilter(filter);
-        });
-      });
-
-      const btnRefreshFeed = document.getElementById('btnRefreshFeed');
-      if (btnRefreshFeed) {
-        btnRefreshFeed.addEventListener('click', () => {
-          const icon = btnRefreshFeed.querySelector('i');
-          if (icon) icon.classList.add('fa-spin');
-          checkLiveScore().finally(() => {
-            setTimeout(() => {
-              if (icon) icon.classList.remove('fa-spin');
-            }, 600);
-          });
-        });
-      }
-    }
-
-    setupTimelineFilters();
 
     // İlk skor kontrolü ve her 15 saniyede bir tam otomatik sorgulama
     checkLiveScore();
