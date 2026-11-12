@@ -842,9 +842,15 @@
             </div>
 
             <div class="flex items-center gap-1.5">
-              <span class="px-2.5 py-1 rounded-lg text-[11px] font-extrabold border ${m.badgeColor}">
-                ${m.channelType === 'free' ? '🟢 ' : ''}${m.badgeText}
-              </span>
+              ${m.isLiveNow ? `
+                <span class="px-2.5 py-1 rounded-lg text-[11px] font-extrabold bg-rose-500/20 text-rose-300 border border-rose-500/40 animate-pulse flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-rose-400 animate-ping"></span> CANLI YAYIN
+                </span>
+              ` : `
+                <span class="px-2.5 py-1 rounded-lg text-[11px] font-extrabold border ${m.badgeColor}">
+                  ${m.channelType === 'free' ? '🟢 ' : ''}${m.badgeText}
+                </span>
+              `}
             </div>
           </div>
 
@@ -863,13 +869,18 @@
               <div class="px-2.5 py-1 rounded-xl bg-rose-600/20 border border-rose-500/40 text-rose-400 text-xs font-black shrink-0 flex items-center gap-1.5 animate-pulse shadow-md shadow-rose-950/40">
                 <span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping"></span>
                 <span>CANLI</span>
-                <span class="match-card-live-score font-mono font-bold text-white">1 - 2</span>
+                <span class="match-card-live-score font-mono font-bold text-white">${m.liveScore || '0 - 0'}</span>
+                ${m.liveClock ? `<span class="text-[10px] text-rose-300 font-mono ml-0.5">(${m.liveClock})</span>` : ''}
+              </div>
+            ` : (m.isFinished ? `
+              <div class="px-2.5 py-1 rounded-lg bg-slate-950 border border-slate-700 text-slate-300 text-xs font-bold shrink-0">
+                <span>MS ${m.liveScore || ''}</span>
               </div>
             ` : `
               <div class="px-2.5 py-1 rounded-lg bg-slate-950 border border-slate-800 text-[11px] font-bold text-slate-400 shrink-0">
                 VS
               </div>
-            `}
+            `)}
 
             <!-- Away Team -->
             <div class="flex items-center gap-2.5 flex-1 min-w-0 justify-end text-right">
@@ -980,60 +991,141 @@
     if (btnCloseFreqModalBtn) btnCloseFreqModalBtn.addEventListener('click', closeModal);
 
     // ========================================================
-    // OTOMATİK CANLI SKOR VE MAÇ DURUMU DİNLEYİCİSİ (15 sn)
+    // EVRENSEL CANLI SKOR VE MAÇ DURUMU DİNLEYİCİSİ (Tüm Maçlar İçin)
     // ========================================================
+    function normalizeTR(str) {
+      if (!str) return '';
+      return str
+        .replace(/İ/g, 'i').replace(/I/g, 'i').replace(/ı/g, 'i')
+        .replace(/ş/g, 's').replace(/Ş/g, 's')
+        .replace(/ğ/g, 'g').replace(/Ğ/g, 'g')
+        .replace(/ü/g, 'u').replace(/Ü/g, 'u')
+        .replace(/ö/g, 'o').replace(/Ö/g, 'o')
+        .replace(/ç/g, 'c').replace(/Ç/g, 'c')
+        .toLowerCase();
+    }
+
+    const TEAM_ALIASES = {
+      'turkiye': ['turkey', 'turkiye'],
+      'belcika': ['belgium', 'belcika'],
+      'fransa': ['france', 'fransa'],
+      'italya': ['italy', 'italya'],
+      'ingiltere': ['england', 'ingiltere'],
+      'yunanistan': ['greece', 'yunanistan', 'croatia'],
+      'almanya': ['germany', 'almanya'],
+      'hollanda': ['netherlands', 'hollanda'],
+      'gurcistan': ['georgia', 'gurcistan'],
+      'ispanya': ['spain', 'ispanya'],
+      'cekya': ['czech', 'cekya'],
+      'hirvatistan': ['croatia', 'hirvatistan'],
+      'real madrid': ['real madrid'],
+      'sevilla': ['sevilla'],
+      'juventus': ['juventus'],
+      'inter': ['inter', 'internazionale'],
+      'galatasaray': ['galatasaray'],
+      'fenerbahce': ['fenerbahce', 'fenerbahçe'],
+      'trabzonspor': ['trabzonspor'],
+      'sivasspor': ['sivasspor'],
+      'besiktas': ['besiktas', 'beşiktaş']
+    };
+
+    function matchEventWithGame(m, ev) {
+      const evName = normalizeTR(ev.name);
+      const cleanName = (str) => normalizeTR(str.replace(/\s*\(.*?\)/g, '').trim());
+      const homeKey = cleanName(m.home.name);
+      const awayKey = cleanName(m.away.name);
+      const homeAliases = TEAM_ALIASES[homeKey] || [homeKey];
+      const awayAliases = TEAM_ALIASES[awayKey] || [awayKey];
+      const hasHome = homeAliases.some(a => evName.includes(a));
+      const hasAway = awayAliases.some(a => evName.includes(a));
+      return hasHome && hasAway;
+    }
+
     async function updateHangiKanaldaLiveScore() {
       try {
-        let liveScoreText = null;
-        let liveStatusText = null;
+        let hasChanges = false;
+        const allEvents = [];
 
-        // 1. Önce açık canlı spor API'si (ESPN)
-        try {
-          const res = await fetch('https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/scoreboard', { cache: 'no-store' });
-          if (res.ok) {
-            const json = await res.json();
-            const turEv = json.events?.find(e => (e.name || '').toLowerCase().includes('tur'));
-            if (turEv) {
-              const comp = turEv.competitions?.[0];
-              const home = comp?.competitors?.find(c => c.homeAway === 'home');
-              const away = comp?.competitors?.find(c => c.homeAway === 'away');
-              const clock = comp?.status?.displayClock || '';
-              const state = comp?.status?.type?.state;
-              if (home && away) {
-                liveScoreText = `${home.score || 0} - ${away.score || 0}`;
-                liveStatusText = state === 'in' ? (clock ? `${clock} Canlı` : 'Canlı') : (comp?.status?.type?.detail || 'Canlı');
-              }
-            }
-          }
-        } catch (_) {}
+        // 1. UEFA Uluslar Ligi ve Açık Lig Skorboardları
+        const FEEDS = [
+          'https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/scoreboard',
+          'https://site.api.espn.com/apis/site/v2/sports/soccer/tur.1/scoreboard'
+        ];
 
-        // 2. Yedek Firebase RTDB
-        if (!liveScoreText) {
+        for (const url of FEEDS) {
           try {
-            const rtdb = await fetch(`https://pratikbase-default-rtdb.firebaseio.com/live_match.json?_t=${Date.now()}`);
-            if (rtdb.ok) {
-              const data = await rtdb.json();
-              if (data && data.scoreHome !== undefined) {
-                liveScoreText = `${data.scoreHome} - ${data.scoreAway}`;
-                liveStatusText = data.statusText || 'Canlı';
+            const res = await fetch(url, { cache: 'no-store' });
+            if (res.ok) {
+              const json = await res.json();
+              if (json.events && Array.isArray(json.events)) {
+                allEvents.push(...json.events);
               }
             }
           } catch (_) {}
         }
 
-        if (liveScoreText) {
-          const spotScore = document.getElementById('spotlightLiveScore');
-          if (spotScore) spotScore.textContent = liveScoreText;
+        // 2. Firebase RTDB (Türkiye maçı veya admin manuel override için)
+        let rtdbData = null;
+        try {
+          const rtdbRes = await fetch(`https://pratikbase-default-rtdb.firebaseio.com/live_match.json?_t=${Date.now()}`);
+          if (rtdbRes.ok) {
+            rtdbData = await rtdbRes.json();
+          }
+        } catch (_) {}
 
-          const spotMin = document.getElementById('spotlightMatchMinute');
-          if (spotMin && liveStatusText) spotMin.textContent = liveStatusText;
+        // 3. Listedeki Tüm Maçları Canlı Akışla Eşleştir
+        MATCHES_DB.forEach(m => {
+          // Özel: Türkiye - Belçika maçı
+          if (m.id === 'm1' && rtdbData && rtdbData.scoreHome !== undefined) {
+            const prevScore = m.liveScore;
+            m.isLiveNow = true;
+            m.liveScore = `${rtdbData.scoreHome} - ${rtdbData.scoreAway}`;
+            m.liveClock = rtdbData.statusText || 'Canlı';
+            if (prevScore !== m.liveScore) hasChanges = true;
 
-          document.querySelectorAll('.match-card-live-score').forEach(el => {
-            el.textContent = liveScoreText;
-          });
+            const spotScore = document.getElementById('spotlightLiveScore');
+            if (spotScore) spotScore.textContent = m.liveScore;
+            const spotMin = document.getElementById('spotlightMatchMinute');
+            if (spotMin) spotMin.textContent = m.liveClock;
+            return;
+          }
+
+          // Diğer tüm maçlar (Fransa-İtalya, İngiltere, vs.)
+          const ev = allEvents.find(e => matchEventWithGame(m, e));
+          if (ev) {
+            const comp = ev.competitions?.[0];
+            const h = comp?.competitors?.find(c => c.homeAway === 'home');
+            const a = comp?.competitors?.find(c => c.homeAway === 'away');
+            const isLive = ev.status?.type?.state === 'in';
+            const isFinished = ev.status?.type?.completed || ev.status?.type?.state === 'post';
+
+            if (h && a) {
+              const cleanName = (str) => normalizeTR(str.replace(/\s*\(.*?\)/g, '').trim());
+              const homeAliases = TEAM_ALIASES[cleanName(m.home.name)] || [cleanName(m.home.name)];
+              const hName = normalizeTR(h.team?.name || h.team?.displayName || '');
+              const homeIsH = homeAliases.some(alias => hName.includes(alias));
+
+              const scoreH = homeIsH ? (h.score || 0) : (a.score || 0);
+              const scoreA = homeIsH ? (a.score || 0) : (h.score || 0);
+              const newScore = `${scoreH} - ${scoreA}`;
+              const newClock = comp.status?.displayClock || (isLive ? 'Canlı' : (isFinished ? 'MS' : ''));
+
+              if (m.isLiveNow !== isLive || m.liveScore !== newScore || m.isFinished !== isFinished) {
+                m.isLiveNow = isLive;
+                m.isFinished = isFinished;
+                m.liveScore = newScore;
+                m.liveClock = newClock;
+                hasChanges = true;
+              }
+            }
+          }
+        });
+
+        if (hasChanges) {
+          renderMatches();
         }
       } catch (err) {
-        console.debug('Hangi kanalda canlı skor kontrolü:', err);
+        console.debug('Evrensel canlı skor kontrol hatası:', err);
       }
     }
 
