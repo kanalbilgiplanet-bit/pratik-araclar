@@ -1456,7 +1456,7 @@
     }
 
     function processAndRenderHistory(period, allDays) {
-      const todayStr = new Date().toISOString().split('T')[0];
+      const todayStr = new Date().toLocaleDateString('en-CA');
       const selectedDates = [];
       const dayKeys = Object.keys(allDays).sort();
 
@@ -1466,13 +1466,13 @@
         for (let i = 6; i >= 0; i--) {
           const d = new Date();
           d.setDate(d.getDate() - i);
-          selectedDates.push(d.toISOString().split('T')[0]);
+          selectedDates.push(d.toLocaleDateString('en-CA'));
         }
       } else if (period === 'month') {
         for (let i = 29; i >= 0; i--) {
           const d = new Date();
           d.setDate(d.getDate() - i);
-          selectedDates.push(d.toISOString().split('T')[0]);
+          selectedDates.push(d.toLocaleDateString('en-CA'));
         }
       } else {
         selectedDates.push(...dayKeys);
@@ -1669,14 +1669,14 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `pratikbase_ziyaretci_raporu_${new Date().toISOString().split('T')[0]}.csv`;
+      a.download = `pratikbase_ziyaretci_raporu_${new Date().toLocaleDateString('en-CA')}.csv`;
       a.click();
       URL.revokeObjectURL(url);
     }
 
     // Bugünün İstatistiklerini Sıfırla
     async function resetTodayStats() {
-      const dateStr = new Date().toISOString().split('T')[0];
+      const dateStr = new Date().toLocaleDateString('en-CA');
       if (confirm(`Bugünün (${dateStr}) test ve ziyaretçi kayıtlarını sıfırlamak istediğinize emin misiniz?`)) {
         await fetch(`${RTDB_URL}/stats/daily/${dateStr}.json`, { method: 'DELETE' });
         await fetch(`${RTDB_URL}/activity_feed.json`, { method: 'DELETE' });
@@ -1714,7 +1714,7 @@
       });
 
       const now = new Date();
-      const dateStr = now.toISOString().split('T')[0];
+      const dateStr = now.toLocaleDateString('en-CA');
       const eventId = 'evt_' + Date.now();
       const hitId = 'h_' + Date.now();
 

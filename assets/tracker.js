@@ -1,13 +1,16 @@
 /**
  * PratikBase.com - Real-Time & Historical Visitor Analytics Tracker + Live Announcement Receiver
- * Cihaz bazlı kalıcı tekil ziyaretçi (localStorage) + Admin kendi ziyaretlerini hariç tutma.
+ * Cihaz bazlı kalıcı tekil ziyaretçi (localStorage).
  */
 (function() {
-  // 1. Admin Koruması: Admin panelindeyse veya bu tarayıcıda admin oturumu açıksa
-  // Adminin kendi gezintilerini ASLA sayaçlara ve istatistiklere dahil etme!
-  const isAdmin = localStorage.getItem('pb_admin_token') || sessionStorage.getItem('pb_admin_token') || window.location.pathname.startsWith('/admin');
-  if (isAdmin) {
-    // Admin kendi duyurusunu sayfada görebilsin ama sayacı artırmasın
+  // Admin panelindeyken takip çalıştırma
+  if (window.location.pathname.startsWith('/admin')) {
+    return;
+  }
+
+  // Admin kendi ziyaretlerini hariç tutmak isterse kontrolü
+  const isExcluded = localStorage.getItem('pb_exclude_admin') === 'true';
+  if (isExcluded && (localStorage.getItem('pb_admin_token') || sessionStorage.getItem('pb_admin_token'))) {
     checkSiteAnnouncement();
     return;
   }
@@ -15,19 +18,19 @@
   const RTDB_URL = 'https://pratikbase-default-rtdb.firebaseio.com';
   const HEARTBEAT_INTERVAL = 15000;
 
-  // 2. Kalıcı Tekil Ziyaretçi Kimliği (Tüm Sekmelerde Aynı Kalır)
-  // sessionStorage yerine localStorage kullanarak her sekmenin ayrı kişi sayılmasını engelliyoruz!
+  // 1. Cihaz Başına Kalıcı Tekil Ziyaretçi Kimliği (Tüm Sekmelerde Aynı Kalır)
+  // Bir cihazda 10 sekme de açılsa sadece 1 kişi sayılır!
   let visitorId = localStorage.getItem('pb_vid');
   if (!visitorId) {
     visitorId = 'v_' + Date.now().toString(36) + '_' + Math.random().toString(36).substring(2, 8);
     localStorage.setItem('pb_vid', visitorId);
   }
 
-  // 3. Cihaz Tespiti
+  // 2. Cihaz Tespiti
   const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
   const deviceType = isMobile ? 'Mobil' : 'Masaüstü';
 
-  // 4. İşletim Sistemi
+  // 3. İşletim Sistemi
   let os = 'Bilinmiyor';
   const ua = navigator.userAgent;
   if (/Windows/i.test(ua)) os = 'Windows';
@@ -36,7 +39,7 @@
   else if (/Macintosh|Mac OS/i.test(ua)) os = 'macOS';
   else if (/Linux/i.test(ua)) os = 'Linux';
 
-  // 5. Trafik Kaynağı (Kalıcı olarak ilk giriş kaynağını hatırlar)
+  // 4. Trafik Kaynağı
   let referrerSource = localStorage.getItem('pb_ref_source');
   if (!referrerSource) {
     const urlParams = new URLSearchParams(window.location.search);
@@ -95,8 +98,7 @@
     localStorage.setItem('pb_started_at', startedAt.toString());
   }
 
-  // 6. Canlı Kalp Atışı (Live Presence) - visitorId ile eşleştirilir
-  // Kullanıcı aynı anda 3 sekme açsa bile tek bir kişi olarak sayılır!
+  // 5. Canlı Kalp Atışı (Live Presence)
   function sendHeartbeat(isExiting = false) {
     const pageInfo = getPageInfo();
     const payload = {
@@ -121,18 +123,18 @@
     }).catch(() => {});
   }
 
-  // 7. Geçmiş ve Günlük İstatistik Kaydı
+  // 6. Kalıcı Geçmiş ve Günlük İstatistik Kaydı (Asla Silinmez)
   function recordPageEnter() {
     const pageInfo = getPageInfo();
     const now = new Date();
-    const dateStr = now.toISOString().split('T')[0];
+    const dateStr = now.toLocaleDateString('en-CA'); // YYYY-MM-DD yerel tarih
     const timeStr = now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
-    // Hızlı sayfa yenilemede (F5) mükerrer hit kaydetmeyi engelle
+    // Hızlı sayfa yenilemede (F5) mükerrer tıklamayı engelle
     const lastHitKey = `pb_last_hit_${pageInfo.path}`;
     const lastHitTime = parseInt(sessionStorage.getItem(lastHitKey) || '0', 10);
     if (Date.now() - lastHitTime < 10000) {
-      return; // 10 saniye içinde aynı sayfaya tıklama tekrar sayılmaz
+      return;
     }
     sessionStorage.setItem(lastHitKey, Date.now().toString());
 
@@ -149,7 +151,7 @@
       timestamp: Date.now()
     };
 
-    // A. Günlük sayfa görüntüleme kaydı
+    // A. Günlük sayfa görüntüleme kaydı (Kalıcı)
     fetch(`${RTDB_URL}/stats/daily/${dateStr}/hits/${hitId}.json`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
@@ -179,7 +181,7 @@
     }).catch(() => {});
   }
 
-  // 8. Site Geneli Canlı Duyuru Bandı
+  // 7. Site Geneli Canlı Duyuru Bandı
   function checkSiteAnnouncement() {
     fetch(`${RTDB_URL}/site_announcement.json?t=${Date.now()}`)
       .then(r => r.json())
