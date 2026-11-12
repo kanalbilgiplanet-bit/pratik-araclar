@@ -1,27 +1,33 @@
 /**
  * PratikBase.com - Real-Time & Historical Visitor Analytics Tracker + Live Announcement Receiver
- * Canlı izleme + Geçmişe dönük gün gün sayfa ve ziyaretçi kaydı + Site geneli acil duyuru bandı.
+ * Cihaz bazlı kalıcı tekil ziyaretçi (localStorage) + Admin kendi ziyaretlerini hariç tutma.
  */
 (function() {
-  if (window.location.pathname.startsWith('/admin')) {
+  // 1. Admin Koruması: Admin panelindeyse veya bu tarayıcıda admin oturumu açıksa
+  // Adminin kendi gezintilerini ASLA sayaçlara ve istatistiklere dahil etme!
+  const isAdmin = localStorage.getItem('pb_admin_token') || sessionStorage.getItem('pb_admin_token') || window.location.pathname.startsWith('/admin');
+  if (isAdmin) {
+    // Admin kendi duyurusunu sayfada görebilsin ama sayacı artırmasın
+    checkSiteAnnouncement();
     return;
   }
 
   const RTDB_URL = 'https://pratikbase-default-rtdb.firebaseio.com';
   const HEARTBEAT_INTERVAL = 15000;
 
-  // 1. Session ID (Oturum Kimliği)
-  let sessionId = sessionStorage.getItem('pb_sid');
-  if (!sessionId) {
-    sessionId = 's_' + Date.now().toString(36) + '_' + Math.random().toString(36).substring(2, 7);
-    sessionStorage.setItem('pb_sid', sessionId);
+  // 2. Kalıcı Tekil Ziyaretçi Kimliği (Tüm Sekmelerde Aynı Kalır)
+  // sessionStorage yerine localStorage kullanarak her sekmenin ayrı kişi sayılmasını engelliyoruz!
+  let visitorId = localStorage.getItem('pb_vid');
+  if (!visitorId) {
+    visitorId = 'v_' + Date.now().toString(36) + '_' + Math.random().toString(36).substring(2, 8);
+    localStorage.setItem('pb_vid', visitorId);
   }
 
-  // 2. Cihaz Tespiti
+  // 3. Cihaz Tespiti
   const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
   const deviceType = isMobile ? 'Mobil' : 'Masaüstü';
 
-  // 3. İşletim Sistemi
+  // 4. İşletim Sistemi
   let os = 'Bilinmiyor';
   const ua = navigator.userAgent;
   if (/Windows/i.test(ua)) os = 'Windows';
@@ -30,8 +36,8 @@
   else if (/Macintosh|Mac OS/i.test(ua)) os = 'macOS';
   else if (/Linux/i.test(ua)) os = 'Linux';
 
-  // 4. Trafik Kaynağı
-  let referrerSource = sessionStorage.getItem('pb_ref_source');
+  // 5. Trafik Kaynağı (Kalıcı olarak ilk giriş kaynağını hatırlar)
+  let referrerSource = localStorage.getItem('pb_ref_source');
   if (!referrerSource) {
     const urlParams = new URLSearchParams(window.location.search);
     const utmSource = urlParams.get('utm_source') || urlParams.get('source') || urlParams.get('ref');
@@ -66,7 +72,7 @@
         }
       }
     }
-    sessionStorage.setItem('pb_ref_source', referrerSource);
+    localStorage.setItem('pb_ref_source', referrerSource);
   }
 
   const screenResolution = `${window.screen.width}x${window.screen.height}`;
@@ -84,16 +90,17 @@
     };
   };
 
-  const startedAt = parseInt(sessionStorage.getItem('pb_started_at') || '0', 10) || Date.now();
-  if (!sessionStorage.getItem('pb_started_at')) {
-    sessionStorage.setItem('pb_started_at', startedAt.toString());
+  const startedAt = parseInt(localStorage.getItem('pb_started_at') || '0', 10) || Date.now();
+  if (!localStorage.getItem('pb_started_at')) {
+    localStorage.setItem('pb_started_at', startedAt.toString());
   }
 
-  // 5. Canlı Kalp Atışı (Live Presence)
+  // 6. Canlı Kalp Atışı (Live Presence) - visitorId ile eşleştirilir
+  // Kullanıcı aynı anda 3 sekme açsa bile tek bir kişi olarak sayılır!
   function sendHeartbeat(isExiting = false) {
     const pageInfo = getPageInfo();
     const payload = {
-      id: sessionId,
+      id: visitorId,
       page: pageInfo.path,
       title: pageInfo.title,
       device: deviceType,
@@ -106,7 +113,7 @@
       isExiting: isExiting
     };
 
-    fetch(`${RTDB_URL}/live_presence/${sessionId}.json`, {
+    fetch(`${RTDB_URL}/live_presence/${visitorId}.json`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
@@ -114,16 +121,25 @@
     }).catch(() => {});
   }
 
-  // 6. Geçmiş ve Günlük İstatistik Kaydı (Historical Analytics)
+  // 7. Geçmiş ve Günlük İstatistik Kaydı
   function recordPageEnter() {
     const pageInfo = getPageInfo();
     const now = new Date();
     const dateStr = now.toISOString().split('T')[0];
     const timeStr = now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-    const hitId = 'h_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6);
 
+    // Hızlı sayfa yenilemede (F5) mükerrer hit kaydetmeyi engelle
+    const lastHitKey = `pb_last_hit_${pageInfo.path}`;
+    const lastHitTime = parseInt(sessionStorage.getItem(lastHitKey) || '0', 10);
+    if (Date.now() - lastHitTime < 10000) {
+      return; // 10 saniye içinde aynı sayfaya tıklama tekrar sayılmaz
+    }
+    sessionStorage.setItem(lastHitKey, Date.now().toString());
+
+    const hitId = 'h_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6);
     const hitData = {
       id: hitId,
+      vid: visitorId,
       time: timeStr,
       date: dateStr,
       page: pageInfo.path,
@@ -140,23 +156,19 @@
       body: JSON.stringify(hitData)
     }).catch(() => {});
 
-    // B. Günlük tekil kullanıcı kaydı
-    const dailyUserKey = `pb_v_${dateStr}`;
-    if (!sessionStorage.getItem(dailyUserKey)) {
-      sessionStorage.setItem(dailyUserKey, '1');
-      fetch(`${RTDB_URL}/stats/daily/${dateStr}/unique_users/${sessionId}.json`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          id: sessionId,
-          firstSeen: Date.now(),
-          device: deviceType,
-          os: os,
-          referrer: referrerSource,
-          entrancePage: pageInfo.path
-        })
-      }).catch(() => {});
-    }
+    // B. Günlük tekil kullanıcı kaydı (visitorId bazlı - cihaz başına günde 1 kez)
+    fetch(`${RTDB_URL}/stats/daily/${dateStr}/unique_users/${visitorId}.json`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: visitorId,
+        firstSeen: Date.now(),
+        device: deviceType,
+        os: os,
+        referrer: referrerSource,
+        entrancePage: pageInfo.path
+      })
+    }).catch(() => {});
 
     // C. Canlı Aktivite Akışı (Feed)
     const eventId = 'evt_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6);
@@ -167,7 +179,7 @@
     }).catch(() => {});
   }
 
-  // 7. Site Geneli Canlı Duyuru Bandı (Admin Yönetimli)
+  // 8. Site Geneli Canlı Duyuru Bandı
   function checkSiteAnnouncement() {
     fetch(`${RTDB_URL}/site_announcement.json?t=${Date.now()}`)
       .then(r => r.json())

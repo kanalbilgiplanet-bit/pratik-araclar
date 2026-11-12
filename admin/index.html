@@ -617,6 +617,12 @@
             <i class="fa-solid fa-file-excel"></i>
             <span>Excel / CSV İndir</span>
           </button>
+
+          <!-- Bugünü Sıfırla Butonu -->
+          <button onclick="resetTodayStats()" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-rose-500/20 hover:text-rose-400 text-slate-400 text-xs font-semibold border border-slate-700/60 transition flex items-center gap-1.5" title="Bugünün test/ziyaretçi kayıtlarını sıfırla">
+            <i class="fa-solid fa-trash-can"></i>
+            <span>Bugünü Sıfırla</span>
+          </button>
         </div>
       </div>
 
@@ -1666,6 +1672,17 @@
       a.download = `pratikbase_ziyaretci_raporu_${new Date().toISOString().split('T')[0]}.csv`;
       a.click();
       URL.revokeObjectURL(url);
+    }
+
+    // Bugünün İstatistiklerini Sıfırla
+    async function resetTodayStats() {
+      const dateStr = new Date().toISOString().split('T')[0];
+      if (confirm(`Bugünün (${dateStr}) test ve ziyaretçi kayıtlarını sıfırlamak istediğinize emin misiniz?`)) {
+        await fetch(`${RTDB_URL}/stats/daily/${dateStr}.json`, { method: 'DELETE' });
+        await fetch(`${RTDB_URL}/activity_feed.json`, { method: 'DELETE' });
+        alert('Bugünün verileri başarıyla sıfırlandı!');
+        loadHistoricalStats('today');
+      }
     }
 
     // Test Ziyaretçisi Ekleme
