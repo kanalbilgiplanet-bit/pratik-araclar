@@ -1,15 +1,14 @@
 /**
- * PratikBase.com - Real-Time Visitor & Analytics Tracker
- * Hafif, gizlilik dostu ve kesintisiz canlı ziyaretçi takip sistemi.
+ * PratikBase.com - Real-Time & Historical Visitor Analytics Tracker
+ * Canlı izleme + Geçmişe dönük gün gün sayfa ve ziyaretçi kaydı.
  */
 (function() {
-  // Admin panelindeyken kendi ziyaretlerimizi sayıma dahil etme
   if (window.location.pathname.startsWith('/admin')) {
     return;
   }
 
   const RTDB_URL = 'https://pratikbase-default-rtdb.firebaseio.com';
-  const HEARTBEAT_INTERVAL = 15000; // 15 saniyede bir kalp atışı
+  const HEARTBEAT_INTERVAL = 15000;
 
   // 1. Session ID (Oturum Kimliği)
   let sessionId = sessionStorage.getItem('pb_sid');
@@ -31,7 +30,7 @@
   else if (/Macintosh|Mac OS/i.test(ua)) os = 'macOS';
   else if (/Linux/i.test(ua)) os = 'Linux';
 
-  // 4. Trafik Kaynağı (Referrer & UTM)
+  // 4. Trafik Kaynağı
   let referrerSource = sessionStorage.getItem('pb_ref_source');
   if (!referrerSource) {
     const urlParams = new URLSearchParams(window.location.search);
@@ -70,14 +69,12 @@
     sessionStorage.setItem('pb_ref_source', referrerSource);
   }
 
-  // 5. Ekran Çözünürlüğü & Zaman Dilimi
   const screenResolution = `${window.screen.width}x${window.screen.height}`;
   let timezone = 'Europe/Istanbul';
   try {
     timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Europe/Istanbul';
   } catch(e) {}
 
-  // 6. Sayfa Bilgisi
   const getPageInfo = () => {
     let p = window.location.pathname;
     if (p.endsWith('/') && p.length > 1) p = p.slice(0, -1);
@@ -92,7 +89,7 @@
     sessionStorage.setItem('pb_started_at', startedAt.toString());
   }
 
-  // 7. Kalp Atışı Gönderimi
+  // 5. Canlı Kalp Atışı (Live Presence)
   function sendHeartbeat(isExiting = false) {
     const pageInfo = getPageInfo();
     const payload = {
@@ -117,16 +114,16 @@
     }).catch(() => {});
   }
 
-  // 8. Sayfa Giriş Aktivite Olayı (Feed)
+  // 6. Geçmiş ve Günlük İstatistik Kaydı (Historical Analytics)
   function recordPageEnter() {
     const pageInfo = getPageInfo();
-    const eventId = 'evt_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6);
     const now = new Date();
-    const timeStr = now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
     const dateStr = now.toISOString().split('T')[0];
+    const timeStr = now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const hitId = 'h_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6);
 
-    const feedEntry = {
-      id: eventId,
+    const hitData = {
+      id: hitId,
       time: timeStr,
       date: dateStr,
       page: pageInfo.path,
@@ -136,33 +133,54 @@
       timestamp: Date.now()
     };
 
-    // Aktivite akışına son girişleri ekle
+    // A. Günlük sayfa görüntüleme kaydı (Geçmiş raporlar için)
+    fetch(`${RTDB_URL}/stats/daily/${dateStr}/hits/${hitId}.json`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(hitData)
+    }).catch(() => {});
+
+    // B. Günlük tekil kullanıcı kaydı (Günde 1 kez yazar)
+    const dailyUserKey = `pb_v_${dateStr}`;
+    if (!sessionStorage.getItem(dailyUserKey)) {
+      sessionStorage.setItem(dailyUserKey, '1');
+      fetch(`${RTDB_URL}/stats/daily/${dateStr}/unique_users/${sessionId}.json`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: sessionId,
+          firstSeen: Date.now(),
+          device: deviceType,
+          os: os,
+          referrer: referrerSource,
+          entrancePage: pageInfo.path
+        })
+      }).catch(() => {});
+    }
+
+    // C. Canlı Aktivite Akışı (Feed)
+    const eventId = 'evt_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6);
     fetch(`${RTDB_URL}/activity_feed/${eventId}.json`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(feedEntry)
+      body: JSON.stringify(hitData)
     }).catch(() => {});
   }
 
-  // İlk yükleme
   sendHeartbeat();
   recordPageEnter();
 
-  // Düzenli kalp atışı
   let heartbeatTimer = setInterval(sendHeartbeat, HEARTBEAT_INTERVAL);
 
-  // Sekme gizlendiğinde kalp atışını yavaşlat / görünür olunca hemen tazele
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') {
       sendHeartbeat();
       if (!heartbeatTimer) heartbeatTimer = setInterval(sendHeartbeat, HEARTBEAT_INTERVAL);
     } else {
-      // Sekme arka plandayken de son durumu bildir
       sendHeartbeat();
     }
   });
 
-  // Sayfadan çıkış anında
   window.addEventListener('pagehide', () => {
     sendHeartbeat(true);
   });
