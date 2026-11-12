@@ -166,7 +166,7 @@
               <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span> GÜNÜN MAÇI
             </span>
             <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-extrabold text-[11px] border border-emerald-500/40">
-              📺 TRT 1 ŞİFRESİZ
+              📺 ATV ŞİFRESİZ
             </span>
           </div>
           <div class="flex items-center gap-4 justify-between">
@@ -358,6 +358,16 @@
         </div>
 
         <div class="space-y-3 text-xs">
+          <!-- ATV HD -->
+          <div class="p-3 rounded-xl bg-slate-950 border border-emerald-500/30 space-y-1">
+            <div class="flex items-center justify-between font-bold text-white">
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-400"></span> ATV HD (Türksat 4A)</span>
+              <span class="text-emerald-400">ŞİFRESİZ</span>
+            </div>
+            <p class="text-slate-400">Frekans: <strong>12054 H 27500</strong> 5/6 • Polarizasyon: Yatay (H)</p>
+            <p class="text-[11px] text-slate-500">Milli maç canlı yayını: Digiturk 25, D-Smart 25, Tivibu 25, Kablo TV 24.</p>
+          </div>
+
           <!-- TRT 1 HD -->
           <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
             <div class="flex items-center justify-between font-bold text-white">
@@ -495,14 +505,14 @@
         home: { name: "Türkiye", flag: "🇹🇷", isNational: true },
         away: { name: "Belçika", flag: "🇧🇪", isNational: true },
         venue: "İzmir Gürsel Aksel Stadyumu",
-        channel: "TRT 1",
+        channel: "ATV",
         channelType: "free", // free, pay, sat
         badgeText: "ŞİFRESİZ YAYIN",
         badgeColor: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40",
-        radio: "TRT Radyo 1",
-        notes: "Ulusal açık kanal & tabii platformu. Şifresiz.",
+        radio: "A Spor Radyo",
+        notes: "Ulusal açık kanal ATV & atv.com.tr canlı yayın. Şifresiz.",
         liveLink: "/milli-mac-canli/",
-        isLiveNow: false,
+        isLiveNow: true,
         isFeatured: true
       },
       {

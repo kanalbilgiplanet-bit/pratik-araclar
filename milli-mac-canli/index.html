@@ -225,13 +225,13 @@
           <!-- Center: SCORE / COUNTDOWN -->
           <div class="flex flex-col items-center justify-center space-y-2">
             <div class="px-4 py-2 sm:px-5 sm:py-3 rounded-2xl bg-slate-950/80 border border-slate-700/80 shadow-inner flex items-center gap-2.5 sm:gap-3">
-              <span id="scoreHome" class="text-3xl sm:text-4xl font-black text-white">0</span>
+              <span id="scoreHome" class="text-3xl sm:text-4xl font-black text-rose-500">1</span>
               <span class="text-xl sm:text-2xl font-bold text-slate-500">-</span>
-              <span id="scoreAway" class="text-3xl sm:text-4xl font-black text-white">0</span>
+              <span id="scoreAway" class="text-3xl sm:text-4xl font-black text-white">2</span>
             </div>
-            <div id="matchStatusText" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/20 text-xs font-semibold">
-              <i class="fa-solid fa-stopwatch text-amber-400"></i>
-              <span id="matchClock">Maç Başlamadı</span>
+            <div id="matchStatusText" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-500/15 text-rose-400 border border-rose-500/30 text-xs font-semibold">
+              <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping mr-0.5"></span>
+              <span id="matchClock">1. Yarı Canlı</span>
             </div>
             <!-- Live Countdown Timer -->
             <div id="countdownBox" class="text-[10px] sm:text-[11px] text-slate-400 font-mono pt-0.5">
@@ -261,7 +261,7 @@
           <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-950/70 border border-slate-800 text-slate-300 text-xs">
             <span class="flex items-center gap-1 font-medium">
               <i class="fa-solid fa-tv text-red-500"></i>
-              <span>TV: <strong id="broadcastTvName" class="text-white">TRT 1</strong></span>
+              <span>TV: <strong id="broadcastTvName" class="text-white">ATV (Şifresiz HD)</strong></span>
             </span>
             <span class="text-slate-700">|</span>
             <span class="flex items-center gap-1 font-medium">
@@ -748,8 +748,8 @@
         displayDate: "12 Kasım 2026 Perşembe • 20:00",
         tournament: "UEFA Uluslar A Ligi • 5. Maç",
         venue: "İzmir Gürsel Aksel Stadyumu",
-        channel: "TRT 1",
-        tvUrl: "https://www.tabii.com/tr/watch/live/trt1",
+        channel: "ATV",
+        tvUrl: "https://www.atv.com.tr/canli-yayin",
         radioUrl: "https://radyo.trt.net.tr/",
         home: {
           name: "TÜRKİYE",
@@ -1303,13 +1303,30 @@
         const activeMatch = FIXTURES[currentMatchIndex];
         let liveData = null;
 
-        // 1. Önce canlı uluslararası API'yi kontrol et
-        const externalData = await fetchExternalLiveScore();
-        if (externalData && (externalData.isLive || externalData.scoreHome > 0 || externalData.scoreAway > 0)) {
-          liveData = externalData;
+        // 1. ÖNCELİKLİ: Uluslararası Canlı Spor API'si (Tam Otomatik ESPN Feed)
+        try {
+          const externalData = await fetchExternalLiveScore();
+          if (externalData && (externalData.isLive || externalData.scoreHome > 0 || externalData.scoreAway > 0 || externalData.isFinished)) {
+            liveData = externalData;
+          }
+        } catch (e) {
+          console.debug('Harici API sorgu hatası:', e);
         }
 
-        // 2. Canlı API yoksa veya henüz başlamadıysa yerel veri dosyasını kontrol et
+        // 2. YEDEK / OVERRIDE: Harici API ulaşılamazsa veya özel durum varsa Firebase RTDB
+        if (!liveData) {
+          try {
+            const rtdbRes = await fetch(`https://pratikbase-default-rtdb.firebaseio.com/live_match.json?_t=${Date.now()}`);
+            if (rtdbRes.ok) {
+              const rtdbData = await rtdbRes.json();
+              if (rtdbData && (rtdbData.scoreHome !== undefined || rtdbData.scoreAway !== undefined)) {
+                liveData = rtdbData;
+              }
+            }
+          } catch (_) {}
+        }
+
+        // 3. Canlı API yoksa veya henüz başlamadıysa yerel veri dosyasını kontrol et
         if (!liveData) {
           try {
             const res = await fetch(`./data/live_score.json?_t=${Date.now()}`, { cache: 'no-store' });
@@ -1355,6 +1372,12 @@
           clockEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-rose-500 animate-ping mr-1"></span> ${liveData.statusText}`;
         }
 
+        // TV Kanalı
+        if (liveData.channel) {
+          const tvEl = document.getElementById('broadcastTvName');
+          if (tvEl) tvEl.textContent = liveData.channel;
+        }
+
         // Canlı olaylar varsa timeline'a ekle
         if (liveData.events && Array.isArray(liveData.events) && liveData.events.length > 0) {
           const container = document.getElementById('liveTimeline');
@@ -1382,9 +1405,9 @@
       }
     }
 
-    // İlk skor kontrolü ve her 20 saniyede bir otomatik sorgulama
+    // İlk skor kontrolü ve her 15 saniyede bir tam otomatik sorgulama
     checkLiveScore();
-    setInterval(checkLiveScore, 20000);
+    setInterval(checkLiveScore, 15000);
 
     // ========================================================
     // TARAFTAR CANLI SOHBET MOTORU & KÜFÜR / SPAM FİLTRESİ
