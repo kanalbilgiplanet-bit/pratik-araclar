@@ -1,6 +1,8 @@
 User-agent: *
 Allow: /
 Disallow: /scratch/
+Disallow: /admin/
+Disallow: /admin
 
 User-agent: Bingbot
 Allow: /
