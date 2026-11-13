@@ -261,7 +261,7 @@
             🦁
           </div>
           <div class="min-w-0">
-            <div class="text-[10px] text-slate-400 uppercase font-semibold">Kulüp</div>
+            <div class="text-[10px] text-slate-400 uppercase font-semibold" id="txtHudClub">Kulüp</div>
             <div id="hudClubName" class="font-bold text-white truncate text-xs">Sokak / Altyapı</div>
           </div>
         </div>
@@ -272,7 +272,7 @@
             <i class="fa-solid fa-chart-line text-xs"></i>
           </div>
           <div class="min-w-0">
-            <div class="text-[10px] text-slate-400 uppercase font-semibold">Piyasa Değeri</div>
+            <div class="text-[10px] text-slate-400 uppercase font-semibold" id="txtHudValue">Piyasa Değeri</div>
             <div id="hudValue" class="font-display font-bold text-emerald-400 text-xs">€50.000</div>
           </div>
         </div>
@@ -283,7 +283,7 @@
             💰
           </div>
           <div class="min-w-0">
-            <div class="text-[10px] text-slate-400 uppercase font-semibold">Banka / Servet</div>
+            <div class="text-[10px] text-slate-400 uppercase font-semibold" id="txtHudBank">Banka / Servet</div>
             <div id="hudBankBalance" class="font-display font-bold text-amber-300 text-xs">€0</div>
           </div>
         </div>
@@ -305,7 +305,7 @@
             🏆
           </div>
           <div class="min-w-0">
-            <div class="text-[10px] text-slate-400 uppercase font-semibold">Kupalar</div>
+            <div class="text-[10px] text-slate-400 uppercase font-semibold" id="txtHudTrophies">Kupalar</div>
             <div id="hudTrophies" class="font-display font-bold text-yellow-300 text-xs">0 Kupa</div>
           </div>
         </div>
@@ -335,9 +335,9 @@
       <div class="space-y-3 max-w-2xl mx-auto pt-4">
         <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold tracking-wide uppercase">
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-          <span>8 Milyarda 1 Futbolcu Piyangosu</span>
+          <span id="txtHeroBadge">8 Milyarda 1 Futbolcu Piyangosu</span>
         </div>
-        <h1 class="text-3xl sm:text-5xl font-display font-black text-white tracking-tight leading-tight">
+        <h1 class="text-3xl sm:text-5xl font-display font-black text-white tracking-tight leading-tight" id="txtHeroTitle">
           Hangi Ülkede, Hangi Yetenekle <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-lime-300 to-green-400">Doğacaksın?</span>
         </h1>
         <p class="text-slate-300 text-sm sm:text-base leading-relaxed" id="txtIntroDesc">
@@ -390,7 +390,7 @@
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto text-left pt-4">
         <div class="p-4 rounded-2xl bg-pitch-900/40 border border-pitch-800/80 space-y-1.5">
           <div class="text-emerald-400 font-bold text-xs uppercase flex items-center gap-1.5">
-            <i class="fa-solid fa-dna"></i> <span>Genetik ve Şans</span>
+            <i class="fa-solid fa-dna"></i> <span id="txtExplTitle1">Genetik ve Şans</span>
           </div>
           <p class="text-xs text-slate-400 leading-relaxed" id="txtExpl1">
             Brezilya sahilinde süper yetenekle de doğabilirsin, San Marino'da kasap forvet olarak da. Her hayat bambaşka bir senaryo.
@@ -399,7 +399,7 @@
 
         <div class="p-4 rounded-2xl bg-pitch-900/40 border border-pitch-800/80 space-y-1.5">
           <div class="text-amber-400 font-bold text-xs uppercase flex items-center gap-1.5">
-            <i class="fa-solid fa-code-fork"></i> <span>Kritik Kararlar</span>
+            <i class="fa-solid fa-code-fork"></i> <span id="txtExplTitle2">Kritik Kararlar</span>
           </div>
           <p class="text-xs text-slate-400 leading-relaxed" id="txtExpl2">
             16 yaşında okul mu profesyonellik mi? 29 yaşında Avrupa Şampiyonlar Turnuvası mı yoksa Körfez'in yıllık 25M€ maaşı mı?
@@ -408,7 +408,7 @@
 
         <div class="p-4 rounded-2xl bg-pitch-900/40 border border-pitch-800/80 space-y-1.5">
           <div class="text-cyan-400 font-bold text-xs uppercase flex items-center gap-1.5">
-            <i class="fa-solid fa-id-card"></i> <span>Jübile ve Kartın</span>
+            <i class="fa-solid fa-id-card"></i> <span id="txtExplTitle3">Jübile ve Kartın</span>
           </div>
           <p class="text-xs text-slate-400 leading-relaxed" id="txtExpl3">
             Kariyerin bitince tüm istatistiklerin, kazandığın kupalar ve kariyer unvanınla sana özel dijital futbolcu kartın hazırlanır.
@@ -505,9 +505,9 @@
       <!-- Compact Title Header -->
       <div class="space-y-1">
         <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs font-mono font-bold">
-          <span>🏆</span> <span>JÜBİLE & EFSANE MİRASI</span>
+          <span>🏆</span> <span id="txtJubileeBadge">JÜBİLE & EFSANE MİRASI</span>
         </div>
-        <h2 class="text-2xl sm:text-3xl font-display font-black text-white">Kramponlar Duvara Asıldı!</h2>
+        <h2 class="text-2xl sm:text-3xl font-display font-black text-white" id="txtJubileeTitle">Kramponlar Duvara Asıldı!</h2>
         <p class="text-slate-400 text-xs" id="txtRetirementSubtitle">
           İşte sokaklardan dünya vitrinine uzanan 40 yıllık kariyer karnen.
         </p>
@@ -550,7 +550,7 @@
             </div>
             <div class="text-right">
               <div id="cardOvr" class="text-3xl font-display font-black text-amber-300 leading-none">89</div>
-              <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">ZİRVE OVR</div>
+              <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mt-0.5" id="txtCardPeakOvr">ZİRVE OVR</div>
             </div>
           </div>
 
@@ -559,12 +559,12 @@
             <div class="flex items-center gap-2">
               <span class="text-2xl" id="cardArchetypeIcon">🌟</span>
               <div>
-                <div class="text-[9px] text-amber-400 font-bold uppercase tracking-wider">Kariyer Kimliği</div>
+                <div class="text-[9px] text-amber-400 font-bold uppercase tracking-wider" id="txtCardArchetypeLabel">Kariyer Kimliği</div>
                 <div class="text-xs sm:text-sm font-bold text-white" id="cardArchetypeName">KULÜP EFSANESİ</div>
               </div>
             </div>
             <div class="text-right">
-              <div class="text-[9px] text-slate-400">Zirve Değeri</div>
+              <div class="text-[9px] text-slate-400" id="txtCardPeakValLabel">Zirve Değeri</div>
               <div class="text-xs font-display font-bold text-emerald-400" id="cardPeakValue">€85.000.000</div>
             </div>
           </div>
@@ -572,11 +572,11 @@
           <!-- Financial Net Worth & Assets Row -->
           <div class="grid grid-cols-2 gap-2 text-left">
             <div class="p-2 rounded-xl bg-pitch-900/90 border border-pitch-800">
-              <div class="text-[9px] text-amber-400 font-bold uppercase tracking-wider">Kazanılan Servet / Banka</div>
+              <div class="text-[9px] text-amber-400 font-bold uppercase tracking-wider" id="txtCardNetWorthLabel">Kazanılan Servet / Banka</div>
               <div class="text-sm sm:text-base font-display font-black text-amber-300" id="cardNetWorth">€0</div>
             </div>
             <div class="p-2 rounded-xl bg-pitch-900/90 border border-pitch-800">
-              <div class="text-[9px] text-emerald-400 font-bold uppercase tracking-wider">Kişisel Mülkler & Yatırımlar</div>
+              <div class="text-[9px] text-emerald-400 font-bold uppercase tracking-wider" id="txtCardAssetsLabel">Kişisel Mülkler & Yatırımlar</div>
               <div class="text-[11px] font-bold text-slate-200 truncate" id="cardAssets">-</div>
             </div>
           </div>
@@ -588,26 +588,26 @@
           <!-- Stats Grid -->
           <div class="grid grid-cols-4 gap-2 text-center">
             <div class="p-2 rounded-xl bg-pitch-900/80 border border-pitch-800">
-              <div class="text-slate-400 text-[10px] uppercase font-bold">Maç</div>
+              <div class="text-slate-400 text-[10px] uppercase font-bold" id="txtCardMatchesLabel">Maç</div>
               <div class="text-sm sm:text-base font-display font-black text-white" id="cardTotalMatches">620</div>
             </div>
             <div class="p-2 rounded-xl bg-pitch-900/80 border border-pitch-800">
-              <div class="text-slate-400 text-[10px] uppercase font-bold">Gol</div>
+              <div class="text-slate-400 text-[10px] uppercase font-bold" id="txtCardGoalsLabel">Gol</div>
               <div class="text-sm sm:text-base font-display font-black text-emerald-400" id="cardTotalGoals">310</div>
             </div>
             <div class="p-2 rounded-xl bg-pitch-900/80 border border-pitch-800">
-              <div class="text-slate-400 text-[10px] uppercase font-bold">Asist</div>
+              <div class="text-slate-400 text-[10px] uppercase font-bold" id="txtCardAssistsLabel">Asist</div>
               <div class="text-sm sm:text-base font-display font-black text-lime-400" id="cardTotalAssists">145</div>
             </div>
             <div class="p-2 rounded-xl bg-pitch-900/80 border border-pitch-800">
-              <div class="text-slate-400 text-[10px] uppercase font-bold">Kupa</div>
+              <div class="text-slate-400 text-[10px] uppercase font-bold" id="txtCardTrophiesLabel">Kupa</div>
               <div class="text-sm sm:text-base font-display font-black text-yellow-300" id="cardTotalTrophies">7</div>
             </div>
           </div>
 
           <!-- Club History Badges -->
           <div class="space-y-1">
-            <div class="text-[10px] text-slate-400 uppercase font-semibold">Formasını Giydiği Kulüpler</div>
+            <div class="text-[10px] text-slate-400 uppercase font-semibold" id="txtCardClubsLabel">Formasını Giydiği Kulüpler</div>
             <div class="flex flex-wrap gap-1.5" id="cardClubList">
               <!-- Dynamically populated -->
             </div>
@@ -928,42 +928,102 @@
        ===================================================================== */
     const I18N = {
       TR: {
+        pageTitle: 'Futbolcu Doğum Piyangosu | 8 Milyarda 1 Futbol Kariyer Simülatörü',
         subtitleNav: 'Futbolcu Doğum Piyangosu',
         soundOn: 'Ses Açık',
         soundOff: 'Ses Kapalı',
+        heroBadge: '8 Milyarda 1 Futbolcu Piyangosu',
+        heroTitle: 'Hangi Ülkede, Hangi Yetenekle <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-lime-300 to-green-400">Doğacaksın?</span>',
         introDesc: "Dünyada her yıl 130 milyon bebek doğuyor ama sadece %0.001'i profesyonel futbol sahnesine çıkabiliyor. Çarkı çevir, doğum piyangona teslim ol; sokak aralarından dev stadyumlara uzanan 0-40 yaş kariyerini yaşa!",
         btnSpin: 'KADERİNİ ÇEK & DOĞ',
+        rouletteCountry: 'Doğum Yerin Seçiliyor...',
+        rouletteOdds: 'Çarkı çevirmeye hazır!',
         badge1: 'Tamamen Rastgele',
         badge2: 'Gerçekçi İstatistik',
         badge3: '0 - 40 Yaş Jübile',
+        explTitle1: 'Genetik ve Şans',
+        expl1: "Brezilya sahilinde süper yetenekle de doğabilirsin, San Marino'da kasap forvet olarak da. Her hayat bambaşka bir senaryo.",
+        explTitle2: 'Kritik Kararlar',
+        expl2: "16 yaşında okul mu profesyonellik mi? 29 yaşında Avrupa Şampiyonlar Turnuvası mı yoksa Körfez'in yıllık 25M€ maaşı mı?",
+        explTitle3: 'Jübile ve Kartın',
+        expl3: 'Kariyerin bitince tüm istatistiklerin, kazandığın kupalar ve kariyer unvanınla sana özel dijital futbolcu kartın hazırlanır.',
+        hallBadge: 'EFSANELER DUVARI',
+        hallTitle: 'Topluluk Efsaneleri & Jübile Karneleri',
+        hallDesc: '40 yaşına ulaşıp kramponlarını asan oyuncuların ölümsüzleşen kariyerleri.',
+        hudClub: 'Kulüp',
+        hudValue: 'Piyasa Değeri',
+        hudBank: 'Banka / Servet',
+        hudTrophies: 'Kupalar',
         advanceBtn: 'SONRAKİ YILA GEÇ',
         autoPlay: 'Otomatik İlerle',
         autoPlayStop: 'Durdur',
-        jubileeTitle: 'JÜBİLE & EFSANE MİRASI',
+        jubileeBadge: 'JÜBİLE & EFSANE MİRASI',
+        jubileeTitle: 'Kramponlar Duvara Asıldı!',
         jubileeSub: 'Kramponlarını astın! İşte sokaklardan dünya vitrinine uzanan 40 yıllık hayat hikayen.',
         shareWA: "WhatsApp'ta Paylaş",
         copyResult: 'Sonucu Kopyala',
         copied: 'Kopyalandı!',
-        playAgain: 'YENİDEN BİR HAYAT ÇEK'
+        playAgain: 'YENİDEN BİR HAYAT ÇEK',
+        cardPeakOvr: 'ZİRVE OVR',
+        cardArchetypeLabel: 'Kariyer Kimliği',
+        cardPeakValLabel: 'Zirve Değeri',
+        cardNetWorthLabel: 'Kazanılan Servet / Banka',
+        cardAssetsLabel: 'Kişisel Mülkler & Yatırımlar',
+        cardClubsLabel: 'Formasını Giydiği Kulüpler',
+        cardMatches: 'Maç',
+        cardGoals: 'Gol',
+        cardAssists: 'Asist',
+        cardTrophies: 'Kupa',
+        dilemmaBadge: 'Kariyer Dönüm Noktası'
       },
       EN: {
+        pageTitle: 'Football Career Lottery | 1-in-8-Billion Soccer Career Simulator',
         subtitleNav: 'Soccer Career Lottery',
         soundOn: 'Sound On',
         soundOff: 'Sound Off',
+        heroBadge: '1 in 8 Billion Football Lottery',
+        heroTitle: 'Which Country & Talent Will You <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-lime-300 to-green-400">Be Born Into?</span>',
         introDesc: '130 million babies are born each year, but only 0.001% reach the world stage. Spin the roulette, surrender to your football birth lottery, and live an authentic 0-40 career from street cages to grand finals!',
         btnSpin: 'ROLL YOUR DESTINY & BE BORN',
+        rouletteCountry: 'Rolling Your Birthplace...',
+        rouletteOdds: 'Ready to spin!',
         badge1: '100% Procedural',
         badge2: 'Real Statistics',
         badge3: 'Age 0-40 Jubilee',
+        explTitle1: 'Genetics & Fate',
+        expl1: 'You could spawn on a Brazilian beach as a prodigy or as a defender in San Marino. Every run is a completely fresh destiny.',
+        explTitle2: 'Critical Dilemmas',
+        expl2: 'Sign youth contract or finish school? Chase Champions League glory at age 29 or accept €25M/year in the Gulf?',
+        explTitle3: 'Jubilee & FUT Card',
+        expl3: 'When you retire at 40, your career stats, trophies, and financial empire are immortalized in a digital collectible card.',
+        hallBadge: 'HALL OF FAME',
+        hallTitle: 'Community Legends & Jubilee Archive',
+        hallDesc: 'Immortalized careers of players who reached age 40 and hung up their boots.',
+        hudClub: 'Club',
+        hudValue: 'Market Value',
+        hudBank: 'Bank / Wealth',
+        hudTrophies: 'Trophies',
         advanceBtn: 'ADVANCE TO NEXT YEAR',
         autoPlay: 'Auto Advance',
         autoPlayStop: 'Pause',
-        jubileeTitle: 'JUBILEE & LEGACY',
+        jubileeBadge: 'JUBILEE & LEGACY',
+        jubileeTitle: 'Boots Hung on the Wall!',
         jubileeSub: 'You have hung up your boots! Here is your 40-year journey from childhood alleys to world spotlight.',
         shareWA: 'Share on WhatsApp',
         copyResult: 'Copy Career Summary',
         copied: 'Copied!',
-        playAgain: 'SPAWN ANOTHER CAREER'
+        playAgain: 'SPAWN ANOTHER CAREER',
+        cardPeakOvr: 'PEAK OVR',
+        cardArchetypeLabel: 'Career Archetype',
+        cardPeakValLabel: 'Peak Value',
+        cardNetWorthLabel: 'Career Earnings / Bank',
+        cardAssetsLabel: 'Personal Assets & Investments',
+        cardClubsLabel: 'Career Clubs & Transfers',
+        cardMatches: 'Apps',
+        cardGoals: 'Goals',
+        cardAssists: 'Assists',
+        cardTrophies: 'Trophies',
+        dilemmaBadge: 'Career Turning Point'
       }
     };
 
@@ -971,6 +1031,7 @@
       currentLang = lang;
       document.getElementById('langCurrent').textContent = lang;
       const dict = I18N[lang];
+      document.title = dict.pageTitle;
       document.getElementById('txtSubtitleNav').textContent = dict.subtitleNav;
       document.getElementById('txtIntroDesc').textContent = dict.introDesc;
       document.getElementById('txtBtnSpin').textContent = dict.btnSpin;
@@ -983,6 +1044,46 @@
       document.getElementById('txtShareWA').textContent = dict.shareWA;
       document.getElementById('txtCopyResult').textContent = dict.copyResult;
       document.getElementById('txtPlayAgain').textContent = dict.playAgain;
+
+      // Full Page Elements
+      const setIfExists = (id, prop, val) => {
+        const el = document.getElementById(id);
+        if (el) el[prop] = val;
+      };
+
+      setIfExists('txtHeroBadge', 'textContent', dict.heroBadge);
+      setIfExists('txtHeroTitle', 'innerHTML', dict.heroTitle);
+      if (document.getElementById('rouletteCountry') && document.getElementById('rouletteCountry').textContent.includes('...')) {
+        document.getElementById('rouletteCountry').textContent = dict.rouletteCountry;
+      }
+      setIfExists('txtExplTitle1', 'textContent', dict.explTitle1);
+      setIfExists('txtExpl1', 'textContent', dict.expl1);
+      setIfExists('txtExplTitle2', 'textContent', dict.explTitle2);
+      setIfExists('txtExpl2', 'textContent', dict.expl2);
+      setIfExists('txtExplTitle3', 'textContent', dict.expl3);
+      setIfExists('txtExpl3', 'textContent', dict.expl3);
+      setIfExists('txtHallBadge', 'textContent', dict.hallBadge);
+      setIfExists('txtHallTitle', 'textContent', dict.hallTitle);
+      setIfExists('txtHallDesc', 'textContent', dict.hallDesc);
+
+      setIfExists('txtHudClub', 'textContent', dict.hudClub);
+      setIfExists('txtHudValue', 'textContent', dict.hudValue);
+      setIfExists('txtHudBank', 'textContent', dict.hudBank);
+      setIfExists('txtHudTrophies', 'textContent', dict.hudTrophies);
+
+      setIfExists('txtJubileeBadge', 'textContent', dict.jubileeBadge);
+      setIfExists('txtJubileeTitle', 'textContent', dict.jubileeTitle);
+      setIfExists('txtCardPeakOvr', 'textContent', dict.cardPeakOvr);
+      setIfExists('txtCardArchetypeLabel', 'textContent', dict.cardArchetypeLabel);
+      setIfExists('txtCardPeakValLabel', 'textContent', dict.cardPeakValLabel);
+      setIfExists('txtCardNetWorthLabel', 'textContent', dict.cardNetWorthLabel);
+      setIfExists('txtCardAssetsLabel', 'textContent', dict.cardAssetsLabel);
+      setIfExists('txtCardClubsLabel', 'textContent', dict.cardClubsLabel);
+      setIfExists('txtCardMatchesLabel', 'textContent', dict.cardMatches);
+      setIfExists('txtCardGoalsLabel', 'textContent', dict.cardGoals);
+      setIfExists('txtCardAssistsLabel', 'textContent', dict.cardAssists);
+      setIfExists('txtCardTrophiesLabel', 'textContent', dict.cardTrophies);
+      setIfExists('dilemmaBadge', 'textContent', dict.dilemmaBadge);
     }
 
     /* =====================================================================
