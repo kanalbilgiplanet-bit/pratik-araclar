@@ -2952,6 +2952,17 @@
         });
       });
 
+      // Auto-detect Language: query param ?lang=en OR foreign browser locale
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlLang = (urlParams.get('lang') || '').toLowerCase();
+      const browserLang = (navigator.language || navigator.userLanguage || '').toLowerCase();
+
+      if (urlLang === 'en' || (!urlLang && !browserLang.startsWith('tr'))) {
+        setLanguage('EN');
+      } else {
+        setLanguage('TR');
+      }
+
       // Initialize Hall of Fame and check URL params
       renderHallOfFame();
       checkSharedCareerUrl();
