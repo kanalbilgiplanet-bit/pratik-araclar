@@ -317,7 +317,7 @@
             68
           </div>
           <div class="min-w-0">
-            <div class="text-[10px] text-slate-400 uppercase font-semibold">Genel Güç (OVR)</div>
+            <div class="text-[10px] text-slate-400 uppercase font-semibold" id="txtHudOvr">Genel Güç (OVR)</div>
             <div id="hudTalentTier" class="font-bold text-slate-200 truncate text-[11px]">Gelişiyor</div>
           </div>
         </div>
@@ -531,8 +531,9 @@
           <span class="hidden sm:inline" id="txtShareWA">WhatsApp</span>
         </button>
 
-        <button id="btnCopyResult" class="py-3 px-3 rounded-2xl bg-pitch-900 hover:bg-pitch-800 text-slate-300 hover:text-white font-bold text-xs border border-pitch-700 active:scale-95 transition shrink-0" title="Kopyala">
+        <button id="btnCopyResult" class="py-3 px-3.5 rounded-2xl bg-pitch-900 hover:bg-pitch-800 text-slate-300 hover:text-white font-bold text-xs border border-pitch-700 active:scale-95 transition shrink-0 flex items-center gap-1.5" title="Kopyala">
           <i class="fa-solid fa-copy"></i>
+          <span class="hidden sm:inline" id="txtCopyResult">Kopyala</span>
         </button>
       </div>
 
@@ -955,6 +956,8 @@
         hudValue: 'Piyasa Değeri',
         hudBank: 'Banka / Servet',
         hudTrophies: 'Kupalar',
+        hudOvr: 'Genel Güç (OVR)',
+        hudStatsTitle: 'Maç / Gol / Asist',
         advanceBtn: 'SONRAKİ YILA GEÇ',
         autoPlay: 'Otomatik İlerle',
         autoPlayStop: 'Durdur',
@@ -962,7 +965,8 @@
         jubileeTitle: 'Kramponlar Duvara Asıldı!',
         jubileeSub: 'Kramponlarını astın! İşte sokaklardan dünya vitrinine uzanan 40 yıllık hayat hikayen.',
         shareWA: "WhatsApp'ta Paylaş",
-        copyResult: 'Sonucu Kopyala',
+        shareWall: 'Duvara Ekle',
+        copyResultTitle: 'Sonucu Kopyala',
         copied: 'Kopyalandı!',
         playAgain: 'YENİDEN BİR HAYAT ÇEK',
         cardPeakOvr: 'ZİRVE OVR',
@@ -975,7 +979,15 @@
         cardGoals: 'Gol',
         cardAssists: 'Asist',
         cardTrophies: 'Kupa',
-        dilemmaBadge: 'Kariyer Dönüm Noktası'
+        dilemmaBadge: 'Kariyer Dönüm Noktası',
+        legendAge40: '40 Yaş Jübile',
+        statMatches: 'Maç',
+        statGoals: 'Gol',
+        statAssists: 'Asist',
+        statTrophies: 'Kupa',
+        statWealth: 'servet',
+        clapBtn: 'Alkışla',
+        inspectBtn: 'Kartı İncele'
       },
       EN: {
         pageTitle: 'Football Career Lottery | 1-in-8-Billion Soccer Career Simulator',
@@ -1004,6 +1016,8 @@
         hudValue: 'Market Value',
         hudBank: 'Bank / Wealth',
         hudTrophies: 'Trophies',
+        hudOvr: 'Overall (OVR)',
+        hudStatsTitle: 'Apps / Goals / Ast',
         advanceBtn: 'ADVANCE TO NEXT YEAR',
         autoPlay: 'Auto Advance',
         autoPlayStop: 'Pause',
@@ -1011,7 +1025,8 @@
         jubileeTitle: 'Boots Hung on the Wall!',
         jubileeSub: 'You have hung up your boots! Here is your 40-year journey from childhood alleys to world spotlight.',
         shareWA: 'Share on WhatsApp',
-        copyResult: 'Copy Career Summary',
+        shareWall: 'Share to Wall',
+        copyResultTitle: 'Copy Career Summary',
         copied: 'Copied!',
         playAgain: 'SPAWN ANOTHER CAREER',
         cardPeakOvr: 'PEAK OVR',
@@ -1024,45 +1039,74 @@
         cardGoals: 'Goals',
         cardAssists: 'Assists',
         cardTrophies: 'Trophies',
-        dilemmaBadge: 'Career Turning Point'
+        dilemmaBadge: 'Career Turning Point',
+        legendAge40: 'Age 40 Jubilee',
+        statMatches: 'Apps',
+        statGoals: 'Goals',
+        statAssists: 'Ast',
+        statTrophies: 'Trophies',
+        statWealth: 'wealth',
+        clapBtn: 'Clap',
+        inspectBtn: 'Inspect Card'
       }
     };
 
+    function formatArchetype(arch) {
+      if (!arch) return '';
+      if (currentLang === 'TR') return arch;
+      const map = {
+        'FUTBOL İLAHİ (DÜNYA YILDIZI)': 'GLOBAL FOOTBALL ICON',
+        'ÖLÜMCÜL BİTİRİCİ (GOL MAKİNESİ)': 'LETHAL FINISHER (GOAL MACHINE)',
+        'GEZGİN SAVAŞÇI (EVLİYA ÇELEBİ)': 'JOURNEYMAN WARRIOR',
+        'KULÜP EFSANESİ & KAPTAN': 'CLUB LEGEND & SKIPPER',
+        'HALI SAHA RESİTALLERİ USTASI': 'GRASSROOTS CULT HERO',
+        'SAYGI DEĞER EMEKÇİ': 'RESPECTED PRO VALIANT'
+      };
+      return map[arch] || arch;
+    }
+
     function setLanguage(lang) {
       currentLang = lang;
-      document.getElementById('langCurrent').textContent = lang;
-      const dict = I18N[lang];
-      document.title = dict.pageTitle;
-      document.getElementById('txtSubtitleNav').textContent = dict.subtitleNav;
-      document.getElementById('txtIntroDesc').textContent = dict.introDesc;
-      document.getElementById('txtBtnSpin').textContent = dict.btnSpin;
-      document.getElementById('txtBadge1').textContent = dict.badge1;
-      document.getElementById('txtBadge2').textContent = dict.badge2;
-      document.getElementById('txtBadge3').textContent = dict.badge3;
-      document.getElementById('txtAdvanceBtn').textContent = dict.advanceBtn;
-      document.getElementById('txtAutoPlay').textContent = isAutoPlaying ? dict.autoPlayStop : dict.autoPlay;
-      document.getElementById('txtRetirementSubtitle').textContent = dict.jubileeSub;
-      document.getElementById('txtShareWA').textContent = dict.shareWA;
-      document.getElementById('txtCopyResult').textContent = dict.copyResult;
-      document.getElementById('txtPlayAgain').textContent = dict.playAgain;
+      const dict = I18N[lang] || I18N.TR;
 
-      // Full Page Elements
       const setIfExists = (id, prop, val) => {
         const el = document.getElementById(id);
         if (el) el[prop] = val;
       };
 
+      document.title = dict.pageTitle;
+      setIfExists('langCurrent', 'textContent', lang);
+      setIfExists('txtSubtitleNav', 'textContent', dict.subtitleNav);
+
+      const soundTxt = document.getElementById('txtSoundLabel');
+      if (soundTxt) {
+        soundTxt.textContent = soundEnabled ? dict.soundOn : dict.soundOff;
+      }
+
       setIfExists('txtHeroBadge', 'textContent', dict.heroBadge);
       setIfExists('txtHeroTitle', 'innerHTML', dict.heroTitle);
-      if (document.getElementById('rouletteCountry') && document.getElementById('rouletteCountry').textContent.includes('...')) {
-        document.getElementById('rouletteCountry').textContent = dict.rouletteCountry;
+      setIfExists('txtIntroDesc', 'textContent', dict.introDesc);
+      setIfExists('txtBtnSpin', 'textContent', dict.btnSpin);
+      setIfExists('txtBadge1', 'textContent', dict.badge1);
+      setIfExists('txtBadge2', 'textContent', dict.badge2);
+      setIfExists('txtBadge3', 'textContent', dict.badge3);
+
+      const rCountry = document.getElementById('rouletteCountry');
+      if (rCountry && (rCountry.textContent.includes('...') || rCountry.textContent.includes('Seçiliyor') || rCountry.textContent.includes('Rolling'))) {
+        rCountry.textContent = dict.rouletteCountry;
       }
+      const rOdds = document.getElementById('rouletteOdds');
+      if (rOdds && (rOdds.textContent.includes('hazır') || rOdds.textContent.includes('Ready'))) {
+        rOdds.textContent = dict.rouletteOdds;
+      }
+
       setIfExists('txtExplTitle1', 'textContent', dict.explTitle1);
       setIfExists('txtExpl1', 'textContent', dict.expl1);
       setIfExists('txtExplTitle2', 'textContent', dict.explTitle2);
       setIfExists('txtExpl2', 'textContent', dict.expl2);
-      setIfExists('txtExplTitle3', 'textContent', dict.expl3);
+      setIfExists('txtExplTitle3', 'textContent', dict.explTitle3);
       setIfExists('txtExpl3', 'textContent', dict.expl3);
+
       setIfExists('txtHallBadge', 'textContent', dict.hallBadge);
       setIfExists('txtHallTitle', 'textContent', dict.hallTitle);
       setIfExists('txtHallDesc', 'textContent', dict.hallDesc);
@@ -1071,6 +1115,17 @@
       setIfExists('txtHudValue', 'textContent', dict.hudValue);
       setIfExists('txtHudBank', 'textContent', dict.hudBank);
       setIfExists('txtHudTrophies', 'textContent', dict.hudTrophies);
+      setIfExists('txtHudOvr', 'textContent', dict.hudOvr);
+
+      setIfExists('txtAdvanceBtn', 'textContent', dict.advanceBtn);
+      setIfExists('txtAutoPlay', 'textContent', isAutoPlaying ? dict.autoPlayStop : dict.autoPlay);
+      setIfExists('txtRetirementSubtitle', 'textContent', dict.jubileeSub);
+      setIfExists('txtShareWA', 'textContent', dict.shareWA);
+      setIfExists('txtShareWall', 'textContent', dict.shareWall);
+      setIfExists('txtPlayAgain', 'textContent', dict.playAgain);
+
+      const copyBtn = document.getElementById('btnCopyResult');
+      if (copyBtn) copyBtn.title = dict.copyResultTitle;
 
       setIfExists('txtJubileeBadge', 'textContent', dict.jubileeBadge);
       setIfExists('txtJubileeTitle', 'textContent', dict.jubileeTitle);
@@ -1085,6 +1140,15 @@
       setIfExists('txtCardAssistsLabel', 'textContent', dict.cardAssists);
       setIfExists('txtCardTrophiesLabel', 'textContent', dict.cardTrophies);
       setIfExists('dilemmaBadge', 'textContent', dict.dilemmaBadge);
+
+      // Re-render Hall of Fame cards with translated stats/archetypes
+      renderHallOfFame();
+
+      // If active game, update HUD & button
+      if (typeof player !== 'undefined' && player && player.country) {
+        updateHUD();
+        updateNextAgeButton(player.age + 1);
+      }
     }
 
     /* =====================================================================
@@ -1262,7 +1326,7 @@
 
       addTimelineEvent({
         age: 0,
-        badge: '👶 DOĞUM',
+        badge: currentLang === 'TR' ? '👶 DOĞUM' : '👶 BIRTH',
         badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
         title: currentLang === 'TR' ? `${birth.country.nameTr} Topraklarında İlk Nefes!` : `First Breath in ${birth.country.nameEn}!`,
         desc: currentLang === 'TR' 
@@ -1289,8 +1353,8 @@
         document.getElementById('hudClubName').textContent = player.currentClub.name;
       } else {
         document.getElementById('hudClubBadge').textContent = '⚽';
-        document.getElementById('hudClubName').textContent = player.age < 7 ? (currentLang === 'TR' ? 'Bebeklik / Çocukluk' : 'Infant') :
-                                                               player.age < 15 ? (currentLang === 'TR' ? 'Sokak / Okul Takımı' : 'Street / School') :
+        document.getElementById('hudClubName').textContent = player.age < 7 ? (currentLang === 'TR' ? 'Bebeklik / Çocukluk' : 'Childhood') :
+                                                               player.age < 15 ? (currentLang === 'TR' ? 'Sokak / Okul Takımı' : 'Grassroots / Academy') :
                                                                                  (currentLang === 'TR' ? 'Kulüpsüz / Serbest' : 'Free Agent');
       }
 
@@ -1306,10 +1370,14 @@
       // Stats
       if (player.position.code === 'GK') {
         document.getElementById('hudStatTitle').textContent = currentLang === 'TR' ? 'Maç / Temiz Ağ / Kurt.' : 'Apps / Clean / Saves';
-        document.getElementById('hudStats').textContent = `${player.stats.matches}M / ${player.stats.cleanSheets}TA / ${player.stats.goals}K`;
+        document.getElementById('hudStats').textContent = currentLang === 'TR'
+          ? `${player.stats.matches}M / ${player.stats.cleanSheets}TA / ${player.stats.goals}K`
+          : `${player.stats.matches}A / ${player.stats.cleanSheets}CS / ${player.stats.goals}S`;
       } else {
         document.getElementById('hudStatTitle').textContent = currentLang === 'TR' ? 'Maç / Gol / Asist' : 'Apps / Goals / Ast';
-        document.getElementById('hudStats').textContent = `${player.stats.matches}M / ${player.stats.goals}G / ${player.stats.assists}A`;
+        document.getElementById('hudStats').textContent = currentLang === 'TR'
+          ? `${player.stats.matches}M / ${player.stats.goals}G / ${player.stats.assists}A`
+          : `${player.stats.matches}A / ${player.stats.goals}G / ${player.stats.assists}A`;
       }
 
       document.getElementById('hudTrophies').textContent = `${player.stats.trophies} ${currentLang === 'TR' ? 'Kupa' : 'Trophies'}`;
@@ -2720,6 +2788,9 @@
         const flag = item.country?.flag || '⚽';
         const countryName = currentLang === 'TR' ? (item.country?.nameTr || '') : (item.country?.nameEn || '');
 
+        const dict = I18N[currentLang] || I18N.TR;
+        const archText = formatArchetype(item.archetype);
+
         card.innerHTML = `
           <div>
             <div class="flex items-center justify-between border-b border-pitch-800 pb-2">
@@ -2737,34 +2808,34 @@
 
             <div class="mt-2 flex items-center justify-between text-[10px]">
               <span class="px-2 py-0.5 rounded-md bg-pitch-950 text-amber-400 font-bold border border-pitch-800 truncate max-w-[180px]">
-                ${item.archetype}
+                ${archText}
               </span>
-              <span class="text-slate-400 font-mono">40 Yaş Jübile</span>
+              <span class="text-slate-400 font-mono">${dict.legendAge40}</span>
             </div>
 
             <!-- Mini Stats -->
             <div class="grid grid-cols-4 gap-1 text-center my-2.5">
               <div class="p-1 rounded-lg bg-pitch-950 border border-pitch-800/80">
-                <div class="text-[9px] text-slate-400">Maç</div>
+                <div class="text-[9px] text-slate-400">${dict.statMatches}</div>
                 <div class="text-xs font-bold text-white">${item.stats.matches}</div>
               </div>
               <div class="p-1 rounded-lg bg-pitch-950 border border-pitch-800/80">
-                <div class="text-[9px] text-slate-400">Gol</div>
+                <div class="text-[9px] text-slate-400">${dict.statGoals}</div>
                 <div class="text-xs font-bold text-emerald-400">${item.stats.goals}</div>
               </div>
               <div class="p-1 rounded-lg bg-pitch-950 border border-pitch-800/80">
-                <div class="text-[9px] text-slate-400">Asist</div>
+                <div class="text-[9px] text-slate-400">${dict.statAssists}</div>
                 <div class="text-xs font-bold text-lime-400">${item.stats.assists}</div>
               </div>
               <div class="p-1 rounded-lg bg-pitch-950 border border-pitch-800/80">
-                <div class="text-[9px] text-slate-400">Kupa</div>
+                <div class="text-[9px] text-slate-400">${dict.statTrophies}</div>
                 <div class="text-xs font-bold text-yellow-300">${item.stats.trophies}</div>
               </div>
             </div>
 
             <!-- Net Worth & Assets -->
             <div class="text-[10px] space-y-0.5 text-slate-400">
-              <div>💰 <strong class="text-amber-300">${formatCurrency(item.bankBalance || 0)}</strong> servet</div>
+              <div>💰 <strong class="text-amber-300">${formatCurrency(item.bankBalance || 0)}</strong> ${dict.statWealth}</div>
               <div class="truncate">🏡 <span class="text-slate-300">${assetTxt}</span></div>
             </div>
           </div>
@@ -2774,9 +2845,9 @@
             <button onclick="applaudLegend('${item.id}')" class="flex-1 py-1.5 px-3 rounded-xl bg-pitch-950 hover:bg-amber-500/10 text-amber-300 border border-pitch-800 hover:border-amber-500/40 text-[11px] font-bold flex items-center justify-center gap-1.5 active:scale-95 transition">
               <span>👏</span>
               <span id="applaudCount-${item.id}">${item.applause || 0}</span>
-              <span class="text-[10px] text-slate-400">${currentLang === 'TR' ? 'Alkışla' : 'Clap'}</span>
+              <span class="text-[10px] text-slate-400">${dict.clapBtn}</span>
             </button>
-            <button onclick="viewLegendCard('${item.id}')" class="p-1.5 px-2.5 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-slate-300 text-xs transition" title="${currentLang === 'TR' ? 'Kartı İncele' : 'Inspect Card'}">
+            <button onclick="viewLegendCard('${item.id}')" class="p-1.5 px-2.5 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-slate-300 text-xs transition" title="${dict.inspectBtn}">
               <i class="fa-solid fa-eye"></i>
             </button>
           </div>
@@ -3042,15 +3113,21 @@
 
       // Copy Result
       document.getElementById('btnCopyResult').addEventListener('click', () => {
-        const text = `⚽ ${player.fullName} (${player.country.flag}) - Futbolcu Doğum Piyangosu\n` +
-          `Zirve OVR: ${player.peakOvr} | ${player.stats.matches} Maç | ${player.stats.goals} Gol | 🏆 ${player.stats.trophies} Kupa | Unvan: ${player.archetype}\n` +
-          `https://pratikbase.com/football-lottery/`;
+        const text = currentLang === 'TR'
+          ? `⚽ ${player.fullName} (${player.country.flag}) - Futbolcu Doğum Piyangosu\n` +
+            `Zirve OVR: ${player.peakOvr} | ${player.stats.matches} Maç | ${player.stats.goals} Gol | 🏆 ${player.stats.trophies} Kupa | Unvan: ${player.archetype}\n` +
+            `https://pratikbase.com/football-lottery/`
+          : `⚽ ${player.fullName} (${player.country.flag}) - Football Career Lottery\n` +
+            `Peak OVR: ${player.peakOvr} | ${player.stats.matches} Apps | ${player.stats.goals} Goals | 🏆 ${player.stats.trophies} Trophies | Archetype: ${formatArchetype(player.archetype)}\n` +
+            `https://pratikbase.com/football-lottery/?lang=en`;
 
         navigator.clipboard.writeText(text).then(() => {
           const btnTxt = document.getElementById('txtCopyResult');
-          const old = btnTxt.textContent;
-          btnTxt.textContent = currentLang === 'TR' ? 'Kopyalandı! ✔' : 'Copied! ✔';
-          setTimeout(() => btnTxt.textContent = old, 2000);
+          if (btnTxt) {
+            const old = btnTxt.textContent;
+            btnTxt.textContent = currentLang === 'TR' ? 'Kopyalandı! ✔' : 'Copied! ✔';
+            setTimeout(() => btnTxt.textContent = old, 2000);
+          }
         });
       });
 
