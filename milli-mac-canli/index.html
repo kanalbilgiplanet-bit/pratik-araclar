@@ -1386,7 +1386,15 @@
     async function fetchExternalLiveScore(activeMatch) {
       if (!activeMatch) return null;
       try {
-        const res = await fetch('https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/scoreboard', {
+        let dateQuery = '';
+        if (activeMatch.date) {
+          const d = new Date(activeMatch.date);
+          const y = d.getFullYear();
+          const m = String(d.getMonth() + 1).padStart(2, '0');
+          const day = String(d.getDate()).padStart(2, '0');
+          dateQuery = `?dates=${y}${m}${day}`;
+        }
+        const res = await fetch(`https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/scoreboard${dateQuery}`, {
           headers: { 'Accept': 'application/json' },
           cache: 'no-store'
         });
@@ -1718,8 +1726,8 @@
           } catch (_) {}
         }
 
-        // 3. Canlı API yoksa veya henüz başlamadıysa yerel veri dosyasını kontrol et
-        if (!liveData) {
+        // 3. Canlı API yoksa veya henüz başlamadıysa yerel veri dosyasını kontrol et (ancak maç zaten bittiyse ezme)
+        if (!liveData && !activeMatch.isFinished) {
           try {
             const res = await fetch(`./data/live_score.json?_t=${Date.now()}`, { cache: 'no-store' });
             if (res.ok) {
@@ -1734,6 +1742,18 @@
         const scoreHomeEl = document.getElementById('scoreHome');
         const scoreAwayEl = document.getElementById('scoreAway');
         const clockEl = document.getElementById('matchClock');
+
+        // Biten maçların kesin skorunu koru: Harici kaynaktan veri yoksa veya 0-0 geldiyse kesin skoru muhafaza et
+        if (activeMatch.isFinished) {
+          if (!liveData || (!liveData.isFinished && liveData.scoreHome === 0 && liveData.scoreAway === 0)) {
+            liveData = {
+              scoreHome: activeMatch.scoreHome ?? 0,
+              scoreAway: activeMatch.scoreAway ?? 0,
+              isFinished: true,
+              statusText: "Maç Sonu (MS)"
+            };
+          }
+        }
 
         // Bu maç için canlı veri yoksa (örn. henüz oynanmamış gelecek maç)
         if (!liveData) {

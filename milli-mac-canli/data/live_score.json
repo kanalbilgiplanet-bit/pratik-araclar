@@ -1,10 +1,11 @@
 {
   "matchId": "tur-bel-2026",
-  "status": "not_started",
-  "statusText": "Maç Başlamadı",
-  "minute": "0",
-  "scoreHome": 0,
-  "scoreAway": 0,
-  "updatedAt": "2026-11-11T21:20:00Z",
+  "status": "finished",
+  "statusText": "Maç Sonu (MS)",
+  "minute": "90'+4'",
+  "scoreHome": 1,
+  "scoreAway": 2,
+  "isFinished": true,
+  "updatedAt": "2026-11-12T22:00:00Z",
   "events": []
 }
