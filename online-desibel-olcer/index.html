@@ -779,7 +779,14 @@
           analyser.smoothingTimeConstant = 0.2;
 
           const source = audioContext.createMediaStreamSource(stream);
+          
+          // Zero-Gain pull to destination: Essential for Chrome / Safari audio pipeline to actively pump microphone data
+          const zeroGain = audioContext.createGain();
+          zeroGain.gain.value = 0;
+
           source.connect(analyser);
+          analyser.connect(zeroGain);
+          zeroGain.connect(audioContext.destination);
 
           isListening = true;
           meterStatusDot.className = "w-3 h-3 rounded-full bg-emerald-400 animate-pulse";
