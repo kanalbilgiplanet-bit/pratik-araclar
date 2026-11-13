@@ -118,3 +118,13 @@
 - URL: https://pratikbase.com/tuketici-hakem-heyeti-dilekcesi/
 - Açıklama: Ayıplı mal ve hizmetler, garanti kapsamı uyuşmazlıkları ve haksız kesintiler için e-Devlet TÜBİS sistemine uyumlu resmi Tüketici Hakem Heyeti dilekçesi oluşturan hukuki kılavuz aracı.
 - Hedef Kitle: Satıcı veya sağlayıcı ile tüketici uyuşmazlığı yaşayan vatandaşlar.
+
+### 24. Bugün Hangi Maç Hangi Kanalda Şifresiz? (TV Yayın Akışı & Frekanslar)
+- URL: https://pratikbase.com/hangi-kanalda/
+- Açıklama: Bugün, yarın ve hafta sonu oynanacak futbol (UEFA Uluslar Ligi, Trendyol Süper Lig, La Liga, Serie A) ve basketbol (EuroLeague) maçlarının resmi yayıncıları, şifresiz açık TV kanalları (TRT 1, TV8.5, A Spor, ATV) ve Türksat 4A uydu frekansları rehberi. Canlı skor akışı ve taraftar sohbeti içerir.
+- Hedef Kitle: Maçların hangi kanalda ve saat kaçta olduğunu, şifresiz yayın frekanslarını arayan tüm sporseverler.
+
+### 25. A Milli Takım Canlı Maç Takip & Canlı Skor Merkezi
+- URL: https://pratikbase.com/milli-mac-canli/
+- Açıklama: Türkiye A Milli Futbol Takımı'nın UEFA Uluslar A Ligi maçları için canlı skor, dakika dakika resmi maç anlatımı, canlı grup puan durumu tablosu, ilk 11 kadroları, maç istatistikleri ve canlı taraftar tribün sohbeti.
+- Hedef Kitle: Türkiye milli maçlarını anlık canlı takip etmek, şifresiz yayın bilgilerini öğrenmek ve diğer taraftarlarla canlı yorumlaşmak isteyenler.
