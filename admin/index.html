@@ -1100,6 +1100,7 @@
           else if (/google/i.test(refName)) iconClass = 'fa-brands fa-google text-blue-400';
           else if (/instagram/i.test(refName)) iconClass = 'fa-brands fa-instagram text-pink-400';
           else if (/twitter|x/i.test(refName)) iconClass = 'fa-brands fa-x-twitter text-slate-300';
+          else if (/reddit/i.test(refName)) iconClass = 'fa-brands fa-reddit text-orange-500';
 
           return `
             <div class="p-3 bg-slate-950/50 border border-slate-800/80 rounded-xl">
@@ -1633,6 +1634,7 @@
         else if (/google/i.test(sourceName)) iconClass = 'fa-brands fa-google text-blue-400';
         else if (/instagram/i.test(sourceName)) iconClass = 'fa-brands fa-instagram text-pink-400';
         else if (/twitter|x/i.test(sourceName)) iconClass = 'fa-brands fa-x-twitter text-slate-300';
+        else if (/reddit/i.test(sourceName)) iconClass = 'fa-brands fa-reddit text-orange-500';
 
         return `
           <div class="p-3 bg-slate-950/50 border border-slate-800/80 rounded-xl">

@@ -59,6 +59,8 @@
         referrerSource = 'Instagram';
       } else if (/t\.co|twitter\.com|x\.com/i.test(ref)) {
         referrerSource = 'Twitter (X)';
+      } else if (/reddit\.com|redd\.it/i.test(ref)) {
+        referrerSource = 'Reddit';
       } else if (/facebook\.com|fb\.com/i.test(ref)) {
         referrerSource = 'Facebook';
       } else if (/tiktok\.com/i.test(ref)) {
