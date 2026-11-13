@@ -24,9 +24,9 @@
 - Açıklama: 3516 Sayılı Ölçüler ve Ayar Kanunu gereğince elektrik sayacı 10 yıllık periyodik muayene ve zorunlu akıllı sayaç dönüşüm sorgulama aracı. 81 ilin yetkili elektrik dağıtım şirketleri (EDAŞ 186), ücretsiz değişim hakları ve Google/Apple takvim hatırlatıcısı entegrasyonu.
 - Hedef Kitle: Konut ve ticarethane elektrik aboneleri, sayacı 10 yılı doldurmuş kiracı/ev sahipleri, kaçak/ceza riskini kontrol etmek isteyenler.
 
-### 5. Kira Artış Oranı Hesaplayıcı (Resmi TÜİK TÜFE Tavanı)
+### 5. Kira Artış Oranı Hesaplayıcı & Kiracı Tahliye Hak Teşhis Robotu
 - URL: https://pratikbase.com/kira-artisi-hesaplayici/
-- Açıklama: Türk Borçlar Kanunu Madde 344 ve resmi TÜİK 12 aylık ortalamalara göre TÜFE tavan oranıyla konut ve çatılı işyeri kira artış hesaplayıcı. Aylık ve yıllık artış tutarları, 5 yıl kuralı / kira tespit uyarısı ve tek tıkla ev sahibine veya kiracıya resmi WhatsApp bildirim metni hazırlama motoru.
+- Açıklama: Türk Borçlar Kanunu Madde 344 resmi TÜİK 12 aylık TÜFE tavanıyla konut/işyeri kira zammı hesabı ve "Ev Sahibi Beni Çıkarabilir mi?" interaktif tahliye teşhis robotu. 10 yıl uzama kuralı, aynı gün imzalanan tahliye taahhütnamesinin geçersizliği (Yargıtay İBK), 3 yıl yeniden kiralama yasağı ve 1 yıllık tazminat hakları (TBK 355) ile tek tıkla yasal itiraz ve WhatsApp bildirim metni jeneratörü.
 - Hedef Kitle: Kiracılar, ev sahipleri, gayrimenkul danışmanları, işyeri sahipleri.
 
 ### 6. AcilDurumRadar – Türkiye Canlı Afet, Deprem & Fay Hattı Haritası

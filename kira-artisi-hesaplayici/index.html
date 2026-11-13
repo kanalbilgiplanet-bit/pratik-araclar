@@ -9,9 +9,9 @@
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
 
-  <title>Kira Artış Oranı Hesaplayıcı (2025 - 2026 TÜİK TÜFE) | PratikBase</title>
-  <meta name="description" content="TÜİK 12 aylık ortalama TÜFE oranlarına göre yasal konut ve işyeri kira artış oranını anında hesaplayın. Türk Borçlar Kanunu Madde 344'e uygun, tek tıkla WhatsApp bildirim mesajı oluşturun.">
-  <meta name="keywords" content="kira artış oranı hesaplama, kira zammı hesaplayıcı, tüik tüfe kira artışı, konut kira artış tavanı 2025 2026, yüzde 25 sınırı kalktı mı, ev kirası ne kadar artar, işyeri kira artış oranı, kira tespit davası 5 yıl kuralı">
+  <title>Kira Artış Oranı Hesaplayıcı & Kiracı Tahliye Hak Teşhis Robotu (2026 TÜİK TÜFE) | PratikBase</title>
+  <meta name="description" content="Resmi TÜİK 12 aylık TÜFE oranına göre yasal kira artışını hesaplayın. 'Ev sahibi beni çıkarabilir mi?' interaktif tahliye teşhis robotu ile yasal haklarınızı ve TBK emsal kararlarını anında öğrenin.">
+  <meta name="keywords" content="kira artış oranı hesaplama, ev sahibi kiracıyı çıkarabilir mi, tahliye taahhütnamesi iptali, kira zammı hesaplayıcı, tüik tüfe kira artışı, kiracı hakları 2026, 10 yıllık kiracı tahliye, ihtiyaç nedeniyle tahliye tazminatı, kira tespit davası 5 yıl kuralı">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   <link rel="canonical" href="https://pratikbase.com/kira-artisi-hesaplayici/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2310b981'/%3E%3Cstop offset='100%25' stop-color='%2306b6d4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23bg)'/%3E%3Cpath d='M32 12 L12 28 L18 28 L18 52 L46 52 L46 28 L52 28 Z' fill='%23ffffff'/%3E%3Crect x='26' y='34' width='12' height='18' rx='2' fill='url(%23bg)'/%3E%3C/svg%3E">
@@ -72,6 +72,22 @@
         "mainEntity": [
           {
             "@type": "Question",
+            "name": "Ev sahibi kiracıyı sadece kirayı az bulduğu için çıkarabilir mi?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Hayır. Türk Borçlar Kanunu Madde 347 uyarınca konut kira sözleşmeleri her yıl kendiliğinden uzar. Kiracı yasal TÜİK TÜFE oranında artış yaparak kirasını ödediği sürece ev sahibi sadece zammı az bulduğu için tahliye davası açamaz."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Aynı gün imzalanan tahliye taahhütnamesi geçerli midir?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yargıtay yerleşik içtihatları ve Hukuk Genel Kurulu kararlarına göre kira sözleşmesiyle aynı gün veya baskı altında imzalanan tahliye taahhütnameleri geçersizdir."
+            }
+          },
+          {
+            "@type": "Question",
             "name": "Konut kiralarında %25 zam sınırı devam ediyor mu?",
             "acceptedAnswer": {
               "@type": "Answer",
@@ -114,6 +130,25 @@
     input[type=number] { -moz-appearance: textfield; }
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+
+    /* Mobile Safari & Chrome Responsiveness Safeguards */
+    html, body {
+      overflow-x: hidden;
+      max-width: 100vw;
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+      -webkit-tap-highlight-color: transparent;
+    }
+    header, .backdrop-blur-md {
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
+    }
+    @media screen and (max-width: 768px) {
+      input, select, textarea {
+        font-size: 16px !important;
+      }
+    }
+
   </style>
 </head>
 <body class="bg-[#0b0f19] text-slate-300 min-h-screen flex flex-col font-sans selection:bg-emerald-500 selection:text-white">
@@ -130,7 +165,7 @@
             <span class="font-bold text-white text-base tracking-tight leading-none group-hover:text-emerald-300 transition">
               Pratik<span class="text-emerald-400">Araçlar</span>
             </span>
-            <span class="text-[10px] text-slate-400 tracking-wider font-semibold uppercase">KİRA ARTIŞ ORANI & TÜFE</span>
+            <span class="text-[10px] text-emerald-400 tracking-wider font-semibold uppercase">KİRA ARTIŞI & TAHLİYE TEŞHİS ROBOTU</span>
           </div>
         </a>
       </div>
@@ -162,15 +197,27 @@
         <span>TÜİK Ekim 2026 Resmi 12 Aylık TÜFE Kira Artış Tavanı: %31,49</span>
       </div>
       <h1 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight mb-2">
-        Kira Artış Oranı Hesaplayıcı
+        Kira Artış Oranı & Kiracı Tahliye Hak Rehberi
       </h1>
-      <p class="text-slate-400 text-sm sm:text-base leading-relaxed">
-        %25 yasal sınırın kalkmasının ardından yürürlükte olan <strong>Türk Borçlar Kanunu Madde 344</strong> uyarınca sözleşme yenileme ayınıza ait resmi TÜİK enflasyon tavanına göre yeni kiranızı hesaplayın ve tek tıkla bildirim metni hazırlayın.
+      <p class="text-slate-400 text-sm sm:text-base leading-relaxed mb-4">
+        Yasal TÜİK TÜFE tavanına göre yeni dönem kiranızı hesaplayın; ardından <strong>"Ev Sahibi Beni Çıkarabilir mi?"</strong> interaktif teşhis robotuyla hukuki güvencenizi ve Yargıtay emsal haklarınızı anında test edin.
       </p>
+      
+      <!-- Quick Navigation Tabs -->
+      <div class="inline-flex items-center p-1 bg-slate-900 border border-slate-800 rounded-2xl shadow-lg gap-1">
+        <a href="#kira-hesaplama" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold text-xs flex items-center gap-2 shadow-sm transition hover:bg-emerald-500">
+          <i class="fa-solid fa-calculator"></i>
+          <span>1. Kira Artış Hesaplayıcı</span>
+        </a>
+        <a href="#tahliye-tehlikesi" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 font-semibold text-xs flex items-center gap-2 transition hover:bg-slate-700 hover:text-white">
+          <i class="fa-solid fa-scale-balanced text-amber-400"></i>
+          <span>2. Ev Sahibi Çıkarabilir mi? (Teşhis)</span>
+        </a>
+      </div>
     </div>
 
     <!-- Grid: Form + Result Card -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-12">
+    <div id="kira-hesaplama" class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-12">
       
       <!-- LEFT: Calculation Form (7 cols) -->
       <section class="lg:col-span-7 bg-[#0f172a] border border-slate-800/90 rounded-3xl p-6 sm:p-8 shadow-xl relative">
@@ -327,7 +374,7 @@
       </section>
 
       <!-- RIGHT: Result Summary Card (5 cols) -->
-      <section class="lg:col-span-5 bg-gradient-to-b from-[#0f172a] to-[#0b1329] border border-slate-800/90 rounded-3xl p-6 sm:p-8 shadow-2xl relative sticky top-24">
+      <section class="lg:col-span-5 bg-gradient-to-b from-[#0f172a] to-[#0b1329] border border-slate-800/90 rounded-3xl p-6 sm:p-8 shadow-2xl relative static lg:sticky top-24">
         
         <div class="flex items-center justify-between pb-4 border-b border-slate-800">
           <div class="flex items-center gap-2">
@@ -435,6 +482,296 @@
       </div>
     </div>
 
+    
+    <!-- ========================================== -->
+    <!-- INTERACTIVE TENANT EVICTION DIAGNOSIS TOOL -->
+    <!-- ========================================== -->
+    <section id="tahliye-tehlikesi" class="bg-gradient-to-b from-[#0f172a] via-[#111c38] to-[#0f172a] border border-slate-800 rounded-3xl p-6 sm:p-10 mb-12 shadow-2xl relative scroll-mt-20">
+      
+      <!-- Section Header -->
+      <div class="text-center max-w-3xl mx-auto mb-10">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/25 text-amber-400 text-xs font-semibold mb-3 shadow-sm">
+          <i class="fa-solid fa-scale-balanced"></i>
+          <span>Türk Borçlar Kanunu (TBK) & Yargıtay İçtihatları Rehberi</span>
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mb-3">
+          ⚖️ Ev Sahibi Beni Çıkarabilir mi? (Tahliye Teşhis Robotu)
+        </h2>
+        <p class="text-slate-300 text-xs sm:text-sm leading-relaxed">
+          Sözleşme süreniz, tahliye taahhütnamesinin durumu, ödeme düzeniniz ve ileri sürülen gerekçeyi işaretleyin; durumunuzun yasal güvencesini, tahliye riskini ve Yargıtay emsal haklarınızı anında öğrenin.
+        </p>
+      </div>
+
+      <!-- Role Selector (Kiracıyım vs Ev Sahibiyim) -->
+      <div class="max-w-md mx-auto mb-8 bg-slate-900/90 p-1.5 rounded-2xl border border-slate-800 grid grid-cols-2 gap-2 shadow-inner">
+        <button type="button" id="diagRoleKiraci" class="diag-role-btn active py-2.5 px-3 rounded-xl bg-emerald-600 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md transition">
+          <i class="fa-solid fa-person-shelter"></i>
+          <span>Kiracıyım</span>
+        </button>
+        <button type="button" id="diagRoleEvSahibi" class="diag-role-btn py-2.5 px-3 rounded-xl bg-transparent text-slate-400 hover:text-white font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 transition">
+          <i class="fa-solid fa-key"></i>
+          <span>Ev Sahibiyim</span>
+        </button>
+      </div>
+
+      <!-- Grid: Questions (Left) & Diagnosis Card (Right) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- LEFT: Questions Form (7 cols) -->
+        <div class="lg:col-span-7 space-y-6">
+          
+          <!-- Soru 1: Sözleşme Kaç Yıllık? -->
+          <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-sm">
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-3 flex items-center gap-2">
+              <span class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-[10px]">1</span>
+              <span>Kira Sözleşmeniz Kaçıncı Yılında? (Kiracılık Süresi)</span>
+            </label>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+              <label class="diag-pill cursor-pointer p-3 rounded-xl border border-slate-700 bg-slate-950/60 hover:bg-slate-800/80 flex flex-col gap-1 transition">
+                <input type="radio" name="diagDuration" value="under5" class="sr-only" checked>
+                <span class="text-xs font-bold text-white flex items-center justify-between">
+                  <span>1 - 4 Yıl</span>
+                  <i class="fa-solid fa-circle-check text-emerald-400 check-icon text-xs"></i>
+                </span>
+                <span class="text-[11px] text-slate-400">TÜFE tavanı zorunlu, gerekçesiz çıkaramaz</span>
+              </label>
+
+              <label class="diag-pill cursor-pointer p-3 rounded-xl border border-slate-800 bg-slate-950/30 hover:bg-slate-800/80 flex flex-col gap-1 transition">
+                <input type="radio" name="diagDuration" value="5to10" class="sr-only">
+                <span class="text-xs font-bold text-slate-300 flex items-center justify-between">
+                  <span>5 - 10 Yıl Arası</span>
+                  <i class="fa-regular fa-circle check-icon text-xs text-slate-600"></i>
+                </span>
+                <span class="text-[11px] text-slate-400">Kira tespit davası açabilir, yine çıkaramaz</span>
+              </label>
+
+              <label class="diag-pill cursor-pointer p-3 rounded-xl border border-slate-800 bg-slate-950/30 hover:bg-slate-800/80 flex flex-col gap-1 transition">
+                <input type="radio" name="diagDuration" value="over10" class="sr-only">
+                <span class="text-xs font-bold text-slate-300 flex items-center justify-between">
+                  <span>10 Yılı Aştı</span>
+                  <i class="fa-regular fa-circle check-icon text-xs text-slate-600"></i>
+                </span>
+                <span class="text-[11px] text-amber-400/90 font-medium">10 uzama yılı doldu (TBK 347 riski)</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Soru 2: Tahliye Taahhütnamesi Durumu -->
+          <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-sm">
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-3 flex items-center gap-2">
+              <span class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-[10px]">2</span>
+              <span>Yazılı Tahliye Taahhütnamesi İmzalandı mı?</span>
+            </label>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <label class="diag-pill cursor-pointer p-3 rounded-xl border border-slate-700 bg-slate-950/60 hover:bg-slate-800/80 flex flex-col gap-1 transition">
+                <input type="radio" name="diagTaahhut" value="none" class="sr-only" checked>
+                <span class="text-xs font-bold text-white flex items-center justify-between">
+                  <span>Hiç İmzalanmadı</span>
+                  <i class="fa-solid fa-circle-check text-emerald-400 check-icon text-xs"></i>
+                </span>
+                <span class="text-[11px] text-slate-400">Yazılı taahhütname belgesi mevcut değil</span>
+              </label>
+
+              <label class="diag-pill cursor-pointer p-3 rounded-xl border border-slate-800 bg-slate-950/30 hover:bg-slate-800/80 flex flex-col gap-1 transition">
+                <input type="radio" name="diagTaahhut" value="same_day" class="sr-only">
+                <span class="text-xs font-bold text-slate-300 flex items-center justify-between">
+                  <span>Sözleşmeyle Aynı Gün İmzalandı</span>
+                  <i class="fa-regular fa-circle check-icon text-xs text-slate-600"></i>
+                </span>
+                <span class="text-[11px] text-emerald-400/90 font-medium">Yargıtay'a göre GEÇERSİZDİR</span>
+              </label>
+
+              <label class="diag-pill cursor-pointer p-3 rounded-xl border border-slate-800 bg-slate-950/30 hover:bg-slate-800/80 flex flex-col gap-1 transition">
+                <input type="radio" name="diagTaahhut" value="blank" class="sr-only">
+                <span class="text-xs font-bold text-slate-300 flex items-center justify-between">
+                  <span>Tarih Boş (Beyaza İmza) Verildi</span>
+                  <i class="fa-regular fa-circle check-icon text-xs text-slate-600"></i>
+                </span>
+                <span class="text-[11px] text-amber-400/90 font-medium">Tarih sonradan doldurulursa riskli</span>
+              </label>
+
+              <label class="diag-pill cursor-pointer p-3 rounded-xl border border-slate-800 bg-slate-950/30 hover:bg-slate-800/80 flex flex-col gap-1 transition">
+                <input type="radio" name="diagTaahhut" value="valid_later" class="sr-only">
+                <span class="text-xs font-bold text-slate-300 flex items-center justify-between">
+                  <span>Sözleşmeden Sonra Düzenlendi</span>
+                  <i class="fa-regular fa-circle check-icon text-xs text-slate-600"></i>
+                </span>
+                <span class="text-[11px] text-red-400 font-medium">Tarihler dolu ve geçerlidir</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Soru 3: Kira ve Gider Ödeme Düzeni -->
+          <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-sm">
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-3 flex items-center gap-2">
+              <span class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-[10px]">3</span>
+              <span>Kira ve Aidat Ödeme Düzeniniz Nasıl?</span>
+            </label>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <label class="diag-pill cursor-pointer p-3 rounded-xl border border-slate-700 bg-slate-950/60 hover:bg-slate-800/80 flex flex-col gap-1 transition">
+                <input type="radio" name="diagPayment" value="clean" class="sr-only" checked>
+                <span class="text-xs font-bold text-white flex items-center justify-between">
+                  <span>Bankadan Düzenli ve Tam</span>
+                  <i class="fa-solid fa-circle-check text-emerald-400 check-icon text-xs"></i>
+                </span>
+                <span class="text-[11px] text-slate-400">Açıklamalı IBAN ödemesi, gecikme yok</span>
+              </label>
+
+              <label class="diag-pill cursor-pointer p-3 rounded-xl border border-slate-800 bg-slate-950/30 hover:bg-slate-800/80 flex flex-col gap-1 transition">
+                <input type="radio" name="diagPayment" value="cash" class="sr-only">
+                <span class="text-xs font-bold text-slate-300 flex items-center justify-between">
+                  <span>Elden / Makbuzsuz Ödeniyor</span>
+                  <i class="fa-regular fa-circle check-icon text-xs text-slate-600"></i>
+                </span>
+                <span class="text-[11px] text-amber-400/90 font-medium">İspat yükü kiracıdadır, riskli!</span>
+              </label>
+
+              <label class="diag-pill cursor-pointer p-3 rounded-xl border border-slate-800 bg-slate-950/30 hover:bg-slate-800/80 flex flex-col gap-1 transition">
+                <input type="radio" name="diagPayment" value="two_warnings" class="sr-only">
+                <span class="text-xs font-bold text-slate-300 flex items-center justify-between">
+                  <span>Aynı Yılda 2 Haklı İhtarname Geldi</span>
+                  <i class="fa-regular fa-circle check-icon text-xs text-slate-600"></i>
+                </span>
+                <span class="text-[11px] text-red-400 font-medium">TBK 352/2 tahliye davası sebebi</span>
+              </label>
+
+              <label class="diag-pill cursor-pointer p-3 rounded-xl border border-slate-800 bg-slate-950/30 hover:bg-slate-800/80 flex flex-col gap-1 transition">
+                <input type="radio" name="diagPayment" value="debt" class="sr-only">
+                <span class="text-xs font-bold text-slate-300 flex items-center justify-between">
+                  <span>Ödenmemiş Kira Borcu Var</span>
+                  <i class="fa-regular fa-circle check-icon text-xs text-slate-600"></i>
+                </span>
+                <span class="text-[11px] text-red-400 font-medium">30 günlük temerrüt ihtarı riski</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Soru 4: Ev Sahibinin İleri Sürdüğü Gerekçe -->
+          <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-sm">
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-3 flex items-center gap-2">
+              <span class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-[10px]">4</span>
+              <span>İleri Sürülen Tahliye Gerekçesi Nedir?</span>
+            </label>
+            <div class="space-y-2">
+              <label class="diag-pill cursor-pointer p-3 rounded-xl border border-slate-700 bg-slate-950/60 hover:bg-slate-800/80 flex items-start gap-3 transition">
+                <input type="radio" name="diagReason" value="rent_dispute" class="sr-only" checked>
+                <i class="fa-solid fa-circle-check text-emerald-400 check-icon text-xs mt-1"></i>
+                <div>
+                  <span class="text-xs font-bold text-white block">Sadece "Kirayı Düşük Buluyor / Zamda Anlaşamadık"</span>
+                  <span class="text-[11px] text-slate-400">"Piyasa arttı, bu paraya oturamazsın, çık evimden" baskısı</span>
+                </div>
+              </label>
+
+              <label class="diag-pill cursor-pointer p-3 rounded-xl border border-slate-800 bg-slate-950/30 hover:bg-slate-800/80 flex items-start gap-3 transition">
+                <input type="radio" name="diagReason" value="own_need" class="sr-only">
+                <i class="fa-regular fa-circle check-icon text-xs text-slate-600 mt-1"></i>
+                <div>
+                  <span class="text-xs font-bold text-slate-300 block">"Kendim / Eşim / Çocuğum Oturacak" (Gereksinim)</span>
+                  <span class="text-[11px] text-slate-400">İhtiyacın samimi, zorunlu ve gerçek olması şarttır (TBK 350)</span>
+                </div>
+              </label>
+
+              <label class="diag-pill cursor-pointer p-3 rounded-xl border border-slate-800 bg-slate-950/30 hover:bg-slate-800/80 flex items-start gap-3 transition">
+                <input type="radio" name="diagReason" value="new_owner" class="sr-only">
+                <i class="fa-regular fa-circle check-icon text-xs text-slate-600 mt-1"></i>
+                <div>
+                  <span class="text-xs font-bold text-slate-300 block">Ev Satıldı, "Yeni Ev Sahibi Oturacak" Diyor</span>
+                  <span class="text-[11px] text-slate-400">Yeni malikin tapudan sonra 1 ay içinde ihtar çekmesi zorunludur (TBK 351)</span>
+                </div>
+              </label>
+
+              <label class="diag-pill cursor-pointer p-3 rounded-xl border border-slate-800 bg-slate-950/30 hover:bg-slate-800/80 flex items-start gap-3 transition">
+                <input type="radio" name="diagReason" value="renovation" class="sr-only">
+                <i class="fa-regular fa-circle check-icon text-xs text-slate-600 mt-1"></i>
+                <div>
+                  <span class="text-xs font-bold text-slate-300 block">Kentsel Dönüşüm / Esaslı Onarım / Yıkım</span>
+                  <span class="text-[11px] text-slate-400">İçinde otururken onarım yapılamayacak derecede proje bulunması şarttır</span>
+                </div>
+              </label>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- RIGHT: Live Diagnosis Result (5 cols) -->
+        <div class="lg:col-span-5 bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-7 shadow-2xl static lg:sticky top-24 space-y-5">
+          
+          <!-- Top Badge -->
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+              <i class="fa-solid fa-stethoscope text-emerald-400"></i>
+              <span>Hukuki Durum Teşhisi</span>
+            </span>
+            <span id="diagStatusBadge" class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+              🟢 GÜVENDESİNİZ
+            </span>
+          </div>
+
+          <!-- Headline Result -->
+          <div>
+            <h3 id="diagHeadline" class="text-base sm:text-lg font-bold text-white leading-snug">
+              Ev sahibi sizi bu şartlarda evden ASLA çıkaramaz!
+            </h3>
+            <p id="diagSubHeadline" class="text-xs text-slate-400 mt-1 leading-relaxed">
+              Kiranızı yasal TÜFE oranında artırıp bankadan ödediğiniz sürece tahliye davası açamaz.
+            </p>
+          </div>
+
+          <!-- Key Legal Points (Bulleted Analysis) -->
+          <div id="diagAnalysisBox" class="p-4 rounded-2xl bg-slate-950/80 border border-slate-800/80 space-y-2.5 text-xs">
+            <!-- Dynamically populated via JS -->
+          </div>
+
+          <!-- Penalty / Compensation Warning Box -->
+          <div id="diagWarningBox" class="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/25 text-amber-200 text-xs space-y-1">
+            <div class="font-bold flex items-center gap-1.5 text-amber-300">
+              <i class="fa-solid fa-shield-halved"></i>
+              <span id="diagWarningTitle">Ev Sahibine 3 Yıl Yeniden Kiralama Yasağı (TBK 355)</span>
+            </div>
+            <p id="diagWarningText" class="text-[11px] text-amber-200/90 leading-relaxed">
+              Ev sahibi ihtiyaç iddiasıyla sizi tahliye ettikten sonra mecuru 3 yıl içinde haklı sebep olmaksızın başkasına kiralarsa; eski kiracıya son kira yılında ödenen <strong>1 yıllık kira bedelinden az olmamak üzere tazminat</strong> ödemekle yükümlüdür.
+            </p>
+          </div>
+
+          <!-- Action / Prepared Letter Generator -->
+          <div class="pt-2 border-t border-slate-800 space-y-2.5">
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-semibold text-slate-300 flex items-center gap-1.5">
+                <i class="fa-solid fa-comment-dots text-emerald-400"></i>
+                <span id="diagLetterTitle">Ev Sahibine WhatsApp Yasal Cevap Metni:</span>
+              </span>
+              <button type="button" id="copyDiagMsgBtn" class="text-emerald-400 hover:text-emerald-300 font-bold transition flex items-center gap-1">
+                <i class="fa-regular fa-copy"></i>
+                <span>Kopyala</span>
+              </button>
+            </div>
+
+            <textarea 
+              id="diagLetterPreview" 
+              rows="4" 
+              readonly 
+              class="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-300 font-mono text-[11px] leading-relaxed focus:outline-none selection:bg-emerald-500 selection:text-slate-950 cursor-pointer"
+              title="Tıklayarak kopyalayabilirsiniz"
+            ></textarea>
+
+            <button type="button" id="sendDiagWhatsappBtn" class="w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition shadow-md shadow-emerald-600/20 flex items-center justify-center gap-2">
+              <i class="fa-brands fa-whatsapp text-base"></i>
+              <span>WhatsApp'tan Gönder</span>
+            </button>
+          </div>
+
+          <!-- Disclaimer / Sorumluluk Reddi -->
+          <p class="text-[10px] text-slate-500 text-center leading-normal pt-1">
+            <i class="fa-solid fa-triangle-exclamation mr-1 text-slate-400"></i>
+            Bu teşhis aracı Türk Borçlar Kanunu ve Yargıtay yerleşik içtihatları doğrultusunda genel bilgilendirme amacıyla hazırlanmıştır; kesin hukuki danışmanlık niteliği taşımaz.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
     <!-- Kahve Molası / PopNDodge Banner -->
     <div class="bg-slate-900/60 border border-slate-800 hover:border-violet-500/40 rounded-2xl p-4 mb-12 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs transition">
       <div class="flex items-center gap-3">
@@ -471,6 +808,55 @@
 
       <div class="space-y-4">
         
+        
+        <!-- NEW FAQ: Tahliye Taahhütnamesi -->
+        <details class="group bg-slate-900/80 border border-slate-800 rounded-2xl p-5 open:bg-slate-900 open:border-slate-700 transition">
+          <summary class="flex justify-between items-center font-semibold text-white text-sm cursor-pointer list-none">
+            <span class="flex items-center gap-2.5">
+              <i class="fa-solid fa-scale-balanced text-amber-400 text-sm"></i>
+              <span>Ev sahibi kira sözleşmesiyle aynı gün imzalatılan tahliye taahhütnamesiyle beni çıkarabilir mi?</span>
+            </span>
+            <i class="fa-solid fa-chevron-down text-xs text-slate-500 group-open:rotate-180 transition-transform"></i>
+          </summary>
+          <div class="pt-4 text-xs sm:text-sm text-slate-400 leading-relaxed border-t border-slate-800/80 mt-3 space-y-2">
+            <p>
+              <strong>Hayır, çıkaramaz.</strong> Yargıtay Hukuk Genel Kurulu ve yerleşik içtihatlarına göre, kira sözleşmesiyle aynı gün veya taşınmaza girmeden önce baskı altında imzalatılan tahliye taahhütnameleri müzayaka (serbest irade bulunmaması) gerekçesiyle <strong>geçersizdir</strong>. Kiracı, taahhütname tarihinin sözleşmeyle aynı gün olduğunu ispatladığı takdirde tahliye engellenir.
+            </p>
+          </div>
+        </details>
+
+        <!-- NEW FAQ: Ev Sahibi Çıkarabilir mi -->
+        <details class="group bg-slate-900/80 border border-slate-800 rounded-2xl p-5 open:bg-slate-900 open:border-slate-700 transition">
+          <summary class="flex justify-between items-center font-semibold text-white text-sm cursor-pointer list-none">
+            <span class="flex items-center gap-2.5">
+              <i class="fa-solid fa-shield-halved text-emerald-400 text-sm"></i>
+              <span>Ev sahibi sadece 'kirasını az bulduğu' için kiracıyı evden çıkarabilir mi?</span>
+            </span>
+            <i class="fa-solid fa-chevron-down text-xs text-slate-500 group-open:rotate-180 transition-transform"></i>
+          </summary>
+          <div class="pt-4 text-xs sm:text-sm text-slate-400 leading-relaxed border-t border-slate-800/80 mt-3 space-y-2">
+            <p>
+              <strong>Kesinlikle hayır.</strong> Türk Borçlar Kanunu Madde 347 uyarınca, kiracı sözleşmeyi feshetmedikçe sözleşme her yıl kendiliğinden 1 yıl uzar. Ev sahibinin kirayı beğenmemesi yasal tahliye sebebi değildir. Kiracı TÜİK TÜFE oranındaki zammı yaparak kirasını bankadan ödediği sürece tahliye edilemez.
+            </p>
+          </div>
+        </details>
+
+        <!-- NEW FAQ: 10 Yıl Kuralı -->
+        <details class="group bg-slate-900/80 border border-slate-800 rounded-2xl p-5 open:bg-slate-900 open:border-slate-700 transition">
+          <summary class="flex justify-between items-center font-semibold text-white text-sm cursor-pointer list-none">
+            <span class="flex items-center gap-2.5">
+              <i class="fa-solid fa-calendar-days text-sky-400 text-sm"></i>
+              <span>10 yıllık kiracı tahliyesi nasıl işler? (TBK Madde 347)</span>
+            </span>
+            <i class="fa-solid fa-chevron-down text-xs text-slate-500 group-open:rotate-180 transition-transform"></i>
+          </summary>
+          <div class="pt-4 text-xs sm:text-sm text-slate-400 leading-relaxed border-t border-slate-800/80 mt-3 space-y-2">
+            <p>
+              Konut kiralarında 1 yıllık sözleşme süresinin ardından <strong>10 adet 1'er yıllık uzama süresi</strong> (toplam 11 yıl) dolduktan sonra ev sahibi, hiçbir gerekçe göstermek zorunda kalmaksızın tahliye talep edebilir. Bunun için her uzama yılının bitiminden <strong>en az 3 ay önce</strong> kiracıya noter kanalıyla yazılı bildirim göndermesi ve uzama yılı bitiminde tahliye davası açması gerekir.
+            </p>
+          </div>
+        </details>
+
         <!-- FAQ 1 -->
         <details class="group bg-slate-900/80 border border-slate-800 rounded-2xl p-5 open:bg-slate-900 open:border-slate-700 transition">
           <summary class="flex justify-between items-center font-semibold text-white text-sm cursor-pointer list-none">
@@ -875,7 +1261,327 @@
         b.classList.toggle('text-slate-300', !is2026);
         b.classList.toggle('border-slate-800', !is2026);
       });
-      populateMonths('2026', 'Ekim 2026');
+      
+    // ==========================================
+    // TAHLİYE TEŞHİS ROBOTU JS MOTORU
+    // ==========================================
+    let diagRole = 'kiraci'; // 'kiraci' or 'evsahibi'
+
+    const diagRoleKiraci = document.getElementById('diagRoleKiraci');
+    const diagRoleEvSahibi = document.getElementById('diagRoleEvSahibi');
+    const diagStatusBadge = document.getElementById('diagStatusBadge');
+    const diagHeadline = document.getElementById('diagHeadline');
+    const diagSubHeadline = document.getElementById('diagSubHeadline');
+    const diagAnalysisBox = document.getElementById('diagAnalysisBox');
+    const diagWarningBox = document.getElementById('diagWarningBox');
+    const diagWarningTitle = document.getElementById('diagWarningTitle');
+    const diagWarningText = document.getElementById('diagWarningText');
+    const diagLetterTitle = document.getElementById('diagLetterTitle');
+    const diagLetterPreview = document.getElementById('diagLetterPreview');
+    const copyDiagMsgBtn = document.getElementById('copyDiagMsgBtn');
+    const sendDiagWhatsappBtn = document.getElementById('sendDiagWhatsappBtn');
+
+    if (diagRoleKiraci && diagRoleEvSahibi) {
+      diagRoleKiraci.addEventListener('click', () => {
+        diagRole = 'kiraci';
+        diagRoleKiraci.classList.add('active', 'bg-emerald-600', 'text-white', 'shadow-md');
+        diagRoleKiraci.classList.remove('bg-transparent', 'text-slate-400');
+        diagRoleEvSahibi.classList.remove('active', 'bg-emerald-600', 'text-white', 'shadow-md');
+        diagRoleEvSahibi.classList.add('bg-transparent', 'text-slate-400');
+        runDiagnosis();
+      });
+
+      diagRoleEvSahibi.addEventListener('click', () => {
+        diagRole = 'evsahibi';
+        diagRoleEvSahibi.classList.add('active', 'bg-emerald-600', 'text-white', 'shadow-md');
+        diagRoleEvSahibi.classList.remove('bg-transparent', 'text-slate-400');
+        diagRoleKiraci.classList.remove('active', 'bg-emerald-600', 'text-white', 'shadow-md');
+        diagRoleKiraci.classList.add('bg-transparent', 'text-slate-400');
+        runDiagnosis();
+      });
+    }
+
+    function setupRadioPills(name) {
+      const radios = document.querySelectorAll('input[name="' + name + '"]');
+      radios.forEach(radio => {
+        radio.addEventListener('change', () => {
+          radios.forEach(r => {
+            const pill = r.closest('.diag-pill');
+            if (!pill) return;
+            const icon = pill.querySelector('.check-icon');
+            if (r.checked) {
+              pill.classList.add('border-slate-700', 'bg-slate-950/60');
+              pill.classList.remove('border-slate-800', 'bg-slate-950/30');
+              if (icon) {
+                icon.className = 'fa-solid fa-circle-check text-emerald-400 check-icon text-xs';
+              }
+            } else {
+              pill.classList.remove('border-slate-700', 'bg-slate-950/60');
+              pill.classList.add('border-slate-800', 'bg-slate-950/30');
+              if (icon) {
+                icon.className = 'fa-regular fa-circle check-icon text-xs text-slate-600';
+              }
+            }
+          });
+          runDiagnosis();
+        });
+      });
+    }
+
+    setupRadioPills('diagDuration');
+    setupRadioPills('diagTaahhut');
+    setupRadioPills('diagPayment');
+    setupRadioPills('diagReason');
+
+    function getSelectedRadio(name) {
+      const checked = document.querySelector('input[name="' + name + '"]:checked');
+      return checked ? checked.value : '';
+    }
+
+    function runDiagnosis() {
+      if (!diagStatusBadge) return;
+      const duration = getSelectedRadio('diagDuration');
+      const taahhut = getSelectedRadio('diagTaahhut');
+      const payment = getSelectedRadio('diagPayment');
+      const reason = getSelectedRadio('diagReason');
+
+      let risk = 'safe';
+      let headline = '';
+      let subHeadline = '';
+      let analysisItems = [];
+      let warningTitle = 'Yasal Koruma & Yaptırım (TBK 355)';
+      let warningText = '';
+      let letterText = '';
+
+      if (taahhut === 'valid_later') {
+        risk = 'danger';
+      } else if (payment === 'two_warnings' || payment === 'debt') {
+        risk = 'danger';
+      } else if (duration === 'over10') {
+        risk = 'danger';
+      } else if (taahhut === 'blank' || payment === 'cash' || reason === 'own_need' || reason === 'new_owner' || duration === '5to10') {
+        risk = 'warning';
+      } else {
+        risk = 'safe';
+      }
+
+      if (diagRole === 'kiraci') {
+        diagLetterTitle.textContent = 'Ev Sahibine WhatsApp Yasal Cevap Metni:';
+
+        if (risk === 'safe') {
+          diagStatusBadge.className = 'px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30';
+          diagStatusBadge.textContent = '🟢 GÜVENDESİNİZ (Çıkarılamaz)';
+          headline = 'Ev sahibi bu şartlarda sizi evden ASLA çıkaramaz!';
+          subHeadline = 'Kiranızı yasal TÜİK TÜFE oranında artırıp bankadan ödediğiniz sürece tahliye davası açamaz veya evi boşaltmanızı zorlayamaz.';
+
+          analysisItems = [
+            { icon: 'fa-shield-halved text-emerald-400', title: 'Sözleşmeniz Kendiliğinden Uzar (TBK Md. 347)', desc: 'Konut kiralarında sözleşme süresi bitse bile, kiracı feshetmedikçe sözleşme her yıl aynı şartlarla 1 yıl kendiliğinden uzar. Ev sahibi "süre bitti" diyerek çıkaramaz.' },
+            { icon: 'fa-scale-balanced text-emerald-400', title: 'Fahiş Zam Talebi Tahliye Sebebi Değildir (TBK Md. 344)', desc: 'Ev sahibinin piyasa rayicini gerekçe göstererek yasal TÜFE tavanının üzerinde artış talep etme hakkı yoktur. Bu oranda zam yapıp ödediğinizde kanunen tüm borcunuzu eksiksiz ifa etmiş sayılırsınız.' }
+          ];
+
+          if (taahhut === 'same_day') {
+            analysisItems.push({
+              icon: 'fa-gavel text-amber-400',
+              title: 'Aynı Gün İmzalanan Taahhütname Geçersizdir!',
+              desc: 'Yargıtay Hukuk Genel Kurulu ve İçtihatları Birleştirme Kararları gereği, kira sözleşmesiyle aynı gün veya baskı altında imzalatılan tahliye taahhütnameleri müzayaka (zor durum) karinesiyle hükümsüzdür.'
+            });
+          }
+
+          warningTitle = 'Ev Sahibine 3 Yıl Yeniden Kiralama Yasağı (TBK 355)';
+          warningText = 'Ev sahibi "kendim / oğlum oturacak" gerekçesiyle dava açıp sizi çıkartırsa, evi 3 yıl boyunca haklı sebep olmaksızın başkasına kiraya veremez. Kiralarsa size son yılda ödediğiniz 1 yıllık kira bedelinden az olmamak üzere nakit tazminat ödemek zorundadır.';
+
+          letterText = 'Sayın Ev Sahibim, kira yenileme dönemimiz kapsamında yasal artış oranımız Türk Borçlar Kanunu Madde 344 uyarınca resmi TÜİK TÜFE verileri doğrultusunda eksiksiz hesaplanarak banka hesabınıza yatırılmaktadır. İlgili kanun maddeleri ve TBK 347 gereğince sözleşmemiz yasal güvence altındadır. Yasal tavanın üzerinde gayriresmi artış veya yasal dayanağı bulunmayan tahliye taleplerini kabul edemeyeceğimi nezaketle bildirir, iyi günler dilerim.';
+
+        } else if (risk === 'warning') {
+          diagStatusBadge.className = 'px-2.5 py-1 rounded-full text-xs font-bold bg-amber-500/15 text-amber-400 border border-amber-500/30';
+          diagStatusBadge.textContent = '🟡 DİKKAT (Şartlı / İspat Durumu)';
+          headline = 'Hemen çıkaramaz ancak dikkat etmeniz gereken yasal riskler var!';
+          subHeadline = 'Ev sahibi anında tahliye edemez fakat ileri sürdüğü gerekçeyle dava açabilir veya ispat ihtilafı yaşanabilir.';
+
+          if (taahhut === 'blank') {
+            analysisItems.push({
+              icon: 'fa-triangle-exclamation text-amber-400',
+              title: 'Beyaza (Tarihsiz) İmza Tuzağına Dikkat!',
+              desc: 'Tarih kısmı boş verilmiş taahhütnameler Yargıtay uygulamasına göre kural olarak geçerli kabul edilir ve ev sahibinin sonradan tarihi doldurma yetkisi olduğu varsayılır. Boş verildiğini ancak yazılı delille (WhatsApp/mesaj/e-posta yazışması) ispatlayabilirsiniz.'
+            });
+          }
+
+          if (reason === 'own_need') {
+            analysisItems.push({
+              icon: 'fa-house-user text-amber-400',
+              title: 'Gereksinim / İhtiyaç İddiası (TBK Md. 350)',
+              desc: 'Ev sahibi kendisinin, eşinin veya altsoyunun (çocuğunun) konut ihtiyacı için tahliye davası açabilir. Ancak ihtiyacın "gerçek, samimi ve zorunlu" olduğunu mahkemede ispatlamak zorundadır. Bakmakla yükümlü olmadığı akrabalar için tahliye istenemez.'
+            });
+          }
+
+          if (reason === 'new_owner') {
+            analysisItems.push({
+              icon: 'fa-user-tag text-amber-400',
+              title: 'Evi Yeni Satın Alan Malikin Hakları (TBK Md. 351)',
+              desc: 'Yeni malik tapuyu tescil ettirdiği tarihten itibaren 1 ay içinde kiracıya noterden ihtar çekmek zorundadır. İhtar çekilirse 6 ay sonra tahliye davası açabilir; süreyi kaçırırsa dönem sonunu beklemek zorundadır.'
+            });
+          }
+
+          if (duration === '5to10') {
+            analysisItems.push({
+              icon: 'fa-scale-unbalanced text-amber-400',
+              title: '5 Yıl Doldu: Kira Tespit Davası Riski (TBK Md. 344/3)',
+              desc: 'Kiracılığınız 5 yılı geçtiği için ev sahibi sizi gerekçesiz çıkaramaz; fakat mahkemede "Kira Tespit Davası" açarak kiranın bölge rayicine yükseltilmesini isteyebilir. Mahkeme hakkaniyet indirimi (%10-20) uygular.'
+            });
+          }
+
+          if (payment === 'cash') {
+            analysisItems.push({
+              icon: 'fa-money-bill-wave text-amber-400',
+              title: 'Elden Ödemelerde İspat Riski!',
+              desc: 'Kiranın ödendiğini ispat yükü kiracıya aittir. Elden yapılan ve yazılı makbuz alınmayan ödemeler inkar edilirse icra takibi ve temerrüt riski doğar. Derhal tüm ödemeleri bankadan "Kira Bedeli" açıklamasıyla yapmaya başlayın.'
+            });
+          }
+
+          warningTitle = 'Ne Yapmalısınız? (Stratejik Korunma)';
+          warningText = 'Gelen tebligatları mutlaka süresi içinde (genellikle 7 gün içinde icraya, 30 gün içinde temerrüt ihtarına) inceleyin ve itiraz edin. Hak kaybına uğramamak adına bir avukattan hukuki destek almanız önerilir.';
+
+          letterText = 'Sayın Ev Sahibim, tarafınızca iletilen talepleri inceledim. Türk Borçlar Kanunu hükümleri uyarınca kira borçlarım yasal süresinde ifa edilmektedir. İleri sürülen ihtiyacın veya taleplerin yasal koşulları taşımadığını değerlendirmekteyim. Sürecin karşılıklı iyi niyet ve yürürlükteki mevzuat dairesinde sürdürülmesini rica ederim.';
+
+        } else {
+          diagStatusBadge.className = 'px-2.5 py-1 rounded-full text-xs font-bold bg-red-500/15 text-red-400 border border-red-500/30';
+          diagStatusBadge.textContent = '🔴 YASAL TAHLİYE RİSKİ YÜKSEK';
+          headline = 'Ev sahibinin yasal tahliye davası açma hakkı oluşmuş durumda!';
+          subHeadline = 'Mevcut duruma göre kanuni tahliye sebeplerinden biri veya birkaçı gerçekleşmiş görünüyor.';
+
+          if (taahhut === 'valid_later') {
+            analysisItems.push({
+              icon: 'fa-file-signature text-red-400',
+              title: 'Geçerli Tahliye Taahhütnamesi (TBK Md. 352/1)',
+              desc: 'Kira sözleşmesinden sonraki bir tarihte düzenlenen ve tahliye tarihi içeren taahhütnameye dayanarak ev sahibi, belirtilen tarihten itibaren 1 ay içinde icra takibi veya tahliye davası açabilir.'
+            });
+          }
+
+          if (payment === 'two_warnings') {
+            analysisItems.push({
+              icon: 'fa-envelope-open-text text-red-400',
+              title: 'İki Haklı İhtar Nedeniyle Tahliye (TBK Md. 352/2)',
+              desc: 'Bir kira yılı içinde kiranın ödenmemesi nedeniyle noter veya icra kanalıyla 2 haklı ihtarname tebliğ edildiyse, ev sahibi kira yılı bitiminden itibaren 1 ay içinde tahliye davası açabilir.'
+            });
+          }
+
+          if (duration === 'over10') {
+            analysisItems.push({
+              icon: 'fa-calendar-xmark text-red-400',
+              title: '10 Yıllık Uzama Süresi Doldu (TBK Md. 347)',
+              desc: '1 yıllık sözleşme + 10 yıllık uzama süresi (toplam 11 yıl) dolduktan sonra ev sahibi, hiçbir gerekçe göstermek zorunda kalmaksızın, her uzama yılının bitiminden en az 3 ay önce yazılı bildirimde bulunarak tahliye davası açabilir.'
+            });
+          }
+
+          if (payment === 'debt') {
+            analysisItems.push({
+              icon: 'fa-triangle-exclamation text-red-400',
+              title: 'Temerrüt Nedeniyle Tahliye Riski (TBK Md. 315)',
+              desc: 'Ödenmemiş kira borcu için ev sahibi 30 günlük ödeme süresi içeren noter ihtarı veya tahliye talepli icra takibi (Örnek No 13) gönderirse, 30 gün içinde ödenmediği takdirde tahliye kesinleşir.'
+            });
+          }
+
+          warningTitle = 'Acil Hukuki Adım Tavsiyesi';
+          warningText = 'Bu aşamada süreler (özellikle 7 günlük icra itirazı ve 30 günlük ödeme süresi) hak düşürücüdür. Süreyi kaçırmamak ve haksız tahliyeyi önlemek için vakit kaybetmeden bir gayrimenkul avukatına başvurmanız kritiktir.';
+
+          letterText = 'Sayın Ev Sahibim, tarafıma iletilen hususlarla ilgili olarak hukuki danışmanımla görüşmekteyim. Konu hakkındaki yasal süreler ve haklarımız çerçevesinde gerekli inceleme yapıldıktan sonra tarafınıza resmi dönüş sağlanacaktır.';
+        }
+
+      } else {
+        diagLetterTitle.textContent = 'Kiracıya WhatsApp İletişim Metni:';
+
+        if (risk === 'safe') {
+          diagStatusBadge.className = 'px-2.5 py-1 rounded-full text-xs font-bold bg-amber-500/15 text-amber-400 border border-amber-500/30';
+          diagStatusBadge.textContent = '🟡 TAHLİYE DAVASI AÇILAMAZ';
+          headline = 'Mevcut şartlarda kiracınızı yasal olarak tahliye edemezsiniz!';
+          subHeadline = 'Sözleşme 10 yılı doldurmadığı ve kiracı borcunu ödediği sürece tahliye talebiniz mahkemece reddedilir.';
+
+          analysisItems = [
+            { icon: 'fa-hand text-amber-400', title: 'Kiracının Kanuni Güvencesi (TBK Md. 347)', desc: 'Sözleşme süresi bitse dahi kiracı çıkmak istemediği takdirde sözleşme her yıl kendiliğinden 1 yıl uzar. Sadece kira bedelini az bulmak tahliye gerekçesi yapılamaz.' },
+            { icon: 'fa-percent text-amber-400', title: 'TÜFE Tavanı Sınırı (TBK Md. 344)', desc: 'İlk 5 yıl içinde kiracınızdan ancak resmi TÜİK 12 aylık ortalama TÜFE oranında artış talep edebilirsiniz. Kiracı bu artışı yaptığı sürece temerrüde düşmez.' }
+          ];
+
+          warningTitle = 'Ev Sahibi Olarak Hangi Yolu İzleyebilirsiniz?';
+          warningText = 'Kiracıyla uzlaşarak makul bir oranda anlaşmaya çalışabilirsiniz. Eğer kiracılık 5 yılı doldurduysa Sulh Hukuk Mahkemesi\'nde Kira Tespit Davası açarak emsal piyasa rayicine göre artış isteyebilirsiniz.';
+
+          letterText = 'Sayın Kiracımız, yeni dönem kira yenileme sürecinde Türk Borçlar Kanunu Madde 344 ve TÜİK enflasyon verileri doğrultusunda güncel kira bedelinin revize edilmesi gerekmektedir. Karşılıklı mağduriyet yaşamamak adına konuyu yasal sınırlar ve piyasa koşulları çerçevesinde nezaketle istişare etmek isterim.';
+
+        } else if (risk === 'warning') {
+          diagStatusBadge.className = 'px-2.5 py-1 rounded-full text-xs font-bold bg-sky-500/15 text-sky-400 border border-sky-500/30';
+          diagStatusBadge.textContent = 'ℹ️ DAVA VE İSPAT ŞARTINA BAĞLI';
+          headline = 'Tahliye davası açılabilir ancak ispat ve prosedür zorunludur.';
+          subHeadline = 'Mahkemede iddianızı resmi delillerle kanıtlamanız ve kanuni sürelere harfiyen uymanız gerekir.';
+
+          analysisItems = [
+            { icon: 'fa-scale-balanced text-sky-400', title: 'İhtiyacın Samimi Olması Şarttır (TBK 350)', desc: 'Kendiniz veya çocuğunuz için tahliye istiyorsanız, ihtiyacın zorunlu ve devamlı olduğunu (örn: kendi evinizin olmaması, kirada oturuyor olmanız) ispatlamalısınız. Mahkeme samimi bulmazsa davayı reddeder.' },
+            { icon: 'fa-ban text-red-400', title: '3 Yıl Kiralama Yasağı Uyarısı (TBK 355)', desc: 'İhtiyaç sebebiyle tahliye ettikten sonra taşınmazı 3 yıl içinde haklı sebep olmaksızın başkasına kiraya veremezsiniz. Aksi halde eski kiracınıza 1 yıllık kira bedeli tazminat ödersiniz.' }
+          ];
+
+          warningTitle = 'Noter İhtarnamesi Çekmeyi Unutmayın';
+          warningText = 'Yeni malikseniz tapu tescilinden itibaren 1 ay içinde kiracıya ihtarname göndermiş olmanız şarttır. Dönem sonlarında da yasal bildirim sürelerini kaçırmayınız.';
+
+          letterText = 'Sayın Kiracımız, taşınmazla ilgili yasal gereksinim ve mevzuat hükümleri çerçevesinde durum tarafınıza bildirilmiştir. Sürecin kanuni takvim içerisinde suhuletle tamamlanması adına görüşlerinizi rica ederim.';
+
+        } else {
+          diagStatusBadge.className = 'px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30';
+          diagStatusBadge.textContent = '🟢 TAHLİYE ŞARTLARI OLUŞTU';
+          headline = 'Yasal tahliye davası veya icra takibi başlatma hakkınız var!';
+          subHeadline = 'Mevcut duruma göre kanunda sayılan haklı tahliye sebeplerinden biri gerçekleşmiştir.';
+
+          analysisItems = [
+            { icon: 'fa-gavel text-emerald-400', title: 'Yasal Sürelere Dikkat Edin', desc: 'Tahliye taahhütnamesinde tarihten itibaren 1 ay içinde; 2 haklı ihtarda ise kira yılı bitiminden itibaren 1 ay içinde dava veya icra takibi açılmalıdır. Süre kaçırılırsa hak düşer.' },
+            { icon: 'fa-clock text-emerald-400', title: '10 Yıl Kuralında 3 Ay Önceden Bildirim', desc: '10 uzama yılı dolan kiracılarda, uzama yılının bitiminden en az 3 ay önce noterden ihtarname tebliğ edilmiş olmalıdır.' }
+          ];
+
+          warningTitle = 'İcra ve Dava Prosedürü';
+          warningText = 'Tahliye süreçlerinde usul ve tebligat hataları davanın reddine sebep olabilir. İşlemleri bir avukat aracılığıyla yürütmeniz tavsiye edilir.';
+
+          letterText = 'Sayın Kiracımız, aramızdaki kira ilişkisine ilişkin yasal süreçler ve tebliğ edilmiş taahhüt/ihtarlar çerçevesinde taşınmazın tahliyesi gerekmektedir. Konuyla ilgili yasal haklarımız saklı kalmak kaydıyla sürecin dostane şekilde sonuçlandırılması için iletişime geçmenizi rica ederim.';
+        }
+      }
+
+      diagHeadline.textContent = headline;
+      diagSubHeadline.textContent = subHeadline;
+      diagWarningTitle.textContent = warningTitle;
+      diagWarningText.textContent = warningText;
+      diagLetterPreview.value = letterText;
+
+      diagAnalysisBox.innerHTML = '';
+      analysisItems.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'flex items-start gap-2.5 pb-2.5 border-b border-slate-800/60 last:border-0 last:pb-0';
+        div.innerHTML = `
+          <i class="fa-solid ${item.icon} text-sm mt-0.5 shrink-0"></i>
+          <div>
+            <strong class="text-white block text-xs">${item.title}</strong>
+            <p class="text-slate-400 text-[11px] leading-relaxed mt-0.5">${item.desc}</p>
+          </div>
+        `;
+        diagAnalysisBox.appendChild(div);
+      });
+    }
+
+    if (copyDiagMsgBtn && diagLetterPreview) {
+      copyDiagMsgBtn.addEventListener('click', () => {
+        triggerCopy(diagLetterPreview.value);
+      });
+
+      diagLetterPreview.addEventListener('click', () => {
+        triggerCopy(diagLetterPreview.value);
+      });
+    }
+
+    if (sendDiagWhatsappBtn && diagLetterPreview) {
+      sendDiagWhatsappBtn.addEventListener('click', () => {
+        const text = encodeURIComponent(diagLetterPreview.value);
+        window.open('https://api.whatsapp.com/send?text=' + text, '_blank');
+      });
+    }
+
+    // Initial Diagnosis Run
+    runDiagnosis();
+
+    populateMonths('2026', 'Ekim 2026');
     });
 
     // Event Listeners
