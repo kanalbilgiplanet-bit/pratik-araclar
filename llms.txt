@@ -133,3 +133,18 @@
 - URL: https://pratikbase.com/arac-deger-kaybi-hesaplayici/
 - Açıklama: Trafik kazasında kusursuz veya az kusurlu araç sahipleri için Sigorta Tahkim ve Yargıtay emsal ilkelerine göre tahmini değer kaybı tazminatı hesaplayıcı. Karayolları Trafik Kanunu Madde 97 uyarınca karşı tarafın sigortasına gönderilecek resmi başvuru ve ihtar dilekçesini tek tıkla ücretsiz (A4/PDF) hazırlar.
 - Hedef Kitle: Kaza yapmış, aracında kaporta/şasi hasarı oluşmuş, avukatsız veya komisyonsuz doğrudan sigorta şirketinden değer kaybı tazminatı almak isteyen tüm araç sahipleri ve sürücüler.
+
+### 27. Miras Kime Kalır? Miras Paylaşımı & Soyağacı Simülatörü
+- URL: https://pratikbase.com/miras-paylasimi-hesaplayici/
+- Açıklama: Türk Medeni Kanunu (TMK) Madde 495 - 506 zümre sistemi uyarınca miras paylaşımını hesaplayan görsel soyağacı simülatörü. Çocuğu olmayan evli kişilerin miras dağılımı (1/2 eşe, 1/2 anne-baba ve kardeşlere), 1., 2. ve 3. zümre yasal mirasçıları, çocukların ve eşin saklı pay oranları, kardeşlerin saklı payının olmaması kuralı, TL bazında net tereke paylaşımı ve tek tıkla WhatsApp miras dökümü paylaşımı.
+- Hedef Kitle: Miras paylaşımı araştıranlar, çocuğu olmayıp mirasının kime kalacağını merak edenler, mirasçılar, veraset ilamı sürecindekiler.
+
+### 28. Komşu Gürültüsü Desibel (dB) Ölçer & Şikayet Dilekçesi Robotu
+- URL: https://pratikbase.com/komsu-gurultusu-desibel-sikayet/
+- Açıklama: Web Audio API ile cihaz mikrofonunu kullanarak ortam sesini gerçek zamanlı desibel (dB SPL) cinsinden ölçen, apartmanda yasal gürültü sınırlarını (gece 35 dB, gündüz 65 dB) denetleyen araç. Kat Mülkiyeti Kanunu (KMK) Madde 18 ve Kabahatler Kanunu Madde 36 uyarınca Apartman Yönetimi, Zabıta, Emniyet (112) ve Cumhuriyet Savcılığı için anında resmi A4 şikayet dilekçesi üretir; ayrıca komşuya gönderilebilecek nezaketli WhatsApp uyarı metni oluşturur.
+- Özellikler: Canlı mikrofon dB ölçümü, RMS tepe/ortalama analiz, yasal sınır göstergesi, 4 farklı resmi makama hazır dilekçe oluşturucu, WhatsApp uyarısı, emsal Yargıtay kararları ve SSS.
+
+### 29. Düğünde Ne Takılır? Takı & Altın Hesaplayıcı + Dijital Takı Defteri
+- URL: https://pratikbase.com/dugunde-ne-takilir-hesaplayici/
+- Açıklama: Türk örf ve adetleri, güncel altın piyasası, davet türü (lüks otel, standart salon, nikah) ve karşılıklılık ilkesine (onlar bize ne takmıştı?) göre kardeş, kuzen, yeğen, yakın arkadaş ve iş arkadaşı düğünlerinde ne takılacağını hesaplayan akıllı görgü asistanı. Ayrıca kullanıcıların kendilerine takılan veya taktıkları altın ve paraları cihazlarında yerel (localStorage) olarak kaydedip Excel (CSV) ve WhatsApp dökümü alabilecekleri dijital takı defteri sunar.
+- Özellikler: 4 adımlı takı sihirbazı, zarif bütçe dostu alternatifler, tebrik zarfı mesaj şablonu kopyalama, WhatsApp'ta danışma, dijital takı kayıt defteri, istatistik paneli (toplam altın ve nakit), Yargıtay emsal altın mülkiyeti içtihadı ve SSS rehberi.

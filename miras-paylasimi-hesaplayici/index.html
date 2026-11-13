@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="tr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Miras Kime Kalır? Miras Paylaşımı & İnteraktif Soyağacı Hesaplayıcı (TMK) | PratikBase</title>
+  <meta name="description" content="Türk Medeni Kanunu zümre sistemine göre miras paylaşımını hesaplayın. 'Çocuğu olmayanın mirası kime kalır?', eş, anne, baba ve kardeşlerin yasal miras paylarını interaktif soyağacında anında görün.">
+  <meta name="keywords" content="miras kime kalır, miras paylaşımı hesaplama, çocuğu olmayanın mirası kime kalır, mirasta eşin payı, kardeşlere miras düşer mi, saklı pay oranları 2026, mirasçılık belgesi, veraset ilamı zümre sistemi, tmk miras oranları">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <link rel="canonical" href="https://pratikbase.com/miras-paylasimi-hesaplayici/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://pratikbase.com/miras-paylasimi-hesaplayici/">
+  <meta property="og:title" content="Miras Kime Kalır? İnteraktif Soyağacı & Miras Paylaşımı Hesaplayıcı">
+  <meta property="og:description" content="Türk Medeni Kanunu'na göre mirasçıların paylarını ve saklı paylarını görsel soyağacı üzerinden anında hesaplayın.">
+  <meta property="og:image" content="https://pratikbase.com/assets/og-banner.png">
+  <meta property="og:locale" content="tr_TR">
+  <meta property="og:site_name" content="PratikBase">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Miras Kime Kalır? Miras Paylaşımı Hesaplayıcı">
+  <meta name="twitter:description" content="Türk Medeni Kanunu zümre sistemine göre interaktif miras hesaplama ve aile soyağacı simülatörü.">
+  <meta name="twitter:image" content="https://pratikbase.com/assets/og-banner.png">
+
+  <!-- Tailwind CSS & FontAwesome -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: { 500: '#6366f1', 600: '#4f46e5' }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Mobile Safari & Chrome Responsiveness Safeguards */
+    html, body {
+      overflow-x: hidden;
+      max-width: 100vw;
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+      -webkit-tap-highlight-color: transparent;
+    }
+    header, .backdrop-blur-md {
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
+    }
+    @media screen and (max-width: 768px) {
+      input, select, textarea {
+        font-size: 16px !important;
+      }
+    }
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type=number] { -moz-appearance: textfield; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+  </style>
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "name": "Miras Paylaşımı & Soyağacı Hesaplayıcı",
+        "url": "https://pratikbase.com/miras-paylasimi-hesaplayici/",
+        "applicationCategory": "LegalService",
+        "operatingSystem": "All",
+        "description": "Türk Medeni Kanunu Zümre Sistemi uyarınca yasal mirasçıların paylarını ve saklı paylarını görsel soyağacı ile hesaplayan simülatör.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "TRY"
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Çocuğu olmayan bir kişinin mirası kime kalır?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Çocuğu olmayan ve evli olan bir kişinin vefatı halinde mirasın tamamı eşe kalmaz. Sağ kalan eş mirasın 1/2'sini (yarısını) alır; kalan 1/2'lik pay ise ölenin anne ve babasına (hayatta değillerse kardeşlerine) kalır."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Kardeşlerin mirasta saklı payı var mıdır?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Hayır. 2007 yılında yapılan kanun değişikliğiyle kardeşlerin saklı pay hakkı Türk Medeni Kanunu'ndan tamamen kaldırılmıştır. Mirasbırakan vasiyetname düzenleyerek mirasını kardeşlerinden tamamen kaçırabilir veya başkasına bırakabilir."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Veraset ilamı (mirasçılık belgesi) nereden alınır?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Veraset ilamı herhangi bir noterden birkaç dakika içinde kolayca alınabilir. Ancak soybağında yabancılık unsuru, gaiplik veya evlatlık gibi ihtilaflı durumlar varsa Sulh Hukuk Mahkemesi'nden talep edilmesi gerekir."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Reddi miras (mirasın reddi) süresi ne kadardır?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Mirasçılar, vefatı ve mirasçı olduklarını öğrendikleri tarihten itibaren 3 ay içinde Sulh Hukuk Mahkemesi'ne sözlü veya yazılı beyanla başvurarak mirası kayıtsız şartsız reddedebilirler."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body class="bg-[#0b0f19] text-slate-100 min-h-screen flex flex-col font-sans selection:bg-indigo-500 selection:text-white">
+
+  <!-- Header -->
+  <header class="border-b border-slate-800/80 bg-slate-900/60 backdrop-blur-md sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-3 group">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-violet-600 flex items-center justify-center shadow-lg shadow-indigo-500/20 group-hover:scale-105 transition-transform">
+          <i class="fa-solid fa-sitemap text-white text-base"></i>
+        </div>
+        <div>
+          <span class="text-xl font-extrabold tracking-tight text-white group-hover:text-indigo-400 transition-colors">
+            Pratik<span class="text-indigo-400">Base</span>
+          </span>
+          <span class="text-[10px] text-slate-400 block -mt-1">Miras Paylaşımı & Soyağacı</span>
+        </div>
+      </a>
+
+      <div class="flex items-center gap-3">
+        <a href="/" class="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold transition border border-slate-700 flex items-center gap-1.5">
+          <i class="fa-solid fa-arrow-left text-xs"></i>
+          <span>Ana Sayfaya Dön</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+    
+    <!-- Hero / Intro -->
+    <div class="text-center max-w-3xl mx-auto mb-8">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/25 text-indigo-400 text-xs font-semibold mb-3 shadow-sm">
+        <i class="fa-solid fa-scale-balanced"></i>
+        <span>Türk Medeni Kanunu (TMK) Yasal Zümre Sistemi</span>
+      </div>
+      <h1 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight mb-3">
+        Miras Kime Kalır? Miras Paylaşımı Simülatörü
+      </h1>
+      <p class="text-slate-400 text-xs sm:text-sm leading-relaxed">
+        Vefat eden kişinin aile durumunu seçin; <strong>1., 2. ve 3. Zümre</strong> yasal mirasçılarını, eşin payını ve saklı pay oranlarını görsel soyağacı üzerinden anında hesaplayın.
+      </p>
+    </div>
+
+    <!-- Quick Scenario Buttons (Sık Aranan Senaryolar) -->
+    <div class="max-w-4xl mx-auto mb-8">
+      <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-2 text-center">
+        ⚡ Sık Karşılaşılan Senaryolar (Hızlı Seçim):
+      </span>
+      <div class="flex flex-wrap items-center justify-center gap-2">
+        <button type="button" class="preset-scenario-btn px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-medium border border-slate-800 transition" data-scenario="evli_cocuklu">
+          👨‍👩‍👧‍👦 Evli + Çocuklu (En Yaygın)
+        </button>
+        <button type="button" class="preset-scenario-btn px-3 py-1.5 rounded-xl bg-indigo-600/20 text-indigo-300 border border-indigo-500/40 hover:bg-indigo-600/30 text-xs font-semibold transition" data-scenario="evli_cocuksuz">
+          💍 Evli + Çocuğu Yok (Kritik Paylaşım!)
+        </button>
+        <button type="button" class="preset-scenario-btn px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-medium border border-slate-800 transition" data-scenario="bekar_annebaba">
+          👤 Bekar + Anne/Baba Sağ
+        </button>
+        <button type="button" class="preset-scenario-btn px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-medium border border-slate-800 transition" data-scenario="yalniz_es">
+          🏠 Sadece Eş Sağ (Akraba Yok)
+        </button>
+      </div>
+    </div>
+
+    <!-- Grid: Form & Visual Tree -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-12">
+      
+      <!-- LEFT: Family Situation Controls (6 cols) -->
+      <div class="lg:col-span-6 bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-7 shadow-xl space-y-6">
+        
+        <h2 class="text-sm font-bold uppercase tracking-wider text-white flex items-center gap-2 border-b border-slate-800 pb-3">
+          <i class="fa-solid fa-users text-indigo-400"></i>
+          <span>1. Mirasbırakanın Aile Durumu</span>
+        </h2>
+
+        <!-- Toplam Miras Tutarı (İsteğe Bağlı) -->
+        <div>
+          <label for="totalEstateInput" class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5 flex items-center justify-between">
+            <span>Toplam Miras / Tereke Tutarı (İsteğe Bağlı)</span>
+            <span class="text-[11px] text-slate-500 font-normal">TL hesabı için</span>
+          </label>
+          <div class="relative">
+            <input 
+              type="text" 
+              id="totalEstateInput" 
+              inputmode="numeric" 
+              value="4.000.000" 
+              class="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-700 focus:border-indigo-500 text-white font-bold text-base outline-none transition pr-10"
+              placeholder="Örn: 4.000.000"
+            >
+            <span class="absolute right-4 top-3 text-slate-400 font-bold">₺</span>
+          </div>
+          <span class="text-[11px] text-slate-500 mt-1 block">
+            Boş bırakırsanız sadece yasal kesir oranları (1/4, 1/2 vb.) gösterilir.
+          </span>
+        </div>
+
+        <!-- 1. Eş Durumu -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
+            Sağ Kalan Eşi Var mı?
+          </label>
+          <div class="grid grid-cols-2 gap-2.5">
+            <label class="cursor-pointer p-3 rounded-xl border border-indigo-500 bg-indigo-500/15 flex items-center justify-between transition radio-box" data-group="spouse">
+              <input type="radio" name="spouseStatus" value="yes" checked class="sr-only">
+              <span class="text-xs font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-ring text-amber-400"></i>
+                <span>Evet, Eşi Sağ</span>
+              </span>
+              <i class="fa-solid fa-circle-check text-indigo-400 text-xs check-icon"></i>
+            </label>
+
+            <label class="cursor-pointer p-3 rounded-xl border border-slate-800 bg-slate-950/40 hover:bg-slate-800/80 flex items-center justify-between transition radio-box" data-group="spouse">
+              <input type="radio" name="spouseStatus" value="no" class="sr-only">
+              <span class="text-xs font-semibold text-slate-300 flex items-center gap-2">
+                <i class="fa-solid fa-user-xmark text-slate-500"></i>
+                <span>Hayır (Bekar / Dul)</span>
+              </span>
+              <i class="fa-regular fa-circle text-slate-600 text-xs check-icon"></i>
+            </label>
+          </div>
+        </div>
+
+        <!-- 2. Çocuklar (1. Zümre - Altsoy) -->
+        <div class="bg-slate-950/60 p-4 rounded-2xl border border-slate-800/80 space-y-3">
+          <div class="flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold text-white block">1. Zümre: Çocuklar (Altsoy)</span>
+              <span class="text-[11px] text-slate-400">Ölenin yaşayan çocuğu veya torunu var mı?</span>
+            </div>
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+              1. ZÜMRE
+            </span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <button type="button" id="btnHasChildrenYes" class="zümre1-btn active py-2.5 px-3 rounded-xl bg-indigo-600 text-white font-bold text-xs flex items-center justify-center gap-2 transition">
+              <i class="fa-solid fa-check"></i>
+              <span>Çocuk(lar) Var</span>
+            </button>
+            <button type="button" id="btnHasChildrenNo" class="zümre1-btn py-2.5 px-3 rounded-xl bg-slate-900 text-slate-400 font-semibold text-xs flex items-center justify-center gap-2 hover:bg-slate-800 transition">
+              <i class="fa-solid fa-xmark"></i>
+              <span>Çocuğu Yok</span>
+            </button>
+          </div>
+
+          <!-- Çocuk Sayısı Kontrolü -->
+          <div id="childrenCountBox" class="pt-2">
+            <div class="flex items-center justify-between">
+              <label for="childrenCountSelect" class="text-xs text-slate-300 font-medium">Toplam Çocuk Sayısı:</label>
+              <select id="childrenCountSelect" class="py-1.5 px-3 rounded-lg bg-slate-900 border border-slate-700 text-white font-bold text-xs outline-none">
+                <option value="1">1 Çocuk</option>
+                <option value="2" selected>2 Çocuk</option>
+                <option value="3">3 Çocuk</option>
+                <option value="4">4 Çocuk</option>
+                <option value="5">5 Çocuk</option>
+                <option value="6">6 Çocuk</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Anne - Baba & Kardeşler (2. Zümre) -->
+        <div id="parentsBox" class="bg-slate-950/60 p-4 rounded-2xl border border-slate-800/80 space-y-3 transition-opacity">
+          <div class="flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold text-white block">2. Zümre: Anne, Baba ve Kardeşler</span>
+              <span class="text-[11px] text-slate-400">Yalnızca çocuk(lar) yoksa mirasçı olurlar</span>
+            </div>
+            <span id="badgeZumre2" class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-800 text-slate-500 border border-slate-700">
+              DEVRE DIŞI
+            </span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 text-xs">
+            <div>
+              <label class="block text-slate-400 mb-1">Anne Sağ mı?</label>
+              <select id="motherStatusSelect" class="w-full py-2 px-2.5 rounded-lg bg-slate-900 border border-slate-700 text-white text-xs outline-none">
+                <option value="alive" selected>Sağ (Hayatta)</option>
+                <option value="deceased">Vefat Etmiş</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-slate-400 mb-1">Baba Sağ mı?</label>
+              <select id="fatherStatusSelect" class="w-full py-2 px-2.5 rounded-lg bg-slate-900 border border-slate-700 text-white text-xs outline-none">
+                <option value="alive" selected>Sağ (Hayatta)</option>
+                <option value="deceased">Vefat Etmiş</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Kardeş Sayısı (Ebeveynlerden biri vefat etmişse devreye girer) -->
+          <div id="siblingsBox" class="pt-2 border-t border-slate-800/60 flex items-center justify-between text-xs">
+            <div>
+              <span class="text-slate-300 font-medium block">Yaşayan Kardeş Sayısı:</span>
+              <span class="text-[10px] text-slate-500">Vefat eden ebeveynin payı kardeşlere geçer</span>
+            </div>
+            <select id="siblingsCountSelect" class="py-1.5 px-3 rounded-lg bg-slate-900 border border-slate-700 text-white font-bold text-xs outline-none">
+              <option value="0">Kardeşi Yok</option>
+              <option value="1">1 Kardeş</option>
+              <option value="2" selected>2 Kardeş</option>
+              <option value="3">3 Kardeş</option>
+              <option value="4">4 Kardeş</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 4. 3. Zümre (Dede, Nine, Amca, Hala) - Opsiyonel -->
+        <div id="grandParentsBox" class="hidden bg-slate-950/60 p-4 rounded-2xl border border-slate-800/80 space-y-2 text-xs">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-white">3. Zümre (Dede / Nine / Amca / Teyze)</span>
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">3. ZÜMRE AKTİF</span>
+          </div>
+          <p class="text-[11px] text-slate-400">
+            Çocuk, anne, baba ve kardeşlerden hiçbiri hayatta olmadığı için miras dede/nine ve onların çocuklarına (amca/hala/dayı/teyze) geçer.
+          </p>
+          <div class="flex items-center justify-between pt-1">
+            <span class="text-slate-300">3. Zümrede Hayatta Olan Akraba Var mı?</span>
+            <select id="zumre3StatusSelect" class="py-1 px-2.5 rounded-lg bg-slate-900 border border-slate-700 text-white text-xs">
+              <option value="yes" selected>Evet, Var</option>
+              <option value="no">Hayır, Kimse Yok</option>
+            </select>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: Visual Soyağacı Diagram & Summary Card (6 cols) -->
+      <div class="lg:col-span-6 space-y-6">
+        
+        <!-- VISUAL SOYAĞACI (FAMILY TREE) DISPLAY -->
+        <div class="bg-gradient-to-b from-slate-900 via-slate-900/90 to-slate-950 border border-slate-800 rounded-3xl p-5 sm:p-6 shadow-2xl relative overflow-hidden">
+          
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800 text-xs">
+            <span class="font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-diagram-project text-indigo-400"></i>
+              <span>İnteraktif Soyağacı Dağılımı</span>
+            </span>
+            <span id="activeZumreBadge" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+              1. ZÜMRE MİRASÇI
+            </span>
+          </div>
+
+          <!-- Tree Schema Diagram -->
+          <div class="py-6 flex flex-col items-center space-y-6 relative">
+            
+            <!-- Level 1: EBEVEYNLER (ANNE & BABA) -->
+            <div id="treeParentsNode" class="flex items-center justify-center gap-4 sm:gap-6 transition-all">
+              <div id="nodeMother" class="px-3.5 py-2 rounded-2xl bg-slate-950 border border-slate-800 flex flex-col items-center text-center w-28 sm:w-32 transition">
+                <span class="text-[10px] text-slate-500 font-semibold uppercase">Anne</span>
+                <span id="nodeMotherShare" class="text-xs font-bold text-slate-400">-</span>
+                <span id="nodeMotherTL" class="text-[10px] text-slate-500 font-mono mt-0.5">Pay Yok</span>
+              </div>
+
+              <div id="nodeFather" class="px-3.5 py-2 rounded-2xl bg-slate-950 border border-slate-800 flex flex-col items-center text-center w-28 sm:w-32 transition">
+                <span class="text-[10px] text-slate-500 font-semibold uppercase">Baba</span>
+                <span id="nodeFatherShare" class="text-xs font-bold text-slate-400">-</span>
+                <span id="nodeFatherTL" class="text-[10px] text-slate-500 font-mono mt-0.5">Pay Yok</span>
+              </div>
+            </div>
+
+            <!-- Down Arrow to Deceased -->
+            <div class="w-0.5 h-4 bg-slate-800"></div>
+
+            <!-- Level 2: MERKEZ (VEFAT EDEN & EŞ) -->
+            <div class="flex items-center justify-center gap-4 sm:gap-6">
+              <!-- Vefat Eden -->
+              <div class="px-4 py-3 rounded-2xl bg-gradient-to-tr from-slate-800 to-slate-900 border-2 border-slate-600 flex flex-col items-center text-center shadow-lg w-32 sm:w-36">
+                <i class="fa-solid fa-ribbon text-slate-400 text-xs mb-1"></i>
+                <span class="text-xs font-extrabold text-white">Mirasbırakan</span>
+                <span class="text-[10px] text-slate-400 font-mono">Vefat Eden</span>
+              </div>
+
+              <!-- Connection Line -->
+              <div class="w-4 sm:w-8 h-0.5 bg-slate-700"></div>
+
+              <!-- Sağ Kalan Eş -->
+              <div id="nodeSpouse" class="px-4 py-3 rounded-2xl bg-slate-950 border-2 border-indigo-500/80 flex flex-col items-center text-center shadow-lg w-32 sm:w-36 transition">
+                <i class="fa-solid fa-ring text-amber-400 text-xs mb-1"></i>
+                <span class="text-xs font-extrabold text-white">Sağ Kalan Eş</span>
+                <span id="nodeSpouseShare" class="text-xs font-black text-indigo-400">1/4 (%25)</span>
+                <span id="nodeSpouseTL" class="text-[11px] text-emerald-400 font-mono font-bold">1.000.000 ₺</span>
+              </div>
+            </div>
+
+            <!-- Down Arrow to Children -->
+            <div class="w-0.5 h-4 bg-slate-800"></div>
+
+            <!-- Level 3: ÇOCUKLAR (ALTSOY) VEYA KARDEŞLER -->
+            <div id="treeChildrenNode" class="flex flex-wrap items-center justify-center gap-2 sm:gap-3 max-w-full">
+              <!-- Dynamically populated via JS -->
+            </div>
+
+          </div>
+
+          <!-- Bottom Notice -->
+          <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-400">
+            <span class="flex items-center gap-1.5">
+              <i class="fa-solid fa-circle-info text-indigo-400"></i>
+              <span id="treeFootnote">Önceki zümrede mirasçı varsa sonraki zümreye pay kalmaz.</span>
+            </span>
+          </div>
+
+        </div>
+
+        <!-- BREAKDOWN SUMMARY TABLE & ACTIONS -->
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 sm:p-7 shadow-xl space-y-4">
+          
+          <h3 class="text-sm font-bold text-white flex items-center justify-between border-b border-slate-800 pb-3">
+            <span class="flex items-center gap-2">
+              <i class="fa-solid fa-calculator text-emerald-400"></i>
+              <span>Yasal Miras Payları Tablosu</span>
+            </span>
+            <span id="summaryTotalLabel" class="text-xs font-mono font-bold text-slate-400">4.000.000 ₺</span>
+          </h3>
+
+          <!-- Shares List -->
+          <div id="sharesListContainer" class="space-y-2 text-xs">
+            <!-- Dynamically populated via JS -->
+          </div>
+
+          <!-- Saklı Pay Uyarısı (TMK Md. 506) -->
+          <div id="sakliPayNoticeBox" class="p-3.5 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-200 text-xs space-y-1">
+            <div class="font-bold flex items-center gap-1.5 text-indigo-300">
+              <i class="fa-solid fa-shield-halved"></i>
+              <span>Vasiyetname & Saklı Pay Güvencesi (TMK Md. 506)</span>
+            </div>
+            <p id="sakliPayNoticeText" class="text-[11px] text-indigo-200/90 leading-relaxed">
+              Çocukların saklı payı yasal miras paylarının <strong>1/2'sidir</strong>. Sağ kalan eşin saklı payı ise çocuklarla birlikte mirasçı olduğunda yasal payının <strong>tamamıdır (%100)</strong>. Vasiyetname düzenlense dahi bu paylar ihlal edilemez.
+            </p>
+          </div>
+
+          <!-- Action Buttons: WhatsApp & Copy -->
+          <div class="pt-3 border-t border-slate-800 grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <button type="button" id="btnShareWhatsApp" class="w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition shadow-md shadow-emerald-600/20 flex items-center justify-center gap-2">
+              <i class="fa-brands fa-whatsapp text-base"></i>
+              <span>WhatsApp'tan Paylaş</span>
+            </button>
+
+            <button type="button" id="btnCopySummary" class="w-full py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-semibold text-xs border border-slate-700 transition flex items-center justify-center gap-2">
+              <i class="fa-regular fa-copy text-sm"></i>
+              <span>Hesabı Panoya Kopyala</span>
+            </button>
+          </div>
+
+          <!-- Copied Toast -->
+          <div id="copyToast" class="hidden py-2 px-3 rounded-xl bg-emerald-500 text-slate-950 font-bold text-xs text-center shadow-xl transition-all">
+            <i class="fa-solid fa-circle-check mr-1"></i>Miras dökümü panoya kopyalandı!
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- DISCLAIMER / SORUMLULUK REDDİ BANNER -->
+    <div class="bg-amber-500/10 border border-amber-500/25 rounded-2xl p-4 sm:p-5 mb-12 text-xs text-amber-200 flex items-start gap-3">
+      <i class="fa-solid fa-triangle-exclamation text-amber-400 text-base mt-0.5 shrink-0"></i>
+      <div class="leading-relaxed space-y-1">
+        <strong class="text-amber-300 block text-xs">Yasal Uyarı ve Sorumluluk Reddi:</strong>
+        <p class="text-[11px] text-amber-200/90">
+          Bu hesaplama ve soyağacı simülasyonu, 4721 sayılı Türk Medeni Kanunu'nun yasal mirasçılık ve zümre sistemi esaslarına göre genel bilgilendirme amacıyla hazırlanmıştır. Tereke borçları, vasiyetname tasarrufları, denkleştirme ve tenkis davaları gibi somut olaya özgü hukuki faktörler nihai payları değiştirebilir. Kesin mirasçılık durumu ve yasal paylar, noter veya Sulh Hukuk Mahkemesi tarafından tanzim edilen <strong>Veraset İlamı (Mirasçılık Belgesi)</strong> ile kesinleşir.
+        </p>
+      </div>
+    </div>
+
+    <!-- SEO FAQ SECTION (ACCORDION) -->
+    <section class="max-w-4xl mx-auto space-y-6 mb-16">
+      <div class="text-center mb-8">
+        <h2 class="text-xl sm:text-2xl font-bold text-white tracking-tight mb-2">
+          Miras Hukuku Hakkında Sıkça Sorulan Sorular
+        </h2>
+        <p class="text-slate-400 text-xs sm:text-sm">
+          Türk Medeni Kanunu kapsamında mirasçılık, saklı paylar ve veraset süreçleri
+        </p>
+      </div>
+
+      <div class="space-y-3.5">
+        
+        <details class="group bg-slate-900/80 border border-slate-800 rounded-2xl p-5 open:bg-slate-900 open:border-slate-700 transition">
+          <summary class="flex justify-between items-center font-semibold text-white text-sm cursor-pointer list-none">
+            <span class="flex items-center gap-2.5">
+              <i class="fa-solid fa-circle-question text-indigo-400 text-sm"></i>
+              <span>Çocuğu olmayan evli bir kişinin mirası kime ve nasıl dağıtılır?</span>
+            </span>
+            <i class="fa-solid fa-chevron-down text-xs text-slate-500 group-open:rotate-180 transition-transform"></i>
+          </summary>
+          <div class="pt-4 text-xs sm:text-sm text-slate-400 leading-relaxed border-t border-slate-800/80 mt-3 space-y-2">
+            <p>
+              Toplumda yaygın bilinenin aksine; çocuk yoksa mirasın tamamı sağ kalan eşe <strong>kalmaz</strong>. Türk Medeni Kanunu Madde 499/2 gereğince, sağ kalan eş mirasın <strong>1/2'sini (yarısını)</strong> alır.
+            </p>
+            <p>
+              Kalan 1/2'lik pay ise ölenin anne ve babasına eşit (1/4 anne, 1/4 baba) olarak paylaştırılır. Ebeveynlerden vefat etmiş olan varsa, onun payı ölenin kardeşlerine intikal eder. Yalnızca anne, baba, kardeş ve yeğenler de dahil 2. zümrede hiç kimse yoksa eşin payı 3/4'e (dede/nine varsa) veya tamamına yükselir.
+            </p>
+          </div>
+        </details>
+
+        <details class="group bg-slate-900/80 border border-slate-800 rounded-2xl p-5 open:bg-slate-900 open:border-slate-700 transition">
+          <summary class="flex justify-between items-center font-semibold text-white text-sm cursor-pointer list-none">
+            <span class="flex items-center gap-2.5">
+              <i class="fa-solid fa-circle-question text-indigo-400 text-sm"></i>
+              <span>Kardeşlerin mirasta saklı pay hakkı var mıdır? Mirastan çıkarılabilirler mi?</span>
+            </span>
+            <i class="fa-solid fa-chevron-down text-xs text-slate-500 group-open:rotate-180 transition-transform"></i>
+          </summary>
+          <div class="pt-4 text-xs sm:text-sm text-slate-400 leading-relaxed border-t border-slate-800/80 mt-3 space-y-2">
+            <p>
+              <strong>Hayır, kardeşlerin saklı payı yoktur.</strong> 2007 yılında yapılan 5650 sayılı Kanun değişikliği ile kardeşlerin saklı pay hakkı yürürlükten kaldırılmıştır. 
+            </p>
+            <p>
+              Mirasbırakan hayattayken geçerli bir vasiyetname düzenleyerek veya miras sözleşmesi yaparak malvarlığını dilediği kişi veya kuruma bırakabilir; kardeşler saklı pay iddiasıyla tenkis davası açamazlar.
+            </p>
+          </div>
+        </details>
+
+        <details class="group bg-slate-900/80 border border-slate-800 rounded-2xl p-5 open:bg-slate-900 open:border-slate-700 transition">
+          <summary class="flex justify-between items-center font-semibold text-white text-sm cursor-pointer list-none">
+            <span class="flex items-center gap-2.5">
+              <i class="fa-solid fa-circle-question text-indigo-400 text-sm"></i>
+              <span>Veraset İlamı (Mirasçılık Belgesi) nereden ve kaç günde alınır?</span>
+            </span>
+            <i class="fa-solid fa-chevron-down text-xs text-slate-500 group-open:rotate-180 transition-transform"></i>
+          </summary>
+          <div class="pt-4 text-xs sm:text-sm text-slate-400 leading-relaxed border-t border-slate-800/80 mt-3 space-y-2">
+            <p>
+              Mirasçılardan herhangi biri kimlik belgesiyle Türkiye'deki <strong>herhangi bir notere</strong> başvurarak yaklaşık 10-15 dakika içinde veraset ilamı alabilir.
+            </p>
+            <p>
+              Ancak nüfus kayıtlarında gaiplik, yabancılık unsuru (yabancı ülke vatandaşı olma) veya evlat edinme gibi nüfus sisteminin doğrudan çözümleyemediği bir durum varsa noter belge veremez; bu durumda ikametgah Sulh Hukuk Mahkemesi'ne başvurulur.
+            </p>
+          </div>
+        </details>
+
+        <details class="group bg-slate-900/80 border border-slate-800 rounded-2xl p-5 open:bg-slate-900 open:border-slate-700 transition">
+          <summary class="flex justify-between items-center font-semibold text-white text-sm cursor-pointer list-none">
+            <span class="flex items-center gap-2.5">
+              <i class="fa-solid fa-circle-question text-indigo-400 text-sm"></i>
+              <span>Reddi Miras (Mirasın Reddi) süresi ne kadardır? Borçlar için ne yapılır?</span>
+            </span>
+            <i class="fa-solid fa-chevron-down text-xs text-slate-500 group-open:rotate-180 transition-transform"></i>
+          </summary>
+          <div class="pt-4 text-xs sm:text-sm text-slate-400 leading-relaxed border-t border-slate-800/80 mt-3 space-y-2">
+            <p>
+              Türk Medeni Kanunu Madde 606 uyarınca mirasın reddi süresi <strong>3 aydır</strong>. Bu süre, mirasçıların vefatı ve yasal mirasçı olduklarını öğrendikleri tarihten itibaren başlar. 
+            </p>
+            <p>
+              Mirasbırakanın borçları malvarlığından fazlaysa (terekenin borca batık olması durumunda), 3 ay içinde Sulh Hukuk Mahkemesi'ne dilekçeyle başvurularak mirasın kayıtsız şartsız reddi talep edilmelidir. Süre kaçırılırsa miras borçlarıyla birlikte kabul edilmiş sayılır.
+            </p>
+          </div>
+        </details>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800/80 bg-slate-900/60 py-6 text-xs text-slate-400 mt-auto">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <span class="font-bold text-white">Pratik<span class="text-indigo-400">Base</span></span>
+        <span>•</span>
+        <span>Türk Medeni Kanunu Miras Paylaşımı Simülatörü</span>
+      </div>
+      <div class="text-[11px] text-slate-500 text-center sm:text-right">
+        TMK Madde 495 - 506 Zümre Sistemi simülasyonudur. Resmi veraset yerine geçmez.
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script Engine -->
+  <script>
+    // State
+    let hasSpouse = true;
+    let hasChildren = true;
+    let childrenCount = 2;
+    let motherStatus = 'alive';
+    let fatherStatus = 'alive';
+    let siblingsCount = 2;
+    let zumre3Available = true;
+
+    // Elements
+    const totalEstateInput = document.getElementById('totalEstateInput');
+    const summaryTotalLabel = document.getElementById('summaryTotalLabel');
+    const btnHasChildrenYes = document.getElementById('btnHasChildrenYes');
+    const btnHasChildrenNo = document.getElementById('btnHasChildrenNo');
+    const childrenCountBox = document.getElementById('childrenCountBox');
+    const childrenCountSelect = document.getElementById('childrenCountSelect');
+    const parentsBox = document.getElementById('parentsBox');
+    const badgeZumre2 = document.getElementById('badgeZumre2');
+    const motherStatusSelect = document.getElementById('motherStatusSelect');
+    const fatherStatusSelect = document.getElementById('fatherStatusSelect');
+    const siblingsBox = document.getElementById('siblingsBox');
+    const siblingsCountSelect = document.getElementById('siblingsCountSelect');
+    const grandParentsBox = document.getElementById('grandParentsBox');
+    const zumre3StatusSelect = document.getElementById('zumre3StatusSelect');
+
+    // Visual Tree Nodes
+    const activeZumreBadge = document.getElementById('activeZumreBadge');
+    const nodeSpouse = document.getElementById('nodeSpouse');
+    const nodeSpouseShare = document.getElementById('nodeSpouseShare');
+    const nodeSpouseTL = document.getElementById('nodeSpouseTL');
+    const nodeMother = document.getElementById('nodeMother');
+    const nodeMotherShare = document.getElementById('nodeMotherShare');
+    const nodeMotherTL = document.getElementById('nodeMotherTL');
+    const nodeFather = document.getElementById('nodeFather');
+    const nodeFatherShare = document.getElementById('nodeFatherShare');
+    const nodeFatherTL = document.getElementById('nodeFatherTL');
+    const treeChildrenNode = document.getElementById('treeChildrenNode');
+    const sharesListContainer = document.getElementById('sharesListContainer');
+    const sakliPayNoticeText = document.getElementById('sakliPayNoticeText');
+    const treeFootnote = document.getElementById('treeFootnote');
+    const copyToast = document.getElementById('copyToast');
+
+    // Number Formatters
+    function parseNumber(val) {
+      if (!val) return 0;
+      let str = String(val).replace(/[^\\d]/g, '');
+      return parseInt(str, 10) || 0;
+    }
+
+    function fmtTRY(amount) {
+      if (amount <= 0) return '0 ₺';
+      return new Intl.NumberFormat('tr-TR', { maximumFractionDigits: 0 }).format(amount) + ' ₺';
+    }
+
+    // Input live formatting
+    totalEstateInput.addEventListener('input', function() {
+      let raw = this.value.replace(/[^\\d]/g, '');
+      if (raw) {
+        this.value = parseInt(raw, 10).toLocaleString('tr-TR');
+      } else {
+        this.value = '';
+      }
+      calculateInheritance();
+    });
+
+    // Radio box styling handler
+    document.querySelectorAll('.radio-box').forEach(box => {
+      box.addEventListener('click', () => {
+        const group = box.getAttribute('data-group');
+        const input = box.querySelector('input');
+        input.checked = true;
+
+        document.querySelectorAll('.radio-box[data-group="' + group + '"]').forEach(b => {
+          b.classList.remove('border-indigo-500', 'bg-indigo-500/15');
+          b.classList.add('border-slate-800', 'bg-slate-950/40');
+          const icon = b.querySelector('.check-icon');
+          if (icon) icon.className = 'fa-regular fa-circle text-slate-600 text-xs check-icon';
+        });
+
+        box.classList.add('border-indigo-500', 'bg-indigo-500/15');
+        box.classList.remove('border-slate-800', 'bg-slate-950/40');
+        const activeIcon = box.querySelector('.check-icon');
+        if (activeIcon) activeIcon.className = 'fa-solid fa-circle-check text-indigo-400 text-xs check-icon';
+
+        hasSpouse = (input.value === 'yes');
+        calculateInheritance();
+      });
+    });
+
+    // Children Toggle
+    btnHasChildrenYes.addEventListener('click', () => {
+      hasChildren = true;
+      btnHasChildrenYes.className = 'zümre1-btn active py-2.5 px-3 rounded-xl bg-indigo-600 text-white font-bold text-xs flex items-center justify-center gap-2 transition';
+      btnHasChildrenNo.className = 'zümre1-btn py-2.5 px-3 rounded-xl bg-slate-900 text-slate-400 font-semibold text-xs flex items-center justify-center gap-2 hover:bg-slate-800 transition';
+      childrenCountBox.classList.remove('hidden');
+      calculateInheritance();
+    });
+
+    btnHasChildrenNo.addEventListener('click', () => {
+      hasChildren = false;
+      btnHasChildrenNo.className = 'zümre1-btn active py-2.5 px-3 rounded-xl bg-indigo-600 text-white font-bold text-xs flex items-center justify-center gap-2 transition';
+      btnHasChildrenYes.className = 'zümre1-btn py-2.5 px-3 rounded-xl bg-slate-900 text-slate-400 font-semibold text-xs flex items-center justify-center gap-2 hover:bg-slate-800 transition';
+      childrenCountBox.classList.add('hidden');
+      calculateInheritance();
+    });
+
+    childrenCountSelect.addEventListener('change', () => {
+      childrenCount = parseInt(childrenCountSelect.value, 10);
+      calculateInheritance();
+    });
+
+    motherStatusSelect.addEventListener('change', () => {
+      motherStatus = motherStatusSelect.value;
+      calculateInheritance();
+    });
+
+    fatherStatusSelect.addEventListener('change', () => {
+      fatherStatus = fatherStatusSelect.value;
+      calculateInheritance();
+    });
+
+    siblingsCountSelect.addEventListener('change', () => {
+      siblingsCount = parseInt(siblingsCountSelect.value, 10);
+      calculateInheritance();
+    });
+
+    zumre3StatusSelect.addEventListener('change', () => {
+      zumre3Available = (zumre3StatusSelect.value === 'yes');
+      calculateInheritance();
+    });
+
+    // Presets
+    document.querySelectorAll('.preset-scenario-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const scenario = btn.getAttribute('data-scenario');
+        if (scenario === 'evli_cocuklu') {
+          setSpouse(true);
+          setChildren(true, 2);
+        } else if (scenario === 'evli_cocuksuz') {
+          setSpouse(true);
+          setChildren(false);
+          motherStatusSelect.value = 'alive';
+          fatherStatusSelect.value = 'alive';
+          motherStatus = 'alive';
+          fatherStatus = 'alive';
+        } else if (scenario === 'bekar_annebaba') {
+          setSpouse(false);
+          setChildren(false);
+          motherStatusSelect.value = 'alive';
+          fatherStatusSelect.value = 'alive';
+          motherStatus = 'alive';
+          fatherStatus = 'alive';
+        } else if (scenario === 'yalniz_es') {
+          setSpouse(true);
+          setChildren(false);
+          motherStatusSelect.value = 'deceased';
+          fatherStatusSelect.value = 'deceased';
+          siblingsCountSelect.value = '0';
+          zumre3StatusSelect.value = 'no';
+          motherStatus = 'deceased';
+          fatherStatus = 'deceased';
+          siblingsCount = 0;
+          zumre3Available = false;
+        }
+        calculateInheritance();
+      });
+    });
+
+    function setSpouse(val) {
+      hasSpouse = val;
+      const radios = document.querySelectorAll('input[name="spouseStatus"]');
+      radios.forEach(r => {
+        r.checked = (r.value === (val ? 'yes' : 'no'));
+        const box = r.closest('.radio-box');
+        if (r.checked) {
+          box.classList.add('border-indigo-500', 'bg-indigo-500/15');
+          box.classList.remove('border-slate-800', 'bg-slate-950/40');
+          box.querySelector('.check-icon').className = 'fa-solid fa-circle-check text-indigo-400 text-xs check-icon';
+        } else {
+          box.classList.remove('border-indigo-500', 'bg-indigo-500/15');
+          box.classList.add('border-slate-800', 'bg-slate-950/40');
+          box.querySelector('.check-icon').className = 'fa-regular fa-circle text-slate-600 text-xs check-icon';
+        }
+      });
+    }
+
+    function setChildren(val, count) {
+      const c = count || 2;
+      if (val) {
+        btnHasChildrenYes.click();
+        childrenCountSelect.value = c.toString();
+        childrenCount = c;
+      } else {
+        btnHasChildrenNo.click();
+      }
+    }
+
+    // MAIN INHERITANCE ENGINE
+    function calculateInheritance() {
+      const totalEstate = parseNumber(totalEstateInput.value);
+      summaryTotalLabel.textContent = totalEstate > 0 ? fmtTRY(totalEstate) : 'Oran Hesabı (TL girilmedi)';
+
+      let shares = [];
+      let activeZumre = 1;
+
+      // SIBLINGS VISIBILITY HELPER
+      if (motherStatus === 'deceased' || fatherStatus === 'deceased') {
+        siblingsBox.classList.remove('hidden');
+      } else {
+        siblingsBox.classList.add('hidden');
+      }
+
+      // 1. ZÜMRE (ÇOCUKLAR VAR)
+      if (hasChildren && childrenCount > 0) {
+        activeZumre = 1;
+        activeZumreBadge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
+        activeZumreBadge.textContent = '1. ZÜMRE (ALTSOY) MİRASÇIDIR';
+        treeFootnote.textContent = '1. Zümrede (çocuklar) mirasçı olduğu için Anne, Baba ve Kardeşlere miras payı düşmez.';
+        badgeZumre2.className = 'text-[10px] font-bold px-2 py-0.5 rounded bg-slate-800 text-slate-500 border border-slate-700';
+        badgeZumre2.textContent = 'ELENDİ (1. Zümre Var)';
+        grandParentsBox.classList.add('hidden');
+
+        let remainingPct = 100;
+        if (hasSpouse) {
+          const spousePct = 25; // 1/4
+          remainingPct = 75; // 3/4
+          shares.push({
+            name: 'Sağ Kalan Eş',
+            role: 'Eş',
+            fraction: '1/4',
+            percent: 25,
+            tl: totalEstate * 0.25,
+            sakliPay: '1/4 (%25) - Yasal Payının Tamamı',
+            icon: 'fa-ring text-amber-400'
+          });
+        }
+
+        const perChildPct = remainingPct / childrenCount;
+        const perChildTL = (totalEstate * (remainingPct / 100)) / childrenCount;
+        for (let i = 1; i <= childrenCount; i++) {
+          shares.push({
+            name: (childrenCount === 1 ? 'Tek Çocuk' : i + '. Çocuk'),
+            role: 'Çocuk (1. Zümre)',
+            fraction: hasSpouse ? ('3/' + (4 * childrenCount)) : ('1/' + childrenCount),
+            percent: perChildPct,
+            tl: perChildTL,
+            sakliPay: 'Yasal Payın 1/2\'si',
+            icon: 'fa-child text-indigo-400'
+          });
+        }
+
+        sakliPayNoticeText.innerHTML = 'Çocukların saklı payı yasal miras paylarının <strong>yarısıdır (1/2)</strong>. Sağ kalan eşin saklı payı ise çocuklarla birlikte mirasçı olduğunda yasal payının <strong>tamamıdır (%100)</strong>. Vasiyetname düzenlense dahi bu paylar ihlal edilemez.';
+
+      // 2. ZÜMRE (ÇOCUK YOK, ANNE/BABA/KARDEŞ)
+      } else {
+        const bothParentsDeceased = (motherStatus === 'deceased' && fatherStatus === 'deceased');
+        const noSiblings = (siblingsCount === 0);
+
+        if (bothParentsDeceased && noSiblings) {
+          activeZumre = 3;
+          badgeZumre2.className = 'text-[10px] font-bold px-2 py-0.5 rounded bg-slate-800 text-slate-500 border border-slate-700';
+          badgeZumre2.textContent = 'ELENDİ (Kimse Yok)';
+          grandParentsBox.classList.remove('hidden');
+
+          if (hasSpouse) {
+            if (zumre3Available) {
+              activeZumreBadge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30';
+              activeZumreBadge.textContent = '3. ZÜMRE (BÜYÜKANNE/DEDE) AKTİF';
+              treeFootnote.textContent = 'Çocuk ve anne-baba olmadığı için eş 3/4 (%75) alır; kalan 1/4 büyükanne/dede ve amcalara kalır.';
+              shares.push({
+                name: 'Sağ Kalan Eş',
+                role: 'Eş (3. Zümreyle)',
+                fraction: '3/4',
+                percent: 75,
+                tl: totalEstate * 0.75,
+                sakliPay: 'Yasal Payın 3/4\'ü (%56,25)',
+                icon: 'fa-ring text-amber-400'
+              });
+              shares.push({
+                name: 'Büyükbaba / Büyükanne / Amca / Hala',
+                role: '3. Zümre Akrabaları',
+                fraction: '1/4',
+                percent: 25,
+                tl: totalEstate * 0.25,
+                sakliPay: 'Saklı Payları Yoktur',
+                icon: 'fa-users text-sky-400'
+              });
+            } else {
+              activeZumreBadge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
+              activeZumreBadge.textContent = 'EŞ TEK BAŞINA MİRASÇIDIR (1/1)';
+              treeFootnote.textContent = 'Hiçbir zümrede kan hısımı akraba bulunmadığı için mirasın tamamı sağ kalan eşe kalır.';
+              shares.push({
+                name: 'Sağ Kalan Eş',
+                role: 'Tek Mirasçı',
+                fraction: '1/1 (Tamamı)',
+                percent: 100,
+                tl: totalEstate,
+                sakliPay: 'Tamamı (%100)',
+                icon: 'fa-ring text-amber-400'
+              });
+            }
+          } else {
+            if (zumre3Available) {
+              activeZumreBadge.textContent = '3. ZÜMRE (DEDE / AMCA) MİRASÇIDIR';
+              shares.push({
+                name: '3. Zümre Akrabaları (Dede/Amca vb.)',
+                role: 'Mirasçılar',
+                fraction: '1/1 (Tamamı)',
+                percent: 100,
+                tl: totalEstate,
+                sakliPay: 'Saklı pay yoktur',
+                icon: 'fa-users text-sky-400'
+              });
+            } else {
+              activeZumreBadge.textContent = 'DEVLET HAZİNESİ MİRASÇIDIR';
+              shares.push({
+                name: 'T.C. Hazine ve Maliye Bakanlığı',
+                role: 'Devlet',
+                fraction: '1/1 (Tamamı)',
+                percent: 100,
+                tl: totalEstate,
+                sakliPay: 'Yok',
+                icon: 'fa-landmark text-red-400'
+              });
+            }
+          }
+
+        } else {
+          activeZumre = 2;
+          activeZumreBadge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30';
+          activeZumreBadge.textContent = '2. ZÜMRE (ANNE/BABA/KARDEŞ) AKTİF';
+          badgeZumre2.className = 'text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30';
+          badgeZumre2.textContent = 'MİRASÇI (Çocuk Yok)';
+          grandParentsBox.classList.add('hidden');
+          treeFootnote.textContent = 'Çocuk olmadığı için eş mirasın 1/2\'sini alır; kalan 1/2 anne, baba ve kardeşler arasında paylaştırılır.';
+
+          let parentsTotalPct = 100;
+          if (hasSpouse) {
+            parentsTotalPct = 50;
+            shares.push({
+              name: 'Sağ Kalan Eş',
+              role: 'Eş (2. Zümreyle)',
+              fraction: '1/2',
+              percent: 50,
+              tl: totalEstate * 0.50,
+              sakliPay: '1/2 (%50) - Yasal Payının Tamamı',
+              icon: 'fa-ring text-amber-400'
+            });
+          }
+
+          const motherBranchPct = parentsTotalPct / 2;
+          const fatherBranchPct = parentsTotalPct / 2;
+
+          if (motherStatus === 'alive') {
+            shares.push({
+              name: 'Anne',
+              role: 'Anne (2. Zümre)',
+              fraction: hasSpouse ? '1/4' : '1/2',
+              percent: motherBranchPct,
+              tl: totalEstate * (motherBranchPct / 100),
+              sakliPay: 'Yasal Payın 1/4\'ü',
+              icon: 'fa-person-dress text-pink-400'
+            });
+          } else {
+            if (siblingsCount > 0) {
+              shares.push({
+                name: 'Kardeşler (Annenin Payı - ' + siblingsCount + ' Kişi)',
+                role: 'Kardeşler (Anneden)',
+                fraction: motherBranchPct + '%',
+                percent: motherBranchPct,
+                tl: totalEstate * (motherBranchPct / 100),
+                sakliPay: 'Kardeşlerin Saklı Payı Yoktur!',
+                icon: 'fa-people-group text-slate-300'
+              });
+            }
+          }
+
+          if (fatherStatus === 'alive') {
+            shares.push({
+              name: 'Baba',
+              role: 'Baba (2. Zümre)',
+              fraction: hasSpouse ? '1/4' : '1/2',
+              percent: fatherBranchPct,
+              tl: totalEstate * (fatherBranchPct / 100),
+              sakliPay: 'Yasal Payın 1/4\'ü',
+              icon: 'fa-person text-blue-400'
+            });
+          } else {
+            if (siblingsCount > 0) {
+              shares.push({
+                name: 'Kardeşler (Babanın Payı - ' + siblingsCount + ' Kişi)',
+                role: 'Kardeşler (Babadan)',
+                fraction: fatherBranchPct + '%',
+                percent: fatherBranchPct,
+                tl: totalEstate * (fatherBranchPct / 100),
+                sakliPay: 'Kardeşlerin Saklı Payı Yoktur!',
+                icon: 'fa-people-group text-slate-300'
+              });
+            }
+          }
+
+          sakliPayNoticeText.innerHTML = '2. Zümrede anne ve babanın saklı payı yasal miras paylarının <strong>1/4\'üdür</strong>. <strong>Kritik Kural:</strong> Kardeşlerin saklı payı 2007\'de kaldırılmıştır; vasiyetname ile kardeşler tamamen mirastan çıkarılabilir.';
+        }
+      }
+
+      updateVisualTree(shares, activeZumre, totalEstate);
+      updateSharesTable(shares, totalEstate);
+    }
+
+    function updateVisualTree(shares, activeZumre, totalEstate) {
+      if (hasSpouse) {
+        nodeSpouse.classList.remove('opacity-30', 'grayscale', 'border-slate-800');
+        nodeSpouse.classList.add('border-indigo-500');
+        const spouseShare = shares.find(function(s) { return s.role.indexOf('Eş') !== -1; });
+        if (spouseShare) {
+          nodeSpouseShare.textContent = spouseShare.fraction + ' (%' + spouseShare.percent + ')';
+          nodeSpouseTL.textContent = totalEstate > 0 ? fmtTRY(spouseShare.tl) : '';
+        }
+      } else {
+        nodeSpouse.classList.add('opacity-30', 'grayscale', 'border-slate-800');
+        nodeSpouse.classList.remove('border-indigo-500');
+        nodeSpouseShare.textContent = 'Mirasçı Değil';
+        nodeSpouseTL.textContent = 'Yok';
+      }
+
+      if (activeZumre === 1) {
+        nodeMother.className = 'px-3.5 py-2 rounded-2xl bg-slate-950 border border-slate-800 opacity-40 flex flex-col items-center text-center w-28 sm:w-32 transition';
+        nodeMotherShare.textContent = 'Elendi (1. Zümre Var)';
+        nodeMotherTL.textContent = '0 ₺';
+      } else if (motherStatus === 'alive') {
+        nodeMother.className = 'px-3.5 py-2 rounded-2xl bg-slate-950 border-2 border-pink-500/80 shadow-md flex flex-col items-center text-center w-28 sm:w-32 transition';
+        const mShare = shares.find(function(s) { return s.role.indexOf('Anne') !== -1; });
+        nodeMotherShare.textContent = mShare ? (mShare.fraction + ' (%' + mShare.percent + ')') : 'Pay Var';
+        nodeMotherTL.textContent = (totalEstate > 0 && mShare) ? fmtTRY(mShare.tl) : '';
+      } else {
+        nodeMother.className = 'px-3.5 py-2 rounded-2xl bg-slate-950 border border-slate-800 opacity-50 flex flex-col items-center text-center w-28 sm:w-32 transition';
+        nodeMotherShare.textContent = 'Vefat Etmiş';
+        nodeMotherTL.textContent = siblingsCount > 0 ? 'Payı Kardeşlerde' : '0 ₺';
+      }
+
+      if (activeZumre === 1) {
+        nodeFather.className = 'px-3.5 py-2 rounded-2xl bg-slate-950 border border-slate-800 opacity-40 flex flex-col items-center text-center w-28 sm:w-32 transition';
+        nodeFatherShare.textContent = 'Elendi (1. Zümre Var)';
+        nodeFatherTL.textContent = '0 ₺';
+      } else if (fatherStatus === 'alive') {
+        nodeFather.className = 'px-3.5 py-2 rounded-2xl bg-slate-950 border-2 border-blue-500/80 shadow-md flex flex-col items-center text-center w-28 sm:w-32 transition';
+        const fShare = shares.find(function(s) { return s.role.indexOf('Baba') !== -1; });
+        nodeFatherShare.textContent = fShare ? (fShare.fraction + ' (%' + fShare.percent + ')') : 'Pay Var';
+        nodeFatherTL.textContent = (totalEstate > 0 && fShare) ? fmtTRY(fShare.tl) : '';
+      } else {
+        nodeFather.className = 'px-3.5 py-2 rounded-2xl bg-slate-950 border border-slate-800 opacity-50 flex flex-col items-center text-center w-28 sm:w-32 transition';
+        nodeFatherShare.textContent = 'Vefat Etmiş';
+        nodeFatherTL.textContent = siblingsCount > 0 ? 'Payı Kardeşlerde' : '0 ₺';
+      }
+
+      treeChildrenNode.innerHTML = '';
+      if (hasChildren && childrenCount > 0) {
+        const childShares = shares.filter(function(s) { return s.role.indexOf('Çocuk') !== -1; });
+        childShares.forEach(function(c) {
+          const div = document.createElement('div');
+          div.className = 'p-3 rounded-2xl bg-slate-950 border-2 border-emerald-500/80 shadow-md flex flex-col items-center text-center min-w-[110px] transition';
+          div.innerHTML = '<i class="fa-solid fa-child text-emerald-400 text-xs mb-1"></i>' +
+            '<span class="text-xs font-bold text-white">' + c.name + '</span>' +
+            '<span class="text-xs font-black text-emerald-400">' + c.fraction + ' (%' + c.percent.toFixed(1).replace('.0','') + ')</span>' +
+            (totalEstate > 0 ? '<span class="text-[11px] text-slate-300 font-mono mt-0.5">' + fmtTRY(c.tl) + '</span>' : '');
+          treeChildrenNode.appendChild(div);
+        });
+      } else if (activeZumre === 2 && siblingsCount > 0 && (motherStatus === 'deceased' || fatherStatus === 'deceased')) {
+        const div = document.createElement('div');
+        div.className = 'p-3 rounded-2xl bg-slate-950 border-2 border-indigo-500/80 shadow-md flex flex-col items-center text-center px-6 transition';
+        div.innerHTML = '<i class="fa-solid fa-people-arrows text-indigo-400 text-sm mb-1"></i>' +
+          '<span class="text-xs font-bold text-white">Kardeşler (' + siblingsCount + ' Kişi)</span>' +
+          '<span class="text-[11px] text-indigo-300">Vefat eden ebeveynin hissesini paylaşırlar</span>';
+        treeChildrenNode.appendChild(div);
+      } else {
+        const div = document.createElement('div');
+        div.className = 'p-2.5 rounded-xl bg-slate-950/60 border border-slate-800 text-slate-500 text-xs text-center';
+        div.textContent = 'Altsoyda (çocuk/torun) mirasçı bulunmamaktadır.';
+        treeChildrenNode.appendChild(div);
+      }
+    }
+
+    function updateSharesTable(shares, totalEstate) {
+      sharesListContainer.innerHTML = '';
+      shares.forEach(function(s) {
+        const div = document.createElement('div');
+        div.className = 'p-3 rounded-xl bg-slate-950/70 border border-slate-800/80 flex items-center justify-between gap-3';
+        div.innerHTML = '<div class="flex items-center gap-2.5">' +
+          '<div class="w-7 h-7 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-xs">' +
+            '<i class="fa-solid ' + s.icon + '"></i>' +
+          '</div>' +
+          '<div>' +
+            '<span class="font-bold text-white block">' + s.name + '</span>' +
+            '<span class="text-[10px] text-slate-400">Saklı Pay: ' + s.sakliPay + '</span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="text-right">' +
+          '<span class="font-black text-indigo-400 block">' + s.fraction + ' (%' + s.percent.toFixed(1).replace('.0','') + ')</span>' +
+          (totalEstate > 0 ? '<span class="text-[11px] font-mono font-bold text-emerald-400">' + fmtTRY(s.tl) + '</span>' : '') +
+        '</div>';
+        sharesListContainer.appendChild(div);
+      });
+    }
+
+    function generateSummaryText() {
+      const totalEstate = parseNumber(totalEstateInput.value);
+      let text = 'MİRAS PAYLAŞIMI VE YASAL ZÜMRE DÖKÜMÜ (TMK)\n' +
+                 '════════════════════════════════════════\n' +
+                 '• Toplam Tereke: ' + (totalEstate > 0 ? fmtTRY(totalEstate) : 'Oran Hesabı') + '\n' +
+                 '• Eş Durumu: ' + (hasSpouse ? 'Sağ' : 'Yok / Vefat') + '\n' +
+                 '• Çocuk Durumu: ' + (hasChildren ? (childrenCount + ' Çocuk Var') : 'Çocuk Yok') + '\n\n' +
+                 'YASAL MİRAS DAĞILIMI:\n';
+
+      const rows = sharesListContainer.querySelectorAll('.p-3');
+      rows.forEach(function(r) {
+        const name = r.querySelector('.font-bold.text-white').textContent;
+        const pct = r.querySelector('.font-black.text-indigo-400').textContent;
+        const tlEl = r.querySelector('.text-emerald-400');
+        const tl = tlEl ? (' -> ' + tlEl.textContent) : '';
+        text += '• ' + name + ': ' + pct + tl + '\n';
+      });
+
+      text += '\nDetaylı interaktif soyağacı hesaplaması için: https://pratikbase.com/miras-paylasimi-hesaplayici/';
+      return text;
+    }
+
+    document.getElementById('btnShareWhatsApp').addEventListener('click', function() {
+      const text = encodeURIComponent(generateSummaryText());
+      window.open('https://api.whatsapp.com/send?text=' + text, '_blank');
+    });
+
+    document.getElementById('btnCopySummary').addEventListener('click', function() {
+      navigator.clipboard.writeText(generateSummaryText()).then(function() {
+        copyToast.classList.remove('hidden');
+        setTimeout(function() { copyToast.classList.add('hidden'); }, 2500);
+      });
+    });
+
+    // Initial Run
+    calculateInheritance();
+  </script>
+
+  <!-- Realtime Analytics Tracker -->
+  <script src="/assets/tracker.js" defer></script>
+</body>
+</html>
