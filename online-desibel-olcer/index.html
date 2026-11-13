@@ -757,15 +757,26 @@
       // 3. AUDIO RECORDING & DECIBEL ENGINE
       async function startDecibelMeter() {
         try {
-          const stream = await navigator.mediaDevices.getUserMedia({ 
-            audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } 
-          });
+          // Standard cross-platform microphone stream
+          let stream;
+          try {
+            stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          } catch (e1) {
+            stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false } });
+          }
           microphoneStream = stream;
 
-          audioContext = new (window.AudioContext || window.webkitAudioContext)();
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          if (!audioContext || audioContext.state === 'closed') {
+            audioContext = new AudioCtx();
+          }
+          if (audioContext.state === 'suspended') {
+            await audioContext.resume();
+          }
+
           analyser = audioContext.createAnalyser();
-          analyser.fftSize = 512;
-          analyser.smoothingTimeConstant = 0.3;
+          analyser.fftSize = 1024;
+          analyser.smoothingTimeConstant = 0.2;
 
           const source = audioContext.createMediaStreamSource(stream);
           source.connect(analyser);
@@ -803,22 +814,55 @@
       function analyzeAudio() {
         if (!isListening || !analyser) return;
 
-        const dataArray = new Uint8Array(analyser.frequencyBinCount);
-        analyser.getByteTimeDomainData(dataArray);
-
-        // Calculate Root Mean Square (RMS)
-        let sumSquares = 0;
-        for (let i = 0; i < dataArray.length; i++) {
-          const norm = (dataArray[i] - 128) / 128;
-          sumSquares += norm * norm;
+        if (audioContext && audioContext.state === 'suspended') {
+          audioContext.resume();
         }
-        const rms = Math.sqrt(sumSquares / dataArray.length);
 
-        // Convert to estimated dB SPL (30 dB room ambient to ~135 dB max)
-        let db = 30;
-        if (rms > 0.0001) {
-          const dbRaw = 20 * Math.log10(rms);
-          db = Math.round(Math.min(135, Math.max(25, 102 + dbRaw)));
+        let rms = 0;
+        // High-precision float time-domain data
+        if (analyser.getFloatTimeDomainData) {
+          const floatData = new Float32Array(analyser.fftSize);
+          analyser.getFloatTimeDomainData(floatData);
+          let sum = 0;
+          for (let i = 0; i < floatData.length; i++) {
+            sum += floatData[i] * floatData[i];
+          }
+          rms = Math.sqrt(sum / floatData.length);
+        } else {
+          const byteData = new Uint8Array(analyser.frequencyBinCount);
+          analyser.getByteTimeDomainData(byteData);
+          let sum = 0;
+          for (let i = 0; i < byteData.length; i++) {
+            const v = (byteData[i] - 128) / 128;
+            sum += v * v;
+          }
+          rms = Math.sqrt(sum / byteData.length);
+        }
+
+        // Also evaluate frequency data to catch fast transient shouts / peaks
+        const freqData = new Uint8Array(analyser.frequencyBinCount);
+        analyser.getByteFrequencyData(freqData);
+        let maxFreq = 0;
+        let sumFreq = 0;
+        for (let i = 0; i < freqData.length; i++) {
+          if (freqData[i] > maxFreq) maxFreq = freqData[i];
+          sumFreq += freqData[i];
+        }
+        const avgFreq = sumFreq / freqData.length;
+
+        // Estimated realistic dB SPL calculation
+        let db = 28;
+        if (rms > 0.00005) {
+          const dbFS = 20 * Math.log10(rms);
+          const estimatedSpl = Math.round(128 + (dbFS * 1.45));
+          db = Math.max(26, Math.min(135, estimatedSpl));
+        } else if (avgFreq > 1) {
+          db = Math.round(28 + (avgFreq / 255) * 65);
+        }
+
+        // Transient peak boost for quick claps or shout peaks
+        if (maxFreq > 200 && db < 110) {
+          db = Math.min(132, db + 10);
         }
 
         updateDisplay(db);
