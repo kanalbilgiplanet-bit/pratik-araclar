@@ -139,10 +139,10 @@
 - Açıklama: Türk Medeni Kanunu (TMK) Madde 495 - 506 zümre sistemi uyarınca miras paylaşımını hesaplayan görsel soyağacı simülatörü. Çocuğu olmayan evli kişilerin miras dağılımı (1/2 eşe, 1/2 anne-baba ve kardeşlere), 1., 2. ve 3. zümre yasal mirasçıları, çocukların ve eşin saklı pay oranları, kardeşlerin saklı payının olmaması kuralı, TL bazında net tereke paylaşımı ve tek tıkla WhatsApp miras dökümü paylaşımı.
 - Hedef Kitle: Miras paylaşımı araştıranlar, çocuğu olmayıp mirasının kime kalacağını merak edenler, mirasçılar, veraset ilamı sürecindekiler.
 
-### 28. Komşu Gürültüsü Desibel (dB) Ölçer & Yasal Sınır Rehberi
-- URL: https://pratikbase.com/komsu-gurultusu-desibel-sikayet/
-- Açıklama: Web Audio API ile cihaz mikrofonunu kullanarak ortam sesini gerçek zamanlı desibel (dB SPL) cinsinden ölçen, apartmanda yasal gürültü sınırlarını (gece 35 dB, gündüz 65 dB) denetleyen araç. Çevre, Şehircilik ve İklim Değişikliği Bakanlığı yönetmelikleri ile Kat Mülkiyeti Kanunu (KMK) Madde 18 uyarınca izin verilen ses eşiklerini ve gürültü saatlerini açıklar; komşuya gönderilebilecek nazik bir WhatsApp uyarı metni sunar.
-- Özellikler: Canlı mikrofon dB ölçümü, RMS tepe/ortalama analiz, yasal sınır göstergesi, komşuya nezaketli WhatsApp uyarısı, emsal Yargıtay kararları ve apartman gürültüsü SSS.
+### 28. Online Desibel (dB) Ölçer: Stadyum Rekoru, Komşu & Ses Seviyesi Testi
+- URL: https://pratikbase.com/online-desibel-olcer/
+- Açıklama: Web Audio API ile cihaz mikrofonunu kullanarak ortam sesini gerçek zamanlı desibel (dB SPL) cinsinden ölçen çok amaçlı ses analizi aracı. 4 farklı kullanım modu sunar: (1) Stadyum & Maç Modu: Türk futbol tarihindeki efsanevi 132 dB Beşiktaş İnönü ve 131.76 dB Galatasaray Ali Sami Yen Guinness rekorlarına meydan okuma ve taraftar tezahürat desibeli ölçümü, (2) Komşu & Apartman Modu: Gece 35 dB ve gündüz 65 dB yasal ses sınırlarını denetleme ve WhatsApp nezaket mesajı oluşturma, (3) Konser & İşitme Sağlığı Modu: DSÖ 85 dB üzeri maruziyet sınırları ve kulak tıkacı tavsiyesi, (4) Egzoz & Araç Sesi Modu: TÜVTÜRK muayenesi ve Karayolları Trafik Kanunu 74-82 dB egzoz ceza sınırları.
+- Özellikler: Canlı mikrofon dB ölçümü, Zirve (Peak) / Ortalama (Avg) / Min takibi, WhatsApp skor paylaşımı, hazır ses simülasyonları, stadyum rekorları tablosu ve SSS.
 
 ### 29. Düğünde Ne Takılır? Takı & Altın Hesaplayıcı + Dijital Takı Defteri
 - URL: https://pratikbase.com/dugunde-ne-takilir-hesaplayici/

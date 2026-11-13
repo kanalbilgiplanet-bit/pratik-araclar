@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="tr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Online Desibel (dB) Ölçer: Stadyum, Komşu & Ses Seviyesi Testi (2026) | PratikBase</title>
+  <meta name="description" content="Mikrofonunuzla ortam sesini anında canlı desibel (dB) olarak ölçün. Stadyum maç tezahürat rekorunu test edin, apartmanda komşu gürültüsü yasal sınırını ve konser ses seviyesini görün.">
+  <meta name="keywords" content="online desibel ölçer, stadyum desibel ölçer, maçta desibel ölçme, beşiktaş 132 desibel, galatasaray ses rekoru 131.76, komşu gürültüsü desibel sınırı, mikrofonla desibel ölçme, ses ölçer online, konser kaç desibel, egzoz desibel sınırı tüvtürk, apartmanda gürültü yasal sınırı">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <link rel="canonical" href="https://pratikbase.com/online-desibel-olcer/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://pratikbase.com/online-desibel-olcer/">
+  <meta property="og:title" content="Online Desibel (dB) Ölçer: Stadyum Rekoru, Komşu & Ses Seviyesi">
+  <meta property="og:description" content="Mikrofonla ortam sesini canlı ölçün. Maçta bağırma rekorunuzu test edin veya apartman yasal ses sınırını denetleyin.">
+  <meta property="og:image" content="https://pratikbase.com/assets/og-banner.png">
+  <meta property="og:locale" content="tr_TR">
+  <meta property="og:site_name" content="PratikBase">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Online Desibel (dB) Ölçer & Ses Testi">
+  <meta name="twitter:description" content="Mikrofonla canlı desibel ölçümü: Stadyum tezahürat rekoru ve apartman yasal sınırları.">
+  <meta name="twitter:image" content="https://pratikbase.com/assets/og-banner.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔊</text></svg>">
+  <meta name="theme-color" content="#0b0f19">
+
+  <!-- Google Fonts & Tailwind -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#fff1f2',
+              100: '#ffe4e6',
+              200: '#fecdd3',
+              500: '#f43f5e',
+              600: '#e11d48',
+              700: '#be123c',
+              800: '#9f1239',
+              900: '#881337'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #0b0f19;
+      color: #f1f5f9;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+    input, select, textarea, button {
+      font-size: 16px !important;
+    }
+    @media (min-width: 640px) {
+      input, select, textarea, button {
+        font-size: 0.875rem !important;
+      }
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.6);
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: rgba(244, 63, 94, 0.4);
+      border-radius: 4px;
+    }
+    .glass-card {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(244, 63, 94, 0.2);
+    }
+    .pulse-meter {
+      transition: width 0.08s ease-out;
+    }
+  </style>
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "name": "Online Desibel (dB) Ölçer & Ses Seviyesi Testi",
+        "url": "https://pratikbase.com/online-desibel-olcer/",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "All",
+        "browserRequirements": "Requires Web Audio API and Microphone Permission",
+        "description": "Tarayıcı üzerinden canlı mikrofonla ses seviyesini desibel (dB SPL) olarak ölçen, stadyum tezahürat rekorlarını ve apartman yasal ses sınırlarını analiz eden araç.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "TRY"
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Ana Sayfa",
+            "item": "https://pratikbase.com/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Online Desibel Ölçer",
+            "item": "https://pratikbase.com/online-desibel-olcer/"
+          }
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Stadyumda en yüksek ses rekoru kaç desibeldir?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Türk futbolunda kayıt dışı en yüksek ses seviyesi 2007 yılındaki Beşiktaş - Liverpool maçında 132 dB olarak kaydedilmiştir. Guinness Dünya Rekorları resmi tescilli stadyum rekoru ise 18 Mart 2011'de Galatasaray - Fenerbahçe derbisinde Türk Telekom Arena'da 131.76 dB ile kırılmıştır."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Apartmanda gece yasal ses sınırı kaç desibeldir?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Çevresel Gürültü Kontrol Yönetmeliği'ne göre konut içlerinde gece dinlenme saatlerinde (23:00 - 07:00) arka plan ses düzeyi en fazla 35 dB olmalıdır. 35 dB'i aşan sesler ve Kat Mülkiyeti Kanunu Md. 18 ihlalleri şikayete konu olabilir."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Online desibel ölçer telefonda doğru ölçüm yapar mı?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Web Audio API ile telefon ve bilgisayar mikrofonunun RMS ses enerjisi yaklaşık SPL desibel skalasına dönüştürülür. Standart telefon mikrofonları 40 ile 90 dB arasında iyi bir fikir verir; ancak profesyonel kalibreli ses cihazı olmadığından yaklaşık referans niteliğindedir."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "İnsan kulağı kaç desibelden sonra zarar görür?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Dünya Sağlık Örgütü (DSÖ) verilerine göre 85 dB üzeri sese uzun süre maruz kalmak kalıcı işitme hasarına yol açabilir. 100 dB seste güvenli süre yalnızca 15 dakika, 120 dB üzeri seslerde ise kulakta anında fiziksel ağrı ve hasar oluşur."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-rose-500 selection:text-white">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 bg-slate-950/80 backdrop-blur-md border-b border-rose-500/20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="/" class="flex items-center gap-2 group">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-rose-600 to-amber-500 flex items-center justify-center text-white font-black text-xl shadow-lg shadow-rose-500/20 group-hover:scale-105 transition-transform">
+            <i class="fa-solid fa-volume-high text-lg"></i>
+          </div>
+          <span class="text-xl font-bold tracking-tight text-white group-hover:text-rose-400 transition-colors">
+            Pratik<span class="text-rose-500">Base</span>
+          </span>
+        </a>
+        <span class="hidden sm:inline-block px-2.5 py-0.5 text-xs font-semibold rounded-full bg-rose-500/10 text-rose-300 border border-rose-500/30">
+          Online Desibel (dB) Ölçer
+        </span>
+      </div>
+
+      <nav class="flex items-center gap-2 sm:gap-4 text-sm font-medium">
+        <a href="/" class="px-3 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors flex items-center gap-1.5">
+          <i class="fa-solid fa-arrow-left text-xs"></i>
+          <span class="hidden sm:inline">Tüm Araçlar</span>
+        </a>
+        <button id="btnSharePage" class="px-3.5 py-1.5 rounded-lg bg-rose-500/10 text-rose-300 border border-rose-500/30 hover:bg-rose-500/20 transition-all flex items-center gap-1.5 font-semibold text-xs sm:text-sm">
+          <i class="fa-solid fa-share-nodes"></i>
+          <span>Paylaş</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="relative overflow-hidden py-8 sm:py-12 border-b border-slate-800/60 bg-gradient-to-b from-rose-950/25 via-slate-950 to-slate-950">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-300 border border-rose-500/30 mb-4">
+        <span class="w-2 h-2 rounded-full bg-rose-400 animate-pulse"></span>
+        Web Audio API Canlı Mikrofon Ölçümü
+      </div>
+
+      <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-4 leading-tight">
+        Online Desibel (dB) Ölçer <br>
+        <span class="bg-clip-text text-transparent bg-gradient-to-r from-rose-400 via-amber-300 to-rose-400">
+          Stadyum Rekoru, Komşu & Ses Testi
+        </span>
+      </h1>
+
+      <p class="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto mb-6 leading-relaxed">
+        Cihaz mikrofonuyla ortam sesini canlı ölçün. <strong>Stadyumda maç tezahürat rekorunuzu kırın</strong> (132 dB İnönü & 131.7 dB Ali Sami Yen testi), apartmanda <strong>komşu gürültüsünün yasal sınırını</strong> denetleyin veya konser sesini test edin.
+      </p>
+
+      <!-- Senaryo Seçim Sekmeleri (Mode Switcher) -->
+      <div class="flex flex-wrap items-center justify-center gap-2 max-w-2xl mx-auto p-1.5 rounded-2xl bg-slate-900 border border-slate-800">
+        <button class="mode-tab-btn py-2 px-3 sm:px-4 rounded-xl text-xs sm:text-sm font-bold transition-all bg-rose-600 text-white shadow-lg shadow-rose-600/30 flex items-center gap-1.5" data-mode="stadium">
+          <i class="fa-solid fa-bullhorn text-amber-300"></i>
+          <span>Stadyum & Maç Rekoru</span>
+        </button>
+        <button class="mode-tab-btn py-2 px-3 sm:px-4 rounded-xl text-xs sm:text-sm font-semibold transition-all text-slate-400 hover:text-white flex items-center gap-1.5" data-mode="apartment">
+          <i class="fa-solid fa-building-user text-cyan-400"></i>
+          <span>Komşu & Apartman</span>
+        </button>
+        <button class="mode-tab-btn py-2 px-3 sm:px-4 rounded-xl text-xs sm:text-sm font-semibold transition-all text-slate-400 hover:text-white flex items-center gap-1.5" data-mode="concert">
+          <i class="fa-solid fa-headphones text-violet-400"></i>
+          <span>Konser & İşitme Sağlığı</span>
+        </button>
+        <button class="mode-tab-btn py-2 px-3 sm:px-4 rounded-xl text-xs sm:text-sm font-semibold transition-all text-slate-400 hover:text-white flex items-center gap-1.5" data-mode="exhaust">
+          <i class="fa-solid fa-car text-emerald-400"></i>
+          <span>Egzoz / Araç Sınırı</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content Area -->
+  <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full space-y-8">
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- SOL: Canlı Desibel Metre Kadranı & İstatistikler -->
+      <div class="lg:col-span-7 glass-card rounded-3xl p-6 sm:p-8 space-y-6 border border-rose-500/30">
+        
+        <!-- Üst Başlık & Durum -->
+        <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+          <div class="flex items-center gap-2">
+            <span id="meterStatusDot" class="w-3 h-3 rounded-full bg-slate-600"></span>
+            <span id="meterStatusText" class="text-xs font-bold text-slate-400 tracking-wide uppercase">Mikrofon Beklemede</span>
+          </div>
+          <button id="btnResetStats" class="text-xs text-slate-400 hover:text-rose-400 transition flex items-center gap-1 font-semibold">
+            <i class="fa-solid fa-rotate-left"></i> Sıfırla
+          </button>
+        </div>
+
+        <!-- Dev Desibel Kadranı -->
+        <div class="relative py-8 px-4 rounded-3xl bg-slate-950/80 border border-slate-800 text-center overflow-hidden">
+          
+          <!-- Arka Plan Nabız Işığı -->
+          <div id="meterGlow" class="absolute inset-0 bg-rose-500/5 rounded-3xl transition-colors duration-150 pointer-events-none"></div>
+
+          <div class="relative z-10 space-y-2">
+            <div class="text-xs font-bold text-slate-400 tracking-wider uppercase flex items-center justify-center gap-1.5">
+              <i class="fa-solid fa-microphone-lines text-rose-500"></i>
+              <span id="meterSubLabel">Anlık Ses Şiddeti</span>
+            </div>
+            
+            <div class="flex items-baseline justify-center gap-2">
+              <span id="liveDbValue" class="text-6xl sm:text-7xl md:text-8xl font-black text-white tracking-tighter">0</span>
+              <span class="text-2xl sm:text-3xl font-extrabold text-rose-500">dB</span>
+            </div>
+
+            <!-- Seviye Rozeti -->
+            <div class="pt-2">
+              <span id="soundLevelBadge" class="inline-block text-xs font-bold px-3 py-1 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
+                Mikrofonu Başlatın
+              </span>
+            </div>
+          </div>
+
+          <!-- Canlı Desibel İlerleme Çubuğu (Bar) -->
+          <div class="mt-6 max-w-md mx-auto">
+            <div class="h-4 w-full bg-slate-900 rounded-full overflow-hidden p-0.5 border border-slate-800 flex">
+              <div id="dbProgressBar" class="h-full bg-gradient-to-r from-emerald-500 via-amber-500 to-rose-600 rounded-full pulse-meter" style="width: 0%"></div>
+            </div>
+            
+            <!-- Ölçek Etiketleri -->
+            <div class="flex justify-between text-[10px] text-slate-500 font-bold mt-1.5 px-1">
+              <span>0 dB (Sessiz)</span>
+              <span>40 dB (Oda)</span>
+              <span>85 dB (Tehlike)</span>
+              <span>110 dB (Konser)</span>
+              <span>132 dB (İnönü Rekor)</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Kontrol Butonları -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <button 
+            type="button" 
+            id="btnToggleMic"
+            class="py-4 px-6 rounded-2xl bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-500 hover:to-red-500 text-white font-extrabold text-sm sm:text-base shadow-xl shadow-rose-600/30 transition-all flex items-center justify-center gap-2.5 active:scale-95"
+          >
+            <i class="fa-solid fa-microphone text-lg"></i>
+            <span id="btnToggleMicText">Mikrofonla Ölçümü Başlat</span>
+          </button>
+
+          <button 
+            type="button" 
+            id="btnShareScore"
+            class="py-4 px-4 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white font-bold text-xs sm:text-sm border border-slate-700 transition-all flex items-center justify-center gap-2"
+          >
+            <i class="fa-brands fa-whatsapp text-emerald-400 text-base"></i>
+            <span>Skorunu WhatsApp'ta Paylaş</span>
+          </button>
+        </div>
+
+        <!-- İstatistik Metrikleri (Zirve, Ortalama, Min) -->
+        <div class="grid grid-cols-3 gap-3">
+          <div class="p-3.5 rounded-2xl bg-slate-900/60 border border-slate-800 text-center">
+            <div class="text-[11px] text-slate-400 font-semibold mb-1 flex items-center justify-center gap-1">
+              <i class="fa-solid fa-bolt text-amber-400"></i> Zirve (Peak)
+            </div>
+            <div id="statPeak" class="text-xl sm:text-2xl font-black text-amber-400">0 dB</div>
+          </div>
+          <div class="p-3.5 rounded-2xl bg-slate-900/60 border border-slate-800 text-center">
+            <div class="text-[11px] text-slate-400 font-semibold mb-1 flex items-center justify-center gap-1">
+              <i class="fa-solid fa-chart-line text-cyan-400"></i> Ortalama
+            </div>
+            <div id="statAvg" class="text-xl sm:text-2xl font-black text-cyan-400">0 dB</div>
+          </div>
+          <div class="p-3.5 rounded-2xl bg-slate-900/60 border border-slate-800 text-center">
+            <div class="text-[11px] text-slate-400 font-semibold mb-1 flex items-center justify-center gap-1">
+              <i class="fa-solid fa-moon text-emerald-400"></i> Minimum
+            </div>
+            <div id="statMin" class="text-xl sm:text-2xl font-black text-emerald-400">0 dB</div>
+          </div>
+        </div>
+
+        <!-- Hızlı Test Simülasyon Butonları (Mikrofon Olmayanlar İçin) -->
+        <div class="pt-2 border-t border-slate-800">
+          <span class="text-xs font-semibold text-slate-400 block mb-2">veya Hazır Ses Seviyesi Simülasyonu Seçin:</span>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <button class="preset-btn py-2 px-2.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-amber-500 text-slate-300 text-xs font-medium transition flex items-center gap-1.5" data-db="132" data-name="İnönü Efsane Liverpool Rekoru">
+              <span>🏟️ 132 dB İnönü</span>
+            </button>
+            <button class="preset-btn py-2 px-2.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-amber-500 text-slate-300 text-xs font-medium transition flex items-center gap-1.5" data-db="131" data-name="Ali Sami Yen Derbi Guinness">
+              <span>🦁 131.7 dB TT Arena</span>
+            </button>
+            <button class="preset-btn py-2 px-2.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-amber-500 text-slate-300 text-xs font-medium transition flex items-center gap-1.5" data-db="115" data-name="Kadıköy / Süper Lig Derbisi">
+              <span>📢 115 dB Derbi Tribün</span>
+            </button>
+            <button class="preset-btn py-2 px-2.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-amber-500 text-slate-300 text-xs font-medium transition flex items-center gap-1.5" data-db="85" data-name="Komşu Matkap Gürültüsü">
+              <span>🔨 85 dB Matkap</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- SAĞ: Dinamik Senaryo Kartı (Stadyum / Komşu / Konser / Egzoz) -->
+      <div class="lg:col-span-5 space-y-6 lg:sticky lg:top-24">
+        
+        <!-- Dinamik Analiz Kutusu -->
+        <div class="glass-card rounded-3xl p-6 sm:p-7 border-2 border-rose-500/50 shadow-2xl relative overflow-hidden">
+          <div class="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
+            <span id="scenarioBadge" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+              <i class="fa-solid fa-trophy"></i> STADYUM REKOR TESTİ
+            </span>
+            <span id="scenarioSubBadge" class="text-xs text-slate-400 font-semibold">
+              Kıyaslama Modu
+            </span>
+          </div>
+
+          <!-- Senaryo Başlığı & Açıklaması -->
+          <div class="space-y-3 mb-6">
+            <h3 id="scenarioHeadline" class="text-lg sm:text-xl font-bold text-white leading-snug">
+              Stadyumda Tezahürat Sesinizi Test Edin!
+            </h3>
+            <p id="scenarioDescription" class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+              Mikrofonu açın, arkadaşlarınızla bağırın veya stadyumda maç anında tutun. Türk futbol tarihindeki efsanevi 132 dB İnönü ve 131.76 dB Guinness rekorlarına ne kadar yaklaştığınızı görün!
+            </p>
+          </div>
+
+          <!-- Karşılaştırma / Değerlendirme Kartı -->
+          <div id="comparisonBox" class="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-3 mb-6">
+            <div class="flex items-center justify-between text-xs font-bold text-slate-200">
+              <span id="compTargetName">🏆 Efsane Karşılaştırması:</span>
+              <span id="compMatchPercent" class="text-amber-400">%0 Uyum</span>
+            </div>
+            <p id="compDetails" class="text-xs text-slate-400 leading-relaxed">
+              132 dB: 2007 Beşiktaş - Liverpool maçı dünya rekoru iddiası.<br>
+              131.76 dB: 2011 Galatasaray - Fenerbahçe maçı tescilli Guinness Dünya Rekoru.
+            </p>
+          </div>
+
+          <!-- Senaryoya Özel Buton -->
+          <div id="scenarioActionBox" class="space-y-3">
+            <!-- Dinamik doldurulur -->
+          </div>
+
+        </div>
+
+        <!-- Mikrofon & Gizlilik Notu -->
+        <div class="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 text-xs text-slate-400 space-y-1.5">
+          <div class="font-bold text-white flex items-center gap-1.5">
+            <i class="fa-solid fa-shield-halved text-emerald-400"></i> %100 Gizli & Güvenli:
+          </div>
+          <p class="text-[11px] leading-relaxed">
+            Sesiniz hiçbir sunucuya gönderilmez veya kaydedilmez. Tüm desibel hesaplaması tarayıcınızın kendi işlemcisinde yerel olarak gerçekleşir.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ALT BÖLÜM: Stadyum Rekorları, Komşu Yasal Sınırları & İşitme Sağlığı Tabloları -->
+    <section class="mt-12 glass-card rounded-3xl p-6 sm:p-8 border border-slate-800 space-y-8">
+      
+      <!-- Tablo 1: Türkiye ve Dünya Stadyum Desibel Rekorları -->
+      <div>
+        <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+          <i class="fa-solid fa-trophy text-amber-400"></i>
+          Türkiye ve Dünya Stadyum Ses (Desibel) Rekorları Efsaneleri
+        </h3>
+
+        <div class="overflow-x-auto custom-scroll">
+          <table class="w-full text-left text-xs sm:text-sm text-slate-300 border-collapse">
+            <thead>
+              <tr class="border-b border-slate-800 bg-slate-900/50 text-slate-400 font-bold uppercase tracking-wider text-[11px]">
+                <th class="py-3 px-4">Ses Seviyesi</th>
+                <th class="py-3 px-4">Maç / Stadyum</th>
+                <th class="py-3 px-4">Tarih</th>
+                <th class="py-3 px-4">Durum / Tescil</th>
+                <th class="py-3 px-4">Önemli Detay</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800/60 font-medium">
+              <tr class="hover:bg-slate-800/30">
+                <td class="py-3.5 px-4 font-black text-amber-400 text-base">132.0 dB</td>
+                <td class="py-3.5 px-4 font-bold text-white">Beşiktaş vs Liverpool (İnönü)</td>
+                <td class="py-3.5 px-4 text-slate-400">24 Ekim 2007</td>
+                <td class="py-3.5 px-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">Medya & Tribün Efsanesi</span></td>
+                <td class="py-3.5 px-4 text-slate-400">UEFA Şampiyonlar Ligi'nde dünya basınında geniş yankı bulan tarihi ses zirvesi.</td>
+              </tr>
+              <tr class="hover:bg-slate-800/30">
+                <td class="py-3.5 px-4 font-black text-rose-400 text-base">131.76 dB</td>
+                <td class="py-3.5 px-4 font-bold text-white">Galatasaray vs Fenerbahçe (TT Arena)</td>
+                <td class="py-3.5 px-4 text-slate-400">18 Mart 2011</td>
+                <td class="py-3.5 px-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30">Guinness Resmi Tescilli</span></td>
+                <td class="py-3.5 px-4 text-slate-400">Guinness hakemleri huzurunda ölçülüp resmi olarak dünya rekoru kırıldı.</td>
+              </tr>
+              <tr class="hover:bg-slate-800/30">
+                <td class="py-3.5 px-4 font-black text-yellow-300">125.0 dB</td>
+                <td class="py-3.5 px-4 font-bold text-white">Fenerbahçe vs Manchester United (Kadıköy)</td>
+                <td class="py-3.5 px-4 text-slate-400">Şükrü Saracoğlu</td>
+                <td class="py-3.5 px-4 text-slate-400">Derbi / Avrupa Zirvesi</td>
+                <td class="py-3.5 px-4 text-slate-400">Kadıköy'ün kapalı tribün akustiğinde kulakları sağır eden derbi baskısı.</td>
+              </tr>
+              <tr class="hover:bg-slate-800/30">
+                <td class="py-3.5 px-4 font-black text-red-500">142.2 dB</td>
+                <td class="py-3.5 px-4 font-bold text-white">Kansas City Chiefs (Arrowhead - ABD)</td>
+                <td class="py-3.5 px-4 text-slate-400">2014 (NFL)</td>
+                <td class="py-3.5 px-4 text-slate-400">Açık Hava Stadyum Rekoru</td>
+                <td class="py-3.5 px-4 text-slate-400">Guinness'in güncel açık hava stadyum dünya rekoru.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tablo 2: Apartman ve Günlük Yaşam Yasal Desibel Sınırları -->
+      <div class="border-t border-slate-800 pt-8">
+        <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+          <i class="fa-solid fa-scale-balanced text-cyan-400"></i>
+          Apartmanda Yasal Desibel Sınırları & Günlük Yaşam Ses Eşikleri
+        </h3>
+
+        <div class="overflow-x-auto custom-scroll">
+          <table class="w-full text-left text-xs sm:text-sm text-slate-300 border-collapse">
+            <thead>
+              <tr class="border-b border-slate-800 bg-slate-900/50 text-slate-400 font-bold uppercase tracking-wider text-[11px]">
+                <th class="py-3 px-4">Desibel (dB)</th>
+                <th class="py-3 px-4">Ses Kaynağı / Örnek</th>
+                <th class="py-3 px-4">Konut Yasal Durumu</th>
+                <th class="py-3 px-4">İşitme Sağlığı Etkisi (DSÖ)</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800/60 font-medium">
+              <tr class="hover:bg-slate-800/30">
+                <td class="py-3 px-4 font-bold text-emerald-400">20 - 30 dB</td>
+                <td class="py-3 px-4">Fısıltı, sessiz kütüphane, yaprak hışırtısı</td>
+                <td class="py-3 px-4 text-emerald-400">Yasal ve İdeal Sessizlik</td>
+                <td class="py-3 px-4 text-slate-400">Tam dinlenme ve derin uyku eşiği.</td>
+              </tr>
+              <tr class="hover:bg-slate-800/30">
+                <td class="py-3 px-4 font-bold text-emerald-300">35 dB</td>
+                <td class="py-3 px-4">Apartman yatak odası gece arka plan sesi</td>
+                <td class="py-3 px-4 text-emerald-300 font-semibold">GECE YASAL SINIRI (23:00 - 07:00)</td>
+                <td class="py-3 px-4 text-slate-400">Yönetmeliğe göre gece 35 dB üstü ihlal sayılır.</td>
+              </tr>
+              <tr class="hover:bg-slate-800/30">
+                <td class="py-3 px-4 font-bold text-amber-300">60 - 65 dB</td>
+                <td class="py-3 px-4">Normal konuşma, ofis ortamı, dikiş makinesi</td>
+                <td class="py-3 px-4 text-amber-300">GÜNDÜZ YASAL TAVANI (07:00 - 19:00)</td>
+                <td class="py-3 px-4 text-slate-400">Gündüz tolere edilir, gece rahatsızlık verir.</td>
+              </tr>
+              <tr class="hover:bg-slate-800/30">
+                <td class="py-3 px-4 font-bold text-rose-400">85 dB</td>
+                <td class="py-3 px-4">Trafik, süpürge, gürültülü restoran</td>
+                <td class="py-3 px-4 text-rose-400 font-bold">AĞIR APARTMAN İHLALİ</td>
+                <td class="py-3 px-4 text-rose-400">8 saatten fazla maruz kalındığında kalıcı hasar.</td>
+              </tr>
+              <tr class="hover:bg-slate-800/30">
+                <td class="py-3 px-4 font-bold text-red-500">100 - 110 dB</td>
+                <td class="py-3 px-4">Canlı rock konseri, gece kulübü, matkap</td>
+                <td class="py-3 px-4 text-red-400">Konutta Yasak</td>
+                <td class="py-3 px-4 text-red-400 font-semibold">15 dakikadan sonra kulak zarı hasarı riski!</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Sıkça Sorulan Sorular (FAQ) -->
+    <section class="mt-8 glass-card rounded-3xl p-6 sm:p-8 border border-slate-800">
+      <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+        <i class="fa-solid fa-circle-question text-rose-400"></i>
+        Desibel ve Ses Ölçümü Hakkında Sıkça Sorulan Sorular
+      </h3>
+
+      <div class="space-y-4">
+        <details class="group bg-slate-900/60 border border-slate-800 rounded-2xl p-4 cursor-pointer">
+          <summary class="font-bold text-sm text-slate-200 group-open:text-rose-400 flex items-center justify-between">
+            <span>Telefon mikrofonuyla ölçülen desibel ne kadar doğrudur?</span>
+            <i class="fa-solid fa-chevron-down text-xs transition-transform group-open:rotate-180"></i>
+          </summary>
+          <p class="text-xs sm:text-sm text-slate-400 mt-3 leading-relaxed">
+            Akıllı telefon mikrofonları insan sesini yakalamak üzere tasarlandığından genellikle 40 dB ile 95 dB arasında oldukça başarılı yaklaşık sonuçlar verir. Ancak 100 dB üzerindeki çok şiddetli seslerde mikrofon doyuma (clipping) ulaşabilir. Eğlence, kıyaslama, tezahürat denemesi ve komşu gürültüsü tespiti için harika bir fikir sunar; resmi mahkeme delili için kalibreli profesyonel SPL metre cihazı gereklidir.
+          </p>
+        </details>
+
+        <details class="group bg-slate-900/60 border border-slate-800 rounded-2xl p-4 cursor-pointer">
+          <summary class="font-bold text-sm text-slate-200 group-open:text-rose-400 flex items-center justify-between">
+            <span>Beşiktaş'ın 132 dB Liverpool rekoru neden resmi sayılmıyor?</span>
+            <i class="fa-solid fa-chevron-down text-xs transition-transform group-open:rotate-180"></i>
+          </summary>
+          <p class="text-xs sm:text-sm text-slate-400 mt-3 leading-relaxed">
+            2007 yılındaki Şampiyonlar Ligi Beşiktaş - Liverpool maçında 132 dB ses ölçümü yapılmış ve UEFA ile Avrupa basınında manşetlere taşınmıştır. Ancak stadyumda Guinness Dünya Rekorları hakem heyeti resmi protokolüyle bulunmadığı için tescil edilememiştir. Resmi Guinness rekoru 2011'deki derbide Galatasaray taraftarına tescil edilmiştir.
+          </p>
+        </details>
+
+        <details class="group bg-slate-900/60 border border-slate-800 rounded-2xl p-4 cursor-pointer">
+          <summary class="font-bold text-sm text-slate-200 group-open:text-rose-400 flex items-center justify-between">
+            <span>Konserlerde kaç desibelden sonra kulak tıkacı takılmalıdır?</span>
+            <i class="fa-solid fa-chevron-down text-xs transition-transform group-open:rotate-180"></i>
+          </summary>
+          <p class="text-xs sm:text-sm text-slate-400 mt-3 leading-relaxed">
+            Müzik konserleri ve festivaller genellikle 95 ile 115 dB aralığındadır. Dünya Sağlık Örgütü (DSÖ), 85 dB üzeri sese maruz kalındığında kulak tıkacı veya ses filtreleyici aparat kullanılmasını tavsiye eder. Çıkışta kulakta oluşan çınlama (tinnitus), geçici işitme hasarının ilk göstergesidir.
+          </p>
+        </details>
+
+        <details class="group bg-slate-900/60 border border-slate-800 rounded-2xl p-4 cursor-pointer">
+          <summary class="font-bold text-sm text-slate-200 group-open:text-rose-400 flex items-center justify-between">
+            <span>Araç egzoz sesi desibel sınırı kaçtır (TÜVTÜRK muayenesi)?</span>
+            <i class="fa-solid fa-chevron-down text-xs transition-transform group-open:rotate-180"></i>
+          </summary>
+          <p class="text-xs sm:text-sm text-slate-400 mt-3 leading-relaxed">
+            Otomobiller için fabrika çıkış onaylı sınır genellikle 74 ile 78 dB arasındadır. Motosikletlerde motor hacmine göre 80-82 dB'e kadar izin verilir. Abart egzozlar bu sınırı 90-100 dB'e çıkararak ağır kusur sayılır ve Karayolları Trafik Kanunu Md. 30/1-b uyarınca idari para cezası ve trafikten men cezası uygulanır.
+          </p>
+        </details>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- WHATSAPP MESSAGE MODAL (KOMŞU MODU İÇİN) -->
+  <div id="whatsappModal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-3 sm:p-5">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-lg w-full p-5 sm:p-6 space-y-4 shadow-2xl relative">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2">
+          <i class="fa-brands fa-whatsapp text-emerald-400 text-lg"></i>
+          <h3 class="text-sm font-bold text-white">Komşuya WhatsApp Nezaket Uyarısı</h3>
+        </div>
+        <button id="btnCloseWhatsAppModal" class="text-slate-400 hover:text-white">
+          <i class="fa-solid fa-xmark text-base"></i>
+        </button>
+      </div>
+
+      <p class="text-xs text-slate-300">
+        Komşunuzu kırmadan, yasal sınır aşımını belirten kibar hazır mesaj:
+      </p>
+
+      <textarea 
+        id="whatsappMessageArea" 
+        rows="5" 
+        class="w-full bg-slate-950 border border-slate-800 rounded-2xl p-3.5 text-xs sm:text-sm text-white focus:outline-none focus:border-emerald-500 leading-relaxed font-sans"
+      ></textarea>
+
+      <div class="grid grid-cols-2 gap-2 pt-1">
+        <button type="button" id="btnCopyWhatsAppText" class="py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition flex items-center justify-center gap-1.5">
+          <i class="fa-regular fa-copy"></i>
+          <span>Kopyala</span>
+        </button>
+        <button type="button" id="btnSendDirectWhatsApp" class="py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-md shadow-emerald-600/30">
+          <i class="fa-brands fa-whatsapp text-base"></i>
+          <span>WhatsApp'ta Aç</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="mt-16 border-t border-slate-800/80 bg-slate-950 py-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs text-slate-400 space-y-4">
+      <div class="flex items-center justify-center gap-2">
+        <span class="font-bold text-white">PratikBase</span> - Hızlı ve Ücretsiz Web Araçları
+      </div>
+      <p class="max-w-xl mx-auto text-slate-400">
+        Yasal Uyarı: Bu web tabanlı ses ölçer yaklaşık referans değerler sunar. Mobil cihaz ve mikrofon donanımlarına bağlı olarak ±5-10 dB fark gösterebilir; resmi veya hukuki delil niteliği taşımaz.
+      </p>
+      <div class="text-slate-400">
+        &copy; 2026 PratikBase.com Tüm hakları saklıdır.
+      </div>
+    </div>
+  </footer>
+
+  <!-- Interactivity Script -->
+  <script>
+    (function() {
+      // 1. STATE & ELEMENTS
+      let currentMode = 'stadium'; // 'stadium', 'apartment', 'concert', 'exhaust'
+      let isListening = false;
+      let audioContext = null;
+      let analyser = null;
+      let microphoneStream = null;
+      let animationFrameId = null;
+
+      let currentDb = 0;
+      let peakDb = 0;
+      let minDb = 999;
+      let dbHistory = [];
+
+      // DOM Elements
+      const modeTabs = document.querySelectorAll('.mode-tab-btn');
+      const liveDbValue = document.getElementById('liveDbValue');
+      const dbProgressBar = document.getElementById('dbProgressBar');
+      const soundLevelBadge = document.getElementById('soundLevelBadge');
+      const meterStatusDot = document.getElementById('meterStatusDot');
+      const meterStatusText = document.getElementById('meterStatusText');
+      const meterGlow = document.getElementById('meterGlow');
+
+      const statPeak = document.getElementById('statPeak');
+      const statAvg = document.getElementById('statAvg');
+      const statMin = document.getElementById('statMin');
+
+      const btnToggleMic = document.getElementById('btnToggleMic');
+      const btnToggleMicText = document.getElementById('btnToggleMicText');
+      const btnResetStats = document.getElementById('btnResetStats');
+      const btnShareScore = document.getElementById('btnShareScore');
+      const btnSharePage = document.getElementById('btnSharePage');
+
+      // Scenario Panel Elements
+      const scenarioBadge = document.getElementById('scenarioBadge');
+      const scenarioHeadline = document.getElementById('scenarioHeadline');
+      const scenarioDescription = document.getElementById('scenarioDescription');
+      const compTargetName = document.getElementById('compTargetName');
+      const compMatchPercent = document.getElementById('compMatchPercent');
+      const compDetails = document.getElementById('compDetails');
+      const scenarioActionBox = document.getElementById('scenarioActionBox');
+
+      // WhatsApp Modal Elements
+      const whatsappModal = document.getElementById('whatsappModal');
+      const btnCloseWhatsAppModal = document.getElementById('btnCloseWhatsAppModal');
+      const whatsappMessageArea = document.getElementById('whatsappMessageArea');
+      const btnCopyWhatsAppText = document.getElementById('btnCopyWhatsAppText');
+      const btnSendDirectWhatsApp = document.getElementById('btnSendDirectWhatsApp');
+
+      // 2. MODE SWITCHING LOGIC
+      const modeConfigs = {
+        stadium: {
+          badge: '<i class="fa-solid fa-trophy"></i> STADYUM REKOR TESTİ',
+          headline: 'Stadyumda Tezahürat Sesinizi Test Edin!',
+          desc: 'Mikrofonu açın, arkadaşlarınızla bağırın veya maçta tribün sesini tutun. Türk futbol tarihindeki efsanevi 132 dB İnönü ve 131.76 dB Guinness rekorlarına ne kadar yaklaştığınızı anlık görün!',
+          actionHtml: '<button type="button" id="btnChallengeFriends" class="w-full py-3.5 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm transition flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20"><i class="fa-solid fa-users"></i><span>Arkadaşlarına Ses Düellosuna Meydan Oku</span></button>'
+        },
+        apartment: {
+          badge: '<i class="fa-solid fa-building-user"></i> APARTMAN & KOMŞU MODU',
+          headline: 'Apartman Gürültüsü & Yasal Ses Sınırı Testi',
+          desc: 'Çevre ve Şehircilik Bakanlığı ile Kat Mülkiyeti Kanunu (KMK 18) standartlarını test edin. Gece 35 dB, gündüz 65 dB sınır ihlalini saptayın.',
+          actionHtml: '<button type="button" id="btnOpenWaModal" class="w-full py-3.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20"><i class="fa-brands fa-whatsapp text-lg"></i><span>Komşuya WhatsApp Nezaket Uyarısı Hazırla</span></button>'
+        },
+        concert: {
+          badge: '<i class="fa-solid fa-headphones"></i> KONSER & İŞİTME SAĞLIĞI',
+          headline: 'Konser & Kulüp Ses Seviyesi Güvenlik Testi',
+          desc: 'Dünya Sağlık Örgütü (DSÖ) 85 dB üzeri sese maruz kalma süresi limitlerini kontrol edin. Kulak tıkacı takmanız gerekip gerekmediğini öğrenin.',
+          actionHtml: '<div class="p-3 rounded-xl bg-violet-950/40 border border-violet-800/40 text-xs text-violet-200 flex items-center gap-2"><i class="fa-solid fa-triangle-exclamation text-amber-400"></i><span>85 dB üzeri seslerde kulak tıkacı kullanmanız tavsiye edilir.</span></div>'
+        },
+        exhaust: {
+          badge: '<i class="fa-solid fa-car"></i> EGZOZ & TÜVTÜRK SINIRI',
+          headline: 'Araç / Motosiklet Egzoz Sesi Muayene Testi',
+          desc: 'TÜVTÜRK muayene ve Karayolları Trafik Kanunu Md. 30/1-b egzoz gürültü ceza limitlerini test edin (Maksimum yasal tavan 74 - 82 dB).',
+          actionHtml: '<div class="p-3 rounded-xl bg-cyan-950/40 border border-cyan-800/40 text-xs text-cyan-200 flex items-center gap-2"><i class="fa-solid fa-circle-info text-cyan-400"></i><span>Motosikletler 80-82 dB, binek otomobiller 74-78 dB sınırındadır.</span></div>'
+        }
+      };
+
+      function setMode(modeKey) {
+        currentMode = modeKey;
+        modeTabs.forEach(btn => {
+          if (btn.dataset.mode === modeKey) {
+            btn.className = "mode-tab-btn py-2 px-3 sm:px-4 rounded-xl text-xs sm:text-sm font-bold transition-all bg-rose-600 text-white shadow-lg shadow-rose-600/30 flex items-center gap-1.5";
+          } else {
+            btn.className = "mode-tab-btn py-2 px-3 sm:px-4 rounded-xl text-xs sm:text-sm font-semibold transition-all text-slate-400 hover:text-white flex items-center gap-1.5";
+          }
+        });
+
+        const cfg = modeConfigs[modeKey];
+        scenarioBadge.innerHTML = cfg.badge;
+        scenarioHeadline.textContent = cfg.headline;
+        scenarioDescription.textContent = cfg.desc;
+        scenarioActionBox.innerHTML = cfg.actionHtml;
+
+        // Attach listeners for dynamic action buttons
+        if (modeKey === 'apartment') {
+          const btn = document.getElementById('btnOpenWaModal');
+          if (btn) btn.addEventListener('click', openWhatsAppModal);
+        } else if (modeKey === 'stadium') {
+          const btn = document.getElementById('btnChallengeFriends');
+          if (btn) btn.addEventListener('click', shareScore);
+        }
+
+        updateEvaluation();
+      }
+
+      modeTabs.forEach(btn => {
+        btn.addEventListener('click', () => setMode(btn.dataset.mode));
+      });
+
+      // 3. AUDIO RECORDING & DECIBEL ENGINE
+      async function startDecibelMeter() {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ 
+            audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } 
+          });
+          microphoneStream = stream;
+
+          audioContext = new (window.AudioContext || window.webkitAudioContext)();
+          analyser = audioContext.createAnalyser();
+          analyser.fftSize = 512;
+          analyser.smoothingTimeConstant = 0.3;
+
+          const source = audioContext.createMediaStreamSource(stream);
+          source.connect(analyser);
+
+          isListening = true;
+          meterStatusDot.className = "w-3 h-3 rounded-full bg-emerald-400 animate-pulse";
+          meterStatusText.textContent = "Canlı Mikrofon Dinleniyor";
+          btnToggleMic.className = "py-4 px-6 rounded-2xl bg-slate-800 hover:bg-slate-700 text-rose-400 font-extrabold text-sm sm:text-base border border-rose-500/40 shadow-xl transition-all flex items-center justify-center gap-2.5 active:scale-95";
+          btnToggleMicText.textContent = "Ölçümü Durdur";
+
+          analyzeAudio();
+        } catch (err) {
+          alert('Mikrofon erişim izni alınamadı: ' + (err.message || 'Lütfen tarayıcı ayarlarından mikrofon izni verin.'));
+        }
+      }
+
+      function stopDecibelMeter() {
+        isListening = false;
+        if (animationFrameId) cancelAnimationFrame(animationFrameId);
+        if (microphoneStream) {
+          microphoneStream.getTracks().forEach(t => t.stop());
+          microphoneStream = null;
+        }
+        if (audioContext && audioContext.state !== 'closed') {
+          audioContext.close();
+          audioContext = null;
+        }
+
+        meterStatusDot.className = "w-3 h-3 rounded-full bg-slate-600";
+        meterStatusText.textContent = "Mikrofon Durduruldu";
+        btnToggleMic.className = "py-4 px-6 rounded-2xl bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-500 hover:to-red-500 text-white font-extrabold text-sm sm:text-base shadow-xl shadow-rose-600/30 transition-all flex items-center justify-center gap-2.5 active:scale-95";
+        btnToggleMicText.textContent = "Mikrofonla Ölçümü Başlat";
+      }
+
+      function analyzeAudio() {
+        if (!isListening || !analyser) return;
+
+        const dataArray = new Uint8Array(analyser.frequencyBinCount);
+        analyser.getByteTimeDomainData(dataArray);
+
+        // Calculate Root Mean Square (RMS)
+        let sumSquares = 0;
+        for (let i = 0; i < dataArray.length; i++) {
+          const norm = (dataArray[i] - 128) / 128;
+          sumSquares += norm * norm;
+        }
+        const rms = Math.sqrt(sumSquares / dataArray.length);
+
+        // Convert to estimated dB SPL (30 dB room ambient to ~135 dB max)
+        let db = 30;
+        if (rms > 0.0001) {
+          const dbRaw = 20 * Math.log10(rms);
+          db = Math.round(Math.min(135, Math.max(25, 102 + dbRaw)));
+        }
+
+        updateDisplay(db);
+        animationFrameId = requestAnimationFrame(analyzeAudio);
+      }
+
+      // 4. DISPLAY UPDATE & THRESHOLD ANALYSIS
+      function updateDisplay(db) {
+        currentDb = db;
+        liveDbValue.textContent = db;
+
+        // Progress Bar
+        const pct = Math.min(100, Math.max(0, (db / 135) * 100));
+        dbProgressBar.style.width = pct + '%';
+
+        // Stats
+        if (db > peakDb) {
+          peakDb = db;
+          statPeak.textContent = peakDb + ' dB';
+        }
+        if (db < minDb && db > 0) {
+          minDb = db;
+          statMin.textContent = minDb + ' dB';
+        }
+        dbHistory.push(db);
+        if (dbHistory.length > 50) dbHistory.shift();
+        const avg = Math.round(dbHistory.reduce((a, b) => a + b, 0) / dbHistory.length);
+        statAvg.textContent = avg + ' dB';
+
+        // Glow Color
+        if (db >= 110) {
+          meterGlow.className = "absolute inset-0 bg-red-600/20 rounded-3xl transition-colors duration-150 pointer-events-none";
+        } else if (db >= 85) {
+          meterGlow.className = "absolute inset-0 bg-amber-500/15 rounded-3xl transition-colors duration-150 pointer-events-none";
+        } else {
+          meterGlow.className = "absolute inset-0 bg-rose-500/5 rounded-3xl transition-colors duration-150 pointer-events-none";
+        }
+
+        updateEvaluation();
+      }
+
+      function updateEvaluation() {
+        const db = currentDb;
+
+        if (currentMode === 'stadium') {
+          compTargetName.textContent = "🏟️ Stadyum Rekor Kıyaslaması:";
+          const percentInonu = Math.min(100, Math.round((db / 132) * 100));
+          compMatchPercent.textContent = percentInonu + "% Güç";
+
+          if (db >= 131) {
+            soundLevelBadge.className = "inline-block text-xs font-bold px-3 py-1 rounded-full bg-red-500/20 text-red-400 border border-red-500/40 animate-bounce";
+            soundLevelBadge.textContent = "🏆 EFSANEVİ STADYUM REKORU DÜZEYİ!";
+            compDetails.innerHTML = "<strong>İNANILMAZ!</strong> Beşiktaş İnönü (132 dB) ve Galatasaray Ali Sami Yen (131.76 dB) rekor seviyesindesiniz!";
+          } else if (db >= 115) {
+            soundLevelBadge.className = "inline-block text-xs font-bold px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40";
+            soundLevelBadge.textContent = "🔥 Derbi Tribün Coşkusu (115+ dB)";
+            compDetails.innerHTML = "Kadıköy veya Ali Sami Yen derbi zirvesi uğultusundasınız! Rekor için biraz daha yüklenin!";
+          } else if (db >= 95) {
+            soundLevelBadge.className = "inline-block text-xs font-bold px-3 py-1 rounded-full bg-yellow-500/20 text-yellow-300 border border-yellow-500/30";
+            soundLevelBadge.textContent = "📢 Coşkulu Tezahürat (95 - 115 dB)";
+            compDetails.innerHTML = "Güçlü bir tribün tezahüratı seviyesi. İnönü rekoruna (" + (132 - db) + " dB) kaldı.";
+          } else {
+            soundLevelBadge.className = "inline-block text-xs font-bold px-3 py-1 rounded-full bg-slate-800 text-slate-300 border border-slate-700";
+            soundLevelBadge.textContent = "Normal Ses / Sakin";
+            compDetails.innerHTML = "Henüz tribün uğultusu başlamadı. Mikrofonu açıp arkadaşlarınızla tezahürat yapın!";
+          }
+
+        } else if (currentMode === 'apartment') {
+          compTargetName.textContent = "🏢 Apartman Yasal Durumu:";
+          if (db < 35) {
+            soundLevelBadge.className = "inline-block text-xs font-bold px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
+            soundLevelBadge.textContent = "🟢 Sessiz / Yasal Sınır İçinde (< 35 dB)";
+            compMatchPercent.textContent = "İHLAL YOK";
+            compDetails.innerHTML = "Gece dinlenme saatleri (23:00 - 07:00) yasal sınırının altındadır. Konut içi normaldir.";
+          } else if (db < 55) {
+            soundLevelBadge.className = "inline-block text-xs font-bold px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30";
+            soundLevelBadge.textContent = "🟡 Gece Yasal Sınırı Aşıldı (35 - 55 dB)";
+            compMatchPercent.textContent = "GECE İHLALİ";
+            compDetails.innerHTML = "Gündüz tolere edilebilir ancak gece 23:00'ten sonra 35 dB üstü Kat Mülkiyeti Kanunu ihlalidir.";
+          } else {
+            soundLevelBadge.className = "inline-block text-xs font-bold px-3 py-1 rounded-full bg-red-500/20 text-red-400 border border-red-500/30";
+            soundLevelBadge.textContent = "🔴 Ağır Gürültü İhlali (> 55 dB)";
+            compMatchPercent.textContent = "AĞIR İHLAL";
+            compDetails.innerHTML = "Hem gündüz hem gece apartman huzurunu bozan seviyedesiniz. Kabahatler Kanunu Md. 36 kapsamındadır.";
+          }
+
+        } else if (currentMode === 'concert') {
+          compTargetName.textContent = "🎧 İşitme Sağlığı Eşiği (DSÖ):";
+          if (db < 85) {
+            soundLevelBadge.className = "inline-block text-xs font-bold px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
+            soundLevelBadge.textContent = "Güvenli Ses Seviyesi (< 85 dB)";
+            compMatchPercent.textContent = "GÜVENLİ";
+            compDetails.innerHTML = "85 dB altı sesler günlük maruziyette işitme hasarı riski oluşturmaz.";
+          } else if (db < 100) {
+            soundLevelBadge.className = "inline-block text-xs font-bold px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30";
+            soundLevelBadge.textContent = "⚠️ Dikkat: Yüksek Ses (85 - 100 dB)";
+            compMatchPercent.textContent = "SINIRDA";
+            compDetails.innerHTML = "Bu seste 2 saatten fazla durmak işitme yorgunluğuna yol açar. Kulak tıkacı önerilir.";
+          } else {
+            soundLevelBadge.className = "inline-block text-xs font-bold px-3 py-1 rounded-full bg-red-500/20 text-red-400 border border-red-500/30";
+            soundLevelBadge.textContent = "🚨 Tehlike: Kulak Hasarı Riski (> 100 dB)";
+            compMatchPercent.textContent = "TEHLİKELİ";
+            compDetails.innerHTML = "15 dakikadan uzun süre maruz kalınmamalıdır! Kulak tıkacı takılması şarttır.";
+          }
+
+        } else if (currentMode === 'exhaust') {
+          compTargetName.textContent = "🚗 TÜVTÜRK Egzoz Muayenesi:";
+          if (db <= 78) {
+            soundLevelBadge.className = "inline-block text-xs font-bold px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
+            soundLevelBadge.textContent = "🟢 Muayeneden Geçer (Yasal)";
+            compMatchPercent.textContent = "UYGUN";
+            compDetails.innerHTML = "Standart binek otomobiller için fabrika yasal ses tavanı dahilindedir.";
+          } else if (db <= 82) {
+            soundLevelBadge.className = "inline-block text-xs font-bold px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30";
+            soundLevelBadge.textContent = "🟡 Motosiklet Üst Sınırı";
+            compMatchPercent.textContent = "SINIRDA";
+            compDetails.innerHTML = "Otomobiller için yüksek, yüksek cc motosikletler için yasal sınır çizgisi.";
+          } else {
+            soundLevelBadge.className = "inline-block text-xs font-bold px-3 py-1 rounded-full bg-red-500/20 text-red-400 border border-red-500/30";
+            soundLevelBadge.textContent = "🔴 Muayeneden Kalır / Trafik Cezası";
+            compMatchPercent.textContent = "AĞIR KUSUR";
+            compDetails.innerHTML = "Abart egzoz seviyesi! KTK Md. 30/1-b uyarınca idari para cezası ve men sebebidir.";
+          }
+        }
+      }
+
+      // 5. EVENT LISTENERS
+      btnToggleMic.addEventListener('click', () => {
+        if (!isListening) {
+          startDecibelMeter();
+        } else {
+          stopDecibelMeter();
+        }
+      });
+
+      btnResetStats.addEventListener('click', () => {
+        peakDb = 0;
+        minDb = 999;
+        dbHistory = [];
+        statPeak.textContent = '0 dB';
+        statAvg.textContent = '0 dB';
+        statMin.textContent = '0 dB';
+        updateDisplay(currentDb);
+      });
+
+      // Preset Buttons
+      document.querySelectorAll('.preset-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (isListening) stopDecibelMeter();
+          const db = parseInt(btn.dataset.db, 10);
+          updateDisplay(db);
+        });
+      });
+
+      // WhatsApp Actions
+      function openWhatsAppModal() {
+        const waMsg = 'Merhaba komşum, rahatsız etmek istemezdim ancak şu an dairenizden gelen sesler binada yankılanıyor ve desibel ölçümünde yaklaşık ' + currentDb + ' dB seviyesine ulaşıyor. Dinlenme saatinde olduğumuz için biraz daha hassasiyet göstermenizi rica edebilir miyim? Anlayışınız için çok teşekkür ederim, iyi günler.';
+        whatsappMessageArea.value = waMsg;
+        whatsappModal.classList.remove('hidden');
+      }
+
+      btnCloseWhatsAppModal.addEventListener('click', () => {
+        whatsappModal.classList.add('hidden');
+      });
+
+      btnCopyWhatsAppText.addEventListener('click', () => {
+        navigator.clipboard.writeText(whatsappMessageArea.value).then(() => {
+          alert('WhatsApp metni panoya kopyalandı!');
+        });
+      });
+
+      btnSendDirectWhatsApp.addEventListener('click', () => {
+        const text = encodeURIComponent(whatsappMessageArea.value);
+        window.open('https://api.whatsapp.com/send?text=' + text, '_blank');
+      });
+
+      function shareScore() {
+        const score = peakDb > 0 ? peakDb : currentDb;
+        const text = encodeURIComponent("PratikBase Online Desibel Ölçer'de bağırma rekorum: tam " + score + " dB! 🔥\n\n132 dB Beşiktaş İnönü ve 131.7 dB Galatasaray Ali Sami Yen stadyum rekoruna meydan okuyorum! Sen kaç desibel yapabilirsin?\nÖlç: https://pratikbase.com/online-desibel-olcer/");
+        window.open('https://api.whatsapp.com/send?text=' + text, '_blank');
+      }
+
+      btnShareScore.addEventListener('click', shareScore);
+
+      btnSharePage.addEventListener('click', () => {
+        if (navigator.share) {
+          navigator.share({
+            title: 'Online Desibel (dB) Ölçer: Stadyum & Ses Testi',
+            url: window.location.href
+          }).catch(() => {});
+        } else {
+          navigator.clipboard.writeText(window.location.href);
+          alert('Bağlantı kopyalandı!');
+        }
+      });
+
+      // Initialize
+      setMode('stadium');
+      updateDisplay(45);
+    })();
+  </script>
+
+  <!-- Realtime Analytics Tracker -->
+  <script src="/assets/tracker.js" defer></script>
+</body>
+</html>
