@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Komşu Gürültüsü Desibel (dB) Ölçer & Şikayet Dilekçesi Robotu (2026) | PratikBase</title>
-  <meta name="description" content="Mikrofonunuzla ortam gürültüsünü anında canlı desibel (dB) olarak ölçün. Apartmanda yasal ses sınırlarını test edin; komşuya WhatsApp uyarısı, yöneticiye veya zabıta/savcılığa resmi şikayet dilekçesi oluşturun.">
+  <title>Komşu Gürültüsü Desibel (dB) Ölçer & Yasal Sınır Rehberi (2026) | PratikBase</title>
+  <meta name="description" content="Mikrofonunuzla ortam gürültüsünü anında canlı desibel (dB) olarak ölçün. Apartmanda gece ve gündüz yasal ses sınırlarını test edin; komşuya WhatsApp nezaket uyarısı ve yasal haklar rehberi.">
   <meta name="keywords" content="komşu gürültüsü şikayet dilekçesi, apartmanda gürültü yasal desibel sınırı, online desibel ölçer, gürültü yapan komşu nereye şikayet edilir, gece süpürge açmak yasak mı, kat mülkiyeti kanunu gürültü cezası, zabıta gürültü şikayet">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   <link rel="canonical" href="https://pratikbase.com/komsu-gurultusu-desibel-sikayet/">
@@ -12,7 +12,7 @@
   <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://pratikbase.com/komsu-gurultusu-desibel-sikayet/">
-  <meta property="og:title" content="Komşu Gürültüsü Canlı Desibel Ölçer & Resmi Şikayet Dilekçesi">
+  <meta property="og:title" content="Komşu Gürültüsü Canlı Desibel (dB) Ölçer & Yasal Sınır Rehberi">
   <meta property="og:description" content="Mikrofonla ortam sesini canlı ölçün, yasal sınır aşımını görün, zabıta ve yöneticiye hazır resmi dilekçe indirin.">
   <meta property="og:image" content="https://pratikbase.com/assets/og-banner.png">
   <meta property="og:locale" content="tr_TR">
@@ -20,7 +20,7 @@
 
   <!-- Twitter / X -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Komşu Gürültüsü Desibel Ölçer & Dilekçe">
+  <meta name="twitter:title" content="Komşu Gürültüsü Desibel Ölçer & Yasal Sınır Rehberi">
   <meta name="twitter:description" content="Canlı mikrofonla desibel ölçümü ve KMK Madde 18 resmi şikayet dilekçesi robotu.">
   <meta name="twitter:image" content="https://pratikbase.com/assets/og-banner.png">
 
@@ -106,7 +106,7 @@
     "@graph": [
       {
         "@type": "WebApplication",
-        "name": "Komşu Gürültüsü Desibel Ölçer & Şikayet Dilekçesi",
+        "name": "Komşu Gürültüsü Desibel Ölçer & Yasal Sınır Rehberi",
         "url": "https://pratikbase.com/komsu-gurultusu-desibel-sikayet/",
         "applicationCategory": "UtilitiesApplication",
         "operatingSystem": "All",
@@ -341,25 +341,24 @@
             </div>
           </div>
 
-          <!-- 3 Aşamalı Aksiyon Butonları -->
+          <!-- Aksiyon Butonları -->
           <div class="pt-2 space-y-2.5">
             <button 
               type="button" 
               id="btnOpenWhatsAppModal"
-              class="w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition shadow-md shadow-emerald-600/20 flex items-center justify-center gap-2"
+              class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs sm:text-sm transition shadow-md shadow-emerald-600/20 flex items-center justify-center gap-2"
             >
-              <i class="fa-brands fa-whatsapp text-base"></i>
-              <span>1. Adım: Komşuya Kibar WhatsApp Uyarı Mesajı</span>
+              <i class="fa-brands fa-whatsapp text-lg"></i>
+              <span>Komşuya WhatsApp Nezaket Uyarısı Gönder</span>
             </button>
 
-            <button 
-              type="button" 
-              id="btnOpenPetitionModal"
-              class="w-full py-3.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs border border-slate-700 transition flex items-center justify-center gap-2"
+            <a 
+              href="#legalSection"
+              class="w-full py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-semibold text-xs border border-slate-700 transition flex items-center justify-center gap-2 text-center"
             >
-              <i class="fa-solid fa-file-contract text-base text-rose-400"></i>
-              <span>2. Adım: Resmi Şikayet Dilekçesi Hazırla (Yönetici / Zabıta)</span>
-            </button>
+              <i class="fa-solid fa-scale-balanced text-amber-400"></i>
+              <span>Apartman Yasal Desibel Sınırları & Saat Rehberi</span>
+            </a>
           </div>
 
         </div>
@@ -376,111 +375,6 @@
 
       </div>
 
-    </div>
-
-    <!-- PETITION MODAL (A4 FORMAT) -->
-    <div id="petitionModal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
-      <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-4xl w-full p-5 sm:p-7 space-y-5 shadow-2xl relative max-h-[92vh] overflow-y-auto">
-        
-        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-          <div class="flex items-center gap-2">
-            <div class="w-8 h-8 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center">
-              <i class="fa-solid fa-file-lines"></i>
-            </div>
-            <div>
-              <h3 class="text-base font-bold text-white">Gürültü ve Huzur Bozma Resmi Şikayet Dilekçesi</h3>
-              <span class="text-[11px] text-slate-400">Kat Mülkiyeti Kanunu Md. 18 ve Kabahatler Kanunu Md. 36</span>
-            </div>
-          </div>
-          <button id="btnClosePetition" class="p-2 text-slate-400 hover:text-white transition">
-            <i class="fa-solid fa-xmark text-lg"></i>
-          </button>
-        </div>
-
-        <!-- Petition Settings Form -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-xs bg-slate-950 p-4 rounded-2xl border border-slate-800">
-          <div>
-            <label class="block font-semibold text-slate-300 mb-1">Başvuru Yapılacak Makam</label>
-            <select id="targetAuthoritySelect" class="w-full py-1.5 px-2.5 rounded-lg bg-slate-900 border border-slate-700 text-white outline-none">
-              <option value="yonetici" selected>Apartman / Site Yöneticiliği</option>
-              <option value="zabita">Belediye Zabıta Müdürlüğü</option>
-              <option value="karakol">İlçe Emniyet Müdürlüğü (Karakol)</option>
-              <option value="savcilik">Cumhuriyet Başsavcılığı</option>
-            </select>
-          </div>
-          <div>
-            <label class="block font-semibold text-slate-300 mb-1">Gürültü Yapan Daire No</label>
-            <input type="text" id="noisyApartmentInput" value="Üst Kat (Daire 7)" class="w-full px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-white outline-none">
-          </div>
-          <div>
-            <label class="block font-semibold text-slate-300 mb-1">Gürültü Türü</label>
-            <input type="text" id="noiseTypeInput" value="Gece Yüksek Müzik ve Eşya Sürükleme" class="w-full px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-white outline-none">
-          </div>
-          <div>
-            <label class="block font-semibold text-slate-300 mb-1">Şikayetçi Adı Soyadı</label>
-            <input type="text" id="complainantNameInput" value="Mehmet Demir" class="w-full px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-white outline-none">
-          </div>
-        </div>
-
-        <!-- A4 Printable Preview -->
-        <div id="printArea" class="a4-print-sheet overflow-x-auto max-w-full p-6 sm:p-10 rounded-2xl border border-slate-300 shadow-inner text-xs sm:text-sm text-slate-900 leading-relaxed space-y-4">
-          <div class="text-center font-bold text-sm sm:text-base tracking-wide uppercase border-b pb-3">
-            <span id="docHeaderTitle">APARTMAN / SİTE YÖNETİCİLİĞİNE</span><br>
-            <span class="text-xs font-normal text-slate-600">(Yazılı İkaz ve Gereğinin Yapılması Talebidir)</span>
-          </div>
-
-          <div class="space-y-1 font-semibold text-xs">
-            <div><strong>ŞİKAYET EDEN (KAT SAKİNİ):</strong> <span id="docComplainantName">Mehmet Demir</span> (Daire No: .......)</div>
-            <div><strong>ŞİKAYET EDİLEN BAĞIMSIZ BÖLÜM:</strong> <span id="docNoisyApartment">Üst Kat (Daire 7)</span></div>
-            <div><strong>TARİH:</strong> <span id="docDate">13.11.2026</span></div>
-            <div><strong>KONU:</strong> 634 sayılı Kat Mülkiyeti Kanunu Madde 18 uyarınca komşuluk hukukunu ağır biçimde ihlal eden sürekli gürültü ve huzur bozucu eylemler hakkında.</div>
-          </div>
-
-          <div class="space-y-2 text-justify text-xs sm:text-sm">
-            <p>
-              İkamet etmekte olduğum binanın <strong><span id="docNoisyApartment2">Üst Kat (Daire 7)</span></strong> numaralı bağımsız bölümünde ikamet eden şahıs/şahıslar; özellikle gece dinlenme saatlerinde ve geç vakitlerde (<strong><span id="docNoiseType">Gece Yüksek Müzik ve Eşya Sürükleme</span></strong>) gerçekleştirmek suretiyle apartman sakinlerinin huzur ve sükununu sürekli olarak ihlal etmektedir.
-            </p>
-            <p>
-              Yaşanan gürültü sebebiyle yapılan ölçümlerde yasal sınırların (Çevresel Gürültü Kontrol Yönetmeliği gece arka plan sınırı olan 35 dB) çok üzerinde ses şiddeti tespit edilmiş; söz konusu durum aile bireylerinin uyku düzenini, dinlenme hakkını ve psikolojik sağlığını çekilmez dereceye getirmiştir.
-            </p>
-            <p>
-              634 sayılı Kat Mülkiyeti Kanunu'nun 18. maddesi gereğince; <em>"Kat malikleri ve sakinleri, gerek bağımsız bölümlerini gerek eklentileri ve ortak yerleri kullanırken doğruluk kaidelerine uymak, özellikle birbirini rahatsız etmemek ve komşuluk haklarına riayet etmekle karşılıklı olarak yükümlüdürler."</em>
-            </p>
-            <p>
-              İşbu nedenle, ilgili bağımsız bölüm sakininin yönetiminizce ivedilikle yazılı olarak uyarılmasını; eylemin devamı halinde kolluk kuvvetlerine (112 Acil Zabıta/Polis) tutanak tutturularak Kabahatler Kanunu Md. 36 uyarınca idari yaptırım ve Sulh Hukuk Mahkemesi nezdinde tahliye davası açılması hususunda gereğini arz ve talep ederim.
-            </p>
-          </div>
-
-          <div class="pt-4 border-t flex justify-between items-end text-xs">
-            <div>
-              <strong>Ekler:</strong> Tarih ve saat kayıtları, ses/video kayıtları.
-            </div>
-            <div class="text-right">
-              <strong>Şikayetçi İsim ve İmza:</strong><br><br>
-              <span id="docComplainantName2">Mehmet Demir</span><br>
-              ............................................
-            </div>
-          </div>
-        </div>
-
-        <!-- Buttons inside Modal -->
-        <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-2">
-          <span class="text-[11px] text-slate-400">
-            * 'Yazdır' butonu ile doğrudan A4 çıktısı alabilir veya PDF formatında indirebilirsiniz.
-          </span>
-          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
-            <button type="button" id="btnCopyPetitionText" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-bold transition flex items-center justify-center gap-1.5">
-              <i class="fa-regular fa-copy"></i>
-              <span>Metni Kopyala</span>
-            </button>
-            <button type="button" onclick="window.print()" class="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-black transition flex items-center justify-center gap-1.5 shadow-md shadow-rose-600/30">
-              <i class="fa-solid fa-print"></i>
-              <span>Yazdır / PDF Kaydet</span>
-            </button>
-          </div>
-        </div>
-
-      </div>
     </div>
 
     <!-- WHATSAPP MESSAGE MODAL -->
@@ -795,50 +689,18 @@
         if (isListening) stopDecibelMeter();
         const db = parseInt(btn.getAttribute('data-db'), 10);
         selectedNoiseTitle = btn.getAttribute('data-title');
-        noiseTypeInput.value = selectedNoiseTitle;
         updateDecibelDisplay(db);
       });
     });
 
-    // Update Message & Petition text
+    // Update WhatsApp Message
     function updateTemplateTexts() {
-      const apt = noisyApartmentInput.value || 'Üst Kat Komşumuz';
-      const noise = noiseTypeInput.value || selectedNoiseTitle;
-      const name = complainantNameInput.value || 'Komşunuz';
-
-      // WhatsApp text
-      const waMsg = 'Merhaba komşum, rahatsız etmek istemezdim ancak şu an dairenizden gelen sesler (' + noise + ') binada oldukça yankılanıyor ve ölçümde ' + currentDb + ' dB seviyesine ulaşıyor. Geç saatlerde dinlenme saatinde olduğumuz için biraz daha hassasiyet göstermenizi rica edebilir miyim? Anlayışınız için çok teşekkür ederim, iyi akşamlar.';
+      const noise = selectedNoiseTitle || 'Gürültü';
+      const waMsg = 'Merhaba komşum, rahatsız etmek istemezdim ancak şu an dairenizden gelen sesler (' + noise + ') binada oldukça yankılanıyor ve ölçümde yaklaşık ' + currentDb + ' dB seviyesine ulaşıyor. Dinlenme saatinde olduğumuz için biraz daha hassasiyet göstermenizi rica edebilir miyim? Anlayışınız için çok teşekkür ederim, iyi günler.';
       whatsappMessageArea.value = waMsg;
-
-      // Petition update
-      docNoisyApartment.textContent = apt;
-      docNoisyApartment2.textContent = apt;
-      docNoiseType.textContent = noise + ' (Ölçülen Ses: ' + currentDb + ' dB)';
-      docComplainantName.textContent = name;
-      docComplainantName2.textContent = name;
-
-      const auth = targetAuthoritySelect.value;
-      if (auth === 'yonetici') {
-        docHeaderTitle.textContent = 'APARTMAN / SİTE YÖNETİCİLİĞİNE';
-      } else if (auth === 'zabita') {
-        docHeaderTitle.textContent = 'BELEDİYE BAŞKANLIĞI ZABITA MÜDÜRLÜĞÜ\'NE';
-      } else if (auth === 'karakol') {
-        docHeaderTitle.textContent = 'İLÇE EMNİYET MÜDÜRLÜĞÜ POLİS MERKEZİ AMİRLİĞİ\'NE';
-      } else {
-        docHeaderTitle.textContent = 'CUMHURİYET BAŞSAVCILIĞI\'NA';
-      }
     }
 
     // Modal listeners
-    btnOpenPetitionModal.addEventListener('click', function() {
-      updateTemplateTexts();
-      petitionModal.classList.remove('hidden');
-    });
-
-    btnClosePetition.addEventListener('click', function() {
-      petitionModal.classList.add('hidden');
-    });
-
     btnOpenWhatsAppModal.addEventListener('click', function() {
       updateTemplateTexts();
       whatsappModal.classList.remove('hidden');
@@ -846,12 +708,6 @@
 
     btnCloseWhatsAppModal.addEventListener('click', function() {
       whatsappModal.classList.add('hidden');
-    });
-
-    // Inputs change listeners
-    [targetAuthoritySelect, noisyApartmentInput, noiseTypeInput, complainantNameInput].forEach(function(el) {
-      el.addEventListener('input', updateTemplateTexts);
-      el.addEventListener('change', updateTemplateTexts);
     });
 
     // WhatsApp actions
@@ -864,13 +720,6 @@
     btnSendDirectWhatsApp.addEventListener('click', function() {
       const text = encodeURIComponent(whatsappMessageArea.value);
       window.open('https://api.whatsapp.com/send?text=' + text, '_blank');
-    });
-
-    btnCopyPetitionText.addEventListener('click', function() {
-      const text = document.getElementById('printArea').innerText;
-      navigator.clipboard.writeText(text).then(function() {
-        alert('Dilekçe metni panoya kopyalandı!');
-      });
     });
 
     // Initial setup
