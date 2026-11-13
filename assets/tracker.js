@@ -18,29 +18,45 @@
   const RTDB_URL = 'https://pratikbase-default-rtdb.firebaseio.com';
   const HEARTBEAT_INTERVAL = 15000;
 
-  // 1. Cihaz Başına Kalıcı Tekil Ziyaretçi Kimliği (Tüm Sekmelerde Aynı Kalır)
-  // Bir cihazda 10 sekme de açılsa sadece 1 kişi sayılır!
-  let visitorId = localStorage.getItem('pb_vid');
-  if (!visitorId) {
-    visitorId = 'v_' + Date.now().toString(36) + '_' + Math.random().toString(36).substring(2, 8);
-    localStorage.setItem('pb_vid', visitorId);
+  // 1. Güvenli Depolama ve Cihaz Başına Kalıcı Tekil Ziyaretçi Kimliği
+  function safeGet(key) {
+    try { return localStorage.getItem(key); } catch(e) { return null; }
+  }
+  function safeSet(key, val) {
+    try { localStorage.setItem(key, val); } catch(e) {}
+  }
+  function safeSessionGet(key) {
+    try { return sessionStorage.getItem(key); } catch(e) { return null; }
+  }
+  function safeSessionSet(key, val) {
+    try { sessionStorage.setItem(key, val); } catch(e) {}
   }
 
-  // 2. Cihaz Tespiti
-  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-  const deviceType = isMobile ? 'Mobil' : 'Masaüstü';
+  let visitorId = safeGet('pb_vid');
+  if (!visitorId) {
+    visitorId = 'v_' + Date.now().toString(36) + '_' + Math.random().toString(36).substring(2, 8);
+    safeSet('pb_vid', visitorId);
+  }
 
-  // 3. İşletim Sistemi
+  // 2. Bot / Crawler Tespiti
+  const ua = navigator.userAgent || '';
+  const isBot = navigator.webdriver === true || 
+    /bot|crawl|spider|slurp|facebookexternalhit|whatsapp|twitterbot|slackbot|telegrambot|discordbot|bingbot|googlebot|yandexbot|headless|phantomjs/i.test(ua);
+
+  // 3. Cihaz Tespiti
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua);
+  const deviceType = isBot ? '🤖 Bot / Önizleme' : (isMobile ? 'Mobil' : 'Masaüstü');
+
+  // 4. İşletim Sistemi
   let os = 'Bilinmiyor';
-  const ua = navigator.userAgent;
   if (/Windows/i.test(ua)) os = 'Windows';
   else if (/Android/i.test(ua)) os = 'Android';
   else if (/iPhone|iPad|iPod/i.test(ua)) os = 'iOS';
   else if (/Macintosh|Mac OS/i.test(ua)) os = 'macOS';
   else if (/Linux/i.test(ua)) os = 'Linux';
 
-  // 4. Trafik Kaynağı
-  let referrerSource = localStorage.getItem('pb_ref_source');
+  // 5. Trafik Kaynağı
+  let referrerSource = safeGet('pb_ref_source');
   if (!referrerSource) {
     const urlParams = new URLSearchParams(window.location.search);
     const utmSource = urlParams.get('utm_source') || urlParams.get('source') || urlParams.get('ref');
@@ -77,7 +93,7 @@
         }
       }
     }
-    localStorage.setItem('pb_ref_source', referrerSource);
+    safeSet('pb_ref_source', referrerSource);
   }
 
   const screenResolution = `${window.screen.width}x${window.screen.height}`;
@@ -85,6 +101,50 @@
   try {
     timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Europe/Istanbul';
   } catch(e) {}
+
+  // 6. GeoIP (Ülke, İl / Şehir ve Bayrak Tespiti)
+  let geo = { country: 'Türkiye', city: 'Türkiye', region: '', flag: '🇹🇷', countryCode: 'TR' };
+  try {
+    const cached = safeSessionGet('pb_geo') || safeGet('pb_geo');
+    if (cached) geo = JSON.parse(cached);
+  } catch(e) {}
+
+  if (!safeSessionGet('pb_geo')) {
+    const tz = timezone || 'Europe/Istanbul';
+    if (tz.includes('Istanbul')) {
+      geo = { country: 'Türkiye', city: 'Türkiye', region: '', flag: '🇹🇷', countryCode: 'TR' };
+    } else if (tz.includes('New_York') || tz.includes('Los_Angeles') || tz.includes('Chicago')) {
+      geo = { country: 'ABD', city: tz.split('/')[1]?.replace('_', ' ') || 'ABD', region: '', flag: '🇺🇸', countryCode: 'US' };
+    } else if (tz.includes('London')) {
+      geo = { country: 'İngiltere', city: 'Londra', region: '', flag: '🇬🇧', countryCode: 'GB' };
+    } else if (tz.includes('Berlin') || tz.includes('Frankfurt')) {
+      geo = { country: 'Almanya', city: 'Almanya', region: '', flag: '🇩🇪', countryCode: 'DE' };
+    } else if (tz.includes('Toronto') || tz.includes('Vancouver')) {
+      geo = { country: 'Kanada', city: 'Toronto', region: '', flag: '🇨🇦', countryCode: 'CA' };
+    } else {
+      const parts = tz.split('/');
+      geo = { country: parts[0] || 'Dünya', city: parts[1]?.replace('_', ' ') || '', region: '', flag: '🌍', countryCode: '' };
+    }
+
+    // Arka planda gerçek IP sorgusu (Asenkron, sayfa yükleme süresine sıfır etki)
+    fetch('https://ipwho.is/')
+      .then(r => r.json())
+      .then(d => {
+        if (d && d.success) {
+          geo = {
+            country: d.country || geo.country,
+            city: d.city || d.region || geo.city,
+            region: d.region || '',
+            flag: d.flag?.emoji || geo.flag,
+            countryCode: d.country_code || geo.countryCode
+          };
+          safeSessionSet('pb_geo', JSON.stringify(geo));
+          safeSet('pb_geo', JSON.stringify(geo));
+          sendHeartbeat();
+        }
+      })
+      .catch(() => {});
+  }
 
   const getPageInfo = () => {
     let p = window.location.pathname;
@@ -95,12 +155,12 @@
     };
   };
 
-  const startedAt = parseInt(localStorage.getItem('pb_started_at') || '0', 10) || Date.now();
-  if (!localStorage.getItem('pb_started_at')) {
-    localStorage.setItem('pb_started_at', startedAt.toString());
+  const startedAt = parseInt(safeGet('pb_started_at') || '0', 10) || Date.now();
+  if (!safeGet('pb_started_at')) {
+    safeSet('pb_started_at', startedAt.toString());
   }
 
-  // 5. Canlı Kalp Atışı (Live Presence)
+  // 7. Canlı Kalp Atışı (Live Presence)
   function sendHeartbeat(isExiting = false) {
     const pageInfo = getPageInfo();
     const payload = {
@@ -112,6 +172,12 @@
       referrer: referrerSource,
       screen: screenResolution,
       timezone: timezone,
+      country: geo.country,
+      city: geo.city,
+      region: geo.region,
+      flag: geo.flag,
+      countryCode: geo.countryCode,
+      isBot: isBot,
       lastSeen: Date.now(),
       startedAt: startedAt,
       isExiting: isExiting
@@ -125,7 +191,7 @@
     }).catch(() => {});
   }
 
-  // 6. Kalıcı Geçmiş ve Günlük İstatistik Kaydı (Asla Silinmez)
+  // 8. Kalıcı Geçmiş ve Günlük İstatistik Kaydı (Asla Silinmez)
   function recordPageEnter() {
     const pageInfo = getPageInfo();
     const now = new Date();
@@ -134,11 +200,11 @@
 
     // Hızlı sayfa yenilemede (F5) mükerrer tıklamayı engelle
     const lastHitKey = `pb_last_hit_${pageInfo.path}`;
-    const lastHitTime = parseInt(sessionStorage.getItem(lastHitKey) || '0', 10);
+    const lastHitTime = parseInt(safeSessionGet(lastHitKey) || '0', 10);
     if (Date.now() - lastHitTime < 10000) {
       return;
     }
-    sessionStorage.setItem(lastHitKey, Date.now().toString());
+    safeSessionSet(lastHitKey, Date.now().toString());
 
     const hitId = 'h_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6);
     const hitData = {
@@ -150,6 +216,10 @@
       title: pageInfo.title,
       device: deviceType,
       referrer: referrerSource,
+      country: geo.country,
+      city: geo.city,
+      flag: geo.flag,
+      isBot: isBot,
       timestamp: Date.now()
     };
 
@@ -170,6 +240,10 @@
         device: deviceType,
         os: os,
         referrer: referrerSource,
+        country: geo.country,
+        city: geo.city,
+        flag: geo.flag,
+        isBot: isBot,
         entrancePage: pageInfo.path
       })
     }).catch(() => {});

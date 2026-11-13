@@ -278,17 +278,18 @@
 
       </div>
 
-      <!-- Orta Bölüm: Aktif Sayfalar & Canlı Trafik -->
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Orta Bölüm: Aktif Sayfalar, Kaynaklar & Canlı Konumlar -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-        <div class="lg:col-span-2 bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col">
+        <!-- Kart 1: Şu An Kim Hangi Sayfada? -->
+        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col">
           <div class="flex items-center justify-between mb-4">
             <div>
               <h2 class="text-base font-bold text-white flex items-center gap-2">
                 <i class="fa-solid fa-compass text-emerald-400"></i>
                 Şu An Kim Hangi Sayfada?
               </h2>
-              <p class="text-xs text-slate-400 mt-0.5">Ziyaretçilerin gezindiği araçlar ve aktif kullanıcı sayıları</p>
+              <p class="text-xs text-slate-400 mt-0.5">Ziyaretçilerin gezindiği aktif araçlar</p>
             </div>
             <span id="pageBreakdownBadge" class="text-xs bg-slate-800 text-slate-300 px-2.5 py-1 rounded-full font-mono">0 Sayfa</span>
           </div>
@@ -301,6 +302,7 @@
           </div>
         </div>
 
+        <!-- Kart 2: Anlık Trafik Kaynakları -->
         <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col">
           <div class="flex items-center justify-between mb-4">
             <div>
@@ -310,12 +312,34 @@
               </h2>
               <p class="text-xs text-slate-400 mt-0.5">Ziyaretçiler siteye nereden ulaştı?</p>
             </div>
+            <span id="sourceBreakdownBadge" class="text-xs bg-slate-800 text-slate-300 px-2.5 py-1 rounded-full font-mono">0 Kanal</span>
           </div>
 
           <div id="trafficSourcesList" class="space-y-3 flex-1 custom-scroll max-h-[380px] overflow-y-auto pr-1">
             <div class="text-center py-12 text-slate-500 text-sm">
               <i class="fa-solid fa-chart-pie text-3xl mb-2 opacity-50 block"></i>
               Kaynak verisi bekleniyor...
+            </div>
+          </div>
+        </div>
+
+        <!-- Kart 3: Canlı Ziyaretçi Konumları (Ülke & İl / Şehir) -->
+        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h2 class="text-base font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-earth-americas text-emerald-400"></i>
+                Canlı Konum Dağılımı
+              </h2>
+              <p class="text-xs text-slate-400 mt-0.5">Ziyaretçilerin ülke ve il / şehir dağılımı</p>
+            </div>
+            <span id="locationBreakdownBadge" class="text-xs bg-slate-800 text-slate-300 px-2.5 py-1 rounded-full font-mono">0 Konum</span>
+          </div>
+
+          <div id="liveLocationsList" class="space-y-3 flex-1 custom-scroll max-h-[380px] overflow-y-auto pr-1">
+            <div class="text-center py-12 text-slate-500 text-sm">
+              <i class="fa-solid fa-location-dot text-3xl mb-2 opacity-50 block"></i>
+              Konum verisi bekleniyor...
             </div>
           </div>
         </div>
@@ -352,6 +376,7 @@
             <thead class="bg-slate-950/60 text-slate-400 uppercase tracking-wider font-semibold border-b border-slate-800">
               <tr>
                 <th class="py-3 px-3.5">Durum</th>
+                <th class="py-3 px-3.5">Konum (Ülke & İl / Şehir)</th>
                 <th class="py-3 px-3.5">Cihaz & İşletim Sistemi</th>
                 <th class="py-3 px-3.5">Bulunduğu Sayfa</th>
                 <th class="py-3 px-3.5">Kaynak (Referrer)</th>
@@ -361,7 +386,7 @@
             </thead>
             <tbody id="liveSessionsTableBody" class="divide-y divide-slate-800/60">
               <tr>
-                <td colspan="6" class="text-center py-8 text-slate-500">
+                <td colspan="7" class="text-center py-8 text-slate-500">
                   Şu an sitede aktif kullanıcı bulunmuyor veya bekleniyor...
                 </td>
               </tr>
@@ -752,6 +777,49 @@
 
       </div>
 
+      <!-- Geçmiş Konum Dağılımı (Ülkeler & Şehirler) -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="text-base font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-earth-americas text-emerald-400"></i>
+                En Çok Ziyaret Alan Ülkeler
+              </h3>
+              <p class="text-xs text-slate-400 mt-0.5">Ziyaretçilerin ülke bazlı toplam dağılımı</p>
+            </div>
+            <span id="histCountryCountBadge" class="text-xs bg-slate-800 text-slate-300 px-2.5 py-1 rounded-full font-mono">0 Ülke</span>
+          </div>
+
+          <div id="histCountriesList" class="space-y-3 flex-1 custom-scroll max-h-[340px] overflow-y-auto pr-1">
+            <div class="text-center py-10 text-slate-500 text-sm">
+              Kayıt bekleniyor...
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="text-base font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-city text-indigo-400"></i>
+                En Çok Ziyaret Alan İller / Şehirler
+              </h3>
+              <p class="text-xs text-slate-400 mt-0.5">Ziyaretçilerin il ve şehir bazlı toplam dağılımı</p>
+            </div>
+            <span id="histCityCountBadge" class="text-xs bg-slate-800 text-slate-300 px-2.5 py-1 rounded-full font-mono">0 Şehir</span>
+          </div>
+
+          <div id="histCitiesList" class="space-y-3 flex-1 custom-scroll max-h-[340px] overflow-y-auto pr-1">
+            <div class="text-center py-10 text-slate-500 text-sm">
+              Kayıt bekleniyor...
+            </div>
+          </div>
+        </div>
+
+      </div>
+
     </main>
 
   </div>
@@ -964,6 +1032,7 @@
         const activeSessions = [];
         const pageCounts = {};
         const referrerCounts = {};
+        const locationCounts = {};
         let mobileCount = 0;
         let desktopCount = 0;
 
@@ -971,7 +1040,14 @@
           if (!s || typeof s !== 'object') continue;
           
           const timeSinceLastSeen = now - (s.lastSeen || 0);
-          const isLive = timeSinceLastSeen <= activeWindow && !s.isExiting;
+
+          // 60 saniyeden eski veya ayrılan oturumları otomatik arka planda temizle (Firebase RTDB'yi temiz tutar)
+          if (timeSinceLastSeen > 60000 || s.isExiting) {
+            fetch(`${RTDB_URL}/live_presence/${id}.json`, { method: 'DELETE' }).catch(() => {});
+            continue;
+          }
+
+          const isLive = timeSinceLastSeen <= activeWindow;
 
           if (isLive) {
             activeSessions.push({ ...s, id, timeSinceLastSeen });
@@ -985,8 +1061,15 @@
             }
             pageCounts[p].count++;
 
-            const ref = s.referrer || 'Doğrudan';
+            const ref = s.referrer || 'Doğrudan (Direct)';
             referrerCounts[ref] = (referrerCounts[ref] || 0) + 1;
+
+            // Konum Tespiti (Ülke & İl / Şehir)
+            const flag = s.flag || '🌍';
+            const country = s.country || (s.timezone ? s.timezone.split('/')[0] : 'Bilinmiyor');
+            const city = s.city || s.region || (s.timezone ? s.timezone.split('/')[1]?.replace('_', ' ') : '');
+            const locKey = city ? `${flag} ${city}, ${country}` : `${flag} ${country}`;
+            locationCounts[locKey] = (locationCounts[locKey] || 0) + 1;
           }
         }
 
@@ -997,7 +1080,7 @@
         }
         previousOnlineCount = currentCount;
 
-        renderDashboard(activeSessions, pageCounts, referrerCounts, mobileCount, desktopCount);
+        renderDashboard(activeSessions, pageCounts, referrerCounts, locationCounts, mobileCount, desktopCount);
 
       } catch (err) {
         console.warn('Veri çekilemedi:', err);
@@ -1008,7 +1091,7 @@
       }
     }
 
-    function renderDashboard(sessions, pages, referrers, mobileCount, desktopCount) {
+    function renderDashboard(sessions, pages, referrers, locations, mobileCount, desktopCount) {
       const totalLive = sessions.length;
       document.getElementById('kpiOnlineCount').innerText = totalLive;
 
@@ -1085,6 +1168,7 @@
       }
 
       const refsContainer = document.getElementById('trafficSourcesList');
+      document.getElementById('sourceBreakdownBadge').innerText = `${sortedRefs.length} Kanal`;
       if (sortedRefs.length === 0) {
         refsContainer.innerHTML = `
           <div class="text-center py-12 text-slate-500 text-sm">
@@ -1119,11 +1203,42 @@
         }).join('');
       }
 
+      // Canlı Konumlar (Ülke & İl / Şehir)
+      const locContainer = document.getElementById('liveLocationsList');
+      const sortedLocs = Object.entries(locations || {}).sort((a, b) => b[1] - a[1]);
+      document.getElementById('locationBreakdownBadge').innerText = `${sortedLocs.length} Konum`;
+
+      if (sortedLocs.length === 0) {
+        locContainer.innerHTML = `
+          <div class="text-center py-12 text-slate-500 text-sm">
+            <i class="fa-solid fa-earth-americas text-3xl mb-2 opacity-50 block"></i>
+            Konum verisi bekleniyor...
+          </div>
+        `;
+      } else {
+        locContainer.innerHTML = sortedLocs.map(([locName, count]) => {
+          const pct = Math.round((count / totalLive) * 100);
+          return `
+            <div class="p-3 bg-slate-950/50 border border-slate-800/80 rounded-xl">
+              <div class="flex items-center justify-between text-xs mb-1.5">
+                <span class="font-medium text-slate-200 flex items-center gap-2 truncate max-w-[190px]">
+                  ${locName}
+                </span>
+                <span class="font-bold text-white font-mono">${count} kişi (%${pct})</span>
+              </div>
+              <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                <div class="bg-gradient-to-r from-emerald-500 to-indigo-400 h-full rounded-full" style="width: ${pct}%"></div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
       const tableBody = document.getElementById('liveSessionsTableBody');
       if (sessions.length === 0) {
         tableBody.innerHTML = `
           <tr>
-            <td colspan="6" class="text-center py-8 text-slate-500 text-xs">
+            <td colspan="7" class="text-center py-8 text-slate-500 text-xs">
               Şu an sitede aktif kullanıcı bulunmuyor veya bekleniyor...
             </td>
           </tr>
@@ -1136,6 +1251,10 @@
           const durationText = durationMins > 0 ? `${durationMins} dk ${durationSecs} sn` : `${durationSecs} sn`;
           const deviceIcon = s.device === 'Mobil' ? 'fa-solid fa-mobile-screen text-emerald-400' : 'fa-solid fa-laptop text-blue-400';
 
+          const flag = s.flag || '🌍';
+          const country = s.country || (s.timezone ? s.timezone.split('/')[0] : 'Bilinmiyor');
+          const city = s.city || s.region || (s.timezone ? s.timezone.split('/')[1]?.replace('_', ' ') : '');
+
           return `
             <tr class="hover:bg-slate-900/50 transition">
               <td class="py-3 px-3.5 whitespace-nowrap">
@@ -1145,10 +1264,20 @@
                 </span>
               </td>
               <td class="py-3 px-3.5">
+                <div class="flex items-center gap-2.5">
+                  <span class="text-2xl shrink-0 leading-none">${flag}</span>
+                  <div class="min-w-0">
+                    <div class="font-bold text-slate-100 text-xs truncate">${city || country}</div>
+                    <div class="text-[10px] text-slate-400 font-medium">${city ? country : ''}</div>
+                  </div>
+                </div>
+              </td>
+              <td class="py-3 px-3.5">
                 <div class="flex items-center gap-2">
                   <i class="${deviceIcon} text-sm"></i>
                   <span class="font-semibold text-slate-200">${s.device || 'Bilinmiyor'}</span>
                   <span class="text-[11px] text-slate-500 font-mono">(${s.os || 'OS'})</span>
+                  ${s.isBot ? '<span class="px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 text-[10px] font-mono border border-amber-500/20">Bot</span>' : ''}
                 </div>
                 <div class="text-[10px] text-slate-500 mt-0.5 font-mono">${s.screen || ''} &bull; ${s.timezone || ''}</div>
               </td>
@@ -1495,6 +1624,9 @@
       let mobileHits = 0;
       const pageTotals = {};
       const sourceTotals = {};
+      const countryTotals = {};
+      const countryFlags = {};
+      const cityTotals = {};
       const dailyTrend = [];
 
       selectedDates.forEach(date => {
@@ -1507,6 +1639,18 @@
             const users = Object.values(dayData.unique_users);
             dayUsers = users.length;
             totalUniqueUsers += dayUsers;
+
+            users.forEach(u => {
+              const country = u.country || 'Türkiye';
+              const city = u.city || '';
+              const flag = u.flag || '🇹🇷';
+              countryTotals[country] = (countryTotals[country] || 0) + 1;
+              countryFlags[country] = flag;
+              if (city) {
+                const cityKey = `${flag} ${city} (${country})`;
+                cityTotals[cityKey] = (cityTotals[cityKey] || 0) + 1;
+              }
+            });
           }
 
           if (dayData.hits) {
@@ -1525,6 +1669,19 @@
 
               const ref = h.referrer || 'Doğrudan';
               sourceTotals[ref] = (sourceTotals[ref] || 0) + 1;
+
+              // Eğer unique_users yoksa hit bazlı konum al
+              if (h.country && (!dayData.unique_users || Object.keys(dayData.unique_users).length === 0)) {
+                const country = h.country || 'Türkiye';
+                const city = h.city || '';
+                const flag = h.flag || '🇹🇷';
+                countryTotals[country] = (countryTotals[country] || 0) + 1;
+                countryFlags[country] = flag;
+                if (city) {
+                  const cityKey = `${flag} ${city} (${country})`;
+                  cityTotals[cityKey] = (cityTotals[cityKey] || 0) + 1;
+                }
+              }
             });
           }
         }
@@ -1549,6 +1706,7 @@
       renderTrendChart(dailyTrend);
       renderHistoryPagesTable(pageTotals, totalHits);
       renderHistorySourcesList(sortedSources, totalHits);
+      renderHistoryLocations(countryTotals, countryFlags, cityTotals, totalUniqueUsers || totalHits);
     }
 
     function renderTrendChart(trend) {
@@ -1653,6 +1811,71 @@
       }).join('');
     }
 
+    function renderHistoryLocations(countryTotals, countryFlags, cityTotals, baseTotal) {
+      // 1. Ülkeler Listesi
+      const countryContainer = document.getElementById('histCountriesList');
+      const sortedCountries = Object.entries(countryTotals || {}).sort((a, b) => b[1] - a[1]);
+      document.getElementById('histCountryCountBadge').innerText = `${sortedCountries.length} Ülke`;
+
+      if (sortedCountries.length === 0) {
+        countryContainer.innerHTML = `
+          <div class="text-center py-10 text-slate-500 text-sm">
+            Kayıtlı ülke bulunamadı.
+          </div>
+        `;
+      } else {
+        countryContainer.innerHTML = sortedCountries.map(([country, count]) => {
+          const pct = baseTotal > 0 ? Math.round((count / baseTotal) * 100) : 0;
+          const flag = countryFlags[country] || '🌍';
+          return `
+            <div class="p-3 bg-slate-950/50 border border-slate-800/80 rounded-xl">
+              <div class="flex items-center justify-between text-xs mb-1.5">
+                <span class="font-medium text-slate-200 flex items-center gap-2">
+                  <span class="text-xl leading-none">${flag}</span>
+                  ${country}
+                </span>
+                <span class="font-bold text-white font-mono">${count} kişi (%${pct})</span>
+              </div>
+              <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                <div class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full rounded-full" style="width: ${pct}%"></div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // 2. İller / Şehirler Listesi
+      const cityContainer = document.getElementById('histCitiesList');
+      const sortedCities = Object.entries(cityTotals || {}).sort((a, b) => b[1] - a[1]);
+      document.getElementById('histCityCountBadge').innerText = `${sortedCities.length} Şehir`;
+
+      if (sortedCities.length === 0) {
+        cityContainer.innerHTML = `
+          <div class="text-center py-10 text-slate-500 text-sm">
+            Kayıtlı şehir bulunamadı.
+          </div>
+        `;
+      } else {
+        cityContainer.innerHTML = sortedCities.map(([cityKey, count]) => {
+          const pct = baseTotal > 0 ? Math.round((count / baseTotal) * 100) : 0;
+          return `
+            <div class="p-3 bg-slate-950/50 border border-slate-800/80 rounded-xl">
+              <div class="flex items-center justify-between text-xs mb-1.5">
+                <span class="font-medium text-slate-200 flex items-center gap-2 truncate max-w-[220px]">
+                  <i class="fa-solid fa-location-dot text-indigo-400 text-xs"></i>
+                  ${cityKey}
+                </span>
+                <span class="font-bold text-white font-mono">${count} kişi (%${pct})</span>
+              </div>
+              <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                <div class="bg-gradient-to-r from-indigo-500 to-purple-400 h-full rounded-full" style="width: ${pct}%"></div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
     // CSV / Excel Dışa Aktarma
     function exportStatsToCSV() {
       if (!cachedDailyStats || Object.keys(cachedDailyStats).length === 0) {
@@ -1660,7 +1883,7 @@
         return;
       }
 
-      let csv = '\uFEFFTarih,Sayfa Yolu,Sayfa Basligi,Cihaz,Trafik Kaynagi,Saat\n';
+      let csv = '\uFEFFTarih,Sayfa Yolu,Sayfa Basligi,Cihaz,Trafik Kaynagi,Ulke,Il_Sehir,Saat\n';
 
       for (const [date, dayData] of Object.entries(cachedDailyStats)) {
         if (dayData && dayData.hits) {
@@ -1671,6 +1894,8 @@
               `"${(hit.title || '').replace(/"/g, '""')}"`,
               hit.device || 'Mobil',
               `"${hit.referrer || 'Dogrudan'}"`,
+              `"${hit.country || ''}"`,
+              `"${hit.city || ''}"`,
               hit.time || ''
             ];
             csv += row.join(',') + '\n';
