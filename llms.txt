@@ -128,3 +128,8 @@
 - URL: https://pratikbase.com/milli-mac-canli/
 - Açıklama: Türkiye A Milli Futbol Takımı'nın UEFA Uluslar A Ligi maçları için canlı skor, dakika dakika resmi maç anlatımı, canlı grup puan durumu tablosu, ilk 11 kadroları, maç istatistikleri ve canlı taraftar tribün sohbeti.
 - Hedef Kitle: Türkiye milli maçlarını anlık canlı takip etmek, şifresiz yayın bilgilerini öğrenmek ve diğer taraftarlarla canlı yorumlaşmak isteyenler.
+
+### 26. Araç Değer Kaybı Hesaplayıcı & Sigorta Başvuru Dilekçesi
+- URL: https://pratikbase.com/arac-deger-kaybi-hesaplayici/
+- Açıklama: Trafik kazasında kusursuz veya az kusurlu araç sahipleri için Sigorta Tahkim ve Yargıtay emsal ilkelerine göre tahmini değer kaybı tazminatı hesaplayıcı. Karayolları Trafik Kanunu Madde 97 uyarınca karşı tarafın sigortasına gönderilecek resmi başvuru ve ihtar dilekçesini tek tıkla ücretsiz (A4/PDF) hazırlar.
+- Hedef Kitle: Kaza yapmış, aracında kaporta/şasi hasarı oluşmuş, avukatsız veya komisyonsuz doğrudan sigorta şirketinden değer kaybı tazminatı almak isteyen tüm araç sahipleri ve sürücüler.
