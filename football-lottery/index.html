@@ -107,6 +107,25 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
   <style>
+    /* Guaranteed Modal Height & Internal Scroll (Her cihazda ekrana tam oturan modal yapısı) */
+    .modal-box-responsive {
+      max-height: 85vh !important;
+      max-height: 85dvh !important;
+      display: flex !important;
+      flex-direction: column !important;
+      overflow: hidden !important;
+    }
+    .modal-scroll-body {
+      max-height: 52vh !important;
+      max-height: 52dvh !important;
+      overflow-y: auto !important;
+      -webkit-overflow-scrolling: touch !important;
+    }
+    @media (max-height: 700px) {
+      .modal-box-responsive { max-height: 92vh !important; max-height: 92dvh !important; }
+      .modal-scroll-body { max-height: 48vh !important; max-height: 48dvh !important; }
+    }
+
     /* Dark Stadium Theme Base (Stadyum Gece Maçı Görünümü) */
     html, body {
       background-color: #06130b !important;
@@ -213,7 +232,7 @@
           <div class="flex flex-col">
             <span class="font-display font-bold text-white text-base tracking-wide flex items-center gap-1.5">
               THE FOOTBALL <span class="text-emerald-400">LOTTERY</span>
-              <span class="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold">V2.1</span>
+              <span class="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold">V2.2</span>
             </span>
             <span class="text-[10px] text-slate-400 font-medium" id="txtSubtitleNav">Futbolcu Doğum Piyangosu</span>
           </div>
@@ -471,13 +490,25 @@
 
       <!-- Hall of Fame / Efsaneler Duvarı Section -->
       <section id="hallOfFameSection" class="pt-10 border-t border-pitch-800/80 space-y-4 text-left">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/30 text-[10px] font-mono font-bold uppercase">
               <i class="fa-solid fa-crown text-amber-400"></i> <span id="txtHallBadge">EFSANELER DUVARI</span>
             </div>
             <h2 class="text-xl sm:text-2xl font-display font-black text-white mt-1" id="txtHallTitle">Topluluk Efsaneleri & Jübile Karneleri</h2>
             <p class="text-slate-400 text-xs" id="txtHallDesc">40 yaşına ulaşıp kramponlarını asan oyuncuların ölümsüzleşen kariyerleri.</p>
+          </div>
+          <!-- Live Realtime Community Pool Badge & Refresh -->
+          <div class="flex items-center gap-2">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-950/80 text-emerald-400 border border-emerald-500/40 text-xs font-mono font-semibold shadow-sm">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+              <span id="txtHofLiveBadge">Canlı Topluluk Havuzu</span>
+              <span class="text-slate-500">•</span>
+              <strong id="txtHofCount" class="text-white">6</strong>
+            </span>
+            <button onclick="fetchLiveHallOfFame(true)" class="p-1.5 px-2.5 rounded-xl bg-pitch-900 hover:bg-pitch-800 text-slate-300 border border-pitch-700/80 text-xs font-bold transition flex items-center gap-1 shadow active:scale-95" title="Duvarı Yenile">
+              <i class="fa-solid fa-arrows-rotate text-emerald-400" id="iconRefreshHof"></i>
+            </button>
           </div>
         </div>
 
@@ -616,7 +647,7 @@
 
       <!-- Cinematic Netflix Style Documentary Poster (Alternative to FUT Card) -->
       <div id="documentaryPoster" class="hidden max-w-sm sm:max-w-md mx-auto p-6 sm:p-8 rounded-3xl bg-gradient-to-b from-stone-950 via-zinc-950 to-black border-2 border-amber-500/50 shadow-2xl relative overflow-hidden text-center space-y-5">
-        <img src="https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=800&q=80" alt="Stadium Atmosphere" class="absolute inset-0 w-full h-full object-cover opacity-20 pointer-events-none mix-blend-luminosity">
+        <img src="https://images.unsplash.com/photo-1511886929837-354d827aae26?auto=format&fit=crop&w=800&q=80" alt="" onerror="this.style.display='none';" class="absolute inset-0 w-full h-full object-cover opacity-20 pointer-events-none mix-blend-luminosity">
         <div class="absolute inset-0 bg-gradient-to-t from-black via-pitch-950/60 to-black/80 pointer-events-none"></div>
         
         <!-- Top Cinematic Studio Watermark & Festival Laurel -->
@@ -767,31 +798,34 @@
   </main>
 
   <!-- Dilemma / Critical Choice Modal (Cinematic Scene Banner) -->
-  <div id="modalDilemma" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
-    <div class="max-w-lg w-full p-5 sm:p-6 rounded-3xl bg-pitch-900 border-2 border-emerald-500/60 shadow-2xl space-y-4 text-left relative animate-in fade-in zoom-in duration-200">
+  <div id="modalDilemma" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md overflow-y-auto">
+    <div class="max-w-lg w-full p-4 sm:p-6 rounded-3xl bg-pitch-900 border-2 border-emerald-500/60 shadow-2xl space-y-3.5 text-left relative animate-in fade-in zoom-in duration-200 overflow-y-auto" style="max-height: 90vh; max-height: 90dvh; overflow-y: auto;">
       
-      <!-- Cinematic Story Scene Illustration Banner with Real Photo -->
-      <div id="dilemmaScene" class="w-full h-40 sm:h-44 rounded-2xl overflow-hidden relative border border-pitch-700 shadow-2xl flex flex-col justify-between p-4 bg-pitch-950">
-        <!-- Real Cinematic Photo Background with Smooth Gradient Vignette -->
-        <img id="dilemmaSceneImg" src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80" alt="Cinematic Scene" class="absolute inset-0 w-full h-full object-cover opacity-45 scale-105 transition-all duration-700">
-        <div class="absolute inset-0 bg-gradient-to-t from-pitch-950 via-pitch-950/60 to-pitch-950/20 pointer-events-none"></div>
+      <!-- Cinematic Story Scene Illustration Banner with Crystal-Clear Contrast -->
+      <div id="dilemmaScene" class="w-full h-44 sm:h-48 rounded-2xl overflow-hidden relative border border-pitch-700 shadow-2xl flex flex-col justify-between p-3.5 sm:p-4 bg-pitch-950">
+        <!-- Photo with automatic darkening filter so bright white photos never wash out text -->
+        <img id="dilemmaSceneImg" src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80" alt="" onerror="this.style.display='none';" class="absolute inset-0 w-full h-full object-cover scale-105 transition-all duration-700" style="opacity: 0.35; filter: brightness(0.6) contrast(1.15);">
+        <!-- Heavy dark gradient scrim -->
+        <div class="absolute inset-0 bg-gradient-to-t from-pitch-950 via-pitch-950/70 to-pitch-950/40 pointer-events-none"></div>
         
+        <!-- Top bar with solid dark badge -->
         <div class="flex items-center justify-between relative z-10">
-          <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/75 border border-white/15 text-[10px] font-mono font-bold text-amber-300 backdrop-blur-md shadow-lg">
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-mono font-bold text-amber-300 shadow-xl" style="background-color: rgba(0, 0, 0, 0.85); border: 1px solid rgba(255, 255, 255, 0.2);">
             <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
             <span id="dilemmaSceneAgeTag">DÖNÜM NOKTASI</span>
           </div>
-          <div id="dilemmaSceneIcon" class="w-10 h-10 rounded-xl bg-black/75 border border-white/15 backdrop-blur-md flex items-center justify-center text-2xl shadow-lg">
+          <div id="dilemmaSceneIcon" class="w-10 h-10 rounded-xl flex items-center justify-center text-2xl shadow-xl" style="background-color: rgba(0, 0, 0, 0.85); border: 1px solid rgba(255, 255, 255, 0.2);">
             💼
           </div>
         </div>
 
-        <div class="relative z-10 space-y-0.5">
-          <div class="flex items-center gap-1.5 text-xs font-mono font-bold text-white drop-shadow-md">
-            <i class="fa-solid fa-location-dot text-rose-400"></i>
+        <!-- Bottom bar wrapped in dedicated high-contrast dark card -->
+        <div class="relative z-10 p-2.5 rounded-xl space-y-1 shadow-2xl" style="background-color: rgba(6, 19, 11, 0.92); border: 1px solid rgba(22, 83, 49, 0.8); backdrop-filter: blur(8px);">
+          <div class="flex items-center gap-1.5 text-xs sm:text-sm font-mono font-bold text-white drop-shadow">
+            <i class="fa-solid fa-location-dot text-rose-400 shrink-0"></i>
             <span id="dilemmaSceneLocation">5 Yıldızlı Otel Süiti - Gece Yarısı Pazarlığı</span>
           </div>
-          <div id="dilemmaSceneMood" class="text-xs text-amber-200 font-medium italic drop-shadow-md">"Geleceğinin kaderi bu masada çiziliyor..."</div>
+          <div id="dilemmaSceneMood" class="text-xs text-amber-300 font-medium italic drop-shadow">"Geleceğinin kaderi bu masada çiziliyor..."</div>
         </div>
       </div>
 
@@ -817,41 +851,41 @@
   </div>
 
 
-  <!-- Museum & Luxury Garage Modal -->
-  <div id="modalMuseum" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
-    <div class="max-w-2xl w-full max-h-[88vh] p-5 sm:p-7 rounded-3xl bg-pitch-900 border-2 border-yellow-500/50 shadow-2xl flex flex-col space-y-4 text-left relative animate-in fade-in zoom-in duration-200">
+  <!-- Museum & Luxury Garage Modal (Guaranteed Screen Fit) -->
+  <div id="modalMuseum" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md">
+    <div class="max-w-2xl w-full p-4 sm:p-6 rounded-3xl bg-pitch-900 border-2 border-yellow-500/50 shadow-2xl flex flex-col space-y-3.5 text-left relative animate-in fade-in zoom-in duration-200 modal-box-responsive" style="max-height: 85vh; max-height: 85dvh;">
       
-      <div class="flex items-center justify-between border-b border-pitch-800 pb-3">
+      <div class="flex items-center justify-between border-b border-pitch-800 pb-3 shrink-0">
         <div class="flex items-center gap-3">
           <div class="w-10 h-10 rounded-2xl bg-yellow-500/20 text-yellow-300 border border-yellow-500/40 flex items-center justify-center text-xl shrink-0">
             🏛️
           </div>
           <div>
-            <h3 class="text-lg font-display font-black text-white" id="txtMuseumTitle">Kişisel Kupa Odası & Lüks Garaj</h3>
+            <h3 class="text-base sm:text-lg font-display font-black text-white" id="txtMuseumTitle">Kişisel Kupa Odası & Lüks Garaj</h3>
             <p class="text-xs text-amber-400 font-mono" id="txtMuseumSub">Kariyer boyunca kazanılan madalyalar, kupalar ve satın alınan mülkler.</p>
           </div>
         </div>
-        <button onclick="closeMuseumModal()" class="w-8 h-8 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-slate-400 hover:text-white flex items-center justify-center transition">
+        <button onclick="closeMuseumModal()" class="w-8 h-8 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-slate-400 hover:text-white flex items-center justify-center transition shrink-0">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
 
       <!-- Navigation Tabs (Kupalar vs Garaj & Varlıklar) -->
-      <div class="flex items-center gap-2 border-b border-pitch-800 pb-2">
-        <button id="tabMuseumTrophies" onclick="switchMuseumTab('trophies')" class="px-3.5 py-1.5 rounded-xl bg-yellow-500 text-pitch-950 font-bold text-xs transition">
+      <div class="flex items-center gap-2 border-b border-pitch-800 pb-2 shrink-0">
+        <button id="tabMuseumTrophies" onclick="switchMuseumTab('trophies')" class="px-3.5 py-1.5 rounded-xl text-xs transition">
           🏆 Kupa Odası
         </button>
-        <button id="tabMuseumAssets" onclick="switchMuseumTab('assets')" class="px-3.5 py-1.5 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-slate-300 font-bold text-xs transition">
+        <button id="tabMuseumAssets" onclick="switchMuseumTab('assets')" class="px-3.5 py-1.5 rounded-xl text-xs transition">
           🏎️ Garaj & Gayrimenkul
         </button>
       </div>
 
       <!-- Scrollable Tab Content Container -->
-      <div class="overflow-y-auto custom-scroll pr-1 flex-1 max-h-[55vh]" id="museumContentContainer">
+      <div class="overflow-y-auto custom-scroll pr-1 flex-1 modal-scroll-body" style="max-height: 52vh; max-height: 52dvh;" id="museumContentContainer">
         <!-- Dynamically populated via renderMuseum() -->
       </div>
 
-      <div class="pt-2 border-t border-pitch-800 text-center">
+      <div class="pt-2 border-t border-pitch-800 text-center shrink-0">
         <button onclick="closeMuseumModal()" class="w-full py-2.5 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-slate-300 font-bold text-xs transition">
           Kapat
         </button>
@@ -860,31 +894,31 @@
     </div>
   </div>
 
-  <!-- Achievements / Rozetler Modal -->
-  <div id="modalAchievements" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
-    <div class="max-w-lg w-full max-h-[85vh] p-6 rounded-3xl bg-pitch-900 border-2 border-amber-500/50 shadow-2xl flex flex-col space-y-4 text-left relative animate-in fade-in zoom-in duration-200">
+  <!-- Achievements / Rozetler Modal (Guaranteed Screen Fit) -->
+  <div id="modalAchievements" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md">
+    <div class="max-w-lg w-full p-4 sm:p-6 rounded-3xl bg-pitch-900 border-2 border-amber-500/50 shadow-2xl flex flex-col space-y-3.5 text-left relative animate-in fade-in zoom-in duration-200 modal-box-responsive" style="max-height: 85vh; max-height: 85dvh;">
       
-      <div class="flex items-center justify-between border-b border-pitch-800 pb-3">
+      <div class="flex items-center justify-between border-b border-pitch-800 pb-3 shrink-0">
         <div class="flex items-center gap-3">
           <div class="w-10 h-10 rounded-2xl bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center justify-center text-xl shrink-0">
             🏆
           </div>
           <div>
-            <h3 class="text-lg font-display font-black text-white" id="txtAchModalTitle">Kariyer Başarımları & Rozetler</h3>
+            <h3 class="text-base sm:text-lg font-display font-black text-white" id="txtAchModalTitle">Kariyer Başarımları & Rozetler</h3>
             <p class="text-xs text-amber-400 font-mono font-bold" id="txtAchProgress">0 / 10 Tamamlandı</p>
           </div>
         </div>
-        <button onclick="closeAchievementsModal()" class="w-8 h-8 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-slate-400 hover:text-white flex items-center justify-center transition">
+        <button onclick="closeAchievementsModal()" class="w-8 h-8 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-slate-400 hover:text-white flex items-center justify-center transition shrink-0">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
 
-      <!-- Achievements List (Scrollable) -->
-      <div class="space-y-2.5 overflow-y-auto custom-scroll pr-1 flex-1 max-h-[55vh]" id="achievementsListContainer">
+      <!-- Achievements List (Internally Scrollable, Never Exceeds Screen) -->
+      <div class="space-y-2.5 overflow-y-auto custom-scroll pr-1 flex-1 modal-scroll-body" style="max-height: 52vh; max-height: 52dvh;" id="achievementsListContainer">
         <!-- Populated via renderAchievementsList() -->
       </div>
 
-      <div class="pt-2 border-t border-pitch-800 text-center">
+      <div class="pt-2 border-t border-pitch-800 text-center shrink-0">
         <button onclick="closeAchievementsModal()" class="w-full py-2.5 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-slate-300 font-bold text-xs transition">
           Kapat
         </button>
@@ -894,8 +928,8 @@
   </div>
 
   <!-- Versus Battle Result Modal -->
-  <div id="modalVersus" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
-    <div class="max-w-xl w-full p-6 sm:p-7 rounded-3xl bg-pitch-900 border-2 border-purple-500/70 shadow-2xl space-y-5 text-center relative animate-in fade-in zoom-in duration-200">
+  <div id="modalVersus" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/90 backdrop-blur-md">
+    <div class="max-w-xl w-full p-4 sm:p-6 rounded-3xl bg-pitch-900 border-2 border-purple-500/70 shadow-2xl space-y-4 text-center relative animate-in fade-in zoom-in duration-200 overflow-y-auto modal-box-responsive" style="max-height: 88vh; max-height: 88dvh; overflow-y: auto;">
       
       <!-- Battle Header -->
       <div class="space-y-1">
@@ -3209,7 +3243,7 @@
         moodTr: '"Ya garanti bir diploma, ya da tüm gemileri yakıp futbol..."',
         moodEn: '"A safe diploma, or burn all ships for pro football..."',
         icon: '⚡',
-        imageUrl: 'https://images.unsplash.com/photo-1529900244934-87a417647228?auto=format&fit=crop&w=800&q=80',
+        imageUrl: 'https://images.unsplash.com/photo-1518091043644-c1d4457512c6?auto=format&fit=crop&w=800&q=80',
         ageTagTr: '16 YAŞ • HAYATİ TERCİH',
         ageTagEn: 'AGE 16 • LIFE CROSSROAD'
       },
@@ -3259,7 +3293,7 @@
         moodTr: '"Ezeli rakip 5M€ nakit koydu. Şehir seni ya hain bilecek ya efsane..."',
         moodEn: '"Arch-rivals put €5M cash on table. Judas or one-club immortal?"',
         icon: '🐍',
-        imageUrl: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=800&q=80',
+        imageUrl: 'https://images.unsplash.com/photo-1511886929837-354d827aae26?auto=format&fit=crop&w=800&q=80',
         ageTagTr: '26 YAŞ • EZELİ RAKİP İHANETİ',
         ageTagEn: 'AGE 26 • DERBY TREASON'
       },
@@ -3315,6 +3349,9 @@
 
       const imgEl = document.getElementById('dilemmaSceneImg');
       if (imgEl && sceneData.imageUrl) {
+        imgEl.style.display = 'block';
+        imgEl.style.opacity = '0.35';
+        imgEl.style.filter = 'brightness(0.6) contrast(1.15)';
         imgEl.src = sceneData.imageUrl;
       }
       const locEl = document.getElementById('dilemmaSceneLocation');
@@ -3599,8 +3636,8 @@
 
     const COUNTRY_CINEMA_THEMES = {
       'Brezilya': {
-        posterTagTr: '🇧🇷 BİR BREZİLYA SAMBA DESTANI',
-        posterTagEn: '🇧🇷 A BRAZILIAN SAMBA ODYSSEY',
+        posterTagTr: 'BREZİLYA • BİR SAMBA DESTANI',
+        posterTagEn: 'BRAZIL • A SAMBA ODYSSEY',
         taglineTr: 'Faveladan Maracanã Zirvesine: Dans, Gözyaşı ve Zafer',
         taglineEn: 'From Favelas to Maracanã: Dance, Tears and Immortality',
         criticsTr: '"Kumsalda çıplak ayakla başlayan, gezegenin en büyük stadyumlarında ilahlaşan bir sambacının hikayesi."',
@@ -3609,8 +3646,8 @@
         festival: '🌿 RIO DE JANEIRO FILM FESTIVAL • BEST ORIGINAL SAGA 🌿'
       },
       'Arjantin': {
-        posterTagTr: '🇦🇷 TUTKU, TANGO VE BOMBİNERA',
-        posterTagEn: '🇦🇷 PASSION, TANGO & LA BOMBONERA',
+        posterTagTr: 'ARJANTİN • TUTKU, TANGO VE BOMBONERA',
+        posterTagEn: 'ARGENTINA • PASSION, TANGO & LA BOMBONERA',
         taglineTr: 'Maradona\'nın Gölgesinde Doğup Kendi Güneşini Yarattı',
         taglineEn: 'Born in the Shadow of Maradona, Forged His Own Legend',
         criticsTr: '"Rosario sokaklarının hırsı, Buenos Aires tribünlerinin tutkusu ve saf deha."',
@@ -3619,8 +3656,8 @@
         festival: '🌿 BUENOS AIRES INTERNATIONAL CINEMA • JURY PRIZE 🌿'
       },
       'Türkiye': {
-        posterTagTr: '🇹🇷 BİR ANADOLU MASALI',
-        posterTagEn: '🇹🇷 AN ANATOLIAN SAGA',
+        posterTagTr: 'TÜRKİYE • BİR ANADOLU MASALI',
+        posterTagEn: 'TURKEY • AN ANATOLIAN SAGA',
         taglineTr: 'Tozlu Sokaklardan 85 Milyonun Kalbine',
         taglineEn: 'From Dusty Alleys to the Heart of 85 Million',
         criticsTr: '"Yırtık kramponlarla başlayan, milli formanın kutsallığında devleşen bir gurur destanı."',
@@ -3629,8 +3666,8 @@
         festival: '🌿 İSTANBUL & ALTIN PORTAKAL FİLM ÖDÜLLERİ • ÖZEL SEÇKİ 🌿'
       },
       'İngiltere': {
-        posterTagTr: '🏴󠁧󠁢󠁥󠁮󠁧󠁿 WEMBLEY\'NİN IŞIKLARI',
-        posterTagEn: '🏴󠁧󠁢󠁥󠁮󠁧󠁿 THE LIGHTS OF WEMBLEY',
+        posterTagTr: 'İNGİLTERE • WEMBLEY\'NİN IŞIKLARI',
+        posterTagEn: 'ENGLAND • THE LIGHTS OF WEMBLEY',
         taglineTr: 'Çamurlu Pazar Liglerinden Krallığın Zirvesine',
         taglineEn: 'From Sunday League Mud to Royal Immortality',
         criticsTr: '"Yağmur, pres, centilmenlik ve İngiliz futbolunun asırlık ruhu."',
@@ -3639,8 +3676,8 @@
         festival: '🌿 BFI LONDON FILM FESTIVAL • OFFICIAL GALA SELECTION 🌿'
       },
       'Almanya': {
-        posterTagTr: '🇩🇪 BİR PANZER DESTANI',
-        posterTagEn: '🇩🇪 A PANZER ODYSSEY',
+        posterTagTr: 'ALMANYA • BİR PANZER DESTANI',
+        posterTagEn: 'GERMANY • A PANZER ODYSSEY',
         taglineTr: 'Çelik Disiplin, Taktiksel Mükemmellik ve Zirve',
         taglineEn: 'Steel Discipline, Tactical Mastery & Dominance',
         criticsTr: '"Hata kabul etmeyen Alman mühendisliği mantığıyla yoğrulmuş kusursuz bir lider."',
@@ -3649,8 +3686,8 @@
         festival: '🌿 BERLINALE INTERNATIONAL FILM FESTIVAL • GOLDEN BEAR RUNNER 🌿'
       },
       'Fransa': {
-        posterTagTr: '🇫🇷 BANLİYÖDEN ŞANZELİZE\'YE',
-        posterTagEn: '🇫🇷 FROM BANLIEUE TO CHAMPS-ÉLYSÉES',
+        posterTagTr: 'FRANSA • BANLİYÖDEN ŞANZELİZE\'YE',
+        posterTagEn: 'FRANCE • FROM BANLIEUE TO CHAMPS-ÉLYSÉES',
         taglineTr: 'Paris Sokak Kafeslerinden Dünya Şampiyonluğuna',
         taglineEn: 'From Paris Street Cages to World Glory',
         criticsTr: '"Hız, zarafet, çok kültürlülük ve modern futbolun en parlak yıldızı."',
@@ -3659,8 +3696,8 @@
         festival: '🌿 FESTIVAL DE CANNES • SÉLECTION OFFICIELLE HORS COMPÉTITION 🌿'
       },
       'İtalya': {
-        posterTagTr: '🇮🇹 IL GLADIATORE',
-        posterTagEn: '🇮🇹 IL GLADIATORE (THE GLADIATOR)',
+        posterTagTr: 'İTALYA • IL GLADIATORE',
+        posterTagEn: 'ITALY • IL GLADIATORE',
         taglineTr: 'San Siro\'nun Kalbinde Bir Rönesans Şaheseri',
         taglineEn: 'A Renaissance Masterpiece at the Cathedral of San Siro',
         criticsTr: '"Kusursuz İtalyan şıklığı, taktiksel deha ve bir ömür süren bayrak sevdası."',
@@ -3669,8 +3706,8 @@
         festival: '🌿 MOSTRA INTERNAZIONALE D\'ARTE CINEMATOGRAFICA DI VENEZIA 🌿'
       },
       'İspanya': {
-        posterTagTr: '🇪🇸 TİKİ-TAKA İLAHİ',
-        posterTagEn: '🇪🇸 THE TIKI-TAKA MAESTRO',
+        posterTagTr: 'İSPANYA • TİKİ-TAKA İLAHİ',
+        posterTagEn: 'SPAIN • THE TIKI-TAKA MAESTRO',
         taglineTr: 'Topa Fısıldayan Adam: Futbol Bir Sanattır',
         taglineEn: 'The Ball Whisperer: When Football Becomes High Art',
         criticsTr: '"Topu ayağına aldığında zamanı durduran, İberya\'nın yetiştirdiği saf dahi."',
@@ -3679,8 +3716,8 @@
         festival: '🌿 SAN SEBASTIÁN INTERNATIONAL FILM FESTIVAL • SPECIAL MENTION 🌿'
       },
       'Portekiz': {
-        posterTagTr: '🇵🇹 ATLANTİK\'İN KÂŞİFİ',
-        posterTagEn: '🇵🇹 THE ATLANTIC CONQUEROR',
+        posterTagTr: 'PORTEKİZ • ATLANTİK\'İN KÂŞİFİ',
+        posterTagEn: 'PORTUGAL • THE ATLANTIC CONQUEROR',
         taglineTr: 'Madeira Kayalıklarından Dünyanın En İyisine',
         taglineEn: 'From Oceanic Cliffs to the Pinnacle of World Football',
         criticsTr: '"Yorulmak bilmeyen bir çalışma hırsı, ego ve kırılmadık rekor bırakmayan bir hırs."',
@@ -3689,8 +3726,8 @@
         festival: '🌿 LISBON INTERNATIONAL INDIE FILM HONORS 🌿'
       },
       'Hollanda': {
-        posterTagTr: '🇳🇱 TOTAL FUTBOLUN MİMARI',
-        posterTagEn: '🇳🇱 ARCHITECT OF TOTAL FOOTBALL',
+        posterTagTr: 'HOLLANDA • TOTAL FUTBOLUN MİMARI',
+        posterTagEn: 'NETHERLANDS • TOTAL FOOTBALL',
         taglineTr: 'Kruyff Ekolü: Sahayı Satranç Tahtası Yapan Zeka',
         taglineEn: 'The Cruyff Legacy: Turning the Pitch into Living Chess',
         criticsTr: '"Turuncu rüzgar, kusursuz geometri ve futbol estetiğinin zirvesi."',
@@ -3699,8 +3736,8 @@
         festival: '🌿 INTERNATIONAL FILM FESTIVAL ROTTERDAM • TIGER AWARD SPECIAL 🌿'
       },
       'Nijerya': {
-        posterTagTr: '🇳🇬 SÜPER KARTALIN YÜKSELİŞİ',
-        posterTagEn: '🇳🇬 RISE OF THE SUPER EAGLE',
+        posterTagTr: 'NİJERYA • SÜPER KARTALIN YÜKSELİŞİ',
+        posterTagEn: 'NIGERIA • RISE OF THE SUPER EAGLE',
         taglineTr: 'Lagos Tozundan Dünya Vitrinine Patlayıcı Güç',
         taglineEn: 'From Dusty Lagos Streets to Global Icon Status',
         criticsTr: '"Durdurulamaz atletizm, bitmek tükenmeyen neşe ve Afrika futbolunun kalbi."',
@@ -3709,8 +3746,8 @@
         festival: '🌿 AFRIFF LAGOS INTERNATIONAL FILM FESTIVAL WINNER 🌿'
       },
       'Fas': {
-        posterTagTr: '🇲🇦 ATLAS ASLANI',
-        posterTagEn: '🇲🇦 THE ATLAS LION',
+        posterTagTr: 'FAS • ATLAS ASLANI',
+        posterTagEn: 'MOROCCO • THE ATLAS LION',
         taglineTr: 'Sahra Rüzgarı: İmkansızı Başaran Kuzey Afrika Mucizesi',
         taglineEn: 'Sahara Winds: The North African Miracle That Shook Earth',
         criticsTr: '"Dualarla, anne kucağıyla ve sarsılmaz inançla dünya devlerine boyun eğdirdi."',
@@ -3719,8 +3756,8 @@
         festival: '🌿 MARRAKECH INTERNATIONAL FILM FESTIVAL TRIBUTE 🌿'
       },
       'Japonya': {
-        posterTagTr: '🇯🇵 MAVİ SAMURAY',
-        posterTagEn: '🇯🇵 THE BLUE SAMURAI',
+        posterTagTr: 'JAPONYA • MAVİ SAMURAY',
+        posterTagEn: 'JAPAN • THE BLUE SAMURAI',
         taglineTr: 'Onur, Sonsuz Disiplin ve Saygının Zaferi',
         taglineEn: 'Honor, Boundless Discipline and the Way of the Pitch',
         criticsTr: '"Son düdüğe kadar koşmayı bırakmayan, soyunma odasını pırıl pırıl bırakan asil ruh."',
@@ -3729,8 +3766,8 @@
         festival: '🌿 TOKYO INTERNATIONAL FILM FESTIVAL • SAMURAI AWARD 🌿'
       },
       'Güney Kore': {
-        posterTagTr: '🇰🇷 BİTMEYEN ENERJİ',
-        posterTagEn: '🇰🇷 THE TIRELESS ENGINE',
+        posterTagTr: 'GÜNEY KORE • BİTMEYEN ENERJİ',
+        posterTagEn: 'SOUTH KOREA • THE TIRELESS ENGINE',
         taglineTr: 'Seul Gökdelenlerinden Premier Lig Yıldızlığına',
         taglineEn: 'From Seoul Skylines to Premier League Superstardom',
         criticsTr: '"Gülümsemesiyle dünyayı ısıtan ama sahada ciğersiz gibi koşan süperstar."',
@@ -3739,8 +3776,8 @@
         festival: '🌿 BUSAN INTERNATIONAL FILM FESTIVAL HIGHLIGHT 🌿'
       },
       'Uruguay': {
-        posterTagTr: '🇺🇾 GARRA CHARRÚA: YENİLMEZ',
-        posterTagEn: '🇺🇾 GARRA CHARRÚA: UNCONQUERABLE',
+        posterTagTr: 'URUGUAY • GARRA CHARRÚA',
+        posterTagEn: 'URUGUAY • GARRA CHARRÚA',
         taglineTr: '3 Milyonluk Dev: Sahada Asla Pes Etmeyen Ruh',
         taglineEn: 'A Nation of 3 Million with the Heart of 100 Million',
         criticsTr: '"Kavgadan kaçmayan, formayı kanıyla ıslatan kadim savaşçı geleneği."',
@@ -3749,8 +3786,8 @@
         festival: '🌿 MONTEVIDEO CINEMA CRITICS CHOICE 🌿'
       },
       'Hırvatistan': {
-        posterTagTr: '🇭🇷 DAMALILARIN MUCİZESİ',
-        posterTagEn: '🇭🇷 THE CHECKERED MIRACLE',
+        posterTagTr: 'HIRVATİSTAN • DAMALILARIN MUCİZESİ',
+        posterTagEn: 'CROATIA • THE CHECKERED MIRACLE',
         taglineTr: 'Savaşın Küllerinden Dünya Finallerine',
         taglineEn: 'From Wartime Ashes to World Cup Final Stages',
         criticsTr: '"Mütevazı bir sahil kasabasından çıkıp modern futbolun en zarif beynine dönüştü."',
@@ -3759,8 +3796,8 @@
         festival: '🌿 ZAGREB CROATIAN FILM HONORS 🌿'
       },
       'Norveç': {
-        posterTagTr: '🇳🇴 KUZEY VİKİNGİ',
-        posterTagEn: '🇳🇴 THE NORDIC VIKING',
+        posterTagTr: 'NORVEÇ • KUZEY VİKİNGİ',
+        posterTagEn: 'NORWAY • THE NORDIC VIKING',
         taglineTr: 'Fiyortların Soğuğundan Ceza Sahası Canavarlığına',
         taglineEn: 'From Icy Fjords to Penalty-Box Terminator',
         criticsTr: '"Doğa kanunlarını zorlayan fiziksel bir dev, saf gol içgüdüsü."',
@@ -3769,8 +3806,8 @@
         festival: '🌿 OSLO NORDIC CINEMA PANORAMA 🌿'
       },
       'Kolombiya': {
-        posterTagTr: '🇨🇴 KAHVE VE SİHİR',
-        posterTagEn: '🇨🇴 COFFEE & MAGIC',
+        posterTagTr: 'KOLOMBİYA • KAHVE VE SİHİR',
+        posterTagEn: 'COLOMBIA • COFFEE & MAGIC',
         taglineTr: 'And Dağlarının Büyüsü: Sokak Sanatçısı',
         taglineEn: 'Andean Sorcery: Street Artist with Ball at Feet',
         criticsTr: '"Müzikle futbolu birleştiren, izleyeni büyüleyen Latin Amerikan romantizmi."',
@@ -3779,8 +3816,8 @@
         festival: '🌿 BOGOTÁ INTERNATIONAL FILM SHOWCASE 🌿'
       },
       'ABD': {
-        posterTagTr: '🇺🇸 AMERİKAN RÜYASI',
-        posterTagEn: '🇺🇸 THE AMERICAN DREAM',
+        posterTagTr: 'ABD • AMERİKAN RÜYASI',
+        posterTagEn: 'USA • THE AMERICAN DREAM',
         taglineTr: 'Kolej Sahalarından Avrupa Devlerine Çıkarma',
         taglineEn: 'From College Pitches to European Megastardom',
         criticsTr: '"Hollywood parlaklığı, kusursuz atletizm ve küresel bir marka değeri."',
@@ -3789,8 +3826,8 @@
         festival: '🌿 TRIBECA FILM FESTIVAL • SPORTS ODYSSEY PREMIERE 🌿'
       },
       'San Marino': {
-        posterTagTr: '🇸🇲 İMKANSIZ MUCİZE',
-        posterTagEn: '🇸🇲 THE IMPOSSIBLE MIRACLE',
+        posterTagTr: 'SAN MARİNO • İMKANSIZ MUCİZE',
+        posterTagEn: 'SAN MARINO • THE IMPOSSIBLE MIRACLE',
         taglineTr: '30 Bin Nüfuslu Kayalıktan Dünyanın Zirvesine',
         taglineEn: 'From a Rock of 30,000 to the Zenith of World Football',
         criticsTr: '"Matematiksel olarak imkansızdı. Ama o kaderin hesaplarını yırttı attı."',
@@ -4049,9 +4086,55 @@
     }
 
     /* =====================================================================
-       13. HALL OF FAME & COMMUNITY SHARING
+       13. HALL OF FAME & LIVE COMMUNITY SHARING (FIREBASE REALTIME DB)
        ===================================================================== */
     const STORAGE_KEY_HOF = 'football_lottery_hall_of_fame';
+    const RTDB_HOF_URL = 'https://pratikbase-default-rtdb.firebaseio.com/football_lottery_hof';
+    let liveHallOfFameList = [];
+
+    // Country Flag Image Helper (Solves Windows missing flag emoji letters like US, BR, TR)
+    function getCountryFlagHtml(country, sizeClass = 'w-6 h-4.5') {
+      if (!country) return '⚽';
+      const codeMap = {
+        'Brezilya': 'br', 'Brazil': 'br',
+        'Arjantin': 'ar', 'Argentina': 'ar',
+        'Fransa': 'fr', 'France': 'fr',
+        'Almanya': 'de', 'Germany': 'de',
+        'İngiltere': 'gb-eng', 'England': 'gb-eng',
+        'İspanya': 'es', 'Spain': 'es',
+        'Türkiye': 'tr', 'Turkey': 'tr',
+        'Portekiz': 'pt', 'Portugal': 'pt',
+        'İtalya': 'it', 'Italy': 'it',
+        'Hollanda': 'nl', 'Netherlands': 'nl',
+        'Nijerya': 'ng', 'Nigeria': 'ng',
+        'Fas': 'ma', 'Morocco': 'ma',
+        'Japonya': 'jp', 'Japan': 'jp',
+        'Güney Kore': 'kr', 'South Korea': 'kr',
+        'Uruguay': 'uy', 'Uruguay': 'uy',
+        'Hırvatistan': 'hr', 'Croatia': 'hr',
+        'Norveç': 'no', 'Norway': 'no',
+        'Kolombiya': 'co', 'Colombia': 'co',
+        'ABD': 'us', 'USA': 'us',
+        'San Marino': 'sm', 'San Marino': 'sm'
+      };
+      const iso = codeMap[country.nameTr] || codeMap[country.nameEn] || (country.code ? country.code.toLowerCase() : null);
+      if (iso) {
+        return `<img src="https://flagcdn.com/w40/${iso}.png" alt="${country.nameTr || ''}" class="${sizeClass} rounded shadow-sm object-cover inline-block align-middle border border-pitch-700/80 shrink-0" onerror="this.outerHTML='<span class=\\'inline-block\\'>${country.flag || '⚽'}</span>';">`;
+      }
+      return `<span class="inline-block">${country.flag || '⚽'}</span>`;
+    }
+
+    function formatTimeAgo(ts) {
+      if (!ts) return '';
+      const diff = Date.now() - Number(ts);
+      if (diff < 60000) return currentLang === 'TR' ? 'Az önce' : 'Just now';
+      const mins = Math.floor(diff / 60000);
+      if (mins < 60) return currentLang === 'TR' ? `${mins} dk önce` : `${mins}m ago`;
+      const hours = Math.floor(mins / 60);
+      if (hours < 24) return currentLang === 'TR' ? `${hours} saat önce` : `${hours}h ago`;
+      const days = Math.floor(hours / 24);
+      return currentLang === 'TR' ? `${days} gün önce` : `${days}d ago`;
+    }
 
     const DEFAULT_LEGENDS = [
       {
@@ -4171,19 +4254,87 @@
     ];
 
     function getStoredHallOfFame() {
+      let userSaved = [];
       try {
         const raw = localStorage.getItem(STORAGE_KEY_HOF);
-        if (!raw) return DEFAULT_LEGENDS;
-        const parsed = JSON.parse(raw);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          const userIds = new Set(parsed.map(x => x.id));
-          const nonDupDefaults = DEFAULT_LEGENDS.filter(d => !userIds.has(d.id));
-          return [...parsed, ...nonDupDefaults];
-        }
-      } catch (e) {
-        console.warn('HOF parse error:', e);
+        if (raw) userSaved = JSON.parse(raw);
+      } catch (e) {}
+      if (!Array.isArray(userSaved)) userSaved = [];
+
+      let liveCached = liveHallOfFameList;
+      if (!liveCached || liveCached.length === 0) {
+        try {
+          const rawLive = localStorage.getItem('football_lottery_live_hof_cache');
+          if (rawLive) liveCached = JSON.parse(rawLive);
+        } catch(e) {}
       }
-      return DEFAULT_LEGENDS;
+      if (!Array.isArray(liveCached)) liveCached = [];
+
+      const seenIds = new Set();
+      const merged = [];
+
+      // 1. Device's own saved newly created legends (highest priority)
+      userSaved.forEach(item => {
+        if (item && item.id && !seenIds.has(item.id)) {
+          seenIds.add(item.id);
+          merged.push({ ...item, isSelf: true, isLiveCommunity: true });
+        }
+      });
+
+      // 2. Real remote community legends from Firebase RTDB
+      liveCached.forEach(item => {
+        if (item && item.id && !seenIds.has(item.id)) {
+          seenIds.add(item.id);
+          merged.push(item);
+        }
+      });
+
+      // 3. Default foundational legends
+      DEFAULT_LEGENDS.forEach(item => {
+        if (item && item.id && !seenIds.has(item.id)) {
+          seenIds.add(item.id);
+          merged.push(item);
+        }
+      });
+
+      return merged;
+    }
+
+    async function fetchLiveHallOfFame(isManual = false) {
+      const icon = document.getElementById('iconRefreshHof');
+      if (icon) icon.classList.add('fa-spin');
+
+      try {
+        const res = await fetch(`${RTDB_HOF_URL}.json?t=${Date.now()}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data && typeof data === 'object') {
+            const remoteList = Object.entries(data).map(([key, item]) => ({
+              ...item,
+              fbKey: key,
+              isLiveCommunity: true
+            }));
+
+            // Sort remote by timestamp descending (newest on top)
+            remoteList.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+            liveHallOfFameList = remoteList;
+
+            try {
+              localStorage.setItem('football_lottery_live_hof_cache', JSON.stringify(remoteList));
+            } catch(e) {}
+
+            renderHallOfFame();
+
+            if (isManual) {
+              showToast(currentLang === 'TR' ? '🔄 Canlı Efsaneler Duvarı Güncellendi!' : '🔄 Live Hall of Fame Refreshed!');
+            }
+          }
+        }
+      } catch (err) {
+        console.warn('Live HOF fetch error:', err);
+      } finally {
+        if (icon) icon.classList.remove('fa-spin');
+      }
     }
 
     function renderHallOfFame() {
@@ -4192,9 +4343,14 @@
       const list = getStoredHallOfFame();
       grid.innerHTML = '';
 
+      // Update Live Legend Counter Badge
+      const countEl = document.getElementById('txtHofCount');
+      if (countEl) countEl.textContent = list.length;
+
       list.forEach(item => {
         const card = document.createElement('div');
-        card.className = 'p-4 rounded-2xl bg-pitch-900/90 border border-pitch-800 hover:border-amber-500/40 transition flex flex-col justify-between space-y-3 relative group';
+        const isHighlight = item.isSelf;
+        card.className = `p-4 rounded-2xl bg-pitch-900/90 border ${isHighlight ? 'border-amber-500/80 ring-1 ring-amber-500/50 shadow-lg shadow-amber-500/10' : 'border-pitch-800 hover:border-amber-500/40'} transition flex flex-col justify-between space-y-3 relative group`;
 
         const assetsList = [
           ...(item.assets?.houses || []),
@@ -4204,24 +4360,41 @@
         const assetTxt = assetsList.length > 0 ? assetsList.slice(0, 2).join(', ') : (currentLang === 'TR' ? 'Mütevazı' : 'Modest');
 
         const posCode = item.position?.code || 'ST';
-        const flag = item.country?.flag || '⚽';
+        const flagHtml = getCountryFlagHtml(item.country, 'w-6 h-4.5');
         const countryName = currentLang === 'TR' ? (item.country?.nameTr || '') : (item.country?.nameEn || '');
 
         const dict = I18N[currentLang] || I18N.TR;
         const archText = formatArchetype(item.archetype);
+        const timeAgoStr = formatTimeAgo(item.timestamp || item.date);
+
+        // Community badge
+        let badgeHtml = '';
+        if (item.isSelf) {
+          badgeHtml = `<span class="px-1.5 py-0.5 rounded text-[8px] font-mono font-bold bg-amber-500/25 text-amber-300 border border-amber-500/40 shrink-0 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>SENİN EFSANEN</span>`;
+        } else if (item.isLiveCommunity) {
+          badgeHtml = `<span class="px-1.5 py-0.5 rounded text-[8px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shrink-0 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>CANLI OYUNCU</span>`;
+        }
 
         card.innerHTML = `
           <div>
             <div class="flex items-center justify-between border-b border-pitch-800 pb-2">
-              <div class="flex items-center gap-2">
-                <span class="text-2xl">${flag}</span>
-                <div>
-                  <div class="text-xs font-display font-black text-white leading-tight truncate max-w-[130px] sm:max-w-[150px]">${item.fullName}</div>
-                  <div class="text-[10px] text-slate-400 font-mono">${posCode} • ${countryName}</div>
+              <div class="flex items-center gap-2.5 min-w-0">
+                ${flagHtml}
+                <div class="min-w-0">
+                  <div class="text-xs font-display font-black text-white leading-tight truncate max-w-[140px] sm:max-w-[160px] flex items-center gap-1.5">
+                    <span>${item.fullName}</span>
+                  </div>
+                  <div class="text-[10px] text-slate-400 font-mono truncate flex items-center gap-1 mt-0.5">
+                    <span>${posCode} • ${countryName}</span>
+                    ${timeAgoStr ? `<span class="text-slate-500">• ${timeAgoStr}</span>` : ''}
+                  </div>
                 </div>
               </div>
-              <div class="px-2 py-0.5 rounded-lg bg-amber-500/20 text-amber-300 font-display font-black text-xs border border-amber-500/30">
-                ${item.peakOvr} OVR
+              <div class="flex flex-col items-end gap-1 shrink-0">
+                <div class="px-2 py-0.5 rounded-lg bg-amber-500/20 text-amber-300 font-display font-black text-xs border border-amber-500/30">
+                  ${item.peakOvr} OVR
+                </div>
+                ${badgeHtml}
               </div>
             </div>
 
@@ -4266,7 +4439,7 @@
               <span id="applaudCount-${item.id}">${item.applause || 0}</span>
               <span class="text-[10px] text-slate-400">${dict.clapBtn}</span>
             </button>
-            <button onclick="viewLegendCard('${item.id}')" class="p-1.5 px-2.5 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-slate-300 text-xs transition" title="${dict.inspectBtn}">
+            <button onclick="viewLegendCard('${item.id}')" class="p-1.5 px-2.5 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-slate-300 text-xs transition active:scale-95" title="${dict.inspectBtn}">
               <i class="fa-solid fa-eye"></i>
             </button>
           </div>
@@ -4278,11 +4451,13 @@
     function applaudLegend(id) {
       let all = getStoredHallOfFame();
       let count = 0;
+      let targetItem = null;
 
       all = all.map(item => {
         if (item.id === id) {
           item.applause = (item.applause || 0) + 1;
           count = item.applause;
+          targetItem = item;
         }
         return item;
       });
@@ -4291,6 +4466,15 @@
         localStorage.setItem(STORAGE_KEY_HOF, JSON.stringify(all));
       } catch (e) {
         console.warn('Could not save applause to localStorage:', e);
+      }
+
+      // Sync applause count to Firebase Realtime Database
+      if (targetItem && targetItem.fbKey) {
+        fetch(`${RTDB_HOF_URL}/${targetItem.fbKey}/applause.json`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(count)
+        }).catch(() => {});
       }
 
       const counterEl = document.getElementById(`applaudCount-${id}`);
@@ -4307,7 +4491,9 @@
       const item = all.find(x => x.id === id);
       if (!item) return;
 
-      document.getElementById('cardFlag').textContent = item.country.flag;
+      const cardFlagEl = document.getElementById('cardFlag');
+      if (cardFlagEl) cardFlagEl.innerHTML = getCountryFlagHtml(item.country, 'w-10 h-7');
+
       document.getElementById('cardPlayerName').textContent = item.fullName.toUpperCase();
       document.getElementById('cardSubTitle').textContent = `${item.position.code} (${currentLang === 'TR' ? (item.position.nameTr || '') : (item.position.nameEn || '')}) • ${item.dominantFoot || ''}`;
       document.getElementById('cardOvr').textContent = item.peakOvr;
@@ -4379,9 +4565,12 @@
         stats: { ...player.stats },
         clubHistory: player.clubHistory.map(c => ({ name: c.name, badge: c.badge })),
         applause: 1,
-        date: new Date().toISOString()
+        timestamp: Date.now(),
+        date: new Date().toISOString(),
+        isLiveCommunity: true
       };
 
+      // 1. Instant local storage save so it renders immediately
       try {
         let stored = [];
         const raw = localStorage.getItem(STORAGE_KEY_HOF);
@@ -4393,6 +4582,20 @@
       } catch (e) {
         console.warn('Storage save failed:', e);
       }
+
+      // 2. Real POST to Firebase Realtime Database for all players worldwide to see!
+      fetch(`${RTDB_HOF_URL}.json`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(legend)
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.name) {
+          legend.fbKey = data.name;
+        }
+      })
+      .catch(err => console.warn('Could not post legend to live DB:', err));
 
       renderHallOfFame();
 
@@ -4419,7 +4622,7 @@
       }
 
       Sound.goal();
-      showToast(currentLang === 'TR' ? '🏆 Kariyerin Efsaneler Duvarına Eklendi & Bağlantı Kopyalandı!' : '🏆 Added to Hall of Fame & Link Copied!');
+      showToast(currentLang === 'TR' ? '🏆 Kariyerin Canlı Efsaneler Duvarına Eklendi & Tüm Topluluğa Yayınlandı!' : '🏆 Added to Live Hall of Fame & Published to Everyone!');
     }
 
     function checkSharedCareerUrl() {
@@ -4669,6 +4872,7 @@
 
       // Initialize Hall of Fame, Achievements Badge and check URL params
       renderHallOfFame();
+      fetchLiveHallOfFame();
       updateAchievementsBadge();
       checkSharedCareerUrl();
       checkVersusUrl();
