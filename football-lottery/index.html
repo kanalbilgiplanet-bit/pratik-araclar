@@ -271,7 +271,7 @@
   </header>
 
   <!-- Live Career HUD (Sticky below navbar during active career) -->
-  <section id="careerHud" class="hidden border-b border-pitch-800 bg-pitch-900/95 backdrop-blur-md sticky top-16 z-40 transition-all">
+  <section id="careerHud" class="hidden border-b border-pitch-800 bg-pitch-900 sticky top-16 z-40 transition-all shadow-xl">
     <div class="max-w-6xl mx-auto px-4 py-2.5">
       <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2 text-center text-xs">
         
@@ -362,7 +362,7 @@
   <main class="flex-grow max-w-4xl w-full mx-auto px-4 py-8 relative stadium-glow grass-pattern">
 
     <!-- Breaking News / Fabrizio Romano "HERE WE GO" Cinematic Flash Banner -->
-    <div id="breakingNewsOverlay" class="hidden fixed top-20 left-1/2 -translate-x-1/2 z-50 max-w-lg w-[92%] p-4 rounded-2xl bg-gradient-to-r from-red-950 via-pitch-950 to-red-950 border-2 border-red-500 shadow-2xl flex items-center gap-3.5 animate-in slide-in-from-top duration-300 cursor-pointer" onclick="dismissBreakingNews()">
+    <div id="breakingNewsOverlay" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50 max-w-lg w-[94%] p-4 rounded-2xl bg-pitch-950/95 backdrop-blur-xl border-2 border-red-500 shadow-2xl shadow-red-950/90 flex items-center gap-3.5 animate-in slide-in-from-bottom duration-300 cursor-pointer" onclick="dismissBreakingNews()">
       <div class="w-12 h-12 rounded-2xl bg-red-600 text-white flex items-center justify-center text-xl shrink-0 font-display font-black shadow-lg shadow-red-600/40 animate-pulse">
         🚨
       </div>
@@ -1452,7 +1452,8 @@
       const oppGoatScore = activeChallenger.goatScore || Math.round((activeChallenger.peakOvr * 3) + (activeChallenger.trophies * 15) + (activeChallenger.goals * 0.4) + Math.min(100, Math.floor((activeChallenger.bank || 0) / 1000000)));
 
       // Populate Player Stats
-      document.getElementById('vsPlayerFlag').textContent = player.country ? player.country.flag : '🌍';
+      const vsFlagEl = document.getElementById('vsPlayerFlag');
+        if (vsFlagEl) vsFlagEl.innerHTML = getCountryFlagHtml(player.country, 'w-6 h-4.5');
       document.getElementById('vsPlayerName').textContent = player.fullName;
       document.getElementById('vsPlayerOvr').textContent = `${player.peakOvr} ZİRVE`;
       document.getElementById('vsPlayerGoals').textContent = player.stats.goals;
@@ -1663,6 +1664,39 @@
         docWatermark: 'pratikbase.com/football-lottery • 40-SEASON DOCUMENTARY'
       }
     };
+
+    // Global Country Flag Image Helper (Fixes Windows Chrome raw ISO letters like DE, BR, TR)
+    // Country Flag Image Helper (Solves Windows missing flag emoji letters like US, BR, TR)
+    function getCountryFlagHtml(country, sizeClass = 'w-6 h-4.5') {
+      if (!country) return '⚽';
+      const codeMap = {
+        'Brezilya': 'br', 'Brazil': 'br',
+        'Arjantin': 'ar', 'Argentina': 'ar',
+        'Fransa': 'fr', 'France': 'fr',
+        'Almanya': 'de', 'Germany': 'de',
+        'İngiltere': 'gb-eng', 'England': 'gb-eng',
+        'İspanya': 'es', 'Spain': 'es',
+        'Türkiye': 'tr', 'Turkey': 'tr',
+        'Portekiz': 'pt', 'Portugal': 'pt',
+        'İtalya': 'it', 'Italy': 'it',
+        'Hollanda': 'nl', 'Netherlands': 'nl',
+        'Nijerya': 'ng', 'Nigeria': 'ng',
+        'Fas': 'ma', 'Morocco': 'ma',
+        'Japonya': 'jp', 'Japan': 'jp',
+        'Güney Kore': 'kr', 'South Korea': 'kr',
+        'Uruguay': 'uy', 'Uruguay': 'uy',
+        'Hırvatistan': 'hr', 'Croatia': 'hr',
+        'Norveç': 'no', 'Norway': 'no',
+        'Kolombiya': 'co', 'Colombia': 'co',
+        'ABD': 'us', 'USA': 'us',
+        'San Marino': 'sm', 'San Marino': 'sm'
+      };
+      const iso = codeMap[country.nameTr] || codeMap[country.nameEn] || (country.code ? country.code.toLowerCase() : null);
+      if (iso) {
+        return `<img src="https://flagcdn.com/w40/${iso}.png" alt="${country.nameTr || ''}" class="${sizeClass} rounded shadow-sm object-cover inline-block align-middle border border-pitch-700/80 shrink-0" onerror="this.outerHTML='<span class=\\'inline-block\\'>${country.flag || '⚽'}</span>';">`;
+      }
+      return `<span class="inline-block">${country.flag || '⚽'}</span>`;
+    }
 
     function formatArchetype(arch) {
       if (!arch) return '';
@@ -1947,7 +1981,8 @@
       document.getElementById('careerHud').classList.remove('hidden');
 
       // Update Reveal Banner
-      document.getElementById('revealFlag').textContent = birth.country.flag;
+      const rFlagEl = document.getElementById('revealFlag');
+      if (rFlagEl) rFlagEl.innerHTML = getCountryFlagHtml(birth.country, 'w-16 h-11');
       document.getElementById('revealCountryName').textContent = currentLang === 'TR' ? `${birth.country.nameTr}'da Doğdun` : `Born in ${birth.country.nameEn}`;
       document.getElementById('revealChance').textContent = currentLang === 'TR' ? `Olasılık: %${birth.country.weight.toFixed(1)}` : `Odds: ${birth.country.weight.toFixed(1)}%`;
       document.getElementById('revealPlayerTitle').textContent = birth.fullName;
@@ -1993,7 +2028,8 @@
        7. HUD UPDATER
        ===================================================================== */
     function updateHUD() {
-      document.getElementById('hudCountryFlag').textContent = player.country.flag;
+      const hFlagEl = document.getElementById('hudCountryFlag');
+      if (hFlagEl) hFlagEl.innerHTML = getCountryFlagHtml(player.country, 'w-6 h-4.5');
       document.getElementById('hudPlayerName').textContent = player.fullName;
       const eraIcon = player.age <= 6 ? '👶' : player.age <= 12 ? '🧒' : player.age <= 17 ? '⚡' : player.age <= 25 ? '🔥' : player.age <= 33 ? '👑' : '🎖️';
       document.getElementById('hudAge').innerHTML = `<span>${eraIcon}</span> <span>${currentLang === 'TR' ? `${player.age} Yaşında` : `Age ${player.age}`}</span>`;
@@ -3935,7 +3971,8 @@
       document.getElementById('screenRetirement').classList.remove('hidden');
 
       // Populate Card
-      document.getElementById('cardFlag').textContent = player.country.flag;
+      const cFlagEl = document.getElementById('cardFlag');
+      if (cFlagEl) cFlagEl.innerHTML = getCountryFlagHtml(player.country, 'w-9 h-6');
       document.getElementById('cardPlayerName').textContent = player.fullName.toUpperCase();
       document.getElementById('cardSubTitle').textContent = `${player.position.code} (${currentLang === 'TR' ? player.position.nameTr : player.position.nameEn}) • ${player.dominantFoot}`;
       document.getElementById('cardOvr').textContent = player.peakOvr;
