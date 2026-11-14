@@ -1343,6 +1343,10 @@
       gulf: [
         { name: 'Riyad Altın Şeyhleri', badge: '💰', color: '#eab308', prestige: 78, isCashCow: true },
         { name: 'Doha Körfez Yıldızları', badge: '💎', color: '#8b5cf6', prestige: 77, isCashCow: true }
+      ],
+      mls: [
+        { name: 'Miami Sahil Yıldızları (MLS)', badge: '🌴', color: '#f43f5e', prestige: 76, isMls: true },
+        { name: 'Los Angeles Hollywood FC', badge: '⭐', color: '#eab308', prestige: 75, isMls: true }
       ]
     };
 
@@ -1392,7 +1396,8 @@
       isRetired: false,
       archetype: '',
       startingOvr: 45,
-      severeInjuries: 0
+      severeInjuries: 0,
+      isCaptain: false
     };
 
     let activeChallenger = null;
@@ -2274,6 +2279,7 @@
       player.startingOvr = player.ovr;
       player.peakOvr = player.ovr;
       player.severeInjuries = 0;
+      player.isCaptain = false;
       player.marketValue = 0;
       player.salary = 0;
       player.bankBalance = 0;
@@ -2302,6 +2308,9 @@
       document.getElementById('screenRetirement').classList.add('hidden');
       document.getElementById('screenCareer').classList.remove('hidden');
       document.getElementById('careerHud').classList.remove('hidden');
+
+      // Generate randomized procedural dilemma schedule for this specific career
+      scheduledDilemmas = scheduleCareerDilemmas();
 
       // Update Reveal Banner
       const rFlagEl = document.getElementById('revealFlag');
@@ -2338,13 +2347,18 @@
 
       updateNextAgeButton(1);
 
-      // Otomatik İlerleme (1x hızında otomatik başlasın)
+      // Otomatik ilerleme başlangıçta KAPALI gelsin (kullanıcı isterse kendisi başlatsın)
       setSpeed(1);
-      setTimeout(() => {
-        if (!isAutoPlaying && !player.isRetired && player.age < 40) {
-          toggleAutoPlay();
-        }
-      }, 750);
+      if (isAutoPlaying) {
+        toggleAutoPlay();
+      } else {
+        const btn = document.getElementById('btnAutoPlay');
+        const icon = document.getElementById('autoPlayIcon');
+        const txt = document.getElementById('txtAutoPlay');
+        if (btn) btn.classList.remove('bg-emerald-950', 'text-emerald-300', 'border-emerald-500/40');
+        if (icon) icon.className = 'fa-solid fa-play text-emerald-400';
+        if (txt) txt.textContent = currentLang === 'TR' ? 'Otomatik İlerle' : 'Auto Advance';
+      }
     }
 
     /* =====================================================================
@@ -2353,7 +2367,7 @@
     function updateHUD() {
       const hFlagEl = document.getElementById('hudCountryFlag');
       if (hFlagEl) hFlagEl.innerHTML = getCountryFlagHtml(player.country, 'w-6 h-4.5');
-      document.getElementById('hudPlayerName').textContent = player.fullName;
+      document.getElementById('hudPlayerName').textContent = player.isCaptain ? `${player.fullName} ©` : player.fullName;
       const eraIcon = player.age <= 6 ? '👶' : player.age <= 12 ? '🧒' : player.age <= 17 ? '⚡' : player.age <= 25 ? '🔥' : player.age <= 33 ? '👑' : '🎖️';
       document.getElementById('hudAge').innerHTML = `<span>${eraIcon}</span> <span>${currentLang === 'TR' ? `${player.age} Yaşında` : `Age ${player.age}`}</span>`;
       document.getElementById('hudPosition').textContent = player.position.code;
@@ -2760,22 +2774,31 @@
       let yearCleans = 0;
 
       if (player.position.code === 'ST') {
-        yearGoals = Math.max(4, Math.floor((player.ovr - 55) * (0.4 + Math.random() * 0.4)));
-        yearAssists = Math.floor(yearGoals * 0.3);
+        // Realistic goal machine striker rates: 0.45 to 0.85 goals/match based on OVR
+        const goalRate = Math.max(0.35, ((player.ovr - 50) / 45) * 0.85);
+        const jitter = 0.82 + Math.random() * 0.36;
+        yearGoals = Math.max(6, Math.round(matchCount * goalRate * jitter));
+        yearAssists = Math.max(2, Math.round(yearGoals * (0.18 + Math.random() * 0.18)));
       } else if (player.position.code === 'WNG') {
-        yearGoals = Math.max(3, Math.floor((player.ovr - 55) * 0.3));
-        yearAssists = Math.max(4, Math.floor((player.ovr - 55) * 0.35));
+        // Modern lethal wingers (Salah, Vinicius, Mbappe, Son, Saka): 0.28 to 0.55 goals/match
+        const goalRate = Math.max(0.25, ((player.ovr - 50) / 48) * 0.62);
+        const jitter = 0.82 + Math.random() * 0.36;
+        yearGoals = Math.max(5, Math.round(matchCount * goalRate * jitter));
+        const assistRate = Math.max(0.22, ((player.ovr - 52) / 48) * 0.50);
+        yearAssists = Math.max(5, Math.round(matchCount * assistRate * (0.8 + Math.random() * 0.4)));
       } else if (player.position.code === 'CM') {
-        yearGoals = Math.max(1, Math.floor((player.ovr - 60) * 0.2));
-        yearAssists = Math.max(5, Math.floor((player.ovr - 55) * 0.4));
+        const goalRate = Math.max(0.08, ((player.ovr - 58) / 50) * 0.28);
+        yearGoals = Math.max(2, Math.round(matchCount * goalRate * (0.8 + Math.random() * 0.4)));
+        const assistRate = Math.max(0.24, ((player.ovr - 52) / 48) * 0.55);
+        yearAssists = Math.max(6, Math.round(matchCount * assistRate * (0.8 + Math.random() * 0.4)));
       } else if (player.position.code === 'LB' || player.position.code === 'RB') {
-        yearGoals = Math.floor(Math.random() * 3);
-        yearAssists = Math.max(2, Math.floor((player.ovr - 55) * 0.25));
-      } else if (player.position.code === 'CB') {
         yearGoals = Math.floor(Math.random() * 4);
-        yearAssists = Math.floor(Math.random() * 2);
+        yearAssists = Math.max(3, Math.round(matchCount * 0.18 * (player.ovr / 78)));
+      } else if (player.position.code === 'CB') {
+        yearGoals = Math.floor(Math.random() * 5);
+        yearAssists = Math.floor(Math.random() * 3);
       } else if (player.position.code === 'GK') {
-        yearCleans = Math.max(5, Math.floor(matchCount * (player.ovr / 190)));
+        yearCleans = Math.max(6, Math.floor(matchCount * (player.ovr / 180)));
       }
 
       player.stats.goals += yearGoals;
@@ -2955,10 +2978,31 @@
       player.ovr = Math.max(62, player.ovr - (Math.random() < 0.7 ? 2 : 1));
       player.marketValue = Math.floor(player.marketValue * 0.5);
 
-      const matchCount = 18 + Math.floor(Math.random() * 12);
+      const matchCount = 18 + Math.floor(Math.random() * 14);
       player.stats.matches += matchCount;
-      const yearGoals = player.position.code === 'ST' ? 4 + Math.floor(Math.random() * 5) : Math.floor(Math.random() * 2);
+      let yearGoals = 0;
+      let yearAssists = 0;
+      if (player.position.code === 'ST') {
+        yearGoals = Math.max(4, Math.round(matchCount * 0.42 * (player.ovr / 80)));
+        yearAssists = Math.max(1, Math.round(yearGoals * 0.25));
+      } else if (player.position.code === 'WNG') {
+        yearGoals = Math.max(3, Math.round(matchCount * 0.30 * (player.ovr / 80)));
+        yearAssists = Math.max(3, Math.round(matchCount * 0.32 * (player.ovr / 80)));
+      } else if (player.position.code === 'CM') {
+        yearGoals = Math.floor(Math.random() * 3);
+        yearAssists = Math.max(2, Math.round(matchCount * 0.25));
+      } else if (player.position.code === 'LB' || player.position.code === 'RB') {
+        yearGoals = Math.floor(Math.random() * 2);
+        yearAssists = Math.max(1, Math.round(matchCount * 0.12));
+      } else if (player.position.code === 'CB') {
+        yearGoals = Math.floor(Math.random() * 3);
+        yearAssists = Math.floor(Math.random() * 2);
+      } else if (player.position.code === 'GK') {
+        yearCleans = Math.max(3, Math.floor(matchCount * (player.ovr / 190)));
+      }
       player.stats.goals += yearGoals;
+      player.stats.assists += yearAssists;
+      player.stats.cleanSheets += (yearCleans || 0);
 
       if (player.salary) player.salary = Math.floor(player.salary * 0.75);
       const annualSavings = Math.round((player.salary || 100000) * 0.5);
@@ -3253,6 +3297,1129 @@
       resumeAfterDilemma();
     }
 
+    /* =====================================================================
+       10. PROCEDURAL RANDOMIZED DILEMMAS & DECISION ENGINE
+       ===================================================================== */
+    let scheduledDilemmas = {};
+
+    const DILEMMA_POOLS = {
+      youth: [
+        'coach_position',
+        'school_vs_pro',
+        'foreign_academy',
+        'street_cage_tournament',
+        'youth_agent_choice'
+      ],
+      breakthrough: [
+        'first_fortune',
+        'nightclub_fame',
+        'derby_penalty_clutch',
+        'boot_sponsor_battle',
+        'first_red_card'
+      ],
+      prime: [
+        'prime_mega_transfer',
+        'arch_rival_treason',
+        'captain_armband',
+        'national_team_or_club',
+        'tactical_clash'
+      ],
+      veteran: [
+        'veteran_investment',
+        'injury_gamble',
+        'mls_farewell_tour'
+      ]
+    };
+
+    function scheduleCareerDilemmas() {
+      const schedule = {};
+
+      // 1. Pick 1 or 2 from Youth pool (ages 13-16)
+      const youthCount = Math.random() < 0.5 ? 1 : 2;
+      const youthShuffled = [...DILEMMA_POOLS.youth].sort(() => 0.5 - Math.random());
+      const youthAges = [13, 14, 15, 16].sort(() => 0.5 - Math.random());
+      for (let i = 0; i < youthCount; i++) {
+        schedule[youthAges[i]] = youthShuffled[i];
+      }
+
+      // 2. Pick 1 or 2 from Breakthrough pool (ages 18-22)
+      const btCount = Math.random() < 0.5 ? 1 : 2;
+      const btShuffled = [...DILEMMA_POOLS.breakthrough].sort(() => 0.5 - Math.random());
+      const btAges = [18, 19, 21, 22].sort(() => 0.5 - Math.random());
+      for (let i = 0; i < btCount; i++) {
+        schedule[btAges[i]] = btShuffled[i];
+      }
+
+      // 3. Pick 1 from Prime pool (ages 26, 27, 29 - keeping 24 and 28 for World Cup!)
+      const primeShuffled = [...DILEMMA_POOLS.prime].sort(() => 0.5 - Math.random());
+      const primeAges = [26, 27, 29].sort(() => 0.5 - Math.random());
+      schedule[primeAges[0]] = primeShuffled[0];
+
+      // 4. Pick 1 from Veteran pool (ages 33-36)
+      const vetShuffled = [...DILEMMA_POOLS.veteran].sort(() => 0.5 - Math.random());
+      const vetAges = [33, 34, 35, 36].sort(() => 0.5 - Math.random());
+      schedule[vetAges[0]] = vetShuffled[0];
+
+      return schedule;
+    }
+
+    const DILEMMA_REGISTRY = {
+      coach_position: (age) => {
+        // Dynamically compute the suggested new position based on current position
+        let targetPos = null;
+        if (player.position.code === 'ST') {
+          targetPos = POSITIONS.find(p => p.code === 'WNG') || POSITIONS[5];
+        } else if (player.position.code === 'WNG') {
+          targetPos = POSITIONS.find(p => p.code === 'ST') || POSITIONS[6];
+        } else if (player.position.code === 'CM') {
+          targetPos = POSITIONS.find(p => p.code === 'WNG') || POSITIONS[5];
+        } else if (player.position.code === 'LB' || player.position.code === 'RB') {
+          targetPos = POSITIONS.find(p => p.code === 'WNG') || POSITIONS[5];
+        } else if (player.position.code === 'CB') {
+          targetPos = POSITIONS.find(p => p.code === 'CM') || POSITIONS[4];
+        } else {
+          targetPos = POSITIONS.find(p => p.code === 'CM') || POSITIONS[4];
+        }
+
+        const targetPosName = currentLang === 'TR' ? targetPos.nameTr : targetPos.nameEn;
+        const currentPosName = currentLang === 'TR' ? player.position.nameTr : player.position.nameEn;
+
+        return {
+          scene: {
+            locationTr: 'Altyapı Taktik Odası - Beyaz Tahta Başı',
+            locationEn: 'Youth Academy Tactical Boardroom',
+            moodTr: `"Hocan tahtaya yeni mevkini çizdi: Artık ${targetPos.code} olarak oynayacaksın..."`,
+            moodEn: `"Your coach redraws tactics on the board: moving you to ${targetPos.code}..."`,
+            icon: '📋',
+            imageUrl: 'https://images.unsplash.com/photo-1517466787929-bc90951d0974?auto=format&fit=crop&w=800&q=80',
+            ageTagTr: `${age} YAŞ • MEVKİ DEĞİŞİKLİĞİ`,
+            ageTagEn: `AGE ${age} • POSITION SHIFT`
+          },
+          badge: currentLang === 'TR' ? `MEVKİ TERCİHİ (${age} YAŞ)` : `POSITION SHIFT (AGE ${age})`,
+          title: currentLang === 'TR' ? `Hocan Seni ${targetPosName} Olarak Oynatmak İstiyor!` : `Coach Wants You to Transition to ${targetPosName}!`,
+          desc: currentLang === 'TR'
+            ? `Altyapı hocan: "Oyun zekan, hızın ve yeteneğin harika. Seni doğal mevkin olan ${currentPosName} yerine ${targetPosName} (${targetPos.code}) mevkisine kaydırmak istiyorum." diyor. Kabul edecek misin?`
+            : `Your youth coach observes: "Your technical acumen suits modern tactical demands. I want to transition you from ${currentPosName} to ${targetPosName} (${targetPos.code})." How do you respond?`,
+          options: [
+            {
+              text: currentLang === 'TR' ? `🔄 Hocayı Dinle & ${targetPos.code} Mevkisine Geç (+3 OVR)` : `🔄 Accept Coach & Switch to ${targetPos.code} (+3 OVR)`,
+              action: () => {
+                const oldPosCode = player.position.code;
+                player.position = targetPos; // ACTUALLY SWITCH POSITION IN GAME STATE!
+                player.ovr += 3;
+                player.workEthic += 10;
+
+                // Update HUD and Reveal banner immediately
+                const hudPosEl = document.getElementById('hudPosition');
+                if (hudPosEl) hudPosEl.textContent = player.position.code;
+                const revealPosEl = document.getElementById('revealPosFoot');
+                if (revealPosEl) {
+                  revealPosEl.textContent = `${player.position.code} (${currentLang === 'TR' ? player.position.nameTr : player.position.nameEn}) • ${player.dominantFoot}`;
+                }
+
+                addTimelineEvent({
+                  age,
+                  badge: 'MEVKİ DEĞİŞTİ',
+                  badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+                  title: currentLang === 'TR' ? `Resmen ${targetPosName} (${targetPos.code}) Oldun!` : `Transitioned to ${targetPosName} (${targetPos.code})!`,
+                  desc: currentLang === 'TR' ? `Hocanın tavsiyesini kabul ettin. Eski mevkin ${oldPosCode} geride kaldı, artık sahada bir ${targetPosName} olarak harikalar yaratıyorsun!` : `Embraced the tactical shift from ${oldPosCode} to ${targetPos.code}. Your versatility unlocked explosive development!`,
+                  statDelta: [{ text: `Mevki: ${targetPos.code} 🔄`, color: 'bg-emerald-500/20 text-emerald-300' }, { text: '+3 OVR', color: 'bg-emerald-500/20 text-emerald-300' }]
+                });
+                resumeAfterDilemma();
+              }
+            },
+            {
+              text: currentLang === 'TR' ? `🛡️ İnat Et! Doğal Mevkin ${player.position.code} Olarak Kal` : `🛡️ Refuse! Stay as Natural ${player.position.code}`,
+              action: () => {
+                player.talentScore += 2;
+                player.clutch += 5;
+                addTimelineEvent({
+                  age,
+                  badge: 'DOĞAL MEVKİ',
+                  badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
+                  title: currentLang === 'TR' ? `${player.position.nameTr} Olarak Devam Ettin` : `Stayed True as Natural ${player.position.nameEn}`,
+                  desc: currentLang === 'TR' ? `Kendi bildiğinden şaşmadın. Doğal mevkin olan ${player.position.nameTr} pozisyonunda saf yeteneğinle parlamaya devam ettin.` : 'Refused to change. Honed your signature role with uncompromising dedication.',
+                  statDelta: [{ text: 'Özgüven +', color: 'bg-amber-500/20 text-amber-300' }]
+                });
+                resumeAfterDilemma();
+              }
+            }
+          ]
+        };
+      },
+
+      school_vs_pro: (age) => ({
+        scene: {
+          locationTr: 'Yol Ayrımı: Kütüphane vs Gece Antrenmanı',
+          locationEn: 'Crossroad: Study Hall vs Night Training',
+          moodTr: '"Ya garanti bir diploma, ya da tüm gemileri yakıp futbol..."',
+          moodEn: '"A safe diploma, or burn all ships for pro football..."',
+          icon: '⚡',
+          imageUrl: 'https://images.unsplash.com/photo-1518091043644-c1d4457512c6?auto=format&fit=crop&w=800&q=80',
+          ageTagTr: `${age} YAŞ • HAYATİ TERCİH`,
+          ageTagEn: `AGE ${age} • LIFE CROSSROAD`
+        },
+        badge: currentLang === 'TR' ? `HAYATİ TERCİH (${age} YAŞ)` : `LIFE CROSSROAD (AGE ${age})`,
+        title: currentLang === 'TR' ? 'Okul mu, Yüzde Yüz Futbol mu?' : 'School Education vs Full-Time Football?',
+        desc: currentLang === 'TR'
+          ? 'Ailen üniversiteyi düşünmeni istiyor. Ancak kulüp tam zamanlı profesyonel antrenman kampına çağırıyor. İkisini birden yürütmek imkansız.'
+          : 'Your family stresses academics. Meanwhile, the academy demands full-time devotion with two-a-day drills.',
+        options: [
+          {
+            text: currentLang === 'TR' ? 'Gemileri yak! Okulu bırak, %100 futbola odaklan (+5 OVR)' : 'Burn the ships! Drop out, devote 100% to football (+5 OVR)',
+            action: () => {
+              player.ovr += 5;
+              player.workEthic += 15;
+              addTimelineEvent({
+                age,
+                badge: 'KRİTİK',
+                badgeColor: 'bg-rose-500/20 text-rose-300',
+                title: currentLang === 'TR' ? 'Tüm Kartlarını Futbola Yatırdın' : 'All-In on Professional Football',
+                desc: currentLang === 'TR' ? 'Günde çift idmanla fiziğini canavara dönüştürdün. A Takım kapıları ardına kadar açıldı.' : 'Unchecked dedication forged you into a physical specimen ready for senior football.',
+                statDelta: [{ text: '+5 OVR', color: 'bg-emerald-500/20 text-emerald-300' }]
+              });
+              resumeAfterDilemma();
+            }
+          },
+          {
+            text: currentLang === 'TR' ? 'Dengeli git: Liseyi bitir, idmanları aksatma (+Dayanıklılık)' : 'Balanced path: Finish high school alongside training (+Durability)',
+            action: () => {
+              player.ovr += 2;
+              player.durability += 6;
+              addTimelineEvent({
+                age,
+                badge: 'DENGE',
+                badgeColor: 'bg-cyan-500/20 text-cyan-300',
+                title: currentLang === 'TR' ? 'Okul ve Futbolu Birlikte Yürüttün' : 'Balanced School & Football',
+                desc: currentLang === 'TR' ? 'Disiplinli yaşamınla hem mezun oldun hem de altyapıda parlamaya devam ettin.' : 'Earned your diploma while steadily climbing academy ranks.',
+                statDelta: [{ text: '+2 OVR', color: 'bg-cyan-500/20 text-cyan-300' }]
+              });
+              resumeAfterDilemma();
+            }
+          }
+        ]
+      }),
+
+      foreign_academy: (age) => ({
+        scene: {
+          locationTr: 'Havalimanı Dış Hatlar - Avrupa Scout Masası',
+          locationEn: 'International Airport - European Scout Suite',
+          moodTr: '"Bavullar hazır. Dilini bilmediğin bir ülkeye tek başına uçacak mısın?"',
+          moodEn: '"Bags packed. Will you fly alone into foreign lands?"',
+          icon: '✈️',
+          imageUrl: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=800&q=80',
+          ageTagTr: `${age} YAŞ • AVRUPA KAPISI`,
+          ageTagEn: `AGE ${age} • EUROPEAN GATEWAY`
+        },
+        badge: currentLang === 'TR' ? `AVRUPA TEKLİFİ (${age} YAŞ)` : `SCOUT CALL (${age} YAŞ)`,
+        title: currentLang === 'TR' ? 'Avrupa Devinden Altyapı Teklifi!' : 'Top European Academy Scout Approach!',
+        desc: currentLang === 'TR'
+          ? 'Avrupa devinin baş scoutu kapına geldi: "Bizim akademimize katıl, dünya vitrinine erken çık." diyor. Genç yaşta gurbete gidecek misin?'
+          : 'A top European academy scout offers you a youth contract abroad. Will you venture overseas alone?',
+        options: [
+          {
+            text: currentLang === 'TR' ? '✈️ Gurbete Git! Avrupa Akademisine Katıl (+5 OVR, +€50K İmza Bonusu)' : '✈️ Venture Abroad! Join European Academy (+5 OVR, +€50K Bonus)',
+            action: () => {
+              player.ovr += 5;
+              player.bankBalance += 50000;
+              addTimelineEvent({
+                age,
+                badge: 'GURBET MACERASI',
+                badgeColor: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30',
+                title: currentLang === 'TR' ? 'Avrupa Altyapısına Transfer Oldun!' : 'Moved to Elite European Academy!',
+                desc: currentLang === 'TR' ? 'Kültür şokunu hızlı atlattın. Dünya çapında tesislerde modern futbol öğrendin.' : 'Adapted to high-tech facilities and accelerated your tactical growth.',
+                statDelta: [{ text: '+5 OVR', color: 'bg-emerald-500/20 text-emerald-300' }, { text: '+€50.000 💰', color: 'bg-emerald-500/20 text-emerald-300' }]
+              });
+              resumeAfterDilemma();
+            }
+          },
+          {
+            text: currentLang === 'TR' ? '🏠 Ülkende Kal: Ailenin yanında A Takıma yükselmeyi bekle (+Sadakat)' : '🏠 Stay Local: Rise to First Team with Family Support (+Durability)',
+            action: () => {
+              player.durability += 8;
+              player.workEthic += 8;
+              addTimelineEvent({
+                age,
+                badge: 'SADAKAT',
+                badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+                title: currentLang === 'TR' ? 'Kendi Topraklarında Kalıp Piştin' : 'Stayed Grounded in Local Academy',
+                desc: currentLang === 'TR' ? 'Ailenden ayrılmadın. Kendi kulübünde taraftarın gözbebeği olarak A Takıma göz kırptın.' : 'Surrounded by family love, you matured steadily into the local first team.',
+                statDelta: [{ text: '+8 Dayanıklılık', color: 'bg-cyan-500/20 text-cyan-300' }]
+              });
+              resumeAfterDilemma();
+            }
+          }
+        ]
+      }),
+
+      street_cage_tournament: (age) => ({
+        scene: {
+          locationTr: 'Yağmurlu Sanayi Mahallesi - Gece Kafes Turnuvası',
+          locationEn: 'Rainy Industrial Quarter - Midnight Cage Cup',
+          moodTr: '"Spot ışıkları paslı tellere vuruyor. Sokak şöhreti seni çağırıyor..."',
+          moodEn: '"Floodlights on rusted mesh fences. Street glory beckons..."',
+          icon: '🔥',
+          imageUrl: 'https://images.unsplash.com/photo-1529900748604-07564a03e7a6?auto=format&fit=crop&w=800&q=80',
+          ageTagTr: `${age} YAŞ • SOKAK ŞÖHRETİ`,
+          ageTagEn: `AGE ${age} • STREET GLORY`
+        },
+        badge: currentLang === 'TR' ? `SOKAK TURNUVASI (${age} YAŞ)` : `STREET CAGE (${age} YAŞ)`,
+        title: currentLang === 'TR' ? 'Yeraltı Sokak Kafes Turnuvası Daveti!' : 'Underground Street Cage Tournament!',
+        desc: currentLang === 'TR'
+          ? 'Mahallenin para ödüllü kafes turnuvası var. Kulüp amatör maçları kesinlikle yasakladı. Gizlice katılıp şov yapacak mısın?'
+          : 'A high-stakes street cage tournament offers fast cash and cult fame, but your club forbids unauthorized matches. Do you play?',
+        options: [
+          {
+            text: currentLang === 'TR' ? '🔥 Gizlice Kafese Çık! Çalımlarla Sokak Kralı Ol (+€20K Nakit, +Clutch)' : '🔥 Enter the Cage! Master street dribbles (+€20K Cash, +Clutch)',
+            action: () => {
+              player.bankBalance += 20000;
+              player.clutch += 8;
+              player.talentScore += 2;
+              addTimelineEvent({
+                age,
+                badge: 'SOKAK EFSANESİ',
+                badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
+                title: currentLang === 'TR' ? 'Kafeste Şov Yaptın, Sokak Kralı Oldun!' : 'Crowned King of the Concrete Cage!',
+                desc: currentLang === 'TR' ? 'Yaptığın akrep vuruşları ve bacak arası çalımlar mahallede dillere destan oldu.' : 'Dazzling nutmegs and audacity forged your fearless street swagger.',
+                statDelta: [{ text: '+€20.000 Nakit', color: 'bg-emerald-500/20 text-emerald-300' }, { text: '+8 Soğukkanlılık', color: 'bg-amber-500/20 text-amber-300' }]
+              });
+              resumeAfterDilemma();
+            }
+          },
+          {
+            text: currentLang === 'TR' ? '🛡️ Kulüp Disiplinine Sadık Kal: İdmanını aksatma (+İş Ahlakı)' : '🛡️ Respect Club Discipline: Rest for academy games (+Work Ethic)',
+            action: () => {
+              player.workEthic += 10;
+              player.durability += 5;
+              addTimelineEvent({
+                age,
+                badge: 'DİSİPLİN',
+                badgeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30',
+                title: currentLang === 'TR' ? 'Gereksiz Risk Almadın' : 'Maintained Strict Professional Discipline',
+                desc: currentLang === 'TR' ? 'Sakatlık riskinden kaçındın ve antrenman performansınla hocanın güvenini perçinledin.' : 'Avoided rogue injuries and earned utmost respect from the coaching staff.',
+                statDelta: [{ text: '+10 İş Ahlakı', color: 'bg-cyan-500/20 text-cyan-300' }]
+              });
+              resumeAfterDilemma();
+            }
+          }
+        ]
+      }),
+
+      youth_agent_choice: (age) => ({
+        scene: {
+          locationTr: '5 Yıldızlı Otel Penthouse - Gece Yarısı Masası',
+          locationEn: '5-Star Penthouse - Midnight Negotiations',
+          moodTr: '"Puro dumanı, lüks çantalar ve kariyerinin tapusu masada..."',
+          moodEn: '"Cigar smoke, luxury briefcases, and your future on the line..."',
+          icon: '🦈',
+          imageUrl: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80',
+          ageTagTr: `${age} YAŞ • MENAJER MASASI`,
+          ageTagEn: `AGE ${age} • AGENT SHOWDOWN`
+        },
+        badge: currentLang === 'TR' ? `MENAJER SEÇİMİ (${age} YAŞ)` : `AGENT SELECTION (${age} YAŞ)`,
+        title: currentLang === 'TR' ? 'Hangi Menajerle Masaya Oturacaksın?' : 'Which Agent Represents Your Future?',
+        desc: currentLang === 'TR'
+          ? 'Kapında iki menajer var: Biri agresif, medyatik "kurt menajer", diğeri ise sakin, ailenin güvendiği bir danışman.'
+          : 'A ruthless super-agent offers high-stakes transfer buzz, while a trusted family counselor promises steady growth.',
+        options: [
+          {
+            text: currentLang === 'TR' ? '🦈 Kurt Menajeri Seç! (+€250K İmza Bonusu, +4 OVR)' : '🦈 Ruthless Super-Agent (+€250K Bonus, +4 OVR)',
+            action: () => {
+              player.bankBalance += 250000;
+              player.ovr += 4;
+              addTimelineEvent({
+                age,
+                badge: 'KURT MENAJER',
+                badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/30',
+                title: currentLang === 'TR' ? 'Kurt Menajerle Anlaştın!' : 'Signed with Notorious Super-Agent!',
+                desc: currentLang === 'TR' ? 'Menajerin kapıları sonuna kadar açtı, basını ayağa kaldırdı ve ilk büyük primini kopardı.' : 'Your agent stirred media frenzy, extracting immediate bonuses and high-profile moves.',
+                statDelta: [{ text: '+€250.000 💰', color: 'bg-emerald-500/20 text-emerald-300' }, { text: '+4 OVR', color: 'bg-emerald-500/20 text-emerald-300' }]
+              });
+              resumeAfterDilemma();
+            }
+          },
+          {
+            text: currentLang === 'TR' ? '🛡️ Aile & Sadık Danışmanla Devam Et (+10 Dayanıklılık)' : '🛡️ Family & Calm Mentor (+10 Durability)',
+            action: () => {
+              player.durability += 10;
+              player.workEthic += 10;
+              addTimelineEvent({
+                age,
+                badge: 'AİLE DANIŞMANI',
+                badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+                title: currentLang === 'TR' ? 'Huzuru ve İstikrarı Tercih Ettin' : 'Chose Peace & Dedicated Mentorship',
+                desc: currentLang === 'TR' ? 'Göz boyayan vaatlere aldanmadın. Ailenin desteğiyle sadece futboluna odaklandın.' : 'Ignored noisy headlines. Kept your head down and built unbreakable work ethic.',
+                statDelta: [{ text: '+10 Dayanıklılık', color: 'bg-cyan-500/20 text-cyan-300' }]
+              });
+              resumeAfterDilemma();
+            }
+          }
+        ]
+      }),
+
+      first_fortune: (age) => ({
+        scene: {
+          locationTr: 'Banka Kasası (€250.000 İlk Büyük İkramiye)',
+          locationEn: 'Bank Vault (€250,000 First Fortune)',
+          moodTr: '"Genç yaşta gelen büyük parayla ilk hamlen ne olacak?"',
+          moodEn: '"First taste of liquid wealth: Speed, family or crypto?"',
+          icon: '🏎️',
+          imageUrl: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80',
+          ageTagTr: `${age} YAŞ • İLK BÜYÜK MAAŞ`,
+          ageTagEn: `AGE ${age} • FIRST FORTUNE`
+        },
+        badge: currentLang === 'TR' ? `İLK BÜYÜK MAAŞ (${age} YAŞ)` : `FIRST FORTUNE (${age} YAŞ)`,
+        title: currentLang === 'TR' ? 'İlk Büyük Prim Geldi: Ne Satın Alacaksın?' : 'First Major Bonus: How Do You Spend It?',
+        desc: currentLang === 'TR'
+          ? 'Kulübün sana ilk büyük sözleşme imza primini ödedi (€250.000). Bu parayla ilk olarak ne yapacaksın?'
+          : 'Your club paid you your first major signing bonus (€250,000). What is your very first big financial move?',
+        options: [
+          {
+            text: currentLang === 'TR' ? '🏎️ İtalyan Süper Spor Araba Al (-€180K, Garaja Ekle)' : '🏎️ Buy an Italian Supercar (-€180K, Add to Garage)',
+            action: () => {
+              player.bankBalance = Math.max(20000, player.bankBalance - 180000);
+              player.assets.cars.push('İtalyan Süper Spor Araba');
+              addTimelineEvent({
+                age,
+                badge: 'LÜKS ARAÇ',
+                badgeColor: 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30',
+                title: currentLang === 'TR' ? 'Antrenman Tesislerine Süper Spor Arabayla Girdin!' : 'Arrived at Training in an Italian Supercar!',
+                desc: currentLang === 'TR' ? 'Kırmızı süper spor arabanla tesislerin önüne yanaştın. Taraftarlar ve basın fotoğraf çekmek için sıraya girdi.' : 'Showed up in a screaming supercar. Fans and media queued for photos.',
+                statDelta: [{ text: '🏎️ Süper Spor Araba', color: 'bg-yellow-500/20 text-yellow-300' }]
+              });
+              resumeAfterDilemma();
+            }
+          },
+          {
+            text: currentLang === 'TR' ? '🏡 Ailene Bahçeli Müstakil Ev Al (-€150K, +8 Dayanıklılık)' : '🏡 Buy a House for Family (-€150K, +8 Durability)',
+            action: () => {
+              player.bankBalance = Math.max(30000, player.bankBalance - 150000);
+              player.durability += 8;
+              player.assets.houses.push('Aileye Müstakil Ev');
+              addTimelineEvent({
+                age,
+                badge: 'AİLE EVİ',
+                badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+                title: currentLang === 'TR' ? 'Ailene Güzel Bir Yuva Hediye Ettin' : 'Gifted Your Family a Beautiful Home',
+                desc: currentLang === 'TR' ? 'İlk kazandığın büyük parayla anne-babanın hayalini gerçekleştirdin. Ailenin huzuru performansına yansıdı.' : 'Fulfilled your parents lifelong dream. Family warmth gave you peace of mind.',
+                statDelta: [{ text: '🏡 Aile Evi', color: 'bg-emerald-500/20 text-emerald-300' }, { text: '+8 Dayanıklılık', color: 'bg-cyan-500/20 text-cyan-300' }]
+              });
+              resumeAfterDilemma();
+            }
+          },
+          {
+            text: currentLang === 'TR' ? '📈 Kripto & Borsa Fonuna Yatır (BÜYÜK RİSK: %50 3x Katlar / %50 Batar)' : '📈 Crypto/Stock Fund (HIGH RISK: 50% Triple / 50% Lose All)',
+            action: () => {
+              const win = Math.random() < 0.5;
+              if (win) {
+                player.bankBalance += 450000;
+                addTimelineEvent({
+                  age,
+                  badge: '💎 BÜYÜK VURGUN',
+                  badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+                  title: currentLang === 'TR' ? 'Kripto Yatırımın Tavan Yaptı (+€450.000)!' : 'Crypto Investment Mooned (+€450,000)!',
+                  desc: currentLang === 'TR' ? 'Cesur kararın meyvesini verdi! Portföyün 3 katına çıktı, takım arkadaşların yatırım tavsiyesi istemeye başladı.' : 'Your daring bet paid off! Tripled your money overnight.',
+                  statDelta: [{ text: '+€450.000 Kazanç 💰', color: 'bg-emerald-500/20 text-emerald-300' }]
+                });
+              } else {
+                player.bankBalance = 15000;
+                addTimelineEvent({
+                  age,
+                  badge: '💸 YATIRIM BATTI',
+                  badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/30',
+                  title: currentLang === 'TR' ? 'Büyük Çöküş: Tüm Birikimin Battı!' : 'Crash! Lost All Your Savings in Crypto!',
+                  desc: currentLang === 'TR' ? 'Yatırdığın fon bir gecede çöktü ve paran buharlaştı! Genç yaşta büyük bir finans dersi aldın.' : 'The fund went to zero overnight. A harsh financial awakening.',
+                  statDelta: [{ text: '💸 Para Battı', color: 'bg-rose-500/20 text-rose-300' }]
+                });
+              }
+              resumeAfterDilemma();
+            }
+          }
+        ]
+      }),
+
+      nightclub_fame: (age) => ({
+        scene: {
+          locationTr: 'VIP Gece Kulübü vs Rejenerasyon Kliniği',
+          locationEn: 'VIP Nightclub vs Recovery Cryo Clinic',
+          moodTr: '"Şöhretin baş döndürücü neonları mı, yoksa buz banyosu mu?"',
+          moodEn: '"Dazzling nightlife glamour vs relentless athletic discipline..."',
+          icon: '🪩',
+          imageUrl: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=800&q=80',
+          ageTagTr: `${age} YAŞ • ŞÖHRET VE DİSİPLİN`,
+          ageTagEn: `AGE ${age} • FAME & GLAMOUR`
+        },
+        badge: currentLang === 'TR' ? `ŞÖHRET SINAVI (${age} YAŞ)` : `FAME TEST (${age} YAŞ)`,
+        title: currentLang === 'TR' ? 'VIP Gece Kulübü & Basın Tuzağı!' : 'VIP Nightclub & Media Trap!',
+        desc: currentLang === 'TR'
+          ? 'Takımın ünlü süperstarı maçtan önceki gece seni VIP bir partiye davet etti. Kapıda magazin muhabirleri bekliyor. Katılacak mısın?'
+          : 'A flashy superstar invites you to an exclusive midnight VIP party before matchday. Paparazzi wait outside.',
+        options: [
+          {
+            text: currentLang === 'TR' ? '🍾 VIP Locaya Geç! Basına poz ver, partile (+Şöhret, Yorgunluk Riski)' : '🍾 Hit the VIP Table! Party & soak in glamour (+Fame)',
+            action: () => {
+              player.marketValue += 2000000;
+              player.durability = Math.max(30, player.durability - 5);
+              addTimelineEvent({
+                age,
+                badge: 'MAGAZİN MANŞETİ',
+                badgeColor: 'bg-pink-500/20 text-pink-300 border-pink-500/30',
+                title: currentLang === 'TR' ? 'Sabaha Kadar Eğlendin, Magazin Manşetlerindesin!' : 'Partied Until Dawn! Front Page Tabloid News!',
+                desc: currentLang === 'TR' ? 'Fotoğrafların sosyal medyada viral oldu. Taraftarlar enerjine hayran kaldı ama hoca hafif uyarı çekti.' : 'Photos went viral across social media. Fans adored your flair, but the gaffer wasn’t pleased.',
+                statDelta: [{ text: '+Popülerlik 📸', color: 'bg-pink-500/20 text-pink-300' }]
+              });
+              resumeAfterDilemma();
+            }
+          },
+          {
+            text: currentLang === 'TR' ? '🛌 Tesislerde Kal & Erken Uyu: Sadece sahaya odaklan (+Dayanıklılık)' : '🛌 Stay at Facility & Sleep Early: Pure Focus (+Durability)',
+            action: () => {
+              player.durability += 8;
+              player.workEthic += 8;
+              addTimelineEvent({
+                age,
+                badge: 'PROFESYONEL ODAK',
+                badgeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30',
+                title: currentLang === 'TR' ? 'Buz Banyosu ve Disiplinli Uyku' : 'Cryo Baths & Disciplined Recovery',
+                desc: currentLang === 'TR' ? 'Gece hayatına kapılmadın. Ertesi gün maçta 12 kilometre koşup maçın adamı seçildin.' : 'Resisted temptation. Clocked 12km on matchday and took Man of the Match honors.',
+                statDelta: [{ text: '+8 Dayanıklılık', color: 'bg-cyan-500/20 text-cyan-300' }]
+              });
+              resumeAfterDilemma();
+            }
+          }
+        ]
+      }),
+
+      derby_penalty_clutch: (age) => ({
+        scene: {
+          locationTr: '60.000 Kişilik Kükreyen Stadyum - 90+4. Dakika',
+          locationEn: '60,000 Roaring Stadium - 94th Minute',
+          moodTr: '"Top beyaz noktada bekliyor. Milyonlar nefesini tuttu..."',
+          moodEn: '"The ball sits on the spot. Millions hold their breath..."',
+          icon: '⚽',
+          imageUrl: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=800&q=80',
+          ageTagTr: `${age} YAŞ • TARİHİ PENALTI`,
+          ageTagEn: `AGE ${age} • 94TH MIN PENALTY`
+        },
+        badge: currentLang === 'TR' ? `90+4 DERBİ PENALTISI (${age} YAŞ)` : `94TH MIN PENALTY (${age} YAŞ)`,
+        title: currentLang === 'TR' ? "90+4'te Tarihi Derbi Penaltısı!" : '94th-Minute Historic Derby Penalty!',
+        desc: currentLang === 'TR'
+          ? "Ezeli rakip karşısında 90+4'te penaltı kazanıldı. 60.000 taraftar ayakta. Kaptan topu sana uzattı: \"Yüreğin yetiyorsa sen at!\" diyor."
+          : 'Penalty awarded in the 94th minute of a fierce derby. The veteran skipper hands you the ball: "Take it if you dare!"',
+        options: [
+          {
+            text: currentLang === 'TR' ? "⚽ Topu Al & 90'a As! Kahraman Olmaya Geldim! (+12 Clutch, +3 OVR)" : '⚽ Step up & smash it top corner! Be the hero! (+12 Clutch, +3 OVR)',
+            action: () => {
+              player.clutch += 12;
+              player.ovr += 3;
+              player.stats.goals += 1;
+              addTimelineEvent({
+                age,
+                badge: 'DERBİ KAHRAMANI',
+                badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+                title: currentLang === 'TR' ? "90'a Taktın! Şehirde Bayram Havası!" : 'Smashed into Top Bins! City Goes Wild!',
+                desc: currentLang === 'TR' ? 'Kaleciyi ters köşeye yatırıp tribünlere koştun! Adın kulüp marşlarına girdi.' : 'Sent keeper wrong way and leaped into the flares! Instant club folklore.',
+                statDelta: [{ text: '+1 Gol ⚽', color: 'bg-emerald-500/20 text-emerald-300' }, { text: '+12 Soğukkanlılık', color: 'bg-amber-500/20 text-amber-300' }, { text: '+3 OVR', color: 'bg-emerald-500/20 text-emerald-300' }]
+              });
+              resumeAfterDilemma();
+            }
+          },
+          {
+            text: currentLang === 'TR' ? '🤝 Riski Böl: Kaptana sarıl ve topu uzmanına bırak (+Takım Ruhu)' : '🤝 Defer to Skipper: Share the pressure (+Team Harmony)',
+            action: () => {
+              player.workEthic += 8;
+              addTimelineEvent({
+                age,
+                badge: 'TAKIM RUHU',
+                badgeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30',
+                title: currentLang === 'TR' ? 'Kaptana Güvendin, Maçı Kazandınız' : 'Trusted the Veteran Skipper',
+                desc: currentLang === 'TR' ? 'Baskıyı paylaştın. Kaptan golü attıktan sonra sana sarılıp teşekkür etti.' : 'Humble restraint maintained locker room hierarchy as the skipper converted.',
+                statDelta: [{ text: '+8 İş Ahlakı', color: 'bg-cyan-500/20 text-cyan-300' }]
+              });
+              resumeAfterDilemma();
+            }
+          }
+        ]
+      }),
+
+      boot_sponsor_battle: (age) => ({
+        scene: {
+          locationTr: 'Moda & Spor İnovasyon Zirvesi - VIP Salon',
+          locationEn: 'Sports Innovation & Fashion Summit',
+          moodTr: '"Özel imza logolu altın krampon mu, yoksa bilimsel antrenör ekibi mi?"',
+          moodEn: '"Signature golden boot deal vs elite sports science team..."',
+          icon: '👟',
+          imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80',
+          ageTagTr: `${age} YAŞ • KRAMPON SAVAŞI`,
+          ageTagEn: `AGE ${age} • BOOT SHOWDOWN`
+        },
+        badge: currentLang === 'TR' ? `SPONSORLUK SAVAŞI (${age} YAŞ)` : `BOOT SHOWDOWN (${age} YAŞ)`,
+        title: currentLang === 'TR' ? 'Milyonluk Krampon Sponsorluğu Teklifi!' : 'Mega Boot Endorsement Battle!',
+        desc: currentLang === 'TR'
+          ? 'Dünya devi iki spor markası seni transfer etmek istiyor. Biri dev nakit çek ve imza kramponu teklif ediyor; diğeri kişisel bilimsel performans ve fizyo ekibi sağlıyor.'
+          : 'Rival global sportswear giants battle for your signature: Mega cash & custom boots vs a dedicated private sports science staff.',
+        options: [
+          {
+            text: currentLang === 'TR' ? '💎 Parayı & İmzalı Kramponu Seç (+€500K Nakit, +Karizma)' : '💎 Signature Boots & Mega Cash (+€500K Cash, +Glamour)',
+            action: () => {
+              player.bankBalance += 500000;
+              addTimelineEvent({
+                age,
+                badge: 'ALTIN KRAMPON',
+                badgeColor: 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30',
+                title: currentLang === 'TR' ? 'Kendi Adına Özel Krampon Tasarlandı!' : 'Launched Your Own Signature Boots!',
+                desc: currentLang === 'TR' ? 'Dünyanın her yerindeki mağazalarda senin imzanı taşıyan kramponlar satışa çıktı.' : 'Billboards across Europe featured your signature boots on store shelves.',
+                statDelta: [{ text: '+€500.000 💰', color: 'bg-emerald-500/20 text-emerald-300' }]
+              });
+              resumeAfterDilemma();
+            }
+          },
+          {
+            text: currentLang === 'TR' ? '⚡ Bilim ve Performansı Seç: Özel Fizyo & Antrenör Ekibi (+Dayanıklılık & Hız)' : '⚡ Sports Science & Recovery: Private Physiotherapist Staff (+Durability)',
+            action: () => {
+              player.durability += 10;
+              player.ovr += 2;
+              addTimelineEvent({
+                age,
+                badge: 'BİLİMSEL PERFORMANS',
+                badgeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30',
+                title: currentLang === 'TR' ? 'Kişisel Sağlık ve Hız Ekibi Kurdun' : 'Assembled Elite Personal Physio Team',
+                desc: currentLang === 'TR' ? 'Özel diyetisyen ve fizyoterapistle çalıştın. Sakatlık riskini minimuma indirdin.' : 'Tailored nutrition and biometric tracking turned you into a machine.',
+                statDelta: [{ text: '+10 Dayanıklılık', color: 'bg-cyan-500/20 text-cyan-300' }, { text: '+2 OVR', color: 'bg-emerald-500/20 text-emerald-300' }]
+              });
+              resumeAfterDilemma();
+            }
+          }
+        ]
+      }),
+
+      first_red_card: (age) => ({
+        scene: {
+          locationTr: 'Soyunma Odası Tüneli - Hakemle Karşı Karşıya',
+          locationEn: 'Tunnel Entrance - Face-to-Face with Referee',
+          moodTr: '"Haksız bir kart. Kameralar yüzüne odaklandı..."',
+          moodEn: '"An unfair red card. All camera lenses are in your face..."',
+          icon: '🟥',
+          imageUrl: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=800&q=80',
+          ageTagTr: `${age} YAŞ • TANSİYON ZİRVESİ`,
+          ageTagEn: `AGE ${age} • RED CARD DRAMA`
+        },
+        badge: currentLang === 'TR' ? `KIRMIZI KART İSYANI (${age} YAŞ)` : `RED CARD REBELLION (${age} YAŞ)`,
+        title: currentLang === 'TR' ? 'Haksız Kırmızı Kart & Hakem İsyanı!' : 'Controversial Red Card & Referee Clash!',
+        desc: currentLang === 'TR'
+          ? 'Derbi maçında hakem seni haksız bir kararla oyundan attı. Canlı yayında mikrofonlar sana uzatıldı. Ne diyeceksin?'
+          : 'Sent off controversially in a heated clash. Microphones are shoved into your face as you exit.',
+        options: [
+          {
+            text: currentLang === 'TR' ? '💥 Kameralara Patla: "Hakkımızı yediler!" (+Taraftar Aşkı, 1 Maç Ceza)' : '💥 Speak Fire: "We were robbed!" (+Fan Adoration, 1-game ban)',
+            action: () => {
+              player.clutch += 8;
+              addTimelineEvent({
+                age,
+                badge: 'TARAFTAR AŞKI',
+                badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/30',
+                title: currentLang === 'TR' ? 'Taraftarlar Senin İçin Sokaklara Döküldü!' : 'Fans Marched in Protest for You!',
+                desc: currentLang === 'TR' ? 'Sert açıklamaların taraftarların yüreğine su serpti. Tribünlerde senin adına pankartlar açıldı.' : 'Unfiltered passion galvanized the ultras. Your banner flew in the south curve.',
+                statDelta: [{ text: '+8 Özgüven & Ruh', color: 'bg-rose-500/20 text-rose-300' }]
+              });
+              resumeAfterDilemma();
+            }
+          },
+          {
+            text: currentLang === 'TR' ? '🤝 Hakemi Tebrik Et & Centilmenliği Koru (+İtibar, Fair-Play Ödülü)' : '🤝 Shake Hands & Walk Tall (+Respect, Fair-Play)',
+            action: () => {
+              player.workEthic += 8;
+              addTimelineEvent({
+                age,
+                badge: 'CENTİLMENLİK',
+                badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+                title: currentLang === 'TR' ? 'Öfkeni Yendin, Saygı Kazandın' : 'Exemplary Composure & Respect',
+                desc: currentLang === 'TR' ? 'Soğukkanlı duruşunla ligin en olgun ve saygıdeğer futbolcusu olarak övgü topladın.' : 'Praised nationwide as a true gentleman of the beautiful game.',
+                statDelta: [{ text: '+8 İş Ahlakı', color: 'bg-cyan-500/20 text-cyan-300' }]
+              });
+              resumeAfterDilemma();
+            }
+          }
+        ]
+      }),
+
+      prime_mega_transfer: (age) => ({
+        scene: {
+          locationTr: 'Monaco Yat Limanı - Mega Transfer Zirvesi',
+          locationEn: 'Monaco Yacht Harbor - Mega Transfer Summit',
+          moodTr: '"Yıllık 25M€ nakit petrol parası mı, Şampiyonlar Ligi kupası mı?"',
+          moodEn: '"Generational Gulf riches or eternal European silverware glory?"',
+          icon: '👑',
+          imageUrl: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=800&q=80',
+          ageTagTr: `${age} YAŞ • ZİRVE TRANSFERİ`,
+          ageTagEn: `AGE ${age} • CAREER PEAK`
+        },
+        badge: currentLang === 'TR' ? `ZİRVE TRANSFERİ (${age} YAŞ)` : `CAREER PEAK CONTRACT (${age} YAŞ)`,
+        title: currentLang === 'TR' ? 'Kariyerinin En Büyük Sözleşmesi Masada!' : 'The Biggest Contract of Your Life!',
+        desc: currentLang === 'TR'
+          ? 'Kariyerinin en parlak dönemindesin. İki dev teklif masanda: Biri Şampiyonlar Ligi kupasını hedefleyen Avrupa Devi, diğeri servetini üçe katlayacak Körfez Kulübü!'
+          : 'At prime age, an elite European powerhouse promises European silverware, while a Gulf sovereign club offers a life-changing mega-fortune!',
+        options: [
+          {
+            text: currentLang === 'TR' ? '👑 Avrupa Devine Git! (Şampiyonlar Ligi Hedefi, +3 OVR, +€15M Değer)' : '👑 Join European Giant! (UCL Contender, +3 OVR, +€15M Value)',
+            action: () => {
+              player.ovr += 3;
+              player.marketValue += 15000000;
+              player.bankBalance += 12000000;
+              const giantClub = CLUBS.tier1[Math.floor(Math.random() * CLUBS.tier1.length)];
+              player.currentClub = giantClub;
+              player.clubHistory.push(giantClub);
+              addTimelineEvent({
+                age,
+                badge: 'DEV TRANSFER',
+                badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
+                title: currentLang === 'TR' ? `${giantClub.name} Kulübüne İmzayı Attın!` : `Signed for ${giantClub.name}!`,
+                desc: currentLang === 'TR' ? 'Dünyanın en prestijli kulüplerinden birine katıldın. Hedefin Şampiyonlar Ligi kupası!' : 'Joined a global powerhouse to compete for European glory on the grandest stage.',
+                statDelta: [{ text: '+3 OVR 📈', color: 'bg-emerald-500/20 text-emerald-300' }, { text: '+€12M İmza Parası 💰', color: 'bg-emerald-500/20 text-emerald-300' }]
+              });
+              resumeAfterDilemma();
+            }
+          },
+          {
+            text: currentLang === 'TR' ? '💰 Körfez Kulübüne İmza At! (+€30.000.000 Dev Nakit Servet)' : '💰 Sign Mega Gulf Sovereign Deal! (+€30,000,000 Fortune)',
+            action: () => {
+              player.bankBalance += 30000000;
+              player.salary = 20000000;
+              const gulfClub = CLUBS.gulf[Math.floor(Math.random() * CLUBS.gulf.length)];
+              player.currentClub = gulfClub;
+              player.clubHistory.push(gulfClub);
+              addTimelineEvent({
+                age,
+                badge: 'MİLYARLIK TRANSFER',
+                badgeColor: 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30',
+                title: currentLang === 'TR' ? 'Körfez Rüyası: Tarihin En Çok Kazananlarından Biri Oldun!' : 'Signed Generational Gulf Mega-Contract!',
+                desc: currentLang === 'TR' ? 'Özel jetler, lüks saray ve yıllık rekor maaşla Körfez liginin yüzü haline geldin.' : 'Secured a sovereign treasure chest that cements generational wealth forever.',
+                statDelta: [{ text: '+€30.000.000 Nakit 💰', color: 'bg-emerald-500/20 text-emerald-300' }, { text: 'Yıllık €20M Maaş', color: 'bg-amber-500/20 text-amber-300' }]
+              });
+              resumeAfterDilemma();
+            }
+          },
+          {
+            text: currentLang === 'TR' ? '🏛️ Kulübünde Kal! Sadakat & Bayrak Adam Ol (+Ölümsüz Efsane)' : '🏛️ Stay Loyal! Become One-Club Legend (+Legacy Immortality)',
+            action: () => {
+              player.clutch += 10;
+              player.durability += 8;
+              addTimelineEvent({
+                age,
+                badge: 'BAYRAK ADAM',
+                badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+                title: currentLang === 'TR' ? 'Totti Ruhu: Parayı Reddettin, Efsane Kaldın!' : 'The Totti Spirit: Refused Billions to Remain a God!',
+                desc: currentLang === 'TR' ? 'Kulübünü ve taraftarlarını yarı yolda bırakmadın. Şehirde heykellerinin dikilmesi gündeme geldi.' : 'Turned down astronomical riches to enshrine yourself as an immortal club hero.',
+                statDelta: [{ text: '+10 Soğukkanlılık', color: 'bg-amber-500/20 text-amber-300' }, { text: 'Ölümsüz Miras 🏛️', color: 'bg-emerald-500/20 text-emerald-300' }]
+              });
+              resumeAfterDilemma();
+            }
+          }
+        ]
+      }),
+
+      arch_rival_treason: (age) => ({
+        scene: {
+          locationTr: 'Şehrin Öbür Yakası - Gizli Otopark Görüşmesi',
+          locationEn: 'The Other Side of Town - Underground Garage',
+          moodTr: '"Ezeli rakip 10M€ nakit koydu. Şehir seni ya hain bilecek ya efsane..."',
+          moodEn: '"Arch-rivals put €10M cash on table. Judas or one-club immortal?"',
+          icon: '🐍',
+          imageUrl: 'https://images.unsplash.com/photo-1511886929837-354d827aae26?auto=format&fit=crop&w=800&q=80',
+          ageTagTr: `${age} YAŞ • EZELİ RAKİP İHANETİ`,
+          ageTagEn: `AGE ${age} • DERBY TREASON`
+        },
+        badge: currentLang === 'TR' ? `EZELİ RAKİP İHANETİ (${age} YAŞ)` : `DERBY TREASON (${age} YAŞ)`,
+        title: currentLang === 'TR' ? 'Ezeli Rakipten Astronomik Teklif Geldi!' : 'Arch-Rivals Put Mega Money on the Table!',
+        desc: currentLang === 'TR'
+          ? 'En büyük ezeli rakibin başkanı gizli bir otoparkta menajerinle buluştu: "Formamızı giy, hem sana €10M imza parası verelim hem şampiyon yapalım!" diyor.'
+          : 'Arch-rivals offer a massive signing bonus and guaranteed trophies if you make the forbidden switch across the city.',
+        options: [
+          {
+            text: currentLang === 'TR' ? '🐍 Teklifi Kabul Et! Ezeli Rakibe Git (+€10M Nakit, Şampiyonluk İhtimali, Hain Damgası)' : '🐍 Make the Move! Switch to Arch-Rivals (+€10M Cash, Branded a Judas)',
+            action: () => {
+              player.bankBalance += 10000000;
+              player.clutch += 8;
+
+              // ACTUALLY SWITCH CLUB TO ARCH RIVAL!
+              const currentName = player.currentClub ? player.currentClub.name : '';
+              let rivalClub = null;
+              if (currentName.includes('Madrid')) rivalClub = CLUBS.tier1.find(c => c.name.includes('Barcelona'));
+              else if (currentName.includes('Barcelona')) rivalClub = CLUBS.tier1.find(c => c.name.includes('Madrid'));
+              else if (currentName.includes('Şeytan')) rivalClub = CLUBS.tier1.find(c => c.name.includes('Gök Maviler'));
+              else if (currentName.includes('Gök Maviler')) rivalClub = CLUBS.tier1.find(c => c.name.includes('Şeytan'));
+              else if (currentName.includes('Kırmızı-Siyah')) rivalClub = CLUBS.tier1.find(c => c.name.includes('Mavi-Siyah'));
+              else if (currentName.includes('Mavi-Siyah')) rivalClub = CLUBS.tier1.find(c => c.name.includes('Kırmızı-Siyah'));
+              else if (currentName.includes('Aslanları')) rivalClub = CLUBS.tier1.find(c => c.name.includes('Boğaz Kanaryaları'));
+              else if (currentName.includes('Kanaryaları')) rivalClub = CLUBS.tier1.find(c => c.name.includes('İstanbul Aslanları'));
+              else if (currentName.includes('Topçuları')) rivalClub = CLUBS.tier2.find(c => c.name.includes('Horozları'));
+              else rivalClub = CLUBS.tier1.find(c => c.name !== currentName) || CLUBS.tier1[0];
+
+              if (rivalClub) {
+                player.currentClub = rivalClub;
+                player.clubHistory.push(rivalClub);
+              }
+              updateHUD();
+
+              addTimelineEvent({
+                age,
+                badge: 'KULÜBE İHANET',
+                badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/30',
+                title: currentLang === 'TR' ? `${rivalClub ? rivalClub.name : 'Ezeli Rakip'} Formasını Sırtına Geçirdin!` : 'Signed for Bitter Rivals! Branded a Traitor!',
+                desc: currentLang === 'TR' ? 'Eski taraftarların formalarını yaktı ama yeni kulübünde milyonlarca euro nakit ve kupa primi kazandın.' : 'Your jerseys burned outside your former stadium, but you bathed in gold.',
+                statDelta: [{ text: `Yeni Kulüp: ${rivalClub ? rivalClub.name : 'Ezeli Rakip'}`, color: 'bg-rose-500/20 text-rose-300' }, { text: '+€10.000.000 Nakit 💰', color: 'bg-emerald-500/20 text-emerald-300' }]
+              });
+              resumeAfterDilemma();
+            }
+          },
+          {
+            text: currentLang === 'TR' ? '🛡️ Teklifi Yırt At! "Bu armayı asla satmam!" de (+Taraftar Sevgisi, +Karakter)' : '🛡️ Tear it up! "I will never betray these colors!" (+Fan Adoration)',
+            action: () => {
+              player.durability += 6;
+              player.workEthic += 10;
+              addTimelineEvent({
+                age,
+                badge: 'KULÜP EFSANESİ',
+                badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+                title: currentLang === 'TR' ? 'Milyonları Reddettin, Sadakatinle Destan Yazdın' : 'Turned Down Judas Millions for Pure Loyalty',
+                desc: currentLang === 'TR' ? 'Olay basına sızdı. Taraftarlar evinin önüne gelip lehine tezahürat yaptı.' : 'Word leaked to the media. Ultras rallied outside your home singing your name.',
+                statDelta: [{ text: '+10 İş Ahlakı', color: 'bg-cyan-500/20 text-cyan-300' }]
+              });
+              resumeAfterDilemma();
+            }
+          }
+        ]
+      }),
+
+      captain_armband: (age) => ({
+        scene: {
+          locationTr: 'Soyunma Odası Taktik Tahtası Başı',
+          locationEn: 'Dressing Room Tactical Chalkboard',
+          moodTr: '"Pazubandı takmak sadece liderlik değil, kriz anında hesabı vermektir..."',
+          moodEn: '"Wearing the armband means taking the bullet when storms hit..."',
+          icon: '🎖️',
+          imageUrl: 'https://images.unsplash.com/photo-1522778119026-d647f0596c20?auto=format&fit=crop&w=800&q=80',
+          ageTagTr: `${age} YAŞ • KAPTANLIK SORUMLULUĞU`,
+          ageTagEn: `AGE ${age} • CAPTAINCY BURDEN`
+        },
+        badge: currentLang === 'TR' ? `KAPTANLIK KRİZİ (${age} YAŞ)` : `CAPTAINCY TEST (${age} YAŞ)`,
+        title: currentLang === 'TR' ? 'Kaptanlık Pazubandı ve Ağır Sorumluluk!' : 'Offered the Full-Time Captaincy!',
+        desc: currentLang === 'TR'
+          ? 'Kulübün efsane kaptanı ayrıldı. Yönetim pazubandını sana teklif etti: "Bu takımı sadece sen toparlarsın." diyorlar. Baskıyı üstlenecek misin?'
+          : 'The club captain departed. The board and dressing room offer you the permanent armband. Will you shoulder the ultimate pressure?',
+        options: [
+          {
+            text: currentLang === 'TR' ? '👑 Pazubandı Koluna Tak! Takımı Sırtla (+Liderlik, +Clutch, +2 OVR)' : '👑 Accept the Armband! Lead the Squad (+Leadership, +Clutch, +2 OVR)',
+            action: () => {
+              player.isCaptain = true; // ACTUALLY MAKE PLAYER CAPTAIN!
+              player.clutch += 10;
+              player.ovr += 2;
+              updateHUD();
+              addTimelineEvent({
+                age,
+                badge: 'KULÜP KAPTANI ©',
+                badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
+                title: currentLang === 'TR' ? `Resmi Olarak Kulüp Kaptanı Oldun! (K)` : 'Appointed Permanent Club Captain!',
+                desc: currentLang === 'TR' ? `Pazubandı koluna taktın. Artık soyunma odasının ve sahanın mutlak lideri sensin.` : 'Proudly donned the armband as undisputed on-pitch and dressing room general.',
+                statDelta: [{ text: 'Pazubandı Aldın ©', color: 'bg-amber-500/20 text-amber-300' }, { text: '+10 Soğukkanlılık', color: 'bg-amber-500/20 text-amber-300' }, { text: '+2 OVR', color: 'bg-emerald-500/20 text-emerald-300' }]
+              });
+              resumeAfterDilemma();
+            }
+          },
+          {
+            text: currentLang === 'TR' ? '🧘 "Sadece futboluma odaklanmak istiyorum" de (+Baskısız Sakin Oyun)' : '🧘 Decline: "Let me focus purely on goals" (+Stress-Free Focus)',
+            action: () => {
+              player.workEthic += 6;
+              addTimelineEvent({
+                age,
+                badge: 'SAF ODAK',
+                badgeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30',
+                title: currentLang === 'TR' ? 'Kaptanlık Baskısından Uzak Kaldın' : 'Kept Mind Free of Captaincy Politics',
+                desc: currentLang === 'TR' ? 'Medya ve hakem gerginliklerinden uzak durup sadece gol ve asistlerine odaklandın.' : 'Avoided press-conference crossfire to focus purely on scoring.',
+                statDelta: [{ text: '+6 İş Ahlakı', color: 'bg-cyan-500/20 text-cyan-300' }]
+              });
+              resumeAfterDilemma();
+            }
+          }
+        ]
+      }),
+
+      national_team_or_club: (age) => ({
+        scene: {
+          locationTr: 'Milli Takım Tesisleri - Basın Odası',
+          locationEn: 'National Team Training Complex',
+          moodTr: '"Göğsündeki bayrak mı, cebindeki kulüp primleri mi?"',
+          moodEn: '"The crest of your homeland vs high-stakes club silverware?"',
+          icon: '🇹🇷',
+          imageUrl: 'https://images.unsplash.com/photo-1518091043644-c1d4457512c6?auto=format&fit=crop&w=800&q=80',
+          ageTagTr: `${age} YAŞ • MİLLİ FEDAKARLIK`,
+          ageTagEn: `AGE ${age} • NATIONAL SACRIFICE`
+        },
+        badge: currentLang === 'TR' ? `MİLLİ YOL AYRIMI (${age} YAŞ)` : `NATION OR CLUB (${age} YAŞ)`,
+        title: currentLang === 'TR' ? 'Kritik Yol Ayrımı: Vatan mı Kulüp mü?' : 'Critical Crossroad: Homeland vs Club Final?',
+        desc: currentLang === 'TR'
+          ? 'Kritik kupa maçı öncesi milli takımın eleme maçı var. Kulüp başkanı riske girmeni istemiyor ama ülken seni bekliyor!'
+          : 'Crucial European ties clash with high-stakes international qualifiers. Your club chair urges you to withdraw from national camp.',
+        options: [
+          {
+            text: currentLang === 'TR' ? '🇹🇷 Vatan Çağırıyor! Milli Takım Kampına Koş (+Milli Gurur, Taraftar Aşkı)' : '🇹🇷 Answer the Homeland Call! Report to Camp (+National Hero)',
+            action: () => {
+              player.stats.nationalCaps += 2;
+              player.clutch += 8;
+              addTimelineEvent({
+                age,
+                badge: 'MİLLİ KAHRAMAN',
+                badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/30',
+                title: currentLang === 'TR' ? 'Milli Formayla Destan Yazdın!' : 'National Hero: Put Country First!',
+                desc: currentLang === 'TR' ? 'Ülken için canını dişine taktın ve son dakikada attığın golle milli takımı finallere taşıdın.' : 'Carried your nation into major tournament finals with a decisive winner.',
+                statDelta: [{ text: '+2 Milli Maç 🌍', color: 'bg-rose-500/20 text-rose-300' }, { text: '+8 Soğukkanlılık', color: 'bg-amber-500/20 text-amber-300' }]
+              });
+              resumeAfterDilemma();
+            }
+          },
+          {
+            text: currentLang === 'TR' ? '🏆 Kulüpte Kal: Tarihi Kupa Maçına Odaklan (+Kulüp Sadakati, Prim)' : '🏆 Stay with Club: Hunt European Silverware (+Club Bonus)',
+            action: () => {
+              player.bankBalance += 1000000;
+              addTimelineEvent({
+                age,
+                badge: 'KULÜP ODAĞI',
+                badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+                title: currentLang === 'TR' ? 'Kulübünle Tarihi Kupa Sezonu' : 'Stayed and Lifted Club Silverware',
+                desc: currentLang === 'TR' ? 'Kulüp yönetimi sana minnettar kaldı ve yüklü bir şampiyonluk primi ödedi.' : 'The board rewarded your focus with a handsome European tournament bonus.',
+                statDelta: [{ text: '+€1.000.000 Prim 💰', color: 'bg-emerald-500/20 text-emerald-300' }]
+              });
+              resumeAfterDilemma();
+            }
+          }
+        ]
+      }),
+
+      tactical_clash: (age) => ({
+        scene: {
+          locationTr: 'Basın Toplantısı Odası - Mikrofon Yağmuru',
+          locationEn: 'Post-Match Press Conference Room',
+          moodTr: '"Hoca takımı otobüs çektiriyor, forvetler aç kalıyor..."',
+          moodEn: '"The manager parks the bus while forwards starve for touches..."',
+          icon: '💥',
+          imageUrl: 'https://images.unsplash.com/photo-1517466787929-bc90951d0974?auto=format&fit=crop&w=800&q=80',
+          ageTagTr: `${age} YAŞ • TAKTİK KRİZİ`,
+          ageTagEn: `AGE ${age} • MANAGER CLASH`
+        },
+        badge: currentLang === 'TR' ? `TAKTİK KRİZİ (${age} YAŞ)` : `TACTICAL CLASH (${age} YAŞ)`,
+        title: currentLang === 'TR' ? 'Teknik Direktörle Taktik Çatışması!' : 'Tactical Feud with the Head Coach!',
+        desc: currentLang === 'TR'
+          ? 'Yeni gelen teknik direktör takımı aşırı defansif oynatıyor. Sahada topla buluşamıyorsun ve gol sayıların düştü. Ne yapacaksın?'
+          : 'A pragmatic manager parks the bus. You receive zero service up front and scoring dries up. How do you handle it?',
+        options: [
+          {
+            text: currentLang === 'TR' ? '💥 Basın Önünde İsyan Et: "Biz hücum takımıyız!" (+Taraftar Desteği)' : '💥 Call it out in Press: "We are an attacking club!" (+Fan Support)',
+            action: () => {
+              player.clutch += 8;
+              addTimelineEvent({
+                age,
+                badge: 'TARAFTAR İSYANI',
+                badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
+                title: currentLang === 'TR' ? 'Açıklamaların Olay Yarattı! Hoca Taktiği Değiştirdi!' : 'Press Comments Sparked Revolution: Tactics Unleashed!',
+                desc: currentLang === 'TR' ? 'Cesur çıkışın taraftarları arkana aldı. Hoca geri adım atıp takımı hücuma geçirdi.' : 'Ultras backed your words. The manager yielded and set the attack free.',
+                statDelta: [{ text: '+Hücum Özgürlüğü ⚡', color: 'bg-amber-500/20 text-amber-300' }]
+              });
+              resumeAfterDilemma();
+            }
+          },
+          {
+            text: currentLang === 'TR' ? '🤝 Hocayla Birebir Görüş: Taktiksel uzlaşma sağla (+Taktik Zeka)' : '🤝 Private Diplomacy: Settle behind closed doors (+Tactical IQ)',
+            action: () => {
+              player.ovr += 2;
+              player.workEthic += 6;
+              addTimelineEvent({
+                age,
+                badge: 'TAKTİK UZLAŞMA',
+                badgeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30',
+                title: currentLang === 'TR' ? 'Hocayla Akıllıca Uzlaştın' : 'Diplomatic Compromise with the Staff',
+                desc: currentLang === 'TR' ? 'Kriz çıkarmadan hocaya hücum varyasyonlarını anlattın ve saygısını kazandın.' : 'Your mature tactical suggestions improved the team without locker-room noise.',
+                statDelta: [{ text: '+2 OVR', color: 'bg-emerald-500/20 text-emerald-300' }]
+              });
+              resumeAfterDilemma();
+            }
+          }
+        ]
+      }),
+
+      veteran_investment: (age) => ({
+        scene: {
+          locationTr: 'Mimar Ofisi - Şehir Maketi Başı (€3.000.000)',
+          locationEn: 'Architect Studio - City Model (€3,000,000)',
+          moodTr: '"Gelecek nesillere ücretsiz akademi mi, lüks malikane mi?"',
+          moodEn: '"Free youth academy for kids or luxury private villa?"',
+          icon: '🏛️',
+          imageUrl: 'https://images.unsplash.com/photo-1526232761682-d26e03ac148e?auto=format&fit=crop&w=800&q=80',
+          ageTagTr: `${age} YAŞ • KALICI MİRAS`,
+          ageTagEn: `AGE ${age} • CAREER LEGACY`
+        },
+        badge: currentLang === 'TR' ? `MİRAS YATIRIMI (${age} YAŞ)` : `LIFETIME LEGACY (${age} YAŞ)`,
+        title: currentLang === 'TR' ? 'Kazanılan Servetle Kalıcı Miras!' : 'Lifetime Legacy Investment!',
+        desc: currentLang === 'TR'
+          ? 'Kariyerinde kazandığın milyonlarca euro nakit bankada bekliyor. Geleceğin için en büyük gayrimenkul / miras yatırımını seç:'
+          : 'Millions accumulated in your career bank vault. Choose your permanent lifetime legacy project:',
+        options: [
+          {
+            text: currentLang === 'TR' ? '⚽ Kendi Futbol Akademini Kur (-€2M, Kalıcı Sevgi & İtibar)' : '⚽ Build Your Own Youth Football Academy (-€2M, Enduring Legacy)',
+            action: () => {
+              player.bankBalance = Math.max(100000, player.bankBalance - 2000000);
+              player.assets.businesses.push('Özel Futbol Gelişim Akademisi');
+              addTimelineEvent({
+                age,
+                badge: 'FUTBOL AKADEMİSİ',
+                badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+                title: currentLang === 'TR' ? 'Kendi Adına Futbol Akademisi Açtın!' : 'Inaugurated Your Own Football Academy!',
+                desc: currentLang === 'TR' ? 'Yüzlerce yoksul çocuğa ücretsiz eğitim veren modern bir tesis kurdun. Tüm futbol dünyası seni ayakta alkışladı.' : 'Built a state-of-the-art academy offering free coaching to underprivileged kids.',
+                statDelta: [{ text: '⚽ Futbol Akademisi', color: 'bg-emerald-500/20 text-emerald-300' }, { text: 'Ölümsüz Saygı 🏆', color: 'bg-amber-500/20 text-amber-300' }]
+              });
+              resumeAfterDilemma();
+            }
+          },
+          {
+            text: currentLang === 'TR' ? '🏰 Sahil Malikanesi Satın Al (-€3M, Lüks Yaşam)' : '🏰 Buy Coastal Ultra-Luxury Mansion (-€3M)',
+            action: () => {
+              player.bankBalance = Math.max(100000, player.bankBalance - 3000000);
+              player.assets.houses.push('Sahil Malikanesi');
+              addTimelineEvent({
+                age,
+                badge: 'LÜKS MALİKANE',
+                badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
+                title: currentLang === 'TR' ? 'Akdeniz Sahilinde Rüya Malikane Aldın!' : 'Bought an Ultra-Luxury Mediterranean Villa!',
+                desc: currentLang === 'TR' ? 'Helikopter pistli, sonsuzluk havuzlu malikanende dünya jet-setini ağırladın.' : 'Hosted high-profile galas at your private cliffside villa with infinity pools.',
+                statDelta: [{ text: '🏰 Sahil Malikanesi', color: 'bg-amber-500/20 text-amber-300' }]
+              });
+              resumeAfterDilemma();
+            }
+          }
+        ]
+      }),
+
+      injury_gamble: (age) => ({
+        scene: {
+          locationTr: 'Final Soyunma Odası - Maça 15 Dakika Kala',
+          locationEn: 'Cup Final Dressing Room - 15 Mins to Kickoff',
+          moodTr: '"Tünelden 80.000 taraftarın kükremesi geliyor. İğneyi vuracak mısın?"',
+          moodEn: '"80,000 roar outside the tunnel. Cortisone shot or preserve health?"',
+          icon: '💉',
+          imageUrl: 'https://images.unsplash.com/photo-1577223625816-7546f13df25d?auto=format&fit=crop&w=800&q=80',
+          ageTagTr: `${age} YAŞ • FİNAL KUMARI`,
+          ageTagEn: `AGE ${age} • FINAL GAMBLE`
+        },
+        badge: currentLang === 'TR' ? `AĞIR SAKATLIK KUMARI (${age} YAŞ)` : `INJURY GAMBLE (${age} YAŞ)`,
+        title: currentLang === 'TR' ? 'Kupa Finali Öncesi Ağır Diz Sakatlığı!' : 'Severe Cartilage Blow Before Cup Final!',
+        desc: currentLang === 'TR'
+          ? 'Kariyerinin son büyük kupa finali öncesi menisküsün yırtıldı. Doktor: "İğne vurursam oynarsın ama dizin kalıcı iflas edebilir." diyor. Kararın ne?'
+          : 'Torn meniscus hours before the grand final. Club doctor warns: "A heavy injection lets you play 90 minutes, but risks career-ending joint collapse."',
+        options: [
+          {
+            text: currentLang === 'TR' ? '💉 İğneyi Vur! Sakat Sakat Sahaya Çık (%65 Kupa / %35 Diz İflas!)' : '💉 Take the Shot! Play Through Agony (65% Trophy / 35% Disaster)',
+            action: () => {
+              const success = Math.random() < 0.65;
+              if (success) {
+                player.stats.trophies++;
+                player.stats.goals += 2;
+                addTimelineEvent({
+                  age,
+                  badge: 'KAHRAMANLIK DESTANI',
+                  badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
+                  title: currentLang === 'TR' ? 'Acıyı Yendin! İki Gol Atıp Kupayı Kaldırdın!' : 'Conquered Agony! Scored a Brace and Lifted the Cup!',
+                  desc: currentLang === 'TR' ? 'Sekerek oynadın ama 89. dakikada şampiyonluk golünü attın! Stadyum senin adınla inledi.' : 'Limped through pain but struck the 89th-minute winner. An unforgettable spectacle.',
+                  statDelta: [{ text: '+1 Kupa 🏆', color: 'bg-amber-500/20 text-amber-300' }, { text: '+2 Final Golü ⚽', color: 'bg-emerald-500/20 text-emerald-300' }]
+                });
+              } else {
+                player.ovr = Math.max(35, player.ovr - 8);
+                player.severeInjuries = (player.severeInjuries || 0) + 1;
+                addTimelineEvent({
+                  age,
+                  badge: '🏥 AĞIR SAKATLIK',
+                  badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/30',
+                  title: currentLang === 'TR' ? 'Diz İflas Etti! Maçın 20. Dakikasında Sedye ile Çıktın!' : 'Knee Blew Out! Stretchered off in minute 20!',
+                  desc: currentLang === 'TR' ? 'Risk tutmadı. Bağların koptu ve sezonu kapattın. OVR seviyen kalıcı olarak düştü.' : 'The gamble failed. Torn ligaments ended your season and shattered your mobility.',
+                  statDelta: [{ text: '-8 OVR 📉', color: 'bg-rose-500/20 text-rose-300' }, { text: 'Ağır Sakatlık 🏥', color: 'bg-rose-500/20 text-rose-300' }]
+                });
+              }
+              resumeAfterDilemma();
+            }
+          },
+          {
+            text: currentLang === 'TR' ? '🛡️ Sağlığını Koru: Kulübede Kal & Gençlere Manevi Destek Ver' : '🛡️ Protect Health: Bench support & mentor youngsters',
+            action: () => {
+              player.durability += 6;
+              addTimelineEvent({
+                age,
+                badge: 'BİLGE LİDERLİK',
+                badgeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30',
+                title: currentLang === 'TR' ? 'Sağduyulu Karar: Takımı Kenardan Ateşledin' : 'Wise Restraint: Captained from the Touchline',
+                desc: currentLang === 'TR' ? 'Gereksiz bir kariyer sonu sakatlığını önledin ve kulübede antrenör gibi takımı yönlendirdin.' : 'Preserved your joints for the sunset years while providing sideline tactical guidance.',
+                statDelta: [{ text: '+6 Dayanıklılık', color: 'bg-cyan-500/20 text-cyan-300' }]
+              });
+              resumeAfterDilemma();
+            }
+          }
+        ]
+      }),
+
+      mls_farewell_tour: (age) => ({
+        scene: {
+          locationTr: 'Miami Sahil Oteli - Veda Pazarlığı (€12.000.000)',
+          locationEn: 'Miami Beachfront Penthouse (€12,000,000)',
+          moodTr: '"Palmiye ağaçları, Hollywood ışıltısı ve son dans..."',
+          moodEn: '"Palm trees, Hollywood glitter, and the ultimate last dance..."',
+          icon: '🌴',
+          imageUrl: 'https://images.unsplash.com/photo-1506929562872-bb421503ef21?auto=format&fit=crop&w=800&q=80',
+          ageTagTr: `${age} YAŞ • SON DANS`,
+          ageTagEn: `AGE ${age} • LAST DANCE`
+        },
+        badge: currentLang === 'TR' ? `SON DANS (${age} YAŞ)` : `LAST DANCE (${age} YAŞ)`,
+        title: currentLang === 'TR' ? 'Amerika / Miami Rüyası mı, Sadakat mi?' : 'American Dream vs Hometown Farewell?',
+        desc: currentLang === 'TR'
+          ? 'Kariyerinin son demlerinde Amerika MLS liginden dev bir teklif geldi (€12M yıllık). Palmiyeler altında son dansı yapacak mısın?'
+          : 'An MLS powerhouse offers an eye-watering marquee contract. Will you enjoy a sun-soaked American farewell or finish at home?',
+        options: [
+          {
+            text: currentLang === 'TR' ? '🌴 Miami Rüyasına İmza At! (+€12M Büyük Kazanç, Lüks Yaşam)' : '🌴 Sign Miami Deal! (+€12M Major Earnings, Luxury Sunset)',
+            action: () => {
+              player.bankBalance += 12000000;
+              // ACTUALLY MOVE TO MLS MIAMI CLUB!
+              const mlsClub = (CLUBS.mls && CLUBS.mls[0]) || { name: 'Miami Sahil Yıldızları (MLS)', badge: '🌴', color: '#f43f5e', prestige: 76 };
+              player.currentClub = mlsClub;
+              player.clubHistory.push(mlsClub);
+              updateHUD();
+
+              addTimelineEvent({
+                age,
+                badge: 'AMERİKA RÜYASI 🌴',
+                badgeColor: 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30',
+                title: currentLang === 'TR' ? 'Miami Sahil Yıldızları Formasını Giydin!' : 'The American Marquee Farewell Tour!',
+                desc: currentLang === 'TR' ? 'Hollywood yıldızları maçlarını izlemeye geldi. Palmiyeler altında rekor maaşla son dansını yapıyorsun.' : 'A-list celebrities cheered from the VIP boxes as you dominated the league.',
+                statDelta: [{ text: 'Kulüp: Miami (MLS) 🌴', color: 'bg-yellow-500/20 text-yellow-300' }, { text: '+€12.000.000 💰', color: 'bg-emerald-500/20 text-emerald-300' }]
+              });
+              resumeAfterDilemma();
+            }
+          },
+          {
+            text: currentLang === 'TR' ? '🏛️ Kulübünde Kal & Efsane Veda: Alkışlarla Jübile Yap' : '🏛️ Stay Loyal: Hang boots at home club with tears and applause',
+            action: () => {
+              player.clutch += 8;
+              addTimelineEvent({
+                age,
+                badge: 'ÖLÜMSÜZ VEFA',
+                badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+                title: currentLang === 'TR' ? 'Parayı Değil, Vefayı Seçtin' : 'Immortal Loyalty Over Late Money',
+                desc: currentLang === 'TR' ? 'Seni sen yapan kulüpten ayrılmadın. Taraftarların gözyaşlarıyla jübileye hazırlandın.' : 'Remained with the club that shaped you. Revered forever as a true legend of loyalty.',
+                statDelta: [{ text: 'Ölümsüz Vefa 🏛️', color: 'bg-emerald-500/20 text-emerald-300' }]
+              });
+              resumeAfterDilemma();
+            }
+          }
+        ]
+      })
+    };
+
     function checkAgeDilemmas(age) {
       // Age 24 & Age 28: FIFA World Cup Tournament Journey
       if (age === 24 || age === 28) {
@@ -3262,656 +4429,15 @@
         }
       }
 
-      if (age === 13) {
-        showDilemmaModal({
-          badge: currentLang === 'TR' ? 'MEVKİ TERCİHİ (13 YAŞ)' : 'TACTICAL CROSSROAD (AGE 13)',
-          title: currentLang === 'TR' ? 'Antrenörün Mevki Değişikliği Teklifi' : 'Coach Wants You to Switch Position',
-          desc: currentLang === 'TR'
-            ? `Altyapı hocan: "Tekniğin harika ama fiziğin güçlü, seni ${player.position.code === 'ST' ? 'orta sahaya çekmek istiyorum' : 'kanat forvete çekmek istiyorum'}." diyor. Ne yapacaksın?`
-            : `Your youth coach wants to shift you into a new role to fit team tactics. How do you respond?`,
-          options: [
-            {
-              text: currentLang === 'TR' ? 'Hocayı dinle & Yeni mevkide taktik zekanı geliştir (+3 OVR)' : 'Accept coach advice & broaden tactical vision (+3 OVR)',
-              action: () => {
-                player.ovr += 3;
-                player.workEthic += 10;
-                addTimelineEvent({
-                  age: 13,
-                  badge: 'SEÇİM',
-                  badgeColor: 'bg-emerald-500/20 text-emerald-300',
-                  title: currentLang === 'TR' ? 'Taktik Esneklik Kazandın' : 'Embraced Tactical Versatility',
-                  desc: currentLang === 'TR' ? 'Hocanın tavsiyesine uyarak modern bir joker futbolcuya dönüştün.' : 'Listening to the staff transformed you into a versatile asset.',
-                  statDelta: [{ text: '+3 OVR', color: 'bg-emerald-500/20 text-emerald-300' }]
-                });
-                resumeAfterDilemma();
-              }
-            },
-            {
-              text: currentLang === 'TR' ? 'İnat et! Doğal mevkinde kalıp saf yeteneğini parlat' : 'Refuse! Stay in your natural role with sheer stubborn passion',
-              action: () => {
-                player.talentScore += 2;
-                addTimelineEvent({
-                  age: 13,
-                  badge: 'SEÇİM',
-                  badgeColor: 'bg-amber-500/20 text-amber-300',
-                  title: currentLang === 'TR' ? 'Kendi Bildiğinden Şaşmadın' : 'Stuck to Your Natural Instincts',
-                  desc: currentLang === 'TR' ? 'Mevkini vermedin ve inadınla o pozisyonun vazgeçilmezi oldun.' : 'Refused to compromise and honed your signature role.',
-                  statDelta: [{ text: 'Özgüven +', color: 'bg-amber-500/20 text-amber-300' }]
-                });
-                resumeAfterDilemma();
-              }
-            }
-          ]
-        });
-        return true;
-      }
-
-      if (age === 16) {
-        showDilemmaModal({
-          badge: currentLang === 'TR' ? 'HAYATİ TERCİH (16 YAŞ)' : 'LIFE CROSSROAD (AGE 16)',
-          title: currentLang === 'TR' ? 'Okul mu, Yüzde Yüz Futbol mu?' : 'School Education vs Full-Time Football?',
-          desc: currentLang === 'TR'
-            ? 'Ailen üniversiteyi düşünmeni istiyor. Ancak kulüp tam zamanlı profesyonel antrenman kampına çağırıyor. İkisini birden yürütmek imkansız.'
-            : 'Your family stresses the safety of academics. Meanwhile, the academy demands full-time devotion with two-a-day drills.',
-          options: [
-            {
-              text: currentLang === 'TR' ? 'Gemileri yak! Okulu bırak, %100 futbola odaklan (+5 OVR, Riskli)' : 'Burn the ships! Drop out, devote 100% to football (+5 OVR, High Risk)',
-              action: () => {
-                player.ovr += 5;
-                player.workEthic += 15;
-                addTimelineEvent({
-                  age: 16,
-                  badge: 'KRİTİK',
-                  badgeColor: 'bg-rose-500/20 text-rose-300',
-                  title: currentLang === 'TR' ? 'Tüm Kartlarını Futbola Yatırdın' : 'All-In on Professional Football',
-                  desc: currentLang === 'TR' ? 'Günde çift idmanla fiziğini canavara dönüştürdün. A Takım kapıları ardına kadar açıldı.' : 'Unchecked dedication forged you into a physical specimen ready for senior football.',
-                  statDelta: [{ text: '+5 OVR', color: 'bg-emerald-500/20 text-emerald-300' }]
-                });
-                resumeAfterDilemma();
-              }
-            },
-            {
-              text: currentLang === 'TR' ? 'Dengeli git: Liseyi bitir, idmanları aksatma' : 'Balanced path: Finish high school alongside training',
-              action: () => {
-                player.ovr += 2;
-                player.durability += 5;
-                addTimelineEvent({
-                  age: 16,
-                  badge: 'DENGE',
-                  badgeColor: 'bg-cyan-500/20 text-cyan-300',
-                  title: currentLang === 'TR' ? 'Okul ve Futbolu Birlikte Yürüttün' : 'Balanced School & Football',
-                  desc: currentLang === 'TR' ? 'Disiplinli yaşamınla hem mezun oldun hem de altyapıda parlamaya devam ettin.' : 'Earned your diploma while steadily climbing academy ranks.',
-                  statDelta: [{ text: '+2 OVR', color: 'bg-cyan-500/20 text-cyan-300' }]
-                });
-                resumeAfterDilemma();
-              }
-            }
-          ]
-        });
-        return true;
-      }
-
-      // Age 17: Super-Agent vs Calm/Family Agent
-      if (age === 17) {
-        showDilemmaModal({
-          badge: currentLang === 'TR' ? 'MENAJER SEÇİMİ (17 YAŞ)' : 'AGENT SELECTION (AGE 17)',
-          title: currentLang === 'TR' ? 'Hangi Menajerle Masaya Oturacaksın?' : 'Which Agent Represents Your Future?',
-          desc: currentLang === 'TR'
-            ? 'Genç yaşta parladın. Kapında iki menajer var: Biri agresif, medyatik "kurt menajer" (Mino Raiola ekolü), diğeri ise sakin, ailenin güvendiği bir danışman.'
-            : 'You are on the radar. A ruthless super-agent offers high-stakes glory, while a trusted family counselor promises long-term stability.',
-          options: [
-            {
-              text: currentLang === 'TR' ? '🦈 Kurt Menajeri Seç! (+€300K İmza Bonusu, Agresif Kariyer Planı, +4 OVR)' : '🦈 Ruthless Super-Agent (+€300K Bonus, Hyper-aggressive transfers, +4 OVR)',
-              action: () => {
-                player.bankBalance += 300000;
-                player.ovr += 4;
-                showBreakingNews({
-                  tag: currentLang === 'TR' ? 'FLAŞ TRANSFER HABERİ' : 'TRANSFER BREAKING',
-                  source: 'FABRIZIO ROMANO & SKY SPORTS',
-                  headline: currentLang === 'TR' ? `🚨 SANSASYONEL MENAJER ANLAŞMASI!` : `🚨 SUPER-AGENT DEAL SIGNED!`,
-                  sub: currentLang === 'TR' ? `${player.fullName} rekor komisyon ve primle devlerin radarına girdi!` : `${player.fullName} on the radar of European giants!`
-                });
-                addTimelineEvent({
-                  age: 17,
-                  breakingNews: { tag: 'FLAŞ ANLAŞMA', source: 'FABRIZIO ROMANO & SKY SPORTS', headline: '🚨 SANSASYONEL MENAJER ANLAŞMASI!' },
-                  badge: 'KURT MENAJER',
-                  badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/30',
-                  title: currentLang === 'TR' ? 'Kurt Menajerle Anlaştın!' : 'Signed with Notorious Super-Agent!',
-                  desc: currentLang === 'TR' ? 'Menajerin kapıları sonuna kadar açtı, basını ayağa kaldırdı ve ilk büyük primini kopardı.' : 'Your agent stirred media frenzy, extracting immediate bonuses and high-profile moves.',
-                  statDelta: [{ text: '+€300.000 💰', color: 'bg-emerald-500/20 text-emerald-300' }, { text: '+4 OVR', color: 'bg-emerald-500/20 text-emerald-300' }]
-                });
-                resumeAfterDilemma();
-              }
-            },
-            {
-              text: currentLang === 'TR' ? '🛡️ Aile & Sadık Danışmanla Devam Et (+10 İstikrar & Dayanıklılık, Sağlam Kökler)' : '🛡️ Family & Calm Mentor (+10 Durability & Focus, Healthy Roots)',
-              action: () => {
-                player.durability += 10;
-                player.workEthic += 10;
-                addTimelineEvent({
-                  age: 17,
-                  badge: 'AİLE DANIŞMANI',
-                  badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
-                  title: currentLang === 'TR' ? 'Huzuru ve İstikrarı Tercih Ettin' : 'Chose Peace & Dedicated Mentorship',
-                  desc: currentLang === 'TR' ? 'Göz boyayan vaatlere aldanmadın. Ailenin desteğiyle sadece futboluna odaklandın.' : 'Ignored noisy headlines. Kept your head down and built unbreakable work ethic.',
-                  statDelta: [{ text: '+10 Dayanıklılık', color: 'bg-cyan-500/20 text-cyan-300' }]
-                });
-                resumeAfterDilemma();
-              }
-            }
-          ]
-        });
-        return true;
-      }
-
-      // Age 19: First Big Money & Luxury Spending Dilemma
-      if (age === 19) {
-        showDilemmaModal({
-          badge: currentLang === 'TR' ? 'İLK BÜYÜK MAAŞ & LÜKS (19 YAŞ)' : 'FIRST BIG PAYCHECK (AGE 19)',
-          title: currentLang === 'TR' ? 'İlk Büyük Prim Geldi: Ne Satın Alacaksın?' : 'First Major Bonus: How Do You Spend It?',
-          desc: currentLang === 'TR'
-            ? 'Kulübün sana ilk büyük sözleşme imza primini ödedi (€250.000). Bu parayla ilk olarak ne yapacaksın?'
-            : 'Your club paid you your first major signing bonus (€250,000). What is your very first big financial move?',
-          options: [
-            {
-              text: currentLang === 'TR' ? '🏎️ İtalyan Süper Spor Araba Al (-€180K, Karizma & Hız Tutkusu)' : '🏎️ Buy an Italian Supercar (-€180K, Speed & Glamour)',
-              action: () => {
-                player.bankBalance = Math.max(20000, player.bankBalance - 180000);
-                player.assets.cars.push('İtalyan Süper Spor Araba');
-                addTimelineEvent({
-                  age: 19,
-                  badge: 'LÜKS ARAÇ',
-                  badgeColor: 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30',
-                  title: currentLang === 'TR' ? 'Antrenman Tesislerine Süper Spor Arabayla Girdin!' : 'Arrived at Training in an Italian Supercar!',
-                  desc: currentLang === 'TR' ? 'Kırmızı süper spor arabanla tesislerin önüne yanaştın. Taraftarlar ve basın fotoğrafını çekmek için sıraya girdi.' : 'Showed up in a screaming supercar. Fans and media queued for photos.',
-                  statDelta: [{ text: '🏎️ Süper Spor Araba', color: 'bg-yellow-500/20 text-yellow-300' }]
-                });
-                resumeAfterDilemma();
-              }
-            },
-            {
-              text: currentLang === 'TR' ? '🏡 Ailene Bahçeli Müstakil Ev Al (-€150K, Aile Desteği & Dayanıklılık +8)' : '🏡 Buy a House for Family (-€150K, Durability +8)',
-              action: () => {
-                player.bankBalance = Math.max(30000, player.bankBalance - 150000);
-                player.durability += 8;
-                player.assets.houses.push('Aileye Müstakil Ev');
-                addTimelineEvent({
-                  age: 19,
-                  badge: 'AİLE EVİ',
-                  badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
-                  title: currentLang === 'TR' ? 'Ailene Güzel Bir Yuva Hediye Ettin' : 'Gifted Your Family a Beautiful Home',
-                  desc: currentLang === 'TR' ? 'İlk kazandığın büyük parayla anne-babanın hayalini gerçekleştirdin. Ailenin duaları ve huzurlu zihnin performansına yansıdı.' : 'Fulfilled your parents lifelong dream. Family warmth gave you peace of mind.',
-                  statDelta: [{ text: '🏡 Aile Evi', color: 'bg-emerald-500/20 text-emerald-300' }, { text: '+8 Dayanıklılık', color: 'bg-cyan-500/20 text-cyan-300' }]
-                });
-                resumeAfterDilemma();
-              }
-            },
-            {
-              text: currentLang === 'TR' ? '📈 Kripto & Borsa Fonuna Yatır (BÜYÜK RİSK: %50 Katlanır / %50 PARA BATAR!)' : '📈 Crypto/Stock Fund (HIGH RISK: 50% Triple / 50% Lose All!)',
-              action: () => {
-                const win = Math.random() < 0.5;
-                if (win) {
-                  player.bankBalance += 450000;
-                  addTimelineEvent({
-                    age: 19,
-                    badge: '💎 BÜYÜK VURGUN',
-                    badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
-                    title: currentLang === 'TR' ? 'Kripto Yatırımın Tavan Yaptı (+€450.000)!' : 'Crypto Investment Mooned (+€450,000)!',
-                    desc: currentLang === 'TR' ? 'Cesur kararın meyvesini verdi! Portföyün 3 katına çıktı, takım arkadaşların yatırım tavsiyesi istemeye başladı.' : 'Your daring bet paid off! Tripled your money overnight.',
-                    statDelta: [{ text: '+€450.000 Kazanç 💰', color: 'bg-emerald-500/20 text-emerald-300' }]
-                  });
-                } else {
-                  player.bankBalance = 15000;
-                  addTimelineEvent({
-                    age: 19,
-                    badge: '💸 YATIRIM BATTI',
-                    badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/30',
-                    title: currentLang === 'TR' ? 'Büyük Çöküş: Tüm Birikimin Battı!' : 'Crash! Lost All Your Savings in Crypto!',
-                    desc: currentLang === 'TR' ? 'Yatırdığın fon bir gecede çöktü ve paran buharlaştı! Genç yaşta büyük bir finans dersi aldın.' : 'The fund went to zero overnight. A harsh financial awakening.',
-                    statDelta: [{ text: '💸 Para Battı', color: 'bg-rose-500/20 text-rose-300' }]
-                  });
-                }
-                resumeAfterDilemma();
-              }
-            }
-          ]
-        });
-        return true;
-      }
-
-            // Age 27: Mega Transfer Market Crossroads (Prime Peak)
-      if (age === 27) {
-        showDilemmaModal({
-          badge: currentLang === 'TR' ? 'ZİRVE TRANSFERİ (27 YAŞ)' : 'CAREER PEAK CONTRACT (AGE 27)',
-          title: currentLang === 'TR' ? 'Kariyerinin En Büyük Sözleşmesi Masada!' : 'The Biggest Contract of Your Life!',
-          desc: currentLang === 'TR'
-            ? 'Kariyerinin en parlak dönemindesin (27 yaş). İki dev teklif masanda: Biri Şampiyonlar Ligi kupasını hedefleyen Avrupa Devi, diğeri servetini üçe katlayacak Körfez Kulübü!'
-            : 'At age 27, you reach absolute prime. An elite European powerhouse promises European silverware, while a Gulf sovereign club offers a life-changing mega-fortune!',
-          options: [
-            {
-              text: currentLang === 'TR' ? '👑 Avrupa Devine Git! (Şampiyonlar Ligi Hedefi, +3 OVR, +€15M Değer)' : '👑 Join European Giant! (UCL Contender, +3 OVR, +€15M Value)',
-              action: () => {
-                player.ovr += 3;
-                player.marketValue += 15000000;
-                player.bankBalance += 12000000;
-                showBreakingNews({
-                  tag: currentLang === 'TR' ? 'DEV TRANSFER' : 'BLOCKBUSTER MOVE',
-                  headline: currentLang === 'TR' ? '🔥 AVRUPA DEVİYLE ANLAŞMA SAĞLANDI!' : '🔥 SIGNED FOR EUROPEAN GIANTS!',
-                  sub: currentLang === 'TR' ? `${player.fullName} kupa avı için dev kulübe imzayı attı!` : `${player.fullName} commits to European elite!`
-                });
-                addTimelineEvent({
-                  age: 27,
-                  breakingNews: { tag: 'DEV TRANSFER', source: 'FABRIZIO ROMANO EXCLUSIVE', headline: '🔥 AVRUPA DEVİYLE ANLAŞMA SAĞLANDI!' },
-                  badge: 'DEV KULÜP',
-                  badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
-                  title: currentLang === 'TR' ? 'Avrupa Zirvesine İmzayı Attın!' : 'Signed for European Elite!',
-                  desc: currentLang === 'TR' ? 'Şampiyonlar Ligi marşıyla sahaya çıkacaksın. Dünya futbolunun en prestijli vitrinindesin.' : 'Joined the European elite to chase continental glory.',
-                  statDelta: [{ text: '+3 OVR', color: 'bg-emerald-500/20 text-emerald-300' }, { text: '+€12M Maaş 💰', color: 'bg-emerald-500/20 text-emerald-300' }]
-                });
-                resumeAfterDilemma();
-              }
-            },
-            {
-              text: currentLang === 'TR' ? '💰 Körfez Krallarına İmzayı At! (+€45.000.000 Nakit Servet Patlaması)' : '💰 Gulf Mega-Contract (+€45,000,000 Pure Cash Wealth)',
-              action: () => {
-                player.bankBalance += 45000000;
-                player.assets.cars.push('Ultra Lüks Mega Yat');
-                showBreakingNews({
-                  tag: currentLang === 'TR' ? 'MİLYARLIK TRANSFER' : 'HISTORIC PAYDAY',
-                  headline: currentLang === 'TR' ? '💸 REKOR MAAŞLA İMZA ATILDI!' : '💸 ASTRONOMICAL DEAL SEALED!',
-                  sub: currentLang === 'TR' ? `${player.fullName} tarihin en çok kazanan futbolcularından biri oldu!` : `${player.fullName} signs record-breaking deal!`
-                });
-                addTimelineEvent({
-                  age: 27,
-                  breakingNews: { tag: 'MİLYARLIK TRANSFER', source: 'FABRIZIO ROMANO EXCLUSIVE', headline: '💸 REKOR MAAŞLA İMZA ATILDI!' },
-                  badge: 'KÖRFEZ ŞEYHİ',
-                  badgeColor: 'bg-amber-500/25 text-amber-300 border-amber-500/40',
-                  title: currentLang === 'TR' ? 'Servetini Katladın: Mega Yat ve Lüks Yaşam' : 'Mega Payday: Ultra-Luxury Estate & Yacht',
-                  desc: currentLang === 'TR' ? 'Körfez ekibi kapına açık çek koydu. Aileni ve gelecek nesillerini garantiye aldın.' : 'Signed an astronomical contract securing multi-generational wealth.',
-                  statDelta: [{ text: '+€45.000.000 Servet 💰', color: 'bg-amber-500/20 text-amber-300' }, { text: '🛥️ Mega Yat', color: 'bg-yellow-500/20 text-yellow-300' }]
-                });
-                resumeAfterDilemma();
-              }
-            }
-          ]
-        });
-        return true;
-      }
-
-      // Age 22: Nightlife vs Physio vs Restaurant Investment
-      if (age === 22) {
-        showDilemmaModal({
-          badge: currentLang === 'TR' ? 'ŞÖHRET VE YATIRIM (22 YAŞ)' : 'FAME & INVESTMENT (AGE 22)',
-          title: currentLang === 'TR' ? 'Şöhret Basamakları: Paranı ve Vaktini Nereye Ayıracaksın?' : 'Fame & Fortune: Where Do You Invest?',
-          desc: currentLang === 'TR'
-            ? 'Şöhretin tüm ülkeye yayıldı. Çevren menajerler, arkadaş grupları ve yatırımcılarla doldu. Hangisine odaklanacaksın?'
-            : 'Fame explodes. Advisors, friends and investors pitch opportunities. What is your priority?',
-          options: [
-            {
-              text: currentLang === 'TR' ? '🥗 Özel Aşçı, Fizyoterapist & Spor Bilimci Tut (-€120K, OVR +3)' : '🥗 Private Chef & Sports Science Team (-€120K, OVR +3)',
-              action: () => {
-                player.ovr += 3;
-                player.durability += 10;
-                player.bankBalance = Math.max(50000, player.bankBalance - 120000);
-                addTimelineEvent({
-                  age: 22,
-                  badge: 'ELİT SPORCU',
-                  badgeColor: 'bg-emerald-500/20 text-emerald-300',
-                  title: currentLang === 'TR' ? 'Cristiano Ronaldo Disiplini: Kusursuz Kondisyon' : 'Elite Professionalism',
-                  desc: currentLang === 'TR' ? 'Özel aşçın ve fizyoterapistinle vücut yağ oranını %8\'e çektin. Sahada 90 dakika yorulmak bilmeyen bir makinesin.' : 'Hired a private performance team. Your match fitness is world-class.',
-                  statDelta: [{ text: '+3 OVR', color: 'bg-emerald-500/20 text-emerald-300' }, { text: '+10 Dayanıklılık', color: 'bg-cyan-500/20 text-cyan-300' }]
-                });
-                resumeAfterDilemma();
-              }
-            },
-            {
-              text: currentLang === 'TR' ? '🍾 VIP Gece Kulübü Partileri & Lüks Hayat (-€80K, Magazin Gündemi, OVR -1)' : '🍾 VIP Nightclub Lifestyle (-€80K, Tabloid Headlines, OVR -1)',
-              action: () => {
-                player.ovr = Math.max(50, player.ovr - 1);
-                player.bankBalance = Math.max(20000, player.bankBalance - 80000);
-                addTimelineEvent({
-                  age: 22,
-                  badge: 'MAGAZİN',
-                  badgeColor: 'bg-rose-500/20 text-rose-300',
-                  title: currentLang === 'TR' ? 'Gece Kulübü Skandalı Manşetlerde!' : 'Nightclub Scandal Hits Front Pages!',
-                  desc: currentLang === 'TR' ? 'Maçtan önceki gece VIP partilerde sabahladın. Fotoğrafların basına sızdı, hoca seni uyardı.' : 'Spotted partying until 4 AM before a fixture. Fined by the club.',
-                  statDelta: [{ text: '-1 OVR', color: 'bg-rose-500/20 text-rose-300' }]
-                });
-                resumeAfterDilemma();
-              }
-            },
-            {
-              text: currentLang === 'TR' ? '🍽️ Menajerin Lüks Steakhouse Projesine Gir (-€300K, %50 İflas / %50 Kâr)' : '🍽️ Luxury Steakhouse Venture (-€300K, 50% Risk / 50% Profit)',
-              action: () => {
-                const success = Math.random() < 0.55;
-                if (success) {
-                  player.bankBalance += 600000;
-                  player.assets.businesses.push('Lüks Steakhouse Zinciri');
-                  addTimelineEvent({
-                    age: 22,
-                    badge: 'BAŞARILI İŞ',
-                    badgeColor: 'bg-emerald-500/20 text-emerald-300',
-                    title: currentLang === 'TR' ? 'Restoran Zincirin Şehrin Gözdesi Oldu (+€600.000)!' : 'Steakhouse Chain Turned Massive Hit (+€600,000)!',
-                    desc: currentLang === 'TR' ? 'Ünlü futbolcular ve sanatçılar mekanına akın etti. Yıllık düzenli pasif gelir elde etmeye başladın.' : 'Celebrity haunt. Turned into a roaring financial asset.',
-                    statDelta: [{ text: '🍽️ Restoran Sahibi', color: 'bg-yellow-500/20 text-yellow-300' }, { text: '+€600.000 Kâr', color: 'bg-emerald-500/20 text-emerald-300' }]
-                  });
-                } else {
-                  player.bankBalance = Math.max(10000, player.bankBalance - 300000);
-                  addTimelineEvent({
-                    age: 22,
-                    badge: 'İFLAS',
-                    badgeColor: 'bg-rose-500/20 text-rose-300',
-                    title: currentLang === 'TR' ? 'Restoran İflas Etti: Ortaklar Parayı Batırdı!' : 'Restaurant Bankrupt! Sunk €300,000!',
-                    desc: currentLang === 'TR' ? 'Kötü yönetim ve güvenilmez ortaklar yüzünden restoran battı ve haciz geldi. €300.000 zarar ettin.' : 'Mismanagement led to bankruptcy. Total loss on the venture.',
-                    statDelta: [{ text: '-€300.000 Batık 💸', color: 'bg-rose-500/20 text-rose-300' }]
-                  });
-                }
-                resumeAfterDilemma();
-              }
-            }
-          ]
-        });
-        return true;
-      }
-
-      // Age 25: Massive Villa vs Boot/Clothing Brand vs Arbitrage Fund
-      if (age === 25) {
-        showDilemmaModal({
-          badge: currentLang === 'TR' ? 'MİLYONLUK YATIRIM (25 YAŞ)' : 'MEGA WEALTH (AGE 25)',
-          title: currentLang === 'TR' ? 'Milyonluk Servet: Malikane mi, Kendi Markan mı?' : 'Million-Euro Choice: Mansion or Global Brand?',
-          desc: currentLang === 'TR'
-            ? 'Kariyerinin en verimli çağındasın. Bankanda milyonlarca euro nakit birikti. Nasıl değerlendireceksin?'
-            : 'In your prime with millions in liquid cash. How do you solidify your fortune?',
-          options: [
-            {
-              text: currentLang === 'TR' ? '🏰 Sahil Şeridinde Özel Havuzlu Dev Malikane Satın Al (-€2.5M)' : '🏰 Buy Coastal Mega Mansion with Private Pool (-€2.5M)',
-              action: () => {
-                player.bankBalance = Math.max(500000, player.bankBalance - 2500000);
-                player.assets.houses.push('Sahil Malikanesi');
-                addTimelineEvent({
-                  age: 25,
-                  badge: 'MALİKANE',
-                  badgeColor: 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30',
-                  title: currentLang === 'TR' ? 'Akdeniz Sahilinde Rüya Malikane Satın Aldın!' : 'Acquired Coastal Dream Mansion!',
-                  desc: currentLang === 'TR' ? '12 odalı, helikopter pistli ve özel havuzlu malikanene taşındın. Dünyanın en ünlü dergilerine kapak oldun.' : 'Moved into a 12-bedroom coastal villa with ocean views.',
-                  statDelta: [{ text: '🏰 Sahil Malikanesi', color: 'bg-yellow-500/20 text-yellow-300' }]
-                });
-                resumeAfterDilemma();
-              }
-            },
-            {
-              text: currentLang === 'TR' ? '👟 Kendi Adını Taşıyan Krampon & Spor Markanı Kur (-€1.5M, Pasif Gelir)' : '👟 Launch Signature Football Boot Brand (-€1.5M)',
-              action: () => {
-                player.bankBalance += 2000000;
-                player.assets.businesses.push('Özel Krampon Markası');
-                addTimelineEvent({
-                  age: 25,
-                  badge: 'GİRİŞİMCİ',
-                  badgeColor: 'bg-emerald-500/20 text-emerald-300',
-                  title: currentLang === 'TR' ? 'Kendi Krampon Markan Dünya Çapında Sattı (+€2M)!' : 'Signature Boots Sold Millions Worldwide (+€2M)!',
-                  desc: currentLang === 'TR' ? 'Tasarladığın kramponlar ve spor giyim ürünleri yok sattı. Artık sadece futbolcu değil, bir iş insanısın.' : 'Your signature boots flew off shelves. Turned into an iconic commercial brand.',
-                  statDelta: [{ text: '👟 Krampon Markası', color: 'bg-emerald-500/20 text-emerald-300' }, { text: '+€2.000.000 Gelir', color: 'bg-yellow-500/20 text-yellow-300' }]
-                });
-                resumeAfterDilemma();
-              }
-            },
-            {
-              text: currentLang === 'TR' ? '📉 Şüpheli Teknoloji Arbitraj Fonu (BÜYÜK KUMAR: %50 Dolandırılırsın / %50 +€4M)' : '📉 Tech Arbitrage Fund (50% Scam / 50% +€4M Windfall)',
-              action: () => {
-                const win = Math.random() < 0.5;
-                if (win) {
-                  player.bankBalance += 4000000;
-                  addTimelineEvent({
-                    age: 25,
-                    badge: 'DEV VURGUN',
-                    badgeColor: 'bg-emerald-500/20 text-emerald-300',
-                    title: currentLang === 'TR' ? 'Fon Rekor Kırdı: Servetin Uçuşa Geçti (+€4M)!' : 'Fund Hit Jackpot (+€4,000,000)!',
-                    desc: currentLang === 'TR' ? 'Riskli yatırımın dünya borsalarında patlama yaptı! Banka hesabına €4.000.000 nakit aktı.' : 'A wildly speculative tech venture paid out 400% returns.',
-                    statDelta: [{ text: '+€4.000.000 Kazanç 💰', color: 'bg-emerald-500/20 text-emerald-300' }]
-                  });
-                } else {
-                  player.bankBalance = Math.max(100000, player.bankBalance - 2000000);
-                  addTimelineEvent({
-                    age: 25,
-                    badge: 'DOLANDIRILDIN',
-                    badgeColor: 'bg-rose-500/20 text-rose-300',
-                    title: currentLang === 'TR' ? 'Büyük Vurgun: Sahte Fon Şirketi €2.000.000 İle Kaçtı!' : 'Scammed! Bogus Tech Fund Stole €2,000,000!',
-                    desc: currentLang === 'TR' ? 'Parayı emanet ettiğin fon yöneticileri sahte evraklarla ortadan kayboldu. Davalık oldun ve €2M battı!' : 'Fund managers vanished with investor deposits. Major financial blow.',
-                    statDelta: [{ text: '-€2.000.000 Battı 💸', color: 'bg-rose-500/20 text-rose-300' }]
-                  });
-                }
-                resumeAfterDilemma();
-              }
-            }
-          ]
-        });
-        return true;
-      }
-
-      // Age 26: Derby Betrayal vs Loyal Flag-Bearer
-      if (age === 26) {
-        showDilemmaModal({
-          badge: currentLang === 'TR' ? 'EZELİ RAKİP & İHANET (26 YAŞ)' : 'DERBY CROSSROADS (AGE 26)',
-          title: currentLang === 'TR' ? 'Ezeli Rakipten Çılgın Teklif: Gidecek misin?' : 'Shocking Offer from Arch-Rivals: Will You Sign?',
-          desc: currentLang === 'TR'
-            ? 'Şehrin ezeli düşman kulübü sana astronomik bir sözleşme teklif etti: Tam 3 katı maaş ve €5.000.000 nakit imza parası! Ancak eski taraftarların formanı yakabilir.'
-            : 'Your club’s fiercest arch-rivals tabled a massive proposal: Triple salary + €5M immediate signing bonus. Fans will call you a traitor.',
-          options: [
-            {
-              text: currentLang === 'TR' ? '🐍 İhanet Et! Parayı Al (+€5.000.000 İmza Parası, 3x Maaş, Kaotik Baskı)' : '🐍 Make the Treason Move! Take +€5M Bonus & 3x Salary (High Pressure)',
-              action: () => {
-                player.bankBalance += 5000000;
-                player.salary *= 3;
-                player.clutch += 12;
-                showBreakingNews({
-                  tag: currentLang === 'TR' ? 'YÜZYILIN İHANETİ' : 'DERBY TREASON',
-                  source: 'MARCA / L\'EQUIPE EXCLUSIVE',
-                  headline: currentLang === 'TR' ? `🔥 ŞEHİR AYAKTA: EZELİ RAKİPTE!` : `🔥 CITY IN FLAMES: SIGNED FOR ARCH-RIVALS!`,
-                  sub: currentLang === 'TR' ? `${player.fullName} €5.000.000 nakit imza parasıyla ezeli rakibe geçti!` : `${player.fullName} crosses the divide with €5M cash bonus!`
-                });
-                addTimelineEvent({
-                  age: 26,
-                  breakingNews: { tag: 'YÜZYILIN İHANETİ', source: 'MARCA / L\'EQUIPE EXCLUSIVE', headline: '🔥 ŞEHİR AYAKTA: EZELİ RAKİPTE!' },
-                  badge: 'EZELİ RAKİBE İHANET',
-                  badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/30',
-                  title: currentLang === 'TR' ? 'Ezeli Rakipten Astronomik İmza! Hain İlan Edildin!' : 'Signed for Arch-Rivals! Labeled a Traitor!',
-                  desc: currentLang === 'TR' ? 'Transfer piyasası sarsıldı! Eski taraftarların formanı yaktı ama hesabına €5.000.000 yattı. Sahaya ıslıklar altında çıktın.' : 'The entire league went ballistic. Jerseys burned in the streets, but bank balance exploded.',
-                  statDelta: [{ text: '+€5.000.000 Nakit 💰', color: 'bg-emerald-500/20 text-emerald-300' }, { text: '3x Maaş 📈', color: 'bg-emerald-500/20 text-emerald-300' }]
-                });
-                resumeAfterDilemma();
-              }
-            },
-            {
-              text: currentLang === 'TR' ? '🏛️ Asla! Sadık Kal & Bayrak Adam Ol (Kaptanlık Pazubandı, Kulüp Efsanesi & Kupa +1)' : '🏛️ Refuse! Remain Loyal & Club Legend (+Armband, Legend Status, Trophy +1)',
-              action: () => {
-                player.clutch += 15;
-                player.stats.trophies += 1;
-                addTimelineEvent({
-                  age: 26,
-                  badge: 'SON MOHİKAN',
-                  badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
-                  title: currentLang === 'TR' ? 'Parayı Reddettin, Kulübün Bayrak Adamı Oldun!' : 'Rejected Millions, Became One-Club Icon!',
-                  desc: currentLang === 'TR' ? 'Ezeli rakibin milyonlarını elinin tersiyle ittin. Taraftar tribünlerde adına besteler yaptı ve kaptanlık bandını taktın.' : 'Declined generational money to cement your god-tier legacy in the hearts of your fans.',
-                  statDelta: [{ text: '👑 Kaptanlık', color: 'bg-amber-500/20 text-amber-300' }, { text: '+1 Kupa 🏆', color: 'bg-amber-500/20 text-amber-300' }]
-                });
-                resumeAfterDilemma();
-              }
-            }
-          ]
-        });
-        return true;
-      }
-
-      if (age === 28) {
-        showDilemmaModal({
-          badge: currentLang === 'TR' ? 'MİLYONLAR MI ŞAMPİYONLAR LİGİ Mİ? (28 YAŞ)' : 'MONEY VS GLORY (AGE 28)',
-          title: currentLang === 'TR' ? 'Körfezden Astronomik 25M€ Teklif!' : 'Astronomical €25M Gulf Mega Offer!',
-          desc: currentLang === 'TR'
-            ? 'Kariyerinin tam zirvesindesin. Körfez devi Riyad Altın Şeyhleri yıllık 25 Milyon € net maaş önerdi! Avrupa Şampiyonlar Turnuvası prestijini bırakıp gitmeli misin?'
-            : 'At your physical peak, Riyadh Gold offers an astonishing €25M net annual tax-free contract! Do you chase generational wealth or European continental glory?',
-          options: [
-            {
-              text: currentLang === 'TR' ? 'Parayı seç: Yıllık 25M€ kabul et! Yedi sülalen zengin olsun (💰)' : 'Accept Generational Wealth: Take the €25M! (💰)',
-              action: () => {
-                const gulfClub = CLUBS.gulf[0];
-                player.currentClub = gulfClub;
-                player.clubHistory.push(gulfClub);
-                player.salary = 25000000;
-                player.bankBalance += 18000000;
-                player.stats.trophies += 2;
-                addTimelineEvent({
-                  age: 28,
-                  badge: 'MİLYARDER',
-                  badgeColor: 'bg-yellow-500/20 text-yellow-300 border-yellow-500/40',
-                  title: currentLang === 'TR' ? 'Körfezde Krallar Gibi Karşılandın' : 'Royal Welcome in the Gulf',
-                  desc: currentLang === 'TR' ? 'Özel jetler, lüks villalar ve rekor maaş! Ligde her maç gol krallığına koşuyorsun.' : 'Private jets and colossal contracts. You dominate the domestic cup and league effortlessly.',
-                  statDelta: [{ text: 'Maaş: €25M/Yıl', color: 'bg-yellow-500/20 text-yellow-300' }]
-                });
-                resumeAfterDilemma();
-              }
-            },
-            {
-              text: currentLang === 'TR' ? 'Prestij ve Kupalar: Avrupa zirvesinde kal, efsane ol!' : 'Refuse the Gold: Stay at the European summit for glory & trophies!',
-              action: () => {
-                player.clutch += 15;
-                player.stats.trophies += 1;
-                addTimelineEvent({
-                  age: 28,
-                  badge: 'ŞAMPİYON',
-                  badgeColor: 'bg-emerald-500/20 text-emerald-300',
-                  title: currentLang === 'TR' ? 'Parayı Reddettin, Şampiyonlar Turnuvası Kupasını Kaldırdın!' : 'Refused Millions, Lifted the Continental Champions Cup!',
-                  desc: currentLang === 'TR' ? 'Finalde uzatmalarda attığın jeneriklik golle takımına kupayı kazandırdın. Efsaneleştin!' : 'Scored an iconic extra-time screamer to win the ultimate club championship.',
-                  statDelta: [{ text: '+1 Avrupa Kupası 🏆', color: 'bg-yellow-500/20 text-yellow-300' }]
-                });
-                resumeAfterDilemma();
-              }
-            }
-          ]
-        });
-        return true;
-      }
-
-      // Age 32: Legacy & Academy vs Commercial Skyscraper vs Mega Yacht
-      if (age === 32) {
-        showDilemmaModal({
-          badge: currentLang === 'TR' ? 'KARİYER MİRASI (32 YAŞ)' : 'CAREER LEGACY (AGE 32)',
-          title: currentLang === 'TR' ? 'Kalıcı Miras: Gençlik Akademisi mi, Ticari Gökdelen mi?' : 'Final Legacy: Academy or Commercial Empire?',
-          desc: currentLang === 'TR'
-            ? '30\'lu yaşların ortasına yaklaşırken geleceğe kalıcı bir iz bırakmak istiyorsun. Nasıl bir yatırım yapacaksın?'
-            : 'Approaching the twilight of your playing days. How do you choose to seal your lifetime legacy?',
-          options: [
-            {
-              text: currentLang === 'TR' ? '⚽ Memleketinde Ücretsiz Gençlik Futbol Akademisi Aç (-€1M, Halk Kahramanı)' : '⚽ Open Free Youth Football Academy (-€1M, Folk Hero)',
-              action: () => {
-                player.bankBalance = Math.max(100000, player.bankBalance - 1000000);
-                player.assets.businesses.push('Ücretsiz Futbol Akademisi');
-                player.clutch += 15;
-                addTimelineEvent({
-                  age: 32,
-                  badge: 'HALK KAHRAMANI',
-                  badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
-                  title: currentLang === 'TR' ? 'Memleketinde Binlerce Çocuğa Ücretsiz Akademi Kurdun!' : 'Built a Free Football Academy for Thousands of Kids!',
-                  desc: currentLang === 'TR' ? 'Yoksul mahallelerdeki yetenekli çocuklara tesisler ve burs sağladın. Tüm ülke senin fedakarlığını ayakta alkışladı.' : 'Provided state-of-the-art pitches and boots for underprivileged kids.',
-                  statDelta: [{ text: '⚽ Futbol Akademisi', color: 'bg-emerald-500/20 text-emerald-300' }]
-                });
-                resumeAfterDilemma();
-              }
-            },
-            {
-              text: currentLang === 'TR' ? '🏢 Şehir Merkezinde Ticari Gökdelen Katı Al (-€3M, Sürekli Kira Geliri)' : '🏢 Commercial Skyscraper Floors (-€3M, Real Estate Empire)',
-              action: () => {
-                player.bankBalance = Math.max(200000, player.bankBalance - 3000000);
-                player.assets.houses.push('Ticari Gökdelen Katı');
-                addTimelineEvent({
-                  age: 32,
-                  badge: 'GAYRİMENKUL',
-                  badgeColor: 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30',
-                  title: currentLang === 'TR' ? 'Metropolün Kalbinde Gökdelen Sahibi Oldun' : 'Acquired Skyscraper Commercial Floors',
-                  desc: currentLang === 'TR' ? 'Şehrin en lüks iş merkezinde tüm katları kiralayarak ömür boyu garanti nakit akışı kurdun.' : 'Guaranteed steady rental income for generations.',
-                  statDelta: [{ text: '🏢 Gökdelen Katı', color: 'bg-yellow-500/20 text-yellow-300' }]
-                });
-                resumeAfterDilemma();
-              }
-            },
-            {
-              text: currentLang === 'TR' ? '🚤 Ultra Lüks Mega Yat Satın Al (-€2M, Adalarda Zevk-i Sefa)' : '🚤 Buy an Ultra-Luxury Mega Yacht (-€2M)',
-              action: () => {
-                player.bankBalance = Math.max(100000, player.bankBalance - 2000000);
-                player.assets.cars.push('Ultra Lüks Mega Yat');
-                addTimelineEvent({
-                  age: 32,
-                  badge: 'MEGA YAT',
-                  badgeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30',
-                  title: currentLang === 'TR' ? 'Mega Yatınla Tropik Adaları Geziyorsun' : 'Cruising Tropical Islands on Mega Yacht',
-                  desc: currentLang === 'TR' ? 'Kişisel helikopter pisti olan mega yatınla dünya sosyetesinin dikkatini çektin.' : 'Summer breaks spent sailing Mediterranean waters on private superyacht.',
-                  statDelta: [{ text: '🚤 Mega Yat', color: 'bg-cyan-500/20 text-cyan-300' }]
-                });
-                resumeAfterDilemma();
-              }
-            }
-          ]
-        });
-        return true;
-      }
-
-      // Age 35: Cortisone Injection before Cup Final vs Safe Health
-      if (age === 35) {
-        showDilemmaModal({
-          badge: currentLang === 'TR' ? 'KUPA FİNALİ İĞNESİ (35 YAŞ)' : 'CUP FINAL GAMBLE (AGE 35)',
-          title: currentLang === 'TR' ? 'Final Öncesi Kortizon İğnesiyle Sahaya Çıkacak mısın?' : 'Take Cortisone Painkillers for Cup Final?',
-          desc: currentLang === 'TR'
-            ? 'Sezonun en büyük kupa finaline 2 gün kala dizinde şiddetli yırtık var. Doktor: "İğneyle ağrıyı kesip oynatabilirim ama dizini mahvedebilirsin, ya da kulübede oturup sağlığını korursun." diyor.'
-            : 'Crucial cup final in 48 hours, but your knee meniscus is torn. Medics offer heavy cortisone shots to numb the pain, risking permanent knee cartilage damage.',
-          options: [
-            {
-              text: currentLang === 'TR' ? '💉 İğneyi Vur! Sakat Sakat Sahaya Çık (BÜYÜK RİSK: %75 Kupa & Goller / %25 Ağır Sakatlık & -8 OVR)' : '💉 Take the Shot! Play Hurt (HIGH RISK: 75% Win Trophy & Score / 25% Severe Injury & -8 OVR)',
-              action: () => {
-                const heroicSuccess = Math.random() < 0.75;
-                if (heroicSuccess) {
-                  player.stats.trophies += 1;
-                  player.stats.goals += 2;
-                  player.clutch += 15;
-                  addTimelineEvent({
-                    age: 35,
-                    badge: '🏆 KAHRAMANLIK DESTANI',
-                    badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
-                    title: currentLang === 'TR' ? 'Acıyı Yendin: Finalde 2 Golle Kupayı Getirdin!' : 'Heroic Stand: Scored Brace to Lift the Cup!',
-                    desc: currentLang === 'TR' ? 'Kortizon iğnesiyle maça çıktın, uzatmalarda galibiyet golünü atıp kupayı havaya kaldırdın! Taraftarlar heykelini istiyor.' : 'Numbed the agony, scored two legendary goals, and lifted the cup in tears.',
-                    statDelta: [{ text: '+1 Kupa 🏆', color: 'bg-amber-500/20 text-amber-300' }, { text: '+2 Final Golü ⚽', color: 'bg-emerald-500/20 text-emerald-300' }]
-                  });
-                } else {
-                  player.ovr = Math.max(35, player.ovr - 8);
-                  player.severeInjuries = (player.severeInjuries || 0) + 1;
-                  addTimelineEvent({
-                    age: 35,
-                    badge: '🏥 AĞIR SAKATLIK',
-                    badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/30',
-                    title: currentLang === 'TR' ? 'Diz İflas Etti! Maçın 20. Dakikasında Sedye ile Çıktın!' : 'Knee Blew Out! Stretchered off in minute 20!',
-                    desc: currentLang === 'TR' ? 'Risk tutmadı. Bağların koptu ve sezonu kapattın. OVR seviyen kalıcı olarak düştü.' : 'The gamble failed. Torn ligaments ended your season and shattered your mobility.',
-                    statDelta: [{ text: '-8 OVR 📉', color: 'bg-rose-500/20 text-rose-300' }, { text: 'Ağır Sakatlık 🏥', color: 'bg-rose-500/20 text-rose-300' }]
-                  });
-                }
-                resumeAfterDilemma();
-              }
-            },
-            {
-              text: currentLang === 'TR' ? '🛡️ Sağlığını Koru: Kulübede Kal & Gençlere Manevi Destek Ver' : '🛡️ Protect Health: Bench support & mentor youngsters',
-              action: () => {
-                player.durability += 6;
-                addTimelineEvent({
-                  age: 35,
-                  badge: 'BİLGE LİDERLİK',
-                  badgeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30',
-                  title: currentLang === 'TR' ? 'Sağduyulu Karar: Takımı Kenardan Ateşledin' : 'Wise Restraint: Captained from the Touchline',
-                  desc: currentLang === 'TR' ? 'Gereksiz bir kariyer sonu sakatlığını önledin ve kulübede antrenör gibi takımı yönlendirdin.' : 'Preserved your joints for the sunset years while providing sideline tactical guidance.',
-                  statDelta: [{ text: '+6 Dayanıklılık', color: 'bg-cyan-500/20 text-cyan-300' }]
-                });
-                resumeAfterDilemma();
-              }
-            }
-          ]
-        });
-        return true;
+      // Check if this career has a procedural dilemma scheduled at this age
+      if (scheduledDilemmas && scheduledDilemmas[age]) {
+        const dilemmaId = scheduledDilemmas[age];
+        const dilemmaFactory = DILEMMA_REGISTRY[dilemmaId];
+        if (dilemmaFactory) {
+          const dilemmaData = dilemmaFactory(age);
+          showDilemmaModal(dilemmaData);
+          return true;
+        }
       }
 
       return false;
@@ -4028,8 +4554,8 @@
         toggleAutoPlay(); // Temporarily pause auto progression so user can read dilemma
       }
 
-      // Populate Cinematic Scene Banner
-      const sceneData = DILEMMA_SCENES[player.age] || {
+      // Populate Cinematic Scene Banner (prioritizes dilemma's own custom scene)
+      const sceneData = data.scene || DILEMMA_SCENES[player.age] || {
         locationTr: 'Kariyer Dönüm Noktası',
         locationEn: 'Career Crossroad',
         moodTr: '"Kariyerinin kaderini belirleyecek an geldi..."',
