@@ -10,7 +10,10 @@
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#0b0f19">
   <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="apple-touch-icon" href="/assets/icon-192.png">
 
   <!-- Open Graph -->
@@ -164,9 +167,23 @@
     ::-webkit-scrollbar-thumb { background: #165331; border-radius: 999px; }
     ::-webkit-scrollbar-thumb:hover { background: #22c55e; }
 
-    /* Stadium Lights Glow */
+    /* Dynamic Country Stadium Atmosphere Lights & Variables */
+    :root {
+      --country-glow-color1: rgba(34, 197, 94, 0.18);
+      --country-glow-color2: rgba(16, 185, 129, 0.04);
+      --country-accent: #10b981;
+      --country-hud-border: rgba(16, 185, 129, 0.35);
+    }
+
+    /* Stadium Lights Glow (Dinamik Ülke Stadyum Işıkları & Yumuşak Geçiş) */
     .stadium-glow {
-      background: radial-gradient(circle at 50% 0%, rgba(34, 197, 94, 0.15) 0%, rgba(6, 19, 11, 0.95) 75%);
+      background: radial-gradient(circle at 50% 0%, var(--country-glow-color1) 0%, var(--country-glow-color2) 35%, rgba(6, 19, 11, 0.98) 75%);
+      transition: background 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    #countryAtmosphereGlow {
+      background: radial-gradient(ellipse 90% 50% at 50% -10%, var(--country-glow-color1) 0%, transparent 70%);
+      transition: background 1.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s ease;
     }
 
     /* Grass lines pattern */
@@ -220,6 +237,8 @@
 </head>
 
 <body class="bg-pitch-950 text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-emerald-500 selection:text-black">
+  <!-- Dynamic Country Stadium Floodlight Atmospheric Ambient Glow -->
+  <div id="countryAtmosphereGlow" class="fixed top-0 inset-x-0 h-80 sm:h-96 pointer-events-none -z-10 opacity-70"></div>
 
   <!-- Top Navigation -->
   <header class="border-b border-pitch-800 bg-pitch-900/90 backdrop-blur-md sticky top-0 z-50">
@@ -232,7 +251,7 @@
           <div class="flex flex-col">
             <span class="font-display font-bold text-white text-base tracking-wide flex items-center gap-1.5">
               THE FOOTBALL <span class="text-emerald-400">LOTTERY</span>
-              <span class="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold">V2.2</span>
+              <span class="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold">V2.3</span>
             </span>
             <span class="text-[10px] text-slate-400 font-medium" id="txtSubtitleNav">Futbolcu Doğum Piyangosu</span>
           </div>
@@ -850,6 +869,45 @@
     </div>
   </div>
 
+
+    <!-- World Cup / International Tournament Modal (Guaranteed Screen Fit & Eye-Comfort Dark Theme) -->
+  <div id="modalTournament" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/90 backdrop-blur-md overflow-y-auto">
+    <div class="max-w-lg w-full p-4 sm:p-6 rounded-3xl bg-pitch-900 border-2 border-amber-500/70 shadow-2xl space-y-4 text-left relative animate-in fade-in zoom-in duration-200 overflow-y-auto modal-box-responsive" style="max-height: 90vh; max-height: 90dvh;">
+      
+      <!-- Tournament Header Banner -->
+      <div class="w-full h-36 sm:h-40 rounded-2xl overflow-hidden relative border border-amber-500/40 shadow-2xl flex flex-col justify-between p-3.5 sm:p-4 bg-gradient-to-br from-amber-950 via-pitch-950 to-black">
+        <img src="https://images.unsplash.com/photo-1518091043644-c1d4457512c6?auto=format&fit=crop&w=800&q=80" alt="" onerror="this.style.display='none';" class="absolute inset-0 w-full h-full object-cover opacity-25 mix-blend-luminosity">
+        <div class="absolute inset-0 bg-gradient-to-t from-pitch-950 via-pitch-950/60 to-transparent pointer-events-none"></div>
+        
+        <div class="flex items-center justify-between relative z-10">
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-lg">
+            <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+            <span id="tourneyBadgeTitle">🌍 DÜNYA KUPASI TURNUVASI</span>
+          </div>
+          <span class="text-3xl filter drop-shadow">🏆</span>
+        </div>
+
+        <div class="relative z-10 p-2.5 rounded-xl bg-pitch-950/90 border border-amber-500/30">
+          <div class="text-xs sm:text-sm font-mono font-bold text-white flex items-center gap-2">
+            <span id="tourneyFlag">🇹🇷</span>
+            <span id="tourneyCountryHeading">Milli Takım Gururu & Tarihi Fırsat</span>
+          </div>
+          <div class="text-[11px] text-amber-300 font-medium truncate" id="tourneySubtitle">Milyonlar ekran başında tek bir golünü bekliyor...</div>
+        </div>
+      </div>
+
+      <!-- Match Stage Card -->
+      <div id="tourneyStageCard" class="p-4 rounded-2xl bg-pitch-950/90 border border-pitch-800 space-y-3">
+        <!-- Populated dynamically via startWorldCupMatchStage() -->
+      </div>
+
+      <!-- Tactical Options / Action Buttons -->
+      <div id="tourneyActions" class="space-y-2 pt-1">
+        <!-- Populated dynamically -->
+      </div>
+
+    </div>
+  </div>
 
   <!-- Museum & Luxury Garage Modal (Guaranteed Screen Fit) -->
   <div id="modalMuseum" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md">
@@ -1934,6 +1992,193 @@
       step();
     }
 
+    
+    /* =====================================================================
+       5B. DYNAMIC COUNTRY STADIUM ATMOSPHERE THEMES (20 COUNTRIES)
+       ===================================================================== */
+    const COUNTRY_THEMES = {
+      'Brezilya': {
+        name: 'Samba Altın & Zümrüt',
+        color1: 'rgba(34, 197, 94, 0.22)',
+        color2: 'rgba(234, 179, 8, 0.10)',
+        accent: '#22c55e',
+        hudBorder: 'rgba(234, 179, 8, 0.45)'
+      },
+      'Arjantin': {
+        name: 'Albiceleste Gök Mavisi',
+        color1: 'rgba(56, 189, 248, 0.24)',
+        color2: 'rgba(255, 255, 255, 0.08)',
+        accent: '#38bdf8',
+        hudBorder: 'rgba(56, 189, 248, 0.45)'
+      },
+      'Türkiye': {
+        name: 'Ay-Yıldız Hilal Kırmızısı',
+        color1: 'rgba(239, 68, 68, 0.22)',
+        color2: 'rgba(255, 255, 255, 0.08)',
+        accent: '#ef4444',
+        hudBorder: 'rgba(239, 68, 68, 0.45)'
+      },
+      'Almanya': {
+        name: 'Panzer Çeliği & Altın',
+        color1: 'rgba(245, 158, 11, 0.20)',
+        color2: 'rgba(239, 68, 68, 0.10)',
+        accent: '#f59e0b',
+        hudBorder: 'rgba(245, 158, 11, 0.45)'
+      },
+      'Fransa': {
+        name: 'Les Bleus Asil Mavi',
+        color1: 'rgba(99, 102, 241, 0.24)',
+        color2: 'rgba(239, 68, 68, 0.10)',
+        accent: '#6366f1',
+        hudBorder: 'rgba(99, 102, 241, 0.45)'
+      },
+      'Hollanda': {
+        name: 'Oranje Gece Ateşi',
+        color1: 'rgba(249, 115, 22, 0.24)',
+        color2: 'rgba(251, 146, 60, 0.10)',
+        accent: '#f97316',
+        hudBorder: 'rgba(249, 115, 22, 0.45)'
+      },
+      'İspanya': {
+        name: 'La Furia Kırmızı & Altın',
+        color1: 'rgba(220, 38, 38, 0.22)',
+        color2: 'rgba(245, 158, 11, 0.12)',
+        accent: '#ef4444',
+        hudBorder: 'rgba(245, 158, 11, 0.45)'
+      },
+      'İtalya': {
+        name: 'Azzurri Gece Mavisi',
+        color1: 'rgba(37, 99, 235, 0.24)',
+        color2: 'rgba(59, 130, 246, 0.10)',
+        accent: '#3b82f6',
+        hudBorder: 'rgba(59, 130, 246, 0.45)'
+      },
+      'Portekiz': {
+        name: 'Gezgin Bordo & Zümrüt',
+        color1: 'rgba(185, 28, 28, 0.22)',
+        color2: 'rgba(16, 185, 129, 0.10)',
+        accent: '#10b981',
+        hudBorder: 'rgba(185, 28, 28, 0.45)'
+      },
+      'İngiltere': {
+        name: 'Three Lions Kırmızı & Beyaz',
+        color1: 'rgba(225, 29, 72, 0.20)',
+        color2: 'rgba(59, 130, 246, 0.10)',
+        accent: '#f43f5e',
+        hudBorder: 'rgba(225, 29, 72, 0.45)'
+      },
+      'Japonya': {
+        name: 'Samurai Blue Neon',
+        color1: 'rgba(14, 165, 233, 0.24)',
+        color2: 'rgba(255, 255, 255, 0.08)',
+        accent: '#0ea5e9',
+        hudBorder: 'rgba(14, 165, 233, 0.45)'
+      },
+      'Güney Kore': {
+        name: 'Taegeuk Kırmızı & Mavi',
+        color1: 'rgba(239, 68, 68, 0.20)',
+        color2: 'rgba(59, 130, 246, 0.12)',
+        accent: '#ef4444',
+        hudBorder: 'rgba(59, 130, 246, 0.45)'
+      },
+      'Uruguay': {
+        name: 'Garra Charrúa Cyan',
+        color1: 'rgba(6, 182, 212, 0.22)',
+        color2: 'rgba(234, 179, 8, 0.10)',
+        accent: '#06b6d4',
+        hudBorder: 'rgba(6, 182, 212, 0.45)'
+      },
+      'Hırvatistan': {
+        name: 'Damalı Kırmızı & Beyaz',
+        color1: 'rgba(239, 68, 68, 0.22)',
+        color2: 'rgba(59, 130, 246, 0.10)',
+        accent: '#ef4444',
+        hudBorder: 'rgba(239, 68, 68, 0.45)'
+      },
+      'Nijerya': {
+        name: 'Super Eagles Zümrüt',
+        color1: 'rgba(16, 185, 129, 0.25)',
+        color2: 'rgba(255, 255, 255, 0.08)',
+        accent: '#10b981',
+        hudBorder: 'rgba(16, 185, 129, 0.45)'
+      },
+      'Fas': {
+        name: 'Atlas Aslanı Kırmızı & Yeşil',
+        color1: 'rgba(225, 29, 72, 0.22)',
+        color2: 'rgba(16, 185, 129, 0.10)',
+        accent: '#10b981',
+        hudBorder: 'rgba(225, 29, 72, 0.45)'
+      },
+      'Norveç': {
+        name: 'Viking Donanması & Kırmızı',
+        color1: 'rgba(225, 29, 72, 0.20)',
+        color2: 'rgba(30, 58, 138, 0.15)',
+        accent: '#f43f5e',
+        hudBorder: 'rgba(225, 29, 72, 0.45)'
+      },
+      'Kolombiya': {
+        name: 'Cafetero Altın & Mavi',
+        color1: 'rgba(234, 179, 8, 0.22)',
+        color2: 'rgba(59, 130, 246, 0.12)',
+        accent: '#eab308',
+        hudBorder: 'rgba(234, 179, 8, 0.45)'
+      },
+      'ABD': {
+        name: 'Stars & Stripes Gece Mavisi',
+        color1: 'rgba(59, 130, 246, 0.22)',
+        color2: 'rgba(239, 68, 68, 0.12)',
+        accent: '#3b82f6',
+        hudBorder: 'rgba(59, 130, 246, 0.45)'
+      },
+      'San Marino': {
+        name: 'Monte Titano Gökyüzü',
+        color1: 'rgba(14, 165, 233, 0.22)',
+        color2: 'rgba(255, 255, 255, 0.08)',
+        accent: '#38bdf8',
+        hudBorder: 'rgba(56, 189, 248, 0.45)'
+      }
+    };
+
+    function applyCountryTheme(country) {
+      const root = document.documentElement;
+      const cName = country ? (country.nameTr || country.nameEn || '') : null;
+      const theme = (cName && COUNTRY_THEMES[cName]) ? COUNTRY_THEMES[cName] : {
+        color1: 'rgba(34, 197, 94, 0.18)',
+        color2: 'rgba(16, 185, 129, 0.04)',
+        accent: '#10b981',
+        hudBorder: 'rgba(16, 185, 129, 0.35)'
+      };
+
+      root.style.setProperty('--country-glow-color1', theme.color1);
+      root.style.setProperty('--country-glow-color2', theme.color2);
+      root.style.setProperty('--country-accent', theme.accent);
+      root.style.setProperty('--country-hud-border', theme.hudBorder);
+
+      // Subtle dynamic aura on bornRevealBanner
+      const revealBanner = document.getElementById('bornRevealBanner');
+      if (revealBanner) {
+        if (country) {
+          revealBanner.style.borderColor = theme.hudBorder;
+          revealBanner.style.boxShadow = `0 16px 36px -12px ${theme.color1}`;
+        } else {
+          revealBanner.style.borderColor = '';
+          revealBanner.style.boxShadow = '';
+        }
+      }
+
+      // Subtle dynamic bottom border glow on careerHud
+      const hud = document.getElementById('careerHud');
+      if (hud) {
+        if (country) {
+          hud.style.borderBottomColor = theme.hudBorder;
+          hud.style.boxShadow = `0 10px 24px -10px ${theme.color1}`;
+        } else {
+          hud.style.borderBottomColor = '';
+          hud.style.boxShadow = '';
+        }
+      }
+    }
+
     /* =====================================================================
        6. CAREER INITIALIZATION
        ===================================================================== */
@@ -1973,6 +2218,9 @@
         ballonDor: 0
       };
       player.isRetired = false;
+
+      // Apply Country-Specific Dynamic Atmosphere & Floodlight Theme
+      applyCountryTheme(birth.country);
 
       // Switch Screens
       document.getElementById('screenIntro').classList.add('hidden');
@@ -2665,7 +2913,260 @@
     /* =====================================================================
        10. CRITICAL DILEMMAS & DECISION MODALS
        ===================================================================== */
+    
+    /* =====================================================================
+       13C. WORLD CUP / INTERNATIONAL TOURNAMENT ENGINE
+       ===================================================================== */
+    let currentTourneyState = {
+      stage: 'quarter', // 'quarter', 'semi', 'final', 'champion', 'eliminated'
+      age: 24,
+      opponent: null,
+      score: { player: 0, opponent: 0 },
+      playerScored: false
+    };
+
+    function startWorldCupTournament(age) {
+      if (isAutoPlaying) toggleAutoPlay(); // Pause auto progression
+
+      currentTourneyState = {
+        stage: 'quarter',
+        age: age,
+        opponent: getRandomTourneyOpponent(),
+        score: { player: 0, opponent: 0 },
+        playerScored: false
+      };
+
+      const modal = document.getElementById('modalTournament');
+      if (!modal) return;
+
+      const flagContainer = document.getElementById('tourneyFlag');
+      if (flagContainer) flagContainer.innerHTML = getCountryFlagHtml(player.country, 'w-6 h-4.5');
+
+      const countryName = currentLang === 'TR' ? player.country.nameTr : player.country.nameEn;
+      document.getElementById('tourneyBadgeTitle').textContent = currentLang === 'TR' ? `🌍 DÜNYA KUPASI (${age} YAŞ)` : `🌍 WORLD CUP (AGE ${age})`;
+      document.getElementById('tourneyCountryHeading').textContent = currentLang === 'TR' ? `${countryName} Milli Takımı Kadrosundasın!` : `Selected for ${countryName} World Cup Squad!`;
+      document.getElementById('tourneySubtitle').textContent = currentLang === 'TR' ? '80.000 kişilik stadyum ve milyonlar tek bir golünü bekliyor...' : 'Millions back home are watching your every touch...';
+
+      renderTourneyStage();
+      modal.classList.remove('hidden');
+      Sound.goal();
+    }
+
+    function getRandomTourneyOpponent() {
+      const candidates = COUNTRIES.filter(c => c.nameTr !== (player.country ? player.country.nameTr : ''));
+      return candidates[Math.floor(Math.random() * candidates.length)] || candidates[0];
+    }
+
+    function renderTourneyStage() {
+      const stageCard = document.getElementById('tourneyStageCard');
+      const actions = document.getElementById('tourneyActions');
+      if (!stageCard || !actions) return;
+
+      const myFlag = getCountryFlagHtml(player.country, 'w-6 h-4.5');
+      const oppFlag = getCountryFlagHtml(currentTourneyState.opponent, 'w-6 h-4.5');
+      const myName = currentLang === 'TR' ? player.country.nameTr : player.country.nameEn;
+      const oppName = currentLang === 'TR' ? currentTourneyState.opponent.nameTr : currentTourneyState.opponent.nameEn;
+
+      let stageLabel = currentLang === 'TR' ? 'ÇEYREK FİNAL' : 'QUARTER-FINAL';
+      if (currentTourneyState.stage === 'semi') stageLabel = currentLang === 'TR' ? 'YARI FİNAL' : 'SEMI-FINAL';
+      if (currentTourneyState.stage === 'final') stageLabel = currentLang === 'TR' ? '🏆 BÜYÜK FİNAL' : '🏆 GRAND FINAL';
+
+      stageCard.innerHTML = `
+        <div class="flex items-center justify-between border-b border-pitch-800 pb-2.5">
+          <span class="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-mono text-[10px] font-bold tracking-wider">
+            ${stageLabel}
+          </span>
+          <span class="text-xs text-slate-400 font-mono">${player.fullName} (${player.ovr} OVR)</span>
+        </div>
+
+        <!-- Head to Head Clash Box -->
+        <div class="grid grid-cols-5 items-center text-center py-2">
+          <div class="col-span-2 flex flex-col items-center gap-1">
+            <div class="p-1.5 rounded-xl bg-pitch-900 border border-pitch-800">${myFlag}</div>
+            <span class="text-xs font-bold text-white truncate max-w-[100px]">${myName}</span>
+          </div>
+
+          <div class="col-span-1 flex flex-col items-center">
+            <span class="text-xs font-mono font-black text-amber-400">VS</span>
+            <span class="text-[10px] text-slate-500">90 Dk</span>
+          </div>
+
+          <div class="col-span-2 flex flex-col items-center gap-1">
+            <div class="p-1.5 rounded-xl bg-pitch-900 border border-pitch-800">${oppFlag}</div>
+            <span class="text-xs font-bold text-white truncate max-w-[100px]">${oppName}</span>
+          </div>
+        </div>
+      `;
+
+      actions.innerHTML = `
+        <button onclick="playTourneyMatch('attack')" class="w-full p-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs flex items-center justify-between shadow-lg shadow-emerald-600/20 active:scale-95 transition">
+          <div class="flex items-center gap-2">
+            <span>⚡</span>
+            <span>${currentLang === 'TR' ? 'Hücum Resitali Yap (Gol & Zafer Ara)' : 'Attack with Flair (Seek Glory)'}</span>
+          </div>
+          <span class="text-[10px] font-mono opacity-80">%70 Şans</span>
+        </button>
+
+        <button onclick="playTourneyMatch('defense')" class="w-full p-3 rounded-xl bg-pitch-950 hover:bg-pitch-800 text-slate-200 border border-pitch-700 font-bold text-xs flex items-center justify-between active:scale-95 transition">
+          <div class="flex items-center gap-2">
+            <span>🛡️</span>
+            <span>${currentLang === 'TR' ? 'Taktik Disiplin & Kaptanlık Yap' : 'Tactical Discipline & Captaincy'}</span>
+          </div>
+          <span class="text-[10px] font-mono text-slate-400">%80 Şans</span>
+        </button>
+      `;
+    }
+
+    function playTourneyMatch(tactic) {
+      const stageCard = document.getElementById('tourneyStageCard');
+      const actions = document.getElementById('tourneyActions');
+      if (!stageCard || !actions) return;
+
+      const myName = currentLang === 'TR' ? player.country.nameTr : player.country.nameEn;
+      const oppName = currentLang === 'TR' ? currentTourneyState.opponent.nameTr : currentTourneyState.opponent.nameEn;
+
+      // Base win probability influenced by OVR
+      let winProb = tactic === 'attack' ? 0.70 : 0.75;
+      if (player.ovr >= 85) winProb += 0.12;
+      if (player.ovr >= 90) winProb += 0.08;
+
+      const won = Math.random() < winProb;
+      const playerGoal = Math.random() < 0.75;
+      const myScore = won ? (playerGoal ? 2 : 1) : (playerGoal ? 1 : 0);
+      const oppScore = won ? (myScore === 2 ? 1 : 0) : 2;
+
+      currentTourneyState.score = { player: myScore, opponent: oppScore };
+      currentTourneyState.playerScored = playerGoal;
+
+      if (won) {
+        Sound.goal();
+        if (currentTourneyState.stage === 'quarter') {
+          currentTourneyState.stage = 'semi';
+          currentTourneyState.opponent = getRandomTourneyOpponent();
+
+          stageCard.innerHTML = `
+            <div class="p-3 rounded-xl bg-emerald-950/60 border border-emerald-500/40 text-center space-y-1">
+              <span class="text-[10px] font-mono font-bold text-emerald-400 uppercase tracking-wider">🎉 ÇEYREK FİNAL GEÇİLDİ!</span>
+              <div class="text-xl font-display font-black text-white">${myName} ${myScore} - ${oppScore} ${oppName}</div>
+              <p class="text-xs text-slate-300">${playerGoal ? `⚽ 81' GOOOOL! ${player.fullName} füzesiyle yarı final biletini kaptın!` : 'Müthiş takım oyunuyla yarı finale yükseldiniz!'}</p>
+            </div>
+          `;
+
+          actions.innerHTML = `
+            <button onclick="renderTourneyStage()" class="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 text-pitch-950 font-display font-black text-xs uppercase tracking-wide flex items-center justify-center gap-2 shadow-lg shadow-amber-500/25 active:scale-95 transition">
+              <span>Yarı Finale İlerle →</span>
+            </button>
+          `;
+        } else if (currentTourneyState.stage === 'semi') {
+          currentTourneyState.stage = 'final';
+          currentTourneyState.opponent = getRandomTourneyOpponent();
+
+          stageCard.innerHTML = `
+            <div class="p-3 rounded-xl bg-emerald-950/60 border border-emerald-500/40 text-center space-y-1">
+              <span class="text-[10px] font-mono font-bold text-emerald-400 uppercase tracking-wider">🔥 BÜYÜK FİNALDESİNİZ!</span>
+              <div class="text-xl font-display font-black text-white">${myName} ${myScore} - ${oppScore} ${oppName}</div>
+              <p class="text-xs text-slate-300">${playerGoal ? `⚽ 88' ${player.fullName} ceza sahası dışından 90'a astı! Dünya Kupası Finalindeyiz!` : 'Muhteşem savunma direnciyle finale çıktınız!'}</p>
+            </div>
+          `;
+
+          actions.innerHTML = `
+            <button onclick="renderTourneyStage()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 text-pitch-950 font-display font-black text-sm uppercase tracking-wide flex items-center justify-center gap-2 shadow-xl shadow-amber-500/30 active:scale-95 transition">
+              <span>🏆 DÜNYA KUPASI BÜYÜK FİNALİNE ÇIK! →</span>
+            </button>
+          `;
+        } else if (currentTourneyState.stage === 'final') {
+          // CHAMPION!
+          player.stats.trophies = (player.stats.trophies || 0) + 1;
+          player.stats.worldCup = (player.stats.worldCup || 0) + 1;
+          player.stats.nationalCaps = (player.stats.nationalCaps || 0) + 7;
+          player.stats.nationalGoals = (player.stats.nationalGoals || 0) + (playerGoal ? 5 : 3);
+          player.marketValue += 22000000;
+          player.ovr += 2;
+
+          stageCard.innerHTML = `
+            <div class="p-4 rounded-xl bg-gradient-to-b from-amber-500/20 via-pitch-950 to-pitch-950 border-2 border-amber-500 text-center space-y-2">
+              <div class="text-3xl">🏆✨</div>
+              <span class="px-2.5 py-0.5 rounded-full bg-amber-500 text-pitch-950 font-display font-black text-[10px] uppercase">DÜNYA ŞAMPİYONU!</span>
+              <div class="text-2xl font-display font-black text-white">${myName} ${myScore} - ${oppScore} ${oppName}</div>
+              <p class="text-xs text-amber-200 leading-relaxed font-medium">
+                Tarih yazıldı! ${player.fullName} kaptanlığında ${myName} Dünya Kupası'nı kaldırdı! Milyonlar sokaklara döküldü, adın ülke futbol tarihine altın harflerle kazındı!
+              </p>
+            </div>
+          `;
+
+          addTimelineEvent({
+            age: currentTourneyState.age,
+            badge: '🏆 DÜNYA ŞAMPİYONU',
+            badgeColor: 'bg-amber-500/25 text-amber-300 border-amber-500/40',
+            title: currentLang === 'TR' ? `${myName} ile Dünya Kupası Şampiyonu!` : `World Cup Champions with ${myName}!`,
+            desc: currentLang === 'TR'
+              ? `80.000 seyirci önünde ${oppName} ekibini ${myScore}-${oppScore} mağlup ederek Dünya Kupası'nı kaldırdın. Ülkende bayram havası esiyor!`
+              : `Lifted the FIFA World Cup trophy after beating ${oppName} ${myScore}-${oppScore}. Nation celebrated in the streets!`,
+            statDelta: [
+              { text: '+1 Dünya Kupası 🏆', color: 'bg-amber-500/20 text-amber-300' },
+              { text: '+€22M Değer', color: 'bg-emerald-500/20 text-emerald-300' },
+              { text: '+2 OVR', color: 'bg-emerald-500/20 text-emerald-300' }
+            ]
+          });
+
+          actions.innerHTML = `
+            <button onclick="closeTourneyModal()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-lime-500 text-pitch-950 font-display font-black text-xs uppercase tracking-wide flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/25 active:scale-95 transition">
+              <span>🏆 Kupayla Kariyere Devam Et</span>
+            </button>
+          `;
+        }
+      } else {
+        // Eliminated with pride
+        player.stats.nationalCaps = (player.stats.nationalCaps || 0) + 4;
+        player.stats.nationalGoals = (player.stats.nationalGoals || 0) + (playerGoal ? 2 : 1);
+        player.ovr += 1;
+
+        stageCard.innerHTML = `
+          <div class="p-3.5 rounded-xl bg-rose-950/40 border border-rose-500/40 text-center space-y-1.5">
+            <span class="text-[10px] font-mono font-bold text-rose-400 uppercase tracking-wider">ELENME & ONURLU MÜCADELE</span>
+            <div class="text-xl font-display font-black text-white">${myName} ${myScore} - ${oppScore} ${oppName}</div>
+            <p class="text-xs text-slate-300">
+              Nefes kesen uzatma anlarında mağlup oldunuz. Ülken elenmenize rağmen seni ayakta alkışladı.
+            </p>
+          </div>
+        `;
+
+        addTimelineEvent({
+          age: currentTourneyState.age,
+          badge: 'MİLLİ GÖREV',
+          badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/30',
+          title: currentLang === 'TR' ? 'Dünya Kupası Macerası Sona Erdi' : 'World Cup Journey Concluded',
+          desc: currentLang === 'TR'
+            ? `${oppName} karşısında ${myScore}-${oppScore} sonuçla turnuvaya veda ettin. Gösterdiğin asil liderlik takdir topladı.`
+            : `Battled courageously in the World Cup against ${oppName}. Bowed out with pride.`,
+          statDelta: [{ text: '+1 OVR', color: 'bg-emerald-500/20 text-emerald-300' }]
+        });
+
+        actions.innerHTML = `
+          <button onclick="closeTourneyModal()" class="w-full py-3 rounded-xl bg-pitch-950 hover:bg-pitch-800 text-slate-200 border border-pitch-700 font-bold text-xs flex items-center justify-center gap-1.5 active:scale-95 transition">
+            <span>Kariyere Devam Et →</span>
+          </button>
+        `;
+      }
+
+      updateHUD();
+    }
+
+    function closeTourneyModal() {
+      const modal = document.getElementById('modalTournament');
+      if (modal) modal.classList.add('hidden');
+      resumeAfterDilemma();
+    }
+
     function checkAgeDilemmas(age) {
+      // Age 24 & Age 28: FIFA World Cup Tournament Journey
+      if (age === 24 || age === 28) {
+        if (player.ovr >= 68 && player.country) {
+          startWorldCupTournament(age);
+          return true;
+        }
+      }
+
       if (age === 13) {
         showDilemmaModal({
           badge: currentLang === 'TR' ? 'MEVKİ TERCİHİ (13 YAŞ)' : 'TACTICAL CROSSROAD (AGE 13)',
@@ -2874,6 +3375,63 @@
                     statDelta: [{ text: '💸 Para Battı', color: 'bg-rose-500/20 text-rose-300' }]
                   });
                 }
+                resumeAfterDilemma();
+              }
+            }
+          ]
+        });
+        return true;
+      }
+
+            // Age 27: Mega Transfer Market Crossroads (Prime Peak)
+      if (age === 27) {
+        showDilemmaModal({
+          badge: currentLang === 'TR' ? 'ZİRVE TRANSFERİ (27 YAŞ)' : 'CAREER PEAK CONTRACT (AGE 27)',
+          title: currentLang === 'TR' ? 'Kariyerinin En Büyük Sözleşmesi Masada!' : 'The Biggest Contract of Your Life!',
+          desc: currentLang === 'TR'
+            ? 'Kariyerinin en parlak dönemindesin (27 yaş). İki dev teklif masanda: Biri Şampiyonlar Ligi kupasını hedefleyen Avrupa Devi, diğeri servetini üçe katlayacak Körfez Kulübü!'
+            : 'At age 27, you reach absolute prime. An elite European powerhouse promises European silverware, while a Gulf sovereign club offers a life-changing mega-fortune!',
+          options: [
+            {
+              text: currentLang === 'TR' ? '👑 Avrupa Devine Git! (Şampiyonlar Ligi Hedefi, +3 OVR, +€15M Değer)' : '👑 Join European Giant! (UCL Contender, +3 OVR, +€15M Value)',
+              action: () => {
+                player.ovr += 3;
+                player.marketValue += 15000000;
+                player.bankBalance += 12000000;
+                showBreakingNews({
+                  tag: currentLang === 'TR' ? 'DEV TRANSFER' : 'BLOCKBUSTER MOVE',
+                  headline: currentLang === 'TR' ? '🔥 AVRUPA DEVİYLE ANLAŞMA SAĞLANDI!' : '🔥 SIGNED FOR EUROPEAN GIANTS!',
+                  sub: currentLang === 'TR' ? `${player.fullName} kupa avı için dev kulübe imzayı attı!` : `${player.fullName} commits to European elite!`
+                });
+                addTimelineEvent({
+                  age: 27,
+                  badge: 'DEV KULÜP',
+                  badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+                  title: currentLang === 'TR' ? 'Avrupa Zirvesine İmzayı Attın!' : 'Signed for European Elite!',
+                  desc: currentLang === 'TR' ? 'Şampiyonlar Ligi marşıyla sahaya çıkacaksın. Dünya futbolunun en prestijli vitrinindesin.' : 'Joined the European elite to chase continental glory.',
+                  statDelta: [{ text: '+3 OVR', color: 'bg-emerald-500/20 text-emerald-300' }, { text: '+€12M Maaş 💰', color: 'bg-emerald-500/20 text-emerald-300' }]
+                });
+                resumeAfterDilemma();
+              }
+            },
+            {
+              text: currentLang === 'TR' ? '💰 Körfez Krallarına İmzayı At! (+€45.000.000 Nakit Servet Patlaması)' : '💰 Gulf Mega-Contract (+€45,000,000 Pure Cash Wealth)',
+              action: () => {
+                player.bankBalance += 45000000;
+                player.assets.cars.push('Ultra Lüks Mega Yat');
+                showBreakingNews({
+                  tag: currentLang === 'TR' ? 'MİLYARLIK TRANSFER' : 'HISTORIC PAYDAY',
+                  headline: currentLang === 'TR' ? '💸 REKOR MAAŞLA İMZA ATILDI!' : '💸 ASTRONOMICAL DEAL SEALED!',
+                  sub: currentLang === 'TR' ? `${player.fullName} tarihin en çok kazanan futbolcularından biri oldu!` : `${player.fullName} signs record-breaking deal!`
+                });
+                addTimelineEvent({
+                  age: 27,
+                  badge: 'KÖRFEZ ŞEYHİ',
+                  badgeColor: 'bg-amber-500/25 text-amber-300 border-amber-500/40',
+                  title: currentLang === 'TR' ? 'Servetini Katladın: Mega Yat ve Lüks Yaşam' : 'Mega Payday: Ultra-Luxury Estate & Yacht',
+                  desc: currentLang === 'TR' ? 'Körfez ekibi kapına açık çek koydu. Aileni ve gelecek nesillerini garantiye aldın.' : 'Signed an astronomical contract securing multi-generational wealth.',
+                  statDelta: [{ text: '+€45.000.000 Servet 💰', color: 'bg-amber-500/20 text-amber-300' }, { text: '🛥️ Mega Yat', color: 'bg-yellow-500/20 text-yellow-300' }]
+                });
                 resumeAfterDilemma();
               }
             }
@@ -3552,6 +4110,27 @@
               </div>
               <p class="text-xs text-slate-300 mt-3 leading-relaxed">
                 ${goldenBootWon ? (currentLang === 'TR' ? 'Bir sezonda 30+ gol barajını aşarak Avrupa Gol Kralı oldun.' : 'Exceeded 30+ goals in a single season to win the Golden Boot.') : (currentLang === 'TR' ? 'Tek bir sezonda 30\'dan fazla gol atarak Gol Krallığı tacını takabilirsin.' : 'Requires 30+ goals in a single season.')}
+              </p>
+            </div>
+
+            <!-- World Cup Trophy Pedestal -->
+            <div class="p-4 rounded-2xl border transition ${(player.stats.worldCup || 0) > 0 ? 'bg-amber-500/20 border-amber-500/70 shadow-xl shadow-amber-500/20 ring-1 ring-amber-500/40' : 'bg-pitch-950/80 border-pitch-800/80'}">
+              <div class="flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                  <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-3xl ${(player.stats.worldCup || 0) > 0 ? 'bg-amber-500/30 text-amber-300 border border-amber-500/60' : 'bg-pitch-900 border border-pitch-800 text-slate-500'}">
+                    🌍
+                  </div>
+                  <div>
+                    <h4 class="font-bold text-sm text-white">${currentLang === 'TR' ? 'FIFA Dünya Kupası' : 'FIFA World Cup'}</h4>
+                    <div class="text-xs font-mono font-bold ${(player.stats.worldCup || 0) > 0 ? 'text-amber-400' : 'text-slate-400'}">
+                      ${(player.stats.worldCup || 0) > 0 ? `${player.stats.worldCup}x ${currentLang === 'TR' ? 'Dünya Şampiyonu 🏆' : 'World Champion 🏆'}` : (currentLang === 'TR' ? 'Kazanılmadı' : 'Not Won')}
+                    </div>
+                  </div>
+                </div>
+                ${!(player.stats.worldCup > 0) ? '<span class="px-2 py-0.5 rounded-full bg-pitch-900 border border-amber-500/30 text-[10px] text-amber-300 font-mono font-bold">KİLİTLİ 🔒</span>' : ''}
+              </div>
+              <p class="text-xs text-slate-300 mt-3 leading-relaxed">
+                ${(player.stats.worldCup || 0) > 0 ? (currentLang === 'TR' ? 'Milli Takımınla Dünya Kupası finalini kazanarak tarihin en büyük futbol mertebesine ulaştın!' : 'Conquered the globe with your nation to claim the ultimate football glory!') : (currentLang === 'TR' ? '24 ve 28 yaşlarında Dünya Kupası turnuvasını kazanarak vitrine ekleyebilirsin.' : 'Win the World Cup tournament at age 24 or 28 to unlock.')}
               </p>
             </div>
 
@@ -4527,6 +5106,7 @@
       const all = getStoredHallOfFame();
       const item = all.find(x => x.id === id);
       if (!item) return;
+      if (item.country) applyCountryTheme(item.country);
 
       const cardFlagEl = document.getElementById('cardFlag');
       if (cardFlagEl) cardFlagEl.innerHTML = getCountryFlagHtml(item.country, 'w-10 h-7');
@@ -4737,6 +5317,7 @@
       if (wallBtn) wallBtn.addEventListener('click', shareToHallOfFame);
 
       const restartGame = () => {
+        applyCountryTheme(null);
         if (window.pbTracker && window.pbTracker.logEvent) {
           window.pbTracker.logEvent('play_again', '/football-lottery', player ? player.fullName : 'Restart');
         }
