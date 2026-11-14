@@ -9,8 +9,8 @@
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
 
-  <title>Gizlilik Politikası, KVKK & Çerez Bildirimi | PratikBase</title>
-  <meta name="description" content="PratikBase Gizlilik Politikası, 6698 sayılı KVKK Aydınlatma Metni ve Çerez (Cookie) kullanım ilkeleri. Verilerinizin güvenliği ve istemci tarafı işleme güvencemiz.">
+  <title id="pageTitle">Gizlilik Politikası, KVKK & Çerez Bildirimi | PratikBase</title>
+  <meta name="description" id="metaDescription" content="PratikBase Gizlilik Politikası, 6698 sayılı KVKK Aydınlatma Metni ve Çerez (Cookie) kullanım ilkeleri. Verilerinizin güvenliği ve istemci tarafı işleme güvencemiz.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://pratikbase.com/gizlilik-politikasi/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%234f46e5'/%3E%3Cstop offset='100%25' stop-color='%2306b6d4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23bg)'/%3E%3Cpath d='M32 14 L46 20 L46 34 C46 44 32 50 32 50 C32 50 18 44 18 34 L18 20 Z' fill='%23ffffff'/%3E%3C/svg%3E">
@@ -40,8 +40,8 @@
 
   <!-- Header -->
   <header class="border-b border-slate-800/80 bg-slate-900/60 backdrop-blur-md sticky top-0 z-40">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <a href="/" class="flex items-center gap-3 group">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
+      <a href="/" class="flex items-center gap-3 group shrink-0">
         <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-cyan-400 flex items-center justify-center shadow-lg shadow-indigo-500/25 group-hover:scale-105 transition-transform">
           <i class="fa-solid fa-bolt text-white text-lg"></i>
         </div>
@@ -52,46 +52,71 @@
         </div>
       </a>
 
-      <a href="/" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold transition border border-slate-700 flex items-center gap-1.5">
-        <i class="fa-solid fa-arrow-left text-xs"></i>
-        <span>Ana Sayfaya Dön</span>
-      </a>
+      <!-- Language Selector & Return Button -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- Dual Language Switcher (TR / EN) -->
+        <div class="inline-flex items-center p-1 rounded-xl bg-slate-800/90 border border-slate-700/80 text-xs font-semibold shadow-inner">
+          <button id="btnLangTR" onclick="setPrivacyLang('TR')" class="px-2.5 py-1.5 rounded-lg transition-all flex items-center gap-1.5 bg-indigo-600 text-white shadow-sm font-bold">
+            <span class="text-xs">🇹🇷</span> <span class="hidden sm:inline">Türkçe</span>
+          </button>
+          <button id="btnLangEN" onclick="setPrivacyLang('EN')" class="px-2.5 py-1.5 rounded-lg transition-all flex items-center gap-1.5 text-slate-400 hover:text-white">
+            <span class="text-xs">🇬🇧</span> <span class="hidden sm:inline">English</span>
+          </button>
+        </div>
+
+        <a href="/" class="px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold transition border border-slate-700 flex items-center gap-1.5">
+          <i class="fa-solid fa-arrow-left text-xs"></i>
+          <span id="txtReturnHome">Ana Sayfa</span>
+        </a>
+      </div>
     </div>
   </header>
 
   <!-- Content -->
-  <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-1 w-full space-y-8">
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 flex-1 w-full space-y-8">
     
+    <!-- Header Title & Badges -->
     <div class="border-b border-slate-800 pb-6">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 text-xs font-semibold mb-3">
-        <i class="fa-solid fa-shield-halved text-indigo-400"></i>
-        <span>Yasal Bilgilendirme & Güvenlik</span>
+      <div class="flex flex-wrap items-center gap-2 mb-3">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 text-xs font-semibold" id="topBadge">
+          <i class="fa-solid fa-shield-halved text-indigo-400"></i>
+          <span>Yasal Bilgilendirme & Güvenlik</span>
+        </div>
+        <!-- Active Language Pill -->
+        <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-800 text-slate-300 border border-slate-700 text-[11px] font-mono">
+          <i class="fa-solid fa-globe text-indigo-400"></i>
+          <span id="activeLangLabel">Dil: Türkçe (TR)</span>
+        </div>
       </div>
-      <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+
+      <h1 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight" id="mainHeading">
         Gizlilik Politikası, KVKK & Çerez Bildirimi
       </h1>
-      <p class="text-slate-400 text-sm mt-2">
-        Son Güncelleme: 13 Kasım 2026 • 6698 Sayılı KVKK ve Küresel Gizlilik Standartlarına Tam Uyumlu
+      <p class="text-slate-400 text-xs sm:text-sm mt-2" id="lastUpdatedText">
+        Son Güncelleme: 14 Kasım 2026 • 6698 Sayılı KVKK ve Küresel Gizlilik Standartlarına (GDPR) Tam Uyumlu
       </p>
     </div>
 
     <!-- Core Assurance Banner -->
-    <div class="p-5 rounded-2xl bg-emerald-950/40 border border-emerald-500/30 flex items-start gap-4">
+    <div class="p-5 rounded-2xl bg-emerald-950/40 border border-emerald-500/30 flex items-start gap-4 shadow-lg shadow-emerald-950/20" id="assuranceBox">
       <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl shrink-0 mt-0.5">
         <i class="fa-solid fa-lock"></i>
       </div>
-      <div class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+      <div class="text-xs sm:text-sm text-slate-300 leading-relaxed" id="assuranceText">
         <strong class="text-emerald-300 block mb-1 font-semibold text-sm sm:text-base">%100 İstemci Tarafı (Client-Side) ve Sıfır Sunucu Kaydı Güvencesi:</strong>
         PratikBase platformunda yer alan araçlarda yüklediğiniz fotoğraflar (örn. e-Okul biyometrik fotoğrafları, besin etiketleri, hasar fotoğrafları) veya girdiğiniz finansal/kişisel veriler (maaş, ek ders, tapu bedeli vb.) <strong>asla sunucularımıza yüklenmez, kaydedilmez veya üçüncü şahıslara aktarılmaz.</strong> Tüm hesaplama ve görsel işleme işlemleri doğrudan kendi tarayıcınızın (telefon/bilgisayar) donanımında gerçekleşir.
       </div>
     </div>
 
-    <div class="space-y-6 text-sm text-slate-300 leading-relaxed">
+    <!-- =====================================================================
+         1. TURKISH CONTENT (VARSAYILAN TÜRKÇE)
+         ===================================================================== -->
+    <div id="contentTR" class="space-y-6 text-sm text-slate-300 leading-relaxed">
       
       <!-- Bölüm 1 -->
       <section class="space-y-2">
         <h2 class="text-lg font-bold text-white flex items-center gap-2">
-          <span class="w-6 h-6 rounded-lg bg-indigo-500/20 text-indigo-400 text-xs flex items-center justify-center">1</span>
+          <span class="w-6 h-6 rounded-lg bg-indigo-500/20 text-indigo-400 text-xs flex items-center justify-center font-mono font-bold">1</span>
           <span>Veri Sorumlusu ve Genel İlkeler</span>
         </h2>
         <p>
@@ -102,7 +127,7 @@
       <!-- Bölüm 2 -->
       <section class="space-y-2">
         <h2 class="text-lg font-bold text-white flex items-center gap-2">
-          <span class="w-6 h-6 rounded-lg bg-indigo-500/20 text-indigo-400 text-xs flex items-center justify-center">2</span>
+          <span class="w-6 h-6 rounded-lg bg-indigo-500/20 text-indigo-400 text-xs flex items-center justify-center font-mono font-bold">2</span>
           <span>Fotoğraf, Belge ve Görsel Verilerinin İşlenmesi</span>
         </h2>
         <p>
@@ -118,16 +143,16 @@
       <!-- Bölüm 3 -->
       <section class="space-y-2">
         <h2 class="text-lg font-bold text-white flex items-center gap-2">
-          <span class="w-6 h-6 rounded-lg bg-indigo-500/20 text-indigo-400 text-xs flex items-center justify-center">3</span>
+          <span class="w-6 h-6 rounded-lg bg-indigo-500/20 text-indigo-400 text-xs flex items-center justify-center font-mono font-bold">3</span>
           <span>Çerezler, Yerel Depolama, Topluluk Sohbeti ve Analitik</span>
         </h2>
         <p>
-          Çerezler ve tarayıcı depolama alanları, web sitemizi ziyaret ettiğinizde cihazınızda çalışan hafif veri mekanizmalarıdır. Platformumuzda bu teknolojiler şu meşru amaçlarla kullanılır:
+          Çerezler ve tarayıcı depolama alanları, web sitemizi ziyaret ettiğinizde cihazınızda çalışan hafif veri mekanizmalarıdır:
         </p>
         <ul class="list-disc list-inside space-y-1.5 pl-2 text-slate-400">
           <li><strong>Zorunlu ve Güvenlik Mekanizmaları:</strong> Altyapı güvenliğini sağlamak, kötü amaçlı bot saldırılarını engellemek ve sayfa yükleme hızını optimize etmek amacıyla kullanılır.</li>
-          <li><strong>Canlı Taraftar Sohbeti & Topluluk İletişimi:</strong> Canlı maç ve yayın akışı sayfalarında sunulan tribün sohbeti, Google Firebase altyapısı üzerinde çalışır. Kullanıcılar yalnızca kendi tercih ettikleri takma rumuz (nick) ve mesaj metnini herkese açık olarak iletir; e-posta, telefon veya T.C. kimlik numarası gibi kişisel veriler kesinlikle talep edilmez ve tutulmaz.</li>
-          <li><strong>Anonim Ziyaretçi & Trafik Ölçümü:</strong> Hangi araçların daha fazla ilgi gördüğünü anlamak ve sunucu yükünü dengelemek amacıyla tamamen <strong>anonimleştirilmiş</strong> teknik veriler (cihaz türü [mobil/masaüstü], işletim sistemi, ekran çözünürlüğü, yönlendiren kaynak [arama motoru, sosyal bağlantı vb.] ve ziyaret edilen araç sayfası) işlenir. Bu veriler hiçbir şekilde kimliğinizle, IP adresinizle veya özel verilerinizle eşleştirilmez. Oturum tekilliği için tarayıcınızın geçici oturum belleği (<code>sessionStorage</code>) kullanılır ve tarayıcı sekmesi kapatıldığında sıfırlanır.</li>
+          <li><strong>Canlı Taraftar Sohbeti & Efsaneler Duvarı:</strong> Canlı maç sayfalarındaki tribün sohbeti ve futbol piyangosundaki Efsaneler Duvarı, Google Firebase Realtime Database altyapısı üzerinde çalışır. Kullanıcılar yalnızca kendi tercih ettikleri takma rumuz (nick), oyun içi başarım kartları ve mesajlarını herkese açık olarak iletir; e-posta, telefon veya T.C. kimlik numarası gibi kişisel veriler kesinlikle talep edilmez ve tutulmaz.</li>
+          <li><strong>Anonim Ziyaretçi & Trafik Ölçümü:</strong> Hangi araçların daha fazla ilgi gördüğünü anlamak ve sunucu yükünü dengelemek amacıyla tamamen <strong>anonimleştirilmiş</strong> teknik veriler (cihaz türü [mobil/masaüstü], işletim sistemi, ekran çözünürlüğü, yönlendiren kaynak ve ziyaret edilen araç sayfası) işlenir. Bu veriler hiçbir şekilde kimliğinizle veya IP adresinizle eşleştirilmez.</li>
           <li><strong>Tercih ve Fonksiyonellik (Yerel Depolama):</strong> Kullanıcının çerez bildirimini onaylaması (<code>pratik_cookie_consent</code>) veya hesaplama tercihlerini hatırlaması amacıyla cihazınızın yerel depolama alanı (<code>localStorage</code>) kullanılır.</li>
           <li><strong>Üçüncü Taraf Reklam Çerezleri:</strong> Google AdSense gibi kurumsal reklam ağları, kullanıcılara ilgi alanlarına uygun reklamlar sunmak amacıyla üçüncü taraf çerezler yerleştirebilir. Tarayıcınızın ayarlarından çerezleri dilediğiniz zaman silebilir veya engelleyebilirsiniz.</li>
         </ul>
@@ -136,49 +161,141 @@
       <!-- Bölüm 4 -->
       <section class="space-y-2">
         <h2 class="text-lg font-bold text-white flex items-center gap-2">
-          <span class="w-6 h-6 rounded-lg bg-indigo-500/20 text-indigo-400 text-xs flex items-center justify-center">4</span>
+          <span class="w-6 h-6 rounded-lg bg-indigo-500/20 text-indigo-400 text-xs flex items-center justify-center font-mono font-bold">4</span>
           <span>Harici Bağlantılar ve Üçüncü Taraf Siteler / Markalar</span>
         </h2>
         <p>
-          Sitemiz, resmi mevzuat kaynaklarına (TÜİK, Resmi Gazete, MEB, Gelir İdaresi Başkanlığı, AFAD, Meteoroloji vb.) veya resmi yayın kuruluşlarına (TRT, ATV, RTÜK vb.) bağlantılar içerebilir:
+          Sitemiz, resmi mevzuat kaynaklarına (TÜİK, Resmi Gazete, MEB, Gelir İdaresi Başkanlığı, AFAD, Meteoroloji vb.) veya resmi yayın kuruluşlarına bağlantılar içerebilir. Bağlantı verilen harici sitelerin gizlilik politikalarından ve içeriklerinden PratikBase sorumlu tutulamaz.
         </p>
-        <ul class="list-disc list-inside space-y-1.5 pl-2 text-slate-400">
-          <li>Bağlantı verilen harici sitelerin gizlilik politikalarından ve içeriklerinden PratikBase sorumlu tutulamaz.</li>
-          <li>Platformumuzda yer alan TV kanalı isimleri, frekans bilgileri, lig adları ve logolar ilgili yayıncı kuruluşların tescilli ticari markalarıdır. Bu bilgiler 5846 sayılı FSEK ve basın/haber verme serbestisi kapsamında kamuya açık televizyon yayın akışını derlemek amacıyla bilgilendirme gayesiyle sunulmaktadır.</li>
-        </ul>
-      </section>
       </section>
 
       <!-- Bölüm 5 -->
       <section class="space-y-2">
         <h2 class="text-lg font-bold text-white flex items-center gap-2">
-          <span class="w-6 h-6 rounded-lg bg-indigo-500/20 text-indigo-400 text-xs flex items-center justify-center">5</span>
+          <span class="w-6 h-6 rounded-lg bg-indigo-500/20 text-indigo-400 text-xs flex items-center justify-center font-mono font-bold">5</span>
           <span>Kullanıcı Hakları (KVKK Madde 11)</span>
         </h2>
         <p>
-          6698 sayılı Kanun'un 11. maddesi uyarınca herkes; kişisel verilerinin işlenip işlenmediğini öğrenme, işlenmişse buna ilişkin bilgi talep etme, verilerin amacına uygun kullanılıp kullanılmadığını öğrenme haklarına sahiptir. Platformumuzda kişisel veri toplanmadığı ve saklanmadığı için sistemlerimizde profilinizle eşleşen bir kayıt tutulmamaktadır.
+          6698 sayılı Kanun'un 11. maddesi uyarınca herkes; kişisel verilerinin işlenip işlenmediğini öğrenme ve verilerin silinmesini talep etme haklarına sahiptir. Platformumuzda kişisel veri toplanmadığı ve sunucularda saklanmadığı için sistemlerimizde profilinizle eşleşen bir kimlik kaydı tutulmamaktadır.
         </p>
       </section>
 
       <!-- Bölüm 6 -->
       <section class="space-y-3">
         <h2 class="text-lg font-bold text-white flex items-center gap-2">
-          <span class="w-6 h-6 rounded-lg bg-indigo-500/20 text-indigo-400 text-xs flex items-center justify-center">6</span>
+          <span class="w-6 h-6 rounded-lg bg-indigo-500/20 text-indigo-400 text-xs flex items-center justify-center font-mono font-bold">6</span>
           <span>Politika Değişiklikleri ve Resmi İletişim</span>
         </h2>
         <p>
-          PratikBase, işbu Gizlilik Politikası hükümlerini dilediği zaman platformda yayınlamak suretiyle güncelleyebilir. Gizlilik politikamıza, kişisel verilerin korunmasına veya telif haklarına ilişkin her türlü soru, talep ve bildirimleriniz için resmi e-posta adreslerimiz üzerinden bizimle doğrudan iletişime geçebilirsiniz:
+          Gizlilik politikamıza, kişisel verilerin korunmasına veya telif haklarına ilişkin her türlü soru ve bildirimleriniz için resmi e-posta adreslerimiz üzerinden bizimle doğrudan iletişime geçebilirsiniz:
         </p>
         <div class="pt-2 flex flex-wrap items-center gap-3">
-          <a href="mailto:iletisim@pratikbase.com" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 hover:border-rose-500 text-slate-200 hover:text-white text-xs font-semibold transition group">
+          <a href="mailto:iletisim@pratikbase.com" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 hover:border-rose-500 text-slate-200 hover:text-white text-xs font-semibold transition group shadow-sm">
             <i class="fa-regular fa-envelope text-rose-400 text-sm"></i>
             <span>iletisim@pratikbase.com</span>
             <span class="text-slate-500 text-[11px] font-normal">(Türkiye İçi / Resmi Yazışmalar)</span>
           </a>
-          <a href="mailto:info@pratikbase.com" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 hover:border-indigo-500 text-slate-200 hover:text-white text-xs font-semibold transition group">
+          <a href="mailto:info@pratikbase.com" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 hover:border-indigo-500 text-slate-200 hover:text-white text-xs font-semibold transition group shadow-sm">
             <i class="fa-solid fa-globe text-indigo-400 text-sm"></i>
             <span>info@pratikbase.com</span>
             <span class="text-slate-500 text-[11px] font-normal">(International / Global Inquiries)</span>
+          </a>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- =====================================================================
+         2. ENGLISH CONTENT (FULL GDPR, CCPA & PRIVACY DISCLOSURE)
+         ===================================================================== -->
+    <div id="contentEN" class="hidden space-y-6 text-sm text-slate-300 leading-relaxed">
+      
+      <!-- Section 1 -->
+      <section class="space-y-2">
+        <h2 class="text-lg font-bold text-white flex items-center gap-2">
+          <span class="w-6 h-6 rounded-lg bg-indigo-500/20 text-indigo-400 text-xs flex items-center justify-center font-mono font-bold">1</span>
+          <span>Data Controller & Core Principles</span>
+        </h2>
+        <p>
+          At PratikBase (<strong>pratikbase.com</strong>), we are committed to upholding the highest privacy standards in compliance with the EU General Data Protection Regulation (<strong>GDPR</strong>), UK Data Protection Act, California Consumer Privacy Act (<strong>CCPA/CPRA</strong>), and global privacy frameworks. PratikBase is an open, client-side digital utilities portal that <strong>never requires mandatory account registration</strong>, and does not collect or store direct identifying details such as names, physical addresses, phone numbers, or government ID numbers.
+        </p>
+      </section>
+
+      <!-- Section 2 -->
+      <section class="space-y-2">
+        <h2 class="text-lg font-bold text-white flex items-center gap-2">
+          <span class="w-6 h-6 rounded-lg bg-indigo-500/20 text-indigo-400 text-xs flex items-center justify-center font-mono font-bold">2</span>
+          <span>Processing of Photos, Documents & Visual Data</span>
+        </h2>
+        <p>
+          Our web-based media and calculation tools (including Photo Resizer, OCR Label Reader, and Damage Report generators) utilize modern HTML5 Canvas, WebAssembly, and local Tesseract client-side engines:
+        </p>
+        <ul class="list-disc list-inside space-y-1.5 pl-2 text-slate-400">
+          <li><strong>No Remote Uploads:</strong> Selected files, photos, or inputs are never transmitted across the network to our remote servers.</li>
+          <li><strong>Ephemeral RAM Processing:</strong> All compression, OCR parsing, and mathematical calculations occur solely within your browser's temporary local memory and are purged immediately when the browser tab is closed.</li>
+          <li><strong>EXIF & Metadata:</strong> EXIF metadata (timestamps, camera details) is inspected exclusively on-device to imprint timestamps on user-generated PDF reports, with zero backend database storage.</li>
+        </ul>
+      </section>
+
+      <!-- Section 3 -->
+      <section class="space-y-2">
+        <h2 class="text-lg font-bold text-white flex items-center gap-2">
+          <span class="w-6 h-6 rounded-lg bg-indigo-500/20 text-indigo-400 text-xs flex items-center justify-center font-mono font-bold">3</span>
+          <span>Cookies, Local Storage, Community Features & Analytics</span>
+        </h2>
+        <p>
+          Cookies and local browser storage are minimal mechanisms utilized for legitimate operational requirements:
+        </p>
+        <ul class="list-disc list-inside space-y-1.5 pl-2 text-slate-400">
+          <li><strong>Strictly Necessary & Security Cookies:</strong> Deployed to ensure edge security, resist denial-of-service/bot abuse, and maintain rapid asset caching.</li>
+          <li><strong>Community Features & Hall of Fame:</strong> Interactive features (such as live match chats and the Football Lottery Hall of Fame) operate on Google Firebase Realtime Database. Users share only their chosen pseudonyms (nicknames) and custom simulation records; no sensitive or identifiable personal info is requested or logged.</li>
+          <li><strong>Anonymous Aggregated Analytics:</strong> To evaluate tool popularity and balance network loads, we monitor strictly <strong>de-identified</strong> metrics (device category [mobile/desktop], operating system, screen dimensions, referrer source, and visited tool page). These records are never linked to personal identities or private IP addresses. Session uniqueness is held temporarily in <code>sessionStorage</code> and resets upon closing the tab.</li>
+          <li><strong>Local Preferences (localStorage):</strong> Stored locally on your device to persist preference choices, such as cookie consent dismissal (<code>pratik_cookie_consent</code>) and calculation parameters.</li>
+          <li><strong>Third-Party Advertising:</strong> Certified ad partners (such as Google AdSense) may place third-party cookies to serve relevant contextual advertising. You may freely disable or clear cookies at any time via your browser preferences.</li>
+        </ul>
+      </section>
+
+      <!-- Section 4 -->
+      <section class="space-y-2">
+        <h2 class="text-lg font-bold text-white flex items-center gap-2">
+          <span class="w-6 h-6 rounded-lg bg-indigo-500/20 text-indigo-400 text-xs flex items-center justify-center font-mono font-bold">4</span>
+          <span>External Links & Third-Party Trademarks</span>
+        </h2>
+        <p>
+          PratikBase may reference external public portals (statistical authorities, meteorological data, television broadcast guides). PratikBase assumes no responsibility for external content or privacy practices. All referenced network names, sports league names, and emblems belong to their respective registered trademark holders and are utilized for descriptive, informational, and fair-use reporting purposes.
+        </p>
+      </section>
+
+      <!-- Section 5 -->
+      <section class="space-y-2">
+        <h2 class="text-lg font-bold text-white flex items-center gap-2">
+          <span class="w-6 h-6 rounded-lg bg-indigo-500/20 text-indigo-400 text-xs flex items-center justify-center font-mono font-bold">5</span>
+          <span>Your Rights Under GDPR & International Privacy Laws</span>
+        </h2>
+        <p>
+          Under GDPR Articles 15-22 and CCPA, global users possess rights to data access, rectification, portability, and erasure. Because PratikBase operates entirely without central user accounts or persistent identifying logs, our servers maintain zero personal profiles or tracking dossiers on individual visitors.
+        </p>
+      </section>
+
+      <!-- Section 6 -->
+      <section class="space-y-3">
+        <h2 class="text-lg font-bold text-white flex items-center gap-2">
+          <span class="w-6 h-6 rounded-lg bg-indigo-500/20 text-indigo-400 text-xs flex items-center justify-center font-mono font-bold">6</span>
+          <span>Policy Revisions & Contact Information</span>
+        </h2>
+        <p>
+          We reserve the right to revise this Privacy Policy periodically. For inquiries regarding our zero-retention architecture, data privacy, or fair-use questions, please contact our administrative team:
+        </p>
+        <div class="pt-2 flex flex-wrap items-center gap-3">
+          <a href="mailto:info@pratikbase.com" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 hover:border-indigo-500 text-slate-200 hover:text-white text-xs font-semibold transition group shadow-sm">
+            <i class="fa-solid fa-globe text-indigo-400 text-sm"></i>
+            <span>info@pratikbase.com</span>
+            <span class="text-slate-500 text-[11px] font-normal">(International & Global Inquiries)</span>
+          </a>
+          <a href="mailto:iletisim@pratikbase.com" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 hover:border-rose-500 text-slate-200 hover:text-white text-xs font-semibold transition group shadow-sm">
+            <i class="fa-regular fa-envelope text-rose-400 text-sm"></i>
+            <span>iletisim@pratikbase.com</span>
+            <span class="text-slate-500 text-[11px] font-normal">(Turkey & Domestic Legal Notice)</span>
           </a>
         </div>
       </section>
@@ -193,18 +310,124 @@
       <div>
         <span class="font-extrabold text-white">Pratik<span class="text-rose-400">Base</span></span>
         <span class="mx-2">•</span>
-        <span>© 2026 Tüm Hakları Saklıdır.</span>
+        <span id="footerCopyright">© 2026 Tüm Hakları Saklıdır.</span>
       </div>
       <div class="flex items-center gap-4 text-xs">
-        <a href="/gizlilik-politikasi/" class="text-indigo-400 hover:text-indigo-300 font-semibold underline">Gizlilik Politikası & KVKK</a>
-        <a href="/kullanim-kosullari/" class="hover:text-slate-200 transition">Kullanım Koşulları</a>
+        <a href="/gizlilik-politikasi/" class="text-indigo-400 hover:text-indigo-300 font-semibold underline" id="footerPrivacyLink">Gizlilik Politikası & KVKK</a>
+        <a href="/kullanim-kosullari/" class="hover:text-slate-200 transition" id="footerTermsLink">Kullanım Koşulları</a>
         <a href="mailto:iletisim@pratikbase.com" class="hover:text-white transition flex items-center gap-1.5"><i class="fa-regular fa-envelope"></i><span>iletisim@pratikbase.com</span></a>
-        <a href="/" class="hover:text-slate-200 transition">Ana Sayfa</a>
+        <a href="/" class="hover:text-slate-200 transition" id="footerHomeLink">Ana Sayfa</a>
       </div>
     </div>
   </footer>
 
   <!-- Realtime Analytics Tracker -->
   <script src="/assets/tracker.js" defer></script>
+
+  <!-- Dual Language Interactive Controller -->
+  <script>
+    let currentPrivacyLang = 'TR';
+
+    function setPrivacyLang(lang) {
+      currentPrivacyLang = lang;
+      try {
+        localStorage.setItem('pratik_privacy_lang', lang);
+      } catch(e) {}
+
+      const btnTR = document.getElementById('btnLangTR');
+      const btnEN = document.getElementById('btnLangEN');
+      const contentTR = document.getElementById('contentTR');
+      const contentEN = document.getElementById('contentEN');
+      const activeLangLabel = document.getElementById('activeLangLabel');
+      const topBadge = document.getElementById('topBadge');
+      const mainHeading = document.getElementById('mainHeading');
+      const lastUpdatedText = document.getElementById('lastUpdatedText');
+      const assuranceText = document.getElementById('assuranceText');
+      const txtReturnHome = document.getElementById('txtReturnHome');
+      const footerCopyright = document.getElementById('footerCopyright');
+      const footerPrivacyLink = document.getElementById('footerPrivacyLink');
+      const footerTermsLink = document.getElementById('footerTermsLink');
+      const footerHomeLink = document.getElementById('footerHomeLink');
+      const pageTitle = document.getElementById('pageTitle');
+
+      if (lang === 'EN') {
+        // Active button styles
+        btnEN.className = 'px-2.5 py-1.5 rounded-lg transition-all flex items-center gap-1.5 bg-indigo-600 text-white shadow-sm font-bold';
+        btnTR.className = 'px-2.5 py-1.5 rounded-lg transition-all flex items-center gap-1.5 text-slate-400 hover:text-white';
+
+        // Toggle content containers
+        contentTR.classList.add('hidden');
+        contentEN.classList.remove('hidden');
+
+        // Update header & badges
+        activeLangLabel.textContent = 'Language: English (EN)';
+        topBadge.innerHTML = '<i class="fa-solid fa-shield-halved text-indigo-400"></i> <span>Legal Disclosure & Security</span>';
+        mainHeading.textContent = 'Privacy Policy, GDPR & Cookie Notice';
+        lastUpdatedText.textContent = 'Last Updated: November 14, 2026 • Fully Compliant with GDPR (EU/UK), CCPA & KVKK Standards';
+        txtReturnHome.textContent = 'Back to Home';
+        pageTitle.textContent = 'Privacy Policy, GDPR & Cookie Notice | PratikBase';
+
+        // Assurance Box
+        assuranceText.innerHTML = `<strong class="text-emerald-300 block mb-1 font-semibold text-sm sm:text-base">%100 Client-Side & Zero Server Storage Guarantee:</strong>
+        Photos uploaded to PratikBase tools (e.g. photo resizers, OCR labels, damage files) and financial or personal parameters <strong>are NEVER transmitted to or stored on our servers.</strong> All processing occurs strictly within your browser's private local hardware.`;
+
+        // Footer translations
+        footerCopyright.textContent = '© 2026 All Rights Reserved.';
+        footerPrivacyLink.textContent = 'Privacy Policy & GDPR';
+        footerTermsLink.textContent = 'Terms of Use';
+        footerHomeLink.textContent = 'Home';
+
+        // Update URL query param smoothly
+        if (history.replaceState) {
+          const url = new URL(window.location);
+          url.searchParams.set('lang', 'en');
+          history.replaceState(null, '', url);
+        }
+      } else {
+        // Turkish active
+        btnTR.className = 'px-2.5 py-1.5 rounded-lg transition-all flex items-center gap-1.5 bg-indigo-600 text-white shadow-sm font-bold';
+        btnEN.className = 'px-2.5 py-1.5 rounded-lg transition-all flex items-center gap-1.5 text-slate-400 hover:text-white';
+
+        contentEN.classList.add('hidden');
+        contentTR.classList.remove('hidden');
+
+        activeLangLabel.textContent = 'Dil: Türkçe (TR)';
+        topBadge.innerHTML = '<i class="fa-solid fa-shield-halved text-indigo-400"></i> <span>Yasal Bilgilendirme & Güvenlik</span>';
+        mainHeading.textContent = 'Gizlilik Politikası, KVKK & Çerez Bildirimi';
+        lastUpdatedText.textContent = 'Son Güncelleme: 14 Kasım 2026 • 6698 Sayılı KVKK ve Küresel Gizlilik Standartlarına (GDPR) Tam Uyumlu';
+        txtReturnHome.textContent = 'Ana Sayfa';
+        pageTitle.textContent = 'Gizlilik Politikası, KVKK & Çerez Bildirimi | PratikBase';
+
+        assuranceText.innerHTML = `<strong class="text-emerald-300 block mb-1 font-semibold text-sm sm:text-base">%100 İstemci Tarafı (Client-Side) ve Sıfır Sunucu Kaydı Güvencesi:</strong>
+        PratikBase platformunda yer alan araçlarda yüklediğiniz fotoğraflar (örn. e-Okul biyometrik fotoğrafları, besin etiketleri, hasar fotoğrafları) veya girdiğiniz finansal/kişisel veriler (maaş, ek ders, tapu bedeli vb.) <strong>asla sunucularımıza yüklenmez, kaydedilmez veya üçüncü şahıslara aktarılmaz.</strong> Tüm hesaplama ve görsel işleme işlemleri doğrudan kendi tarayıcınızın (telefon/bilgisayar) donanımında gerçekleşir.`;
+
+        footerCopyright.textContent = '© 2026 Tüm Hakları Saklıdır.';
+        footerPrivacyLink.textContent = 'Gizlilik Politikası & KVKK';
+        footerTermsLink.textContent = 'Kullanım Koşulları';
+        footerHomeLink.textContent = 'Ana Sayfa';
+
+        if (history.replaceState) {
+          const url = new URL(window.location);
+          url.searchParams.delete('lang');
+          history.replaceState(null, '', url);
+        }
+      }
+    }
+
+    // Auto-detect language on load: query param, hash or saved preference
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const paramLang = urlParams.get('lang');
+      const hash = window.location.hash;
+      let saved = null;
+      try { saved = localStorage.getItem('pratik_privacy_lang'); } catch(e) {}
+
+      if (paramLang === 'en' || hash === '#en' || (saved === 'EN' && paramLang !== 'tr')) {
+        setPrivacyLang('EN');
+      } else {
+        setPrivacyLang('TR');
+      }
+    });
+  </script>
 </body>
 </html>

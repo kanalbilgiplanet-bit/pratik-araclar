@@ -14,6 +14,34 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- Smart Bot & User Redirect Router -->
+  <script>
+    (function() {
+      var p = window.location.pathname.toLowerCase().replace(/\/+$/, '');
+      var map = {
+        '/privacy': '/gizlilik-politikasi/?lang=en',
+        '/privacy-policy': '/gizlilik-politikasi/?lang=en',
+        '/kvkk': '/gizlilik-politikasi/',
+        '/terms': '/kullanim-kosullari/',
+        '/terms-of-service': '/kullanim-kosullari/',
+        '/terms-and-conditions': '/kullanim-kosullari/',
+        '/tos': '/kullanim-kosullari/',
+        '/legal': '/kullanim-kosullari/',
+        '/imprint': '/kullanim-kosullari/',
+        '/impressum': '/kullanim-kosullari/',
+        '/about': '/#hakkinda',
+        '/about-us': '/#hakkinda',
+        '/team': '/#hakkinda',
+        '/contact': '/#iletisim',
+        '/contact-us': '/#iletisim',
+        '/support': '/#iletisim',
+        '/help': '/#iletisim'
+      };
+      if (map[p]) {
+        window.location.replace(map[p]);
+      }
+    })();
+  </script>
 </head>
 <body class="bg-[#0b0f19] text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-indigo-500 selection:text-white">
 
