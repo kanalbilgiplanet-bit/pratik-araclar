@@ -560,9 +560,15 @@
             </div>
           </div>
 
-          <!-- Fast action controls: AutoPlay + Speed (1x, 2x, 4x, 8x) + Restart -->
+          <!-- Fast action controls: Advance Year + AutoPlay + Speed (1x, 2x, 4x, 8x) + Restart -->
           <div class="flex flex-wrap items-center gap-2 shrink-0">
-            <button id="btnAutoPlay" class="px-3.5 py-2 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-slate-200 text-xs font-bold transition border border-pitch-700 flex items-center gap-1.5 shadow-md">
+            <button id="btnAdvanceYearTop" class="px-3 sm:px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-lime-500 hover:from-emerald-400 hover:to-lime-400 text-pitch-950 font-display font-black text-xs uppercase tracking-wide transition border border-emerald-400/50 flex items-center gap-1.5 shadow-md shadow-emerald-500/20 active:scale-95" title="Sonraki Yıla Geç">
+              <i class="fa-solid fa-forward-step text-pitch-950 text-xs"></i>
+              <span id="txtAdvanceBtnTop">1 Yıl İlerle</span>
+              <span class="px-1.5 py-0.5 rounded bg-pitch-950/30 text-[10px] font-mono font-bold" id="badgeNextAgeTop">Yaş: 1</span>
+            </button>
+
+            <button id="btnAutoPlay" class="px-3 py-2 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-slate-200 text-xs font-bold transition border border-pitch-700 flex items-center gap-1.5 shadow-md">
               <i class="fa-solid fa-play text-emerald-400" id="autoPlayIcon"></i>
               <span id="txtAutoPlay">Otomatik İlerle</span>
             </button>
@@ -575,29 +581,31 @@
               <button onclick="setSpeed(8)" id="spdBtn8" class="px-2 py-1 rounded-lg text-xs font-bold transition text-slate-400 hover:text-white">8x</button>
             </div>
 
-            <button id="btnRestartDirect" class="px-3 py-2 rounded-xl bg-pitch-800 hover:bg-rose-950/60 text-slate-400 hover:text-rose-400 text-xs font-bold transition border border-pitch-700 shadow-md" title="Yeniden Doğ">
+            <button id="btnRestartDirect" class="px-2.5 py-2 rounded-xl bg-pitch-800 hover:bg-rose-950/60 text-slate-400 hover:text-rose-400 text-xs font-bold transition border border-pitch-700 shadow-md" title="Yeniden Doğ">
               <i class="fa-solid fa-rotate-right"></i>
             </button>
           </div>
         </div>
       </div>
 
-      <!-- Timeline Container (Newest Events On Top, Extra Bottom Padding So Button Never Covers Cards) -->
-      <div class="relative pl-6 sm:pl-8 space-y-4 pb-36 before:content-[''] before:absolute before:left-2 sm:before:left-3 before:top-2 before:bottom-36 before:w-0.5 before:bg-gradient-to-b before:from-emerald-500 before:via-pitch-700 before:to-slate-800" id="timelineList">
+      <!-- Timeline Container (Newest Events On Top, Extra Bottom Padding So Floating Dock Never Covers Cards) -->
+      <div class="relative pl-6 sm:pl-8 space-y-4 pb-32 sm:pb-36 before:content-[''] before:absolute before:left-2 sm:before:left-3 before:top-2 before:bottom-32 sm:before:bottom-36 before:w-0.5 before:bg-gradient-to-b before:from-emerald-500 before:via-pitch-700 before:to-slate-800" id="timelineList">
         <!-- Yearly event cards will be dynamically prepended here (newest on top) -->
       </div>
 
-      <!-- Advance Age Button Bar (Sticky at bottom when needed) -->
-      <div id="advanceBar" class="sticky bottom-6 z-30 pt-4 flex flex-wrap items-center justify-center gap-3">
-        <button id="btnEarlyRetire" onclick="finishCareerAndShowJubilee()" class="hidden py-3 px-4 rounded-2xl bg-pitch-900 hover:bg-rose-950/60 text-slate-300 hover:text-rose-300 border border-pitch-700 font-bold text-xs transition flex items-center gap-1.5 shadow-lg active:scale-95">
-          <i class="fa-solid fa-flag-checkered text-amber-400"></i>
-          <span id="txtEarlyRetire">Kramponları As (Jübile)</span>
-        </button>
-        <button id="btnAdvanceYear" class="py-3.5 px-8 rounded-2xl bg-gradient-to-r from-emerald-500 to-lime-500 hover:from-emerald-400 hover:to-lime-400 text-pitch-950 font-display font-black text-base tracking-wide uppercase shadow-2xl shadow-emerald-500/30 active:scale-[0.98] transition flex items-center gap-2 border border-emerald-400/40">
-          <span id="txtAdvanceBtn">SONRAKİ YILA GEÇ</span>
-          <span class="px-2 py-0.5 rounded bg-pitch-950/30 text-xs font-mono font-bold" id="badgeNextAge">Yaş: 1</span>
-          <i class="fa-solid fa-arrow-right"></i>
-        </button>
+      <!-- Floating Bottom Action Dock (Fixed at bottom, never forces user to scroll down) -->
+      <div id="advanceBar" class="fixed bottom-3 sm:bottom-5 inset-x-0 z-30 flex items-center justify-center pointer-events-none px-3">
+        <div class="pointer-events-auto flex items-center gap-2 p-1.5 sm:p-2 rounded-2xl bg-pitch-950/90 backdrop-blur-md border border-emerald-500/40 shadow-2xl shadow-black/90 max-w-sm sm:max-w-md w-full justify-between">
+          <button id="btnEarlyRetire" onclick="finishCareerAndShowJubilee()" class="hidden py-2 sm:py-2.5 px-3 rounded-xl bg-pitch-900/90 hover:bg-rose-950 text-slate-300 hover:text-rose-300 border border-pitch-700 font-bold text-xs transition flex items-center gap-1.5 shadow active:scale-95 shrink-0" title="Erken Jübile Yap">
+            <i class="fa-solid fa-flag-checkered text-amber-400"></i>
+            <span id="txtEarlyRetire" class="hidden xs:inline">Jübile</span>
+          </button>
+          <button id="btnAdvanceYear" class="flex-1 py-2.5 sm:py-3 px-4 sm:px-6 rounded-xl bg-gradient-to-r from-emerald-500 via-emerald-400 to-lime-400 hover:from-emerald-400 hover:to-lime-300 text-pitch-950 font-display font-black text-xs sm:text-sm tracking-wide uppercase shadow-lg shadow-emerald-500/25 active:scale-[0.98] transition flex items-center justify-center gap-2 border border-emerald-300/40">
+            <span id="txtAdvanceBtn">SONRAKİ YILA GEÇ</span>
+            <span class="px-2 py-0.5 rounded bg-pitch-950/30 text-xs font-mono font-bold" id="badgeNextAge">Yaş: 1</span>
+            <i class="fa-solid fa-arrow-right text-xs"></i>
+          </button>
+        </div>
       </div>
 
     </div>
@@ -1945,6 +1953,7 @@
       setIfExists('txtHudOvr', 'textContent', dict.hudOvr);
 
       setIfExists('txtAdvanceBtn', 'textContent', dict.advanceBtn);
+      setIfExists('txtAdvanceBtnTop', 'textContent', currentLang === 'TR' ? '1 Yıl İlerle' : 'Advance 1 Yr');
       setIfExists('txtAutoPlay', 'textContent', isAutoPlaying ? dict.autoPlayStop : dict.autoPlay);
       setIfExists('txtRetirementSubtitle', 'textContent', dict.jubileeSub);
       setIfExists('txtShareWA', 'textContent', dict.shareWA);
@@ -2545,11 +2554,10 @@
         }
       }
       const badge = document.getElementById('badgeNextAge');
-      if (nextAge <= 40) {
-        badge.textContent = currentLang === 'TR' ? `Yaş: ${nextAge}` : `Age: ${nextAge}`;
-      } else {
-        badge.textContent = currentLang === 'TR' ? 'Jübile' : 'Retire';
-      }
+      const badgeTop = document.getElementById('badgeNextAgeTop');
+      const txt = nextAge <= 40 ? (currentLang === 'TR' ? `Yaş: ${nextAge}` : `Age: ${nextAge}`) : (currentLang === 'TR' ? 'Jübile' : 'Retire');
+      if (badge) badge.textContent = txt;
+      if (badgeTop) badgeTop.textContent = txt;
     }
 
     /* =====================================================================
@@ -6059,8 +6067,10 @@ function finishCareerAndShowJubilee() {
       // Spin & Born
       document.getElementById('btnSpinBorn').addEventListener('click', startBirthRoulette);
 
-      // Advance 1 Year
+      // Advance 1 Year (Both floating bottom dock and top banner button)
       document.getElementById('btnAdvanceYear').addEventListener('click', advanceOneYear);
+      const btnAdvTop = document.getElementById('btnAdvanceYearTop');
+      if (btnAdvTop) btnAdvTop.addEventListener('click', advanceOneYear);
 
       // Auto Play
       document.getElementById('btnAutoPlay').addEventListener('click', toggleAutoPlay);
