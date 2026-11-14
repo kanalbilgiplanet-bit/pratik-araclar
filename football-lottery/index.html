@@ -253,7 +253,7 @@
           <div class="flex flex-col">
             <span class="font-display font-bold text-white text-base tracking-wide flex items-center gap-1.5">
               THE FOOTBALL <span class="text-emerald-400">LOTTERY</span>
-              <span class="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold">V2.4</span>
+              <span class="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold">V2.5</span>
             </span>
             <span class="text-[10px] text-slate-400 font-medium" id="txtSubtitleNav">Futbolcu Doğum Piyangosu</span>
           </div>
@@ -780,6 +780,11 @@
               <div class="text-slate-400 text-[10px] uppercase font-bold" id="txtCardTrophiesLabel">Kupa</div>
               <div class="text-sm sm:text-base font-display font-black text-yellow-300" id="cardTotalTrophies">7</div>
             </div>
+          </div>
+
+          <!-- Detailed Trophy Breakdown Badges -->
+          <div id="cardTrophyBreakdownRow" class="hidden flex flex-wrap items-center justify-center gap-1.5 pt-1 text-[10px] font-mono font-bold">
+            <!-- Dynamically populated e.g. 1x 🌍 Dünya Kupası • 2x 🌟 Şampiyonlar Ligi • 4x 🏆 Lig • 3x 🥇 Ulusal Kupa -->
           </div>
 
           <!-- Club History Badges -->
@@ -2711,7 +2716,7 @@
       if (age === 14) {
         title = currentLang === 'TR' ? 'Genç Milli Takım (U15) Daveti' : 'U15 Youth National Team Call-up';
         desc = currentLang === 'TR'
-          ? `${player.country.nameTr} U15 Milli Takımı'na seçildin! Göğsünde ay-yıldız / ulusal bayrakla ilk uluslararası turnuvana çıktın.`
+          ? `${player.country.nameTr} U15 Milli Takımı'na seçildin! Göğsünde ${player.country.nameTr === 'Türkiye' ? 'ay-yıldızlı şanlı bayrakla' : (player.country.flag + ' ' + player.country.nameTr + ' armasıyla')} ilk uluslararası turnuvana çıktın.`
           : `Selected for the ${player.country.nameEn} U15 National Team! You represented your country internationally for the first time.`;
         player.stats.nationalCaps += 3;
         player.ovr += 4;
@@ -2821,11 +2826,40 @@
         leagueRank = Math.floor(Math.random() * 4 + 5);
       }
 
-      // Trophy roll
-      const wonTrophy = (leagueRank === 1) || (Math.random() * 100 < (player.currentClub.prestige * 0.25));
-      if (wonTrophy) {
+      // Realistic Trophy roll with detailed category tracking
+      let wonLeague = false;
+      let wonUcl = false;
+      let wonDomesticCup = false;
+      let wonSuperCup = false;
+
+      if (leagueRank === 1) {
+        wonLeague = true;
+        player.stats.leagueTitles = (player.stats.leagueTitles || 0) + 1;
         player.stats.trophies++;
       }
+
+      // Continental Champions League Cup roll (top clubs & high OVR)
+      if (player.currentClub.prestige >= 88 && player.ovr >= 80 && Math.random() < 0.32) {
+        wonUcl = true;
+        player.stats.uclTrophies = (player.stats.uclTrophies || 0) + 1;
+        player.stats.trophies++;
+      }
+
+      // Domestic Cup roll
+      if (!wonLeague && (Math.random() * 100 < (player.currentClub.prestige * 0.22))) {
+        wonDomesticCup = true;
+        player.stats.domesticCups = (player.stats.domesticCups || 0) + 1;
+        player.stats.trophies++;
+      }
+
+      // Super Cup roll
+      if ((wonLeague || wonUcl) && Math.random() < 0.25) {
+        wonSuperCup = true;
+        player.stats.superCups = (player.stats.superCups || 0) + 1;
+        player.stats.trophies++;
+      }
+
+      const wonTrophy = wonLeague || wonUcl || wonDomesticCup || wonSuperCup;
 
       // Top Scorer / Altın Ayakkabı calculation
       let isTopScorer = false;
@@ -4144,56 +4178,63 @@
         ]
       }),
 
-      national_team_or_club: (age) => ({
-        scene: {
-          locationTr: 'Milli Takım Tesisleri - Basın Odası',
-          locationEn: 'National Team Training Complex',
-          moodTr: '"Göğsündeki bayrak mı, cebindeki kulüp primleri mi?"',
-          moodEn: '"The crest of your homeland vs high-stakes club silverware?"',
-          icon: '🇹🇷',
-          imageUrl: 'https://images.unsplash.com/photo-1518091043644-c1d4457512c6?auto=format&fit=crop&w=800&q=80',
-          ageTagTr: `${age} YAŞ • MİLLİ FEDAKARLIK`,
-          ageTagEn: `AGE ${age} • NATIONAL SACRIFICE`
-        },
-        badge: currentLang === 'TR' ? `MİLLİ YOL AYRIMI (${age} YAŞ)` : `NATION OR CLUB (${age} YAŞ)`,
-        title: currentLang === 'TR' ? 'Kritik Yol Ayrımı: Vatan mı Kulüp mü?' : 'Critical Crossroad: Homeland vs Club Final?',
-        desc: currentLang === 'TR'
-          ? 'Kritik kupa maçı öncesi milli takımın eleme maçı var. Kulüp başkanı riske girmeni istemiyor ama ülken seni bekliyor!'
-          : 'Crucial European ties clash with high-stakes international qualifiers. Your club chair urges you to withdraw from national camp.',
-        options: [
-          {
-            text: currentLang === 'TR' ? '🇹🇷 Vatan Çağırıyor! Milli Takım Kampına Koş (+Milli Gurur, Taraftar Aşkı)' : '🇹🇷 Answer the Homeland Call! Report to Camp (+National Hero)',
-            action: () => {
-              player.stats.nationalCaps += 2;
-              player.clutch += 8;
-              addTimelineEvent({
-                age,
-                badge: 'MİLLİ KAHRAMAN',
-                badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/30',
-                title: currentLang === 'TR' ? 'Milli Formayla Destan Yazdın!' : 'National Hero: Put Country First!',
-                desc: currentLang === 'TR' ? 'Ülken için canını dişine taktın ve son dakikada attığın golle milli takımı finallere taşıdın.' : 'Carried your nation into major tournament finals with a decisive winner.',
-                statDelta: [{ text: '+2 Milli Maç 🌍', color: 'bg-rose-500/20 text-rose-300' }, { text: '+8 Soğukkanlılık', color: 'bg-amber-500/20 text-amber-300' }]
-              });
-              resumeAfterDilemma();
-            }
+      national_team_or_club: (age) => {
+        const flag = (player && player.country && player.country.flag) ? player.country.flag : '🌍';
+        const cNameTr = (player && player.country && player.country.nameTr) ? player.country.nameTr : 'Milli Takım';
+        const cNameEn = (player && player.country && player.country.nameEn) ? player.country.nameEn : 'National Team';
+        const cName = currentLang === 'TR' ? cNameTr : cNameEn;
+
+        return {
+          scene: {
+            locationTr: `${cNameTr} Milli Takım Tesisleri - Basın Odası`,
+            locationEn: `${cNameEn} National Team Complex - Press Room`,
+            moodTr: '"Göğsündeki bayrak mı, cebindeki kulüp primleri mi?"',
+            moodEn: '"The crest of your homeland vs high-stakes club silverware?"',
+            icon: flag,
+            imageUrl: 'https://images.unsplash.com/photo-1518091043644-c1d4457512c6?auto=format&fit=crop&w=800&q=80',
+            ageTagTr: `${age} YAŞ • ${cNameTr.toUpperCase()} MİLLİ FEDAKARLIK`,
+            ageTagEn: `AGE ${age} • ${cNameEn.toUpperCase()} NATIONAL SACRIFICE`
           },
-          {
-            text: currentLang === 'TR' ? '🏆 Kulüpte Kal: Tarihi Kupa Maçına Odaklan (+Kulüp Sadakati, Prim)' : '🏆 Stay with Club: Hunt European Silverware (+Club Bonus)',
-            action: () => {
-              player.bankBalance += 1000000;
-              addTimelineEvent({
-                age,
-                badge: 'KULÜP ODAĞI',
-                badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
-                title: currentLang === 'TR' ? 'Kulübünle Tarihi Kupa Sezonu' : 'Stayed and Lifted Club Silverware',
-                desc: currentLang === 'TR' ? 'Kulüp yönetimi sana minnettar kaldı ve yüklü bir şampiyonluk primi ödedi.' : 'The board rewarded your focus with a handsome European tournament bonus.',
-                statDelta: [{ text: '+€1.000.000 Prim 💰', color: 'bg-emerald-500/20 text-emerald-300' }]
-              });
-              resumeAfterDilemma();
+          badge: currentLang === 'TR' ? `MİLLİ YOL AYRIMI (${age} YAŞ)` : `NATION OR CLUB (${age} YAŞ)`,
+          title: currentLang === 'TR' ? `${cNameTr} Forması mı, Kulüp Şampiyonluğu mu?` : `${cNameEn} Homeland Duty vs Club Final?`,
+          desc: currentLang === 'TR'
+            ? `Kritik kupa maçı öncesi ${cNameTr} milli takımının tarihi eleme maçı var. Kulüp başkanı riske girmeni istemiyor ama ${cNameTr} halkı seni bekliyor!`
+            : `Crucial club ties clash with international qualifiers. Your club urges you to withdraw, but the entire ${cNameEn} nation looks up to you!`,
+          options: [
+            {
+              text: currentLang === 'TR' ? `${flag} Vatan Çağırıyor! ${cNameTr} Kampına Koş (+Milli Gurur, Taraftar Aşkı)` : `${flag} Answer ${cNameEn}'s Call! Report to Camp (+National Hero)`,
+              action: () => {
+                player.stats.nationalCaps += 2;
+                player.clutch += 8;
+                addTimelineEvent({
+                  age,
+                  badge: 'MİLLİ KAHRAMAN',
+                  badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/30',
+                  title: currentLang === 'TR' ? `${cNameTr} Formasıyla Destan Yazdın!` : `Hero of ${cNameEn}: Put Country First!`,
+                  desc: currentLang === 'TR' ? `${cNameTr} için canını dişine taktın ve son dakikada attığın golle milli takımı finallere taşıdın.` : `Carried ${cNameEn} into major tournament finals with a decisive winner.`,
+                  statDelta: [{ text: `+2 Milli Maç (${flag})`, color: 'bg-rose-500/20 text-rose-300' }, { text: '+8 Soğukkanlılık', color: 'bg-amber-500/20 text-amber-300' }]
+                });
+                resumeAfterDilemma();
+              }
+            },
+            {
+              text: currentLang === 'TR' ? '🏆 Kulüpte Kal: Tarihi Kupa Maçına Odaklan (+Kulüp Sadakati, Prim)' : '🏆 Stay with Club: Hunt European Silverware (+Club Bonus)',
+              action: () => {
+                player.bankBalance += 1000000;
+                addTimelineEvent({
+                  age,
+                  badge: 'KULÜP ODAĞI',
+                  badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+                  title: currentLang === 'TR' ? 'Kulübünle Tarihi Kupa Sezonu' : 'Stayed and Lifted Club Silverware',
+                  desc: currentLang === 'TR' ? 'Kulüp yönetimi sana minnettar kaldı ve yüklü bir şampiyonluk primi ödedi.' : 'The board rewarded your focus with a handsome European tournament bonus.',
+                  statDelta: [{ text: '+€1.000.000 Prim 💰', color: 'bg-emerald-500/20 text-emerald-300' }]
+                });
+                resumeAfterDilemma();
+              }
             }
-          }
-        ]
-      }),
+          ]
+        };
+      },
 
       tactical_clash: (age) => ({
         scene: {
@@ -4735,23 +4776,77 @@
               </p>
             </div>
 
-            <!-- Team Trophies Cabinet -->
-            <div class="p-4 rounded-2xl border transition ${trophiesCount > 0 ? 'bg-emerald-500/10 border-emerald-500/50 shadow-lg shadow-emerald-500/10' : 'bg-pitch-950/80 border-pitch-800/80'}">
-              <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-3xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
-                  🏆
-                </div>
-                <div>
-                  <h4 class="font-bold text-sm text-white">${currentLang === 'TR' ? 'Kazanılan Kupalar' : 'Team Trophies'}</h4>
-                  <div class="text-xs font-mono font-bold text-emerald-400">
-                    ${trophiesCount} ${currentLang === 'TR' ? 'Şampiyonluk Kupası' : 'Trophies Won'}
+            <!-- Team Trophies Cabinet with Detailed Breakdown -->
+            ${(() => {
+              const tb = getTrophyBreakdown(player.stats);
+              return `
+              <div class="p-4 sm:p-5 rounded-2xl border transition ${trophiesCount > 0 ? 'bg-emerald-500/10 border-emerald-500/50 shadow-lg shadow-emerald-500/10' : 'bg-pitch-950/80 border-pitch-800/80'} space-y-3">
+                <div class="flex items-center justify-between gap-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-3xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                      🏆
+                    </div>
+                    <div>
+                      <h4 class="font-bold text-sm text-white">${currentLang === 'TR' ? 'Kazanılan Kupalar & Müze Vitrini' : 'Trophy Cabinet & Honors'}</h4>
+                      <div class="text-xs font-mono font-bold text-emerald-400">
+                        ${trophiesCount} ${currentLang === 'TR' ? 'Toplam Şampiyonluk' : 'Total Trophies'}
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <p class="text-xs text-slate-300 mt-3 leading-relaxed">
-                ${currentLang === 'TR' ? 'Lig şampiyonlukları, ulusal kupalar ve Avrupa zaferleriyle dolu bir müze vitrini.' : 'League titles, national cups, and continental triumphs.'}
-              </p>
-            </div>
+
+                ${trophiesCount > 0 ? `
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 text-xs">
+                  ${tb.wc > 0 ? `
+                  <div class="p-2.5 rounded-xl bg-amber-950/40 border border-amber-500/50 flex items-center gap-2.5 text-amber-300">
+                    <span class="text-xl shrink-0">🌍</span>
+                    <div class="min-w-0">
+                      <div class="font-bold text-white truncate">${tb.wc}x ${currentLang === 'TR' ? 'FIFA Dünya Kupası' : 'FIFA World Cup'}</div>
+                      <div class="text-[10px] text-amber-400/80 font-mono">${currentLang === 'TR' ? 'Milli Takım Dünya Şampiyonu' : 'World Champion'}</div>
+                    </div>
+                  </div>` : ''}
+
+                  ${tb.ucl > 0 ? `
+                  <div class="p-2.5 rounded-xl bg-indigo-950/40 border border-indigo-500/50 flex items-center gap-2.5 text-indigo-300">
+                    <span class="text-xl shrink-0">🌟</span>
+                    <div class="min-w-0">
+                      <div class="font-bold text-white truncate">${tb.ucl}x ${currentLang === 'TR' ? 'UEFA Şampiyonlar Ligi' : 'Champions League'}</div>
+                      <div class="text-[10px] text-indigo-400/80 font-mono">${currentLang === 'TR' ? 'Avrupa / Kıta Şampiyonu' : 'Continental Cup'}</div>
+                    </div>
+                  </div>` : ''}
+
+                  ${tb.league > 0 ? `
+                  <div class="p-2.5 rounded-xl bg-emerald-950/40 border border-emerald-500/50 flex items-center gap-2.5 text-emerald-300">
+                    <span class="text-xl shrink-0">🏆</span>
+                    <div class="min-w-0">
+                      <div class="font-bold text-white truncate">${tb.league}x ${currentLang === 'TR' ? 'Ulusal Lig Şampiyonluğu' : 'League Championship'}</div>
+                      <div class="text-[10px] text-emerald-400/80 font-mono">${currentLang === 'TR' ? 'Lig Kupası Zaferi' : 'League Title'}</div>
+                    </div>
+                  </div>` : ''}
+
+                  ${tb.domesticCup > 0 ? `
+                  <div class="p-2.5 rounded-xl bg-pitch-900 border border-pitch-700 flex items-center gap-2.5 text-slate-300">
+                    <span class="text-xl shrink-0">🥇</span>
+                    <div class="min-w-0">
+                      <div class="font-bold text-white truncate">${tb.domesticCup}x ${currentLang === 'TR' ? 'Ulusal Kupa' : 'National Cup'}</div>
+                      <div class="text-[10px] text-slate-400 font-mono">${currentLang === 'TR' ? 'Eleme Usulü Kupa Zaferi' : 'Domestic Cup'}</div>
+                    </div>
+                  </div>` : ''}
+
+                  ${tb.superCup > 0 ? `
+                  <div class="p-2.5 rounded-xl bg-pitch-900 border border-pitch-700 flex items-center gap-2.5 text-yellow-300">
+                    <span class="text-xl shrink-0">⚡</span>
+                    <div class="min-w-0">
+                      <div class="font-bold text-white truncate">${tb.superCup}x ${currentLang === 'TR' ? 'Süper Kupa' : 'Super Cup'}</div>
+                      <div class="text-[10px] text-yellow-400/80 font-mono">${currentLang === 'TR' ? 'Sezon Açılış Kupası' : 'Super Cup Trophy'}</div>
+                    </div>
+                  </div>` : ''}
+                </div>` : `
+                <p class="text-xs text-slate-400 leading-relaxed">
+                  ${currentLang === 'TR' ? 'Henüz müzede resmi bir kupa bulunmuyor.' : 'No official trophies won yet.'}
+                </p>`}
+              </div>`;
+            })()}
 
             <!-- National Team Cap Honors (Clean Country Name, No Windows DE Flag Glitch!) -->
             <div class="p-4 rounded-2xl border transition ${capsCount > 0 ? 'bg-cyan-500/10 border-cyan-500/50 shadow-lg shadow-cyan-500/10' : 'bg-pitch-950/80 border-pitch-800/80'}">
@@ -5117,7 +5212,37 @@
     /* =====================================================================
        11. JUBILEE & CAREER CARD GENERATOR
        ===================================================================== */
-    function finishCareerAndShowJubilee() {
+        function getTrophyBreakdown(stats) {
+      const s = stats || {};
+      let wc = s.worldCup || 0;
+      let ucl = s.uclTrophies || 0;
+      let league = s.leagueTitles || 0;
+      let cup = s.domesticCups || 0;
+      let superCup = s.superCups || 0;
+      const total = s.trophies || 0;
+
+      // Ensure exact sum matches total trophies
+      let sum = wc + ucl + league + cup + superCup;
+      if (total > sum) {
+        let diff = total - sum;
+        const addLeague = Math.ceil(diff * 0.5);
+        league += addLeague;
+        diff -= addLeague;
+        const addCup = Math.ceil(diff * 0.6);
+        cup += addCup;
+        diff -= addCup;
+        if (diff > 0) {
+          if (s.ballonDor > 0 || (player && player.peakOvr >= 86)) {
+            ucl += diff;
+          } else {
+            superCup += diff;
+          }
+        }
+      }
+      return { wc, ucl, league, cup, superCup, total };
+    }
+
+function finishCareerAndShowJubilee() {
       player.isRetired = true;
       if (isAutoPlaying) toggleAutoPlay();
 
@@ -5164,6 +5289,35 @@
       document.getElementById('cardTotalGoals').textContent = player.stats.goals;
       document.getElementById('cardTotalAssists').textContent = player.stats.assists;
       document.getElementById('cardTotalTrophies').textContent = player.stats.trophies;
+
+      // Detailed Trophy Breakdown Row on Jubilee Card
+      const trophyBreakdownRow = document.getElementById('cardTrophyBreakdownRow');
+      if (trophyBreakdownRow) {
+        const tb = getTrophyBreakdown(player.stats);
+        const pills = [];
+        if (tb.wc > 0) {
+          pills.push(`<span class="px-2 py-0.5 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40">🌍 ${tb.wc}x ${currentLang === 'TR' ? 'Dünya Kupası' : 'World Cup'}</span>`);
+        }
+        if (tb.ucl > 0) {
+          pills.push(`<span class="px-2 py-0.5 rounded-lg bg-indigo-500/20 text-indigo-300 border border-indigo-500/40">🌟 ${tb.ucl}x ${currentLang === 'TR' ? 'Şampiyonlar Ligi' : 'UCL'}</span>`);
+        }
+        if (tb.league > 0) {
+          pills.push(`<span class="px-2 py-0.5 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">🏆 ${tb.league}x ${currentLang === 'TR' ? 'Lig Şampiyonu' : 'League'}</span>`);
+        }
+        if (tb.domesticCup > 0) {
+          pills.push(`<span class="px-2 py-0.5 rounded-lg bg-pitch-900 text-slate-300 border border-pitch-700">🥇 ${tb.domesticCup}x ${currentLang === 'TR' ? 'Ulusal Kupa' : 'Cup'}</span>`);
+        }
+        if (tb.superCup > 0) {
+          pills.push(`<span class="px-2 py-0.5 rounded-lg bg-yellow-500/10 text-yellow-300 border border-pitch-700">⚡ ${tb.superCup}x ${currentLang === 'TR' ? 'Süper Kupa' : 'Super Cup'}</span>`);
+        }
+
+        if (pills.length > 0) {
+          trophyBreakdownRow.innerHTML = pills.join('');
+          trophyBreakdownRow.classList.remove('hidden');
+        } else {
+          trophyBreakdownRow.classList.add('hidden');
+        }
+      }
 
       // Populate Financial Assets
       const netWorthEl = document.getElementById('cardNetWorth');

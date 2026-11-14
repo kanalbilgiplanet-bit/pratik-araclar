@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Flag Blitz | Ülke Bayrakları Bilmece & Canlı Çok Oyunculu Düello</title>
-  <meta name="description" content="10 bayrak, soru başı 5 saniye, saliseler yarışıyor! Arkadaşlarınla canlı 1v1 veya çok oyunculu odada yarış ya da Global İlk 100 rekorunu kır.">
+  <meta name="description" content="15 bayrak, soru başı 5 saniye, saliseler yarışıyor! Arkadaşlarınla canlı 1v1 veya çok oyunculu odada yarış ya da Global İlk 100 rekorunu kır.">
   <meta name="keywords" content="bayrak oyunu, flag quiz, ülke bayrakları bilmece, online bayrak yarışması, multiplayer flag quiz, bayrak bilmaca 1v1">
   <link rel="canonical" href="https://pratikbase.com/flag-quiz/">
 
   <!-- Open Graph / Social Meta -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="Flag Blitz | Ülke Bayrakları Canlı Düello">
-  <meta property="og:description" content="10 bayrak, saliseler yarışıyor! Arkadaşlarına meydan oku veya Global İlk 100 listesine adını yazdır.">
+  <meta property="og:description" content="15 bayrak, saliseler yarışıyor! Arkadaşlarına meydan oku veya Global İlk 100 listesine adını yazdır.">
   <meta property="og:image" content="https://flagcdn.com/w640/tr.png">
   <meta property="og:url" content="https://pratikbase.com/flag-quiz/">
 
@@ -135,7 +135,7 @@
       <div class="text-center space-y-2">
         <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xs font-mono font-semibold">
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-          <span id="txtHeroBadge">10 Bayrak • 5 Saniye • Saliseler Yarışıyor!</span>
+          <span id="txtHeroBadge">15 Bayrak • 5 Saniye • Saliseler Yarışıyor!</span>
         </div>
         <h1 class="text-3xl sm:text-5xl font-display font-black text-white tracking-tight">
           Hangi Ülkenin <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-lime-300 to-green-400">Bayrağı?</span>
@@ -162,7 +162,7 @@
           </button>
         </div>
         <div class="flex items-center justify-between text-[11px] text-slate-400 pt-1">
-          <span id="txtPersonalBestHint">Kişisel Rekorun: <strong id="homePersonalBest" class="text-emerald-400 font-mono">0/10 • --s</strong></span>
+          <span id="txtPersonalBestHint">Kişisel Rekorun: <strong id="homePersonalBest" class="text-emerald-400 font-mono">0/15 • --s</strong></span>
           <button onclick="openProfileModal()" class="text-emerald-400 hover:underline flex items-center gap-1 font-semibold" id="btnAccountTransfer">
             <i class="fa-solid fa-key text-[10px]"></i> Cihaz Kodu
           </button>
@@ -203,14 +203,14 @@
             </div>
             <h3 class="font-display font-black text-lg text-white" id="txtModeMultiTitle">Arkadaşlarla Canlı Oda</h3>
             <p class="text-xs text-slate-300 leading-relaxed" id="txtModeMultiDesc">
-              2 ila 8 kişiyle aynı anda yarış! Oda linkini WhatsApp'tan at, aynı 10 bayrakta podyum savaşı verin.
+              2 ila 8 kişiyle aynı anda yarış! Oda linkini WhatsApp'tan at, aynı 15 bayrakta podyum savaşı verin.
             </p>
           </div>
           <div class="flex gap-2">
             <button onclick="createPartyRoom()" class="flex-1 py-3 px-3 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-pitch-950 font-display font-black text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-lg shadow-amber-500/25 active:scale-95 transition" id="btnCreateRoom">
               <i class="fa-solid fa-plus text-xs"></i> Oda Kur
             </button>
-            <button onclick="promptJoinRoom()" class="py-3 px-3 rounded-xl bg-pitch-900 hover:bg-pitch-800 text-slate-200 border border-pitch-700 font-bold text-xs active:scale-95 transition" id="btnJoinRoom">
+            <button onclick="openJoinRoomModal()" class="py-3 px-3 rounded-xl bg-pitch-900 hover:bg-pitch-800 text-slate-200 border border-pitch-700 font-bold text-xs active:scale-95 transition" id="btnJoinRoom">
               Koda Katıl
             </button>
           </div>
@@ -525,6 +525,55 @@
           </div>
         </div>
       </div>
+
+    </div>
+  </div>
+
+  
+  <!-- ================================================================= -->
+  <!-- MODAL: ODAYA KATIL (JOIN ROOM MODAL - MOBILE OPTIMIZED) -->
+  <!-- ================================================================= -->
+  <div id="modalJoinRoom" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md" onclick="if(event.target === this) closeJoinRoomModal(true)">
+    <div class="max-w-sm w-full p-6 rounded-3xl bg-pitch-900 border border-amber-500/50 shadow-2xl space-y-4 text-center relative animate-in fade-in zoom-in duration-200">
+      
+      <div class="flex items-center justify-between border-b border-pitch-800 pb-3 text-left">
+        <div class="flex items-center gap-2.5">
+          <span class="w-9 h-9 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-base shrink-0 border border-amber-500/30">
+            <i class="fa-solid fa-users"></i>
+          </span>
+          <div class="min-w-0">
+            <h3 class="font-display font-black text-white text-base leading-tight" id="txtJoinRoomTitle">Canlı Odaya Katıl</h3>
+            <p class="text-[11px] text-slate-400 truncate" id="txtJoinRoomSub">Arkadaşının oda kodunu veya linkini gir</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeJoinRoomModal(true)" class="w-8 h-8 rounded-xl bg-pitch-950 text-slate-400 hover:text-white flex items-center justify-center text-sm transition shrink-0 border border-pitch-800">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form id="formJoinRoom" onsubmit="submitJoinRoomForm(event)" class="space-y-4 text-left">
+        <div>
+          <label class="block text-xs font-bold text-slate-300 mb-1.5" id="lblJoinRoomCode">
+            Oda Kodu (Örn: 5821 veya Link):
+          </label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none font-mono font-bold text-amber-400/80 text-sm">
+              FLG-
+            </div>
+            <input type="text" id="inputJoinRoomCode" maxlength="50" placeholder="5821" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" inputmode="text" class="w-full pl-16 pr-4 py-3.5 rounded-2xl bg-pitch-950 border-2 border-pitch-700 focus:border-amber-400 focus:ring-2 focus:ring-amber-500/20 focus:outline-none text-white font-mono font-black text-lg tracking-widest uppercase transition shadow-inner">
+          </div>
+        </div>
+
+        <div class="flex gap-2.5 pt-1">
+          <button type="button" onclick="closeJoinRoomModal(true)" class="flex-1 py-3 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-slate-300 font-bold text-xs transition" id="btnCancelJoinRoom">
+            Vazgeç
+          </button>
+          <button type="submit" id="btnSubmitJoinRoom" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs transition shadow-lg shadow-amber-500/25 flex items-center justify-center gap-1.5 active:scale-95">
+            <span>Odaya Katıl</span>
+            <i class="fa-solid fa-arrow-right text-[11px]"></i>
+          </button>
+        </div>
+      </form>
 
     </div>
   </div>
@@ -869,9 +918,9 @@
       const pbEl = document.getElementById('homePersonalBest');
       if (pbEl) {
         if (myPlayer.bestScore > 0) {
-          pbEl.textContent = `${myPlayer.bestScore}/10 • ${myPlayer.bestTime.toFixed(2)}s`;
+          pbEl.textContent = `${myPlayer.bestScore}/${TOTAL_QUESTIONS} • ${myPlayer.bestTime.toFixed(2)}s`;
         } else {
-          pbEl.textContent = '0/10 • Henüz yok';
+          pbEl.textContent = '0/15 • Henüz yok';
         }
       }
 
@@ -931,7 +980,7 @@
        4. GAME STATE ENGINE (SOLO BLITZ & SYNCHRONIZED MULTIPLAYER)
        ===================================================================== */
     const QUESTION_TIME_LIMIT = 5.0; // 5 seconds per flag
-    const TOTAL_QUESTIONS = 10;
+    const TOTAL_QUESTIONS = 15;
 
     let currentMatchMode = 'solo'; // 'solo' or 'party'
     let currentRoomId = null;
@@ -1208,20 +1257,20 @@
       const titleEl = document.getElementById('txtResultTitle');
       const rankMsgEl = document.getElementById('resultRankMessage');
 
-      if (correctCount === 10) {
+      if (correctCount === TOTAL_QUESTIONS) {
         Sound.victory();
         trophyEl.textContent = '👑';
-        titleEl.textContent = 'Kusursuz Refleks! 10\'da 10!';
-        rankMsgEl.textContent = 'Mükemmel! Bütün bayrakları hatasız bildin. Global sıralamada zirveye oynuyorsun!';
-      } else if (correctCount >= 8) {
+        titleEl.textContent = currentLang === 'TR' ? `Kusursuz Refleks! ${TOTAL_QUESTIONS}'te ${TOTAL_QUESTIONS}!` : `Flawless Reflex! ${TOTAL_QUESTIONS}/${TOTAL_QUESTIONS}!`;
+        rankMsgEl.textContent = currentLang === 'TR' ? 'Mükemmel! Bütün 15 bayrağı hatasız bildin. Global sıralamada zirveye oynuyorsun!' : 'Perfect score! 15 out of 15 correct flags!';
+      } else if (correctCount >= Math.round(TOTAL_QUESTIONS * 0.75)) {
         Sound.victory();
         trophyEl.textContent = '🥇';
-        titleEl.textContent = 'Harika Performans!';
-        rankMsgEl.textContent = `${correctCount} doğru harika bir derece! Biraz daha hızlanarak rekoru zorlayabilirsin.`;
-      } else if (correctCount >= 5) {
+        titleEl.textContent = currentLang === 'TR' ? 'Harika Performans!' : 'Amazing Performance!';
+        rankMsgEl.textContent = currentLang === 'TR' ? `${correctCount}/${TOTAL_QUESTIONS} doğru harika bir derece! Biraz daha hızlanarak rekoru zorlayabilirsin.` : `${correctCount}/${TOTAL_QUESTIONS} is a great score! Push your speed to top the leaderboard.`;
+      } else if (correctCount >= Math.round(TOTAL_QUESTIONS * 0.45)) {
         trophyEl.textContent = '⚡';
-        titleEl.textContent = 'Fena Değil!';
-        rankMsgEl.textContent = `${correctCount} doğru bildin. Birkaç benzer bayrakta yanıltmacaya düştün, tekrar dene!`;
+        titleEl.textContent = currentLang === 'TR' ? 'Fena Değil!' : 'Good Effort!';
+        rankMsgEl.textContent = currentLang === 'TR' ? `${correctCount}/${TOTAL_QUESTIONS} doğru bildin. Birkaç benzer bayrakta yanıltmacaya düştün, tekrar dene!` : `${correctCount}/${TOTAL_QUESTIONS} correct. Watch out for tricky lookalikes!`;
       } else {
         trophyEl.textContent = '🎯';
         titleEl.textContent = 'Antrenmana Devam!';
@@ -1445,14 +1494,85 @@
       }
     }
 
-    async function promptJoinRoom() {
+    // =====================================================================
+    // MOBILE-OPTIMIZED JOIN ROOM MODAL LOGIC
+    // =====================================================================
+    function openJoinRoomModal() {
       saveNickFromInput();
-      const codeInput = prompt('4 Haneli Oda Kodunu Giriniz (Örn: 5821 veya FLG-5821):');
-      if (!codeInput) return;
-      let cleanCode = codeInput.trim().toUpperCase();
-      if (!cleanCode.startsWith('FLG-')) cleanCode = 'FLG-' + cleanCode;
+      const modal = document.getElementById('modalJoinRoom');
+      const input = document.getElementById('inputJoinRoomCode');
+      if (!modal || !input) return;
 
-      joinPartyRoom(cleanCode);
+      input.value = '';
+      modal.classList.remove('hidden');
+
+      // Push dummy state so mobile gesture/hardware Back button closes modal instead of navigating away
+      try {
+        history.pushState({ modal: 'joinRoom' }, '', window.location.href);
+      } catch(e) {}
+
+      setTimeout(() => {
+        input.focus();
+      }, 120);
+    }
+
+    function closeJoinRoomModal(shouldPopHistory = true) {
+      const modal = document.getElementById('modalJoinRoom');
+      if (!modal || modal.classList.contains('hidden')) return;
+
+      const input = document.getElementById('inputJoinRoomCode');
+      if (input) input.blur();
+
+      modal.classList.add('hidden');
+
+      if (shouldPopHistory && history.state && history.state.modal === 'joinRoom') {
+        try { history.back(); } catch(e) {}
+      }
+    }
+
+    // Android/Mobile Back Button (Hardware / Gesture) Listener
+    window.addEventListener('popstate', (e) => {
+      const modalJoin = document.getElementById('modalJoinRoom');
+      if (modalJoin && !modalJoin.classList.contains('hidden')) {
+        closeJoinRoomModal(false);
+      }
+      const modalProfile = document.getElementById('modalProfile');
+      if (modalProfile && !modalProfile.classList.contains('hidden')) {
+        closeProfileModal();
+      }
+    });
+
+    async function submitJoinRoomForm(e) {
+      if (e) e.preventDefault();
+      const input = document.getElementById('inputJoinRoomCode');
+      if (!input) return;
+
+      let val = input.value.trim().toUpperCase();
+      if (!val) {
+        showToast('Lütfen oda kodunu giriniz!');
+        input.focus();
+        return;
+      }
+
+      // If user pasted a full URL like https://pratikbase.com/flag-quiz/?room=FLG-5821
+      if (val.includes('ROOM=')) {
+        const parts = val.split('ROOM=');
+        val = (parts[1] || '').split('&')[0].trim();
+      }
+
+      // Strip any extra FLG- prefix user typed
+      if (val.startsWith('FLG-')) {
+        val = val.substring(4).trim();
+      }
+
+      if (!val) {
+        showToast('Geçersiz oda kodu!');
+        return;
+      }
+
+      const finalCode = 'FLG-' + val;
+      closeJoinRoomModal(true);
+      joinPartyRoom(finalCode);
     }
 
     async function joinPartyRoom(roomId) {
@@ -1667,7 +1787,7 @@
             ${medal}
             <div class="min-w-0">
               <div class="font-bold text-white truncate">${escapeHtml(p.nick)} ${isMe ? '(Sen)' : ''}</div>
-              <div class="text-[10px] text-slate-400 font-mono">${p.hasFinished ? 'Yarışmayı Bitirdi ✔' : `Soru ${p.currentQ || 0}/10`}</div>
+              <div class="text-[10px] text-slate-400 font-mono">${p.hasFinished ? 'Yarışmayı Bitirdi ✔' : `Soru ${p.currentQ || 0}/${TOTAL_QUESTIONS}`}</div>
             </div>
           </div>
           <div class="text-right font-mono shrink-0">
@@ -1713,7 +1833,7 @@
     function shareResultWhatsApp() {
       const correct = userAnswers.filter(a => a.isCorrect).length;
       const totalTime = (userAnswers.reduce((sum, a) => sum + a.timeMs, 0) / 1000).toFixed(2);
-      const text = `🚩 Flag Blitz'te 10 bayraktan ${correct} tanesini ${totalTime} saniyede bildim! Sen beni geçebilir misin?\\nHemen oyna: https://pratikbase.com/flag-quiz/`;
+      const text = `🚩 Flag Blitz'te 15 bayraktan ${correct} tanesini ${totalTime} saniyede bildim! Sen beni geçebilir misin?\\nHemen oyna: https://pratikbase.com/flag-quiz/`;
       window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
     }
 
@@ -1760,15 +1880,25 @@
       document.getElementById('langFlag').textContent = lang === 'TR' ? '🇹🇷' : '🇬🇧';
 
       if (lang === 'TR') {
-        document.getElementById('txtHeroBadge').textContent = '10 Bayrak • 5 Saniye • Saliseler Yarışıyor!';
+        document.getElementById('txtHeroBadge').textContent = '15 Bayrak • 5 Saniye • Saliseler Yarışıyor!';
         document.getElementById('txtHeroSub').textContent = 'Doğru ülkeyi en hızlı kim seçecek? İster tek başına rekor kır, ister arkadaş grubunla canlı düelloya gir!';
         document.getElementById('txtModeSoloTitle').textContent = 'Hızlı Yarış (Solo Blitz)';
         document.getElementById('txtModeMultiTitle').textContent = 'Arkadaşlarla Canlı Oda';
         document.getElementById('btnStartSolo').textContent = 'HEMEN BAŞLA';
         document.getElementById('btnCreateRoom').innerHTML = '<i class="fa-solid fa-plus text-xs"></i> Oda Kur';
         document.getElementById('btnJoinRoom').textContent = 'Koda Katıl';
+        const txtJTitle = document.getElementById('txtJoinRoomTitle');
+        if (txtJTitle) txtJTitle.textContent = 'Canlı Odaya Katıl';
+        const txtJSub = document.getElementById('txtJoinRoomSub');
+        if (txtJSub) txtJSub.textContent = 'Arkadaşının oda kodunu veya linkini gir';
+        const lblJCode = document.getElementById('lblJoinRoomCode');
+        if (lblJCode) lblJCode.textContent = 'Oda Kodu (Örn: 5821 veya Link):';
+        const btnJCancel = document.getElementById('btnCancelJoinRoom');
+        if (btnJCancel) btnJCancel.textContent = 'Vazgeç';
+        const btnJSubmit = document.getElementById('btnSubmitJoinRoom');
+        if (btnJSubmit) btnJSubmit.innerHTML = '<span>Odaya Katıl</span><i class="fa-solid fa-arrow-right text-[11px]"></i>';
       } else {
-        document.getElementById('txtHeroBadge').textContent = '10 Flags • 5 Seconds • Split-Seconds Count!';
+        document.getElementById('txtHeroBadge').textContent = '15 Flags • 5 Seconds • Split-Seconds Count!';
         document.getElementById('txtHeroSub').textContent = 'Who can identify the flag quickest? Chase the Global Top 100 or duel live in private party lobbies!';
         document.getElementById('txtModeSoloTitle').textContent = 'Solo Blitz (Leaderboard)';
         document.getElementById('txtModeMultiTitle').textContent = 'Live Party Room (2-8P)';
