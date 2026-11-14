@@ -256,7 +256,7 @@
             <div id="kpiTopPage" class="text-base font-bold text-emerald-400 truncate font-mono">Bekleniyor...</div>
             <div id="kpiTopPageUsers" class="text-xs text-slate-400 mt-1">Ziyaretçi bekleniyor</div>
           </div>
-          <div class="mt-3 text-[11px] text-slate-500 flex items-center gap-1.5">
+          <div id="kpiTopPageSubtitle" class="mt-3 text-[11px] text-slate-500 flex items-center gap-1.5">
             <i class="fa-solid fa-arrow-trend-up text-emerald-500"></i> Anlık en yoğun araç
           </div>
         </div>
@@ -820,6 +820,72 @@
 
       </div>
 
+      <!-- Sayfa & Araç Bazlı Etkileşim ve Dönüşüm Raporu (WhatsApp, Kart İndir, Duvara Ekle, Kopyala) -->
+      <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-lg space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800/80 pb-4">
+          <div>
+            <h3 class="text-base font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-bolt text-amber-400"></i>
+              Sayfa & Araç Bazlı Etkileşim ve Dönüşüm Raporu
+            </h3>
+            <p class="text-xs text-slate-400 mt-0.5">Ziyaretçiler hangi araçta hangi butonları kullandı? (WhatsApp, Kart İndir, Duvara Ekle, Kopyala, Yeniden Başlat)</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <span id="histTotalEventsBadge" class="text-xs bg-amber-500/20 text-amber-300 border border-amber-500/40 px-3 py-1 rounded-full font-mono font-bold">0 Toplam Eylem</span>
+          </div>
+        </div>
+
+        <!-- 4 Özet KPI Kartı -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div class="p-3.5 bg-slate-950/60 rounded-xl border border-slate-800">
+            <div class="text-[11px] font-semibold text-emerald-400 flex items-center gap-1.5 uppercase tracking-wider">
+              <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp Paylaşımı
+            </div>
+            <div id="kpiEventWA" class="text-xl font-black text-white font-mono mt-1">0</div>
+          </div>
+          <div class="p-3.5 bg-slate-950/60 rounded-xl border border-slate-800">
+            <div class="text-[11px] font-semibold text-cyan-400 flex items-center gap-1.5 uppercase tracking-wider">
+              <i class="fa-solid fa-download text-sm"></i> Kart İndirme (PNG)
+            </div>
+            <div id="kpiEventDownload" class="text-xl font-black text-white font-mono mt-1">0</div>
+          </div>
+          <div class="p-3.5 bg-slate-950/60 rounded-xl border border-slate-800">
+            <div class="text-[11px] font-semibold text-amber-400 flex items-center gap-1.5 uppercase tracking-wider">
+              <i class="fa-solid fa-crown text-sm"></i> Duvara Ekleme
+            </div>
+            <div id="kpiEventWall" class="text-xl font-black text-white font-mono mt-1">0</div>
+          </div>
+          <div class="p-3.5 bg-slate-950/60 rounded-xl border border-slate-800">
+            <div class="text-[11px] font-semibold text-slate-300 flex items-center gap-1.5 uppercase tracking-wider">
+              <i class="fa-solid fa-copy text-sm"></i> Sonuç Kopyalama
+            </div>
+            <div id="kpiEventCopy" class="text-xl font-black text-white font-mono mt-1">0</div>
+          </div>
+        </div>
+
+        <!-- Sayfa Bazlı Etkileşim Tablosu -->
+        <div class="overflow-x-auto custom-scroll">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-950/60 text-slate-400 uppercase tracking-wider font-semibold border-b border-slate-800">
+              <tr>
+                <th class="py-2.5 px-3">Sayfa Yolu</th>
+                <th class="py-2.5 px-3 text-center">💬 WhatsApp</th>
+                <th class="py-2.5 px-3 text-center">🖼️ Kart İndir</th>
+                <th class="py-2.5 px-3 text-center">👑 Duvara Ekle</th>
+                <th class="py-2.5 px-3 text-center">📋 Kopyala</th>
+                <th class="py-2.5 px-3 text-center">🔄 Yeniden Başlat</th>
+                <th class="py-2.5 px-3 text-right">Toplam Eylem</th>
+              </tr>
+            </thead>
+            <tbody id="histEventsTableBody" class="divide-y divide-slate-800/60 font-mono">
+              <tr>
+                <td colspan="7" class="text-center py-6 text-slate-500">Henüz kaydedilmiş etkileşim bulunmuyor...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
     </main>
 
   </div>
@@ -1018,9 +1084,42 @@
     // ==========================================
     // CANLI VERİ ÇEKME & SESLİ BİLDİRİM (TAB 1)
     // ==========================================
+    let todayPageHitsMap = {};
+    let todayTopPageFromHits = { path: '', count: 0, title: '' };
+    let lastTodayHitsFetch = 0;
+
+    async function checkTodayHitsSummary() {
+      if (Date.now() - lastTodayHitsFetch < 15000 && Object.keys(todayPageHitsMap).length > 0) return;
+      lastTodayHitsFetch = Date.now();
+      try {
+        const todayStr = new Date().toLocaleDateString('en-CA');
+        const res = await fetch(`${RTDB_URL}/stats/daily/${todayStr}.json?t=${Date.now()}`);
+        const dayData = await res.json();
+        if (dayData && dayData.hits) {
+          const map = {};
+          let maxHits = 0;
+          let topP = '';
+          let topT = '';
+          Object.values(dayData.hits).forEach(h => {
+            if (!h) return;
+            const p = h.page || '/';
+            map[p] = (map[p] || 0) + 1;
+            if (map[p] > maxHits) {
+              maxHits = map[p];
+              topP = p;
+              topT = h.title || p;
+            }
+          });
+          todayPageHitsMap = map;
+          todayTopPageFromHits = { path: topP, count: maxHits, title: topT };
+        }
+      } catch(e) {}
+    }
+
     async function fetchLiveData(isManual = false) {
       const refreshIcon = document.getElementById('refreshIcon');
       if (isManual && refreshIcon) refreshIcon.classList.add('fa-spin');
+      checkTodayHitsSummary();
 
       try {
         const res = await fetch(`${RTDB_URL}/live_presence.json?t=${Date.now()}`);
@@ -1110,13 +1209,21 @@
       }
 
       const sortedPages = Object.entries(pages).sort((a, b) => b[1].count - a[1].count);
+      const kpiSub = document.getElementById('kpiTopPageSubtitle');
       if (sortedPages.length > 0) {
         const [topPath, topInfo] = sortedPages[0];
+        const pageViewsToday = todayPageHitsMap[topPath] || topInfo.count;
         document.getElementById('kpiTopPage').innerText = topPath;
-        document.getElementById('kpiTopPageUsers').innerText = `${topInfo.count} aktif ziyaretçi (${topInfo.title})`;
+        document.getElementById('kpiTopPageUsers').innerText = `${topInfo.count} aktif ziyaretçi • Bugün ${pageViewsToday} görüntüleme`;
+        if (kpiSub) kpiSub.innerHTML = '<i class="fa-solid fa-arrow-trend-up text-emerald-500"></i> Anlık en yoğun araç';
+      } else if (todayTopPageFromHits.path) {
+        document.getElementById('kpiTopPage').innerText = todayTopPageFromHits.path;
+        document.getElementById('kpiTopPageUsers').innerText = `Bugün ${todayTopPageFromHits.count} görüntüleme (Şu an aktif yok)`;
+        if (kpiSub) kpiSub.innerHTML = '<i class="fa-solid fa-crown text-amber-500"></i> Günün en çok ziyaret edilen aracı';
       } else {
         document.getElementById('kpiTopPage').innerText = 'Henüz yok';
         document.getElementById('kpiTopPageUsers').innerText = 'Ziyaretçi bekleniyor';
+        if (kpiSub) kpiSub.innerHTML = '<i class="fa-solid fa-arrow-trend-up text-emerald-500"></i> Anlık en yoğun araç';
       }
 
       const sortedRefs = Object.entries(referrers).sort((a, b) => b[1] - a[1]);
@@ -1622,6 +1729,13 @@
       let totalUniqueUsers = 0;
       let totalHits = 0;
       let mobileHits = 0;
+      let totalEvents = 0;
+      let waEvents = 0;
+      let downloadEvents = 0;
+      let wallEvents = 0;
+      let copyEvents = 0;
+      let playAgainEvents = 0;
+      const pageEventTotals = {};
       const pageTotals = {};
       const sourceTotals = {};
       const countryTotals = {};
@@ -1635,6 +1749,38 @@
         let dayUsers = 0;
 
         if (dayData) {
+          // Etkinlikler & Dönüşümler (WhatsApp, Kart İndir, Duvara Ekle, Kopyala vs.)
+          if (dayData.events) {
+            Object.values(dayData.events).forEach(ev => {
+              if (!ev || typeof ev !== 'object') return;
+              totalEvents++;
+              const act = ev.action || '';
+              const p = ev.page || '/';
+
+              if (!pageEventTotals[p]) {
+                pageEventTotals[p] = { wa: 0, download: 0, wall: 0, copy: 0, playAgain: 0, total: 0 };
+              }
+              pageEventTotals[p].total++;
+
+              if (act === 'whatsapp_share') {
+                waEvents++;
+                pageEventTotals[p].wa++;
+              } else if (act === 'card_download' || act === 'card_share_native') {
+                downloadEvents++;
+                pageEventTotals[p].download++;
+              } else if (act === 'wall_add') {
+                wallEvents++;
+                pageEventTotals[p].wall++;
+              } else if (act === 'copy_result') {
+                copyEvents++;
+                pageEventTotals[p].copy++;
+              } else if (act === 'play_again') {
+                playAgainEvents++;
+                pageEventTotals[p].playAgain++;
+              }
+            });
+          }
+
           if (dayData.unique_users) {
             const users = Object.values(dayData.unique_users);
             dayUsers = users.length;
@@ -1707,6 +1853,48 @@
       renderHistoryPagesTable(pageTotals, totalHits);
       renderHistorySourcesList(sortedSources, totalHits);
       renderHistoryLocations(countryTotals, countryFlags, cityTotals, totalUniqueUsers || totalHits);
+
+      // Etkileşim & Dönüşüm Raporu Render
+      const totalEvBadge = document.getElementById('histTotalEventsBadge');
+      if (totalEvBadge) totalEvBadge.innerText = `${totalEvents} Toplam Eylem`;
+      const elWA = document.getElementById('kpiEventWA');
+      if (elWA) elWA.innerText = waEvents;
+      const elDl = document.getElementById('kpiEventDownload');
+      if (elDl) elDl.innerText = downloadEvents;
+      const elWl = document.getElementById('kpiEventWall');
+      if (elWl) elWl.innerText = wallEvents;
+      const elCp = document.getElementById('kpiEventCopy');
+      if (elCp) elCp.innerText = copyEvents;
+      renderEventsTable(pageEventTotals);
+    }
+
+    function renderEventsTable(pageEvents) {
+      const tbody = document.getElementById('histEventsTableBody');
+      if (!tbody) return;
+
+      const entries = Object.entries(pageEvents).sort((a, b) => b[1].total - a[1].total);
+      if (entries.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="7" class="text-center py-6 text-slate-500">Bu tarih aralığında henüz kaydedilmiş etkileşim bulunmuyor.</td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = entries.map(([page, ev]) => `
+        <tr class="hover:bg-slate-800/40 transition">
+          <td class="py-2.5 px-3">
+            <span class="text-emerald-400 font-bold font-mono">${page}</span>
+          </td>
+          <td class="py-2.5 px-3 text-center text-emerald-400 font-bold">${ev.wa || 0}</td>
+          <td class="py-2.5 px-3 text-center text-cyan-400 font-bold">${ev.download || 0}</td>
+          <td class="py-2.5 px-3 text-center text-amber-400 font-bold">${ev.wall || 0}</td>
+          <td class="py-2.5 px-3 text-center text-slate-300 font-bold">${ev.copy || 0}</td>
+          <td class="py-2.5 px-3 text-center text-slate-400">${ev.playAgain || 0}</td>
+          <td class="py-2.5 px-3 text-right font-bold text-white">${ev.total}</td>
+        </tr>
+      `).join('');
     }
 
     function renderTrendChart(trend) {
@@ -1901,6 +2089,31 @@
             csv += row.join(',') + '\n';
           }
         }
+      }
+
+      // Etkinlik ve Dönüşüm Kayıtları (WhatsApp, Kart İndir, Duvara Ekle, Kopyala vs.)
+      let hasEvents = false;
+      let eventCsv = '\n\nEtkinlik ve Donusum Kayitlari\nTarih,Sayfa Yolu,Eylem (Action),Detay,Cihaz,Ulke,Il_Sehir,Saat\n';
+      for (const [date, dayData] of Object.entries(cachedDailyStats)) {
+        if (dayData && dayData.events) {
+          hasEvents = true;
+          for (const ev of Object.values(dayData.events)) {
+            const evRow = [
+              date,
+              `"${ev.page || ''}"`,
+              `"${ev.action || ''}"`,
+              `"${(ev.label || '').replace(/"/g, '""')}"`,
+              ev.device || 'Mobil',
+              `"${ev.country || ''}"`,
+              `"${ev.city || ''}"`,
+              ev.time || ''
+            ];
+            eventCsv += evRow.join(',') + '\n';
+          }
+        }
+      }
+      if (hasEvents) {
+        csv += eventCsv;
       }
 
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });

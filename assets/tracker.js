@@ -290,6 +290,71 @@
       .catch(() => {});
   }
 
+  // 9. Etkinlik ve Dönüşüm Takibi (Event Tracking: WhatsApp, Kopyala, Duvara Ekle, Kart İndir vs.)
+  function logEvent(action, pageOverride, label) {
+    try {
+      const pageInfo = getPageInfo();
+      const targetPage = pageOverride || pageInfo.path;
+      const now = new Date();
+      const dateStr = now.toLocaleDateString('en-CA');
+      const timeStr = now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      const eventId = 'ev_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6);
+
+      const eventPayload = {
+        id: eventId,
+        vid: visitorId,
+        action: action, // 'whatsapp_share', 'copy_result', 'wall_add', 'card_download', 'play_again'
+        label: label || '',
+        page: targetPage,
+        date: dateStr,
+        time: timeStr,
+        timestamp: Date.now(),
+        country: geo.country || 'Türkiye',
+        city: geo.city || '',
+        flag: geo.flag || '🇹🇷',
+        device: deviceType
+      };
+
+      // 1. Günlük kümülatif etkinlik kaydı (stats/daily/YYYY-MM-DD/events/{eventId})
+      fetch(`${RTDB_URL}/stats/daily/${dateStr}/events/${eventId}.json`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(eventPayload),
+        keepalive: true
+      }).catch(() => {});
+
+      // 2. Canlı aktivite akışına da düşür
+      fetch(`${RTDB_URL}/activity_feed/${eventId}.json`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...eventPayload,
+          title: `[Etkinlik] ${action}: ${label || targetPage}`
+        }),
+        keepalive: true
+      }).catch(() => {});
+    } catch(e) {}
+  }
+
+  // Global erişim
+  window.pbTracker = {
+    logEvent: logEvent,
+    getVisitorId: () => visitorId,
+    getGeo: () => geo
+  };
+
+  // HTML üzerindeki data-pb-event tıklamalarını otomatik yakala
+  document.addEventListener('click', (e) => {
+    try {
+      const el = e.target.closest('[data-pb-event]');
+      if (el) {
+        const action = el.getAttribute('data-pb-event');
+        const label = el.getAttribute('data-pb-label') || el.innerText?.slice(0, 40) || '';
+        logEvent(action, null, label);
+      }
+    } catch(err) {}
+  });
+
   sendHeartbeat();
   recordPageEnter();
   checkSiteAnnouncement();

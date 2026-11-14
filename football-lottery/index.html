@@ -103,6 +103,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;1,700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- HTML2Canvas: Crisp High-Res Card Image Export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
   <style>
     /* Dark Stadium Theme Base (Stadyum Gece Maçı Görünümü) */
@@ -514,27 +516,36 @@
         </p>
       </div>
 
-      <!-- Action Buttons Row (Placed DIRECTLY ABOVE CARD for instant zero-scroll access) -->
-      <div class="flex items-center justify-center gap-2 max-w-md mx-auto px-1">
-        <button id="btnPlayAgainTop" class="flex-1 py-3 px-4 rounded-2xl bg-gradient-to-r from-emerald-500 via-emerald-600 to-lime-500 hover:from-emerald-400 hover:to-lime-400 text-pitch-950 font-display font-black text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 shadow-xl shadow-emerald-500/25 active:scale-95 transition">
-          <i class="fa-solid fa-rotate-right"></i>
-          <span id="txtPlayAgain">YENİDEN BİR HAYAT ÇEK</span>
+      <!-- Action Buttons (Balanced Layout: Primary Full-Width CTA + 4-Column Secondary Bar) -->
+      <div class="space-y-2.5 max-w-md mx-auto px-1">
+        <!-- 1. Primary Action: YENİDEN BİR HAYAT ÇEK (Full width, bold, impossible to miss, single line) -->
+        <button id="btnPlayAgainTop" class="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-emerald-500 via-emerald-600 to-lime-500 hover:from-emerald-400 hover:to-lime-400 text-pitch-950 font-display font-black text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 shadow-xl shadow-emerald-500/25 active:scale-95 transition">
+          <i class="fa-solid fa-rotate-right text-sm"></i>
+          <span id="txtPlayAgain" class="whitespace-nowrap">YENİDEN BİR HAYAT ÇEK</span>
         </button>
 
-        <button id="btnShareToWall" class="py-3 px-3.5 sm:px-4 rounded-2xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-pitch-950 font-display font-black text-xs flex items-center gap-1.5 shadow-lg shadow-amber-500/25 active:scale-95 transition shrink-0" title="Efsaneler Duvarında Paylaş">
-          <i class="fa-solid fa-crown text-sm"></i>
-          <span id="txtShareWall">Duvara Ekle</span>
-        </button>
+        <!-- 2. Secondary Share & Export Bar (Equal 4-Column Balanced Grid) -->
+        <div class="grid grid-cols-4 gap-2">
+          <button id="btnDownloadCard" class="py-2.5 px-1.5 sm:px-2 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-lg shadow-cyan-500/20 active:scale-95 transition" title="Jübile Kartını Görsel Olarak İndir / Paylaş">
+            <i class="fa-solid fa-download text-xs"></i>
+            <span id="txtDownloadCard" class="truncate text-[11px] sm:text-xs">Kartı İndir</span>
+          </button>
 
-        <button id="btnShareWhatsApp" class="py-3 px-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-emerald-600/20 active:scale-95 transition shrink-0" title="WhatsApp Paylaş">
-          <i class="fa-brands fa-whatsapp text-sm"></i>
-          <span class="hidden sm:inline" id="txtShareWA">WhatsApp</span>
-        </button>
+          <button id="btnShareToWall" class="py-2.5 px-1.5 sm:px-2 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-pitch-950 font-display font-black text-xs flex items-center justify-center gap-1.5 shadow-lg shadow-amber-500/25 active:scale-95 transition" title="Efsaneler Duvarında Paylaş">
+            <i class="fa-solid fa-crown text-xs"></i>
+            <span id="txtShareWall" class="truncate text-[11px] sm:text-xs">Duvara Ekle</span>
+          </button>
 
-        <button id="btnCopyResult" class="py-3 px-3.5 rounded-2xl bg-pitch-900 hover:bg-pitch-800 text-slate-300 hover:text-white font-bold text-xs border border-pitch-700 active:scale-95 transition shrink-0 flex items-center gap-1.5" title="Kopyala">
-          <i class="fa-solid fa-copy"></i>
-          <span class="hidden sm:inline" id="txtCopyResult">Kopyala</span>
-        </button>
+          <button id="btnShareWhatsApp" class="py-2.5 px-1.5 sm:px-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-600/20 active:scale-95 transition" title="WhatsApp Paylaş">
+            <i class="fa-brands fa-whatsapp text-sm"></i>
+            <span id="txtShareWA" class="truncate text-[11px] sm:text-xs">WhatsApp</span>
+          </button>
+
+          <button id="btnCopyResult" class="py-2.5 px-1.5 sm:px-2 rounded-xl bg-pitch-900 hover:bg-pitch-800 text-slate-300 hover:text-white font-bold text-xs border border-pitch-700 active:scale-95 transition flex items-center justify-center gap-1.5" title="Kopyala">
+            <i class="fa-solid fa-copy text-xs"></i>
+            <span id="txtCopyResult" class="truncate text-[11px] sm:text-xs">Kopyala</span>
+          </button>
+        </div>
       </div>
 
       <!-- The Digital Collectible Footballer Card (FUT Style Canvas & HTML) -->
@@ -964,8 +975,10 @@
         jubileeBadge: 'JÜBİLE & EFSANE MİRASI',
         jubileeTitle: 'Kramponlar Duvara Asıldı!',
         jubileeSub: 'Kramponlarını astın! İşte sokaklardan dünya vitrinine uzanan 40 yıllık hayat hikayen.',
-        shareWA: "WhatsApp'ta Paylaş",
+        shareWA: 'WhatsApp',
         shareWall: 'Duvara Ekle',
+        downloadCard: 'Kartı İndir',
+        downloadCardTitle: 'Jübile Kartını Görsel Olarak İndir / Paylaş',
         copyResultTitle: 'Sonucu Kopyala',
         copied: 'Kopyalandı!',
         playAgain: 'YENİDEN BİR HAYAT ÇEK',
@@ -1024,8 +1037,10 @@
         jubileeBadge: 'JUBILEE & LEGACY',
         jubileeTitle: 'Boots Hung on the Wall!',
         jubileeSub: 'You have hung up your boots! Here is your 40-year journey from childhood alleys to world spotlight.',
-        shareWA: 'Share on WhatsApp',
+        shareWA: 'WhatsApp',
         shareWall: 'Share to Wall',
+        downloadCard: 'Save Card',
+        downloadCardTitle: 'Download or Share Jubilee Card as Image',
         copyResultTitle: 'Copy Career Summary',
         copied: 'Copied!',
         playAgain: 'SPAWN ANOTHER CAREER',
@@ -1122,6 +1137,9 @@
       setIfExists('txtRetirementSubtitle', 'textContent', dict.jubileeSub);
       setIfExists('txtShareWA', 'textContent', dict.shareWA);
       setIfExists('txtShareWall', 'textContent', dict.shareWall);
+      setIfExists('txtDownloadCard', 'textContent', dict.downloadCard);
+      const downloadBtn = document.getElementById('btnDownloadCard');
+      if (downloadBtn) downloadBtn.title = dict.downloadCardTitle;
       setIfExists('txtPlayAgain', 'textContent', dict.playAgain);
 
       const copyBtn = document.getElementById('btnCopyResult');
@@ -1226,8 +1244,8 @@
       const oddsEl = document.getElementById('rouletteOdds');
 
       let spinCount = 0;
-      const maxSpins = 28;
-      let delay = 50;
+      const maxSpins = 16; // Snappy & thrilling ~2.8s total duration
+      let delay = 40;
 
       function step() {
         spinCount++;
@@ -1238,7 +1256,7 @@
         oddsEl.textContent = currentLang === 'TR' ? `Olasılık: %${randCountry.weight.toFixed(1)}` : `Probability: ${randCountry.weight.toFixed(1)}%`;
 
         if (spinCount < maxSpins) {
-          delay += Math.floor(spinCount * 5.5);
+          delay += Math.floor(spinCount * 2.5);
           setTimeout(step, delay);
         } else {
           // Final Selected Country
@@ -1253,7 +1271,7 @@
 
           setTimeout(() => {
             initCareerWithBirth(birth);
-          }, 1000);
+          }, 600);
         }
       }
 
@@ -2977,6 +2995,10 @@
 
       renderHallOfFame();
 
+      if (window.pbTracker && window.pbTracker.logEvent) {
+        window.pbTracker.logEvent('wall_add', '/football-lottery', player ? player.fullName : 'Legend');
+      }
+
       const shareBtn = document.getElementById('btnShareToWall');
       if (shareBtn) {
         shareBtn.disabled = true;
@@ -3074,6 +3096,9 @@
       if (wallBtn) wallBtn.addEventListener('click', shareToHallOfFame);
 
       const restartGame = () => {
+        if (window.pbTracker && window.pbTracker.logEvent) {
+          window.pbTracker.logEvent('play_again', '/football-lottery', player ? player.fullName : 'Restart');
+        }
         if (isAutoPlaying) toggleAutoPlay();
         document.getElementById('screenCareer').classList.add('hidden');
         document.getElementById('careerHud').classList.add('hidden');
@@ -3092,34 +3117,121 @@
       const playAgainTopBtn = document.getElementById('btnPlayAgainTop');
       if (playAgainTopBtn) playAgainTopBtn.addEventListener('click', restartGame);
 
+      // Download or Share Jubilee Card as High-Res Image (PNG)
+      const downloadCardBtn = document.getElementById('btnDownloadCard');
+      if (downloadCardBtn) {
+        downloadCardBtn.addEventListener('click', async () => {
+          const cardEl = document.getElementById('jubileeCard');
+          if (!cardEl) return;
+          const originalContent = downloadCardBtn.innerHTML;
+          downloadCardBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-xs"></i> <span class="text-[11px]">...</span>';
+          downloadCardBtn.disabled = true;
+
+          try {
+            if (typeof html2canvas === 'undefined') {
+              throw new Error('html2canvas not loaded');
+            }
+
+            const canvas = await html2canvas(cardEl, {
+              scale: 2, // 2x Retina resolution
+              backgroundColor: '#06130b',
+              useCORS: true,
+              logging: false
+            });
+
+            canvas.toBlob(async (blob) => {
+              if (!blob) throw new Error('Blob could not be created');
+              const playerNameSafe = (player && player.fullName) ? player.fullName.toLowerCase().replace(/[^a-z0-9]/g, '-') : 'footballer';
+              const filename = `${playerNameSafe}-legacy-card.png`;
+              const file = new File([blob], filename, { type: 'image/png' });
+
+              // If mobile browser supports native file sharing (iOS Safari / Chrome / Android):
+              if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                try {
+                  await navigator.share({
+                    files: [file],
+                    title: `${player.fullName} - Jubilee Card`,
+                    text: currentLang === 'TR'
+                      ? `⚽ ${player.fullName} (${player.country.flag}) - Futbolcu Doğum Piyangosu 40 yaş jübile kartım!\nSen de oyna: https://pratikbase.com/football-lottery/?ref=card_share`
+                      : `⚽ ${player.fullName} (${player.country.flag}) - My 40-year Football Career Lottery card!\nPlay here: https://pratikbase.com/football-lottery/?lang=en&ref=card_share`
+                  });
+                  downloadCardBtn.innerHTML = originalContent;
+                  downloadCardBtn.disabled = false;
+                  if (window.pbTracker && window.pbTracker.logEvent) {
+                    window.pbTracker.logEvent('card_share_native', '/football-lottery', player ? player.fullName : 'NativeShare');
+                  }
+                  return;
+                } catch (shareErr) {
+                  if (shareErr.name === 'AbortError') {
+                    downloadCardBtn.innerHTML = originalContent;
+                    downloadCardBtn.disabled = false;
+                    return;
+                  }
+                }
+              }
+
+              // Fallback: Direct download as PNG file
+              const link = document.createElement('a');
+              link.download = filename;
+              link.href = URL.createObjectURL(blob);
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+              URL.revokeObjectURL(link.href);
+
+              downloadCardBtn.innerHTML = '<i class="fa-solid fa-check text-emerald-400 text-xs"></i> <span class="text-[11px] text-emerald-400">İndi!</span>';
+              setTimeout(() => {
+                downloadCardBtn.innerHTML = originalContent;
+                downloadCardBtn.disabled = false;
+              }, 2000);
+
+              if (window.pbTracker && window.pbTracker.logEvent) {
+                window.pbTracker.logEvent('card_download', '/football-lottery', player ? player.fullName : 'CardDownload');
+              }
+            }, 'image/png');
+          } catch (err) {
+            console.error('Image export error:', err);
+            downloadCardBtn.innerHTML = originalContent;
+            downloadCardBtn.disabled = false;
+            alert(currentLang === 'TR' ? 'Görsel kaydedilemedi, ekran görüntüsü alabilirsiniz.' : 'Could not export image, you can take a screenshot.');
+          }
+        });
+      }
+
       // Share to WhatsApp
       document.getElementById('btnShareWhatsApp').addEventListener('click', () => {
+        if (window.pbTracker && window.pbTracker.logEvent) {
+          window.pbTracker.logEvent('whatsapp_share', '/football-lottery', player ? player.fullName : 'WhatsApp');
+        }
         const text = currentLang === 'TR'
           ? `⚽ Futbolcu Doğum Piyangosu'nda kariyerimi tamamladım!\n\n` +
             `👤 Oyuncu: ${player.fullName} (${player.country.flag} ${player.country.nameTr})\n` +
             `⭐ Zirve OVR: ${player.peakOvr} | Mevki: ${player.position.code}\n` +
             `📊 İstatistik: ${player.stats.matches} Maç, ${player.stats.goals} Gol, ${player.stats.assists} Asist, 🏆 ${player.stats.trophies} Kupa\n` +
             `🎖️ Kariyer Kimliği: ${player.archetype}\n\n` +
-            `Sen hangi ülkede, hangi yetenekle doğacaksın? Hemen oyna:\nhttps://pratikbase.com/football-lottery/`
+            `Sen hangi ülkede, hangi yetenekle doğacaksın? Hemen oyna:\nhttps://pratikbase.com/football-lottery/?ref=whatsapp`
           : `⚽ Just finished my Football Lottery Career!\n\n` +
             `👤 Player: ${player.fullName} (${player.country.flag} ${player.country.nameEn})\n` +
             `⭐ Peak OVR: ${player.peakOvr} | Pos: ${player.position.code}\n` +
             `📊 Stats: ${player.stats.matches} Apps, ${player.stats.goals} Goals, ${player.stats.assists} Ast, 🏆 ${player.stats.trophies} Trophies\n` +
             `🎖️ Identity: ${player.archetype}\n\n` +
-            `Test your football birth lottery now:\nhttps://pratikbase.com/football-lottery/`;
+            `Test your football birth lottery now:\nhttps://pratikbase.com/football-lottery/?lang=en&ref=whatsapp`;
 
         window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
       });
 
       // Copy Result
       document.getElementById('btnCopyResult').addEventListener('click', () => {
+        if (window.pbTracker && window.pbTracker.logEvent) {
+          window.pbTracker.logEvent('copy_result', '/football-lottery', player ? player.fullName : 'Copy');
+        }
         const text = currentLang === 'TR'
           ? `⚽ ${player.fullName} (${player.country.flag}) - Futbolcu Doğum Piyangosu\n` +
             `Zirve OVR: ${player.peakOvr} | ${player.stats.matches} Maç | ${player.stats.goals} Gol | 🏆 ${player.stats.trophies} Kupa | Unvan: ${player.archetype}\n` +
-            `https://pratikbase.com/football-lottery/`
+            `https://pratikbase.com/football-lottery/?ref=copy`
           : `⚽ ${player.fullName} (${player.country.flag}) - Football Career Lottery\n` +
             `Peak OVR: ${player.peakOvr} | ${player.stats.matches} Apps | ${player.stats.goals} Goals | 🏆 ${player.stats.trophies} Trophies | Archetype: ${formatArchetype(player.archetype)}\n` +
-            `https://pratikbase.com/football-lottery/?lang=en`;
+            `https://pratikbase.com/football-lottery/?lang=en&ref=copy`;
 
         navigator.clipboard.writeText(text).then(() => {
           const btnTxt = document.getElementById('txtCopyResult');
