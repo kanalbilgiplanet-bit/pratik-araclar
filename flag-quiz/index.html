@@ -1,0 +1,1805 @@
+<!DOCTYPE html>
+<html lang="tr" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Flag Blitz | Ülke Bayrakları Bilmece & Canlı Çok Oyunculu Düello</title>
+  <meta name="description" content="10 bayrak, soru başı 5 saniye, saliseler yarışıyor! Arkadaşlarınla canlı 1v1 veya çok oyunculu odada yarış ya da Global İlk 100 rekorunu kır.">
+  <meta name="keywords" content="bayrak oyunu, flag quiz, ülke bayrakları bilmece, online bayrak yarışması, multiplayer flag quiz, bayrak bilmaca 1v1">
+  <link rel="canonical" href="https://pratikbase.com/flag-quiz/">
+
+  <!-- Open Graph / Social Meta -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Flag Blitz | Ülke Bayrakları Canlı Düello">
+  <meta property="og:description" content="10 bayrak, saliseler yarışıyor! Arkadaşlarına meydan oku veya Global İlk 100 listesine adını yazdır.">
+  <meta property="og:image" content="https://flagcdn.com/w640/tr.png">
+  <meta property="og:url" content="https://pratikbase.com/flag-quiz/">
+
+  <!-- Tailwind CSS & Fonts -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            pitch: {
+              950: '#06130b',
+              900: '#0b2014',
+              850: '#0f2b1b',
+              800: '#153824',
+              700: '#1d4a31'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            display: ['Space Grotesk', 'Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          }
+        }
+      }
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&family=Space+Grotesk:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    @keyframes pulse-fast {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.85; transform: scale(1.04); }
+    }
+    @keyframes shake-wrong {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
+    .anim-shake { animation: shake-wrong 0.35s ease-in-out; }
+    .anim-pulse-fast { animation: pulse-fast 1s infinite ease-in-out; }
+
+    /* Custom Glassmorphism */
+    .glass-card {
+      background: rgba(11, 32, 20, 0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+    }
+    .glass-card-amber {
+      background: rgba(21, 56, 36, 0.9);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+    }
+
+    /* Flag image ratio container */
+    .flag-box {
+      aspect-ratio: 3 / 2;
+    }
+
+    /* Prevent mobile double-tap zoom on game buttons */
+    button {
+      touch-action: manipulation;
+    }
+  </style>
+</head>
+<body class="bg-pitch-950 text-slate-100 font-sans antialiased min-h-screen flex flex-col selection:bg-emerald-500 selection:text-pitch-950">
+
+  <!-- Top Navigation Bar -->
+  <header class="border-b border-pitch-800 bg-pitch-900/90 backdrop-blur-md sticky top-0 z-40">
+    <div class="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="/" class="flex items-center gap-2 group text-white">
+          <span class="w-8 h-8 rounded-xl bg-gradient-to-br from-emerald-500 to-lime-500 flex items-center justify-center text-pitch-950 font-black shadow-lg shadow-emerald-500/20 group-hover:scale-105 transition">
+            🚩
+          </span>
+          <div class="flex flex-col">
+            <span class="font-display font-black text-sm tracking-tight text-white flex items-center gap-1.5">
+              FLAG BLITZ
+              <span class="px-1.5 py-0.2 rounded text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">CANLI</span>
+            </span>
+            <span class="text-[10px] text-slate-400 font-mono -mt-0.5">PratikBase Oyun Arenası</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Controls: Language, Sound, Player Profile -->
+      <div class="flex items-center gap-2">
+        <!-- Sound Toggle -->
+        <button id="btnSoundToggle" onclick="toggleSound()" class="w-8 h-8 rounded-lg bg-pitch-800 hover:bg-pitch-700 text-slate-300 hover:text-white flex items-center justify-center text-xs transition border border-pitch-700" title="Ses Aç/Kapat">
+          <i id="soundIcon" class="fa-solid fa-volume-high"></i>
+        </button>
+
+        <!-- Language Switcher -->
+        <button id="btnLangToggle" onclick="toggleLang()" class="px-2.5 py-1 rounded-lg bg-pitch-800 hover:bg-pitch-700 text-slate-200 text-xs font-mono font-bold transition border border-pitch-700 flex items-center gap-1">
+          <span id="langFlag">🇹🇷</span>
+          <span id="langLabel">TR</span>
+        </button>
+
+        <!-- Profile / Transfer Button -->
+        <button onclick="openProfileModal()" class="px-2.5 py-1 rounded-lg bg-emerald-950 hover:bg-emerald-900 text-emerald-300 border border-emerald-500/30 text-xs font-bold transition flex items-center gap-1.5" title="Profil & Cihaz Kodu">
+          <i class="fa-solid fa-user-astronaut text-[11px]"></i>
+          <span id="navPlayerNick" class="max-w-[70px] truncate">Misafir</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="flex-1 max-w-4xl w-full mx-auto p-4 sm:p-6 flex flex-col justify-center">
+
+    <!-- ================================================================= -->
+    <!-- SCREEN 1: HOME & LOBBY HUB -->
+    <!-- ================================================================= -->
+    <div id="screenHome" class="space-y-6 animate-in fade-in duration-300">
+      
+      <!-- Hero Title -->
+      <div class="text-center space-y-2">
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xs font-mono font-semibold">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+          <span id="txtHeroBadge">10 Bayrak • 5 Saniye • Saliseler Yarışıyor!</span>
+        </div>
+        <h1 class="text-3xl sm:text-5xl font-display font-black text-white tracking-tight">
+          Hangi Ülkenin <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-lime-300 to-green-400">Bayrağı?</span>
+        </h1>
+        <p class="text-slate-300 text-xs sm:text-sm max-w-md mx-auto" id="txtHeroSub">
+          Doğru ülkeyi en hızlı kim seçecek? İster tek başına rekor kır, ister arkadaş grubunla canlı düelloya gir!
+        </p>
+      </div>
+
+      <!-- Player Identity Card (Zero-Login, Instant Persistent) -->
+      <div class="glass-card p-4 sm:p-5 rounded-2xl max-w-md mx-auto space-y-3">
+        <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider" id="txtYourNickLabel">
+          Yarışmacı Adın / Nick
+        </label>
+        <div class="flex items-center gap-2">
+          <div class="relative flex-1">
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm">
+              <i class="fa-solid fa-bolt text-emerald-400"></i>
+            </span>
+            <input type="text" id="inputPlayerNick" maxlength="15" placeholder="Adını veya Lakabını Yaz..." class="w-full pl-9 pr-3 py-2.5 rounded-xl bg-pitch-950 border border-pitch-700 focus:border-emerald-500 focus:outline-none text-white font-bold text-sm placeholder:text-slate-600 transition">
+          </div>
+          <button onclick="saveNickFromInput()" class="px-4 py-2.5 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-slate-200 text-xs font-bold border border-pitch-700 transition shrink-0" id="btnSaveNick">
+            Kaydet
+          </button>
+        </div>
+        <div class="flex items-center justify-between text-[11px] text-slate-400 pt-1">
+          <span id="txtPersonalBestHint">Kişisel Rekorun: <strong id="homePersonalBest" class="text-emerald-400 font-mono">0/10 • --s</strong></span>
+          <button onclick="openProfileModal()" class="text-emerald-400 hover:underline flex items-center gap-1 font-semibold" id="btnAccountTransfer">
+            <i class="fa-solid fa-key text-[10px]"></i> Cihaz Kodu
+          </button>
+        </div>
+      </div>
+
+      <!-- Game Mode Selection Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-xl mx-auto">
+        
+        <!-- Mode A: Solo Blitz (Record Hunt) -->
+        <div class="glass-card hover:border-emerald-500/60 transition p-5 rounded-3xl flex flex-col justify-between space-y-4 group text-left relative overflow-hidden shadow-xl">
+          <div class="absolute -right-6 -bottom-6 text-7xl text-emerald-500/5 group-hover:text-emerald-500/10 transition pointer-events-none">
+            ⚡
+          </div>
+          <div class="space-y-2">
+            <div class="w-10 h-10 rounded-2xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center text-lg">
+              <i class="fa-solid fa-bolt-lightning"></i>
+            </div>
+            <h3 class="font-display font-black text-lg text-white" id="txtModeSoloTitle">Hızlı Yarış (Solo Blitz)</h3>
+            <p class="text-xs text-slate-300 leading-relaxed" id="txtModeSoloDesc">
+              Beklemeden hemen başla. 10 bayrağı en hızlı sürede bilip <strong>Global İlk 100</strong> listesine adını yazdır!
+            </p>
+          </div>
+          <button onclick="startSoloGame()" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-lime-500 hover:from-emerald-400 hover:to-lime-400 text-pitch-950 font-display font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/25 active:scale-95 transition">
+            <i class="fa-solid fa-play text-xs"></i>
+            <span id="btnStartSolo">HEMEN BAŞLA</span>
+          </button>
+        </div>
+
+        <!-- Mode B: Multiplayer Party Room (1v1, 3, 4+ Friends) -->
+        <div class="glass-card hover:border-amber-500/60 transition p-5 rounded-3xl flex flex-col justify-between space-y-4 group text-left relative overflow-hidden shadow-xl">
+          <div class="absolute -right-6 -bottom-6 text-7xl text-amber-500/5 group-hover:text-amber-500/10 transition pointer-events-none">
+            👥
+          </div>
+          <div class="space-y-2">
+            <div class="w-10 h-10 rounded-2xl bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center justify-center text-lg">
+              <i class="fa-solid fa-users"></i>
+            </div>
+            <h3 class="font-display font-black text-lg text-white" id="txtModeMultiTitle">Arkadaşlarla Canlı Oda</h3>
+            <p class="text-xs text-slate-300 leading-relaxed" id="txtModeMultiDesc">
+              2 ila 8 kişiyle aynı anda yarış! Oda linkini WhatsApp'tan at, aynı 10 bayrakta podyum savaşı verin.
+            </p>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="createPartyRoom()" class="flex-1 py-3 px-3 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-pitch-950 font-display font-black text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-lg shadow-amber-500/25 active:scale-95 transition" id="btnCreateRoom">
+              <i class="fa-solid fa-plus text-xs"></i> Oda Kur
+            </button>
+            <button onclick="promptJoinRoom()" class="py-3 px-3 rounded-xl bg-pitch-900 hover:bg-pitch-800 text-slate-200 border border-pitch-700 font-bold text-xs active:scale-95 transition" id="btnJoinRoom">
+              Koda Katıl
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Live Top 100 Leaderboard Section -->
+      <div class="max-w-xl mx-auto pt-4 space-y-3">
+        <div class="flex items-center justify-between border-b border-pitch-800 pb-2">
+          <div class="flex items-center gap-2">
+            <span class="text-amber-400 text-sm"><i class="fa-solid fa-trophy"></i></span>
+            <h4 class="font-display font-bold text-sm text-white" id="txtLeaderboardHeading">İlk 100 Liderlik Tablosu</h4>
+          </div>
+          <div class="flex items-center bg-pitch-950 p-0.5 rounded-lg border border-pitch-800 text-[11px] font-bold">
+            <button id="btnTabToday" onclick="switchLeaderboardTab('today')" class="px-2.5 py-0.5 rounded-md bg-emerald-500 text-pitch-950">Bugün</button>
+            <button id="btnTabAllTime" onclick="switchLeaderboardTab('all')" class="px-2.5 py-0.5 rounded-md text-slate-400 hover:text-white">Tüm Zamanlar</button>
+          </div>
+        </div>
+
+        <div id="leaderboardList" class="space-y-1.5 max-h-60 overflow-y-auto pr-1">
+          <!-- Populated dynamically from Firebase Realtime DB -->
+          <div class="text-center py-6 text-slate-500 text-xs font-mono">
+            <i class="fa-solid fa-spinner fa-spin mr-1"></i> Liderler Yükleniyor...
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- SCREEN 2: MULTIPLAYER LOBBY (WAITING ROOM FOR 2-8 PLAYERS) -->
+    <!-- ================================================================= -->
+    <div id="screenLobby" class="hidden max-w-lg mx-auto w-full space-y-5 animate-in fade-in duration-200">
+      
+      <div class="glass-card-amber p-6 rounded-3xl space-y-5 text-center relative overflow-hidden">
+        
+        <!-- Header & Room Code -->
+        <div class="space-y-1">
+          <span class="px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[11px] font-mono font-bold" id="txtLobbyBadge">
+            CANLI DÜELLO ODASI
+          </span>
+          <h2 class="text-2xl font-display font-black text-white pt-1" id="txtLobbyTitle">Arkadaşların Bekleniyor...</h2>
+          <p class="text-xs text-slate-300" id="txtLobbyDesc">Linki kopyalayıp WhatsApp grubuna at, herkes gelince başlat!</p>
+        </div>
+
+        <!-- Room Code Display & Copy -->
+        <div class="p-3.5 rounded-2xl bg-pitch-950 border border-pitch-700 flex items-center justify-between gap-3">
+          <div class="text-left min-w-0">
+            <div class="text-[10px] text-slate-500 uppercase tracking-wider font-mono font-bold">Oda Kodu</div>
+            <div id="lblRoomCode" class="text-xl sm:text-2xl font-mono font-black text-amber-400 tracking-wider">FLG-8421</div>
+          </div>
+          <div class="flex items-center gap-1.5 shrink-0">
+            <button onclick="copyRoomLink()" class="px-3 py-2 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-slate-200 text-xs font-bold border border-pitch-700 transition flex items-center gap-1.5" id="btnCopyRoomLink">
+              <i class="fa-solid fa-copy"></i>
+              <span id="txtCopyRoomBtn">Kopyala</span>
+            </button>
+            <button onclick="shareRoomWhatsApp()" class="px-3 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition flex items-center gap-1.5 shadow-md shadow-emerald-600/20" title="WhatsApp ile Paylaş">
+              <i class="fa-brands fa-whatsapp text-sm"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Connected Players List (2 - 8 Players) -->
+        <div class="space-y-2 text-left">
+          <div class="flex items-center justify-between text-xs text-slate-400 font-bold px-1">
+            <span id="txtPlayersCount">Oyuncular (0)</span>
+            <span class="text-emerald-400 font-mono text-[11px] flex items-center gap-1">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> Canlı Bağlantı
+            </span>
+          </div>
+          <div id="lobbyPlayersList" class="space-y-2 max-h-56 overflow-y-auto pr-1">
+            <!-- Populated via Firebase Realtime Database -->
+          </div>
+        </div>
+
+        <!-- Host Action Buttons -->
+        <div class="pt-2 space-y-2">
+          <button id="btnHostStartMatch" onclick="hostStartMatch()" class="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-pitch-950 font-display font-black text-sm uppercase tracking-wider shadow-xl shadow-amber-500/25 active:scale-95 transition flex items-center justify-center gap-2">
+            <i class="fa-solid fa-play"></i>
+            <span id="txtHostStartBtn">YARIŞMAYI BAŞLAT (3, 2, 1!)</span>
+          </button>
+          <button onclick="leaveRoomAndGoHome()" class="w-full py-2.5 text-xs text-slate-400 hover:text-rose-400 font-bold transition" id="btnLeaveRoom">
+            Odadan Ayrıl
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- SCREEN 3: ACTIVE QUIZ ARENA (10 FLAGS, 5S PER FLAG) -->
+    <!-- ================================================================= -->
+    <div id="screenQuiz" class="hidden max-w-lg mx-auto w-full space-y-4 animate-in fade-in duration-200">
+      
+      <!-- Top HUD: Question Progress + Live Reaction Timer + Multiplayer Mini Bar -->
+      <div class="flex items-center justify-between text-xs font-mono font-bold px-1">
+        <div class="flex items-center gap-1.5 text-slate-300">
+          <span class="text-emerald-400 text-sm">🚩</span>
+          <span id="quizQuestionCounter">1 / 10</span>
+        </div>
+
+        <!-- Live Stopwatch for current question -->
+        <div class="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-pitch-900 border border-pitch-800 text-amber-300 font-mono">
+          <i class="fa-regular fa-clock text-[11px]"></i>
+          <span id="quizCurrentTimerText">0.00s</span>
+        </div>
+
+        <!-- Score counter so far -->
+        <div class="flex items-center gap-1 text-emerald-400">
+          <i class="fa-solid fa-check text-xs"></i>
+          <span id="quizScoreCounter">0 Doğru</span>
+        </div>
+      </div>
+
+      <!-- Real-time Multi-Opponent Mini Bar (Shows in multiplayer rooms) -->
+      <div id="quizMultiplayerLiveBar" class="hidden glass-card p-2.5 rounded-xl space-y-1.5 text-[11px] font-mono">
+        <div class="text-[10px] text-slate-400 uppercase tracking-wider font-bold px-0.5">Rakiplerin Durumu</div>
+        <div id="quizOpponentsTrack" class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+      <!-- 5-Second Countdown Time Progress Bar -->
+      <div class="w-full h-2.5 rounded-full bg-pitch-900 border border-pitch-800 overflow-hidden relative shadow-inner">
+        <div id="quizTimerBar" class="h-full w-full bg-emerald-500 rounded-full transition-all duration-75"></div>
+      </div>
+
+      <!-- Giant Flag Showcase Box -->
+      <div class="glass-card p-5 sm:p-7 rounded-3xl shadow-2xl flex flex-col items-center justify-center relative overflow-hidden text-center space-y-4" id="quizFlagCard">
+        
+        <div class="w-full max-w-[280px] sm:max-w-[320px] mx-auto flag-box rounded-2xl overflow-hidden shadow-2xl border-2 border-pitch-700/80 bg-pitch-950 flex items-center justify-center relative">
+          <!-- Flag Image from FlagCDN w320 with graceful fallback -->
+          <img id="quizFlagImg" src="https://flagcdn.com/w320/tr.png" alt="Country Flag" class="w-full h-full object-cover rounded-xl" onerror="handleFlagImageError(this)">
+          <!-- Overlay badge for question result effect -->
+          <div id="quizFlagFeedbackOverlay" class="absolute inset-0 flex items-center justify-center text-5xl font-black opacity-0 transition-opacity pointer-events-none">
+            <!-- Populated on click: check or cross -->
+          </div>
+        </div>
+
+        <div class="text-xs text-slate-400 font-medium font-mono" id="txtWhichCountryQuestion">
+          Bu bayrak hangi ülkeye ait?
+        </div>
+
+      </div>
+
+      <!-- The 2 Large Touch Options (1 Correct, 1 Tricky Distractor) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1" id="quizOptionsContainer">
+        
+        <button id="btnOptionA" onclick="chooseOption(0)" class="w-full py-4 px-4 rounded-2xl bg-pitch-900 hover:bg-pitch-850 active:scale-98 border-2 border-pitch-700 hover:border-emerald-500/50 text-white font-display font-black text-base sm:text-lg flex items-center justify-between gap-3 shadow-xl transition relative overflow-hidden group">
+          <div class="flex items-center gap-3 min-w-0">
+            <span class="w-7 h-7 rounded-lg bg-pitch-950 text-slate-400 group-hover:text-emerald-300 border border-pitch-700 flex items-center justify-center text-xs font-mono font-bold shrink-0">A</span>
+            <span id="lblOptionA" class="truncate text-left">Türkiye</span>
+          </div>
+          <i class="fa-solid fa-arrow-right text-slate-600 group-hover:text-emerald-400 group-hover:translate-x-1 transition text-xs shrink-0"></i>
+        </button>
+
+        <button id="btnOptionB" onclick="chooseOption(1)" class="w-full py-4 px-4 rounded-2xl bg-pitch-900 hover:bg-pitch-850 active:scale-98 border-2 border-pitch-700 hover:border-emerald-500/50 text-white font-display font-black text-base sm:text-lg flex items-center justify-between gap-3 shadow-xl transition relative overflow-hidden group">
+          <div class="flex items-center gap-3 min-w-0">
+            <span class="w-7 h-7 rounded-lg bg-pitch-950 text-slate-400 group-hover:text-emerald-300 border border-pitch-700 flex items-center justify-center text-xs font-mono font-bold shrink-0">B</span>
+            <span id="lblOptionB" class="truncate text-left">Azerbaycan</span>
+          </div>
+          <i class="fa-solid fa-arrow-right text-slate-600 group-hover:text-emerald-400 group-hover:translate-x-1 transition text-xs shrink-0"></i>
+        </button>
+
+      </div>
+
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- SCREEN 4: RESULTS PODIUM (SOLO STATS & MULTIPLAYER 1ST-4TH RANK) -->
+    <!-- ================================================================= -->
+    <div id="screenResult" class="hidden max-w-lg mx-auto w-full space-y-5 animate-in fade-in duration-300">
+      
+      <div class="glass-card p-6 rounded-3xl space-y-5 text-center shadow-2xl relative overflow-hidden border border-emerald-500/30">
+        
+        <!-- Victory / Result Header -->
+        <div class="space-y-1">
+          <div id="resultTrophyIcon" class="text-4xl sm:text-5xl anim-pulse-fast">🏆</div>
+          <h2 class="text-2xl sm:text-3xl font-display font-black text-white" id="txtResultTitle">Yarışma Tamamlandı!</h2>
+          <p class="text-xs text-slate-300" id="txtResultSubtitle">İşte 10 bayrağın refleks karnesi</p>
+        </div>
+
+        <!-- Solo Score Showcase Box -->
+        <div id="resultSoloCard" class="p-4 rounded-2xl bg-pitch-950 border border-pitch-800 space-y-3">
+          <div class="grid grid-cols-3 gap-2 text-center">
+            <div class="p-2 rounded-xl bg-pitch-900/60 border border-pitch-800">
+              <div class="text-[10px] text-slate-400 font-mono uppercase font-bold" id="lblCorrectCount">Doğru</div>
+              <div class="text-xl sm:text-2xl font-mono font-black text-emerald-400" id="valResultCorrect">9 / 10</div>
+            </div>
+            <div class="p-2 rounded-xl bg-pitch-900/60 border border-pitch-800">
+              <div class="text-[10px] text-slate-400 font-mono uppercase font-bold" id="lblTotalTime">Toplam Süre</div>
+              <div class="text-xl sm:text-2xl font-mono font-black text-amber-300" id="valResultTime">12.42s</div>
+            </div>
+            <div class="p-2 rounded-xl bg-pitch-900/60 border border-pitch-800">
+              <div class="text-[10px] text-slate-400 font-mono uppercase font-bold" id="lblAvgTime">Ortalama</div>
+              <div class="text-xl sm:text-2xl font-mono font-black text-cyan-300" id="valResultAvg">1.24s</div>
+            </div>
+          </div>
+          <div id="resultRankMessage" class="text-xs text-emerald-300 font-medium py-1 px-2 rounded-lg bg-emerald-950/60 border border-emerald-500/30">
+            <!-- Dynamic feedback based on score -->
+          </div>
+        </div>
+
+        <!-- Multiplayer Grand Podium (1st, 2nd, 3rd, 4th...) -->
+        <div id="resultPodiumCard" class="hidden space-y-3 text-left">
+          <div class="text-xs text-amber-300 font-mono font-bold flex items-center justify-between px-1">
+            <span>🏁 ODA SIRALAMASI & PODYUM</span>
+            <span class="text-[10px] text-slate-400">Eşitlikte hız kazanır!</span>
+          </div>
+          <div id="podiumRanksList" class="space-y-2">
+            <!-- Populated dynamically via Firebase RTDB room results -->
+          </div>
+        </div>
+
+        <!-- 10 Questions Flag Summary Accordion -->
+        <details class="text-left group rounded-xl bg-pitch-950/80 border border-pitch-800 overflow-hidden text-xs">
+          <summary class="p-3 font-bold text-slate-300 cursor-pointer hover:text-white flex items-center justify-between select-none">
+            <span id="txtInspect10Questions">🔍 10 Sorunun Analizi & Hataların</span>
+            <i class="fa-solid fa-chevron-down text-slate-500 group-open:rotate-180 transition text-xs"></i>
+          </summary>
+          <div id="resultQuestionsBreakdown" class="p-3 border-t border-pitch-800/80 space-y-2 divide-y divide-pitch-900">
+            <!-- Populated with all 10 flags, chosen answer, right answer, time -->
+          </div>
+        </details>
+
+        <!-- Action Buttons: Play Again, Rematch, Share WhatsApp, Home -->
+        <div class="space-y-2 pt-2">
+          
+          <!-- Primary CTA (Play Again or Rematch) -->
+          <button id="btnPlayAgain" onclick="restartMatchAction()" class="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-emerald-500 via-emerald-600 to-lime-500 hover:from-emerald-400 hover:to-lime-400 text-pitch-950 font-display font-black text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 shadow-xl shadow-emerald-500/25 active:scale-95 transition">
+            <i class="fa-solid fa-rotate-right"></i>
+            <span id="txtPlayAgainBtn">YENİDEN OYNA (10 YENİ BAYRAK)</span>
+          </button>
+
+          <!-- Share Result on WhatsApp -->
+          <button onclick="shareResultWhatsApp()" class="w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20 active:scale-95 transition">
+            <i class="fa-brands fa-whatsapp text-sm"></i>
+            <span id="txtShareWhatsAppBtn">Skorunu WhatsApp'ta Paylaş</span>
+          </button>
+
+          <!-- Back to Home -->
+          <button onclick="goHome()" class="w-full py-2 text-xs text-slate-400 hover:text-white font-bold transition" id="btnBackToHome">
+            Ana Menüye Dön
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ================================================================= -->
+  <!-- MODAL: SYNCHRONIZED 3, 2, 1 COUNTDOWN OVERLAY -->
+  <!-- ================================================================= -->
+  <div id="overlayCountdown" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md">
+    <div class="text-center space-y-4">
+      <div id="countdownNumber" class="text-8xl sm:text-9xl font-display font-black text-amber-400 drop-shadow-[0_0_35px_rgba(245,158,11,0.6)] animate-ping">
+        3
+      </div>
+      <div class="text-sm font-mono font-bold text-slate-300 tracking-wider uppercase" id="txtGetReady">
+        HAZIRLANIN... OYUN BAŞLIYOR!
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================= -->
+  <!-- MODAL: ACCOUNT & DEVICE TRANSFER CODE -->
+  <!-- ================================================================= -->
+  <div id="modalProfile" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+    <div class="max-w-md w-full p-5 sm:p-6 rounded-3xl bg-pitch-900 border border-emerald-500/40 shadow-2xl space-y-4 text-left relative animate-in fade-in zoom-in duration-200">
+      
+      <div class="flex items-center justify-between border-b border-pitch-800 pb-3">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-id-card text-emerald-400 text-base"></i>
+          <h3 class="font-display font-black text-white text-base" id="txtProfileModalTitle">Kullanıcı & Cihaz Aktarımı</h3>
+        </div>
+        <button onclick="closeProfileModal()" class="text-slate-400 hover:text-white text-base">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs leading-relaxed text-slate-300">
+        <p id="txtProfileExplain">
+          Bu tarayıcı oyunu üyelik veya şifre gerektirmez. Aşağıdaki gizli transfer kodunu başka bir telefona veya bilgisayara yapıştırarak aynı nick ve rekorlarına devam edebilirsin.
+        </p>
+
+        <!-- Current Transfer Code -->
+        <div class="p-3 rounded-xl bg-pitch-950 border border-pitch-700 flex items-center justify-between gap-2">
+          <div class="min-w-0">
+            <div class="text-[10px] text-slate-500 uppercase font-mono font-bold">Mevcut Cihaz Kodun</div>
+            <div id="lblMyTransferCode" class="font-mono font-black text-emerald-400 text-sm tracking-wider">FLG-USR-XXXX</div>
+          </div>
+          <button onclick="copyMyTransferCode()" class="px-3 py-1.5 rounded-lg bg-pitch-800 hover:bg-pitch-700 text-slate-200 text-xs font-bold transition border border-pitch-700 shrink-0">
+            Kopyala
+          </button>
+        </div>
+
+        <!-- Restore / Import Account -->
+        <div class="pt-2 border-t border-pitch-800 space-y-2">
+          <label class="block text-[11px] font-bold text-slate-300" id="lblImportTransferCode">
+            Başka Cihazdaki Kodunu Buraya Yapıştır:
+          </label>
+          <div class="flex gap-2">
+            <input type="text" id="inputImportCode" placeholder="FLG-USR-XXXX..." class="flex-1 px-3 py-2 rounded-xl bg-pitch-950 border border-pitch-700 focus:border-emerald-500 focus:outline-none text-white font-mono text-xs uppercase">
+            <button onclick="importAccountByCode()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition shrink-0">
+              Yükle
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 pointer-events-none space-y-2"></div>
+
+  <!-- Footer -->
+  <footer class="border-t border-pitch-800/80 py-4 text-center text-xs text-slate-500 font-mono">
+    <div class="max-w-4xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <div>&copy; 2026 PratikBase • Flag Blitz Arena</div>
+      <div class="flex items-center gap-3">
+        <a href="/" class="hover:text-slate-300">Ana Sayfa</a>
+        <span>•</span>
+        <a href="/football-lottery/" class="hover:text-slate-300">Futbol Piyangosu</a>
+        <span>•</span>
+        <a href="/gizlilik-politikasi/" class="hover:text-slate-300">Gizlilik</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================================================================= -->
+  <!-- SCRIPT ENGINE: DATA, AUDIO, MULTIPLAYER & LOCALSTORAGE IDENTITY -->
+  <!-- ================================================================= -->
+  <script>
+    /* =====================================================================
+       1. COUNTRY DATABASE (140+ NATIONS WITH PRE-PAIRED TRICKY DISTRACTORS)
+       ===================================================================== */
+    const COUNTRIES_DB = [
+      // Tricky Pairs: High-similarity distractor flags
+      { iso: 'tr', nameTr: 'Türkiye', nameEn: 'Turkey', distractors: ['az', 'tn', 'dz', 'pk'] },
+      { iso: 'az', nameTr: 'Azerbaycan', nameEn: 'Azerbaijan', distractors: ['tr', 'uz', 'tm', 'kz'] },
+      { iso: 'ie', nameTr: 'İrlanda', nameEn: 'Ireland', distractors: ['ci', 'it', 'fr', 'ne'] },
+      { iso: 'ci', nameTr: 'Fildişi Sahili', nameEn: 'Ivory Coast', distractors: ['ie', 'in', 'ne', 'it'] },
+      { iso: 'ro', nameTr: 'Romanya', nameEn: 'Romania', distractors: ['td', 'md', 'ad', 'be'] },
+      { iso: 'td', nameTr: 'Çad', nameEn: 'Chad', distractors: ['ro', 'ml', 'gn', 'sn'] },
+      { iso: 'au', nameTr: 'Avustralya', nameEn: 'Australia', distractors: ['nz', 'gb', 'fj', 'tv'] },
+      { iso: 'nz', nameTr: 'Yeni Zelanda', nameEn: 'New Zealand', distractors: ['au', 'gb', 'ws', 'to'] },
+      { iso: 'mc', nameTr: 'Monako', nameEn: 'Monaco', distractors: ['id', 'pl', 'sg', 'mt'] },
+      { iso: 'id', nameTr: 'Endonezya', nameEn: 'Indonesia', distractors: ['mc', 'pl', 'sg', 'my'] },
+      { iso: 'pl', nameTr: 'Polonya', nameEn: 'Poland', distractors: ['mc', 'id', 'at', 'cz'] },
+      { iso: 'co', nameTr: 'Kolombiya', nameEn: 'Colombia', distractors: ['ec', 've', 'es', 'bo'] },
+      { iso: 'ec', nameTr: 'Ekvador', nameEn: 'Ecuador', distractors: ['co', 've', 'pe', 'bo'] },
+      { iso: 've', nameTr: 'Venezuela', nameEn: 'Venezuela', distractors: ['co', 'ec', 'bo', 'cl'] },
+      { iso: 'no', nameTr: 'Norveç', nameEn: 'Norway', distractors: ['is', 'dk', 'se', 'fi'] },
+      { iso: 'is', nameTr: 'İzlanda', nameEn: 'Iceland', distractors: ['no', 'fo', 'fi', 'se'] },
+      { iso: 'dk', nameTr: 'Danimarka', nameEn: 'Denmark', distractors: ['ch', 'no', 'se', 'at'] },
+      { iso: 'se', nameTr: 'İsveç', nameEn: 'Sweden', distractors: ['fi', 'ua', 'no', 'dk'] },
+      { iso: 'fi', nameTr: 'Finlandiya', nameEn: 'Finland', distractors: ['se', 'is', 'gr', 'ee'] },
+      { iso: 'nl', nameTr: 'Hollanda', nameEn: 'Netherlands', distractors: ['lu', 'fr', 'ru', 'hr'] },
+      { iso: 'lu', nameTr: 'Lüksemburg', nameEn: 'Luxembourg', distractors: ['nl', 'fr', 'py', 'hr'] },
+      { iso: 'de', nameTr: 'Almanya', nameEn: 'Germany', distractors: ['be', 'at', 'nl', 'ug'] },
+      { iso: 'be', nameTr: 'Belçika', nameEn: 'Belgium', distractors: ['de', 'ro', 'td', 'fr'] },
+      { iso: 'fr', nameTr: 'Fransa', nameEn: 'France', distractors: ['it', 'nl', 'ru', 'be'] },
+      { iso: 'it', nameTr: 'İtalya', nameEn: 'Italy', distractors: ['fr', 'ie', 'mx', 'hu'] },
+      { iso: 'es', nameTr: 'İspanya', nameEn: 'Spain', distractors: ['pt', 'ad', 'co', 'ec'] },
+      { iso: 'pt', nameTr: 'Portekiz', nameEn: 'Portugal', distractors: ['es', 'br', 'ao', 'mz'] },
+      { iso: 'br', nameTr: 'Brezilya', nameEn: 'Brazil', distractors: ['ar', 'pt', 'jm', 'za'] },
+      { iso: 'ar', nameTr: 'Arjantin', nameEn: 'Argentina', distractors: ['uy', 'gt', 'hn', 'sv'] },
+      { iso: 'uy', nameTr: 'Uruguay', nameEn: 'Uruguay', distractors: ['ar', 'gr', 'us', 'py'] },
+      { iso: 'gb-eng', nameTr: 'İngiltere', nameEn: 'England', distractors: ['ge', 'ch', 'dk', 'gb'] },
+      { iso: 'gb', nameTr: 'Birleşik Krallık', nameEn: 'United Kingdom', distractors: ['au', 'nz', 'us', 'is'] },
+      { iso: 'us', nameTr: 'Amerika Birleşik Devletleri', nameEn: 'USA', distractors: ['lr', 'my', 'uy', 'cu'] },
+      { iso: 'ca', nameTr: 'Kanada', nameEn: 'Canada', distractors: ['pe', 'jp', 'dk', 'ch'] },
+      { iso: 'mx', nameTr: 'Meksika', nameEn: 'Mexico', distractors: ['it', 'br', 'co', 'gt'] },
+      { iso: 'jp', nameTr: 'Japonya', nameEn: 'Japan', distractors: ['bd', 'pw', 'kr', 'cn'] },
+      { iso: 'kr', nameTr: 'Güney Kore', nameEn: 'South Korea', distractors: ['jp', 'cn', 'kp', 'tw'] },
+      { iso: 'cn', nameTr: 'Çin', nameEn: 'China', distractors: ['vn', 'tw', 'kr', 'jp'] },
+      { iso: 'in', nameTr: 'Hindistan', nameEn: 'India', distractors: ['ne', 'ie', 'ci', 'ir'] },
+      { iso: 'pk', nameTr: 'Pakistan', nameEn: 'Pakistan', distractors: ['tr', 'dz', 'mr', 'sa'] },
+      { iso: 'ng', nameTr: 'Nijerya', nameEn: 'Nigeria', distractors: ['nf', 'sa', 'cm', 'ci'] },
+      { iso: 'ma', nameTr: 'Fas', nameEn: 'Morocco', distractors: ['vn', 'al', 'tn', 'tr'] },
+      { iso: 'eg', nameTr: 'Mısır', nameEn: 'Egypt', distractors: ['iq', 'sy', 'ye', 'sd'] },
+      { iso: 'sa', nameTr: 'Suudi Arabistan', nameEn: 'Saudi Arabia', distractors: ['ng', 'pk', 'dz', 'ir'] },
+      { iso: 'ae', nameTr: 'Birleşik Arap Emirlikleri', nameEn: 'UAE', distractors: ['jo', 'ps', 'kw', 'sd'] },
+      { iso: 'qa', nameTr: 'Katar', nameEn: 'Qatar', distractors: ['bh', 'lv', 'pl', 'sg'] },
+      { iso: 'bh', nameTr: 'Bahreyn', nameEn: 'Bahrain', distractors: ['qa', 'mt', 'pl', 'at'] },
+      { iso: 'ch', nameTr: 'İsviçre', nameEn: 'Switzerland', distractors: ['dk', 'to', 'at', 'ge'] },
+      { iso: 'at', nameTr: 'Avusturya', nameEn: 'Austria', distractors: ['lv', 'lb', 'pe', 'pl'] },
+      { iso: 'hr', nameTr: 'Hırvatistan', nameEn: 'Croatia', distractors: ['rs', 'si', 'sk', 'nl'] },
+      { iso: 'rs', nameTr: 'Sırbistan', nameEn: 'Serbia', distractors: ['hr', 'sk', 'si', 'ru'] },
+      { iso: 'gr', nameTr: 'Yunanistan', nameEn: 'Greece', distractors: ['uy', 'fi', 'cy', 'il'] },
+      { iso: 'cy', nameTr: 'Kıbrıs', nameEn: 'Cyprus', distractors: ['gr', 'tr', 'xk', 'sm'] },
+      { iso: 'sm', nameTr: 'San Marino', nameEn: 'San Marino', distractors: ['va', 'ad', 'mc', 'cy'] },
+      { iso: 'za', nameTr: 'Güney Afrika', nameEn: 'South Africa', distractors: ['jm', 'br', 'zw', 'ke'] },
+      { iso: 'gh', nameTr: 'Gana', nameEn: 'Ghana', distractors: ['sn', 'cm', 'gw', 'bo'] },
+      { iso: 'sn', nameTr: 'Senegal', nameEn: 'Senegal', distractors: ['ml', 'cm', 'gh', 'gw'] },
+      { iso: 'cm', nameTr: 'Kamerun', nameEn: 'Cameroon', distractors: ['sn', 'gh', 'ml', 'cg'] },
+      { iso: 'cl', nameTr: 'Şili', nameEn: 'Chile', distractors: ['cz', 'cu', 'pr', 'ph'] },
+      { iso: 'pe', nameTr: 'Peru', nameEn: 'Peru', distractors: ['at', 'ca', 'lb', 'pl'] },
+      { iso: 'cz', nameTr: 'Çekya', nameEn: 'Czechia', distractors: ['ph', 'cl', 'cu', 'sk'] },
+      { iso: 'sk', nameTr: 'Slovakya', nameEn: 'Slovakia', distractors: ['si', 'ru', 'cz', 'hr'] },
+      { iso: 'si', nameTr: 'Slovenya', nameEn: 'Slovenia', distractors: ['sk', 'ru', 'hr', 'rs'] },
+      { iso: 'hu', nameTr: 'Macaristan', nameEn: 'Hungary', distractors: ['it', 'bg', 'tj', 'ir'] },
+      { iso: 'bg', nameTr: 'Bulgaristan', nameEn: 'Bulgaria', distractors: ['hu', 'it', 'ir', 'om'] },
+      { iso: 'ua', nameTr: 'Ukrayna', nameEn: 'Ukraine', distractors: ['se', 'kz', 'ba', 'rw'] },
+      { iso: 'kz', nameTr: 'Kazakistan', nameEn: 'Kazakhstan', distractors: ['ua', 'uz', 'az', 'kg'] },
+      { iso: 'uz', nameTr: 'Özbekistan', nameEn: 'Uzbekistan', distractors: ['kz', 'az', 'tm', 'tj'] },
+      { iso: 'ge', nameTr: 'Gürcistan', nameEn: 'Georgia', distractors: ['gb-eng', 'ch', 'mt', 'dk'] },
+      { iso: 'al', nameTr: 'Arnavutluk', nameEn: 'Albania', distractors: ['ma', 'me', 'mk', 'tr'] },
+      { iso: 'ba', nameTr: 'Bosna-Hersek', nameEn: 'Bosnia & Herzegovina', distractors: ['ua', 'kz', 'xk', 'se'] },
+      { iso: 'tn', nameTr: 'Tunus', nameEn: 'Tunisia', distractors: ['tr', 'dz', 'pk', 'ma'] },
+      { iso: 'dz', nameTr: 'Cezayir', nameEn: 'Algeria', distractors: ['tn', 'tr', 'pk', 'mr'] },
+      { iso: 'sg', nameTr: 'Singapur', nameEn: 'Singapore', distractors: ['id', 'mc', 'my', 'pl'] },
+      { iso: 'my', nameTr: 'Malezya', nameEn: 'Malaysia', distractors: ['us', 'lr', 'sg', 'ph'] },
+      { iso: 'th', nameTr: 'Tayland', nameEn: 'Thailand', distractors: ['cr', 'nl', 'fr', 'no'] },
+      { iso: 'vn', nameTr: 'Vietnam', nameEn: 'Vietnam', distractors: ['cn', 'ma', 'so', 'tr'] },
+      { iso: 'ke', nameTr: 'Kenya', nameEn: 'Kenya', distractors: ['za', 'tz', 'ug', 'et'] },
+      { iso: 'et', nameTr: 'Etiyopya', nameEn: 'Ethiopia', distractors: ['gh', 'sn', 'bo', 'cm'] },
+      { iso: 'ir', nameTr: 'İran', nameEn: 'Iran', distractors: ["iq","sa","sy"] },
+      { iso: 'iq', nameTr: 'Irak', nameEn: 'Iraq', distractors: ["ir","sy","jo"] },
+      { iso: 'lb', nameTr: 'Lübnan', nameEn: 'Lebanon', distractors: ["sy","jo","cy"] },
+      { iso: 'jo', nameTr: 'Ürdün', nameEn: 'Jordan', distractors: ["ps","kw","ae"] },
+      { iso: 'kw', nameTr: 'Kuveyt', nameEn: 'Kuwait', distractors: ["ae","jo","iq"] },
+      { iso: 'om', nameTr: 'Umman', nameEn: 'Oman', distractors: ["ae","qa","kw"] },
+      { iso: 'ph', nameTr: 'Filipinler', nameEn: 'Philippines', distractors: ["cu","cz","my"] },
+      { iso: 'bd', nameTr: 'Bangladeş', nameEn: 'Bangladesh', distractors: ["jp","pk","in"] },
+      { iso: 'lk', nameTr: 'Sri Lanka', nameEn: 'Sri Lanka', distractors: ["in","np","bd"] },
+      { iso: 'np', nameTr: 'Nepal', nameEn: 'Nepal', distractors: ["bt","lk","in"] },
+      { iso: 'mn', nameTr: 'Moğolistan', nameEn: 'Mongolia', distractors: ["kz","cn","kr"] },
+      { iso: 'cu', nameTr: 'Küba', nameEn: 'Cuba', distractors: ["pr","ph","cr"] },
+      { iso: 'jm', nameTr: 'Jamaika', nameEn: 'Jamaica', distractors: ["gh","tt","bs"] },
+      { iso: 'cr', nameTr: 'Kosta Rika', nameEn: 'Costa Rica', distractors: ["th","py","cu"] },
+      { iso: 'pa', nameTr: 'Panama', nameEn: 'Panama', distractors: ["cr","cl","cu"] },
+      { iso: 'py', nameTr: 'Paraguay', nameEn: 'Paraguay', distractors: ["nl","hr","uy"] },
+      { iso: 'bo', nameTr: 'Bolivya', nameEn: 'Bolivia', distractors: ["gh","sn","et"] },
+      { iso: 'ml', nameTr: 'Mali', nameEn: 'Mali', distractors: ["gn","sn","cm"] },
+      { iso: 'gn', nameTr: 'Gine', nameEn: 'Guinea', distractors: ["ml","sn","gh"] },
+      { iso: 'ao', nameTr: 'Angola', nameEn: 'Angola', distractors: ["mz","cd","ke"] },
+      { iso: 'zm', nameTr: 'Zambiya', nameEn: 'Zambia', distractors: ["zw","za","na"] },
+      { iso: 'zw', nameTr: 'Zimbabve', nameEn: 'Zimbabwe', distractors: ["zm","za","ke"] },
+      { iso: 'tz', nameTr: 'Tanzanya', nameEn: 'Tanzania', distractors: ["ke","cd","za"] },
+      { iso: 'mg', nameTr: 'Madagaskar', nameEn: 'Madagascar', distractors: ["pl","id","mc"] },
+      { iso: 'gb-sct', nameTr: 'İskoçya', nameEn: 'Scotland', distractors: ["gb-eng","gb","is"] },
+      { iso: 'gb-wls', nameTr: 'Galler', nameEn: 'Wales', distractors: ["gb-eng","gb","bt"] },
+      { iso: 'ee', nameTr: 'Estonya', nameEn: 'Estonia', distractors: ["fi","lv","lt"] },
+      { iso: 'lv', nameTr: 'Letonya', nameEn: 'Latvia', distractors: ["at","ee","lt"] },
+      { iso: 'lt', nameTr: 'Litvanya', nameEn: 'Lithuania', distractors: ["lv","ee","bg"] },
+      { iso: 'md', nameTr: 'Moldova', nameEn: 'Moldova', distractors: ["ro","ad","td"] },
+      { iso: 'mk', nameTr: 'Kuzey Makedonya', nameEn: 'North Macedonia', distractors: ["me","al","gr"] },
+      { iso: 'me', nameTr: 'Karadağ', nameEn: 'Montenegro', distractors: ["al","mk","rs"] },
+      { iso: 'xk', nameTr: 'Kosova', nameEn: 'Kosovo', distractors: ["al","ba","mk"] },
+      { iso: 'mt', nameTr: 'Malta', nameEn: 'Malta', distractors: ["pl","id","mc"] },
+      { iso: 'li', nameTr: 'Lihtenştayn', nameEn: 'Liechtenstein', distractors: ["ch","at","sm"] },
+      { iso: 'ad', nameTr: 'Andorra', nameEn: 'Andorra', distractors: ["md","ro","td"] }
+    ];
+
+    /* =====================================================================
+       2. WEB AUDIO API SYNTHESIZER (FAST, ZERO EXTERNAL DEPENDENCIES)
+       ===================================================================== */
+    let audioCtx = null;
+    let isSoundMuted = false;
+
+    function getAudioContext() {
+      if (!audioCtx) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioContextClass) audioCtx = new AudioContextClass();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    const Sound = {
+      correct: () => {
+        if (isSoundMuted) return;
+        try {
+          const ctx = getAudioContext();
+          if (!ctx) return;
+          const osc1 = ctx.createOscillator();
+          const osc2 = ctx.createOscillator();
+          const gain = ctx.createGain();
+
+          osc1.type = 'triangle';
+          osc2.type = 'sine';
+          osc1.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
+          osc1.frequency.exponentialRampToValueAtTime(659.25, ctx.currentTime + 0.08); // E5
+          osc1.frequency.exponentialRampToValueAtTime(783.99, ctx.currentTime + 0.16); // G5
+
+          osc2.frequency.setValueAtTime(1046.50, ctx.currentTime + 0.16); // C6
+
+          gain.gain.setValueAtTime(0.18, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+
+          osc1.connect(gain);
+          osc2.connect(gain);
+          gain.connect(ctx.destination);
+
+          osc1.start(ctx.currentTime);
+          osc2.start(ctx.currentTime + 0.16);
+          osc1.stop(ctx.currentTime + 0.35);
+          osc2.stop(ctx.currentTime + 0.35);
+        } catch(e) {}
+      },
+
+      wrong: () => {
+        if (isSoundMuted) return;
+        try {
+          const ctx = getAudioContext();
+          if (!ctx) return;
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(220, ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(140, ctx.currentTime + 0.25);
+
+          gain.gain.setValueAtTime(0.18, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.28);
+
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+
+          osc.start(ctx.currentTime);
+          osc.stop(ctx.currentTime + 0.28);
+        } catch(e) {}
+      },
+
+      tick: () => {
+        if (isSoundMuted) return;
+        try {
+          const ctx = getAudioContext();
+          if (!ctx) return;
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(800, ctx.currentTime);
+
+          gain.gain.setValueAtTime(0.06, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.04);
+
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+
+          osc.start(ctx.currentTime);
+          osc.stop(ctx.currentTime + 0.04);
+        } catch(e) {}
+      },
+
+      countdownBeep: (high = false) => {
+        if (isSoundMuted) return;
+        try {
+          const ctx = getAudioContext();
+          if (!ctx) return;
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(high ? 880 : 440, ctx.currentTime);
+
+          gain.gain.setValueAtTime(0.2, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + (high ? 0.35 : 0.18));
+
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+
+          osc.start(ctx.currentTime);
+          osc.stop(ctx.currentTime + (high ? 0.35 : 0.18));
+        } catch(e) {}
+      },
+
+      victory: () => {
+        if (isSoundMuted) return;
+        try {
+          const ctx = getAudioContext();
+          if (!ctx) return;
+          [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.1);
+            gain.gain.setValueAtTime(0.18, ctx.currentTime + i * 0.1);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.1 + 0.28);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(ctx.currentTime + i * 0.1);
+            osc.stop(ctx.currentTime + i * 0.1 + 0.28);
+          });
+        } catch(e) {}
+      }
+    };
+
+    function toggleSound() {
+      isSoundMuted = !isSoundMuted;
+      const icon = document.getElementById('soundIcon');
+      if (icon) {
+        icon.className = isSoundMuted ? 'fa-solid fa-volume-xmark text-rose-400' : 'fa-solid fa-volume-high text-slate-300';
+      }
+      showToast(isSoundMuted ? 'Ses Kapatıldı 🔇' : 'Ses Açıldı 🔊');
+    }
+
+    /* =====================================================================
+       3. ZERO-LOGIN IDENTITY & LOCALSTORAGE DEVICE KEY ARCHITECTURE
+       ===================================================================== */
+    const STORAGE_KEY_TOKEN = 'pb_fq_player_token';
+    const STORAGE_KEY_NICK = 'pb_fq_player_nick';
+    const STORAGE_KEY_BEST = 'pb_fq_personal_best';
+    const RTDB_BASE_URL = 'https://pratikbase-default-rtdb.firebaseio.com';
+
+    let myPlayer = {
+      token: '',
+      nick: 'Misafir',
+      bestScore: 0,
+      bestTime: 999.99
+    };
+
+    function initPlayerIdentity() {
+      // 1. Get or generate permanent device token
+      let token = localStorage.getItem(STORAGE_KEY_TOKEN);
+      if (!token) {
+        token = 'usr_' + Math.random().toString(36).substring(2, 10) + Date.now().toString(36).substring(4);
+        localStorage.setItem(STORAGE_KEY_TOKEN, token);
+      }
+      myPlayer.token = token;
+
+      // 2. Get saved nickname
+      let nick = localStorage.getItem(STORAGE_KEY_NICK);
+      if (!nick) {
+        nick = 'Yarışmacı_' + Math.floor(100 + Math.random() * 900);
+        localStorage.setItem(STORAGE_KEY_NICK, nick);
+      }
+      myPlayer.nick = nick;
+
+      // 3. Get personal best
+      try {
+        const best = JSON.parse(localStorage.getItem(STORAGE_KEY_BEST) || '{}');
+        myPlayer.bestScore = Number(best.score || 0);
+        myPlayer.bestTime = Number(best.time || 999.99);
+      } catch(e) {}
+
+      updateIdentityUI();
+    }
+
+    function updateIdentityUI() {
+      const nickInput = document.getElementById('inputPlayerNick');
+      if (nickInput) nickInput.value = myPlayer.nick;
+
+      const navNick = document.getElementById('navPlayerNick');
+      if (navNick) navNick.textContent = myPlayer.nick;
+
+      const pbEl = document.getElementById('homePersonalBest');
+      if (pbEl) {
+        if (myPlayer.bestScore > 0) {
+          pbEl.textContent = `${myPlayer.bestScore}/10 • ${myPlayer.bestTime.toFixed(2)}s`;
+        } else {
+          pbEl.textContent = '0/10 • Henüz yok';
+        }
+      }
+
+      const transferCodeEl = document.getElementById('lblMyTransferCode');
+      if (transferCodeEl) {
+        transferCodeEl.textContent = `FLG-${myPlayer.token.replace('usr_', '').toUpperCase().slice(0, 8)}`;
+      }
+    }
+
+    function saveNickFromInput() {
+      const input = document.getElementById('inputPlayerNick');
+      if (!input) return;
+      const val = input.value.trim();
+      if (!val) {
+        showToast('Lütfen bir isim yazınız!');
+        return;
+      }
+      myPlayer.nick = val.substring(0, 15);
+      localStorage.setItem(STORAGE_KEY_NICK, myPlayer.nick);
+      updateIdentityUI();
+      showToast(`İsim Kaydedildi: ${myPlayer.nick} ✔`);
+    }
+
+    function openProfileModal() {
+      document.getElementById('modalProfile').classList.remove('hidden');
+    }
+
+    function closeProfileModal() {
+      document.getElementById('modalProfile').classList.add('hidden');
+    }
+
+    function copyMyTransferCode() {
+      const code = document.getElementById('lblMyTransferCode').textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        showToast('Cihaz Kodu Kopyalandı! 📋');
+      });
+    }
+
+    function importAccountByCode() {
+      const input = document.getElementById('inputImportCode');
+      if (!input) return;
+      const raw = input.value.trim().toUpperCase();
+      if (!raw || !raw.startsWith('FLG-')) {
+        showToast('Geçersiz transfer kodu!');
+        return;
+      }
+      const token = 'usr_' + raw.replace('FLG-', '').toLowerCase();
+      localStorage.setItem(STORAGE_KEY_TOKEN, token);
+      myPlayer.token = token;
+      closeProfileModal();
+      showToast('Hesap Bu Cihaza Başarıyla Aktarıldı! 🚀');
+      initPlayerIdentity();
+      fetchLeaderboard();
+    }
+
+    /* =====================================================================
+       4. GAME STATE ENGINE (SOLO BLITZ & SYNCHRONIZED MULTIPLAYER)
+       ===================================================================== */
+    const QUESTION_TIME_LIMIT = 5.0; // 5 seconds per flag
+    const TOTAL_QUESTIONS = 10;
+
+    let currentMatchMode = 'solo'; // 'solo' or 'party'
+    let currentRoomId = null;
+    let isRoomHost = false;
+    let currentQuestions = [];
+    let currentQIndex = 0;
+    let questionStartTime = 0;
+    let questionTimerInterval = null;
+    let userAnswers = []; // Records { iso, correct, chosen, timeMs }
+    let partyRoomPollInterval = null;
+    let isAnsweringBlocked = false;
+
+    // Solo game start
+    function startSoloGame() {
+      saveNickFromInput();
+      currentMatchMode = 'solo';
+      currentRoomId = null;
+      generateQuizQuestions();
+      switchScreen('quiz');
+      startQuestion(0);
+    }
+
+    // Generate 10 randomized flags with smart tricky distractors
+    function generateQuizQuestions() {
+      const shuffledCountries = [...COUNTRIES_DB].sort(() => 0.5 - Math.random());
+      const selected = shuffledCountries.slice(0, TOTAL_QUESTIONS);
+
+      currentQuestions = selected.map(country => {
+        // Pick distractor: 70% chance from pre-paired tricky list, 30% random other country
+        let distractorIso = null;
+        if (country.distractors && country.distractors.length && Math.random() < 0.75) {
+          const validDistractors = country.distractors.filter(iso => iso !== country.iso);
+          distractorIso = validDistractors[Math.floor(Math.random() * validDistractors.length)];
+        }
+        
+        let distractorCountry = COUNTRIES_DB.find(c => c.iso === distractorIso);
+        if (!distractorCountry) {
+          const others = COUNTRIES_DB.filter(c => c.iso !== country.iso);
+          distractorCountry = others[Math.floor(Math.random() * others.length)];
+        }
+
+        // Randomly assign option A or B (50% / 50%)
+        const correctIsOptionA = Math.random() < 0.5;
+        const optionA = correctIsOptionA ? country : distractorCountry;
+        const optionB = correctIsOptionA ? distractorCountry : country;
+
+        return {
+          country,
+          correctIsOptionA,
+          optionA,
+          optionB
+        };
+      });
+
+      userAnswers = [];
+    }
+
+    // Switch active view screens
+    function switchScreen(screen) {
+      document.getElementById('screenHome').classList.add('hidden');
+      document.getElementById('screenLobby').classList.add('hidden');
+      document.getElementById('screenQuiz').classList.add('hidden');
+      document.getElementById('screenResult').classList.add('hidden');
+
+      if (screen === 'home') document.getElementById('screenHome').classList.remove('hidden');
+      if (screen === 'lobby') document.getElementById('screenLobby').classList.remove('hidden');
+      if (screen === 'quiz') document.getElementById('screenQuiz').classList.remove('hidden');
+      if (screen === 'result') document.getElementById('screenResult').classList.remove('hidden');
+    }
+
+    // Start a question round (0 to 9)
+    function startQuestion(qIndex) {
+      currentQIndex = qIndex;
+      isAnsweringBlocked = false;
+
+      if (qIndex >= TOTAL_QUESTIONS) {
+        finishMatchAndShowResults();
+        return;
+      }
+
+      const q = currentQuestions[qIndex];
+
+      // Update counters
+      document.getElementById('quizQuestionCounter').textContent = `${qIndex + 1} / ${TOTAL_QUESTIONS}`;
+      const correctSoFar = userAnswers.filter(a => a.isCorrect).length;
+      document.getElementById('quizScoreCounter').textContent = `${correctSoFar} Doğru`;
+
+      // Update Flag Image with FlagCDN w320
+      const flagImg = document.getElementById('quizFlagImg');
+      flagImg.src = `https://flagcdn.com/w320/${q.country.iso}.png`;
+      flagImg.alt = q.country.nameTr;
+
+      // Reset button styles
+      resetOptionButtonStyles();
+
+      // Set Option Labels (TR / EN)
+      const nameKey = currentLang === 'TR' ? 'nameTr' : 'nameEn';
+      document.getElementById('lblOptionA').textContent = q.optionA[nameKey];
+      document.getElementById('lblOptionB').textContent = q.optionB[nameKey];
+
+      // Reset feedback overlay
+      const overlay = document.getElementById('quizFlagFeedbackOverlay');
+      overlay.style.opacity = '0';
+      overlay.innerHTML = '';
+      document.getElementById('quizFlagCard').classList.remove('anim-shake');
+
+      // Start 5-Second countdown timer
+      questionStartTime = performance.now();
+      clearInterval(questionTimerInterval);
+
+      const timerBar = document.getElementById('quizTimerBar');
+      timerBar.style.width = '100%';
+      timerBar.className = 'h-full w-full bg-emerald-500 rounded-full transition-all duration-75';
+
+      let lastTickSec = 5;
+
+      questionTimerInterval = setInterval(() => {
+        const elapsedSec = (performance.now() - questionStartTime) / 1000;
+        const remainSec = Math.max(0, QUESTION_TIME_LIMIT - elapsedSec);
+        const percent = (remainSec / QUESTION_TIME_LIMIT) * 100;
+
+        timerBar.style.width = `${percent}%`;
+        document.getElementById('quizCurrentTimerText').textContent = `${elapsedSec.toFixed(2)}s`;
+
+        // Color coding timer bar
+        if (remainSec <= 1.5) {
+          timerBar.className = 'h-full w-full bg-rose-500 rounded-full transition-all duration-75';
+          const curSecFloor = Math.ceil(remainSec);
+          if (curSecFloor !== lastTickSec) {
+            lastTickSec = curSecFloor;
+            Sound.tick();
+          }
+        } else if (remainSec <= 2.8) {
+          timerBar.className = 'h-full w-full bg-amber-400 rounded-full transition-all duration-75';
+        }
+
+        // Time up timeout!
+        if (remainSec <= 0) {
+          clearInterval(questionTimerInterval);
+          handleAnswerTimeUp();
+        }
+      }, 35);
+    }
+
+    function resetOptionButtonStyles() {
+      const btnA = document.getElementById('btnOptionA');
+      const btnB = document.getElementById('btnOptionB');
+      const defaultClass = 'w-full py-4 px-4 rounded-2xl bg-pitch-900 hover:bg-pitch-850 active:scale-98 border-2 border-pitch-700 hover:border-emerald-500/50 text-white font-display font-black text-base sm:text-lg flex items-center justify-between gap-3 shadow-xl transition relative overflow-hidden group';
+      btnA.className = defaultClass;
+      btnB.className = defaultClass;
+      btnA.disabled = false;
+      btnB.disabled = false;
+    }
+
+    // User taps Option A (0) or Option B (1)
+    function chooseOption(optionIndex) {
+      if (isAnsweringBlocked) return;
+      isAnsweringBlocked = true;
+      clearInterval(questionTimerInterval);
+
+      const timeElapsedMs = Math.round(performance.now() - questionStartTime);
+      const q = currentQuestions[currentQIndex];
+      const isCorrect = (optionIndex === 0 && q.correctIsOptionA) || (optionIndex === 1 && !q.correctIsOptionA);
+
+      const btnA = document.getElementById('btnOptionA');
+      const btnB = document.getElementById('btnOptionB');
+      btnA.disabled = true;
+      btnB.disabled = true;
+
+      const chosenBtn = optionIndex === 0 ? btnA : btnB;
+      const correctBtn = q.correctIsOptionA ? btnA : btnB;
+
+      userAnswers.push({
+        qIndex: currentQIndex,
+        country: q.country,
+        chosenCountry: optionIndex === 0 ? q.optionA : q.optionB,
+        isCorrect,
+        timeMs: timeElapsedMs
+      });
+
+      // Visual & Audio Feedback
+      const overlay = document.getElementById('quizFlagFeedbackOverlay');
+      if (isCorrect) {
+        Sound.correct();
+        chosenBtn.className = 'w-full py-4 px-4 rounded-2xl bg-emerald-600 border-2 border-emerald-400 text-white font-display font-black text-base sm:text-lg flex items-center justify-between gap-3 shadow-xl shadow-emerald-500/30 scale-102 transition';
+        overlay.innerHTML = '<span class="text-emerald-400 drop-shadow-[0_0_20px_rgba(52,211,153,0.8)]"><i class="fa-solid fa-check"></i></span>';
+        overlay.style.opacity = '1';
+      } else {
+        Sound.wrong();
+        chosenBtn.className = 'w-full py-4 px-4 rounded-2xl bg-rose-900/80 border-2 border-rose-500 text-rose-200 font-display font-black text-base sm:text-lg flex items-center justify-between gap-3 shadow-xl transition';
+        correctBtn.className = 'w-full py-4 px-4 rounded-2xl bg-emerald-700/80 border-2 border-emerald-400 text-white font-display font-black text-base sm:text-lg flex items-center justify-between gap-3 shadow-xl transition';
+        document.getElementById('quizFlagCard').classList.add('anim-shake');
+        overlay.innerHTML = '<span class="text-rose-500 drop-shadow-[0_0_20px_rgba(244,63,94,0.8)]"><i class="fa-solid fa-xmark"></i></span>';
+        overlay.style.opacity = '1';
+      }
+
+      // Sync progress in multiplayer rooms
+      if (currentMatchMode === 'party' && currentRoomId) {
+        syncMyPartyProgress();
+      }
+
+      // Fast auto advance (450ms for snappy game feel)
+      setTimeout(() => {
+        startQuestion(currentQIndex + 1);
+      }, 550);
+    }
+
+    // Time ran out (0s reached)
+    function handleAnswerTimeUp() {
+      if (isAnsweringBlocked) return;
+      isAnsweringBlocked = true;
+
+      const q = currentQuestions[currentQIndex];
+      Sound.wrong();
+
+      userAnswers.push({
+        qIndex: currentQIndex,
+        country: q.country,
+        chosenCountry: null,
+        isCorrect: false,
+        timeMs: 5000
+      });
+
+      // Highlight the correct answer in green
+      const correctBtn = q.correctIsOptionA ? document.getElementById('btnOptionA') : document.getElementById('btnOptionB');
+      correctBtn.className = 'w-full py-4 px-4 rounded-2xl bg-emerald-700/80 border-2 border-emerald-400 text-white font-display font-black text-base sm:text-lg flex items-center justify-between gap-3 shadow-xl transition';
+
+      const overlay = document.getElementById('quizFlagFeedbackOverlay');
+      overlay.innerHTML = '<span class="text-amber-400 text-3xl font-mono font-black drop-shadow">SÜRE DOLDU!</span>';
+      overlay.style.opacity = '1';
+
+      if (currentMatchMode === 'party' && currentRoomId) {
+        syncMyPartyProgress();
+      }
+
+      setTimeout(() => {
+        startQuestion(currentQIndex + 1);
+      }, 700);
+    }
+
+    function handleFlagImageError(img) {
+      img.onerror = null;
+      img.src = 'https://flagcdn.com/w320/un.png';
+    }
+
+    /* =====================================================================
+       5. FINISH MATCH & RESULTS PODIUM
+       ===================================================================== */
+    function finishMatchAndShowResults() {
+      clearInterval(questionTimerInterval);
+      switchScreen('result');
+
+      const correctCount = userAnswers.filter(a => a.isCorrect).length;
+      const totalTimeMs = userAnswers.reduce((sum, a) => sum + a.timeMs, 0);
+      const totalTimeSec = (totalTimeMs / 1000).toFixed(2);
+      const avgTimeSec = (totalTimeMs / (TOTAL_QUESTIONS * 1000)).toFixed(2);
+
+      document.getElementById('valResultCorrect').textContent = `${correctCount} / ${TOTAL_QUESTIONS}`;
+      document.getElementById('valResultTime').textContent = `${totalTimeSec}s`;
+      document.getElementById('valResultAvg').textContent = `${avgTimeSec}s`;
+
+      // Update personal best in localStorage
+      if (correctCount > myPlayer.bestScore || (correctCount === myPlayer.bestScore && totalTimeSec < myPlayer.bestTime)) {
+        myPlayer.bestScore = correctCount;
+        myPlayer.bestTime = Number(totalTimeSec);
+        try {
+          localStorage.setItem(STORAGE_KEY_BEST, JSON.stringify({ score: myPlayer.bestScore, time: myPlayer.bestTime }));
+        } catch(e) {}
+        updateIdentityUI();
+      }
+
+      // Check result mood & trophy
+      const trophyEl = document.getElementById('resultTrophyIcon');
+      const titleEl = document.getElementById('txtResultTitle');
+      const rankMsgEl = document.getElementById('resultRankMessage');
+
+      if (correctCount === 10) {
+        Sound.victory();
+        trophyEl.textContent = '👑';
+        titleEl.textContent = 'Kusursuz Refleks! 10\'da 10!';
+        rankMsgEl.textContent = 'Mükemmel! Bütün bayrakları hatasız bildin. Global sıralamada zirveye oynuyorsun!';
+      } else if (correctCount >= 8) {
+        Sound.victory();
+        trophyEl.textContent = '🥇';
+        titleEl.textContent = 'Harika Performans!';
+        rankMsgEl.textContent = `${correctCount} doğru harika bir derece! Biraz daha hızlanarak rekoru zorlayabilirsin.`;
+      } else if (correctCount >= 5) {
+        trophyEl.textContent = '⚡';
+        titleEl.textContent = 'Fena Değil!';
+        rankMsgEl.textContent = `${correctCount} doğru bildin. Birkaç benzer bayrakta yanıltmacaya düştün, tekrar dene!`;
+      } else {
+        trophyEl.textContent = '🎯';
+        titleEl.textContent = 'Antrenmana Devam!';
+        rankMsgEl.textContent = 'Zorlu bayraklar denk geldi! Tekrar oynayarak göz aşinalığını geliştirebilirsin.';
+      }
+
+      // Populate 10 Questions Analysis Breakdown
+      const breakdownEl = document.getElementById('resultQuestionsBreakdown');
+      breakdownEl.innerHTML = '';
+      userAnswers.forEach((ans, i) => {
+        const row = document.createElement('div');
+        row.className = 'pt-2 flex items-center justify-between gap-2';
+        const rightName = currentLang === 'TR' ? ans.country.nameTr : ans.country.nameEn;
+        const chosenName = ans.chosenCountry ? (currentLang === 'TR' ? ans.chosenCountry.nameTr : ans.chosenCountry.nameEn) : 'Süre Doldu';
+
+        row.innerHTML = `
+          <div class="flex items-center gap-2.5 min-w-0">
+            <span class="w-7 h-5 rounded overflow-hidden shadow-sm shrink-0 border border-pitch-700">
+              <img src="https://flagcdn.com/w40/${ans.country.iso}.png" class="w-full h-full object-cover">
+            </span>
+            <div class="min-w-0">
+              <div class="font-bold text-white truncate text-xs">${rightName}</div>
+              <div class="text-[11px] ${ans.isCorrect ? 'text-emerald-400' : 'text-rose-400'} truncate">
+                ${ans.isCorrect ? '✔ Doğru yanıtlandı' : `❌ Seçilen: ${chosenName}`}
+              </div>
+            </div>
+          </div>
+          <span class="font-mono text-slate-400 text-[11px] shrink-0">${(ans.timeMs / 1000).toFixed(2)}s</span>
+        `;
+        breakdownEl.appendChild(row);
+      });
+
+      // Submit to Firebase Leaderboard if solo match
+      if (currentMatchMode === 'solo') {
+        document.getElementById('resultSoloCard').classList.remove('hidden');
+        document.getElementById('resultPodiumCard').classList.add('hidden');
+        document.getElementById('txtPlayAgainBtn').textContent = 'YENİDEN OYNA (10 YENİ BAYRAK)';
+        submitScoreToLeaderboard(correctCount, totalTimeSec);
+      } else if (currentMatchMode === 'party' && currentRoomId) {
+        // Multi-user room finish
+        document.getElementById('resultSoloCard').classList.add('hidden');
+        document.getElementById('resultPodiumCard').classList.remove('hidden');
+        document.getElementById('txtPlayAgainBtn').textContent = 'RÖVANŞ OYNA (AYNI ODA)';
+        submitPartyResultAndWatchPodium(correctCount, totalTimeSec);
+      }
+    }
+
+    function restartMatchAction() {
+      if (currentMatchMode === 'party' && currentRoomId) {
+        // Request rematch in room
+        requestPartyRematch();
+      } else {
+        startSoloGame();
+      }
+    }
+
+    function goHome() {
+      clearInterval(questionTimerInterval);
+      clearInterval(partyRoomPollInterval);
+      currentMatchMode = 'solo';
+      currentRoomId = null;
+      switchScreen('home');
+      fetchLeaderboard();
+    }
+
+    /* =====================================================================
+       6. GLOBAL TOP 100 LEADERBOARD (FIREBASE REALTIME DB)
+       ===================================================================== */
+    let currentLeaderboardTab = 'today';
+    let cachedLeaderboardList = [];
+
+    async function submitScoreToLeaderboard(score, timeSec) {
+      if (!myPlayer.token) return;
+      try {
+        const payload = {
+          token: myPlayer.token,
+          nick: myPlayer.nick,
+          score: Number(score),
+          time: Number(timeSec),
+          timestamp: Date.now()
+        };
+
+        // Put to user's record under /flag_quiz_leaderboard/{token}
+        await fetch(`${RTDB_BASE_URL}/flag_quiz_leaderboard/${myPlayer.token}.json`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        fetchLeaderboard();
+      } catch(e) {}
+    }
+
+    async function fetchLeaderboard() {
+      const container = document.getElementById('leaderboardList');
+      if (!container) return;
+
+      try {
+        const res = await fetch(`${RTDB_BASE_URL}/flag_quiz_leaderboard.json`);
+        const data = await res.json();
+        if (!data) {
+          container.innerHTML = '<div class="text-center py-5 text-slate-500 text-xs font-mono">İlk rekoru sen kır!</div>';
+          return;
+        }
+
+        const list = Object.values(data).filter(item => item && item.nick && item.score !== undefined);
+        cachedLeaderboardList = list;
+        renderLeaderboard();
+      } catch(e) {
+        container.innerHTML = '<div class="text-center py-4 text-slate-500 text-xs">Sıralama çevrimdışı görüntülendi.</div>';
+      }
+    }
+
+    function switchLeaderboardTab(tab) {
+      currentLeaderboardTab = tab;
+      const btnToday = document.getElementById('btnTabToday');
+      const btnAll = document.getElementById('btnTabAllTime');
+      if (tab === 'today') {
+        btnToday.className = 'px-2.5 py-0.5 rounded-md bg-emerald-500 text-pitch-950';
+        btnAll.className = 'px-2.5 py-0.5 rounded-md text-slate-400 hover:text-white';
+      } else {
+        btnAll.className = 'px-2.5 py-0.5 rounded-md bg-emerald-500 text-pitch-950';
+        btnToday.className = 'px-2.5 py-0.5 rounded-md text-slate-400 hover:text-white';
+      }
+      renderLeaderboard();
+    }
+
+    function renderLeaderboard() {
+      const container = document.getElementById('leaderboardList');
+      if (!container) return;
+
+      let list = [...cachedLeaderboardList];
+      const now = Date.now();
+      const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+
+      if (currentLeaderboardTab === 'today') {
+        list = list.filter(item => (now - (item.timestamp || 0)) <= ONE_DAY_MS);
+      }
+
+      // Sort by score descending, then by time ascending (Tie-Breaker: lower time wins!)
+      list.sort((a, b) => {
+        if (b.score !== a.score) return b.score - a.score;
+        return a.time - b.time;
+      });
+
+      if (!list.length) {
+        container.innerHTML = '<div class="text-center py-5 text-slate-500 text-xs font-mono">Bugün henüz rekor kırılmadı. İlk sen ol!</div>';
+        return;
+      }
+
+      container.innerHTML = '';
+      list.slice(0, 100).forEach((entry, idx) => {
+        const isMe = entry.token === myPlayer.token;
+        const row = document.createElement('div');
+        row.className = `p-2.5 rounded-xl border flex items-center justify-between text-xs transition ${isMe ? 'bg-emerald-950/70 border-emerald-500/60 shadow-md' : 'bg-pitch-900/60 border-pitch-800'}`;
+
+        let rankBadge = `<span class="w-6 font-mono font-bold text-slate-400">#${idx + 1}</span>`;
+        if (idx === 0) rankBadge = '<span class="w-6 text-sm">🥇</span>';
+        if (idx === 1) rankBadge = '<span class="w-6 text-sm">🥈</span>';
+        if (idx === 2) rankBadge = '<span class="w-6 text-sm">🥉</span>';
+
+        row.innerHTML = `
+          <div class="flex items-center gap-2 min-w-0">
+            ${rankBadge}
+            <span class="font-bold ${isMe ? 'text-emerald-300 font-display' : 'text-slate-200'} truncate max-w-[130px] sm:max-w-[180px]">
+              ${escapeHtml(entry.nick)} ${isMe ? '<span class="text-[10px] text-emerald-400 font-mono">(Sen)</span>' : ''}
+            </span>
+          </div>
+          <div class="flex items-center gap-3 font-mono shrink-0">
+            <span class="font-bold text-emerald-400">${entry.score}/10</span>
+            <span class="text-amber-300 font-semibold">${Number(entry.time).toFixed(2)}s</span>
+          </div>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    /* =====================================================================
+       7. MULTIPLAYER PARTY ROOMS (2 - 8 PLAYERS IN 1 ROOM)
+       ===================================================================== */
+    async function createPartyRoom() {
+      saveNickFromInput();
+      const code = 'FLG-' + Math.floor(1000 + Math.random() * 9000);
+      currentRoomId = code;
+      isRoomHost = true;
+      currentMatchMode = 'party';
+
+      // Prepare shared 10 questions for this room
+      generateQuizQuestions();
+
+      const initialRoomData = {
+        roomId: code,
+        hostToken: myPlayer.token,
+        status: 'waiting', // 'waiting', 'starting', 'in_progress', 'finished'
+        createdAt: Date.now(),
+        questions: currentQuestions,
+        players: {
+          [myPlayer.token]: {
+            token: myPlayer.token,
+            nick: myPlayer.nick,
+            isHost: true,
+            isReady: true,
+            score: 0,
+            time: 0,
+            currentQ: 0,
+            hasFinished: false
+          }
+        }
+      };
+
+      try {
+        await fetch(`${RTDB_BASE_URL}/flag_quiz_rooms/${code}.json`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(initialRoomData)
+        });
+
+        openLobbyView(code, true);
+      } catch(e) {
+        showToast('Oda oluşturulurken hata oluştu!');
+      }
+    }
+
+    async function promptJoinRoom() {
+      saveNickFromInput();
+      const codeInput = prompt('4 Haneli Oda Kodunu Giriniz (Örn: 5821 veya FLG-5821):');
+      if (!codeInput) return;
+      let cleanCode = codeInput.trim().toUpperCase();
+      if (!cleanCode.startsWith('FLG-')) cleanCode = 'FLG-' + cleanCode;
+
+      joinPartyRoom(cleanCode);
+    }
+
+    async function joinPartyRoom(roomId) {
+      saveNickFromInput();
+      try {
+        const res = await fetch(`${RTDB_BASE_URL}/flag_quiz_rooms/${roomId}.json`);
+        const room = await res.json();
+
+        if (!room) {
+          showToast('Bu oda bulunamadı veya kapatılmış!');
+          return;
+        }
+
+        currentRoomId = roomId;
+        isRoomHost = room.hostToken === myPlayer.token;
+        currentMatchMode = 'party';
+        currentQuestions = room.questions || [];
+
+        // Add myself to room's players list
+        const myPlayerData = {
+          token: myPlayer.token,
+          nick: myPlayer.nick,
+          isHost: isRoomHost,
+          isReady: true,
+          score: 0,
+          time: 0,
+          currentQ: 0,
+          hasFinished: false
+        };
+
+        await fetch(`${RTDB_BASE_URL}/flag_quiz_rooms/${roomId}/players/${myPlayer.token}.json`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(myPlayerData)
+        });
+
+        openLobbyView(roomId, isRoomHost);
+      } catch(e) {
+        showToast('Odaya bağlanırken bağlantı hatası!');
+      }
+    }
+
+    function openLobbyView(roomId, isHost) {
+      switchScreen('lobby');
+      document.getElementById('lblRoomCode').textContent = roomId;
+      const hostBtn = document.getElementById('btnHostStartMatch');
+
+      if (isHost) {
+        hostBtn.classList.remove('hidden');
+        document.getElementById('txtLobbyDesc').textContent = 'Arkadaşların gelince "Yarışmayı Başlat" butonuna bas!';
+      } else {
+        hostBtn.classList.add('hidden');
+        document.getElementById('txtLobbyDesc').textContent = 'Oda sahibinin yarışmayı başlatması bekleniyor...';
+      }
+
+      // Start Realtime Room Poller
+      clearInterval(partyRoomPollInterval);
+      pollPartyRoomState();
+      partyRoomPollInterval = setInterval(pollPartyRoomState, 1000);
+    }
+
+    async function pollPartyRoomState() {
+      if (!currentRoomId) return;
+      try {
+        const res = await fetch(`${RTDB_BASE_URL}/flag_quiz_rooms/${currentRoomId}.json`);
+        const room = await res.json();
+        if (!room) return;
+
+        // 1. Render connected players
+        const players = Object.values(room.players || {});
+        renderLobbyPlayers(players);
+
+        // 2. Check if host launched the match
+        if (room.status === 'starting' && document.getElementById('screenLobby').classList.contains('hidden') === false) {
+          launchSynchronizedCountdown(room.questions);
+        }
+      } catch(e) {}
+    }
+
+    function renderLobbyPlayers(players) {
+      const container = document.getElementById('lobbyPlayersList');
+      if (!container) return;
+
+      document.getElementById('txtPlayersCount').textContent = `Oyuncular (${players.length})`;
+      container.innerHTML = '';
+
+      players.forEach(p => {
+        const isMe = p.token === myPlayer.token;
+        const row = document.createElement('div');
+        row.className = `p-3 rounded-2xl border flex items-center justify-between text-xs font-bold ${isMe ? 'bg-amber-950/40 border-amber-500/50 text-amber-300' : 'bg-pitch-950 border-pitch-700 text-white'}`;
+
+        row.innerHTML = `
+          <div class="flex items-center gap-2 min-w-0">
+            <span class="w-7 h-7 rounded-lg ${p.isHost ? 'bg-amber-500/20 text-amber-400' : 'bg-pitch-800 text-slate-300'} flex items-center justify-center text-xs shrink-0">
+              ${p.isHost ? '👑' : '<i class="fa-solid fa-user"></i>'}
+            </span>
+            <span class="truncate">${escapeHtml(p.nick)} ${isMe ? '(Sen)' : ''}</span>
+          </div>
+          <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+            Hazır ✔
+          </span>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    async function hostStartMatch() {
+      if (!isRoomHost || !currentRoomId) return;
+      try {
+        await fetch(`${RTDB_BASE_URL}/flag_quiz_rooms/${currentRoomId}/status.json`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify('starting')
+        });
+      } catch(e) {}
+    }
+
+    // 3, 2, 1 Countdown overlay before match
+    function launchSynchronizedCountdown(questions) {
+      clearInterval(partyRoomPollInterval);
+      if (questions && questions.length) currentQuestions = questions;
+
+      const overlay = document.getElementById('overlayCountdown');
+      const numEl = document.getElementById('countdownNumber');
+      overlay.classList.remove('hidden');
+
+      let count = 3;
+      numEl.textContent = count;
+      Sound.countdownBeep(false);
+
+      const countdownInt = setInterval(() => {
+        count--;
+        if (count > 0) {
+          numEl.textContent = count;
+          Sound.countdownBeep(false);
+        } else if (count === 0) {
+          numEl.textContent = 'BAŞLA!';
+          Sound.countdownBeep(true);
+        } else {
+          clearInterval(countdownInt);
+          overlay.classList.add('hidden');
+          switchScreen('quiz');
+          document.getElementById('quizMultiplayerLiveBar').classList.remove('hidden');
+          startQuestion(0);
+        }
+      }, 950);
+    }
+
+    async function syncMyPartyProgress() {
+      if (!currentRoomId || !myPlayer.token) return;
+      const correctCount = userAnswers.filter(a => a.isCorrect).length;
+      const totalTimeMs = userAnswers.reduce((sum, a) => sum + a.timeMs, 0);
+
+      try {
+        await fetch(`${RTDB_BASE_URL}/flag_quiz_rooms/${currentRoomId}/players/${myPlayer.token}.json`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            score: correctCount,
+            time: Number((totalTimeMs / 1000).toFixed(2)),
+            currentQ: currentQIndex + 1,
+            hasFinished: (currentQIndex + 1) >= TOTAL_QUESTIONS
+          })
+        });
+      } catch(e) {}
+    }
+
+    async function submitPartyResultAndWatchPodium(correctCount, totalTimeSec) {
+      await syncMyPartyProgress();
+      pollPartyPodium();
+      partyRoomPollInterval = setInterval(pollPartyPodium, 1500);
+    }
+
+    async function pollPartyPodium() {
+      if (!currentRoomId) return;
+      try {
+        const res = await fetch(`${RTDB_BASE_URL}/flag_quiz_rooms/${currentRoomId}/players.json`);
+        const playersObj = await res.json();
+        if (!playersObj) return;
+
+        const players = Object.values(playersObj);
+        renderPodiumRanks(players);
+      } catch(e) {}
+    }
+
+    function renderPodiumRanks(players) {
+      const container = document.getElementById('podiumRanksList');
+      if (!container) return;
+
+      // Sort players: Score DESC, then Time ASC (lower time wins in ties!)
+      players.sort((a, b) => {
+        if (b.score !== a.score) return b.score - a.score;
+        return a.time - b.time;
+      });
+
+      container.innerHTML = '';
+      players.forEach((p, idx) => {
+        const isMe = p.token === myPlayer.token;
+        const row = document.createElement('div');
+        row.className = `p-3.5 rounded-2xl border flex items-center justify-between text-xs transition ${
+          idx === 0 ? 'bg-amber-500/20 border-amber-500/60 shadow-lg shadow-amber-500/15' :
+          isMe ? 'bg-emerald-950/60 border-emerald-500/50' : 'bg-pitch-950 border-pitch-800'
+        }`;
+
+        let medal = `<span class="w-7 font-mono font-bold text-slate-400">#${idx + 1}</span>`;
+        if (idx === 0) medal = '<span class="w-7 text-xl">🥇</span>';
+        if (idx === 1) medal = '<span class="w-7 text-xl">🥈</span>';
+        if (idx === 2) medal = '<span class="w-7 text-xl">🥉</span>';
+
+        row.innerHTML = `
+          <div class="flex items-center gap-2.5 min-w-0">
+            ${medal}
+            <div class="min-w-0">
+              <div class="font-bold text-white truncate">${escapeHtml(p.nick)} ${isMe ? '(Sen)' : ''}</div>
+              <div class="text-[10px] text-slate-400 font-mono">${p.hasFinished ? 'Yarışmayı Bitirdi ✔' : `Soru ${p.currentQ || 0}/10`}</div>
+            </div>
+          </div>
+          <div class="text-right font-mono shrink-0">
+            <div class="text-sm font-black ${idx === 0 ? 'text-amber-400' : 'text-emerald-400'}">${p.score || 0} / 10</div>
+            <div class="text-[11px] text-slate-300 font-semibold">${Number(p.time || 0).toFixed(2)}s</div>
+          </div>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    async function requestPartyRematch() {
+      if (!currentRoomId) return;
+      generateQuizQuestions();
+
+      if (isRoomHost) {
+        await fetch(`${RTDB_BASE_URL}/flag_quiz_rooms/${currentRoomId}.json`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            status: 'starting',
+            questions: currentQuestions
+          })
+        });
+      } else {
+        openLobbyView(currentRoomId, false);
+      }
+    }
+
+    function copyRoomLink() {
+      const url = `https://pratikbase.com/flag-quiz/?room=${currentRoomId}`;
+      navigator.clipboard.writeText(url).then(() => {
+        showToast('Oda Davet Linki Kopyalandı! 📋');
+      });
+    }
+
+    function shareRoomWhatsApp() {
+      const url = `https://pratikbase.com/flag-quiz/?room=${currentRoomId}`;
+      const text = `🚩 Flag Blitz bayrak yarışması odası açtım! Hemen katıl kapışalım:\\n${url}`;
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+    }
+
+    function shareResultWhatsApp() {
+      const correct = userAnswers.filter(a => a.isCorrect).length;
+      const totalTime = (userAnswers.reduce((sum, a) => sum + a.timeMs, 0) / 1000).toFixed(2);
+      const text = `🚩 Flag Blitz'te 10 bayraktan ${correct} tanesini ${totalTime} saniyede bildim! Sen beni geçebilir misin?\\nHemen oyna: https://pratikbase.com/flag-quiz/`;
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+    }
+
+    function leaveRoomAndGoHome() {
+      goHome();
+    }
+
+    /* =====================================================================
+       8. UTILITY & TOAST ALERTS
+       ===================================================================== */
+    function showToast(msg) {
+      const container = document.getElementById('toastContainer');
+      if (!container) return;
+      const el = document.createElement('div');
+      el.className = 'px-4 py-2 rounded-xl bg-pitch-900 border border-emerald-500/50 text-white text-xs font-bold shadow-2xl animate-in fade-in slide-in-from-bottom duration-200';
+      el.textContent = msg;
+      container.appendChild(el);
+      setTimeout(() => {
+        el.style.opacity = '0';
+        setTimeout(() => el.remove(), 250);
+      }, 2400);
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/[&<>"']/g, m => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+      }[m]));
+    }
+
+    /* =====================================================================
+       9. LANGUAGE / TRANSLATION SYSTEM (TR / EN)
+       ===================================================================== */
+    let currentLang = 'TR';
+
+    function toggleLang() {
+      currentLang = currentLang === 'TR' ? 'EN' : 'TR';
+      applyLanguage(currentLang);
+    }
+
+    function applyLanguage(lang) {
+      currentLang = lang;
+      document.getElementById('langLabel').textContent = lang;
+      document.getElementById('langFlag').textContent = lang === 'TR' ? '🇹🇷' : '🇬🇧';
+
+      if (lang === 'TR') {
+        document.getElementById('txtHeroBadge').textContent = '10 Bayrak • 5 Saniye • Saliseler Yarışıyor!';
+        document.getElementById('txtHeroSub').textContent = 'Doğru ülkeyi en hızlı kim seçecek? İster tek başına rekor kır, ister arkadaş grubunla canlı düelloya gir!';
+        document.getElementById('txtModeSoloTitle').textContent = 'Hızlı Yarış (Solo Blitz)';
+        document.getElementById('txtModeMultiTitle').textContent = 'Arkadaşlarla Canlı Oda';
+        document.getElementById('btnStartSolo').textContent = 'HEMEN BAŞLA';
+        document.getElementById('btnCreateRoom').innerHTML = '<i class="fa-solid fa-plus text-xs"></i> Oda Kur';
+        document.getElementById('btnJoinRoom').textContent = 'Koda Katıl';
+      } else {
+        document.getElementById('txtHeroBadge').textContent = '10 Flags • 5 Seconds • Split-Seconds Count!';
+        document.getElementById('txtHeroSub').textContent = 'Who can identify the flag quickest? Chase the Global Top 100 or duel live in private party lobbies!';
+        document.getElementById('txtModeSoloTitle').textContent = 'Solo Blitz (Leaderboard)';
+        document.getElementById('txtModeMultiTitle').textContent = 'Live Party Room (2-8P)';
+        document.getElementById('btnStartSolo').textContent = 'START BLITZ';
+        document.getElementById('btnCreateRoom').innerHTML = '<i class="fa-solid fa-plus text-xs"></i> Create Room';
+        document.getElementById('btnJoinRoom').textContent = 'Join Code';
+      }
+    }
+
+    /* =====================================================================
+       10. APP INITIALIZATION & AUTO-URL ROOM PARSER
+       ===================================================================== */
+    window.addEventListener('DOMContentLoaded', () => {
+      initPlayerIdentity();
+      fetchLeaderboard();
+
+      // Check URL parameters for ?room=XXXX or ?lang=en
+      const urlParams = new URLSearchParams(window.location.search);
+      const roomParam = urlParams.get('room');
+      const langParam = urlParams.get('lang');
+
+      if (langParam && langParam.toLowerCase() === 'en') {
+        applyLanguage('EN');
+      }
+
+      if (roomParam) {
+        let clean = roomParam.trim().toUpperCase();
+        if (!clean.startsWith('FLG-')) clean = 'FLG-' + clean;
+        joinPartyRoom(clean);
+      }
+    });
+  </script>
+</body>
+</html>
