@@ -213,7 +213,7 @@
           <div class="flex flex-col">
             <span class="font-display font-bold text-white text-base tracking-wide flex items-center gap-1.5">
               THE FOOTBALL <span class="text-emerald-400">LOTTERY</span>
-              <span class="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold">V2.0</span>
+              <span class="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold">V2.1</span>
             </span>
             <span class="text-[10px] text-slate-400 font-medium" id="txtSubtitleNav">Futbolcu Doğum Piyangosu</span>
           </div>
@@ -1945,6 +1945,14 @@
       });
 
       updateNextAgeButton(1);
+
+      // Otomatik İlerleme (1x hızında otomatik başlasın)
+      setSpeed(1);
+      setTimeout(() => {
+        if (!isAutoPlaying && !player.isRetired && player.age < 40) {
+          toggleAutoPlay();
+        }
+      }, 750);
     }
 
     /* =====================================================================
