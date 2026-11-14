@@ -155,10 +155,15 @@
     };
   };
 
-  const startedAt = parseInt(safeGet('pb_started_at') || '0', 10) || Date.now();
-  if (!safeGet('pb_started_at')) {
-    safeSet('pb_started_at', startedAt.toString());
+  // 6. Oturum Başlangıç Zamanı: Sekme bazlı (sessionStorage) ve 30 dk hareketsizlik aşımında taze başlangıç
+  try { localStorage.removeItem('pb_started_at'); } catch(e) {}
+  let sessionStart = parseInt(safeSessionGet('pb_sess_started') || '0', 10);
+  const nowTs = Date.now();
+  if (!sessionStart || (nowTs - sessionStart > 1800000)) { // 30 dakikadan eskiyse yeni oturum say
+    sessionStart = nowTs;
+    safeSessionSet('pb_sess_started', sessionStart.toString());
   }
+  const startedAt = sessionStart;
 
   // 7. Canlı Kalp Atışı (Live Presence)
   function sendHeartbeat(isExiting = false) {

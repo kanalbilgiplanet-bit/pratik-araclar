@@ -220,15 +220,26 @@
         </button>
       </div>
 
-      <!-- Controls Right: Sound & Language & Reset -->
-      <div class="flex items-center gap-2.5">
-        <button id="btnSoundToggle" class="px-3 py-1.5 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-slate-300 hover:text-white text-xs font-semibold flex items-center gap-1.5 transition border border-pitch-700/60" title="Ses Aç/Kapat">
-          <i class="fa-solid fa-volume-high text-emerald-400" id="soundIcon"></i>
+      <!-- Controls Right: Museum, Achievements, Sound, Language, Portal (Mobile optimized) -->
+      <div class="flex items-center gap-1 sm:gap-2">
+        <button id="btnOpenMuseum" class="px-2 sm:px-2.5 py-1.5 rounded-xl bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-300 text-xs font-bold transition border border-yellow-500/30 flex items-center gap-1.5" title="Kişisel Müze & Lüks Garaj">
+          <i class="fa-solid fa-gem text-amber-400 text-xs"></i>
+          <span class="hidden md:inline" id="txtMuseumNav">Müze & Garaj</span>
+        </button>
+
+        <button id="btnOpenAchievements" class="px-2 sm:px-2.5 py-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 text-xs font-bold transition border border-amber-500/30 flex items-center gap-1.5" title="Kariyer Başarımları">
+          <i class="fa-solid fa-trophy text-amber-400 text-xs"></i>
+          <span class="hidden md:inline" id="txtAchCountNav">Başarımlar</span>
+          <span id="badgeAchCount" class="px-1.5 py-0.5 rounded-full bg-amber-500/20 text-[10px] text-amber-300 font-mono font-bold">0/10</span>
+        </button>
+
+        <button id="btnSoundToggle" class="px-2 sm:px-3 py-1.5 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-slate-300 hover:text-white text-xs font-semibold flex items-center gap-1.5 transition border border-pitch-700/60" title="Ses Aç/Kapat">
+          <i class="fa-solid fa-volume-high text-emerald-400 text-xs" id="soundIcon"></i>
           <span class="hidden sm:inline" id="txtSoundLabel">Ses Açık</span>
         </button>
 
-        <button id="btnLangToggle" class="px-3 py-1.5 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-emerald-300 font-mono text-xs font-bold transition border border-pitch-700/60 flex items-center gap-1">
-          <i class="fa-solid fa-globe"></i>
+        <button id="btnLangToggle" class="px-2 sm:px-3 py-1.5 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-emerald-300 font-mono text-xs font-bold transition border border-pitch-700/60 flex items-center gap-1">
+          <i class="fa-solid fa-globe text-xs"></i>
           <span id="langCurrent">TR</span>
         </button>
 
@@ -330,6 +341,45 @@
 
   <!-- Main Container -->
   <main class="flex-grow max-w-4xl w-full mx-auto px-4 py-8 relative stadium-glow grass-pattern">
+
+    <!-- Breaking News / Fabrizio Romano "HERE WE GO" Cinematic Flash Banner -->
+    <div id="breakingNewsOverlay" class="hidden fixed top-20 left-1/2 -translate-x-1/2 z-50 max-w-lg w-[92%] p-4 rounded-2xl bg-gradient-to-r from-red-950 via-pitch-950 to-red-950 border-2 border-red-500 shadow-2xl flex items-center gap-3.5 animate-in slide-in-from-top duration-300 cursor-pointer" onclick="dismissBreakingNews()">
+      <div class="w-12 h-12 rounded-2xl bg-red-600 text-white flex items-center justify-center text-xl shrink-0 font-display font-black shadow-lg shadow-red-600/40 animate-pulse">
+        🚨
+      </div>
+      <div class="min-w-0 flex-1">
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 rounded-full bg-red-600 text-white text-[9px] font-mono font-black uppercase tracking-widest animate-pulse" id="breakingNewsTag">SON DAKİKA</span>
+          <span class="text-[10px] text-slate-400 font-mono" id="breakingNewsSource">FABRIZIO ROMANO EXCLUSIVE</span>
+        </div>
+        <h4 class="text-sm sm:text-base font-display font-black text-white truncate mt-0.5" id="breakingNewsHeadline">HERE WE GO!</h4>
+        <p class="text-xs text-slate-300 truncate" id="breakingNewsSub">Oyuncu yeni kulübe katıldı.</p>
+      </div>
+      <button class="text-slate-400 hover:text-white text-xs px-2 py-1 shrink-0">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <!-- Versus / Challenge Active Banner -->
+    <div id="versusBanner" class="hidden mb-6 p-4 rounded-2xl bg-gradient-to-r from-purple-950 via-indigo-950 to-pitch-950 border-2 border-purple-500/50 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-3 text-left">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-purple-500/20 text-purple-300 border border-purple-500/40 flex items-center justify-center text-lg shrink-0">
+          ⚔️
+        </div>
+        <div>
+          <div class="text-[10px] text-purple-300 font-bold uppercase tracking-wider flex items-center gap-1.5">
+            <span>MEYDAN OKUMA DEVAM EDİYOR</span>
+            <span class="w-2 h-2 rounded-full bg-purple-400 animate-ping"></span>
+          </div>
+          <div id="versusBannerText" class="text-xs sm:text-sm font-bold text-white mt-0.5">
+            Rakip bir oyuncu sana meydan okudu! 40 yaşına ulaştığında kariyerleriniz kıyaslanacak.
+          </div>
+        </div>
+      </div>
+      <button onclick="dismissVersusMode()" class="px-2.5 py-1 text-[11px] text-purple-300 hover:text-white bg-purple-900/50 hover:bg-purple-900 rounded-lg transition shrink-0">
+        Vazgeç
+      </button>
+    </div>
 
     <!-- Screen 1: Birth Roulette & Launch Screen -->
     <div id="screenIntro" class="space-y-8 text-center">
@@ -546,6 +596,81 @@
             <span id="txtCopyResult" class="truncate text-[11px] sm:text-xs">Kopyala</span>
           </button>
         </div>
+
+        <!-- 3. Versus Mode CTA: Arkadaşına Meydan Oku -->
+        <button id="btnShareVersus" class="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-purple-700 via-indigo-700 to-violet-700 hover:from-purple-600 hover:to-violet-600 text-white font-display font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-purple-600/25 active:scale-95 transition" title="Bu kariyerle bir arkadaşına meydan oku!">
+          <i class="fa-solid fa-swords text-amber-300"></i>
+          <span id="txtShareVersus">⚔️ ARKADAŞINA MEYDAN OKU (VS)</span>
+        </button>
+      </div>
+
+      <!-- Card Style Switcher: FUT Style vs Cinematic Netflix Documentary Poster -->
+      <div class="flex items-center justify-center gap-2 mb-2">
+        <button id="btnViewCardFUT" onclick="switchCardView('fut')" class="px-3.5 py-1.5 rounded-xl bg-emerald-500 text-pitch-950 font-display font-bold text-xs uppercase tracking-wider transition shadow-lg">
+          ⚽ FUT Kartı
+        </button>
+        <button id="btnViewCardDoc" onclick="switchCardView('doc')" class="px-3.5 py-1.5 rounded-xl bg-pitch-900 hover:bg-pitch-800 text-slate-300 font-display font-bold text-xs uppercase tracking-wider transition border border-pitch-800">
+          🎬 Belgesel Film Afişi
+        </button>
+      </div>
+
+      <!-- Cinematic Netflix Style Documentary Poster (Alternative to FUT Card) -->
+      <div id="documentaryPoster" class="hidden max-w-sm sm:max-w-md mx-auto p-6 sm:p-8 rounded-3xl bg-gradient-to-b from-stone-950 via-zinc-950 to-black border-2 border-amber-500/50 shadow-2xl relative overflow-hidden text-center space-y-5">
+        
+        <!-- Top Cinematic Studio Watermark & Festival Laurel -->
+        <div class="space-y-1">
+          <div class="text-[9px] uppercase font-mono tracking-widest text-amber-300 font-black" id="docPosterFestivalBadge">
+            🌿 RIO DE JANEIRO FILM FESTIVAL • OFFICIAL SELECTION 🌿
+          </div>
+          <div class="text-[10px] uppercase font-mono tracking-widest text-slate-400 font-bold">
+            PRATIKBASE CINEMA & ORIGINALS
+          </div>
+          <div class="w-12 h-0.5 bg-amber-500 mx-auto"></div>
+        </div>
+
+        <!-- Poster Main Title -->
+        <div class="space-y-1">
+          <div class="text-xs uppercase font-mono font-bold tracking-widest text-slate-400" id="docPosterCountry">
+            🇧🇷 BİR BREZİLYA DESTANI
+          </div>
+          <h2 class="text-3xl sm:text-4xl font-display font-black text-white tracking-tight uppercase" id="docPosterPlayerName">
+            GABRIEL SILVA
+          </h2>
+          <div class="text-xs sm:text-sm font-display font-bold text-amber-300 italic" id="docPosterTagline">
+            "Kaderi Yenen Adam: 8 Milyarda 1 İhtimalin Peşinde"
+          </div>
+        </div>
+
+        <!-- Key Metrics Quad in Poster Style -->
+        <div class="grid grid-cols-2 gap-2 sm:gap-3 pt-2 text-left">
+          <div class="p-3 rounded-2xl bg-stone-900/80 border border-stone-800">
+            <div class="text-[10px] uppercase font-mono text-slate-400 font-bold" id="txtDocMetricPeak">ZİRVE GÜÇ</div>
+            <div class="text-2xl font-display font-black text-amber-400" id="docPosterPeakOvr">89 OVR</div>
+            <div class="text-[10px] text-slate-400 truncate" id="docPosterArchetype">FUTBOL İLAHİ</div>
+          </div>
+          <div class="p-3 rounded-2xl bg-stone-900/80 border border-stone-800">
+            <div class="text-[10px] uppercase font-mono text-slate-400 font-bold" id="txtDocMetricTrophies">KUPA & GOL</div>
+            <div class="text-2xl font-display font-black text-white" id="docPosterTrophies">7 KUPA</div>
+            <div class="text-[10px] text-slate-400 truncate" id="docPosterGoals">310 Kariyer Golü</div>
+          </div>
+          <div class="p-3 rounded-2xl bg-stone-900/80 border border-stone-800">
+            <div class="text-[10px] uppercase font-mono text-slate-400 font-bold" id="txtDocMetricWealth">SERVET</div>
+            <div class="text-xl font-display font-black text-emerald-400" id="docPosterWealth">€12.5M</div>
+            <div class="text-[10px] text-slate-400 truncate" id="txtDocMetricWealthSub">Ömür Boyu Birikim</div>
+          </div>
+          <div class="p-3 rounded-2xl bg-stone-900/80 border border-stone-800">
+            <div class="text-[10px] uppercase font-mono text-slate-400 font-bold" id="txtDocMetricDuration">KARİYER SÜRESİ</div>
+            <div class="text-xl font-display font-black text-cyan-300">40 YIL</div>
+            <div class="text-[10px] text-slate-400 truncate" id="txtDocMetricDurationSub">Jübile Onuru</div>
+          </div>
+        </div>
+
+        <!-- Poster Footer Critics Quote -->
+        <div class="pt-4 border-t border-stone-800 space-y-1">
+          <p class="text-xs italic text-slate-300" id="txtDocPosterCritics">"Sadece futbol değil; sokaktan dünya sahnesine uzanan destansı bir hayat mücadelesi."</p>
+          <div class="text-[10px] text-slate-400 font-mono" id="txtDocPosterWatermark">pratikbase.com/football-lottery • 40 SEZONLUK BELGESEL</div>
+        </div>
+
       </div>
 
       <!-- The Digital Collectible Footballer Card (FUT Style Canvas & HTML) -->
@@ -639,17 +764,41 @@
 
   </main>
 
-  <!-- Dilemma / Critical Choice Modal -->
+  <!-- Dilemma / Critical Choice Modal (Cinematic Scene Banner) -->
   <div id="modalDilemma" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
-    <div class="max-w-md w-full p-6 sm:p-7 rounded-3xl bg-pitch-900 border-2 border-emerald-500/60 shadow-2xl space-y-5 text-left relative animate-in fade-in zoom-in duration-200">
+    <div class="max-w-lg w-full p-5 sm:p-6 rounded-3xl bg-pitch-900 border-2 border-emerald-500/60 shadow-2xl space-y-4 text-left relative animate-in fade-in zoom-in duration-200">
       
+      <!-- Cinematic Story Scene Illustration Banner -->
+      <div id="dilemmaScene" class="w-full h-36 sm:h-40 rounded-2xl overflow-hidden relative border border-pitch-700/80 shadow-2xl flex flex-col justify-between p-3.5 bg-gradient-to-br from-amber-950 via-pitch-950 to-black transition-all">
+        <div id="dilemmaSceneGlow" class="absolute -top-10 -right-10 w-40 h-40 bg-amber-500/20 rounded-full blur-2xl pointer-events-none"></div>
+        <div id="dilemmaSceneGlow2" class="absolute -bottom-10 -left-10 w-40 h-40 bg-emerald-500/20 rounded-full blur-2xl pointer-events-none"></div>
+        
+        <div class="flex items-center justify-between relative z-10">
+          <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/60 border border-white/10 text-[10px] font-mono font-bold text-amber-300 backdrop-blur-md">
+            <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+            <span id="dilemmaSceneAgeTag">DÖNÜM NOKTASI</span>
+          </div>
+          <div id="dilemmaSceneIcon" class="w-10 h-10 rounded-xl bg-black/60 border border-white/10 backdrop-blur-md flex items-center justify-center text-2xl shadow-lg">
+            💼
+          </div>
+        </div>
+
+        <div class="relative z-10">
+          <div class="flex items-center gap-1.5 text-[11px] font-mono font-bold text-slate-300">
+            <i class="fa-solid fa-location-dot text-rose-400"></i>
+            <span id="dilemmaSceneLocation">5 Yıldızlı Otel Süiti - Gece Yarısı Pazarlığı</span>
+          </div>
+          <div id="dilemmaSceneMood" class="text-xs text-amber-200/90 font-medium italic mt-0.5">"Geleceğinin kaderi bu masada çiziliyor..."</div>
+        </div>
+      </div>
+
       <div class="flex items-center gap-3">
-        <div class="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 border border-amber-500/40 flex items-center justify-center text-xl shrink-0">
+        <div class="w-10 h-10 rounded-2xl bg-amber-500/20 text-amber-400 border border-amber-500/40 flex items-center justify-center text-lg shrink-0">
           <i class="fa-solid fa-triangle-exclamation"></i>
         </div>
         <div>
           <div class="text-[10px] text-amber-400 font-bold uppercase tracking-wider" id="dilemmaBadge">Kariyer Dönüm Noktası</div>
-          <h3 class="text-xl font-display font-black text-white" id="dilemmaTitle">Büyük Teklif Geldi!</h3>
+          <h3 class="text-lg sm:text-xl font-display font-black text-white" id="dilemmaTitle">Büyük Teklif Geldi!</h3>
         </div>
       </div>
 
@@ -657,8 +806,148 @@
         Açıklama metni buraya gelecek.
       </p>
 
-      <div class="space-y-2.5 pt-2" id="dilemmaOptions">
+      <div class="space-y-2.5 pt-1" id="dilemmaOptions">
         <!-- Buttons populated dynamically -->
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- Museum & Luxury Garage Modal -->
+  <div id="modalMuseum" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
+    <div class="max-w-2xl w-full max-h-[88vh] p-5 sm:p-7 rounded-3xl bg-pitch-900 border-2 border-yellow-500/50 shadow-2xl flex flex-col space-y-4 text-left relative animate-in fade-in zoom-in duration-200">
+      
+      <div class="flex items-center justify-between border-b border-pitch-800 pb-3">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-yellow-500/20 text-yellow-300 border border-yellow-500/40 flex items-center justify-center text-xl shrink-0">
+            🏛️
+          </div>
+          <div>
+            <h3 class="text-lg font-display font-black text-white" id="txtMuseumTitle">Kişisel Kupa Odası & Lüks Garaj</h3>
+            <p class="text-xs text-amber-400 font-mono" id="txtMuseumSub">Kariyer boyunca kazanılan madalyalar, kupalar ve satın alınan mülkler.</p>
+          </div>
+        </div>
+        <button onclick="closeMuseumModal()" class="w-8 h-8 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-slate-400 hover:text-white flex items-center justify-center transition">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Navigation Tabs (Kupalar vs Garaj & Varlıklar) -->
+      <div class="flex items-center gap-2 border-b border-pitch-800 pb-2">
+        <button id="tabMuseumTrophies" onclick="switchMuseumTab('trophies')" class="px-3.5 py-1.5 rounded-xl bg-yellow-500 text-pitch-950 font-bold text-xs transition">
+          🏆 Kupa Odası
+        </button>
+        <button id="tabMuseumAssets" onclick="switchMuseumTab('assets')" class="px-3.5 py-1.5 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-slate-300 font-bold text-xs transition">
+          🏎️ Garaj & Gayrimenkul
+        </button>
+      </div>
+
+      <!-- Scrollable Tab Content Container -->
+      <div class="overflow-y-auto custom-scroll pr-1 flex-1 max-h-[55vh]" id="museumContentContainer">
+        <!-- Dynamically populated via renderMuseum() -->
+      </div>
+
+      <div class="pt-2 border-t border-pitch-800 text-center">
+        <button onclick="closeMuseumModal()" class="w-full py-2.5 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-slate-300 font-bold text-xs transition">
+          Kapat
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Achievements / Rozetler Modal -->
+  <div id="modalAchievements" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
+    <div class="max-w-lg w-full max-h-[85vh] p-6 rounded-3xl bg-pitch-900 border-2 border-amber-500/50 shadow-2xl flex flex-col space-y-4 text-left relative animate-in fade-in zoom-in duration-200">
+      
+      <div class="flex items-center justify-between border-b border-pitch-800 pb-3">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center justify-center text-xl shrink-0">
+            🏆
+          </div>
+          <div>
+            <h3 class="text-lg font-display font-black text-white" id="txtAchModalTitle">Kariyer Başarımları & Rozetler</h3>
+            <p class="text-xs text-amber-400 font-mono font-bold" id="txtAchProgress">0 / 10 Tamamlandı</p>
+          </div>
+        </div>
+        <button onclick="closeAchievementsModal()" class="w-8 h-8 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-slate-400 hover:text-white flex items-center justify-center transition">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Achievements List (Scrollable) -->
+      <div class="space-y-2.5 overflow-y-auto custom-scroll pr-1 flex-1 max-h-[55vh]" id="achievementsListContainer">
+        <!-- Populated via renderAchievementsList() -->
+      </div>
+
+      <div class="pt-2 border-t border-pitch-800 text-center">
+        <button onclick="closeAchievementsModal()" class="w-full py-2.5 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-slate-300 font-bold text-xs transition">
+          Kapat
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Versus Battle Result Modal -->
+  <div id="modalVersus" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
+    <div class="max-w-xl w-full p-6 sm:p-7 rounded-3xl bg-pitch-900 border-2 border-purple-500/70 shadow-2xl space-y-5 text-center relative animate-in fade-in zoom-in duration-200">
+      
+      <!-- Battle Header -->
+      <div class="space-y-1">
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/40 text-xs font-mono font-bold">
+          <span>⚔️</span> <span>VERSUS MEYDAN OKUMA SONUCU</span>
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-display font-black text-white" id="vsWinnerAnnouncement">
+          KAZANAN: SEN! 👑
+        </h2>
+        <p class="text-slate-400 text-xs" id="vsBattleSub">İşte iki efsanenin 40 yıllık kariyer karnesi kıyaslaması.</p>
+      </div>
+
+      <!-- Battle Cards Comparison Grid (Side by Side) -->
+      <div class="grid grid-cols-2 gap-3 sm:gap-4 text-left">
+        <!-- Player Column -->
+        <div class="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-b from-pitch-950 to-black border-2 border-emerald-500/50 space-y-2.5 relative">
+          <div class="text-[10px] uppercase font-bold text-emerald-400 font-mono tracking-wider">SENİN OYUNCUN</div>
+          <div class="flex items-center gap-2">
+            <span id="vsPlayerFlag" class="text-2xl sm:text-3xl">🇧🇷</span>
+            <div class="min-w-0">
+              <div id="vsPlayerName" class="font-bold text-white text-xs sm:text-sm truncate">Oyuncu</div>
+              <div id="vsPlayerOvr" class="text-emerald-300 font-display font-black text-base sm:text-lg">89 ZİRVE</div>
+            </div>
+          </div>
+          <div class="space-y-1 pt-1.5 border-t border-pitch-800 text-[11px] font-mono text-slate-300">
+            <div class="flex justify-between"><span>Gol:</span> <strong id="vsPlayerGoals" class="text-white">0</strong></div>
+            <div class="flex justify-between"><span>Kupa:</span> <strong id="vsPlayerTrophies" class="text-amber-400">0</strong></div>
+            <div class="flex justify-between"><span>Servet:</span> <strong id="vsPlayerBank" class="text-emerald-400">€0</strong></div>
+            <div class="flex justify-between"><span>GOAT Puanı:</span> <strong id="vsPlayerScore" class="text-yellow-300 font-bold">0</strong></div>
+          </div>
+        </div>
+
+        <!-- Challenger Column -->
+        <div class="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-b from-pitch-950 to-black border-2 border-purple-500/50 space-y-2.5 relative">
+          <div class="text-[10px] uppercase font-bold text-purple-400 font-mono tracking-wider">RAKİP MEYDAN OKUYAN</div>
+          <div class="flex items-center gap-2">
+            <span id="vsOpponentFlag" class="text-2xl sm:text-3xl">🇳🇱</span>
+            <div class="min-w-0">
+              <div id="vsOpponentName" class="font-bold text-white text-xs sm:text-sm truncate">Rakip</div>
+              <div id="vsOpponentOvr" class="text-purple-300 font-display font-black text-base sm:text-lg">85 ZİRVE</div>
+            </div>
+          </div>
+          <div class="space-y-1 pt-1.5 border-t border-pitch-800 text-[11px] font-mono text-slate-300">
+            <div class="flex justify-between"><span>Gol:</span> <strong id="vsOpponentGoals" class="text-white">0</strong></div>
+            <div class="flex justify-between"><span>Kupa:</span> <strong id="vsOpponentTrophies" class="text-amber-400">0</strong></div>
+            <div class="flex justify-between"><span>Servet:</span> <strong id="vsOpponentBank" class="text-emerald-400">€0</strong></div>
+            <div class="flex justify-between"><span>GOAT Puanı:</span> <strong id="vsOpponentScore" class="text-yellow-300 font-bold">0</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button onclick="closeVersusModal()" class="w-full py-3 px-4 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-white font-bold text-xs transition">
+          Jübile Kartımı Gör & Kapat
+        </button>
       </div>
 
     </div>
@@ -933,8 +1222,240 @@
         ballonDor: 0
       },
       isRetired: false,
-      archetype: ''
+      archetype: '',
+      startingOvr: 45,
+      severeInjuries: 0
     };
+
+    let activeChallenger = null;
+    const STORAGE_KEY_ACHIEVEMENTS = 'pb_fl_unlocked_achievements';
+    const ACHIEVEMENTS_DATA = [
+      { id: 'ballon_dor', icon: '👑', nameTr: "Ballon d'Or Sahibi", nameEn: "Ballon d'Or Winner", descTr: "Dünyanın en iyi futbolcusu seçilerek Ballon d'Or ödülünü kazan.", descEn: "Win the Ballon d'Or trophy as the best player on Earth." },
+      { id: 'golden_boot', icon: '👟', nameTr: 'Altın Ayakkabı', nameEn: 'Golden Boot', descTr: 'Bir sezonda 30\'dan fazla gol atarak Gol Kralı ol.', descEn: 'Score 30+ goals in a single season to win the Golden Boot.' },
+      { id: 'one_club', icon: '🏛️', nameTr: 'Son Mohikan (Totti)', nameEn: 'One-Club Legend', descTr: 'Kariyerin boyunca tek kulüpte en az 15 yıl forma giy.', descEn: 'Remain loyal and play 15+ years for a single club.' },
+      { id: 'journeyman', icon: '🌍', nameTr: 'Evliya Çelebi', nameEn: 'Journeyman Warrior', descTr: 'Kariyerinde en az 5 farklı kulübün formasını giy.', descEn: 'Play for at least 5 different clubs during your career.' },
+      { id: 'gulf_tycoon', icon: '💰', nameTr: 'Körfez Şeyhi', nameEn: 'Gulf Tycoon', descTr: 'Bankada 100 Milyon € üzerinde nakit servet biriktir.', descEn: 'Amass over €100,000,000 in liquid career wealth.' },
+      { id: 'glass_cannon', icon: '🏥', nameTr: 'Yılmayan Savaşçı', nameEn: 'Iron Resolve', descTr: 'Ağır sakatlıklar yaşamana rağmen 40 yaşına ulaşıp jübile yap.', descEn: 'Endure severe injuries and still reach age 40 jubilee.' },
+      { id: 'underdog_hero', icon: '🇸🇲', nameTr: 'Kaderi Yenen Yıldız', nameEn: 'Underdog Hero', descTr: 'Nüfus payı düşük bir ülkede doğup 85+ OVR dünya yıldızı ol.', descEn: 'Spawn in an underdog nation and reach 85+ Peak OVR.' },
+      { id: 'trophy_hoarder', icon: '🏆', nameTr: 'Kupa Canavarı', nameEn: 'Trophy Hoarder', descTr: 'Kariyerin boyunca en az 8 kupa kazan.', descEn: 'Win 8 or more career trophies.' },
+      { id: 'zero_to_hero', icon: '⚡', nameTr: 'Sıfırdan Zirveye', nameEn: 'Zero to Hero', descTr: '60 OVR altında doğup 85+ OVR seviyesine ulaş.', descEn: 'Spawn below 60 OVR and grind to 85+ Peak OVR.' },
+      { id: 'supercar_owner', icon: '🏎️', nameTr: 'Lüks Tutkunu', nameEn: 'Speed & Luxury', descTr: 'Garajına İtalyan Süper Spor Araba ekle.', descEn: 'Add an Italian Supercar to your personal garage.' }
+    ];
+
+    function getUnlockedAchievements() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY_ACHIEVEMENTS) || '[]');
+      } catch(e) {
+        return [];
+      }
+    }
+
+    function unlockAchievement(achId) {
+      const unlocked = getUnlockedAchievements();
+      if (!unlocked.includes(achId)) {
+        unlocked.push(achId);
+        try {
+          localStorage.setItem(STORAGE_KEY_ACHIEVEMENTS, JSON.stringify(unlocked));
+        } catch(e) {}
+        const ach = ACHIEVEMENTS_DATA.find(a => a.id === achId);
+        if (ach) {
+          Sound.goal();
+          showToast(`🏆 BAŞARIM AÇILDI: ${currentLang === 'TR' ? ach.nameTr : ach.nameEn}!`);
+          if (window.pbTracker && window.pbTracker.logEvent) {
+            window.pbTracker.logEvent('achievement_unlock', '/football-lottery', achId);
+          }
+        }
+        updateAchievementsBadge();
+      }
+    }
+
+    function updateAchievementsBadge() {
+      const unlocked = getUnlockedAchievements();
+      const badge = document.getElementById('badgeAchCount');
+      if (badge) badge.textContent = `${unlocked.length}/${ACHIEVEMENTS_DATA.length}`;
+    }
+
+    function openAchievementsModal() {
+      const modal = document.getElementById('modalAchievements');
+      const container = document.getElementById('achievementsListContainer');
+      const unlocked = getUnlockedAchievements();
+      const progressTxt = document.getElementById('txtAchProgress');
+      if (progressTxt) {
+        progressTxt.textContent = `${unlocked.length} / ${ACHIEVEMENTS_DATA.length} ${currentLang === 'TR' ? 'Tamamlandı' : 'Completed'}`;
+      }
+
+      container.innerHTML = ACHIEVEMENTS_DATA.map(a => {
+        const isDone = unlocked.includes(a.id);
+        const name = currentLang === 'TR' ? a.nameTr : a.nameEn;
+        const desc = currentLang === 'TR' ? a.descTr : a.descEn;
+        return `
+          <div class="p-3.5 rounded-2xl border transition flex items-center gap-3.5 ${isDone ? 'bg-amber-500/10 border-amber-500/40' : 'bg-pitch-950/60 border-pitch-800 opacity-60'}">
+            <div class="w-11 h-11 rounded-2xl flex items-center justify-center text-2xl shrink-0 ${isDone ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-lg shadow-amber-500/20' : 'bg-pitch-900 text-slate-500 border border-pitch-800'}">
+              ${a.icon}
+            </div>
+            <div class="min-w-0 flex-1">
+              <div class="flex items-center justify-between gap-2">
+                <h4 class="font-bold text-sm ${isDone ? 'text-white' : 'text-slate-400'}">${name}</h4>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded-full ${isDone ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold' : 'bg-pitch-900 text-slate-500'}">
+                  ${isDone ? (currentLang === 'TR' ? 'AÇILDI ✓' : 'UNLOCKED ✓') : (currentLang === 'TR' ? 'KİLİTLİ 🔒' : 'LOCKED 🔒')}
+                </span>
+              </div>
+              <p class="text-xs text-slate-400 mt-0.5">${desc}</p>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeAchievementsModal() {
+      document.getElementById('modalAchievements').classList.add('hidden');
+    }
+
+    function checkCareerAchievements(p) {
+      if (!p) return;
+      if (p.stats.ballonDor > 0) unlockAchievement('ballon_dor');
+      if (p.stats.goldenBoots > 0) unlockAchievement('golden_boot');
+      if (p.clubHistory.length <= 2 && p.age >= 35) unlockAchievement('one_club');
+      if (p.clubHistory.length >= 5) unlockAchievement('journeyman');
+      if (p.bankBalance >= 100000000) unlockAchievement('gulf_tycoon');
+      if (p.severeInjuries >= 2 && p.age >= 38) unlockAchievement('glass_cannon');
+      if (p.country && p.country.weight <= 2.0 && p.peakOvr >= 85) unlockAchievement('underdog_hero');
+      if (p.stats.trophies >= 8) unlockAchievement('trophy_hoarder');
+      if (p.startingOvr && p.startingOvr < 60 && p.peakOvr >= 85) unlockAchievement('zero_to_hero');
+      if (p.assets && p.assets.cars && p.assets.cars.length > 0) unlockAchievement('supercar_owner');
+    }
+
+    function dismissVersusMode() {
+      activeChallenger = null;
+      document.getElementById('versusBanner').classList.add('hidden');
+    }
+
+    function closeVersusModal() {
+      document.getElementById('modalVersus').classList.add('hidden');
+    }
+
+    function shareVersusLink() {
+      if (!player || !player.isRetired) {
+        showToast(currentLang === 'TR' ? 'Önce kariyerini 40 yaşına ulaştırıp tamamlamalısın!' : 'Finish your 40-year career first!');
+        return;
+      }
+
+      const vsPayload = {
+        name: player.fullName,
+        flag: player.country ? player.country.flag : '🌍',
+        countryTr: player.country ? player.country.nameTr : '',
+        countryEn: player.country ? player.country.nameEn : '',
+        pos: player.position ? player.position.code : 'ST',
+        peakOvr: player.peakOvr,
+        matches: player.stats.matches,
+        goals: player.stats.goals,
+        assists: player.stats.assists,
+        trophies: player.stats.trophies,
+        bank: player.bankBalance || 0,
+        archetype: player.archetype || '',
+        ballonDor: player.stats.ballonDor || 0,
+        goatScore: Math.round((player.peakOvr * 3) + (player.stats.trophies * 15) + (player.stats.goals * 0.4) + Math.min(100, Math.floor((player.bankBalance || 0) / 1000000)))
+      };
+
+      try {
+        const jsonStr = JSON.stringify(vsPayload);
+        const encoded = btoa(unescape(encodeURIComponent(jsonStr)));
+        const challengeUrl = `https://pratikbase.com/football-lottery/?vs=${encoded}&ref=vs_challenge`;
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(challengeUrl).then(() => {
+            showToast(currentLang === 'TR' ? '⚔️ Meydan okuma linki kopyalandı! Arkadaşına gönder!' : '⚔️ Challenge link copied! Send it to your friend!');
+          });
+        } else {
+          prompt(currentLang === 'TR' ? 'Meydan Okuma Linki:' : 'Challenge Link:', challengeUrl);
+        }
+
+        if (window.pbTracker && window.pbTracker.logEvent) {
+          window.pbTracker.logEvent('versus_challenge_created', '/football-lottery', player.fullName);
+        }
+      } catch (err) {
+        console.error('Versus link generation error:', err);
+      }
+    }
+
+    function checkVersusUrl() {
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        let vsParam = urlParams.get('vs');
+        if (!vsParam && window.location.hash.includes('vs=')) {
+          vsParam = window.location.hash.split('vs=')[1];
+        }
+        if (vsParam) {
+          const decoded = JSON.parse(decodeURIComponent(escape(atob(vsParam))));
+          if (decoded && decoded.name && decoded.peakOvr) {
+            activeChallenger = decoded;
+            const banner = document.getElementById('versusBanner');
+            const bannerText = document.getElementById('versusBannerText');
+            if (banner && bannerText) {
+              banner.classList.remove('hidden');
+              bannerText.innerHTML = currentLang === 'TR'
+                ? `<span class="text-amber-400 font-bold">${decoded.name} (${decoded.flag} ${decoded.peakOvr} Zirve OVR)</span> sana meydan okudu! Kariyerini 40 yaşına tamamla ve GOAT savaşını kazan!`
+                : `<span class="text-amber-400 font-bold">${decoded.name} (${decoded.flag} ${decoded.peakOvr} Peak OVR)</span> has challenged you! Reach age 40 to decide the true GOAT!`;
+            }
+          }
+        }
+      } catch (e) {
+        console.warn('Could not parse versus challenger:', e);
+      }
+    }
+
+    function showVersusBattleModal() {
+      if (!activeChallenger) return;
+      const modal = document.getElementById('modalVersus');
+      if (!modal) return;
+
+      const myGoatScore = Math.round((player.peakOvr * 3) + (player.stats.trophies * 15) + (player.stats.goals * 0.4) + Math.min(100, Math.floor((player.bankBalance || 0) / 1000000)));
+      const oppGoatScore = activeChallenger.goatScore || Math.round((activeChallenger.peakOvr * 3) + (activeChallenger.trophies * 15) + (activeChallenger.goals * 0.4) + Math.min(100, Math.floor((activeChallenger.bank || 0) / 1000000)));
+
+      // Populate Player Stats
+      document.getElementById('vsPlayerFlag').textContent = player.country ? player.country.flag : '🌍';
+      document.getElementById('vsPlayerName').textContent = player.fullName;
+      document.getElementById('vsPlayerOvr').textContent = `${player.peakOvr} ZİRVE`;
+      document.getElementById('vsPlayerGoals').textContent = player.stats.goals;
+      document.getElementById('vsPlayerTrophies').textContent = player.stats.trophies;
+      document.getElementById('vsPlayerBank').textContent = formatCurrency(player.bankBalance || 0);
+      document.getElementById('vsPlayerScore').textContent = myGoatScore;
+
+      // Populate Challenger Stats
+      document.getElementById('vsOpponentFlag').textContent = activeChallenger.flag || '🌍';
+      document.getElementById('vsOpponentName').textContent = activeChallenger.name || 'Rakip';
+      document.getElementById('vsOpponentOvr').textContent = `${activeChallenger.peakOvr} ZİRVE`;
+      document.getElementById('vsOpponentGoals').textContent = activeChallenger.goals || 0;
+      document.getElementById('vsOpponentTrophies').textContent = activeChallenger.trophies || 0;
+      document.getElementById('vsOpponentBank').textContent = formatCurrency(activeChallenger.bank || 0);
+      document.getElementById('vsOpponentScore').textContent = oppGoatScore;
+
+      // Decide Winner
+      const titleEl = document.getElementById('vsWinnerAnnouncement');
+      const subEl = document.getElementById('vsBattleSub');
+      if (myGoatScore > oppGoatScore) {
+        titleEl.textContent = currentLang === 'TR' ? 'KAZANAN: SEN! 👑' : 'WINNER: YOU! 👑';
+        titleEl.className = 'text-2xl sm:text-3xl font-display font-black text-amber-300 animate-bounce';
+        subEl.textContent = currentLang === 'TR' ? 'Tebrikler! Arkadaşını her alanda ezip geçerek gerçek GOAT olduğunu kanıtladın!' : 'Congratulations! You crushed your opponent in every metric and took the GOAT crown!';
+      } else if (oppGoatScore > myGoatScore) {
+        titleEl.textContent = currentLang === 'TR' ? 'KAZANAN: RAKİP! ⚔️' : 'WINNER: OPPONENT! ⚔️';
+        titleEl.className = 'text-2xl sm:text-3xl font-display font-black text-rose-400';
+        subEl.textContent = currentLang === 'TR' ? 'Rakip bu kez daha üstün bir kariyere imza attı! Yeni bir kariyer açıp rövanşı al!' : 'Your opponent had a superior career this time! Start a new run to take revenge!';
+      } else {
+        titleEl.textContent = currentLang === 'TR' ? 'BERABERLİK! 🤝' : 'TIED BATTLE! 🤝';
+        titleEl.className = 'text-2xl sm:text-3xl font-display font-black text-cyan-300';
+        subEl.textContent = currentLang === 'TR' ? 'İki efsane de eşit derecede görkemli bir mirasa imza attı!' : 'Both icons forged equally legendary careers!';
+      }
+
+      modal.classList.remove('hidden');
+      Sound.goal();
+
+      if (window.pbTracker && window.pbTracker.logEvent) {
+        window.pbTracker.logEvent('versus_battle_resolved', '/football-lottery', myGoatScore > oppGoatScore ? 'PlayerWin' : 'OpponentWin');
+      }
+    }
 
     /* =====================================================================
        4. TRANSLATIONS (TR & EN)
@@ -1000,7 +1521,27 @@
         statTrophies: 'Kupa',
         statWealth: 'servet',
         clapBtn: 'Alkışla',
-        inspectBtn: 'Kartı İncele'
+        inspectBtn: 'Kartı İncele',
+        achievementsNav: 'Başarımlar',
+        achievementsTitle: 'Kariyer Başarımları & Rozetler',
+        achievementsCompleted: 'Tamamlandı',
+        shareVersus: '⚔️ ARKADAŞINA MEYDAN OKU (VS)',
+        vsWinnerYou: 'KAZANAN: SEN! 👑',
+        vsWinnerOpponent: 'KAZANAN: RAKİP! ⚔️',
+        vsTie: 'BERABERLİK! 🤝',
+        museumNav: 'Müze & Garaj',
+        museumTitle: 'Kişisel Kupa Odası & Lüks Garaj',
+        museumSub: 'Kariyer boyunca kazanılan madalyalar, kupalar ve satın alınan mülkler.',
+        tabMuseumTrophies: '🏆 Kupa Odası',
+        tabMuseumAssets: '🏎️ Garaj & Gayrimenkul',
+        btnFUT: '⚽ FUT Kartı',
+        btnDoc: '🎬 Belgesel Film Afişi',
+        docMetricPeak: 'ZİRVE GÜÇ',
+        docMetricTrophies: 'KUPA & GOL',
+        docMetricWealth: 'SERVET',
+        docMetricDuration: 'KARİYER SÜRESİ',
+        docCriticsQuote: '"Sadece futbol değil; sokaktan dünya sahnesine uzanan destansı bir hayat mücadelesi."',
+        docWatermark: 'pratikbase.com/football-lottery • 40 SEZONLUK BELGESEL'
       },
       EN: {
         pageTitle: 'Football Career Lottery | 1-in-8-Billion Soccer Career Simulator',
@@ -1062,7 +1603,27 @@
         statTrophies: 'Trophies',
         statWealth: 'wealth',
         clapBtn: 'Clap',
-        inspectBtn: 'Inspect Card'
+        inspectBtn: 'Inspect Card',
+        achievementsNav: 'Badges',
+        achievementsTitle: 'Career Achievements & Badges',
+        achievementsCompleted: 'Completed',
+        shareVersus: '⚔️ CHALLENGE A FRIEND (VS)',
+        vsWinnerYou: 'WINNER: YOU! 👑',
+        vsWinnerOpponent: 'WINNER: OPPONENT! ⚔️',
+        vsTie: 'TIED BATTLE! 🤝',
+        museumNav: 'Museum & Garage',
+        museumTitle: 'Personal Trophy Room & Luxury Garage',
+        museumSub: 'Trophies, individual awards, and luxury real estate amassed throughout your career.',
+        tabMuseumTrophies: '🏆 Trophy Cabinet',
+        tabMuseumAssets: '🏎️ Garage & Assets',
+        btnFUT: '⚽ FUT Card',
+        btnDoc: '🎬 Documentary Poster',
+        docMetricPeak: 'PEAK OVR',
+        docMetricTrophies: 'CUPS & GOALS',
+        docMetricWealth: 'NET WORTH',
+        docMetricDuration: 'CAREER DURATION',
+        docCriticsQuote: '"More than football; an epic rise from dusty grassroots to the pinnacle of world glory."',
+        docWatermark: 'pratikbase.com/football-lottery • 40-SEASON DOCUMENTARY'
       }
     };
 
@@ -1125,6 +1686,30 @@
       setIfExists('txtHallBadge', 'textContent', dict.hallBadge);
       setIfExists('txtHallTitle', 'textContent', dict.hallTitle);
       setIfExists('txtHallDesc', 'textContent', dict.hallDesc);
+
+      setIfExists('txtAchCountNav', 'textContent', dict.achievementsNav);
+      setIfExists('txtAchModalTitle', 'textContent', dict.achievementsTitle);
+      setIfExists('txtShareVersus', 'textContent', dict.shareVersus);
+      updateAchievementsBadge();
+
+      // Museum & Documentary Poster translations
+      setIfExists('txtMuseumNav', 'textContent', dict.museumNav);
+      setIfExists('txtMuseumTitle', 'textContent', dict.museumTitle);
+      setIfExists('txtMuseumSub', 'textContent', dict.museumSub);
+      setIfExists('tabMuseumTrophies', 'textContent', dict.tabMuseumTrophies);
+      setIfExists('tabMuseumAssets', 'textContent', dict.tabMuseumAssets);
+      setIfExists('btnViewCardFUT', 'textContent', dict.btnFUT);
+      setIfExists('btnViewCardDoc', 'textContent', dict.btnDoc);
+      setIfExists('txtDocMetricPeak', 'textContent', dict.docMetricPeak);
+      setIfExists('txtDocMetricTrophies', 'textContent', dict.docMetricTrophies);
+      setIfExists('txtDocMetricWealth', 'textContent', dict.docMetricWealth);
+      setIfExists('txtDocMetricDuration', 'textContent', dict.docMetricDuration);
+      setIfExists('txtDocPosterCritics', 'textContent', dict.docCriticsQuote);
+      setIfExists('txtDocPosterWatermark', 'textContent', dict.docWatermark);
+
+      if (typeof populateDocumentaryPoster === 'function') {
+        populateDocumentaryPoster();
+      }
 
       setIfExists('txtHudClub', 'textContent', dict.hudClub);
       setIfExists('txtHudValue', 'textContent', dict.hudValue);
@@ -1295,7 +1880,9 @@
 
       player.age = 0;
       player.ovr = Math.max(30, Math.floor(birth.talentScore * 0.45));
+      player.startingOvr = player.ovr;
       player.peakOvr = player.ovr;
+      player.severeInjuries = 0;
       player.marketValue = 0;
       player.salary = 0;
       player.bankBalance = 0;
@@ -1363,7 +1950,8 @@
     function updateHUD() {
       document.getElementById('hudCountryFlag').textContent = player.country.flag;
       document.getElementById('hudPlayerName').textContent = player.fullName;
-      document.getElementById('hudAge').textContent = currentLang === 'TR' ? `${player.age} Yaşında` : `Age ${player.age}`;
+      const eraIcon = player.age <= 6 ? '👶' : player.age <= 12 ? '🧒' : player.age <= 17 ? '⚡' : player.age <= 25 ? '🔥' : player.age <= 33 ? '👑' : '🎖️';
+      document.getElementById('hudAge').innerHTML = `<span>${eraIcon}</span> <span>${currentLang === 'TR' ? `${player.age} Yaşında` : `Age ${player.age}`}</span>`;
       document.getElementById('hudPosition').textContent = player.position.code;
 
       if (player.currentClub) {
@@ -1517,6 +2105,7 @@
       generateProceduralYear(player.age);
       updateHUD();
       updateNextAgeButton(player.age + 1);
+      checkCareerAchievements(player);
 
       if (player.age >= 40) {
         finishCareerAndShowJubilee();
@@ -2085,6 +2674,58 @@
         return true;
       }
 
+      // Age 17: Super-Agent vs Calm/Family Agent
+      if (age === 17) {
+        showDilemmaModal({
+          badge: currentLang === 'TR' ? 'MENAJER SEÇİMİ (17 YAŞ)' : 'AGENT SELECTION (AGE 17)',
+          title: currentLang === 'TR' ? 'Hangi Menajerle Masaya Oturacaksın?' : 'Which Agent Represents Your Future?',
+          desc: currentLang === 'TR'
+            ? 'Genç yaşta parladın. Kapında iki menajer var: Biri agresif, medyatik "kurt menajer" (Mino Raiola ekolü), diğeri ise sakin, ailenin güvendiği bir danışman.'
+            : 'You are on the radar. A ruthless super-agent offers high-stakes glory, while a trusted family counselor promises long-term stability.',
+          options: [
+            {
+              text: currentLang === 'TR' ? '🦈 Kurt Menajeri Seç! (+€300K İmza Bonusu, Agresif Kariyer Planı, +4 OVR)' : '🦈 Ruthless Super-Agent (+€300K Bonus, Hyper-aggressive transfers, +4 OVR)',
+              action: () => {
+                player.bankBalance += 300000;
+                player.ovr += 4;
+                showBreakingNews({
+                  tag: currentLang === 'TR' ? 'FLAŞ TRANSFER HABERİ' : 'TRANSFER BREAKING',
+                  source: 'FABRIZIO ROMANO & SKY SPORTS',
+                  headline: currentLang === 'TR' ? `🚨 SANSASYONEL MENAJER ANLAŞMASI!` : `🚨 SUPER-AGENT DEAL SIGNED!`,
+                  sub: currentLang === 'TR' ? `${player.fullName} rekor komisyon ve primle devlerin radarına girdi!` : `${player.fullName} on the radar of European giants!`
+                });
+                addTimelineEvent({
+                  age: 17,
+                  badge: 'KURT MENAJER',
+                  badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/30',
+                  title: currentLang === 'TR' ? 'Kurt Menajerle Anlaştın!' : 'Signed with Notorious Super-Agent!',
+                  desc: currentLang === 'TR' ? 'Menajerin kapıları sonuna kadar açtı, basını ayağa kaldırdı ve ilk büyük primini kopardı.' : 'Your agent stirred media frenzy, extracting immediate bonuses and high-profile moves.',
+                  statDelta: [{ text: '+€300.000 💰', color: 'bg-emerald-500/20 text-emerald-300' }, { text: '+4 OVR', color: 'bg-emerald-500/20 text-emerald-300' }]
+                });
+                resumeAfterDilemma();
+              }
+            },
+            {
+              text: currentLang === 'TR' ? '🛡️ Aile & Sadık Danışmanla Devam Et (+10 İstikrar & Dayanıklılık, Sağlam Kökler)' : '🛡️ Family & Calm Mentor (+10 Durability & Focus, Healthy Roots)',
+              action: () => {
+                player.durability += 10;
+                player.workEthic += 10;
+                addTimelineEvent({
+                  age: 17,
+                  badge: 'AİLE DANIŞMANI',
+                  badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+                  title: currentLang === 'TR' ? 'Huzuru ve İstikrarı Tercih Ettin' : 'Chose Peace & Dedicated Mentorship',
+                  desc: currentLang === 'TR' ? 'Göz boyayan vaatlere aldanmadın. Ailenin desteğiyle sadece futboluna odaklandın.' : 'Ignored noisy headlines. Kept your head down and built unbreakable work ethic.',
+                  statDelta: [{ text: '+10 Dayanıklılık', color: 'bg-cyan-500/20 text-cyan-300' }]
+                });
+                resumeAfterDilemma();
+              }
+            }
+          ]
+        });
+        return true;
+      }
+
       // Age 19: First Big Money & Luxury Spending Dilemma
       if (age === 19) {
         showDilemmaModal({
@@ -2310,6 +2951,59 @@
         return true;
       }
 
+      // Age 26: Derby Betrayal vs Loyal Flag-Bearer
+      if (age === 26) {
+        showDilemmaModal({
+          badge: currentLang === 'TR' ? 'EZELİ RAKİP & İHANET (26 YAŞ)' : 'DERBY CROSSROADS (AGE 26)',
+          title: currentLang === 'TR' ? 'Ezeli Rakipten Çılgın Teklif: Gidecek misin?' : 'Shocking Offer from Arch-Rivals: Will You Sign?',
+          desc: currentLang === 'TR'
+            ? 'Şehrin ezeli düşman kulübü sana astronomik bir sözleşme teklif etti: Tam 3 katı maaş ve €5.000.000 nakit imza parası! Ancak eski taraftarların formanı yakabilir.'
+            : 'Your club’s fiercest arch-rivals tabled a massive proposal: Triple salary + €5M immediate signing bonus. Fans will call you a traitor.',
+          options: [
+            {
+              text: currentLang === 'TR' ? '🐍 İhanet Et! Parayı Al (+€5.000.000 İmza Parası, 3x Maaş, Kaotik Baskı)' : '🐍 Make the Treason Move! Take +€5M Bonus & 3x Salary (High Pressure)',
+              action: () => {
+                player.bankBalance += 5000000;
+                player.salary *= 3;
+                player.clutch += 12;
+                showBreakingNews({
+                  tag: currentLang === 'TR' ? 'YÜZYILIN İHANETİ' : 'DERBY TREASON',
+                  source: 'MARCA / L\'EQUIPE EXCLUSIVE',
+                  headline: currentLang === 'TR' ? `🔥 ŞEHİR AYAKTA: EZELİ RAKİPTE!` : `🔥 CITY IN FLAMES: SIGNED FOR ARCH-RIVALS!`,
+                  sub: currentLang === 'TR' ? `${player.fullName} €5.000.000 nakit imza parasıyla ezeli rakibe geçti!` : `${player.fullName} crosses the divide with €5M cash bonus!`
+                });
+                addTimelineEvent({
+                  age: 26,
+                  badge: 'EZELİ RAKİBE İHANET',
+                  badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/30',
+                  title: currentLang === 'TR' ? 'Ezeli Rakipten Astronomik İmza! Hain İlan Edildin!' : 'Signed for Arch-Rivals! Labeled a Traitor!',
+                  desc: currentLang === 'TR' ? 'Transfer piyasası sarsıldı! Eski taraftarların formanı yaktı ama hesabına €5.000.000 yattı. Sahaya ıslıklar altında çıktın.' : 'The entire league went ballistic. Jerseys burned in the streets, but bank balance exploded.',
+                  statDelta: [{ text: '+€5.000.000 Nakit 💰', color: 'bg-emerald-500/20 text-emerald-300' }, { text: '3x Maaş 📈', color: 'bg-emerald-500/20 text-emerald-300' }]
+                });
+                resumeAfterDilemma();
+              }
+            },
+            {
+              text: currentLang === 'TR' ? '🏛️ Asla! Sadık Kal & Bayrak Adam Ol (Kaptanlık Pazubandı, Kulüp Efsanesi & Kupa +1)' : '🏛️ Refuse! Remain Loyal & Club Legend (+Armband, Legend Status, Trophy +1)',
+              action: () => {
+                player.clutch += 15;
+                player.stats.trophies += 1;
+                addTimelineEvent({
+                  age: 26,
+                  badge: 'SON MOHİKAN',
+                  badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
+                  title: currentLang === 'TR' ? 'Parayı Reddettin, Kulübün Bayrak Adamı Oldun!' : 'Rejected Millions, Became One-Club Icon!',
+                  desc: currentLang === 'TR' ? 'Ezeli rakibin milyonlarını elinin tersiyle ittin. Taraftar tribünlerde adına besteler yaptı ve kaptanlık bandını taktın.' : 'Declined generational money to cement your god-tier legacy in the hearts of your fans.',
+                  statDelta: [{ text: '👑 Kaptanlık', color: 'bg-amber-500/20 text-amber-300' }, { text: '+1 Kupa 🏆', color: 'bg-amber-500/20 text-amber-300' }]
+                });
+                resumeAfterDilemma();
+              }
+            }
+          ]
+        });
+        return true;
+      }
+
       if (age === 28) {
         showDilemmaModal({
           badge: currentLang === 'TR' ? 'MİLYONLAR MI ŞAMPİYONLAR LİGİ Mİ? (28 YAŞ)' : 'MONEY VS GLORY (AGE 28)',
@@ -2422,16 +3116,200 @@
         return true;
       }
 
+      // Age 35: Cortisone Injection before Cup Final vs Safe Health
+      if (age === 35) {
+        showDilemmaModal({
+          badge: currentLang === 'TR' ? 'KUPA FİNALİ İĞNESİ (35 YAŞ)' : 'CUP FINAL GAMBLE (AGE 35)',
+          title: currentLang === 'TR' ? 'Final Öncesi Kortizon İğnesiyle Sahaya Çıkacak mısın?' : 'Take Cortisone Painkillers for Cup Final?',
+          desc: currentLang === 'TR'
+            ? 'Sezonun en büyük kupa finaline 2 gün kala dizinde şiddetli yırtık var. Doktor: "İğneyle ağrıyı kesip oynatabilirim ama dizini mahvedebilirsin, ya da kulübede oturup sağlığını korursun." diyor.'
+            : 'Crucial cup final in 48 hours, but your knee meniscus is torn. Medics offer heavy cortisone shots to numb the pain, risking permanent knee cartilage damage.',
+          options: [
+            {
+              text: currentLang === 'TR' ? '💉 İğneyi Vur! Sakat Sakat Sahaya Çık (BÜYÜK RİSK: %75 Kupa & Goller / %25 Ağır Sakatlık & -8 OVR)' : '💉 Take the Shot! Play Hurt (HIGH RISK: 75% Win Trophy & Score / 25% Severe Injury & -8 OVR)',
+              action: () => {
+                const heroicSuccess = Math.random() < 0.75;
+                if (heroicSuccess) {
+                  player.stats.trophies += 1;
+                  player.stats.goals += 2;
+                  player.clutch += 15;
+                  addTimelineEvent({
+                    age: 35,
+                    badge: '🏆 KAHRAMANLIK DESTANI',
+                    badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
+                    title: currentLang === 'TR' ? 'Acıyı Yendin: Finalde 2 Golle Kupayı Getirdin!' : 'Heroic Stand: Scored Brace to Lift the Cup!',
+                    desc: currentLang === 'TR' ? 'Kortizon iğnesiyle maça çıktın, uzatmalarda galibiyet golünü atıp kupayı havaya kaldırdın! Taraftarlar heykelini istiyor.' : 'Numbed the agony, scored two legendary goals, and lifted the cup in tears.',
+                    statDelta: [{ text: '+1 Kupa 🏆', color: 'bg-amber-500/20 text-amber-300' }, { text: '+2 Final Golü ⚽', color: 'bg-emerald-500/20 text-emerald-300' }]
+                  });
+                } else {
+                  player.ovr = Math.max(35, player.ovr - 8);
+                  player.severeInjuries = (player.severeInjuries || 0) + 1;
+                  addTimelineEvent({
+                    age: 35,
+                    badge: '🏥 AĞIR SAKATLIK',
+                    badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/30',
+                    title: currentLang === 'TR' ? 'Diz İflas Etti! Maçın 20. Dakikasında Sedye ile Çıktın!' : 'Knee Blew Out! Stretchered off in minute 20!',
+                    desc: currentLang === 'TR' ? 'Risk tutmadı. Bağların koptu ve sezonu kapattın. OVR seviyen kalıcı olarak düştü.' : 'The gamble failed. Torn ligaments ended your season and shattered your mobility.',
+                    statDelta: [{ text: '-8 OVR 📉', color: 'bg-rose-500/20 text-rose-300' }, { text: 'Ağır Sakatlık 🏥', color: 'bg-rose-500/20 text-rose-300' }]
+                  });
+                }
+                resumeAfterDilemma();
+              }
+            },
+            {
+              text: currentLang === 'TR' ? '🛡️ Sağlığını Koru: Kulübede Kal & Gençlere Manevi Destek Ver' : '🛡️ Protect Health: Bench support & mentor youngsters',
+              action: () => {
+                player.durability += 6;
+                addTimelineEvent({
+                  age: 35,
+                  badge: 'BİLGE LİDERLİK',
+                  badgeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30',
+                  title: currentLang === 'TR' ? 'Sağduyulu Karar: Takımı Kenardan Ateşledin' : 'Wise Restraint: Captained from the Touchline',
+                  desc: currentLang === 'TR' ? 'Gereksiz bir kariyer sonu sakatlığını önledin ve kulübede antrenör gibi takımı yönlendirdin.' : 'Preserved your joints for the sunset years while providing sideline tactical guidance.',
+                  statDelta: [{ text: '+6 Dayanıklılık', color: 'bg-cyan-500/20 text-cyan-300' }]
+                });
+                resumeAfterDilemma();
+              }
+            }
+          ]
+        });
+        return true;
+      }
+
       return false;
     }
 
     let wasAutoPlayingBeforeDilemma = false;
+
+    const DILEMMA_SCENES = {
+      13: {
+        locationTr: 'Altyapı Taktik Odası - Beyaz Tahta Başı',
+        locationEn: 'Youth Academy Tactical Boardroom',
+        moodTr: '"Hocan tahtanın önüne geçti ve kaderini yeniden çiziyor..."',
+        moodEn: '"Your coach redraws team tactics to alter your fate..."',
+        icon: '📋',
+        ageTagTr: '13 YAŞ • TAKTİK DÖNÜM NOKTASI',
+        ageTagEn: 'AGE 13 • TACTICAL CROSSROAD',
+        glowClass: 'bg-emerald-500/20'
+      },
+      16: {
+        locationTr: 'Yol Ayrımı: Kütüphane vs Gece Antrenmanı',
+        locationEn: 'Crossroad: Study Hall vs Night Training',
+        moodTr: '"Ya garanti bir diploma, ya da tüm gemileri yakıp futbol..."',
+        moodEn: '"A safe diploma, or burn all ships for pro football..."',
+        icon: '⚡',
+        ageTagTr: '16 YAŞ • HAYATİ TERCİH',
+        ageTagEn: 'AGE 16 • LIFE CROSSROAD',
+        glowClass: 'bg-amber-500/20'
+      },
+      17: {
+        locationTr: '5 Yıldızlı Otel Penthouse - Gece Yarısı Masası',
+        locationEn: '5-Star Penthouse - Midnight Negotiations',
+        moodTr: '"Puro dumanı, lüks çantalar ve kariyerinin tapusu masada..."',
+        moodEn: '"Cigar smoke, luxury briefcases, and your future on the line..."',
+        icon: '🦈',
+        ageTagTr: '17 YAŞ • KURT MENAJER MASASI',
+        ageTagEn: 'AGE 17 • AGENT SHOWDOWN',
+        glowClass: 'bg-rose-500/20'
+      },
+      19: {
+        locationTr: 'Banka Kasası (€250.000 İlk Büyük İkramiye)',
+        locationEn: 'Bank Vault (€250,000 First Fortune)',
+        moodTr: '"Genç yaşta gelen büyük parayla ilk hamlen ne olacak?"',
+        moodEn: '"First taste of liquid wealth: Speed, family or crypto?"',
+        icon: '🏎️',
+        ageTagTr: '19 YAŞ • İLK BÜYÜK MAAŞ',
+        ageTagEn: 'AGE 19 • FIRST FORTUNE',
+        glowClass: 'bg-yellow-500/20'
+      },
+      22: {
+        locationTr: 'VIP Gece Kulübü vs Rejenerasyon Kliniği',
+        locationEn: 'VIP Nightclub vs Recovery Cryo Clinic',
+        moodTr: '"Şöhretin baş döndürücü neonları mı, yoksa buz banyosu mu?"',
+        moodEn: '"Dazzling nightlife glamour vs relentless athletic discipline..."',
+        icon: '🪩',
+        ageTagTr: '22 YAŞ • ŞÖHRET VE DİSİPLİN',
+        ageTagEn: 'AGE 22 • FAME & GLAMOUR',
+        glowClass: 'bg-purple-500/20'
+      },
+      25: {
+        locationTr: 'Yatırım Danışmanı Zirvesi (€3.000.000)',
+        locationEn: 'Wealth Management Summit (€3,000,000)',
+        moodTr: '"Kariyerinin en zengin dönemi: Malikane mi, giyim markası mı?"',
+        moodEn: '"Peak earning velocity: Luxury villa, brand or fund?"',
+        icon: '🏰',
+        ageTagTr: '25 YAŞ • MİLYONLUK YATIRIM',
+        ageTagEn: 'AGE 25 • MEGA WEALTH',
+        glowClass: 'bg-cyan-500/20'
+      },
+      26: {
+        locationTr: 'Şehrin Öbür Yakası - Gizli Otopark Görüşmesi',
+        locationEn: 'The Other Side of Town - Underground Garage',
+        moodTr: '"Ezeli rakip 5M€ nakit koydu. Şehir seni ya hain bilecek ya efsane..."',
+        moodEn: '"Arch-rivals put €5M cash on table. Judas or one-club immortal?"',
+        icon: '🐍',
+        ageTagTr: '26 YAŞ • EZELİ RAKİP İHANETİ',
+        ageTagEn: 'AGE 26 • DERBY TREASON',
+        glowClass: 'bg-red-500/20'
+      },
+      28: {
+        locationTr: 'Zirve Kavşağı: Çöl Krallığı vs Avrupa Kupası',
+        locationEn: 'Peak Dilemma: Gulf Gold Rush vs European Glory',
+        moodTr: '"Yıllık 25M€ nakit petrol parası mı, Şampiyonlar Ligi kupası mı?"',
+        moodEn: '"Generational Gulf riches or eternal European silverware glory?"',
+        icon: '👑',
+        ageTagTr: '28 YAŞ • PARA MI ŞEREF Mİ?',
+        ageTagEn: 'AGE 28 • MONEY OR GLORY',
+        glowClass: 'bg-amber-500/20'
+      },
+      32: {
+        locationTr: 'Doğduğun Şehir - Veda Öncesi Kalıcı Miras',
+        locationEn: 'Home City - Sealing Your Lifetime Legacy',
+        moodTr: '"Gelecek nesillere ücretsiz akademi mi, gökdelen mi, mega yat mı?"',
+        moodEn: '"Youth academy for kids, commercial towers or superyacht?"',
+        icon: '🏛️',
+        ageTagTr: '32 YAŞ • KALICI MİRAS',
+        ageTagEn: 'AGE 32 • CAREER LEGACY',
+        glowClass: 'bg-emerald-500/20'
+      },
+      35: {
+        locationTr: 'Final Soyunma Odası - Maça 15 Dakika Kala',
+        locationEn: 'Cup Final Dressing Room - 15 Mins to Kickoff',
+        moodTr: '"Tünelden 80.000 taraftarın kükremesi geliyor. İğneyi vuracak mısın?"',
+        moodEn: '"80,000 roar outside the tunnel. Cortisone shot or preserve health?"',
+        icon: '💉',
+        ageTagTr: '35 YAŞ • KUPA FİNALİ KUMARI',
+        ageTagEn: 'AGE 35 • CUP FINAL GAMBLE',
+        glowClass: 'bg-rose-500/20'
+      }
+    };
 
     function showDilemmaModal(data) {
       wasAutoPlayingBeforeDilemma = isAutoPlaying;
       if (isAutoPlaying) {
         toggleAutoPlay(); // Temporarily pause auto progression so user can read dilemma
       }
+
+      // Populate Cinematic Scene Banner
+      const sceneData = DILEMMA_SCENES[player.age] || {
+        locationTr: 'Kariyer Dönüm Noktası',
+        locationEn: 'Career Crossroad',
+        moodTr: '"Kariyerinin kaderini belirleyecek an geldi..."',
+        moodEn: '"A defining moment in your career is at hand..."',
+        icon: '⚽',
+        ageTagTr: `${player.age} YAŞ • SEÇİM ANI`,
+        ageTagEn: `AGE ${player.age} • DECISION`,
+        glowClass: 'bg-emerald-500/20'
+      };
+
+      const locEl = document.getElementById('dilemmaSceneLocation');
+      if (locEl) locEl.textContent = currentLang === 'TR' ? sceneData.locationTr : sceneData.locationEn;
+      const moodEl = document.getElementById('dilemmaSceneMood');
+      if (moodEl) moodEl.textContent = currentLang === 'TR' ? sceneData.moodTr : sceneData.moodEn;
+      const iconEl = document.getElementById('dilemmaSceneIcon');
+      if (iconEl) iconEl.textContent = sceneData.icon;
+      const tagEl = document.getElementById('dilemmaSceneAgeTag');
+      if (tagEl) tagEl.textContent = currentLang === 'TR' ? sceneData.ageTagTr : sceneData.ageTagEn;
 
       document.getElementById('dilemmaBadge').textContent = data.badge;
       document.getElementById('dilemmaTitle').textContent = data.title;
@@ -2461,6 +3339,7 @@
     function resumeAfterDilemma() {
       updateHUD();
       updateNextAgeButton(player.age + 1);
+      checkCareerAchievements(player);
 
       // If user was using auto progression before the dilemma, seamlessly resume it
       if (wasAutoPlayingBeforeDilemma) {
@@ -2471,6 +3350,494 @@
           }
         }, 350);
       }
+    }
+
+
+    /* =====================================================================
+       13B. CINEMATIC STORYTELLING: BREAKING NEWS, MUSEUM & DOC POSTER
+       ===================================================================== */
+    let breakingNewsTimer = null;
+
+    function showBreakingNews(data) {
+      const overlay = document.getElementById('breakingNewsOverlay');
+      if (!overlay) return;
+
+      const tagEl = document.getElementById('breakingNewsTag');
+      const sourceEl = document.getElementById('breakingNewsSource');
+      const headlineEl = document.getElementById('breakingNewsHeadline');
+      const subEl = document.getElementById('breakingNewsSub');
+
+      if (tagEl) tagEl.textContent = data.tag || (currentLang === 'TR' ? 'SON DAKİKA' : 'BREAKING NEWS');
+      if (sourceEl) sourceEl.textContent = data.source || 'FABRIZIO ROMANO EXCLUSIVE';
+      if (headlineEl) headlineEl.textContent = data.headline || 'HERE WE GO!';
+      if (subEl) subEl.textContent = data.sub || '';
+
+      overlay.classList.remove('hidden');
+      Sound.goal();
+
+      if (breakingNewsTimer) clearTimeout(breakingNewsTimer);
+      breakingNewsTimer = setTimeout(() => {
+        dismissBreakingNews();
+      }, 4500);
+    }
+
+    function dismissBreakingNews() {
+      const overlay = document.getElementById('breakingNewsOverlay');
+      if (overlay) overlay.classList.add('hidden');
+    }
+
+    // --- Museum & Luxury Garage Modal ---
+    let currentMuseumTab = 'trophies';
+
+    function openMuseumModal() {
+      renderMuseum();
+      document.getElementById('modalMuseum').classList.remove('hidden');
+    }
+
+    function closeMuseumModal() {
+      document.getElementById('modalMuseum').classList.add('hidden');
+    }
+
+    function switchMuseumTab(tab) {
+      currentMuseumTab = tab;
+      const btnTrophies = document.getElementById('tabMuseumTrophies');
+      const btnAssets = document.getElementById('tabMuseumAssets');
+      if (tab === 'trophies') {
+        btnTrophies.className = 'px-3.5 py-1.5 rounded-xl bg-yellow-500 text-pitch-950 font-bold text-xs transition';
+        btnAssets.className = 'px-3.5 py-1.5 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-slate-300 font-bold text-xs transition';
+      } else {
+        btnAssets.className = 'px-3.5 py-1.5 rounded-xl bg-yellow-500 text-pitch-950 font-bold text-xs transition';
+        btnTrophies.className = 'px-3.5 py-1.5 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-slate-300 font-bold text-xs transition';
+      }
+      renderMuseum();
+    }
+
+    function renderMuseum() {
+      const container = document.getElementById('museumContentContainer');
+      if (!container || !player) return;
+
+      if (currentMuseumTab === 'trophies') {
+        const ballonDorWon = player.stats.ballonDor > 0;
+        const goldenBootWon = player.stats.goldenBoots > 0;
+        const trophiesCount = player.stats.trophies || 0;
+        const capsCount = player.stats.nationalCaps || 0;
+
+        container.innerHTML = `
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-left">
+            
+            <!-- Ballon d'Or Pedestal -->
+            <div class="p-4 rounded-2xl border transition ${ballonDorWon ? 'bg-amber-500/10 border-amber-500/50 shadow-lg shadow-amber-500/10' : 'bg-pitch-950/60 border-pitch-800 opacity-60'}">
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-3xl ${ballonDorWon ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' : 'bg-pitch-900 text-slate-600'}">
+                  👑
+                </div>
+                <div>
+                  <h4 class="font-bold text-sm ${ballonDorWon ? 'text-white' : 'text-slate-500'}">Ballon d'Or</h4>
+                  <div class="text-xs font-mono font-bold ${ballonDorWon ? 'text-amber-400' : 'text-slate-600'}">
+                    ${ballonDorWon ? `${player.stats.ballonDor}x ${currentLang === 'TR' ? 'Kazanıldı' : 'Won'}` : (currentLang === 'TR' ? 'Kazanılmadı 🔒' : 'Locked 🔒')}
+                  </div>
+                </div>
+              </div>
+              <p class="text-xs text-slate-400 mt-2.5">
+                ${ballonDorWon ? (currentLang === 'TR' ? 'Dünyanın en iyi futbolcusu seçilerek altın topu vitrinine koydun.' : 'Voted the best footballer on Earth and crowned with the golden ball.') : (currentLang === 'TR' ? 'Bu ödülü kazanmak için 90+ OVR ve şampiyonluklar gerekir.' : 'Requires 90+ Peak OVR and massive silverware.')}
+              </p>
+            </div>
+
+            <!-- Golden Boot Pedestal -->
+            <div class="p-4 rounded-2xl border transition ${goldenBootWon ? 'bg-yellow-500/10 border-yellow-500/50 shadow-lg shadow-yellow-500/10' : 'bg-pitch-950/60 border-pitch-800 opacity-60'}">
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-3xl ${goldenBootWon ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/40' : 'bg-pitch-900 text-slate-600'}">
+                  👟
+                </div>
+                <div>
+                  <h4 class="font-bold text-sm ${goldenBootWon ? 'text-white' : 'text-slate-500'}">${currentLang === 'TR' ? 'Altın Ayakkabı' : 'Golden Boot'}</h4>
+                  <div class="text-xs font-mono font-bold ${goldenBootWon ? 'text-yellow-400' : 'text-slate-600'}">
+                    ${goldenBootWon ? `${player.stats.goldenBoots}x ${currentLang === 'TR' ? 'Gol Kralı' : 'Top Scorer'}` : (currentLang === 'TR' ? 'Kazanılmadı 🔒' : 'Locked 🔒')}
+                  </div>
+                </div>
+              </div>
+              <p class="text-xs text-slate-400 mt-2.5">
+                ${goldenBootWon ? (currentLang === 'TR' ? 'Bir sezonda 30+ gol barajını aşarak Avrupa Gol Kralı oldun.' : 'Exceeded 30+ goals in a single season to win the Golden Boot.') : (currentLang === 'TR' ? 'Tek sezonda 30+ gol atarak bu ödülü müzene katabilirsin.' : 'Requires 30+ goals in a single season.')}
+              </p>
+            </div>
+
+            <!-- Team Trophies Cabinet -->
+            <div class="p-4 rounded-2xl border transition ${trophiesCount > 0 ? 'bg-emerald-500/10 border-emerald-500/40' : 'bg-pitch-950/60 border-pitch-800 opacity-60'}">
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-3xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                  🏆
+                </div>
+                <div>
+                  <h4 class="font-bold text-sm text-white">${currentLang === 'TR' ? 'Kazanılan Kupalar' : 'Team Trophies'}</h4>
+                  <div class="text-xs font-mono font-bold text-emerald-400">
+                    ${trophiesCount} ${currentLang === 'TR' ? 'Şampiyonluk Kupası' : 'Trophies Won'}
+                  </div>
+                </div>
+              </div>
+              <p class="text-xs text-slate-400 mt-2.5">
+                ${currentLang === 'TR' ? 'Lig şampiyonlukları, ulusal kupalar ve Avrupa zaferleri.' : 'League titles, national cups, and continental triumphs.'}
+              </p>
+            </div>
+
+            <!-- National Team Cap Honors -->
+            <div class="p-4 rounded-2xl border transition ${capsCount > 0 ? 'bg-cyan-500/10 border-cyan-500/40' : 'bg-pitch-950/60 border-pitch-800 opacity-60'}">
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-3xl bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
+                  🌍
+                </div>
+                <div>
+                  <h4 class="font-bold text-sm text-white">${player.country ? player.country.flag : '🌍'} ${currentLang === 'TR' ? 'Milli Takım Forması' : 'National Caps'}</h4>
+                  <div class="text-xs font-mono font-bold text-cyan-400">
+                    ${capsCount} ${currentLang === 'TR' ? 'Milli Maç' : 'Caps'} • ${player.stats.nationalGoals || 0} ${currentLang === 'TR' ? 'Gol' : 'Goals'}
+                  </div>
+                </div>
+              </div>
+              <p class="text-xs text-slate-400 mt-2.5">
+                ${currentLang === 'TR' ? 'Ülkeni uluslararası arenada gururla temsil ettiğin milli forma.' : 'The sacred jersey worn while representing your homeland on the global stage.'}
+              </p>
+            </div>
+
+          </div>
+        `;
+      } else {
+        // Assets & Garage Tab
+        const allCars = player.assets?.cars || [];
+        const allHouses = player.assets?.houses || [];
+        const allBiz = player.assets?.businesses || [];
+        const hasAnyAsset = (allCars.length + allHouses.length + allBiz.length) > 0;
+
+        if (!hasAnyAsset) {
+          container.innerHTML = `
+            <div class="py-12 text-center space-y-3">
+              <div class="text-4xl">💼</div>
+              <h4 class="font-bold text-sm text-slate-300">${currentLang === 'TR' ? 'Henüz Büyük Mülk veya Süper Araba Alınmadı' : 'No Major Luxury Assets Purchased Yet'}</h4>
+              <p class="text-xs text-slate-500 max-w-sm mx-auto">
+                ${currentLang === 'TR' ? '19, 25 ve 32 yaş ikilemlerinde kazandığın paralarla garajına süper spor araba, malikane veya akademi katabilirsin.' : 'Make choices in Age 19, 25, and 32 dilemmas to collect supercars, mansions and private assets.'}
+              </p>
+            </div>
+          `;
+          return;
+        }
+
+        let assetCards = [];
+        allCars.forEach(c => {
+          assetCards.push({ icon: '🏎️', title: c, category: currentLang === 'TR' ? 'Lüks Garaj' : 'Luxury Garage', color: 'border-yellow-500/40 bg-yellow-500/10 text-yellow-300' });
+        });
+        allHouses.forEach(h => {
+          assetCards.push({ icon: '🏰', title: h, category: currentLang === 'TR' ? 'Gayrimenkul' : 'Real Estate', color: 'border-emerald-500/40 bg-emerald-500/10 text-emerald-300' });
+        });
+        allBiz.forEach(b => {
+          assetCards.push({ icon: '⚽', title: b, category: currentLang === 'TR' ? 'Yatırım & Miras' : 'Legacy Business', color: 'border-cyan-500/40 bg-cyan-500/10 text-cyan-300' });
+        });
+
+        container.innerHTML = `
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-left">
+            ${assetCards.map(item => `
+              <div class="p-3.5 rounded-2xl border ${item.color} flex items-center gap-3">
+                <div class="w-11 h-11 rounded-2xl bg-pitch-950 flex items-center justify-center text-2xl shrink-0">
+                  ${item.icon}
+                </div>
+                <div>
+                  <div class="text-[10px] uppercase font-mono font-bold opacity-80">${item.category}</div>
+                  <h4 class="font-bold text-white text-xs sm:text-sm">${item.title}</h4>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+          <div class="p-3.5 rounded-2xl bg-pitch-950 border border-pitch-800 text-center mt-3">
+            <span class="text-xs text-slate-400">${currentLang === 'TR' ? 'Toplam Likit Banka Birikimi:' : 'Total Bank Balance:'}</span>
+            <strong class="text-sm font-display font-black text-emerald-400 ml-1.5">${formatCurrency(player.bankBalance || 0)}</strong>
+          </div>
+        `;
+      }
+    }
+
+    // --- Switch Card View: FUT Card vs Documentary Poster ---
+    let activeCardView = 'fut';
+
+    function switchCardView(view) {
+      activeCardView = view;
+      const futCard = document.getElementById('jubileeCard');
+      const docCard = document.getElementById('documentaryPoster');
+      const btnFUT = document.getElementById('btnViewCardFUT');
+      const btnDoc = document.getElementById('btnViewCardDoc');
+
+      if (view === 'fut') {
+        if (futCard) futCard.classList.remove('hidden');
+        if (docCard) docCard.classList.add('hidden');
+        if (btnFUT) btnFUT.className = 'px-3.5 py-1.5 rounded-xl bg-emerald-500 text-pitch-950 font-display font-bold text-xs uppercase tracking-wider transition shadow-lg';
+        if (btnDoc) btnDoc.className = 'px-3.5 py-1.5 rounded-xl bg-pitch-900 hover:bg-pitch-800 text-slate-300 font-display font-bold text-xs uppercase tracking-wider transition border border-pitch-800';
+      } else {
+        if (futCard) futCard.classList.add('hidden');
+        if (docCard) docCard.classList.remove('hidden');
+        if (btnDoc) btnDoc.className = 'px-3.5 py-1.5 rounded-xl bg-amber-500 text-pitch-950 font-display font-bold text-xs uppercase tracking-wider transition shadow-lg';
+        if (btnFUT) btnFUT.className = 'px-3.5 py-1.5 rounded-xl bg-pitch-900 hover:bg-pitch-800 text-slate-300 font-display font-bold text-xs uppercase tracking-wider transition border border-pitch-800';
+      }
+    }
+
+
+    const COUNTRY_CINEMA_THEMES = {
+      'Brezilya': {
+        posterTagTr: '🇧🇷 BİR BREZİLYA SAMBA DESTANI',
+        posterTagEn: '🇧🇷 A BRAZILIAN SAMBA ODYSSEY',
+        taglineTr: 'Faveladan Maracanã Zirvesine: Dans, Gözyaşı ve Zafer',
+        taglineEn: 'From Favelas to Maracanã: Dance, Tears and Immortality',
+        criticsTr: '"Kumsalda çıplak ayakla başlayan, gezegenin en büyük stadyumlarında ilahlaşan bir sambacının hikayesi."',
+        criticsEn: '"A barefoot beach prodigy who became a football god on the biggest stages on Earth."',
+        gradientClass: 'from-emerald-950 via-yellow-950/30 to-black border-amber-500/60',
+        festival: '🌿 RIO DE JANEIRO FILM FESTIVAL • BEST ORIGINAL SAGA 🌿'
+      },
+      'Arjantin': {
+        posterTagTr: '🇦🇷 TUTKU, TANGO VE BOMBİNERA',
+        posterTagEn: '🇦🇷 PASSION, TANGO & LA BOMBONERA',
+        taglineTr: 'Maradona\'nın Gölgesinde Doğup Kendi Güneşini Yarattı',
+        taglineEn: 'Born in the Shadow of Maradona, Forged His Own Legend',
+        criticsTr: '"Rosario sokaklarının hırsı, Buenos Aires tribünlerinin tutkusu ve saf deha."',
+        criticsEn: '"Rosario grit, Buenos Aires heartbreak, and divine Argentine genius."',
+        gradientClass: 'from-sky-950 via-blue-950/40 to-black border-sky-400/60',
+        festival: '🌿 BUENOS AIRES INTERNATIONAL CINEMA • JURY PRIZE 🌿'
+      },
+      'Türkiye': {
+        posterTagTr: '🇹🇷 BİR ANADOLU MASALI',
+        posterTagEn: '🇹🇷 AN ANATOLIAN SAGA',
+        taglineTr: 'Tozlu Sokaklardan 85 Milyonun Kalbine',
+        taglineEn: 'From Dusty Alleys to the Heart of 85 Million',
+        criticsTr: '"Yırtık kramponlarla başlayan, milli formanın kutsallığında devleşen bir gurur destanı."',
+        criticsEn: '"A raw tale of sacrifice, brotherhood, and unyielding Turkish spirit."',
+        gradientClass: 'from-red-950 via-rose-950/40 to-black border-red-500/60',
+        festival: '🌿 İSTANBUL & ALTIN PORTAKAL FİLM ÖDÜLLERİ • ÖZEL SEÇKİ 🌿'
+      },
+      'İngiltere': {
+        posterTagTr: '🏴󠁧󠁢󠁥󠁮󠁧󠁿 WEMBLEY\'NİN IŞIKLARI',
+        posterTagEn: '🏴󠁧󠁢󠁥󠁮󠁧󠁿 THE LIGHTS OF WEMBLEY',
+        taglineTr: 'Çamurlu Pazar Liglerinden Krallığın Zirvesine',
+        taglineEn: 'From Sunday League Mud to Royal Immortality',
+        criticsTr: '"Yağmur, pres, centilmenlik ve İngiliz futbolunun asırlık ruhu."',
+        criticsEn: '"Rain-soaked turf, iron grit, and the quintessential English gentleman."',
+        gradientClass: 'from-slate-950 via-indigo-950/40 to-black border-indigo-400/50',
+        festival: '🌿 BFI LONDON FILM FESTIVAL • OFFICIAL GALA SELECTION 🌿'
+      },
+      'Almanya': {
+        posterTagTr: '🇩🇪 BİR PANZER DESTANI',
+        posterTagEn: '🇩🇪 A PANZER ODYSSEY',
+        taglineTr: 'Çelik Disiplin, Taktiksel Mükemmellik ve Zirve',
+        taglineEn: 'Steel Discipline, Tactical Mastery & Dominance',
+        criticsTr: '"Hata kabul etmeyen Alman mühendisliği mantığıyla yoğrulmuş kusursuz bir lider."',
+        criticsEn: '"An uncompromising study in mental resilience, discipline, and ruthless efficiency."',
+        gradientClass: 'from-neutral-950 via-stone-900 to-black border-amber-500/50',
+        festival: '🌿 BERLINALE INTERNATIONAL FILM FESTIVAL • GOLDEN BEAR RUNNER 🌿'
+      },
+      'Fransa': {
+        posterTagTr: '🇫🇷 BANLİYÖDEN ŞANZELİZE\'YE',
+        posterTagEn: '🇫🇷 FROM BANLIEUE TO CHAMPS-ÉLYSÉES',
+        taglineTr: 'Paris Sokak Kafeslerinden Dünya Şampiyonluğuna',
+        taglineEn: 'From Paris Street Cages to World Glory',
+        criticsTr: '"Hız, zarafet, çok kültürlülük ve modern futbolun en parlak yıldızı."',
+        criticsEn: '"A dazzling journey of speed, swagger, and French football renaissance."',
+        gradientClass: 'from-blue-950 via-indigo-950/40 to-black border-blue-500/60',
+        festival: '🌿 FESTIVAL DE CANNES • SÉLECTION OFFICIELLE HORS COMPÉTITION 🌿'
+      },
+      'İtalya': {
+        posterTagTr: '🇮🇹 IL GLADIATORE',
+        posterTagEn: '🇮🇹 IL GLADIATORE (THE GLADIATOR)',
+        taglineTr: 'San Siro\'nun Kalbinde Bir Rönesans Şaheseri',
+        taglineEn: 'A Renaissance Masterpiece at the Cathedral of San Siro',
+        criticsTr: '"Kusursuz İtalyan şıklığı, taktiksel deha ve bir ömür süren bayrak sevdası."',
+        criticsEn: '"Tactical nobility, Mediterranean passion, and the eternal romance of Calcio."',
+        gradientClass: 'from-blue-950 via-cyan-950/30 to-black border-emerald-500/50',
+        festival: '🌿 MOSTRA INTERNAZIONALE D\'ARTE CINEMATOGRAFICA DI VENEZIA 🌿'
+      },
+      'İspanya': {
+        posterTagTr: '🇪🇸 TİKİ-TAKA İLAHİ',
+        posterTagEn: '🇪🇸 THE TIKI-TAKA MAESTRO',
+        taglineTr: 'Topa Fısıldayan Adam: Futbol Bir Sanattır',
+        taglineEn: 'The Ball Whisperer: When Football Becomes High Art',
+        criticsTr: '"Topu ayağına aldığında zamanı durduran, İberya\'nın yetiştirdiği saf dahi."',
+        criticsEn: '"Hypnotic geometry, endless rondo patience, and Spanish football royalty."',
+        gradientClass: 'from-amber-950 via-red-950/40 to-black border-amber-500/60',
+        festival: '🌿 SAN SEBASTIÁN INTERNATIONAL FILM FESTIVAL • SPECIAL MENTION 🌿'
+      },
+      'Portekiz': {
+        posterTagTr: '🇵🇹 ATLANTİK\'İN KÂŞİFİ',
+        posterTagEn: '🇵🇹 THE ATLANTIC CONQUEROR',
+        taglineTr: 'Madeira Kayalıklarından Dünyanın En İyisine',
+        taglineEn: 'From Oceanic Cliffs to the Pinnacle of World Football',
+        criticsTr: '"Yorulmak bilmeyen bir çalışma hırsı, ego ve kırılmadık rekor bırakmayan bir hırs."',
+        criticsEn: '"Insatiable hunger, relentless gym discipline, and shattering every record in sight."',
+        gradientClass: 'from-red-950 via-emerald-950/40 to-black border-amber-400/50',
+        festival: '🌿 LISBON INTERNATIONAL INDIE FILM HONORS 🌿'
+      },
+      'Hollanda': {
+        posterTagTr: '🇳🇱 TOTAL FUTBOLUN MİMARI',
+        posterTagEn: '🇳🇱 ARCHITECT OF TOTAL FOOTBALL',
+        taglineTr: 'Kruyff Ekolü: Sahayı Satranç Tahtası Yapan Zeka',
+        taglineEn: 'The Cruyff Legacy: Turning the Pitch into Living Chess',
+        criticsTr: '"Turuncu rüzgar, kusursuz geometri ve futbol estetiğinin zirvesi."',
+        criticsEn: '"Orange flair, spatial awareness, and the timeless philosophy of Total Football."',
+        gradientClass: 'from-orange-950 via-amber-950/40 to-black border-orange-500/60',
+        festival: '🌿 INTERNATIONAL FILM FESTIVAL ROTTERDAM • TIGER AWARD SPECIAL 🌿'
+      },
+      'Nijerya': {
+        posterTagTr: '🇳🇬 SÜPER KARTALIN YÜKSELİŞİ',
+        posterTagEn: '🇳🇬 RISE OF THE SUPER EAGLE',
+        taglineTr: 'Lagos Tozundan Dünya Vitrinine Patlayıcı Güç',
+        taglineEn: 'From Dusty Lagos Streets to Global Icon Status',
+        criticsTr: '"Durdurulamaz atletizm, bitmek tükenmeyen neşe ve Afrika futbolunun kalbi."',
+        criticsEn: '"Explosive kinetic energy, infectious joyful celebrations, and African pride."',
+        gradientClass: 'from-emerald-950 via-green-950/40 to-black border-emerald-400/60',
+        festival: '🌿 AFRIFF LAGOS INTERNATIONAL FILM FESTIVAL WINNER 🌿'
+      },
+      'Fas': {
+        posterTagTr: '🇲🇦 ATLAS ASLANI',
+        posterTagEn: '🇲🇦 THE ATLAS LION',
+        taglineTr: 'Sahra Rüzgarı: İmkansızı Başaran Kuzey Afrika Mucizesi',
+        taglineEn: 'Sahara Winds: The North African Miracle That Shook Earth',
+        criticsTr: '"Dualarla, anne kucağıyla ve sarsılmaz inançla dünya devlerine boyun eğdirdi."',
+        criticsEn: '"Faith, family devotion, and lionhearted counter-attacks that inspired millions."',
+        gradientClass: 'from-red-950 via-emerald-950/30 to-black border-amber-400/50',
+        festival: '🌿 MARRAKECH INTERNATIONAL FILM FESTIVAL TRIBUTE 🌿'
+      },
+      'Japonya': {
+        posterTagTr: '🇯🇵 MAVİ SAMURAY',
+        posterTagEn: '🇯🇵 THE BLUE SAMURAI',
+        taglineTr: 'Onur, Sonsuz Disiplin ve Saygının Zaferi',
+        taglineEn: 'Honor, Boundless Discipline and the Way of the Pitch',
+        criticsTr: '"Son düdüğe kadar koşmayı bırakmayan, soyunma odasını pırıl pırıl bırakan asil ruh."',
+        criticsEn: '"Unflinching work rate, high-tech tactical obedience, and noble warrior spirit."',
+        gradientClass: 'from-blue-950 via-indigo-950/40 to-black border-blue-400/60',
+        festival: '🌿 TOKYO INTERNATIONAL FILM FESTIVAL • SAMURAI AWARD 🌿'
+      },
+      'Güney Kore': {
+        posterTagTr: '🇰🇷 BİTMEYEN ENERJİ',
+        posterTagEn: '🇰🇷 THE TIRELESS ENGINE',
+        taglineTr: 'Seul Gökdelenlerinden Premier Lig Yıldızlığına',
+        taglineEn: 'From Seoul Skylines to Premier League Superstardom',
+        criticsTr: '"Gülümsemesiyle dünyayı ısıtan ama sahada ciğersiz gibi koşan süperstar."',
+        criticsEn: '"Wholesome charm off the pitch, lethal two-footed assassin on it."',
+        gradientClass: 'from-red-950 via-blue-950/30 to-black border-red-500/50',
+        festival: '🌿 BUSAN INTERNATIONAL FILM FESTIVAL HIGHLIGHT 🌿'
+      },
+      'Uruguay': {
+        posterTagTr: '🇺🇾 GARRA CHARRÚA: YENİLMEZ',
+        posterTagEn: '🇺🇾 GARRA CHARRÚA: UNCONQUERABLE',
+        taglineTr: '3 Milyonluk Dev: Sahada Asla Pes Etmeyen Ruh',
+        taglineEn: 'A Nation of 3 Million with the Heart of 100 Million',
+        criticsTr: '"Kavgadan kaçmayan, formayı kanıyla ıslatan kadim savaşçı geleneği."',
+        criticsEn: '"Bruising physicality, razor-sharp instincts, and warrior blood in every tackle."',
+        gradientClass: 'from-sky-950 via-cyan-950/40 to-black border-sky-400/60',
+        festival: '🌿 MONTEVIDEO CINEMA CRITICS CHOICE 🌿'
+      },
+      'Hırvatistan': {
+        posterTagTr: '🇭🇷 DAMALILARIN MUCİZESİ',
+        posterTagEn: '🇭🇷 THE CHECKERED MIRACLE',
+        taglineTr: 'Savaşın Küllerinden Dünya Finallerine',
+        taglineEn: 'From Wartime Ashes to World Cup Final Stages',
+        criticsTr: '"Mütevazı bir sahil kasabasından çıkıp modern futbolun en zarif beynine dönüştü."',
+        criticsEn: '"Poetic midfield vision, resilience tested by war, and legendary longevity."',
+        gradientClass: 'from-red-950 via-blue-950/30 to-black border-red-400/50',
+        festival: '🌿 ZAGREB CROATIAN FILM HONORS 🌿'
+      },
+      'Norveç': {
+        posterTagTr: '🇳🇴 KUZEY VİKİNGİ',
+        posterTagEn: '🇳🇴 THE NORDIC VIKING',
+        taglineTr: 'Fiyortların Soğuğundan Ceza Sahası Canavarlığına',
+        taglineEn: 'From Icy Fjords to Penalty-Box Terminator',
+        criticsTr: '"Doğa kanunlarını zorlayan fiziksel bir dev, saf gol içgüdüsü."',
+        criticsEn: '"A genetic marvel, cold-blooded finishing precision, and Nordic power."',
+        gradientClass: 'from-red-950 via-indigo-950/30 to-black border-cyan-400/50',
+        festival: '🌿 OSLO NORDIC CINEMA PANORAMA 🌿'
+      },
+      'Kolombiya': {
+        posterTagTr: '🇨🇴 KAHVE VE SİHİR',
+        posterTagEn: '🇨🇴 COFFEE & MAGIC',
+        taglineTr: 'And Dağlarının Büyüsü: Sokak Sanatçısı',
+        taglineEn: 'Andean Sorcery: Street Artist with Ball at Feet',
+        criticsTr: '"Müzikle futbolu birleştiren, izleyeni büyüleyen Latin Amerikan romantizmi."',
+        criticsEn: '"Rhythm, flamboyant trickery, and intoxicating South American joy."',
+        gradientClass: 'from-yellow-950 via-blue-950/30 to-black border-yellow-400/60',
+        festival: '🌿 BOGOTÁ INTERNATIONAL FILM SHOWCASE 🌿'
+      },
+      'ABD': {
+        posterTagTr: '🇺🇸 AMERİKAN RÜYASI',
+        posterTagEn: '🇺🇸 THE AMERICAN DREAM',
+        taglineTr: 'Kolej Sahalarından Avrupa Devlerine Çıkarma',
+        taglineEn: 'From College Pitches to European Megastardom',
+        criticsTr: '"Hollywood parlaklığı, kusursuz atletizm ve küresel bir marka değeri."',
+        criticsEn: '"Global branding power, elite athleticism, and conquering the old continent."',
+        gradientClass: 'from-blue-950 via-red-950/30 to-black border-blue-400/60',
+        festival: '🌿 TRIBECA FILM FESTIVAL • SPORTS ODYSSEY PREMIERE 🌿'
+      },
+      'San Marino': {
+        posterTagTr: '🇸🇲 İMKANSIZ MUCİZE',
+        posterTagEn: '🇸🇲 THE IMPOSSIBLE MIRACLE',
+        taglineTr: '30 Bin Nüfuslu Kayalıktan Dünyanın Zirvesine',
+        taglineEn: 'From a Rock of 30,000 to the Zenith of World Football',
+        criticsTr: '"Matematiksel olarak imkansızdı. Ama o kaderin hesaplarını yırttı attı."',
+        criticsEn: '"Statistically impossible. Yet he tore up the script and conquered planet Earth."',
+        gradientClass: 'from-cyan-950 via-sky-950/40 to-black border-cyan-400/70',
+        festival: '🌿 SUNDANCE FILM FESTIVAL • GREATEST UNDERDOG STORY 🌿'
+      }
+    };
+
+    function populateDocumentaryPoster() {
+      if (!player) return;
+
+      const cName = player.country ? player.country.nameTr : 'Brezilya';
+      const theme = COUNTRY_CINEMA_THEMES[cName] || {
+        posterTagTr: `${player.country ? player.country.flag : '🌍'} BİR ${(player.country ? player.country.nameTr : '').toUpperCase()} DESTANI`,
+        posterTagEn: `${player.country ? player.country.flag : '🌍'} A ${(player.country ? player.country.nameEn : '').toUpperCase()} ODYSSEY`,
+        taglineTr: `Kaderi Yenen Efsane: ${player.archetype || 'Dünya Yıldızı'}`,
+        taglineEn: `The Legend Who Defied Destiny: ${player.archetype || 'World Icon'}`,
+        criticsTr: '"Sokaklardan stadyumların zirvesine uzanan destansı bir hayat mücadelesi."',
+        criticsEn: '"A gritty, unforgettable rise from the streets to the summit of world football."',
+        gradientClass: 'from-amber-950 via-zinc-950 to-black border-amber-500/50',
+        festival: '🌿 OFFICIAL WORLD CINEMA DOCUMENTARY SELECTION 🌿'
+      };
+
+      // Dynamic Poster Container Styling based on Country
+      const posterContainer = document.getElementById('documentaryPoster');
+      if (posterContainer && theme.gradientClass) {
+        posterContainer.className = `max-w-sm sm:max-w-md mx-auto p-5 sm:p-7 rounded-3xl bg-gradient-to-b ${theme.gradientClass} border-2 shadow-2xl relative overflow-hidden text-center space-y-4 transition-all`;
+      }
+
+      // Festival Badge
+      const festivalEl = document.getElementById('docPosterFestivalBadge');
+      if (festivalEl) {
+        festivalEl.textContent = theme.festival;
+      }
+
+      const docCountry = document.getElementById('docPosterCountry');
+      if (docCountry) {
+        docCountry.textContent = currentLang === 'TR' ? theme.posterTagTr : theme.posterTagEn;
+      }
+      const docName = document.getElementById('docPosterPlayerName');
+      if (docName) docName.textContent = player.fullName.toUpperCase();
+      
+      const docTag = document.getElementById('docPosterTagline');
+      if (docTag) {
+        docTag.textContent = `"${currentLang === 'TR' ? theme.taglineTr : theme.taglineEn}"`;
+      }
+
+      const docPeak = document.getElementById('docPosterPeakOvr');
+      if (docPeak) docPeak.textContent = `${player.peakOvr} OVR`;
+      const docArch = document.getElementById('docPosterArchetype');
+      if (docArch) docArch.textContent = formatArchetype(player.archetype);
+      const docTrophies = document.getElementById('docPosterTrophies');
+      if (docTrophies) docTrophies.textContent = `${player.stats.trophies} ${currentLang === 'TR' ? 'KUPA' : 'TROPHIES'}`;
+      const docGoals = document.getElementById('docPosterGoals');
+      if (docGoals) docGoals.textContent = `${player.stats.goals} ${currentLang === 'TR' ? 'Kariyer Golü' : 'Career Goals'}`;
+      const docWealth = document.getElementById('docPosterWealth');
+      if (docWealth) docWealth.textContent = formatCurrency(player.bankBalance || 0);
+
+      const criticsEl = document.getElementById('txtDocPosterCritics');
+      if (criticsEl) {
+        criticsEl.textContent = currentLang === 'TR' ? theme.criticsTr : theme.criticsEn;
+      }
+
+      const wealthSub = document.getElementById('txtDocMetricWealthSub');
+      if (wealthSub) wealthSub.textContent = currentLang === 'TR' ? 'Ömür Boyu Birikim' : 'Lifetime Wealth';
+      const durSub = document.getElementById('txtDocMetricDurationSub');
+      if (durSub) durSub.textContent = currentLang === 'TR' ? 'Jübile Onuru' : 'Jubilee Honor';
     }
 
     /* =====================================================================
@@ -2588,6 +3955,19 @@
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
       Sound.goal();
+
+      // Populate Cinematic Documentary Movie Poster
+      populateDocumentaryPoster();
+
+      // Check all career-end achievements
+      checkCareerAchievements(player);
+
+      // If playing in Versus Mode against a challenger, show Battle comparison modal
+      if (activeChallenger) {
+        setTimeout(() => {
+          showVersusBattleModal();
+        }, 800);
+      }
     }
 
     /* =====================================================================
@@ -3121,7 +4501,7 @@
       const downloadCardBtn = document.getElementById('btnDownloadCard');
       if (downloadCardBtn) {
         downloadCardBtn.addEventListener('click', async () => {
-          const cardEl = document.getElementById('jubileeCard');
+          const cardEl = (activeCardView === 'doc' && document.getElementById('documentaryPoster')) ? document.getElementById('documentaryPoster') : document.getElementById('jubileeCard');
           if (!cardEl) return;
           const originalContent = downloadCardBtn.innerHTML;
           downloadCardBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-xs"></i> <span class="text-[11px]">...</span>';
@@ -3254,9 +4634,23 @@
         setLanguage('TR');
       }
 
-      // Initialize Hall of Fame and check URL params
+      // Achievements Button in Nav
+      const btnAch = document.getElementById('btnOpenAchievements');
+      if (btnAch) btnAch.addEventListener('click', openAchievementsModal);
+
+      // Museum Button in Nav
+      const btnMus = document.getElementById('btnOpenMuseum');
+      if (btnMus) btnMus.addEventListener('click', openMuseumModal);
+
+      // Share Versus Button in Jubilee actions
+      const btnVs = document.getElementById('btnShareVersus');
+      if (btnVs) btnVs.addEventListener('click', shareVersusLink);
+
+      // Initialize Hall of Fame, Achievements Badge and check URL params
       renderHallOfFame();
+      updateAchievementsBadge();
       checkSharedCareerUrl();
+      checkVersusUrl();
     });
 
     if ('serviceWorker' in navigator) {
