@@ -616,6 +616,8 @@
 
       <!-- Cinematic Netflix Style Documentary Poster (Alternative to FUT Card) -->
       <div id="documentaryPoster" class="hidden max-w-sm sm:max-w-md mx-auto p-6 sm:p-8 rounded-3xl bg-gradient-to-b from-stone-950 via-zinc-950 to-black border-2 border-amber-500/50 shadow-2xl relative overflow-hidden text-center space-y-5">
+        <img src="https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=800&q=80" alt="Stadium Atmosphere" class="absolute inset-0 w-full h-full object-cover opacity-20 pointer-events-none mix-blend-luminosity">
+        <div class="absolute inset-0 bg-gradient-to-t from-black via-pitch-950/60 to-black/80 pointer-events-none"></div>
         
         <!-- Top Cinematic Studio Watermark & Festival Laurel -->
         <div class="space-y-1">
@@ -768,27 +770,28 @@
   <div id="modalDilemma" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
     <div class="max-w-lg w-full p-5 sm:p-6 rounded-3xl bg-pitch-900 border-2 border-emerald-500/60 shadow-2xl space-y-4 text-left relative animate-in fade-in zoom-in duration-200">
       
-      <!-- Cinematic Story Scene Illustration Banner -->
-      <div id="dilemmaScene" class="w-full h-36 sm:h-40 rounded-2xl overflow-hidden relative border border-pitch-700/80 shadow-2xl flex flex-col justify-between p-3.5 bg-gradient-to-br from-amber-950 via-pitch-950 to-black transition-all">
-        <div id="dilemmaSceneGlow" class="absolute -top-10 -right-10 w-40 h-40 bg-amber-500/20 rounded-full blur-2xl pointer-events-none"></div>
-        <div id="dilemmaSceneGlow2" class="absolute -bottom-10 -left-10 w-40 h-40 bg-emerald-500/20 rounded-full blur-2xl pointer-events-none"></div>
+      <!-- Cinematic Story Scene Illustration Banner with Real Photo -->
+      <div id="dilemmaScene" class="w-full h-40 sm:h-44 rounded-2xl overflow-hidden relative border border-pitch-700 shadow-2xl flex flex-col justify-between p-4 bg-pitch-950">
+        <!-- Real Cinematic Photo Background with Smooth Gradient Vignette -->
+        <img id="dilemmaSceneImg" src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80" alt="Cinematic Scene" class="absolute inset-0 w-full h-full object-cover opacity-45 scale-105 transition-all duration-700">
+        <div class="absolute inset-0 bg-gradient-to-t from-pitch-950 via-pitch-950/60 to-pitch-950/20 pointer-events-none"></div>
         
         <div class="flex items-center justify-between relative z-10">
-          <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/60 border border-white/10 text-[10px] font-mono font-bold text-amber-300 backdrop-blur-md">
+          <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/75 border border-white/15 text-[10px] font-mono font-bold text-amber-300 backdrop-blur-md shadow-lg">
             <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
             <span id="dilemmaSceneAgeTag">DÖNÜM NOKTASI</span>
           </div>
-          <div id="dilemmaSceneIcon" class="w-10 h-10 rounded-xl bg-black/60 border border-white/10 backdrop-blur-md flex items-center justify-center text-2xl shadow-lg">
+          <div id="dilemmaSceneIcon" class="w-10 h-10 rounded-xl bg-black/75 border border-white/15 backdrop-blur-md flex items-center justify-center text-2xl shadow-lg">
             💼
           </div>
         </div>
 
-        <div class="relative z-10">
-          <div class="flex items-center gap-1.5 text-[11px] font-mono font-bold text-slate-300">
+        <div class="relative z-10 space-y-0.5">
+          <div class="flex items-center gap-1.5 text-xs font-mono font-bold text-white drop-shadow-md">
             <i class="fa-solid fa-location-dot text-rose-400"></i>
             <span id="dilemmaSceneLocation">5 Yıldızlı Otel Süiti - Gece Yarısı Pazarlığı</span>
           </div>
-          <div id="dilemmaSceneMood" class="text-xs text-amber-200/90 font-medium italic mt-0.5">"Geleceğinin kaderi bu masada çiziliyor..."</div>
+          <div id="dilemmaSceneMood" class="text-xs text-amber-200 font-medium italic drop-shadow-md">"Geleceğinin kaderi bu masada çiziliyor..."</div>
         </div>
       </div>
 
@@ -3188,9 +3191,9 @@
         moodTr: '"Hocan tahtanın önüne geçti ve kaderini yeniden çiziyor..."',
         moodEn: '"Your coach redraws team tactics to alter your fate..."',
         icon: '📋',
+        imageUrl: 'https://images.unsplash.com/photo-1517466787929-bc90951d0974?auto=format&fit=crop&w=800&q=80',
         ageTagTr: '13 YAŞ • TAKTİK DÖNÜM NOKTASI',
-        ageTagEn: 'AGE 13 • TACTICAL CROSSROAD',
-        glowClass: 'bg-emerald-500/20'
+        ageTagEn: 'AGE 13 • TACTICAL CROSSROAD'
       },
       16: {
         locationTr: 'Yol Ayrımı: Kütüphane vs Gece Antrenmanı',
@@ -3198,9 +3201,9 @@
         moodTr: '"Ya garanti bir diploma, ya da tüm gemileri yakıp futbol..."',
         moodEn: '"A safe diploma, or burn all ships for pro football..."',
         icon: '⚡',
+        imageUrl: 'https://images.unsplash.com/photo-1529900244934-87a417647228?auto=format&fit=crop&w=800&q=80',
         ageTagTr: '16 YAŞ • HAYATİ TERCİH',
-        ageTagEn: 'AGE 16 • LIFE CROSSROAD',
-        glowClass: 'bg-amber-500/20'
+        ageTagEn: 'AGE 16 • LIFE CROSSROAD'
       },
       17: {
         locationTr: '5 Yıldızlı Otel Penthouse - Gece Yarısı Masası',
@@ -3208,9 +3211,9 @@
         moodTr: '"Puro dumanı, lüks çantalar ve kariyerinin tapusu masada..."',
         moodEn: '"Cigar smoke, luxury briefcases, and your future on the line..."',
         icon: '🦈',
+        imageUrl: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80',
         ageTagTr: '17 YAŞ • KURT MENAJER MASASI',
-        ageTagEn: 'AGE 17 • AGENT SHOWDOWN',
-        glowClass: 'bg-rose-500/20'
+        ageTagEn: 'AGE 17 • AGENT SHOWDOWN'
       },
       19: {
         locationTr: 'Banka Kasası (€250.000 İlk Büyük İkramiye)',
@@ -3218,9 +3221,9 @@
         moodTr: '"Genç yaşta gelen büyük parayla ilk hamlen ne olacak?"',
         moodEn: '"First taste of liquid wealth: Speed, family or crypto?"',
         icon: '🏎️',
+        imageUrl: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80',
         ageTagTr: '19 YAŞ • İLK BÜYÜK MAAŞ',
-        ageTagEn: 'AGE 19 • FIRST FORTUNE',
-        glowClass: 'bg-yellow-500/20'
+        ageTagEn: 'AGE 19 • FIRST FORTUNE'
       },
       22: {
         locationTr: 'VIP Gece Kulübü vs Rejenerasyon Kliniği',
@@ -3228,9 +3231,9 @@
         moodTr: '"Şöhretin baş döndürücü neonları mı, yoksa buz banyosu mu?"',
         moodEn: '"Dazzling nightlife glamour vs relentless athletic discipline..."',
         icon: '🪩',
+        imageUrl: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=800&q=80',
         ageTagTr: '22 YAŞ • ŞÖHRET VE DİSİPLİN',
-        ageTagEn: 'AGE 22 • FAME & GLAMOUR',
-        glowClass: 'bg-purple-500/20'
+        ageTagEn: 'AGE 22 • FAME & GLAMOUR'
       },
       25: {
         locationTr: 'Yatırım Danışmanı Zirvesi (€3.000.000)',
@@ -3238,9 +3241,9 @@
         moodTr: '"Kariyerinin en zengin dönemi: Malikane mi, giyim markası mı?"',
         moodEn: '"Peak earning velocity: Luxury villa, brand or fund?"',
         icon: '🏰',
+        imageUrl: 'https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=800&q=80',
         ageTagTr: '25 YAŞ • MİLYONLUK YATIRIM',
-        ageTagEn: 'AGE 25 • MEGA WEALTH',
-        glowClass: 'bg-cyan-500/20'
+        ageTagEn: 'AGE 25 • MEGA WEALTH'
       },
       26: {
         locationTr: 'Şehrin Öbür Yakası - Gizli Otopark Görüşmesi',
@@ -3248,9 +3251,9 @@
         moodTr: '"Ezeli rakip 5M€ nakit koydu. Şehir seni ya hain bilecek ya efsane..."',
         moodEn: '"Arch-rivals put €5M cash on table. Judas or one-club immortal?"',
         icon: '🐍',
+        imageUrl: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=800&q=80',
         ageTagTr: '26 YAŞ • EZELİ RAKİP İHANETİ',
-        ageTagEn: 'AGE 26 • DERBY TREASON',
-        glowClass: 'bg-red-500/20'
+        ageTagEn: 'AGE 26 • DERBY TREASON'
       },
       28: {
         locationTr: 'Zirve Kavşağı: Çöl Krallığı vs Avrupa Kupası',
@@ -3258,9 +3261,9 @@
         moodTr: '"Yıllık 25M€ nakit petrol parası mı, Şampiyonlar Ligi kupası mı?"',
         moodEn: '"Generational Gulf riches or eternal European silverware glory?"',
         icon: '👑',
+        imageUrl: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=800&q=80',
         ageTagTr: '28 YAŞ • PARA MI ŞEREF Mİ?',
-        ageTagEn: 'AGE 28 • MONEY OR GLORY',
-        glowClass: 'bg-amber-500/20'
+        ageTagEn: 'AGE 28 • MONEY OR GLORY'
       },
       32: {
         locationTr: 'Doğduğun Şehir - Veda Öncesi Kalıcı Miras',
@@ -3268,9 +3271,9 @@
         moodTr: '"Gelecek nesillere ücretsiz akademi mi, gökdelen mi, mega yat mı?"',
         moodEn: '"Youth academy for kids, commercial towers or superyacht?"',
         icon: '🏛️',
+        imageUrl: 'https://images.unsplash.com/photo-1526232761682-d26e03ac148e?auto=format&fit=crop&w=800&q=80',
         ageTagTr: '32 YAŞ • KALICI MİRAS',
-        ageTagEn: 'AGE 32 • CAREER LEGACY',
-        glowClass: 'bg-emerald-500/20'
+        ageTagEn: 'AGE 32 • CAREER LEGACY'
       },
       35: {
         locationTr: 'Final Soyunma Odası - Maça 15 Dakika Kala',
@@ -3278,9 +3281,9 @@
         moodTr: '"Tünelden 80.000 taraftarın kükremesi geliyor. İğneyi vuracak mısın?"',
         moodEn: '"80,000 roar outside the tunnel. Cortisone shot or preserve health?"',
         icon: '💉',
+        imageUrl: 'https://images.unsplash.com/photo-1577223625816-7546f13df25d?auto=format&fit=crop&w=800&q=80',
         ageTagTr: '35 YAŞ • KUPA FİNALİ KUMARI',
-        ageTagEn: 'AGE 35 • CUP FINAL GAMBLE',
-        glowClass: 'bg-rose-500/20'
+        ageTagEn: 'AGE 35 • CUP FINAL GAMBLE'
       }
     };
 
@@ -3302,6 +3305,10 @@
         glowClass: 'bg-emerald-500/20'
       };
 
+      const imgEl = document.getElementById('dilemmaSceneImg');
+      if (imgEl && sceneData.imageUrl) {
+        imgEl.src = sceneData.imageUrl;
+      }
       const locEl = document.getElementById('dilemmaSceneLocation');
       if (locEl) locEl.textContent = currentLang === 'TR' ? sceneData.locationTr : sceneData.locationEn;
       const moodEl = document.getElementById('dilemmaSceneMood');
@@ -3390,7 +3397,7 @@
     let currentMuseumTab = 'trophies';
 
     function openMuseumModal() {
-      renderMuseum();
+      switchMuseumTab(currentMuseumTab || 'trophies');
       document.getElementById('modalMuseum').classList.remove('hidden');
     }
 
@@ -3403,11 +3410,11 @@
       const btnTrophies = document.getElementById('tabMuseumTrophies');
       const btnAssets = document.getElementById('tabMuseumAssets');
       if (tab === 'trophies') {
-        btnTrophies.className = 'px-3.5 py-1.5 rounded-xl bg-yellow-500 text-pitch-950 font-bold text-xs transition';
-        btnAssets.className = 'px-3.5 py-1.5 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-slate-300 font-bold text-xs transition';
+        btnTrophies.style = 'background-color: #eab308 !important; color: #06130b !important; font-weight: 800; border-color: #facc15 !important;';
+        btnAssets.style = 'background-color: #0f3821 !important; color: #cbd5e1 !important; font-weight: 600; border-color: #165331 !important;';
       } else {
-        btnAssets.className = 'px-3.5 py-1.5 rounded-xl bg-yellow-500 text-pitch-950 font-bold text-xs transition';
-        btnTrophies.className = 'px-3.5 py-1.5 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-slate-300 font-bold text-xs transition';
+        btnAssets.style = 'background-color: #eab308 !important; color: #06130b !important; font-weight: 800; border-color: #facc15 !important;';
+        btnTrophies.style = 'background-color: #0f3821 !important; color: #cbd5e1 !important; font-weight: 600; border-color: #165331 !important;';
       }
       renderMuseum();
     }
@@ -3426,43 +3433,49 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-left">
             
             <!-- Ballon d'Or Pedestal -->
-            <div class="p-4 rounded-2xl border transition ${ballonDorWon ? 'bg-amber-500/10 border-amber-500/50 shadow-lg shadow-amber-500/10' : 'bg-pitch-950/60 border-pitch-800 opacity-60'}">
-              <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-3xl ${ballonDorWon ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' : 'bg-pitch-900 text-slate-600'}">
-                  👑
-                </div>
-                <div>
-                  <h4 class="font-bold text-sm ${ballonDorWon ? 'text-white' : 'text-slate-500'}">Ballon d'Or</h4>
-                  <div class="text-xs font-mono font-bold ${ballonDorWon ? 'text-amber-400' : 'text-slate-600'}">
-                    ${ballonDorWon ? `${player.stats.ballonDor}x ${currentLang === 'TR' ? 'Kazanıldı' : 'Won'}` : (currentLang === 'TR' ? 'Kazanılmadı 🔒' : 'Locked 🔒')}
+            <div class="p-4 rounded-2xl border transition ${ballonDorWon ? 'bg-amber-500/10 border-amber-500/50 shadow-lg shadow-amber-500/10' : 'bg-pitch-950/80 border-pitch-800/80'}">
+              <div class="flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                  <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-3xl ${ballonDorWon ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' : 'bg-pitch-900 border border-pitch-800 text-slate-500'}">
+                    👑
+                  </div>
+                  <div>
+                    <h4 class="font-bold text-sm text-white">Ballon d'Or</h4>
+                    <div class="text-xs font-mono font-bold ${ballonDorWon ? 'text-amber-400' : 'text-slate-400'}">
+                      ${ballonDorWon ? `${player.stats.ballonDor}x ${currentLang === 'TR' ? 'Kazanıldı 🏆' : 'Won 🏆'}` : (currentLang === 'TR' ? 'Kazanılmadı' : 'Not Won')}
+                    </div>
                   </div>
                 </div>
+                ${!ballonDorWon ? '<span class="px-2 py-0.5 rounded-full bg-pitch-900 border border-amber-500/30 text-[10px] text-amber-300 font-mono font-bold">KİLİTLİ 🔒</span>' : ''}
               </div>
-              <p class="text-xs text-slate-400 mt-2.5">
-                ${ballonDorWon ? (currentLang === 'TR' ? 'Dünyanın en iyi futbolcusu seçilerek altın topu vitrinine koydun.' : 'Voted the best footballer on Earth and crowned with the golden ball.') : (currentLang === 'TR' ? 'Bu ödülü kazanmak için 90+ OVR ve şampiyonluklar gerekir.' : 'Requires 90+ Peak OVR and massive silverware.')}
+              <p class="text-xs text-slate-300 mt-3 leading-relaxed">
+                ${ballonDorWon ? (currentLang === 'TR' ? 'Dünyanın en iyi futbolcusu seçilerek altın topu vitrinine koydun.' : 'Voted the best footballer on Earth and crowned with the golden ball.') : (currentLang === 'TR' ? 'Bu efsanevi ödülü kazanmak için 90+ OVR ve büyük kupa zaferleri gerekir.' : 'Requires 90+ Peak OVR and massive silverware.')}
               </p>
             </div>
 
             <!-- Golden Boot Pedestal -->
-            <div class="p-4 rounded-2xl border transition ${goldenBootWon ? 'bg-yellow-500/10 border-yellow-500/50 shadow-lg shadow-yellow-500/10' : 'bg-pitch-950/60 border-pitch-800 opacity-60'}">
-              <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-3xl ${goldenBootWon ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/40' : 'bg-pitch-900 text-slate-600'}">
-                  👟
-                </div>
-                <div>
-                  <h4 class="font-bold text-sm ${goldenBootWon ? 'text-white' : 'text-slate-500'}">${currentLang === 'TR' ? 'Altın Ayakkabı' : 'Golden Boot'}</h4>
-                  <div class="text-xs font-mono font-bold ${goldenBootWon ? 'text-yellow-400' : 'text-slate-600'}">
-                    ${goldenBootWon ? `${player.stats.goldenBoots}x ${currentLang === 'TR' ? 'Gol Kralı' : 'Top Scorer'}` : (currentLang === 'TR' ? 'Kazanılmadı 🔒' : 'Locked 🔒')}
+            <div class="p-4 rounded-2xl border transition ${goldenBootWon ? 'bg-yellow-500/10 border-yellow-500/50 shadow-lg shadow-yellow-500/10' : 'bg-pitch-950/80 border-pitch-800/80'}">
+              <div class="flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                  <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-3xl ${goldenBootWon ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/40' : 'bg-pitch-900 border border-pitch-800 text-slate-500'}">
+                    👟
+                  </div>
+                  <div>
+                    <h4 class="font-bold text-sm text-white">${currentLang === 'TR' ? 'Altın Ayakkabı' : 'Golden Boot'}</h4>
+                    <div class="text-xs font-mono font-bold ${goldenBootWon ? 'text-yellow-400' : 'text-slate-400'}">
+                      ${goldenBootWon ? `${player.stats.goldenBoots}x ${currentLang === 'TR' ? 'Gol Kralı 🥇' : 'Top Scorer 🥇'}` : (currentLang === 'TR' ? 'Kazanılmadı' : 'Not Won')}
+                    </div>
                   </div>
                 </div>
+                ${!goldenBootWon ? '<span class="px-2 py-0.5 rounded-full bg-pitch-900 border border-yellow-500/30 text-[10px] text-yellow-300 font-mono font-bold">KİLİTLİ 🔒</span>' : ''}
               </div>
-              <p class="text-xs text-slate-400 mt-2.5">
-                ${goldenBootWon ? (currentLang === 'TR' ? 'Bir sezonda 30+ gol barajını aşarak Avrupa Gol Kralı oldun.' : 'Exceeded 30+ goals in a single season to win the Golden Boot.') : (currentLang === 'TR' ? 'Tek sezonda 30+ gol atarak bu ödülü müzene katabilirsin.' : 'Requires 30+ goals in a single season.')}
+              <p class="text-xs text-slate-300 mt-3 leading-relaxed">
+                ${goldenBootWon ? (currentLang === 'TR' ? 'Bir sezonda 30+ gol barajını aşarak Avrupa Gol Kralı oldun.' : 'Exceeded 30+ goals in a single season to win the Golden Boot.') : (currentLang === 'TR' ? 'Tek bir sezonda 30\'dan fazla gol atarak Gol Krallığı tacını takabilirsin.' : 'Requires 30+ goals in a single season.')}
               </p>
             </div>
 
             <!-- Team Trophies Cabinet -->
-            <div class="p-4 rounded-2xl border transition ${trophiesCount > 0 ? 'bg-emerald-500/10 border-emerald-500/40' : 'bg-pitch-950/60 border-pitch-800 opacity-60'}">
+            <div class="p-4 rounded-2xl border transition ${trophiesCount > 0 ? 'bg-emerald-500/10 border-emerald-500/50 shadow-lg shadow-emerald-500/10' : 'bg-pitch-950/80 border-pitch-800/80'}">
               <div class="flex items-center gap-3">
                 <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-3xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
                   🏆
@@ -3474,26 +3487,26 @@
                   </div>
                 </div>
               </div>
-              <p class="text-xs text-slate-400 mt-2.5">
-                ${currentLang === 'TR' ? 'Lig şampiyonlukları, ulusal kupalar ve Avrupa zaferleri.' : 'League titles, national cups, and continental triumphs.'}
+              <p class="text-xs text-slate-300 mt-3 leading-relaxed">
+                ${currentLang === 'TR' ? 'Lig şampiyonlukları, ulusal kupalar ve Avrupa zaferleriyle dolu bir müze vitrini.' : 'League titles, national cups, and continental triumphs.'}
               </p>
             </div>
 
-            <!-- National Team Cap Honors -->
-            <div class="p-4 rounded-2xl border transition ${capsCount > 0 ? 'bg-cyan-500/10 border-cyan-500/40' : 'bg-pitch-950/60 border-pitch-800 opacity-60'}">
+            <!-- National Team Cap Honors (Clean Country Name, No Windows DE Flag Glitch!) -->
+            <div class="p-4 rounded-2xl border transition ${capsCount > 0 ? 'bg-cyan-500/10 border-cyan-500/50 shadow-lg shadow-cyan-500/10' : 'bg-pitch-950/80 border-pitch-800/80'}">
               <div class="flex items-center gap-3">
                 <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-3xl bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
-                  🌍
+                  👕
                 </div>
                 <div>
-                  <h4 class="font-bold text-sm text-white">${player.country ? player.country.flag : '🌍'} ${currentLang === 'TR' ? 'Milli Takım Forması' : 'National Caps'}</h4>
+                  <h4 class="font-bold text-sm text-white">${player.country ? (currentLang === 'TR' ? player.country.nameTr : player.country.nameEn) : ''} ${currentLang === 'TR' ? 'Milli Takımı' : 'National Team'}</h4>
                   <div class="text-xs font-mono font-bold text-cyan-400">
                     ${capsCount} ${currentLang === 'TR' ? 'Milli Maç' : 'Caps'} • ${player.stats.nationalGoals || 0} ${currentLang === 'TR' ? 'Gol' : 'Goals'}
                   </div>
                 </div>
               </div>
-              <p class="text-xs text-slate-400 mt-2.5">
-                ${currentLang === 'TR' ? 'Ülkeni uluslararası arenada gururla temsil ettiğin milli forma.' : 'The sacred jersey worn while representing your homeland on the global stage.'}
+              <p class="text-xs text-slate-300 mt-3 leading-relaxed">
+                ${currentLang === 'TR' ? 'Vatanını uluslararası sahada gururla temsil ettiğin resmi milli takım forması.' : 'The sacred jersey worn while representing your homeland on the global stage.'}
               </p>
             </div>
 
