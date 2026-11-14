@@ -1,0 +1,1751 @@
+<!DOCTYPE html>
+<html lang="tr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Next Star Soccer (NSS) | Sokaktan Zirveye Futbol Kariyer Simülatörü</title>
+  <meta name="description" content="12 yaşında mahallede top oynayarak başla, mevkini seç, şut çek veya kaleci olarak kurtarış yap! 3 kulüpten teklif al, U-15 milli takıma yüksel ve Altın Ayakkabı kazan.">
+  <meta name="keywords" content="next star soccer, nss oyna, futbol kariyer oyunu, new star soccer benzeri, kaleci oyunu, şut çekme oyunu, futbolcu kariyeri simülatörü">
+  <link rel="canonical" href="https://pratikbase.com/next-star-soccer/">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#06130b">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#06130b">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#06130b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://pratikbase.com/next-star-soccer/">
+  <meta property="og:title" content="Next Star Soccer (NSS) | Sokaktan Zirveye Futbol Efsanesi">
+  <meta property="og:description" content="12 yaşında mahallede başla, forvet olup 90'a as ya da kaleci olup eldivenlerinle kurtarış yap! İnteraktif futbol kariyeri.">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=1200&h=630&q=80">
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            pitch: {
+              950: '#06130b',
+              900: '#0a2315',
+              800: '#0f3821',
+              700: '#165331',
+              600: '#1e7545',
+              500: '#22c55e'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Chakra Petch', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Mobile viewport and horizontal overflow prevention */
+    html, body {
+      overflow-x: hidden !important;
+      max-width: 100vw !important;
+      width: 100% !important;
+      -webkit-text-size-adjust: 100%;
+      touch-action: manipulation;
+    }
+
+    .font-display { font-family: 'Chakra Petch', sans-serif !important; }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: #06130b; }
+    ::-webkit-scrollbar-thumb { background: #165331; border-radius: 999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #22c55e; }
+
+    /* Stadium lights glow */
+    .stadium-glow {
+      background: radial-gradient(circle at 50% 0%, rgba(34, 197, 94, 0.15) 0%, rgba(16, 185, 129, 0.03) 40%, rgba(6, 19, 11, 0.98) 75%);
+    }
+
+    /* Grass lines pattern */
+    .grass-pattern {
+      background-image: repeating-linear-gradient(0deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 50px, transparent 50px, transparent 100px);
+    }
+
+    /* Canvas smoothing & touch control */
+    #matchCanvas {
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    @keyframes pulse-subtle {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.03); opacity: 0.9; }
+    }
+    .animate-pulse-subtle {
+      animation: pulse-subtle 2s infinite ease-in-out;
+    }
+  </style>
+
+  <!-- Instant Netlify Badge Remover -->
+  <script>
+    (function() {
+      const killBadge = () => {
+        const f = document.getElementById('nl-badge-frame') || document.getElementById('nl-hud-frame') || document.querySelector('iframe[title*="Netlify"]');
+        if (f) f.remove();
+      };
+      if (window.MutationObserver) {
+        new MutationObserver(killBadge).observe(document.documentElement, { childList: true, subtree: true });
+      }
+      window.addEventListener('DOMContentLoaded', killBadge);
+      window.addEventListener('load', killBadge);
+    })();
+  </script>
+</head>
+
+<body class="bg-pitch-950 text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-emerald-500 selection:text-black">
+
+  <!-- Top Navigation Bar -->
+  <header class="border-b border-pitch-800 bg-pitch-900/95 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-2 sm:px-4 h-14 sm:h-16 flex items-center justify-between gap-1">
+      
+      <!-- Brand & Back Button -->
+      <div class="flex items-center gap-2 min-w-0">
+        <button id="btnNavHome" class="flex items-center gap-2 group cursor-pointer text-left focus:outline-none shrink-0" title="Ana Menüye Dön">
+          <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-tr from-amber-400 via-emerald-500 to-lime-400 flex items-center justify-center text-pitch-950 font-black shadow-lg shadow-emerald-500/20 group-hover:scale-105 transition shrink-0 text-sm sm:text-base">
+            ⭐
+          </div>
+          <div class="flex flex-col min-w-0">
+            <span class="font-display font-black text-white text-xs sm:text-base tracking-wide flex items-center gap-1">
+              <span>NEXT STAR</span> <span class="text-emerald-400">SOCCER</span>
+              <span class="text-[9px] uppercase font-mono px-1 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 font-bold shrink-0">NSS V1.0</span>
+            </span>
+            <span class="text-[9px] sm:text-[10px] text-slate-400 font-medium truncate hidden sm:inline" id="txtNavTagline">Sokaktan Zirveye Futbol Efsanesi</span>
+          </div>
+        </button>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="flex items-center gap-1 sm:gap-2 shrink-0">
+        <!-- Sound Toggle -->
+        <button id="btnSoundToggle" class="p-1.5 sm:px-3 sm:py-1.5 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-slate-300 hover:text-white text-xs font-semibold flex items-center gap-1 transition border border-pitch-700/60 shrink-0" title="Ses Aç/Kapat">
+          <i class="fa-solid fa-volume-high text-emerald-400 text-xs" id="soundIcon"></i>
+          <span class="hidden sm:inline" id="txtSoundLabel">Ses Açık</span>
+        </button>
+
+        <!-- Language Toggle -->
+        <button id="btnLangToggle" class="px-2 py-1.5 sm:px-3 sm:py-1.5 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-emerald-300 font-mono text-xs font-bold transition border border-pitch-700/60 flex items-center gap-1 shrink-0">
+          <i class="fa-solid fa-globe text-xs"></i>
+          <span id="langCurrent">TR</span>
+        </button>
+
+        <!-- Portal Link -->
+        <a href="/" class="px-3 py-1.5 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-slate-300 hover:text-white text-xs font-medium transition border border-pitch-700/60 hidden sm:flex items-center gap-1 shrink-0">
+          <i class="fa-solid fa-house"></i>
+          <span>Portal</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Live Career Sticky HUD (Visible during career) -->
+  <section id="careerHud" class="hidden border-b border-pitch-800 bg-pitch-900 sticky top-14 sm:top-16 z-40 transition-all shadow-xl">
+    <div class="max-w-6xl mx-auto px-2 sm:px-4 py-2 sm:py-2.5">
+      <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-1.5 sm:gap-2 text-center text-xs">
+        
+        <!-- Player & Age -->
+        <div class="p-2 rounded-xl bg-pitch-950/80 border border-pitch-800 flex items-center gap-2 text-left">
+          <div id="hudCountryFlag" class="w-7 h-7 rounded-lg bg-pitch-900 border border-pitch-700 flex items-center justify-center shrink-0 overflow-hidden text-base">🇹🇷</div>
+          <div class="min-w-0">
+            <div id="hudPlayerName" class="font-bold text-white truncate text-xs">Yeni Oyuncu</div>
+            <div class="text-[10px] text-emerald-400 font-mono font-semibold flex items-center gap-1">
+              <span id="hudAge">12 Yaşında</span>
+              <span class="text-slate-500">•</span>
+              <span id="hudPosBadge" class="px-1 rounded bg-pitch-800 text-amber-300">ST</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Current Team / Stage -->
+        <div class="p-2 rounded-xl bg-pitch-950/80 border border-pitch-800 flex items-center gap-2 text-left">
+          <div id="hudClubBadge" class="w-7 h-7 rounded-lg bg-pitch-800 flex items-center justify-center text-sm font-bold shrink-0">
+            🏡
+          </div>
+          <div class="min-w-0">
+            <div class="text-[9px] text-slate-400 uppercase font-semibold" id="txtHudClubLabel">Takım / Aşama</div>
+            <div id="hudClubName" class="font-bold text-white truncate text-xs">Mahalle Sahası</div>
+          </div>
+        </div>
+
+        <!-- Career Goals / Saves -->
+        <div class="p-2 rounded-xl bg-pitch-950/80 border border-pitch-800 flex items-center gap-2 text-left">
+          <div class="w-7 h-7 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center shrink-0">
+            <i class="fa-solid fa-futbol text-xs" id="hudStatIcon"></i>
+          </div>
+          <div class="min-w-0">
+            <div class="text-[9px] text-slate-400 uppercase font-semibold" id="hudStatTitle">Gol / Asist</div>
+            <div id="hudStats" class="font-display font-bold text-white text-xs">0 Gol</div>
+          </div>
+        </div>
+
+        <!-- Trophies & Awards -->
+        <div class="p-2 rounded-xl bg-pitch-950/80 border border-pitch-800 flex items-center gap-2 text-left">
+          <div class="w-7 h-7 rounded-lg bg-yellow-500/10 text-yellow-400 flex items-center justify-center shrink-0">
+            🏆
+          </div>
+          <div class="min-w-0">
+            <div class="text-[9px] text-slate-400 uppercase font-semibold" id="txtHudTrophiesLabel">Kupalar & Ödüller</div>
+            <div id="hudTrophies" class="font-display font-bold text-yellow-300 text-xs">0 Kupa</div>
+          </div>
+        </div>
+
+        <!-- Bank Wealth -->
+        <div class="p-2 rounded-xl bg-pitch-950/80 border border-pitch-800 flex items-center gap-2 text-left">
+          <div class="w-7 h-7 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center shrink-0">
+            💰
+          </div>
+          <div class="min-w-0">
+            <div class="text-[9px] text-slate-400 uppercase font-semibold" id="txtHudBankLabel">Banka / Servet</div>
+            <div id="hudBankBalance" class="font-display font-bold text-amber-300 text-xs">€0</div>
+          </div>
+        </div>
+
+        <!-- Overall Rating (OVR) -->
+        <div class="p-2 rounded-xl bg-pitch-950/80 border border-pitch-800 flex items-center gap-2 text-left col-span-2 sm:col-span-1">
+          <div id="hudRatingBox" class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-300 flex items-center justify-center font-display font-black text-xs shrink-0">
+            55
+          </div>
+          <div class="min-w-0">
+            <div class="text-[9px] text-slate-400 uppercase font-semibold">GÜÇ (OVR)</div>
+            <div id="hudTalentTier" class="font-bold text-slate-200 truncate text-[10px]">Mahalle Yıldızı</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Container -->
+  <main class="flex-grow max-w-4xl w-full mx-auto px-3 sm:px-4 py-6 relative stadium-glow grass-pattern flex flex-col justify-center">
+
+    <!-- =====================================================================
+         SCREEN 1: WELCOME & RESUME OR NEW CAREER
+         ===================================================================== -->
+    <section id="screenWelcome" class="space-y-6 text-center max-w-lg mx-auto w-full py-4">
+      
+      <!-- Logo Badge & Title -->
+      <div class="space-y-3">
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold tracking-wide uppercase">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+          <span id="txtHeroBadge">12'den 40 Yaşa Futbol Kariyer Simülatörü</span>
+        </div>
+        <h1 class="text-3xl sm:text-5xl font-display font-black text-white tracking-tight leading-tight">
+          NEXT STAR <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-emerald-400 to-lime-300">SOCCER</span>
+        </h1>
+        <p class="text-slate-300 text-xs sm:text-sm leading-relaxed" id="txtWelcomeDesc">
+          12 yaşında mahallede top oynayarak başla, mevkini seç (forvet olup 90'a as ya da kaleci olup eldivenlerinle kurtarış yap!), 3 kulüpten teklif al ve Altın Ayakkabı'ya uzan!
+        </p>
+      </div>
+
+      <!-- Player Identity Card (Nick Input) -->
+      <div class="p-4 sm:p-5 rounded-2xl bg-pitch-900/90 border border-pitch-700/80 shadow-xl space-y-3 text-left">
+        <label class="block text-xs font-bold text-slate-300 flex items-center justify-between">
+          <span id="lblPlayerNick">Oyuncu Adı / Nick:</span>
+          <span class="text-[10px] text-emerald-400 font-mono">Kayıtlı Profil</span>
+        </label>
+        <div class="flex items-center gap-2">
+          <input type="text" id="inputPlayerNick" maxlength="24" class="flex-1 bg-pitch-950 border border-pitch-700 rounded-xl px-3.5 py-2.5 text-sm text-white font-bold placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition" placeholder="Örn: Yeni Oyuncu">
+          <button id="btnSaveNick" class="px-3.5 py-2.5 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-xs font-bold text-emerald-300 border border-pitch-700 transition shrink-0" title="Kaydet">
+            <i class="fa-solid fa-floppy-disk mr-1"></i> <span id="txtBtnSaveNick">Kaydet</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Actions: Resume Career vs Start New -->
+      <div class="space-y-3">
+        <!-- Resume Button (Shown only if save exists) -->
+        <button id="btnResumeCareer" class="hidden w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-emerald-500 via-emerald-600 to-green-600 hover:from-emerald-400 hover:to-green-500 text-pitch-950 font-display font-black text-base sm:text-lg tracking-wide uppercase shadow-xl shadow-emerald-500/25 active:scale-[0.98] transition flex items-center justify-center gap-2 group">
+          <i class="fa-solid fa-play text-pitch-950 group-hover:scale-110 transition"></i>
+          <span id="txtBtnResume">Kariyerine Devam Et</span>
+        </button>
+
+        <!-- New Career Button -->
+        <button id="btnStartNewCareer" class="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-pitch-950 font-display font-black text-base sm:text-lg tracking-wide uppercase shadow-xl shadow-amber-500/25 active:scale-[0.98] transition flex items-center justify-center gap-2 group">
+          <i class="fa-solid fa-bolt text-pitch-950 group-hover:rotate-12 transition"></i>
+          <span id="txtBtnNewCareer">YENİ OYUNCU / YENİ KARİYER</span>
+        </button>
+      </div>
+
+      <!-- Key Game Features Pills -->
+      <div class="grid grid-cols-3 gap-2 text-center text-[10px] sm:text-xs text-slate-400 pt-2">
+        <div class="p-2.5 rounded-xl bg-pitch-900/60 border border-pitch-800/80">
+          <i class="fa-solid fa-futbol text-emerald-400 block mb-1 text-sm"></i>
+          <span>Şut & Fiske</span>
+        </div>
+        <div class="p-2.5 rounded-xl bg-pitch-900/60 border border-pitch-800/80">
+          <i class="fa-solid fa-mitten text-amber-400 block mb-1 text-sm"></i>
+          <span>Kaleci Modu</span>
+        </div>
+        <div class="p-2.5 rounded-xl bg-pitch-900/60 border border-pitch-800/80">
+          <i class="fa-solid fa-trophy text-yellow-400 block mb-1 text-sm"></i>
+          <span>12'den 40 Yaşa</span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- =====================================================================
+         SCREEN 2: COUNTRY PICKER (Random vs Choose)
+         ===================================================================== -->
+    <section id="screenCountry" class="hidden space-y-6 text-center max-w-lg mx-auto w-full py-2">
+      <div class="space-y-2">
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-mono font-bold uppercase">
+          <span>AŞAMA 1 / 3</span>
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-display font-black text-white" id="txtTitleCountry">Hangi Ülkede Doğacaksın?</h2>
+        <p class="text-xs text-slate-300" id="txtDescCountry">Kaderine boyun eğip çarkı çevirebilir ya da oynamak istediğin vatanı bizzat seçebilirsin.</p>
+      </div>
+
+      <!-- Country Selection Tabs: Random vs Manual -->
+      <div class="flex items-center bg-pitch-900 p-1 rounded-2xl border border-pitch-800">
+        <button id="tabCountryRandom" class="flex-1 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition bg-emerald-500 text-pitch-950 flex items-center justify-center gap-1.5">
+          <i class="fa-solid fa-dice"></i> <span id="txtTabRandom">Rastgele Çek</span>
+        </button>
+        <button id="tabCountryManual" class="flex-1 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition text-slate-400 hover:text-white flex items-center justify-center gap-1.5">
+          <i class="fa-solid fa-earth-americas"></i> <span id="txtTabManual">Kendim Seçeyim</span>
+        </button>
+      </div>
+
+      <!-- Tab Content 1: Roulette Spin -->
+      <div id="boxCountryRandom" class="p-6 rounded-3xl bg-pitch-900/90 border border-pitch-700/80 shadow-2xl space-y-5">
+        <div id="rouletteDisplay" class="py-6 px-4 rounded-2xl bg-pitch-950 border border-pitch-800 text-center min-h-[140px] flex flex-col items-center justify-center space-y-2">
+          <div id="rouletteFlag" class="text-6xl animate-bounce">🌍</div>
+          <div id="rouletteName" class="font-display font-bold text-xl text-white">Çarkı Çevir!</div>
+          <div id="rouletteSubtitle" class="text-xs text-emerald-400 font-mono">Dünyada 40+ Futbol Ülkesi</div>
+        </div>
+
+        <button id="btnSpinCountry" class="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-emerald-500 to-lime-400 text-pitch-950 font-display font-black text-sm uppercase tracking-wide shadow-lg shadow-emerald-500/25 active:scale-95 transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-rotate"></i>
+          <span id="txtBtnSpinCountry">ÜLKEMİ RASTGELE BELİRLE</span>
+        </button>
+      </div>
+
+      <!-- Tab Content 2: Manual Country List -->
+      <div id="boxCountryManual" class="hidden p-4 rounded-3xl bg-pitch-900/90 border border-pitch-700/80 shadow-2xl space-y-3 text-left">
+        <input type="text" id="searchCountryInput" class="w-full bg-pitch-950 border border-pitch-700 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500" placeholder="Ülke ara (Örn: Türkiye, Brezilya, Almanya...)">
+        <div id="countryListGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-60 overflow-y-auto pr-1">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </div>
+
+      <!-- Selected Country Confirmation Card -->
+      <div id="selectedCountryCard" class="hidden p-4 rounded-2xl bg-pitch-900 border-2 border-emerald-500/60 shadow-xl flex items-center justify-between gap-3 text-left animate-in fade-in">
+        <div class="flex items-center gap-3">
+          <div id="selectedFlag" class="text-4xl">🇹🇷</div>
+          <div>
+            <div class="text-[10px] text-emerald-400 font-bold uppercase" id="txtChosenBadge">Seçilen Ülke</div>
+            <div id="selectedName" class="text-lg font-display font-black text-white">Türkiye</div>
+          </div>
+        </div>
+        <button id="btnConfirmCountry" class="py-2.5 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-pitch-950 font-bold text-xs uppercase shadow transition">
+          <span id="txtBtnConfirmCountry">Devam Et</span> <i class="fa-solid fa-arrow-right ml-1"></i>
+        </button>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         SCREEN 3: CHARACTER & POSITION CREATOR (Skin, Hair, Position GK/ST)
+         ===================================================================== -->
+    <section id="screenCharacter" class="hidden space-y-5 text-center max-w-lg mx-auto w-full py-2">
+      <div class="space-y-1">
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 text-amber-400 text-xs font-mono font-bold uppercase">
+          <span>AŞAMA 2 / 3</span>
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-display font-black text-white" id="txtTitleChar">Karakterini ve Mevkini Yarat</h2>
+        <p class="text-xs text-slate-300" id="txtDescChar">Saha oyuncusu olup gol mü atacaksın, yoksa kaleci olup eldivenlerinle kalesini gole kapatan bir duvar mı?</p>
+      </div>
+
+      <!-- Live Dynamic SVG Avatar Display -->
+      <div class="p-4 rounded-3xl bg-pitch-900/90 border border-pitch-700/80 shadow-2xl flex flex-col sm:flex-row items-center justify-center gap-6">
+        
+        <!-- Interactive Avatar Preview Box -->
+        <div class="relative flex flex-col items-center">
+          <div id="avatarContainer" class="w-28 h-28 sm:w-32 sm:h-32 rounded-2xl bg-pitch-950 border-2 border-emerald-500/50 shadow-inner flex items-center justify-center overflow-hidden">
+            <!-- Dynamic SVG Injected via JS -->
+            <svg id="svgAvatar" viewBox="0 0 100 100" class="w-full h-full"></svg>
+          </div>
+          <span class="mt-2 text-[11px] font-mono font-bold text-emerald-400 px-2 py-0.5 rounded bg-pitch-950 border border-pitch-800" id="previewPlayerTitle">ST • #9</span>
+        </div>
+
+        <!-- Position Selector (Crucial Distinction: Outfield vs Goalkeeper) -->
+        <div class="flex-1 space-y-3 text-left w-full">
+          <label class="block text-xs font-bold text-slate-300" id="lblChoosePos">Mevki Seçimi:</label>
+          <div class="grid grid-cols-2 gap-2" id="positionButtonGroup">
+            <button onclick="setPlayerPosition('ST')" class="pos-btn p-2 rounded-xl border border-pitch-700 bg-pitch-950 text-left hover:border-emerald-500 transition active" data-pos="ST">
+              <div class="text-xs font-black text-white flex items-center justify-between">
+                <span>⚽ Forvet (ST)</span>
+                <span class="text-[10px] text-emerald-400">Golcü</span>
+              </div>
+              <div class="text-[10px] text-slate-400">Şut & Bitiricilik</div>
+            </button>
+
+            <button onclick="setPlayerPosition('CAM')" class="pos-btn p-2 rounded-xl border border-pitch-700 bg-pitch-950 text-left hover:border-emerald-500 transition" data-pos="CAM">
+              <div class="text-xs font-black text-white flex items-center justify-between">
+                <span>🎩 10 Numara</span>
+                <span class="text-[10px] text-emerald-400">Oyun Kurucu</span>
+              </div>
+              <div class="text-[10px] text-slate-400">Pas & Frikik</div>
+            </button>
+
+            <button onclick="setPlayerPosition('WNG')" class="pos-btn p-2 rounded-xl border border-pitch-700 bg-pitch-950 text-left hover:border-emerald-500 transition" data-pos="WNG">
+              <div class="text-xs font-black text-white flex items-center justify-between">
+                <span>⚡ Kanat (LW/RW)</span>
+                <span class="text-[10px] text-emerald-400">Fırtına</span>
+              </div>
+              <div class="text-[10px] text-slate-400">Hız & Falso</div>
+            </button>
+
+            <button onclick="setPlayerPosition('GK')" class="pos-btn p-2 rounded-xl border-2 border-amber-500/60 bg-amber-950/20 text-left hover:border-amber-400 transition" data-pos="GK">
+              <div class="text-xs font-black text-amber-300 flex items-center justify-between">
+                <span>🧤 Kaleci (GK)</span>
+                <span class="text-[10px] text-amber-400 font-bold">ÖZEL</span>
+              </div>
+              <div class="text-[10px] text-amber-200/80">Eldivenle Kurtarış</div>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Customization Controls: Skin Tone, Hair Style, Hair Color, Number -->
+      <div class="p-4 rounded-3xl bg-pitch-900/90 border border-pitch-700/80 shadow-2xl space-y-4 text-left">
+        
+        <!-- Skin Tone -->
+        <div class="space-y-1.5">
+          <label class="block text-xs font-semibold text-slate-300" id="lblSkinTone">Ten Rengi:</label>
+          <div class="flex items-center gap-2.5" id="skinPaletteGroup">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+
+        <!-- Hair Model & Hair Color -->
+        <div class="grid grid-cols-2 gap-3">
+          <div class="space-y-1.5">
+            <label class="block text-xs font-semibold text-slate-300" id="lblHairModel">Saç Modeli:</label>
+            <select id="selectHairModel" class="w-full bg-pitch-950 border border-pitch-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+              <option value="short">Kısa Klasik</option>
+              <option value="curly">Kıvırcık / Afro</option>
+              <option value="mohawk">Mohikan / Stil</option>
+              <option value="long">Uzun / Dağınık</option>
+              <option value="bald">Sıfır Numara</option>
+            </select>
+          </div>
+
+          <div class="space-y-1.5">
+            <label class="block text-xs font-semibold text-slate-300" id="lblHairColor">Saç Rengi:</label>
+            <select id="selectHairColor" class="w-full bg-pitch-950 border border-pitch-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+              <option value="#1c1917">Siyah</option>
+              <option value="#573a24">Kahverengi</option>
+              <option value="#d4a373">Kumral</option>
+              <option value="#eab308">Sarı</option>
+              <option value="#dc2626">Kızıl</option>
+              <option value="#94a3b8">Platin Gri</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Jersey Number -->
+        <div class="flex items-center justify-between gap-3 pt-1 border-t border-pitch-800">
+          <div class="flex items-center gap-2">
+            <label class="text-xs font-semibold text-slate-300" id="lblJerseyNum">Forma No:</label>
+            <input type="number" id="inputJerseyNumber" min="1" max="99" value="9" class="w-16 bg-pitch-950 border border-pitch-700 rounded-xl px-2.5 py-1.5 text-xs text-center font-bold text-emerald-400">
+          </div>
+          <button id="btnRandomizeChar" class="px-3 py-1.5 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-xs text-slate-300 font-bold transition flex items-center gap-1.5 border border-pitch-700">
+            <i class="fa-solid fa-shuffle text-amber-400"></i> <span id="txtBtnRandomize">Rastgele Yap</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Continue to Age 12 Button -->
+      <button id="btnStartCareerAge12" class="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-emerald-500 to-lime-400 text-pitch-950 font-display font-black text-base uppercase tracking-wide shadow-xl shadow-emerald-500/30 active:scale-95 transition flex items-center justify-center gap-2">
+        <span id="txtBtnStart12">12 YAŞINDA MAHALLEDE BAŞLA</span>
+        <i class="fa-solid fa-arrow-right"></i>
+      </button>
+    </section>
+
+    <!-- =====================================================================
+         SCREEN 4: AGE 12 STREET FOOTBALL INTRO & SCOUT DISCOVERY
+         ===================================================================== -->
+    <section id="screenStreetIntro" class="hidden space-y-6 text-center max-w-lg mx-auto w-full py-4">
+      <div class="p-6 rounded-3xl bg-pitch-900/90 border border-emerald-500/40 shadow-2xl space-y-4 text-left relative overflow-hidden">
+        
+        <div class="flex items-center justify-between">
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-mono font-bold">
+            <span>🧒 12 YAŞ • MAHALLE ARASI</span>
+          </div>
+          <span class="text-2xl">🏡⚽</span>
+        </div>
+
+        <h3 class="text-xl sm:text-2xl font-display font-black text-white leading-snug" id="txtStreetTitle">
+          Her Şey İki Taşın Arasında Başladı...
+        </h3>
+
+        <p class="text-slate-300 text-xs sm:text-sm leading-relaxed" id="txtStreetStory">
+          Tozlu mahalle arsasında, araba geçtiğinde kenara çekilerek top oynadığın günler... Ayaklarındaki yetenek mahalleye sığmıyor. Mahalle turnuvasının final maçındasın ve saha kenarında seni izleyen gizemli bir gözlemci (Scout) var!
+        </p>
+
+        <div class="p-3.5 rounded-2xl bg-pitch-950 border border-pitch-800 space-y-1.5">
+          <div class="text-[11px] text-amber-400 font-bold uppercase flex items-center gap-1">
+            <i class="fa-solid fa-bullseye"></i> <span id="txtStreetMissionBadge">İLK GÖREV: KENDİNİ GÖSTER</span>
+          </div>
+          <p class="text-xs text-slate-400" id="txtStreetMissionDesc">
+            Ceza sahasından şut çekerek golü bulmalı veya kaleciysen rakibin füzesini 90'dan çıkarmalısın.
+          </p>
+        </div>
+
+        <button id="btnPlayStreetMatch" class="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-emerald-500 to-lime-400 text-pitch-950 font-display font-black text-sm uppercase tracking-wide shadow-lg shadow-emerald-500/25 active:scale-95 transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-play"></i>
+          <span id="txtBtnPlayStreet">MAÇ POZİSYONUNA GİR</span>
+        </button>
+
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         SCREEN 5: INTERACTIVE MATCH CANVAS (Mini Game: Shoot or Save!)
+         ===================================================================== -->
+    <section id="screenMatchPlay" class="hidden space-y-3 text-center max-w-xl mx-auto w-full py-2">
+      
+      <!-- Match Info Top Header -->
+      <div class="flex items-center justify-between px-2">
+        <div class="flex items-center gap-2">
+          <span class="w-3 h-3 rounded-full bg-rose-500 animate-ping"></span>
+          <span class="text-xs font-mono font-bold text-white uppercase tracking-wider" id="matchHeadline">89' KRİTİK POZİSYON</span>
+        </div>
+        <div class="text-xs font-mono font-bold text-amber-300 bg-pitch-900 px-3 py-1 rounded-xl border border-pitch-700" id="matchAttemptScore">
+          Pozisyon: 1 / 2
+        </div>
+      </div>
+
+      <!-- Interactive Canvas Stage Box -->
+      <div class="relative w-full rounded-3xl overflow-hidden border-2 border-emerald-500/50 shadow-2xl bg-pitch-950">
+        
+        <!-- Canvas Element -->
+        <canvas id="matchCanvas" width="600" height="420" class="w-full h-auto block"></canvas>
+
+        <!-- Dynamic Overlay Instruction (Fade out after touch) -->
+        <div id="canvasInstructionOverlay" class="absolute inset-x-0 bottom-4 pointer-events-none text-center px-4">
+          <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-pitch-950/90 text-emerald-300 border border-emerald-500/40 text-xs font-mono font-bold shadow-2xl backdrop-blur-md animate-pulse">
+            <i class="fa-solid fa-hand-pointer"></i>
+            <span id="txtCanvasPrompt">Topu parmağınla geriye çek ve bırak!</span>
+          </span>
+        </div>
+
+        <!-- Goal / Save Feedback Splash Banner -->
+        <div id="matchFeedbackSplash" class="hidden absolute inset-0 bg-black/75 backdrop-blur-sm flex flex-col items-center justify-center space-y-2 animate-in zoom-in-50 duration-200">
+          <div id="splashIcon" class="text-6xl">⚽</div>
+          <div id="splashTitle" class="text-3xl font-display font-black text-white">GOOOOOOL!</div>
+          <div id="splashDesc" class="text-xs font-mono text-emerald-400">90'a Harika Bir Vuruş!</div>
+        </div>
+
+      </div>
+
+      <!-- Quick Tips Bar Below Canvas -->
+      <div class="flex items-center justify-between text-[11px] text-slate-400 px-2 pt-1">
+        <span id="txtCanvasHint">İpucu: Ne kadar geriye çekersen şut o kadar sert gider!</span>
+        <button id="btnSkipPosition" class="text-slate-500 hover:text-slate-300 transition text-[10px] underline">Pozisyonu Otomatik Simüle Et</button>
+      </div>
+
+    </section>
+
+    <!-- =====================================================================
+         SCREEN 6: AGE 16 TURNING POINT - U-15/U-17 CALL & 3 CONTRACT OFFERS
+         ===================================================================== -->
+    <section id="screenContracts" class="hidden space-y-5 text-center max-w-xl mx-auto w-full py-2">
+      
+      <!-- Headline & National Team Call-Up -->
+      <div class="space-y-2">
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-yellow-500/20 text-yellow-300 border border-yellow-500/40 text-xs font-mono font-bold">
+          <span>🎖️ 16 YAŞ DÖNÜM NOKTASI</span>
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-display font-black text-white" id="txtContractMainTitle">
+          Milli Davet ve İlk Profesyonel Teklifler!
+        </h2>
+        <p class="text-xs text-slate-300" id="txtContractMainDesc">
+          Mahalledeki şovun federasyonun ve kulüp gözlemcilerinin gözünden kaçmadı. Ülken seni U-15/U-17 kadrosuna çağırdı! Masanda ise kariyerini başlatacak 3 farklı kulüp sözleşmesi duruyor.
+        </p>
+      </div>
+
+      <!-- 3 Offers Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-left" id="contractOffersGrid">
+        <!-- Generated dynamically via JS -->
+      </div>
+
+    </section>
+
+    <!-- =====================================================================
+         SCREEN 7: CAREER SEASONS (Ages 17 to 40 Progression)
+         ===================================================================== -->
+    <section id="screenSeasons" class="hidden space-y-5 text-center max-w-xl mx-auto w-full py-2">
+      
+      <!-- Season Header Card -->
+      <div class="p-4 rounded-2xl bg-pitch-900 border border-pitch-700 shadow-xl flex items-center justify-between gap-3 text-left">
+        <div>
+          <div class="text-[10px] text-emerald-400 font-mono font-bold uppercase" id="seasonSubHead">SEZON BAŞLIYOR</div>
+          <h3 class="text-lg font-display font-black text-white flex items-center gap-2" id="seasonTitle">
+            <span>2028 - 2029 Sezonu</span>
+          </h3>
+        </div>
+        <div class="text-right">
+          <div class="text-xs font-mono font-bold text-amber-300" id="seasonClubDisplay">🦁 Galatasaray A.Ş.</div>
+          <div class="text-[10px] text-slate-400" id="seasonSalaryDisplay">Maaş: €120.000 / Yıl</div>
+        </div>
+      </div>
+
+      <!-- Yearly Story Timeline Container -->
+      <div class="space-y-3 text-left" id="seasonEventsFeed">
+        <!-- Dynamically populated year event cards -->
+      </div>
+
+      <!-- Floating or Docked Action Bar: Play Critical Match vs Next Year -->
+      <div class="pt-2 flex flex-wrap items-center justify-center gap-3">
+        <button id="btnPlaySeasonMatch" class="flex-1 py-3.5 px-6 rounded-2xl bg-gradient-to-r from-emerald-500 via-emerald-400 to-lime-400 text-pitch-950 font-display font-black text-sm uppercase tracking-wide shadow-xl shadow-emerald-500/25 active:scale-95 transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-gamepad"></i>
+          <span id="txtBtnPlayMatch">SEZONUN MAÇINA ÇIK</span>
+        </button>
+
+        <button id="btnAdvanceSeasonYear" class="py-3.5 px-5 rounded-2xl bg-pitch-800 hover:bg-pitch-700 text-slate-200 border border-pitch-700 font-display font-bold text-xs uppercase tracking-wide transition flex items-center gap-1.5 shadow">
+          <span id="txtBtnNextSeason">Sezonu Tamamla</span>
+          <i class="fa-solid fa-forward-step text-emerald-400"></i>
+        </button>
+      </div>
+
+    </section>
+
+    <!-- =====================================================================
+         SCREEN 8: RETIREMENT & JUBILEE CARD (Kariyer Sonu Karnesi)
+         ===================================================================== -->
+    <section id="screenRetirement" class="hidden space-y-4 text-center max-w-lg mx-auto w-full py-4">
+      
+      <div class="space-y-1">
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs font-mono font-bold">
+          <span>🏆 EFSANE JÜBİLE KARNESİ</span>
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-display font-black text-white" id="txtRetireTitle">
+          Kramponları Asma Vakti Geldi
+        </h2>
+        <p class="text-xs text-slate-300" id="txtRetireDesc">
+          Mahalleden başlayan serüven dünya kupalarına, Altın Ayakkabılara ve efsaneleşen bir jübileye dönüştü.
+        </p>
+      </div>
+
+      <!-- Collectible Final Digital Card -->
+      <div id="jubileeCardBox" class="p-5 rounded-3xl bg-gradient-to-b from-pitch-900 via-pitch-950 to-pitch-900 border-2 border-amber-500/60 shadow-2xl space-y-4 text-left relative overflow-hidden">
+        
+        <div class="flex items-center justify-between border-b border-pitch-800 pb-3">
+          <div class="flex items-center gap-3">
+            <div id="retireFlag" class="text-3xl">🇹🇷</div>
+            <div>
+              <h3 id="retirePlayerName" class="text-lg font-display font-black text-white">Yeni Oyuncu</h3>
+              <div class="text-[11px] text-amber-400 font-mono font-semibold" id="retirePlayerSub">Forvet (ST) • 40 Yaş Jübile</div>
+            </div>
+          </div>
+          <div class="w-11 h-11 rounded-2xl bg-amber-500/20 text-amber-300 flex items-center justify-center font-display font-black text-lg border border-amber-500/40 shadow" id="retirePeakOvr">
+            89
+          </div>
+        </div>
+
+        <!-- Career Statistics Grid -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs">
+          <div class="p-2.5 rounded-xl bg-pitch-950 border border-pitch-800">
+            <div class="text-[9px] text-slate-400 uppercase font-semibold">Toplam Maç</div>
+            <div id="retireTotalMatches" class="font-display font-black text-white text-base">642</div>
+          </div>
+          <div class="p-2.5 rounded-xl bg-pitch-950 border border-pitch-800">
+            <div class="text-[9px] text-slate-400 uppercase font-semibold" id="lblRetireStat2">Toplam Gol</div>
+            <div id="retireTotalGoals" class="font-display font-black text-emerald-400 text-base">384</div>
+          </div>
+          <div class="p-2.5 rounded-xl bg-pitch-950 border border-pitch-800">
+            <div class="text-[9px] text-slate-400 uppercase font-semibold">Kupalar</div>
+            <div id="retireTotalTrophies" class="font-display font-black text-yellow-300 text-base">14 🏆</div>
+          </div>
+          <div class="p-2.5 rounded-xl bg-pitch-950 border border-pitch-800">
+            <div class="text-[9px] text-slate-400 uppercase font-semibold">Toplam Servet</div>
+            <div id="retireTotalWealth" class="font-display font-black text-amber-300 text-base">€48M</div>
+          </div>
+        </div>
+
+        <!-- Awards List (Altın Ayakkabı, Altın Eldiven, Ballon d'Or) -->
+        <div class="p-3 rounded-xl bg-pitch-950/80 border border-pitch-800 space-y-1">
+          <div class="text-[10px] text-amber-400 font-bold uppercase tracking-wider">Kazanılan Bireysel Ödüller</div>
+          <div id="retireAwardsList" class="flex flex-wrap gap-1.5 text-xs">
+            <!-- Dynamically populated awards badges -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Action Buttons: Share vs Restart -->
+      <div class="flex flex-col sm:flex-row gap-2.5 pt-1">
+        <button id="btnShareWhatsApp" class="flex-1 py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase transition flex items-center justify-center gap-1.5 shadow">
+          <i class="fa-brands fa-whatsapp text-sm"></i>
+          <span>WhatsApp'ta Paylaş</span>
+        </button>
+
+        <button id="btnPlayAgain" class="flex-1 py-3 px-4 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-slate-200 font-bold text-xs uppercase transition border border-pitch-700 flex items-center justify-center gap-1.5">
+          <i class="fa-solid fa-rotate-right text-emerald-400"></i>
+          <span>Yeni Kariyere Başla</span>
+        </button>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Sound Engine, Canvas Game Engine & Career Orchestration Scripts -->
+  <script>
+    /* =====================================================================
+       1. DATA DEFINITIONS: COUNTRIES, CLUBS, AWARDS
+       ===================================================================== */
+    const COUNTRIES = [
+      { code: 'TR', nameTr: 'Türkiye', nameEn: 'Turkey', flag: '🇹🇷', rep: 80 },
+      { code: 'BR', nameTr: 'Brezilya', nameEn: 'Brazil', flag: '🇧🇷', rep: 95 },
+      { code: 'AR', nameTr: 'Arjantin', nameEn: 'Argentina', flag: '🇦🇷', rep: 94 },
+      { code: 'DE', nameTr: 'Almanya', nameEn: 'Germany', flag: '🇩🇪', rep: 92 },
+      { code: 'FR', nameTr: 'Fransa', nameEn: 'France', flag: '🇫🇷', rep: 93 },
+      { code: 'EN', nameTr: 'İngiltere', nameEn: 'England', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', rep: 92 },
+      { code: 'ES', nameTr: 'İspanya', nameEn: 'Spain', flag: '🇪🇸', rep: 92 },
+      { code: 'IT', nameTr: 'İtalya', nameEn: 'Italy', flag: '🇮🇹', rep: 90 },
+      { code: 'PT', nameTr: 'Portekiz', nameEn: 'Portugal', flag: '🇵🇹', rep: 89 },
+      { code: 'NL', nameTr: 'Hollanda', nameEn: 'Netherlands', flag: '🇳🇱', rep: 88 },
+      { code: 'BE', nameTr: 'Belçika', nameEn: 'Belgium', flag: '🇧🇪', rep: 85 },
+      { code: 'HR', nameTr: 'Hırvatistan', nameEn: 'Croatia', flag: '🇭🇷', rep: 84 },
+      { code: 'UY', nameTr: 'Uruguay', nameEn: 'Uruguay', flag: '🇺🇾', rep: 84 },
+      { code: 'MA', nameTr: 'Fas', nameEn: 'Morocco', flag: '🇲🇦', rep: 82 },
+      { code: 'JP', nameTr: 'Japonya', nameEn: 'Japan', flag: '🇯🇵', rep: 80 },
+      { code: 'KR', nameTr: 'Güney Kore', nameEn: 'South Korea', flag: '🇰🇷', rep: 79 },
+      { code: 'CO', nameTr: 'Kolombiya', nameEn: 'Colombia', flag: '🇨🇴', rep: 80 },
+      { code: 'SN', nameTr: 'Senegal', nameEn: 'Senegal', flag: '🇸🇳', rep: 80 },
+      { code: 'NO', nameTr: 'Norveç', nameEn: 'Norway', flag: '🇳🇴', rep: 80 },
+      { code: 'SE', nameTr: 'İsveç', nameEn: 'Sweden', flag: '🇸🇪', rep: 78 }
+    ];
+
+    const SKIN_TONES = ['#f8d5b8', '#e0ac69', '#c68642', '#8d5524', '#3d2314'];
+
+    const CLUB_TIERS = {
+      starterOffers: [
+        { nameTr: 'Anadolu Yıldızı SK', nameEn: 'Anatolia Stars FC', badge: '⚡', rep: 60, salary: 25000, descTr: 'İlk 11 garantisi, doğrudan gelişim fırsatı!', descEn: 'Guaranteed starter role & fast match growth!' },
+        { nameTr: 'Başkent Akademi GSK', nameEn: 'Capital Academy FC', badge: '🦁', rep: 68, salary: 35000, descTr: 'Modern tesisler, yüksek prestij, kıyasıya forma savaşı.', descEn: 'Top facilities, fierce squad competition.' },
+        { nameTr: 'Genk Sporting (Yurtdışı)', nameEn: 'Genk Sporting (Overseas)', badge: '🦅', rep: 74, salary: 60000, descTr: 'Avrupa yetenek avcısı kulüp, döviz maaş ve vitrin.', descEn: 'European scout haven, higher wage & exposure.' }
+      ],
+      eliteClubs: [
+        { name: 'Real Madrid CF', badge: '👑', minOvr: 84, salary: 12000000 },
+        { name: 'Manchester City', badge: '🌊', minOvr: 83, salary: 11000000 },
+        { name: 'Bayern München', badge: '🔴', minOvr: 82, salary: 9500000 },
+        { name: 'Inter Milano', badge: '🔵', minOvr: 80, salary: 7000000 },
+        { name: 'Paris Saint-Germain', badge: '🗼', minOvr: 81, salary: 10500000 },
+        { name: 'Arsenal FC', badge: '🔴', minOvr: 80, salary: 6500000 },
+        { name: 'Galatasaray A.Ş.', badge: '🦁', minOvr: 75, salary: 3500000 },
+        { name: 'Fenerbahçe SK', badge: '🟡', minOvr: 75, salary: 3500000 }
+      ]
+    };
+
+    /* =====================================================================
+       2. GLOBAL STATE & SOUND ENGINE
+       ===================================================================== */
+    let currentLang = 'TR';
+    let soundEnabled = true;
+    let audioCtx = null;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    const Sound = {
+      play(freq, type, duration, gainVal = 0.15) {
+        if (!soundEnabled) return;
+        try {
+          initAudio();
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+          gain.gain.setValueAtTime(gainVal, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start();
+          osc.stop(audioCtx.currentTime + duration);
+        } catch (e) {}
+      },
+      whistle() {
+        if (!soundEnabled) return;
+        this.play(2400, 'sine', 0.2, 0.2);
+        setTimeout(() => this.play(2800, 'sine', 0.4, 0.25), 180);
+      },
+      kick() {
+        this.play(120, 'triangle', 0.12, 0.35);
+      },
+      postHit() {
+        this.play(800, 'square', 0.15, 0.25);
+      },
+      saveGlove() {
+        this.play(220, 'sawtooth', 0.18, 0.3);
+      },
+      goal() {
+        if (!soundEnabled) return;
+        this.play(440, 'triangle', 0.2, 0.25);
+        setTimeout(() => this.play(660, 'triangle', 0.3, 0.3), 150);
+        setTimeout(() => this.play(880, 'sine', 0.5, 0.35), 300);
+      }
+    };
+
+    /* Player State */
+    let player = {
+      nick: 'Yeni Oyuncu',
+      country: COUNTRIES[0],
+      position: 'ST', // ST, CAM, WNG, GK
+      jerseyNumber: 9,
+      skinTone: SKIN_TONES[1],
+      hairModel: 'short',
+      hairColor: '#1c1917',
+      age: 12,
+      ovr: 55,
+      club: { name: 'Mahalle Sahası', badge: '🏡', salary: 0 },
+      wealth: 0,
+      stats: {
+        matches: 0,
+        goals: 0,
+        assists: 0,
+        saves: 0,
+        trophies: 0
+      },
+      awards: []
+    };
+
+    /* =====================================================================
+       3. SAVE / LOAD ENGINE (Bayrak Oyunu Mantığıyla Kalıcı Cihaz Kaydı)
+       ===================================================================== */
+    const SAVE_KEY = 'nss_career_save_v1';
+
+    function saveCareer() {
+      try {
+        localStorage.setItem(SAVE_KEY, JSON.stringify(player));
+      } catch (e) {}
+      updateHUD();
+    }
+
+    function loadSavedCareer() {
+      try {
+        const raw = localStorage.getItem(SAVE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed && parsed.nick) {
+            player = parsed;
+            return true;
+          }
+        }
+      } catch (e) {}
+      return false;
+    }
+
+    function checkExistingSave() {
+      const exists = loadSavedCareer();
+      const resumeBtn = document.getElementById('btnResumeCareer');
+      const inputNick = document.getElementById('inputPlayerNick');
+
+      if (exists && player.age >= 12) {
+        resumeBtn.classList.remove('hidden');
+        document.getElementById('txtBtnResume').textContent = 
+          currentLang === 'TR' 
+            ? `${player.nick} ile Devam Et (${player.age} Yaş • ${player.club.name})`
+            : `Resume with ${player.nick} (Age ${player.age} • ${player.club.name})`;
+        inputNick.value = player.nick;
+      } else {
+        resumeBtn.classList.add('hidden');
+        inputNick.value = `Oyuncu_${Math.floor(100 + Math.random() * 900)}`;
+        player.nick = inputNick.value;
+      }
+    }
+
+    /* =====================================================================
+       4. AVATAR RENDERER (SVG DYNAMIC PREVIEW)
+       ===================================================================== */
+    function renderAvatarSvg() {
+      const svg = document.getElementById('svgAvatar');
+      if (!svg) return;
+
+      const skin = player.skinTone || SKIN_TONES[1];
+      const hairCol = player.hairColor || '#1c1917';
+      const isGK = player.position === 'GK';
+      const jerseyCol = isGK ? '#f59e0b' : '#10b981'; // Yellow for keeper, Green for outfield
+
+      let hairSvg = '';
+      if (player.hairModel === 'short') {
+        hairSvg = `<path d="M 30 35 Q 50 18 70 35 Q 72 26 50 22 Q 28 26 30 35 Z" fill="${hairCol}"/>`;
+      } else if (player.hairModel === 'curly') {
+        hairSvg = `
+          <circle cx="34" cy="28" r="8" fill="${hairCol}"/>
+          <circle cx="50" cy="24" r="9" fill="${hairCol}"/>
+          <circle cx="66" cy="28" r="8" fill="${hairCol}"/>
+          <circle cx="28" cy="36" r="6" fill="${hairCol}"/>
+          <circle cx="72" cy="36" r="6" fill="${hairCol}"/>
+        `;
+      } else if (player.hairModel === 'mohawk') {
+        hairSvg = `<path d="M 44 14 L 56 14 L 54 36 L 46 36 Z" fill="${hairCol}"/>`;
+      } else if (player.hairModel === 'long') {
+        hairSvg = `
+          <path d="M 28 35 Q 50 16 72 35 Q 78 55 70 65 L 66 40 Q 50 25 34 40 L 30 65 Z" fill="${hairCol}"/>
+        `;
+      }
+
+      svg.innerHTML = `
+        <!-- Background -->
+        <circle cx="50" cy="50" r="48" fill="#06130b"/>
+        
+        <!-- Jersey Shoulders -->
+        <path d="M 20 88 Q 50 74 80 88 L 84 100 L 16 100 Z" fill="${jerseyCol}"/>
+        <!-- Jersey Collar & Number -->
+        <path d="M 42 77 Q 50 85 58 77 Z" fill="#ffffff" opacity="0.8"/>
+        <text x="50" y="96" font-family="'Chakra Petch', sans-serif" font-weight="900" font-size="11" fill="#ffffff" text-anchor="middle">${player.jerseyNumber}</text>
+
+        <!-- Neck -->
+        <rect x="44" y="62" width="12" height="16" fill="${skin}"/>
+
+        <!-- Head / Face -->
+        <ellipse cx="50" cy="46" rx="20" ry="24" fill="${skin}"/>
+        
+        <!-- Eyes -->
+        <ellipse cx="43" cy="45" rx="2.5" ry="3.5" fill="#1c1917"/>
+        <ellipse cx="57" cy="45" rx="2.5" ry="3.5" fill="#1c1917"/>
+        <circle cx="44" cy="44" r="0.8" fill="#ffffff"/>
+        <circle cx="58" cy="44" r="0.8" fill="#ffffff"/>
+
+        <!-- Eyebrows -->
+        <path d="M 39 40 Q 43 38 47 40" stroke="${hairCol}" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+        <path d="M 53 40 Q 57 38 61 40" stroke="${hairCol}" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+
+        <!-- Nose & Smile -->
+        <path d="M 49 48 L 51 51 L 48 52" stroke="#a16207" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+        <path d="M 45 56 Q 50 61 55 56" stroke="#1c1917" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+
+        <!-- Ears -->
+        <circle cx="30" cy="46" r="4" fill="${skin}"/>
+        <circle cx="70" cy="46" r="4" fill="${skin}"/>
+
+        <!-- Hair -->
+        ${hairSvg}
+      `;
+
+      // Update badge label
+      const badge = document.getElementById('previewPlayerTitle');
+      if (badge) {
+        badge.textContent = `${player.position} • #${player.jerseyNumber}`;
+      }
+    }
+
+    function setPlayerPosition(pos) {
+      player.position = pos;
+      document.querySelectorAll('.pos-btn').forEach(btn => {
+        if (btn.getAttribute('data-pos') === pos) {
+          btn.classList.add('border-emerald-500', 'bg-pitch-900');
+          btn.classList.remove('border-pitch-700', 'bg-pitch-950');
+        } else {
+          btn.classList.remove('border-emerald-500', 'bg-pitch-900');
+          btn.classList.add('border-pitch-700', 'bg-pitch-950');
+        }
+      });
+      renderAvatarSvg();
+    }
+
+    function initSkinPalette() {
+      const container = document.getElementById('skinPaletteGroup');
+      if (!container) return;
+      container.innerHTML = '';
+      SKIN_TONES.forEach((color, idx) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `w-7 h-7 rounded-full border-2 transition ${player.skinTone === color ? 'border-emerald-400 scale-110 shadow-lg' : 'border-pitch-700 hover:scale-105'}`;
+        btn.style.backgroundColor = color;
+        btn.onclick = () => {
+          player.skinTone = color;
+          initSkinPalette();
+          renderAvatarSvg();
+        };
+        container.appendChild(btn);
+      });
+    }
+
+    /* =====================================================================
+       5. HUD UPDATER
+       ===================================================================== */
+    function updateHUD() {
+      document.getElementById('hudCountryFlag').textContent = player.country.flag;
+      document.getElementById('hudPlayerName').textContent = player.nick;
+      document.getElementById('hudAge').textContent = currentLang === 'TR' ? `${player.age} Yaşında` : `Age ${player.age}`;
+      document.getElementById('hudPosBadge').textContent = player.position;
+      document.getElementById('hudClubBadge').textContent = player.club.badge || '⚽';
+      document.getElementById('hudClubName').textContent = player.club.name;
+      
+      const isGK = player.position === 'GK';
+      document.getElementById('hudStatIcon').className = isGK ? 'fa-solid fa-mitten text-xs text-amber-400' : 'fa-solid fa-futbol text-xs text-emerald-400';
+      document.getElementById('hudStatTitle').textContent = isGK ? (currentLang === 'TR' ? 'Kurtarış' : 'Saves') : (currentLang === 'TR' ? 'Gol / Asist' : 'Goals / Assists');
+      document.getElementById('hudStats').textContent = isGK ? `${player.stats.saves} Kurtarış` : `${player.stats.goals} Gol`;
+
+      document.getElementById('hudTrophies').textContent = `${player.stats.trophies} Kupa`;
+      document.getElementById('hudBankBalance').textContent = `€${player.wealth.toLocaleString('tr-TR')}`;
+      document.getElementById('hudRatingBox').textContent = player.ovr;
+    }
+
+    /* =====================================================================
+       6. INTERACTIVE MATCH CANVAS ENGINE (Shoot or Goalkeeper Save!)
+       ===================================================================== */
+    let canvas, ctx;
+    let canvasWidth, canvasHeight;
+    let isDragging = false;
+    let dragStart = { x: 0, y: 0 };
+    let dragCurrent = { x: 0, y: 0 };
+
+    let ball = { x: 300, y: 350, z: 0, vx: 0, vy: 0, vz: 0, radius: 11, inFlight: false, scored: false, saved: false };
+    let goalkeeper = { x: 300, y: 155, width: 44, height: 60, vx: 2 };
+    let gloves = { x: 300, y: 220, radius: 24, dragging: false };
+    let matchMode = 'SHOOT'; // 'SHOOT' or 'SAVE'
+    let currentMatchCallback = null;
+
+    function initMatchCanvas(mode, callback) {
+      matchMode = mode;
+      currentMatchCallback = callback;
+
+      canvas = document.getElementById('matchCanvas');
+      ctx = canvas.getContext('2d');
+      canvasWidth = canvas.width;
+      canvasHeight = canvas.height;
+
+      // Reset Ball & Actors
+      ball.x = canvasWidth / 2;
+      ball.y = canvasHeight - 60;
+      ball.z = 0;
+      ball.vx = 0;
+      ball.vy = 0;
+      ball.vz = 0;
+      ball.inFlight = false;
+      ball.scored = false;
+      ball.saved = false;
+
+      goalkeeper.x = canvasWidth / 2;
+      goalkeeper.y = 150;
+      goalkeeper.vx = (Math.random() > 0.5 ? 2.2 : -2.2);
+
+      gloves.x = canvasWidth / 2;
+      gloves.y = 200;
+
+      const overlay = document.getElementById('canvasInstructionOverlay');
+      const promptTxt = document.getElementById('txtCanvasPrompt');
+      overlay.classList.remove('hidden');
+
+      if (matchMode === 'SHOOT') {
+        promptTxt.textContent = currentLang === 'TR' ? '⚽ Topu geriye çekip nişan al ve fırlat!' : '⚽ Drag ball backward to aim & release!';
+      } else {
+        promptTxt.textContent = currentLang === 'TR' ? '🧤 Rakip vuruyor! Eldivenleri topun önüne sürükle!' : '🧤 Incoming shot! Drag gloves to block the ball!';
+        // In GK mode, shot fires automatically after 1.2s!
+        setTimeout(() => {
+          if (!ball.inFlight && matchMode === 'SAVE') {
+            shootBallAtGoalKeeper();
+          }
+        }, 1200);
+      }
+
+      setupCanvasEvents();
+      requestAnimationFrame(renderCanvasLoop);
+    }
+
+    function shootBallAtGoalKeeper() {
+      ball.inFlight = true;
+      Sound.kick();
+      const targetX = canvasWidth * 0.25 + Math.random() * (canvasWidth * 0.5);
+      const targetY = 120 + Math.random() * 80;
+      ball.vx = (targetX - ball.x) / 32;
+      ball.vy = (targetY - ball.y) / 32;
+    }
+
+    function setupCanvasEvents() {
+      const getPos = (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        return {
+          x: (clientX - rect.left) * (canvas.width / rect.width),
+          y: (clientY - rect.top) * (canvas.height / rect.height)
+        };
+      };
+
+      canvas.onmousedown = canvas.ontouchstart = (e) => {
+        e.preventDefault();
+        const pos = getPos(e);
+        document.getElementById('canvasInstructionOverlay').classList.add('hidden');
+
+        if (matchMode === 'SHOOT' && !ball.inFlight) {
+          const dist = Math.hypot(pos.x - ball.x, pos.y - ball.y);
+          if (dist < 50) {
+            isDragging = true;
+            dragStart = { x: ball.x, y: ball.y };
+            dragCurrent = pos;
+          }
+        } else if (matchMode === 'SAVE') {
+          gloves.dragging = true;
+          gloves.x = pos.x;
+          gloves.y = pos.y;
+        }
+      };
+
+      window.onmousemove = window.ontouchmove = (e) => {
+        if (!canvas) return;
+        const pos = getPos(e);
+        if (isDragging && matchMode === 'SHOOT') {
+          dragCurrent = pos;
+        } else if (gloves.dragging && matchMode === 'SAVE') {
+          gloves.x = Math.max(120, Math.min(canvasWidth - 120, pos.x));
+          gloves.y = Math.max(100, Math.min(260, pos.y));
+        }
+      };
+
+      window.onmouseup = window.ontouchend = (e) => {
+        if (isDragging && matchMode === 'SHOOT' && !ball.inFlight) {
+          isDragging = false;
+          // Calculate launch vector (pull-back slingshot)
+          const dx = dragStart.x - dragCurrent.x;
+          const dy = dragStart.y - dragCurrent.y;
+          const power = Math.min(Math.hypot(dx, dy), 120);
+
+          if (power > 15) {
+            ball.inFlight = true;
+            ball.vx = (dx / power) * (power * 0.18);
+            ball.vy = (dy / power) * (power * 0.18);
+            Sound.kick();
+          }
+        }
+        if (matchMode === 'SAVE') {
+          gloves.dragging = false;
+        }
+      };
+    }
+
+    function renderCanvasLoop() {
+      if (!canvas || !ctx) return;
+
+      // 1. Clear & Draw Pitch
+      ctx.fillStyle = '#0a2315';
+      ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+      // Grass Stripes
+      for (let y = 0; y < canvasHeight; y += 40) {
+        ctx.fillStyle = ((y / 40) % 2 === 0) ? 'rgba(34, 197, 94, 0.04)' : 'rgba(0, 0, 0, 0.05)';
+        ctx.fillRect(0, y, canvasWidth, 40);
+      }
+
+      // 2. Draw Goal Frame (2.5D Perspective)
+      const goalLeft = 140;
+      const goalRight = canvasWidth - 140;
+      const goalTop = 100;
+      const goalBottom = 220;
+
+      // Goal Net
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.12)';
+      ctx.fillRect(goalLeft, goalTop, goalRight - goalLeft, goalBottom - goalTop);
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.18)';
+      ctx.lineWidth = 1;
+      for (let x = goalLeft; x <= goalRight; x += 15) {
+        ctx.beginPath(); ctx.moveTo(x, goalTop); ctx.lineTo(x, goalBottom); ctx.stroke();
+      }
+      for (let y = goalTop; y <= goalBottom; y += 15) {
+        ctx.beginPath(); ctx.moveTo(goalLeft, y); ctx.lineTo(goalRight, y); ctx.stroke();
+      }
+
+      // Goal Posts (White Heavy)
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 6;
+      ctx.strokeRect(goalLeft, goalTop, goalRight - goalLeft, goalBottom - goalTop);
+
+      // Penalty Spot & Box Lines
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(90, 180, canvasWidth - 180, canvasHeight);
+
+      // 3. Actors: Goalkeeper & AI Movement
+      if (matchMode === 'SHOOT') {
+        goalkeeper.x += goalkeeper.vx;
+        if (goalkeeper.x < goalLeft + 35 || goalkeeper.x > goalRight - 35) {
+          goalkeeper.vx *= -1;
+        }
+
+        // Draw AI Goalkeeper
+        ctx.fillStyle = '#f59e0b'; // Gold GK shirt
+        ctx.fillRect(goalkeeper.x - 14, goalkeeper.y, 28, 45);
+        ctx.fillStyle = '#f8d5b8'; // Face
+        ctx.beginPath(); ctx.arc(goalkeeper.x, goalkeeper.y - 8, 9, 0, Math.PI * 2); ctx.fill();
+        // Arms
+        ctx.strokeStyle = '#f59e0b'; ctx.lineWidth = 4;
+        ctx.beginPath(); ctx.moveTo(goalkeeper.x - 14, goalkeeper.y + 10); ctx.lineTo(goalkeeper.x - 22, goalkeeper.y); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(goalkeeper.x + 14, goalkeeper.y + 10); ctx.lineTo(goalkeeper.x + 22, goalkeeper.y); ctx.stroke();
+      }
+
+      // In GK Mode: Draw Player Gloves
+      if (matchMode === 'SAVE') {
+        ctx.fillStyle = '#f59e0b';
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 2.5;
+        // Left Glove
+        ctx.beginPath(); ctx.arc(gloves.x - 16, gloves.y, 14, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+        // Right Glove
+        ctx.beginPath(); ctx.arc(gloves.x + 16, gloves.y, 14, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 10px sans-serif';
+        ctx.fillText('🧤', gloves.x - 7, gloves.y + 4);
+      }
+
+      // 4. Slingshot Aiming Line (When dragging)
+      if (isDragging) {
+        ctx.strokeStyle = '#22c55e';
+        ctx.lineWidth = 3;
+        ctx.setLineDash([6, 6]);
+        ctx.beginPath();
+        ctx.moveTo(ball.x, ball.y);
+        ctx.lineTo(ball.x + (dragStart.x - dragCurrent.x) * 1.5, ball.y + (dragStart.y - dragCurrent.y) * 1.5);
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+
+      // 5. Ball Physics & Flight
+      if (ball.inFlight) {
+        ball.x += ball.vx;
+        ball.y += ball.vy;
+
+        // Collision Check in SHOOT mode
+        if (matchMode === 'SHOOT') {
+          // Check collision with AI Goalkeeper
+          const distGK = Math.hypot(ball.x - goalkeeper.x, ball.y - (goalkeeper.y + 20));
+          if (distGK < 30 && !ball.saved && !ball.scored) {
+            ball.saved = true;
+            ball.vx = (Math.random() - 0.5) * 5;
+            ball.vy = 4;
+            Sound.saveGlove();
+            showMatchSplash(false, 'KALECİ ÇIKARDI!', 'Harika uzandı ve topu kornere çeldi');
+          }
+
+          // Goal Check
+          if (ball.y <= goalBottom && ball.y >= goalTop && ball.x >= goalLeft && ball.x <= goalRight && !ball.saved && !ball.scored) {
+            ball.scored = true;
+            ball.vx *= 0.2;
+            ball.vy *= 0.2;
+            Sound.goal();
+            showMatchSplash(true, 'GOOOOOOOL!', '90’a Mükemmel Bir Şut!');
+          } else if (ball.y < goalTop || ball.x < 40 || ball.x > canvasWidth - 40) {
+            if (!ball.scored && !ball.saved) {
+              ball.saved = true;
+              Sound.postHit();
+              showMatchSplash(false, 'AUT!', 'Top az farkla direğin yanından auta gitti');
+            }
+          }
+        }
+
+        // Collision Check in SAVE mode (Player is Goalkeeper)
+        if (matchMode === 'SAVE') {
+          const distGlove = Math.hypot(ball.x - gloves.x, ball.y - gloves.y);
+          if (distGlove < 34 && !ball.saved && !ball.scored) {
+            ball.saved = true;
+            ball.vx = (Math.random() - 0.5) * 6;
+            ball.vy = -3;
+            Sound.saveGlove();
+            showMatchSplash(true, 'MÜTHİŞ KURTARIŞ!', '90’a giden topu eldivenlerinle çeldin!');
+          } else if (ball.y <= goalBottom && ball.y >= goalTop && ball.x >= goalLeft && ball.x <= goalRight && !ball.saved && !ball.scored) {
+            ball.scored = true;
+            Sound.goal();
+            showMatchSplash(false, 'GOL OLDU...', 'Top ağlarla buluştu, toparlanmalısın');
+          }
+        }
+      }
+
+      // Draw Ball
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#1c1917';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      // Ball Pentagons
+      ctx.fillStyle = '#0f172a';
+      ctx.beginPath();
+      ctx.arc(ball.x, ball.y, 4, 0, Math.PI * 2);
+      ctx.fill();
+
+      if (!ball.scored && !ball.saved) {
+        requestAnimationFrame(renderCanvasLoop);
+      }
+    }
+
+    function showMatchSplash(success, title, desc) {
+      const splash = document.getElementById('matchFeedbackSplash');
+      const iconEl = document.getElementById('splashIcon');
+      const titleEl = document.getElementById('splashTitle');
+      const descEl = document.getElementById('splashDesc');
+
+      splash.classList.remove('hidden');
+      iconEl.textContent = success ? (player.position === 'GK' ? '🧤' : '⚽') : '❌';
+      titleEl.textContent = title;
+      descEl.textContent = desc;
+
+      if (success) {
+        if (player.position === 'GK') player.stats.saves++;
+        else player.stats.goals++;
+        player.ovr = Math.min(99, player.ovr + 1);
+        saveCareer();
+      }
+
+      setTimeout(() => {
+        splash.classList.add('hidden');
+        if (currentMatchCallback) {
+          currentMatchCallback(success);
+        }
+      }, 1600);
+    }
+
+    /* =====================================================================
+       7. SCREEN ROUTING & PROGRESSION
+       ===================================================================== */
+    const SCREENS = ['screenWelcome', 'screenCountry', 'screenCharacter', 'screenStreetIntro', 'screenMatchPlay', 'screenContracts', 'screenSeasons', 'screenRetirement'];
+
+    function showScreen(screenId) {
+      SCREENS.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          if (id === screenId) el.classList.remove('hidden');
+          else el.classList.add('hidden');
+        }
+      });
+
+      // Show/Hide Career HUD
+      const hud = document.getElementById('careerHud');
+      if (['screenStreetIntro', 'screenMatchPlay', 'screenContracts', 'screenSeasons'].includes(screenId)) {
+        hud.classList.remove('hidden');
+        updateHUD();
+      } else {
+        hud.classList.add('hidden');
+      }
+
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+
+    /* =====================================================================
+       8. INITIALIZATION & EVENT HANDLERS
+       ===================================================================== */
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Initial State Check
+      checkExistingSave();
+      initSkinPalette();
+      renderAvatarSvg();
+
+      // Sound Toggle
+      document.getElementById('btnSoundToggle').addEventListener('click', () => {
+        soundEnabled = !soundEnabled;
+        const icon = document.getElementById('soundIcon');
+        const txt = document.getElementById('txtSoundLabel');
+        if (soundEnabled) {
+          icon.className = 'fa-solid fa-volume-high text-emerald-400';
+          txt.textContent = currentLang === 'TR' ? 'Ses Açık' : 'Sound On';
+        } else {
+          icon.className = 'fa-solid fa-volume-xmark text-slate-500';
+          txt.textContent = currentLang === 'TR' ? 'Sessiz' : 'Muted';
+        }
+      });
+
+      // Language Toggle
+      document.getElementById('btnLangToggle').addEventListener('click', () => {
+        currentLang = currentLang === 'TR' ? 'EN' : 'TR';
+        document.getElementById('langCurrent').textContent = currentLang;
+        checkExistingSave();
+        updateHUD();
+      });
+
+      // Save Nick
+      document.getElementById('btnSaveNick').addEventListener('click', () => {
+        const val = document.getElementById('inputPlayerNick').value.trim();
+        if (val) {
+          player.nick = val;
+          saveCareer();
+          Sound.whistle();
+          alert(currentLang === 'TR' ? `Oyuncu adı "${player.nick}" olarak kaydedildi!` : `Player name saved as "${player.nick}"!`);
+        }
+      });
+
+      // Resume Career
+      document.getElementById('btnResumeCareer').addEventListener('click', () => {
+        Sound.whistle();
+        if (player.age < 16) {
+          showScreen('screenStreetIntro');
+        } else if (player.age < 38) {
+          showScreen('screenSeasons');
+          renderSeasonScreen();
+        } else {
+          showScreen('screenRetirement');
+          renderRetirementScreen();
+        }
+      });
+
+      // Start New Career
+      document.getElementById('btnStartNewCareer').addEventListener('click', () => {
+        Sound.whistle();
+        const inputNick = document.getElementById('inputPlayerNick').value.trim();
+        player.nick = inputNick || 'Yeni Oyuncu';
+        showScreen('screenCountry');
+        initCountryStage();
+      });
+
+      // Home / Reset
+      document.getElementById('btnNavHome').addEventListener('click', () => {
+        showScreen('screenWelcome');
+        checkExistingSave();
+      });
+
+      // Stage 2: Character Customization Listeners
+      document.getElementById('selectHairModel').addEventListener('change', (e) => {
+        player.hairModel = e.target.value;
+        renderAvatarSvg();
+      });
+      document.getElementById('selectHairColor').addEventListener('change', (e) => {
+        player.hairColor = e.target.value;
+        renderAvatarSvg();
+      });
+      document.getElementById('inputJerseyNumber').addEventListener('input', (e) => {
+        player.jerseyNumber = Math.max(1, Math.min(99, parseInt(e.target.value) || 9));
+        renderAvatarSvg();
+      });
+      document.getElementById('btnRandomizeChar').addEventListener('click', () => {
+        Sound.whistle();
+        player.skinTone = SKIN_TONES[Math.floor(Math.random() * SKIN_TONES.length)];
+        const models = ['short', 'curly', 'mohawk', 'long', 'bald'];
+        player.hairModel = models[Math.floor(Math.random() * models.length)];
+        const colors = ['#1c1917', '#573a24', '#d4a373', '#eab308', '#dc2626'];
+        player.hairColor = colors[Math.floor(Math.random() * colors.length)];
+        player.jerseyNumber = Math.floor(1 + Math.random() * 98);
+        document.getElementById('selectHairModel').value = player.hairModel;
+        document.getElementById('selectHairColor').value = player.hairColor;
+        document.getElementById('inputJerseyNumber').value = player.jerseyNumber;
+        initSkinPalette();
+        renderAvatarSvg();
+      });
+
+      // Start 12 Year Old Street Intro
+      document.getElementById('btnStartCareerAge12').addEventListener('click', () => {
+        Sound.whistle();
+        player.age = 12;
+        player.club = { name: currentLang === 'TR' ? 'Mahalle Sahası' : 'Street Ground', badge: '🏡', salary: 0 };
+        saveCareer();
+        showScreen('screenStreetIntro');
+      });
+
+      // Play First Street Match
+      document.getElementById('btnPlayStreetMatch').addEventListener('click', () => {
+        showScreen('screenMatchPlay');
+        initMatchCanvas(player.position === 'GK' ? 'SAVE' : 'SHOOT', (success) => {
+          // After street match, fast-forward to age 16 turning point!
+          player.age = 16;
+          player.ovr += success ? 5 : 2;
+          saveCareer();
+          showScreen('screenContracts');
+          renderContractOffers();
+        });
+      });
+
+      // Skip Position Button
+      document.getElementById('btnSkipPosition').addEventListener('click', () => {
+        showMatchSplash(Math.random() > 0.4, 'SİMÜLE EDİLDİ', 'Pozisyon hızlıca tamamlandı.');
+      });
+
+      // Season Play Match
+      document.getElementById('btnPlaySeasonMatch').addEventListener('click', () => {
+        showScreen('screenMatchPlay');
+        initMatchCanvas(player.position === 'GK' ? 'SAVE' : 'SHOOT', (success) => {
+          showScreen('screenSeasons');
+          renderSeasonScreen();
+        });
+      });
+
+      // Advance Season Year
+      document.getElementById('btnAdvanceSeasonYear').addEventListener('click', () => {
+        Sound.kick();
+        player.age++;
+        player.stats.matches += Math.floor(30 + Math.random() * 8);
+        const goalsThisYear = player.position === 'GK' ? 0 : Math.floor(12 + Math.random() * 22);
+        const savesThisYear = player.position === 'GK' ? Math.floor(40 + Math.random() * 30) : 0;
+        player.stats.goals += goalsThisYear;
+        player.stats.saves += savesThisYear;
+        player.wealth += player.club.salary || 40000;
+
+        // Check Trophy & Awards
+        if (Math.random() > 0.6) {
+          player.stats.trophies++;
+        }
+        if (goalsThisYear > 25 && !player.awards.includes('Altın Ayakkabı 🥇')) {
+          player.awards.push('Altın Ayakkabı 🥇');
+        }
+        if (savesThisYear > 55 && !player.awards.includes('Altın Eldiven 🧤')) {
+          player.awards.push('Altın Eldiven 🧤');
+        }
+        if (player.ovr >= 85 && !player.awards.includes('Ballon d\'Or ⭐')) {
+          player.awards.push('Ballon d\'Or ⭐');
+        }
+
+        saveCareer();
+
+        if (player.age >= 38) {
+          showScreen('screenRetirement');
+          renderRetirementScreen();
+        } else {
+          renderSeasonScreen();
+        }
+      });
+
+      // Play Again
+      document.getElementById('btnPlayAgain').addEventListener('click', () => {
+        localStorage.removeItem(SAVE_KEY);
+        showScreen('screenWelcome');
+        checkExistingSave();
+      });
+
+      // Share WhatsApp
+      document.getElementById('btnShareWhatsApp').addEventListener('click', () => {
+        const text = `⭐ Next Star Soccer'da (NSS) efsane kariyerimi tamamladım!\n` +
+          `👤 Oyuncu: ${player.nick} (${player.country.flag})\n` +
+          `⚽ Mevki: ${player.position} • Yaş: ${player.age} (Jübile)\n` +
+          `📊 İstatistik: ${player.stats.matches} Maç • ${player.stats.goals} Gol • ${player.stats.saves} Kurtarış\n` +
+          `🏆 Kupalar: ${player.stats.trophies} Kupa • Servet: €${player.wealth.toLocaleString('tr-TR')}\n` +
+          `Sen de kendi futbol efsaneni yarat: https://pratikbase.com/next-star-soccer/`;
+        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+      });
+    });
+
+    /* =====================================================================
+       9. COUNTRY PICKER LOGIC
+       ===================================================================== */
+    function initCountryStage() {
+      const grid = document.getElementById('countryListGrid');
+      grid.innerHTML = '';
+
+      COUNTRIES.forEach(c => {
+        const btn = document.createElement('button');
+        btn.className = 'p-2 rounded-xl bg-pitch-950 hover:bg-pitch-800 border border-pitch-800 flex items-center gap-2 text-left text-xs transition';
+        btn.innerHTML = `<span class="text-xl">${c.flag}</span> <span class="font-bold text-white truncate">${currentLang === 'TR' ? c.nameTr : c.nameEn}</span>`;
+        btn.onclick = () => selectCountry(c);
+        grid.appendChild(btn);
+      });
+
+      // Tabs: Random vs Manual
+      const tabR = document.getElementById('tabCountryRandom');
+      const tabM = document.getElementById('tabCountryManual');
+      const boxR = document.getElementById('boxCountryRandom');
+      const boxM = document.getElementById('boxCountryManual');
+
+      tabR.onclick = () => {
+        tabR.className = 'flex-1 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition bg-emerald-500 text-pitch-950 flex items-center justify-center gap-1.5';
+        tabM.className = 'flex-1 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition text-slate-400 hover:text-white flex items-center justify-center gap-1.5';
+        boxR.classList.remove('hidden');
+        boxM.classList.add('hidden');
+      };
+
+      tabM.onclick = () => {
+        tabM.className = 'flex-1 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition bg-emerald-500 text-pitch-950 flex items-center justify-center gap-1.5';
+        tabR.className = 'flex-1 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition text-slate-400 hover:text-white flex items-center justify-center gap-1.5';
+        boxM.classList.remove('hidden');
+        boxR.classList.add('hidden');
+      };
+
+      // Random Spin
+      document.getElementById('btnSpinCountry').onclick = () => {
+        let count = 0;
+        const max = 12;
+        const flagEl = document.getElementById('rouletteFlag');
+        const nameEl = document.getElementById('rouletteName');
+        const interval = setInterval(() => {
+          count++;
+          Sound.kick();
+          const r = COUNTRIES[Math.floor(Math.random() * COUNTRIES.length)];
+          flagEl.textContent = r.flag;
+          nameEl.textContent = currentLang === 'TR' ? r.nameTr : r.nameEn;
+          if (count >= max) {
+            clearInterval(interval);
+            const final = COUNTRIES[Math.floor(Math.random() * COUNTRIES.length)];
+            selectCountry(final);
+          }
+        }, 80);
+      };
+
+      // Search Filter
+      document.getElementById('searchCountryInput').oninput = (e) => {
+        const query = e.target.value.toLowerCase();
+        Array.from(grid.children).forEach(btn => {
+          const match = btn.textContent.toLowerCase().includes(query);
+          btn.style.display = match ? 'flex' : 'none';
+        });
+      };
+    }
+
+    function selectCountry(c) {
+      player.country = c;
+      Sound.goal();
+      const card = document.getElementById('selectedCountryCard');
+      card.classList.remove('hidden');
+      document.getElementById('selectedFlag').textContent = c.flag;
+      document.getElementById('selectedName').textContent = currentLang === 'TR' ? c.nameTr : c.nameEn;
+
+      document.getElementById('btnConfirmCountry').onclick = () => {
+        Sound.whistle();
+        showScreen('screenCharacter');
+        renderAvatarSvg();
+      };
+    }
+
+    /* =====================================================================
+       10. CONTRACT OFFERS (16 Yaşında 3 Teklif)
+       ===================================================================== */
+    function renderContractOffers() {
+      const grid = document.getElementById('contractOffersGrid');
+      grid.innerHTML = '';
+
+      CLUB_TIERS.starterOffers.forEach((club, idx) => {
+        const card = document.createElement('div');
+        card.className = 'p-4 rounded-2xl bg-pitch-900 border border-pitch-700 hover:border-emerald-500 shadow-xl flex flex-col justify-between space-y-3 transition group text-left';
+        card.innerHTML = `
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-3xl">${club.badge}</span>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-pitch-950 text-emerald-400 font-bold border border-pitch-800">Teklif #${idx + 1}</span>
+            </div>
+            <h4 class="font-display font-black text-white text-base">${currentLang === 'TR' ? club.nameTr : club.nameEn}</h4>
+            <p class="text-xs text-slate-400 leading-relaxed">${currentLang === 'TR' ? club.descTr : club.descEn}</p>
+          </div>
+          <div class="pt-2 border-t border-pitch-800 space-y-2">
+            <div class="text-xs font-mono font-bold text-amber-300">Yıllık Maaş: €${club.salary.toLocaleString('tr-TR')}</div>
+            <button class="w-full py-2.5 rounded-xl bg-emerald-500 group-hover:bg-emerald-400 text-pitch-950 font-bold text-xs uppercase transition shadow">
+              Sözleşme İmzala ✍️
+            </button>
+          </div>
+        `;
+        card.querySelector('button').onclick = () => {
+          Sound.whistle();
+          player.club = { name: currentLang === 'TR' ? club.nameTr : club.nameEn, badge: club.badge, salary: club.salary };
+          player.age = 17;
+          saveCareer();
+          showScreen('screenSeasons');
+          renderSeasonScreen();
+        };
+        grid.appendChild(card);
+      });
+    }
+
+    /* =====================================================================
+       11. SEASONS PROGRESSION (Ages 17 to 38)
+       ===================================================================== */
+    function renderSeasonScreen() {
+      document.getElementById('seasonTitle').textContent = `${2026 + (player.age - 16)} - ${2027 + (player.age - 16)} Sezonu (Yaş: ${player.age})`;
+      document.getElementById('seasonClubDisplay').textContent = `${player.club.badge} ${player.club.name}`;
+      document.getElementById('seasonSalaryDisplay').textContent = `Maaş: €${(player.club.salary || 30000).toLocaleString('tr-TR')} / Yıl`;
+
+      const feed = document.getElementById('seasonEventsFeed');
+      feed.innerHTML = `
+        <div class="p-4 rounded-2xl bg-pitch-900/90 border border-pitch-800 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-emerald-400">🔥 Sezon İlerlemesi</span>
+            <span class="text-[10px] text-slate-400 font-mono">${player.stats.matches} Toplam Maç</span>
+          </div>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            ${player.club.name} formasıyla taraftarların sevgilisi haline geldin. Bu sezon takımın kaderini belirleyecek dev bir lig derbisi seni bekliyor!
+          </p>
+        </div>
+      `;
+
+      // Check Transfer Offers if player has high OVR
+      if (player.ovr >= 78 && Math.random() > 0.5) {
+        const elite = CLUB_TIERS.eliteClubs[Math.floor(Math.random() * CLUB_TIERS.eliteClubs.length)];
+        if (elite.name !== player.club.name) {
+          const offerCard = document.createElement('div');
+          offerCard.className = 'p-3.5 rounded-2xl bg-gradient-to-r from-amber-950/60 to-pitch-900 border-2 border-amber-500/60 flex items-center justify-between gap-3';
+          offerCard.innerHTML = `
+            <div class="flex items-center gap-2.5">
+              <span class="text-3xl">${elite.badge}</span>
+              <div>
+                <div class="text-[10px] text-amber-400 font-bold uppercase">DEV TRANSFER TEKLİFİ!</div>
+                <div class="text-sm font-display font-black text-white">${elite.name}</div>
+                <div class="text-[10px] text-slate-400">Maaş: €${elite.salary.toLocaleString('tr-TR')}</div>
+              </div>
+            </div>
+            <button class="px-3 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-pitch-950 font-bold text-xs uppercase shadow transition shrink-0">
+              Kabul Et
+            </button>
+          `;
+          offerCard.querySelector('button').onclick = () => {
+            Sound.whistle();
+            player.club = { name: elite.name, badge: elite.badge, salary: elite.salary };
+            saveCareer();
+            renderSeasonScreen();
+          };
+          feed.prepend(offerCard);
+        }
+      }
+    }
+
+    /* =====================================================================
+       12. RETIREMENT & JUBILEE SCREEN
+       ===================================================================== */
+    function renderRetirementScreen() {
+      document.getElementById('retireFlag').textContent = player.country.flag;
+      document.getElementById('retirePlayerName').textContent = player.nick;
+      document.getElementById('retirePlayerSub').textContent = `${player.position} • ${player.age} Yaş Jübile`;
+      document.getElementById('retirePeakOvr').textContent = player.ovr;
+      document.getElementById('retireTotalMatches').textContent = player.stats.matches;
+      
+      const isGK = player.position === 'GK';
+      document.getElementById('lblRetireStat2').textContent = isGK ? 'Toplam Kurtarış' : 'Toplam Gol';
+      document.getElementById('retireTotalGoals').textContent = isGK ? player.stats.saves : player.stats.goals;
+
+      document.getElementById('retireTotalTrophies').textContent = `${player.stats.trophies} 🏆`;
+      document.getElementById('retireTotalWealth').textContent = `€${player.wealth.toLocaleString('tr-TR')}`;
+
+      const awardsContainer = document.getElementById('retireAwardsList');
+      awardsContainer.innerHTML = '';
+      if (player.awards.length === 0) {
+        player.awards.push('Kulüp Efsanesi 🎖️');
+      }
+      player.awards.forEach(a => {
+        const badge = document.createElement('span');
+        badge.className = 'px-2 py-0.5 rounded-md bg-pitch-900 border border-pitch-700 text-[11px] font-bold text-amber-300';
+        badge.textContent = a;
+        awardsContainer.appendChild(badge);
+      });
+    }
+  </script>
+
+  <!-- Realtime Analytics Tracker -->
+  <script src="/assets/tracker.js" defer></script>
+</body>
+</html>
