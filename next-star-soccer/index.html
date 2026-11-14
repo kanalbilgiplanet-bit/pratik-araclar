@@ -391,18 +391,18 @@
         <div class="flex-1 space-y-3 text-left w-full">
           <label class="block text-xs font-bold text-slate-300" id="lblChoosePos">Mevki Seçimi:</label>
           <div class="grid grid-cols-2 gap-2" id="positionButtonGroup">
-            <button onclick="setPlayerPosition('ST')" class="pos-btn p-2 rounded-xl border border-pitch-700 bg-pitch-950 text-left hover:border-emerald-500 transition active" data-pos="ST">
+            <button onclick="setPlayerPosition('ST')" class="pos-btn p-2 rounded-xl border-2 border-emerald-500 bg-pitch-900 text-left transition" data-pos="ST">
               <div class="text-xs font-black text-white flex items-center justify-between">
                 <span>⚽ Forvet (ST)</span>
-                <span class="text-[10px] text-emerald-400">Golcü</span>
+                <span class="text-[10px] text-emerald-400 font-bold">SEÇİLİ</span>
               </div>
-              <div class="text-[10px] text-slate-400">Şut & Bitiricilik</div>
+              <div class="text-[10px] text-slate-300">Şut & Bitiricilik</div>
             </button>
 
             <button onclick="setPlayerPosition('CAM')" class="pos-btn p-2 rounded-xl border border-pitch-700 bg-pitch-950 text-left hover:border-emerald-500 transition" data-pos="CAM">
               <div class="text-xs font-black text-white flex items-center justify-between">
                 <span>🎩 10 Numara</span>
-                <span class="text-[10px] text-emerald-400">Oyun Kurucu</span>
+                <span class="text-[10px] text-slate-400">Oyun Kurucu</span>
               </div>
               <div class="text-[10px] text-slate-400">Verkaç & Frikik</div>
             </button>
@@ -410,17 +410,17 @@
             <button onclick="setPlayerPosition('WNG')" class="pos-btn p-2 rounded-xl border border-pitch-700 bg-pitch-950 text-left hover:border-emerald-500 transition" data-pos="WNG">
               <div class="text-xs font-black text-white flex items-center justify-between">
                 <span>⚡ Kanat (LW/RW)</span>
-                <span class="text-[10px] text-emerald-400">Fırtına</span>
+                <span class="text-[10px] text-slate-400">Fırtına</span>
               </div>
               <div class="text-[10px] text-slate-400">Orta & Falso</div>
             </button>
 
-            <button onclick="setPlayerPosition('GK')" class="pos-btn p-2 rounded-xl border-2 border-amber-500/60 bg-amber-950/20 text-left hover:border-amber-400 transition" data-pos="GK">
-              <div class="text-xs font-black text-amber-300 flex items-center justify-between">
+            <button onclick="setPlayerPosition('GK')" class="pos-btn p-2 rounded-xl border border-pitch-700 bg-pitch-950 text-left hover:border-amber-400 transition" data-pos="GK">
+              <div class="text-xs font-black text-slate-300 flex items-center justify-between">
                 <span>🧤 Kaleci (GK)</span>
                 <span class="text-[10px] text-amber-400 font-bold">ÖZEL</span>
               </div>
-              <div class="text-[10px] text-amber-200/80">Eldivenle Kurtarış</div>
+              <div class="text-[10px] text-slate-400">Eldivenle Kurtarış</div>
             </button>
           </div>
         </div>
@@ -1178,12 +1178,15 @@
     function setPlayerPosition(pos) {
       player.position = pos;
       document.querySelectorAll('.pos-btn').forEach(btn => {
-        if (btn.getAttribute('data-pos') === pos) {
-          btn.classList.add('border-emerald-500', 'bg-pitch-900');
-          btn.classList.remove('border-pitch-700', 'bg-pitch-950');
+        const btnPos = btn.getAttribute('data-pos');
+        if (btnPos === pos) {
+          if (pos === 'GK') {
+            btn.className = 'pos-btn p-2 rounded-xl border-2 border-amber-500 bg-amber-950/40 text-left transition';
+          } else {
+            btn.className = 'pos-btn p-2 rounded-xl border-2 border-emerald-500 bg-pitch-900 text-left transition';
+          }
         } else {
-          btn.classList.remove('border-emerald-500', 'bg-pitch-900');
-          btn.classList.add('border-pitch-700', 'bg-pitch-950');
+          btn.className = 'pos-btn p-2 rounded-xl border border-pitch-700 bg-pitch-950 text-left hover:border-emerald-500 transition';
         }
       });
       renderAvatarSvg();
@@ -1693,6 +1696,7 @@
     document.addEventListener('DOMContentLoaded', () => {
       checkExistingSave();
       initSkinPalette();
+      setPlayerPosition(player.position || 'ST');
       renderAvatarSvg();
 
       // Sound Toggle
@@ -1750,6 +1754,8 @@
         Sound.whistle();
         const inputNick = document.getElementById('inputPlayerNick').value.trim();
         player.nick = inputNick || 'Yeni Oyuncu';
+        player.position = 'ST';
+        setPlayerPosition('ST');
         showScreen('screenCountry');
         initCountryStage();
       });
@@ -2013,6 +2019,7 @@
       document.getElementById('btnConfirmCountry').onclick = () => {
         Sound.whistle();
         showScreen('screenCharacter');
+        setPlayerPosition(player.position || 'ST');
         renderAvatarSvg();
       };
     }
