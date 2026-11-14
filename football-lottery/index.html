@@ -298,7 +298,7 @@
         
         <!-- Player & Age -->
         <div class="p-2 rounded-xl bg-pitch-950/70 border border-pitch-800 flex items-center gap-2.5 text-left">
-          <div id="hudCountryFlag" class="text-2xl shrink-0">🇧🇷</div>
+          <div id="hudCountryFlag" class="w-8 h-8 rounded-lg bg-pitch-950/80 border border-pitch-700/80 flex items-center justify-center shrink-0 overflow-hidden text-lg">🇧🇷</div>
           <div class="min-w-0">
             <div id="hudPlayerName" class="font-bold text-white truncate text-[13px]">Gabriel Santos</div>
             <div class="text-[11px] text-emerald-400 font-mono font-semibold flex items-center gap-1">
@@ -531,8 +531,8 @@
       <div id="bornRevealBanner" class="p-6 rounded-3xl bg-gradient-to-r from-pitch-900 via-pitch-800 to-pitch-900 border border-emerald-500/40 shadow-2xl relative overflow-hidden">
         <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
           <div class="flex items-center gap-4 text-left">
-            <div id="revealFlag" class="text-5xl sm:text-6xl p-3 rounded-2xl bg-pitch-950 border border-pitch-700 shrink-0">
-              🇧🇷
+            <div id="revealFlag" class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-pitch-950 border border-pitch-700/80 shrink-0 flex items-center justify-center p-2 shadow-inner overflow-hidden">
+              <span class="text-4xl sm:text-5xl">🇧🇷</span>
             </div>
             <div>
               <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[11px] font-mono font-bold mb-1 border border-emerald-500/30">
@@ -610,27 +610,28 @@
           <span id="txtPlayAgain" class="whitespace-nowrap">YENİDEN BİR HAYAT ÇEK</span>
         </button>
 
-        <!-- 2. Secondary Share & Export Bar (Equal 4-Column Balanced Grid) -->
-        <div class="grid grid-cols-4 gap-2">
-          <button id="btnDownloadCard" class="py-2.5 px-1.5 sm:px-2 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-lg shadow-cyan-500/20 active:scale-95 transition" title="Jübile Kartını Görsel Olarak İndir / Paylaş">
+        <!-- 2. Secondary Share & Export Bar (Clean 3-Column Grid) -->
+        <div class="grid grid-cols-3 gap-2">
+          <button id="btnDownloadCard" class="py-2.5 px-2 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-lg shadow-cyan-500/20 active:scale-95 transition" title="Jübile Kartını HD Görsel (PNG) Olarak İndir / Paylaş">
             <i class="fa-solid fa-download text-xs"></i>
-            <span id="txtDownloadCard" class="truncate text-[11px] sm:text-xs">Kartı İndir</span>
+            <span id="txtDownloadCard" class="truncate text-[11px] sm:text-xs">HD Kartı İndir</span>
           </button>
 
-          <button id="btnShareToWall" class="py-2.5 px-1.5 sm:px-2 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-pitch-950 font-display font-black text-xs flex items-center justify-center gap-1.5 shadow-lg shadow-amber-500/25 active:scale-95 transition" title="Efsaneler Duvarında Paylaş">
+          <button id="btnShareToWall" class="py-2.5 px-2 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-pitch-950 font-display font-black text-xs flex items-center justify-center gap-1.5 shadow-lg shadow-amber-500/25 active:scale-95 transition" title="Efsaneler Duvarında Paylaş">
             <i class="fa-solid fa-crown text-xs"></i>
             <span id="txtShareWall" class="truncate text-[11px] sm:text-xs">Duvara Ekle</span>
           </button>
 
-          <button id="btnShareWhatsApp" class="py-2.5 px-1.5 sm:px-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-600/20 active:scale-95 transition" title="WhatsApp Paylaş">
+          <button id="btnShareWhatsApp" class="py-2.5 px-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-600/20 active:scale-95 transition" title="WhatsApp Paylaş">
             <i class="fa-brands fa-whatsapp text-sm"></i>
             <span id="txtShareWA" class="truncate text-[11px] sm:text-xs">WhatsApp</span>
           </button>
+        </div>
 
-          <button id="btnCopyResult" class="py-2.5 px-1.5 sm:px-2 rounded-xl bg-pitch-900 hover:bg-pitch-800 text-slate-300 hover:text-white font-bold text-xs border border-pitch-700 active:scale-95 transition flex items-center justify-center gap-1.5" title="Kopyala">
-            <i class="fa-solid fa-copy text-xs"></i>
-            <span id="txtCopyResult" class="truncate text-[11px] sm:text-xs">Kopyala</span>
-          </button>
+        <!-- Explanatory helper note for downloading the card -->
+        <div class="text-[11px] text-slate-400 text-center flex items-center justify-center gap-1.5 px-2 py-1 rounded-lg bg-pitch-950/60 border border-pitch-800/60">
+          <i class="fa-solid fa-image text-cyan-400 text-[10px]"></i>
+          <span id="txtCardDownloadHint">Kartını HD görsel (PNG) olarak indirip Instagram hikayelerinde veya arkadaş gruplarında paylaşabilirsin.</span>
         </div>
 
         <!-- 3. Versus Mode CTA: Arkadaşına Meydan Oku -->
@@ -718,7 +719,7 @@
           <!-- Card Header Decor -->
           <div class="flex items-center justify-between border-b border-pitch-800 pb-2.5">
             <div class="flex items-center gap-2.5">
-              <span id="cardFlag" class="text-3xl">🇧🇷</span>
+              <div id="cardFlag" class="w-11 h-11 rounded-xl bg-pitch-950 border border-pitch-800 flex items-center justify-center shrink-0 overflow-hidden text-2xl">🇧🇷</div>
               <div>
                 <div id="cardPlayerName" class="font-display font-black text-lg text-white leading-tight">GABRIEL SILVA</div>
                 <div class="text-[11px] text-amber-400 font-mono font-bold" id="cardSubTitle">SANTRAFOR (ST) • 1986-2026</div>
@@ -1191,26 +1192,106 @@
        2. DATABASE & DATA MODELS (SAFE PARODY & DEMOGRAPHICS)
        ===================================================================== */
     const COUNTRIES = [
-      { nameTr: 'Brezilya', nameEn: 'Brazil', flag: '🇧🇷', weight: 8.5, footballRating: 95, firstNames: ['Gabriel', 'Lucas', 'Thiago', 'Matheus', 'Felipe', 'Vinicius', 'Rodrigo', 'Arthur'], lastNames: ['Silva', 'Santos', 'Oliveira', 'Souza', 'Pereira', 'Lima', 'Costa'] },
-      { nameTr: 'Arjantin', nameEn: 'Argentina', flag: '🇦🇷', weight: 5.5, footballRating: 94, firstNames: ['Mateo', 'Agustin', 'Lautaro', 'Julian', 'Enzo', 'Tomas', 'Facundo'], lastNames: ['Rodriguez', 'Gonzalez', 'Fernandez', 'Lopez', 'Martinez', 'Romero'] },
-      { nameTr: 'Fransa', nameEn: 'France', flag: '🇫🇷', weight: 6.0, footballRating: 93, firstNames: ['Antoine', 'Kylian', 'Theo', 'Lucas', 'Maxime', 'Hugo', 'Adrien'], lastNames: ['Dubois', 'Laurent', 'Moreau', 'Fournier', 'Girard', 'Mercier'] },
-      { nameTr: 'Almanya', nameEn: 'Germany', flag: '🇩🇪', weight: 5.0, footballRating: 92, firstNames: ['Lukas', 'Maximilian', 'Felix', 'Jonas', 'Leon', 'Florian'], lastNames: ['Müller', 'Schmidt', 'Schneider', 'Fischer', 'Weber', 'Meyer'] },
-      { nameTr: 'İngiltere', nameEn: 'England', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', weight: 5.5, footballRating: 92, firstNames: ['Harry', 'Oliver', 'George', 'Jack', 'Charlie', 'James', 'Mason'], lastNames: ['Smith', 'Jones', 'Taylor', 'Brown', 'Williams', 'Walker'] },
-      { nameTr: 'İspanya', nameEn: 'Spain', flag: '🇪🇸', weight: 5.0, footballRating: 92, firstNames: ['Alejandro', 'Pablo', 'Alvaro', 'David', 'Sergio', 'Daniel'], lastNames: ['Garcia', 'Martinez', 'Sanchez', 'Perez', 'Gomez', 'Ruiz'] },
-      { nameTr: 'Türkiye', nameEn: 'Turkey', flag: '🇹🇷', weight: 6.5, footballRating: 82, firstNames: ['Arda', 'Barış', 'Semih', 'Kerem', 'Emre', 'Yusuf', 'Can', 'Eren'], lastNames: ['Yılmaz', 'Kaya', 'Demir', 'Çelik', 'Şahin', 'Yıldız', 'Öztürk'] },
-      { nameTr: 'Portekiz', nameEn: 'Portugal', flag: '🇵🇹', weight: 4.0, footballRating: 90, firstNames: ['Bernardo', 'Ruben', 'Joao', 'Diogo', 'Rafael', 'Gonçalo'], lastNames: ['Silva', 'Santos', 'Ferreira', 'Pereira', 'Oliveira'] },
-      { nameTr: 'İtalya', nameEn: 'Italy', flag: '🇮🇹', weight: 4.5, footballRating: 89, firstNames: ['Lorenzo', 'Federico', 'Nicolo', 'Alessandro', 'Gianluca', 'Matteo'], lastNames: ['Rossi', 'Russo', 'Ferrari', 'Esposito', 'Bianchi', 'Romano'] },
-      { nameTr: 'Hollanda', nameEn: 'Netherlands', flag: '🇳🇱', weight: 3.5, footballRating: 88, firstNames: ['Frenkie', 'Cody', 'Denzel', 'Tijjani', 'Marten', 'Quinten'], lastNames: ['de Jong', 'van Dijk', 'Jansen', 'Bakker', 'Visser', 'Smit'] },
-      { nameTr: 'Nijerya', nameEn: 'Nigeria', flag: '🇳🇬', weight: 7.0, footballRating: 80, firstNames: ['Victor', 'Samuel', 'Kelechi', 'Ademola', 'Chidera', 'Oluwaseun'], lastNames: ['Osimhen', 'Chukwueze', 'Nwankwo', 'Okafor', 'Balogun'] },
-      { nameTr: 'Fas', nameEn: 'Morocco', flag: '🇲🇦', weight: 3.5, footballRating: 84, firstNames: ['Achraf', 'Hakim', 'Sofyan', 'Yassine', 'Azzedine', 'Bilal'], lastNames: ['Hakimi', 'Ziyech', 'Amrabat', 'Bounou', 'En-Nesyri'] },
-      { nameTr: 'Japonya', nameEn: 'Japan', flag: '🇯🇵', weight: 4.0, footballRating: 81, firstNames: ['Takefusa', 'Kaoru', 'Daichi', 'Wataru', 'Ritsu', 'Takumi'], lastNames: ['Kubo', 'Mitoma', 'Kamada', 'Endo', 'Doan', 'Minamino'] },
-      { nameTr: 'Güney Kore', nameEn: 'South Korea', flag: '🇰🇷', weight: 3.0, footballRating: 80, firstNames: ['Heung-min', 'Kang-in', 'Min-jae', 'Hee-chan', 'Gue-sung'], lastNames: ['Kim', 'Lee', 'Park', 'Choi', 'Son', 'Jung'] },
-      { nameTr: 'Uruguay', nameEn: 'Uruguay', flag: '🇺🇾', weight: 2.0, footballRating: 87, firstNames: ['Federico', 'Darwin', 'Ronald', 'Manuel', 'Rodrigo', 'Facundo'], lastNames: ['Valverde', 'Nunez', 'Araujo', 'Bentancur', 'Ugarte'] },
-      { nameTr: 'Hırvatistan', nameEn: 'Croatia', flag: '🇭🇷', weight: 2.0, footballRating: 86, firstNames: ['Luka', 'Mateo', 'Josko', 'Dominik', 'Lovro', 'Borna'], lastNames: ['Modric', 'Kovacic', 'Gvardiol', 'Livakovic', 'Majer', 'Sosa'] },
-      { nameTr: 'Norveç', nameEn: 'Norway', flag: '🇳🇴', weight: 2.0, footballRating: 82, firstNames: ['Erling', 'Martin', 'Alexander', 'Sander', 'Kristoffer'], lastNames: ['Haaland', 'Odegaard', 'Sorloth', 'Berge', 'Ajer'] },
-      { nameTr: 'Kolombiya', nameEn: 'Colombia', flag: '🇨🇴', weight: 3.5, footballRating: 82, firstNames: ['Luis', 'James', 'Jhon', 'Davinson', 'Yaser', 'Richard'], lastNames: ['Diaz', 'Rodriguez', 'Duran', 'Sanchez', 'Asprilla', 'Rios'] },
-      { nameTr: 'ABD', nameEn: 'USA', flag: '🇺🇸', weight: 5.0, footballRating: 77, firstNames: ['Christian', 'Weston', 'Tyler', 'Timothy', 'Folarin', 'Gio'], lastNames: ['Pulisic', 'McKennie', 'Adams', 'Weah', 'Balogun', 'Reyna'] },
-      { nameTr: 'San Marino', nameEn: 'San Marino', flag: '🇸🇲', weight: 0.2, footballRating: 30, firstNames: ['Matteo', 'Filippo', 'Alessandro', 'Nicola', 'Andrea'], lastNames: ['Vitaioli', 'Nanni', 'Ceccaroli', 'Battistini', 'Mularoni'] }
+      { 
+        nameTr: 'Brezilya', nameEn: 'Brazil', flag: '🇧🇷', weight: 8.5, footballRating: 95, 
+        firstNames: ['Gabriel', 'Lucas', 'Thiago', 'Matheus', 'Felipe', 'Vinicius', 'Rodrigo', 'Arthur', 'Neymar', 'Rodrygo', 'Endrick', 'Casemiro', 'Alisson', 'Ederson', 'Richarlison', 'Antony', 'Raphinha', 'Marquinhos', 'Danilo', 'Paquetá', 'Bruno', 'Douglas', 'Renan', 'Luiz', 'Caio', 'Igor', 'Murillo', 'Vitor', 'Savinho', 'Joao'], 
+        lastNames: ['Silva', 'Santos', 'Oliveira', 'Souza', 'Pereira', 'Lima', 'Costa', 'Ferreira', 'Rodrigues', 'Alves', 'Nascimento', 'Ribeiro', 'Carvalho', 'Gomes', 'Martins', 'Araujo', 'Barbosa', 'Teixeira', 'Cardoso', 'Guimarães', 'Roque', 'Magalhães', 'Militão'] 
+      },
+      { 
+        nameTr: 'Arjantin', nameEn: 'Argentina', flag: '🇦🇷', weight: 5.5, footballRating: 94, 
+        firstNames: ['Mateo', 'Agustin', 'Lautaro', 'Julian', 'Enzo', 'Tomas', 'Facundo', 'Lionel', 'Angel', 'Rodrigo', 'Alexis', 'Emiliano', 'Cristian', 'Nahuel', 'Nicolas', 'Alejandro', 'Thiago', 'Valentin', 'Franco', 'Leandro', 'Guido', 'Lucas', 'Giovanni', 'Exequiel', 'Alejo', 'Maximo'], 
+        lastNames: ['Rodriguez', 'Gonzalez', 'Fernandez', 'Lopez', 'Martinez', 'Romero', 'Perez', 'Alvarez', 'Mac Allister', 'De Paul', 'Di Maria', 'Correa', 'Acuna', 'Molina', 'Otamendi', 'Tagliafico', 'Dybala', 'Paredes', 'Palacios', 'Garnacho', 'Barco', 'Carboni'] 
+      },
+      { 
+        nameTr: 'Fransa', nameEn: 'France', flag: '🇫🇷', weight: 6.0, footballRating: 93, 
+        firstNames: ['Antoine', 'Kylian', 'Theo', 'Lucas', 'Maxime', 'Hugo', 'Adrien', 'Eduardo', 'Aurelien', 'Ousmane', 'Marcus', 'Randal', 'Kingsley', 'William', 'Ibrahima', 'Jules', 'Dayot', 'Bradley', 'Warren', 'Christopher', 'Moussa', 'Michael', 'Axel', 'Youssouf', 'Brice'], 
+        lastNames: ['Dubois', 'Laurent', 'Moreau', 'Fournier', 'Girard', 'Mercier', 'Mbappe', 'Griezmann', 'Camavinga', 'Tchouameni', 'Dembele', 'Hernandez', 'Kounde', 'Upamecano', 'Saliba', 'Konate', 'Barcola', 'Zaire-Emery', 'Coman', 'Thuram', 'Kolo Muani', 'Olise', 'Nkunku'] 
+      },
+      { 
+        nameTr: 'Almanya', nameEn: 'Germany', flag: '🇩🇪', weight: 5.0, footballRating: 92, 
+        firstNames: ['Lukas', 'Maximilian', 'Felix', 'Jonas', 'Leon', 'Florian', 'Kai', 'Jamal', 'Leroy', 'Joshua', 'Ilkay', 'Toni', 'Manuel', 'Marc', 'Antonio', 'David', 'Niclas', 'Serge', 'Robin', 'Nico', 'Waldemar', 'Maxim', 'Pascal', 'Jan', 'Alexander', 'Deniz'], 
+        lastNames: ['Müller', 'Schmidt', 'Schneider', 'Fischer', 'Weber', 'Meyer', 'Wagner', 'Becker', 'Hoffmann', 'Schäfer', 'Koch', 'Bauer', 'Richter', 'Klein', 'Wolf', 'Schröder', 'Neumann', 'Schwarz', 'Zimmermann', 'Kimmich', 'Musiala', 'Wirtz', 'Havertz', 'Rüdiger', 'Kroos', 'Gündoğan', 'Undav', 'Füllkrug'] 
+      },
+      { 
+        nameTr: 'İngiltere', nameEn: 'England', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', weight: 5.5, footballRating: 92, 
+        firstNames: ['Harry', 'Oliver', 'George', 'Jack', 'Charlie', 'James', 'Mason', 'Jude', 'Bukayo', 'Phil', 'Declan', 'Trent', 'Cole', 'Marcus', 'Kobbie', 'John', 'Kyle', 'Ollie', 'Anthony', 'Eberechi', 'Conor', 'Levi', 'Jarrod', 'Dominic', 'Rico', 'Harvey'], 
+        lastNames: ['Smith', 'Jones', 'Taylor', 'Brown', 'Williams', 'Walker', 'Kane', 'Bellingham', 'Saka', 'Foden', 'Rice', 'Alexander-Arnold', 'Palmer', 'Rashford', 'Mainoo', 'Stones', 'Pickford', 'Watkins', 'Gordon', 'Eze', 'Gallagher', 'Colwill', 'Bowen', 'Lewis', 'Elliott'] 
+      },
+      { 
+        nameTr: 'İspanya', nameEn: 'Spain', flag: '🇪🇸', weight: 5.0, footballRating: 92, 
+        firstNames: ['Alejandro', 'Pablo', 'Alvaro', 'David', 'Sergio', 'Daniel', 'Lamine', 'Pedri', 'Gavi', 'Rodri', 'Nico', 'Ferran', 'Dani', 'Mikel', 'Unai', 'Aymeric', 'Robin', 'Marc', 'Martin', 'Alex', 'Pau', 'Fabian', 'Yeremy', 'Inigo', 'Borja', 'Bryan'], 
+        lastNames: ['Garcia', 'Martinez', 'Sanchez', 'Perez', 'Gomez', 'Ruiz', 'Hernandez', 'Yamal', 'Williams', 'Morata', 'Olmo', 'Carvajal', 'Merino', 'Simon', 'Laporte', 'Le Normand', 'Cucurella', 'Zubimendi', 'Ruiz', 'Torres', 'Baena', 'Cubarsi', 'Grimaldo', 'Vivian', 'Zaragoza'] 
+      },
+      { 
+        nameTr: 'Türkiye', nameEn: 'Turkey', flag: '🇹🇷', weight: 6.5, footballRating: 82, 
+        firstNames: ['Arda', 'Barış', 'Semih', 'Kerem', 'Emre', 'Yusuf', 'Can', 'Eren', 'Hakan', 'Ferdi', 'Kenan', 'Cengiz', 'Merih', 'Çağlar', 'İrfan', 'Enes', 'Okay', 'Salih', 'Ozan', 'Altay', 'Uğurcan', 'Cenk', 'Zeki', 'Orkun', 'Bertuğ', 'Yunus', 'İsmail', 'Ahmet', 'Mehmet', 'Burak', 'Oğuz', 'Doğan', 'Taylan', 'Berkan', 'Samet'], 
+        lastNames: ['Yılmaz', 'Kaya', 'Demir', 'Çelik', 'Şahin', 'Yıldız', 'Öztürk', 'Aydın', 'Özdemir', 'Arslan', 'Doğan', 'Kılıç', 'Aslan', 'Çetin', 'Kara', 'Koç', 'Kurt', 'Özkan', 'Şimşek', 'Polat', 'Erdoğan', 'Yavuz', 'Korkmaz', 'Güler', 'Bayındır', 'Çakır', 'Aktürkoğlu', 'Yüksek', 'Kahveci', 'Kabak', 'Söyüncü', 'Demiral', 'Tosun', 'Kılıçsoy', 'Akgün'] 
+      },
+      { 
+        nameTr: 'Portekiz', nameEn: 'Portugal', flag: '🇵🇹', weight: 4.0, footballRating: 90, 
+        firstNames: ['Bernardo', 'Ruben', 'Joao', 'Diogo', 'Rafael', 'Gonçalo', 'Cristiano', 'Bruno', 'Vitinha', 'Matheus', 'Nuno', 'Pedro', 'Francisco', 'Antonio', 'Renato', 'Danilo', 'Nelson', 'Otavio', 'Fabio', 'Geovany', 'Goncalo', 'Tiago'], 
+        lastNames: ['Silva', 'Santos', 'Ferreira', 'Pereira', 'Oliveira', 'Fernandes', 'Dias', 'Cancelo', 'Leao', 'Ramos', 'Jota', 'Mendes', 'Palhinha', 'Neves', 'Inacio', 'Costa', 'Dalot', 'Conceicao', 'Neto', 'Quaresma', 'Carvalho', 'Guerreiro'] 
+      },
+      { 
+        nameTr: 'İtalya', nameEn: 'Italy', flag: '🇮🇹', weight: 4.5, footballRating: 89, 
+        firstNames: ['Lorenzo', 'Federico', 'Nicolo', 'Alessandro', 'Gianluca', 'Matteo', 'Gianluigi', 'Giacomo', 'Davide', 'Manuel', 'Riccardo', 'Bryan', 'Sandro', 'Destiny', 'Giorgio', 'Andrea', 'Samuele', 'Francesco', 'Michael', 'Cesare'], 
+        lastNames: ['Rossi', 'Russo', 'Ferrari', 'Esposito', 'Bianchi', 'Romano', 'Barella', 'Chiesa', 'Donnarumma', 'Bastoni', 'Dimarco', 'Calafiori', 'Tonali', 'Scamacca', 'Raspadori', 'Frattesi', 'Pellegrini', 'Locatelli', 'Udogie', 'Retegui', 'Gatti', 'Buongiorno'] 
+      },
+      { 
+        nameTr: 'Hollanda', nameEn: 'Netherlands', flag: '🇳🇱', weight: 3.5, footballRating: 88, 
+        firstNames: ['Frenkie', 'Cody', 'Denzel', 'Tijjani', 'Marten', 'Quinten', 'Virgil', 'Memphis', 'Xavi', 'Nathan', 'Matthijs', 'Micky', 'Jeremie', 'Teun', 'Joey', 'Brian', 'Bart', 'Donyell', 'Lutsharel', 'Stefan', 'Kenneth', 'Joshua'], 
+        lastNames: ['de Jong', 'van Dijk', 'Jansen', 'Bakker', 'Visser', 'Smit', 'Gakpo', 'Dumfries', 'Reijnders', 'Simons', 'Ake', 'de Ligt', 'van de Ven', 'Frimpong', 'Koopmeiners', 'Veerman', 'Brobbey', 'Verbruggen', 'Malen', 'Geertruida', 'de Vrij', 'Zirkzee'] 
+      },
+      { 
+        nameTr: 'Nijerya', nameEn: 'Nigeria', flag: '🇳🇬', weight: 7.0, footballRating: 80, 
+        firstNames: ['Victor', 'Samuel', 'Kelechi', 'Ademola', 'Chidera', 'Oluwaseun', 'Wilfred', 'Alex', 'Taiwo', 'Terem', 'Moses', 'Calvin', 'Bright', 'Frank', 'Semi', 'Stanley', 'Raphael', 'Cyriel', 'Nathan', 'Chuba'], 
+        lastNames: ['Osimhen', 'Chukwueze', 'Nwankwo', 'Okafor', 'Balogun', 'Lookman', 'Ndidi', 'Iwobi', 'Awoniyi', 'Moffi', 'Simon', 'Bassey', 'Osayi-Samuel', 'Onyeka', 'Ajayi', 'Nwabali', 'Onyedika', 'Dessers', 'Tella', 'Akpom'] 
+      },
+      { 
+        nameTr: 'Fas', nameEn: 'Morocco', flag: '🇲🇦', weight: 3.5, footballRating: 84, 
+        firstNames: ['Achraf', 'Hakim', 'Sofyan', 'Yassine', 'Azzedine', 'Bilal', 'Nayef', 'Noussair', 'Brahim', 'Amine', 'Youssef', 'Ismael', 'Ayoub', 'Munir', 'Selim', 'Abde', 'Eliesse', 'Amir', 'Chadi'], 
+        lastNames: ['Hakimi', 'Ziyech', 'Amrabat', 'Bounou', 'En-Nesyri', 'Ounahi', 'Aguerd', 'Mazraoui', 'Diaz', 'Adli', 'El Kaabi', 'Saibari', 'Harit', 'El Khannouss', 'Rahimi', 'Ezzalzouli', 'Ben Seghir', 'Richardson', 'Riad'] 
+      },
+      { 
+        nameTr: 'Japonya', nameEn: 'Japan', flag: '🇯🇵', weight: 4.0, footballRating: 81, 
+        firstNames: ['Takefusa', 'Kaoru', 'Daichi', 'Wataru', 'Ritsu', 'Takumi', 'Hidemasa', 'Ao', 'Ko', 'Takehiro', 'Koki', 'Keito', 'Yukinari', 'Zion', 'Ayase', 'Reo', 'Daizen', 'Shogo', 'Kosei'], 
+        lastNames: ['Kubo', 'Mitoma', 'Kamada', 'Endo', 'Doan', 'Minamino', 'Morita', 'Tanaka', 'Itakura', 'Tomiyasu', 'Ogawa', 'Nakamura', 'Sugawara', 'Suzuki', 'Ueda', 'Hatate', 'Maeda', 'Taniguchi', 'Tani'] 
+      },
+      { 
+        nameTr: 'Güney Kore', nameEn: 'South Korea', flag: '🇰🇷', weight: 3.0, footballRating: 80, 
+        firstNames: ['Heung-min', 'Kang-in', 'Min-jae', 'Hee-chan', 'Gue-sung', 'Hyun-seok', 'Woo-yeong', 'In-beom', 'Jae-sung', 'Young-woo', 'Seung-gyu', 'Hyun-gyu', 'Han-beom', 'Ji-soo'], 
+        lastNames: ['Kim', 'Lee', 'Park', 'Choi', 'Son', 'Jung', 'Hwang', 'Hong', 'Seol', 'Song', 'Bae', 'Oh', 'Lee', 'Cho'] 
+      },
+      { 
+        nameTr: 'Uruguay', nameEn: 'Uruguay', flag: '🇺🇾', weight: 2.0, footballRating: 87, 
+        firstNames: ['Federico', 'Darwin', 'Ronald', 'Manuel', 'Rodrigo', 'Facundo', 'Sergio', 'Mathias', 'Sebastian', 'Nicolas', 'Giorgian', 'Nahitan', 'Jose', 'Cristian', 'Luciano', 'Emiliano'], 
+        lastNames: ['Valverde', 'Nunez', 'Araujo', 'Bentancur', 'Ugarte', 'Rochet', 'Olivera', 'Caceres', 'de la Cruz', 'Nandez', 'Gimenez', 'Pellistri', 'Torres', 'Olivera', 'Rodriguez', 'Martinez'] 
+      },
+      { 
+        nameTr: 'Hırvatistan', nameEn: 'Croatia', flag: '🇭🇷', weight: 2.0, footballRating: 86, 
+        firstNames: ['Luka', 'Mateo', 'Josko', 'Dominik', 'Lovro', 'Borna', 'Andrej', 'Mario', 'Marcelo', 'Josip', 'Martin', 'Nikola', 'Ivan', 'Petar', 'Marco', 'Marin'], 
+        lastNames: ['Modric', 'Kovacic', 'Gvardiol', 'Livakovic', 'Majer', 'Sosa', 'Kramaric', 'Pasalic', 'Brozovic', 'Stanisic', 'Sutalo', 'Baturina', 'Vlasic', 'Perisic', 'Sucic', 'Pongracic', 'Erlic'] 
+      },
+      { 
+        nameTr: 'Norveç', nameEn: 'Norway', flag: '🇳🇴', weight: 2.0, footballRating: 82, 
+        firstNames: ['Erling', 'Martin', 'Alexander', 'Sander', 'Kristoffer', 'Antonio', 'Leo', 'Jens Petter', 'Fredrik', 'Oscar', 'Andreas', 'Jorgen', 'Orjan', 'Patrick', 'David'], 
+        lastNames: ['Haaland', 'Odegaard', 'Sorloth', 'Berge', 'Ajer', 'Nusa', 'Ostigard', 'Hauge', 'Aursnes', 'Bobb', 'Schjelderup', 'Strand Larsen', 'Nyland', 'Berg', 'Moller Wolfe'] 
+      },
+      { 
+        nameTr: 'Kolombiya', nameEn: 'Colombia', flag: '🇨🇴', weight: 3.5, footballRating: 82, 
+        firstNames: ['Luis', 'James', 'Jhon', 'Davinson', 'Yaser', 'Richard', 'Daniel', 'Camilo', 'Jefferson', 'Carlos', 'Mateus', 'Kevin', 'Jhon Elmer', 'Yerry', 'Santiago'], 
+        lastNames: ['Diaz', 'Rodriguez', 'Duran', 'Sanchez', 'Asprilla', 'Rios', 'Munoz', 'Vargas', 'Lerma', 'Arias', 'Cuesta', 'Uribe', 'Castano', 'Lucumi', 'Mina', 'Borja'] 
+      },
+      { 
+        nameTr: 'ABD', nameEn: 'USA', flag: '🇺🇸', weight: 5.0, footballRating: 77, 
+        firstNames: ['Christian', 'Weston', 'Tyler', 'Timothy', 'Folarin', 'Gio', 'Yunus', 'Antonee', 'Chris', 'Matt', 'Ricardo', 'Joe', 'Malik', 'Brenden', 'Johnny', 'Aidan', 'Patrick'], 
+        lastNames: ['Pulisic', 'McKennie', 'Adams', 'Weah', 'Balogun', 'Reyna', 'Musah', 'Robinson', 'Richards', 'Turner', 'Pepi', 'Scally', 'Tillman', 'Aaronson', 'Cardoso', 'Morris', 'Schulte'] 
+      },
+      { 
+        nameTr: 'San Marino', nameEn: 'San Marino', flag: '🇸🇲', weight: 0.2, footballRating: 30, 
+        firstNames: ['Matteo', 'Filippo', 'Alessandro', 'Nicola', 'Andrea', 'Lorenzo', 'Marcello', 'Danilo', 'Mirko', 'Roberto', 'Michele', 'Simone', 'Elia', 'Nicko', 'Giacomo'], 
+        lastNames: ['Vitaioli', 'Nanni', 'Ceccaroli', 'Battistini', 'Mularoni', 'Lazzari', 'Sensoli', 'Rinaldi', 'Palazzi', 'Golinucci', 'Berardi', 'Contadini', 'Benedettini', 'Rossi', 'Tosi'] 
+      }
     ];
 
     const POSITIONS = [
@@ -1586,7 +1667,8 @@
         jubileeSub: 'Kramponlarını astın! İşte sokaklardan dünya vitrinine uzanan 40 yıllık hayat hikayen.',
         shareWA: 'WhatsApp',
         shareWall: 'Duvara Ekle',
-        downloadCard: 'Kartı İndir',
+        downloadCard: 'HD Kartı İndir',
+        cardDownloadHint: 'Kartını HD görsel (PNG) olarak indirip Instagram hikayelerinde veya arkadaş gruplarında paylaşabilirsin.',
         downloadCardTitle: 'Jübile Kartını Görsel Olarak İndir / Paylaş',
         copyResultTitle: 'Sonucu Kopyala',
         copied: 'Kopyalandı!',
@@ -1668,7 +1750,8 @@
         jubileeSub: 'You have hung up your boots! Here is your 40-year journey from childhood alleys to world spotlight.',
         shareWA: 'WhatsApp',
         shareWall: 'Share to Wall',
-        downloadCard: 'Save Card',
+        downloadCard: 'Download HD Card',
+        cardDownloadHint: 'Export your career card as an HD image (PNG) to share on Instagram stories or group chats.',
         downloadCardTitle: 'Download or Share Jubilee Card as Image',
         copyResultTitle: 'Copy Career Summary',
         copied: 'Copied!',
@@ -1716,7 +1799,6 @@
     };
 
     // Global Country Flag Image Helper (Fixes Windows Chrome raw ISO letters like DE, BR, TR)
-    // Country Flag Image Helper (Solves Windows missing flag emoji letters like US, BR, TR)
     function getCountryFlagHtml(country, sizeClass = 'w-6 h-4.5') {
       if (!country) return '⚽';
       const codeMap = {
@@ -1743,9 +1825,9 @@
       };
       const iso = codeMap[country.nameTr] || codeMap[country.nameEn] || (country.code ? country.code.toLowerCase() : null);
       if (iso) {
-        return `<img src="https://flagcdn.com/w40/${iso}.png" alt="${country.nameTr || ''}" class="${sizeClass} rounded shadow-sm object-cover inline-block align-middle border border-pitch-700/80 shrink-0" onerror="this.outerHTML='<span class=\\'inline-block\\'>${country.flag || '⚽'}</span>';">`;
+        return `<img src="https://flagcdn.com/w80/${iso}.png" alt="${country.nameTr || ''}" class="${sizeClass} object-cover rounded shadow-sm border border-pitch-700/80 shrink-0 block m-auto" onerror="this.outerHTML='<span class=\\'inline-flex items-center justify-center\\'>${country.flag || '⚽'}</span>';">`;
       }
-      return `<span class="inline-block">${country.flag || '⚽'}</span>`;
+      return `<span class="inline-flex items-center justify-center">${country.flag || '⚽'}</span>`;
     }
 
     function formatArchetype(arch) {
@@ -1844,6 +1926,7 @@
       setIfExists('txtShareWA', 'textContent', dict.shareWA);
       setIfExists('txtShareWall', 'textContent', dict.shareWall);
       setIfExists('txtDownloadCard', 'textContent', dict.downloadCard);
+      setIfExists('txtCardDownloadHint', 'textContent', dict.cardDownloadHint);
       const downloadBtn = document.getElementById('btnDownloadCard');
       if (downloadBtn) downloadBtn.title = dict.downloadCardTitle;
       setIfExists('txtPlayAgain', 'textContent', dict.playAgain);
@@ -2222,7 +2305,7 @@
 
       // Update Reveal Banner
       const rFlagEl = document.getElementById('revealFlag');
-      if (rFlagEl) rFlagEl.innerHTML = getCountryFlagHtml(birth.country, 'w-16 h-11');
+      if (rFlagEl) rFlagEl.innerHTML = getCountryFlagHtml(birth.country, 'w-14 h-9.5 sm:w-16 sm:h-11 shadow-md');
       document.getElementById('revealCountryName').textContent = currentLang === 'TR' ? `${birth.country.nameTr}'da Doğdun` : `Born in ${birth.country.nameEn}`;
       document.getElementById('revealChance').textContent = currentLang === 'TR' ? `Olasılık: %${birth.country.weight.toFixed(1)}` : `Odds: ${birth.country.weight.toFixed(1)}%`;
       document.getElementById('revealPlayerTitle').textContent = birth.fullName;
@@ -4700,37 +4783,7 @@
     const RTDB_HOF_URL = 'https://pratikbase-default-rtdb.firebaseio.com/football_lottery_hof';
     let liveHallOfFameList = [];
 
-    // Country Flag Image Helper (Solves Windows missing flag emoji letters like US, BR, TR)
-    function getCountryFlagHtml(country, sizeClass = 'w-6 h-4.5') {
-      if (!country) return '⚽';
-      const codeMap = {
-        'Brezilya': 'br', 'Brazil': 'br',
-        'Arjantin': 'ar', 'Argentina': 'ar',
-        'Fransa': 'fr', 'France': 'fr',
-        'Almanya': 'de', 'Germany': 'de',
-        'İngiltere': 'gb-eng', 'England': 'gb-eng',
-        'İspanya': 'es', 'Spain': 'es',
-        'Türkiye': 'tr', 'Turkey': 'tr',
-        'Portekiz': 'pt', 'Portugal': 'pt',
-        'İtalya': 'it', 'Italy': 'it',
-        'Hollanda': 'nl', 'Netherlands': 'nl',
-        'Nijerya': 'ng', 'Nigeria': 'ng',
-        'Fas': 'ma', 'Morocco': 'ma',
-        'Japonya': 'jp', 'Japan': 'jp',
-        'Güney Kore': 'kr', 'South Korea': 'kr',
-        'Uruguay': 'uy', 'Uruguay': 'uy',
-        'Hırvatistan': 'hr', 'Croatia': 'hr',
-        'Norveç': 'no', 'Norway': 'no',
-        'Kolombiya': 'co', 'Colombia': 'co',
-        'ABD': 'us', 'USA': 'us',
-        'San Marino': 'sm', 'San Marino': 'sm'
-      };
-      const iso = codeMap[country.nameTr] || codeMap[country.nameEn] || (country.code ? country.code.toLowerCase() : null);
-      if (iso) {
-        return `<img src="https://flagcdn.com/w40/${iso}.png" alt="${country.nameTr || ''}" class="${sizeClass} rounded shadow-sm object-cover inline-block align-middle border border-pitch-700/80 shrink-0" onerror="this.outerHTML='<span class=\\'inline-block\\'>${country.flag || '⚽'}</span>';">`;
-      }
-      return `<span class="inline-block">${country.flag || '⚽'}</span>`;
-    }
+// (getCountryFlagHtml defined above)
 
     function formatTimeAgo(ts) {
       if (!ts) return '';
@@ -5435,7 +5488,8 @@
       });
 
       // Copy Result
-      document.getElementById('btnCopyResult').addEventListener('click', () => {
+      const copyBtnEl = document.getElementById('btnCopyResult');
+      if (copyBtnEl) copyBtnEl.addEventListener('click', () => {
         if (window.pbTracker && window.pbTracker.logEvent) {
           window.pbTracker.logEvent('copy_result', '/football-lottery', player ? player.fullName : 'Copy');
         }
