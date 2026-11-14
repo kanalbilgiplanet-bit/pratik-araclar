@@ -94,9 +94,9 @@
           <div class="flex flex-col">
             <span class="font-display font-black text-sm tracking-tight text-white flex items-center gap-1.5">
               FLAG BLITZ
-              <span class="px-1.5 py-0.2 rounded text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">CANLI</span>
+              <span id="badgeHeaderLive" class="px-1.5 py-0.2 rounded text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">CANLI</span>
             </span>
-            <span class="text-[10px] text-slate-400 font-mono -mt-0.5">PratikBase Oyun Arenası</span>
+            <span id="txtHeaderSubtitle" class="text-[10px] text-slate-400 font-mono -mt-0.5">PratikBase Oyun Arenası</span>
           </div>
         </a>
       </div>
@@ -137,7 +137,7 @@
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
           <span id="txtHeroBadge">20 Bayrak • 5 Saniye • Saliseler Yarışıyor!</span>
         </div>
-        <h1 class="text-3xl sm:text-5xl font-display font-black text-white tracking-tight">
+        <h1 id="txtHeroTitle" class="text-3xl sm:text-5xl font-display font-black text-white tracking-tight">
           Hangi Ülkenin <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-lime-300 to-green-400">Bayrağı?</span>
         </h1>
         <p class="text-slate-300 text-xs sm:text-sm max-w-md mx-auto" id="txtHeroSub">
@@ -183,7 +183,7 @@
             </div>
             <h3 class="font-display font-black text-lg text-white" id="txtModeSoloTitle">Hızlı Yarış (Solo Blitz)</h3>
             <p class="text-xs text-slate-300 leading-relaxed" id="txtModeSoloDesc">
-              Beklemeden hemen başla. 10 bayrağı en hızlı sürede bilip <strong>Global İlk 100</strong> listesine adını yazdır!
+              Beklemeden hemen başla. 20 bayrağı en hızlı sürede bilip <strong>Global İlk 100</strong> listesine adını yazdır!
             </p>
           </div>
           <button onclick="startSoloGame()" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-lime-500 hover:from-emerald-400 hover:to-lime-400 text-pitch-950 font-display font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/25 active:scale-95 transition">
@@ -311,7 +311,7 @@
       <div class="flex items-center justify-between text-xs font-mono font-bold px-1">
         <div class="flex items-center gap-1.5 text-slate-300">
           <span class="text-emerald-400 text-sm">🚩</span>
-          <span id="quizQuestionCounter">1 / 10</span>
+          <span id="quizQuestionCounter">1 / 20</span>
         </div>
 
         <!-- Live Stopwatch for current question -->
@@ -392,7 +392,7 @@
         <div class="space-y-1">
           <div id="resultTrophyIcon" class="text-4xl sm:text-5xl anim-pulse-fast">🏆</div>
           <h2 class="text-2xl sm:text-3xl font-display font-black text-white" id="txtResultTitle">Yarışma Tamamlandı!</h2>
-          <p class="text-xs text-slate-300" id="txtResultSubtitle">İşte 10 bayrağın refleks karnesi</p>
+          <p class="text-xs text-slate-300" id="txtResultSubtitle">İşte 20 bayrağın refleks karnesi</p>
         </div>
 
         <!-- Solo Score Showcase Box -->
@@ -400,7 +400,7 @@
           <div class="grid grid-cols-3 gap-2 text-center">
             <div class="p-2 rounded-xl bg-pitch-900/60 border border-pitch-800">
               <div class="text-[10px] text-slate-400 font-mono uppercase font-bold" id="lblCorrectCount">Doğru</div>
-              <div class="text-xl sm:text-2xl font-mono font-black text-emerald-400" id="valResultCorrect">9 / 10</div>
+              <div class="text-xl sm:text-2xl font-mono font-black text-emerald-400" id="valResultCorrect">0 / 20</div>
             </div>
             <div class="p-2 rounded-xl bg-pitch-900/60 border border-pitch-800">
               <div class="text-[10px] text-slate-400 font-mono uppercase font-bold" id="lblTotalTime">Toplam Süre</div>
@@ -1000,7 +1000,7 @@
         if (myPlayer.bestScore > 0) {
           pbEl.textContent = `${myPlayer.bestScore}/${TOTAL_QUESTIONS} • ${myPlayer.bestTime.toFixed(2)}s`;
         } else {
-          pbEl.textContent = '0/20 • Henüz yok';
+          pbEl.textContent = currentLang === 'TR' ? '0/20 • Henüz yok' : '0/20 • None yet';
         }
       }
 
@@ -1405,13 +1405,13 @@
       if (currentMatchMode === 'solo') {
         document.getElementById('resultSoloCard').classList.remove('hidden');
         document.getElementById('resultPodiumCard').classList.add('hidden');
-        document.getElementById('txtPlayAgainBtn').textContent = 'YENİDEN OYNA (10 YENİ BAYRAK)';
+        document.getElementById('txtPlayAgainBtn').textContent = currentLang === 'TR' ? `YENİDEN OYNA (${totalMatchQ} YENİ BAYRAK)` : `PLAY AGAIN (${totalMatchQ} NEW FLAGS)`;
         submitScoreToLeaderboard(correctCount, totalTimeSec);
       } else if (currentMatchMode === 'party' && currentRoomId) {
         // Multi-user room finish
         document.getElementById('resultSoloCard').classList.add('hidden');
         document.getElementById('resultPodiumCard').classList.remove('hidden');
-        document.getElementById('txtPlayAgainBtn').textContent = 'RÖVANŞ OYNA (AYNI ODA)';
+        document.getElementById('txtPlayAgainBtn').textContent = currentLang === 'TR' ? 'RÖVANŞ OYNA (AYNI ODA)' : 'REMATCH (SAME ROOM)';
         submitPartyResultAndWatchPodium(correctCount, totalTimeSec);
       }
     }
@@ -1962,7 +1962,7 @@
             </div>
           </div>
           <div class="text-right font-mono shrink-0">
-            <div class="text-sm font-black ${idx === 0 ? 'text-amber-400' : 'text-emerald-400'}">${p.score || 0} / 10</div>
+            <div class="text-sm font-black ${idx === 0 ? 'text-amber-400' : 'text-emerald-400'}">${p.score || 0} / ${TOTAL_QUESTIONS}</div>
             <div class="text-[11px] text-slate-300 font-semibold">${Number(p.time || 0).toFixed(2)}s</div>
           </div>
         `;
@@ -2042,6 +2042,7 @@
 
     function toggleLang() {
       currentLang = currentLang === 'TR' ? 'EN' : 'TR';
+      try { localStorage.setItem('flag_quiz_lang', currentLang); } catch(e) {}
       applyLanguage(currentLang);
     }
 
@@ -2050,33 +2051,90 @@
       document.getElementById('langLabel').textContent = lang;
       document.getElementById('langFlag').textContent = lang === 'TR' ? '🇹🇷' : '🇬🇧';
 
-      if (lang === 'TR') {
-        document.getElementById('txtHeroBadge').textContent = '20 Bayrak • 5 Saniye • Saliseler Yarışıyor!';
-        document.getElementById('txtHeroSub').textContent = 'Doğru ülkeyi en hızlı kim seçecek? İster tek başına rekor kır, ister arkadaş grubunla canlı düelloya gir!';
-        document.getElementById('txtModeSoloTitle').textContent = 'Hızlı Yarış (Solo Blitz)';
-        document.getElementById('txtModeMultiTitle').textContent = 'Arkadaşlarla Canlı Oda';
-        document.getElementById('btnStartSolo').textContent = 'HEMEN BAŞLA';
-        document.getElementById('btnCreateRoom').innerHTML = '<i class="fa-solid fa-plus text-xs"></i> Oda Kur';
-        document.getElementById('btnJoinRoom').textContent = 'Koda Katıl';
-        const txtJTitle = document.getElementById('txtJoinRoomTitle');
-        if (txtJTitle) txtJTitle.textContent = 'Canlı Odaya Katıl';
-        const txtJSub = document.getElementById('txtJoinRoomSub');
-        if (txtJSub) txtJSub.textContent = 'Arkadaşının oda kodunu veya linkini gir';
-        const lblJCode = document.getElementById('lblJoinRoomCode');
-        if (lblJCode) lblJCode.textContent = 'Oda Kodu (Örn: 5821 veya Link):';
-        const btnJCancel = document.getElementById('btnCancelJoinRoom');
-        if (btnJCancel) btnJCancel.textContent = 'Vazgeç';
-        const btnJSubmit = document.getElementById('btnSubmitJoinRoom');
-        if (btnJSubmit) btnJSubmit.innerHTML = '<span>Odaya Katıl</span><i class="fa-solid fa-arrow-right text-[11px]"></i>';
-      } else {
-        document.getElementById('txtHeroBadge').textContent = '20 Flags • 5 Seconds • Split-Seconds Count!';
-        document.getElementById('txtHeroSub').textContent = 'Who can identify the flag quickest? Chase the Global Top 100 or duel live in private party lobbies!';
-        document.getElementById('txtModeSoloTitle').textContent = 'Solo Blitz (Leaderboard)';
-        document.getElementById('txtModeMultiTitle').textContent = 'Live Party Room (2-8P)';
-        document.getElementById('btnStartSolo').textContent = 'START BLITZ';
-        document.getElementById('btnCreateRoom').innerHTML = '<i class="fa-solid fa-plus text-xs"></i> Create Room';
-        document.getElementById('btnJoinRoom').textContent = 'Join Code';
+      const badgeLive = document.getElementById('badgeHeaderLive');
+      if (badgeLive) badgeLive.textContent = lang === 'TR' ? 'CANLI' : 'LIVE';
+      const subLive = document.getElementById('txtHeaderSubtitle');
+      if (subLive) subLive.textContent = lang === 'TR' ? 'PratikBase Oyun Arenası' : 'PratikBase Game Arena';
+
+      const heroTitle = document.getElementById('txtHeroTitle');
+      if (heroTitle) {
+        heroTitle.innerHTML = lang === 'TR'
+          ? 'Hangi Ülkenin <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-lime-300 to-green-400">Bayrağı?</span>'
+          : 'Which Country\'s <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-lime-300 to-green-400">Flag?</span>';
       }
+
+      const heroBadge = document.getElementById('txtHeroBadge');
+      if (heroBadge) heroBadge.textContent = lang === 'TR' ? '20 Bayrak • 5 Saniye • Saliseler Yarışıyor!' : '20 Flags • 5 Seconds • Split-Seconds Count!';
+
+      const heroSub = document.getElementById('txtHeroSub');
+      if (heroSub) heroSub.textContent = lang === 'TR'
+        ? 'Doğru ülkeyi en hızlı kim seçecek? İster tek başına rekor kır, ister arkadaş grubunla canlı düelloya gir!'
+        : 'Who can identify the flag quickest? Chase the Global Top 100 or duel live in private party lobbies!';
+
+      const nickLabel = document.getElementById('txtYourNickLabel');
+      if (nickLabel) nickLabel.textContent = lang === 'TR' ? 'Yarışmacı Adın / Nick' : 'Player Nickname / Handle';
+
+      const nickInput = document.getElementById('inputPlayerNick');
+      if (nickInput) nickInput.placeholder = lang === 'TR' ? 'Adını veya Lakabını Yaz...' : 'Enter your name or nickname...';
+
+      const btnSave = document.getElementById('btnSaveNick');
+      if (btnSave) btnSave.textContent = lang === 'TR' ? 'Kaydet' : 'Save';
+
+      const btnTransfer = document.getElementById('btnAccountTransfer');
+      if (btnTransfer) btnTransfer.innerHTML = `<i class="fa-solid fa-key text-[10px]"></i> ${lang === 'TR' ? 'Cihaz Kodu' : 'Device Key'}`;
+
+      const soloTitle = document.getElementById('txtModeSoloTitle');
+      if (soloTitle) soloTitle.textContent = lang === 'TR' ? 'Hızlı Yarış (Solo Blitz)' : 'Solo Blitz (Leaderboard)';
+
+      const soloDesc = document.getElementById('txtModeSoloDesc');
+      if (soloDesc) {
+        soloDesc.innerHTML = lang === 'TR'
+          ? 'Beklemeden hemen başla. 20 bayrağı en hızlı sürede bilip <strong>Global İlk 100</strong> listesine adını yazdır!'
+          : 'Start instantly. Name 20 flags in the fastest time and claim your spot on the <strong>Global Top 100</strong>!';
+      }
+
+      const btnStart = document.getElementById('btnStartSolo');
+      if (btnStart) btnStart.textContent = lang === 'TR' ? 'HEMEN BAŞLA' : 'START BLITZ';
+
+      const multiTitle = document.getElementById('txtModeMultiTitle');
+      if (multiTitle) multiTitle.textContent = lang === 'TR' ? 'Arkadaşlarla Canlı Oda' : 'Live Party Room (2-8P)';
+
+      const multiDesc = document.getElementById('txtModeMultiDesc');
+      if (multiDesc) {
+        multiDesc.textContent = lang === 'TR'
+          ? '2 ila 8 kişiyle aynı anda yarış! Oda linkini WhatsApp\'tan at, aynı bayraklarla (10-50 arası) podyum savaşı verin.'
+          : 'Race with 2 to 8 players in real-time! Share the room link and battle for the podium on identical flags.';
+      }
+
+      const btnCreate = document.getElementById('btnCreateRoom');
+      if (btnCreate) btnCreate.innerHTML = `<i class="fa-solid fa-plus text-xs"></i> ${lang === 'TR' ? 'Oda Kur' : 'Create Room'}`;
+
+      const btnJoin = document.getElementById('btnJoinRoom');
+      if (btnJoin) btnJoin.textContent = lang === 'TR' ? 'Koda Katıl' : 'Join Code';
+
+      const txtJTitle = document.getElementById('txtJoinRoomTitle');
+      if (txtJTitle) txtJTitle.textContent = lang === 'TR' ? 'Canlı Odaya Katıl' : 'Join Live Room';
+      const txtJSub = document.getElementById('txtJoinRoomSub');
+      if (txtJSub) txtJSub.textContent = lang === 'TR' ? 'Arkadaşının oda kodunu veya linkini gir' : 'Enter your friend\'s room code or link';
+      const lblJCode = document.getElementById('lblJoinRoomCode');
+      if (lblJCode) lblJCode.textContent = lang === 'TR' ? 'Oda Kodu (Örn: 5821 veya Link):' : 'Room Code (e.g. 5821 or Link):';
+      const btnJCancel = document.getElementById('btnCancelJoinRoom');
+      if (btnJCancel) btnJCancel.textContent = lang === 'TR' ? 'Vazgeç' : 'Cancel';
+      const btnJSubmit = document.getElementById('btnSubmitJoinRoom');
+      if (btnJSubmit) btnJSubmit.innerHTML = `<span>${lang === 'TR' ? 'Odaya Katıl' : 'Join Room'}</span><i class="fa-solid fa-arrow-right text-[11px]"></i>`;
+
+      const resTitle = document.getElementById('txtResultTitle');
+      if (resTitle) resTitle.textContent = lang === 'TR' ? 'Yarışma Tamamlandı!' : 'Challenge Completed!';
+      const resSub = document.getElementById('txtResultSubtitle');
+      if (resSub) resSub.textContent = lang === 'TR' ? 'İşte 20 bayrağın refleks karnesi' : 'Here is your 20-flag reflex scorecard';
+      const lblCorrect = document.getElementById('lblCorrectCount');
+      if (lblCorrect) lblCorrect.textContent = lang === 'TR' ? 'Doğru' : 'Correct';
+      const lblTime = document.getElementById('lblTotalTime');
+      if (lblTime) lblTime.textContent = lang === 'TR' ? 'Toplam Süre' : 'Total Time';
+      const lblAvg = document.getElementById('lblAvgTime');
+      if (lblAvg) lblAvg.textContent = lang === 'TR' ? 'Ortalama' : 'Average';
+
+      updateIdentityUI();
     }
 
     /* =====================================================================
@@ -2086,13 +2144,17 @@
       initPlayerIdentity();
       fetchLeaderboard();
 
-      // Check URL parameters for ?room=XXXX or ?lang=en
+      // Check URL parameters for ?room=XXXX or ?lang=en, or saved preference
       const urlParams = new URLSearchParams(window.location.search);
       const roomParam = urlParams.get('room');
       const langParam = urlParams.get('lang');
+      let savedLang = null;
+      try { savedLang = localStorage.getItem('flag_quiz_lang'); } catch(e) {}
 
       if (langParam && langParam.toLowerCase() === 'en') {
         applyLanguage('EN');
+      } else if (savedLang && (savedLang === 'TR' || savedLang === 'EN')) {
+        applyLanguage(savedLang);
       }
 
       if (roomParam) {
