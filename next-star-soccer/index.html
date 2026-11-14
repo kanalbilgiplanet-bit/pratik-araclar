@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Next Star Soccer (NSS) | Sokaktan Zirveye Futbol Kariyer Simülatörü</title>
-  <meta name="description" content="12 yaşında mahallede top oynayarak başla, mevkini seç, şut çek veya kaleci olarak kurtarış yap! 3 kulüpten teklif al, U-15 milli takıma yüksel ve Altın Ayakkabı kazan.">
-  <meta name="keywords" content="next star soccer, nss oyna, futbol kariyer oyunu, new star soccer benzeri, kaleci oyunu, şut çekme oyunu, futbolcu kariyeri simülatörü">
+  <meta name="description" content="12 yaşında mahallede top oynayarak başla, mevkini seç, falsolu şut çek veya kaleci olarak kurtarış yap! 3 kulüpten teklif al, transfer ol, puan durumunu takip et ve Altın Ayakkabı kazan.">
+  <meta name="keywords" content="next star soccer, nss oyna, futbol kariyer oyunu, new star soccer benzeri, kaleci oyunu, falsolu şut çekme, futbolcu kariyeri simülatörü, transfer masası">
   <link rel="canonical" href="https://pratikbase.com/next-star-soccer/">
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#06130b">
@@ -21,7 +21,7 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://pratikbase.com/next-star-soccer/">
   <meta property="og:title" content="Next Star Soccer (NSS) | Sokaktan Zirveye Futbol Efsanesi">
-  <meta property="og:description" content="12 yaşında mahallede başla, forvet olup 90'a as ya da kaleci olup eldivenlerinle kurtarış yap! İnteraktif futbol kariyeri.">
+  <meta property="og:description" content="12 yaşında mahallede başla, falsolu şut çek, verkaç yap, kaleci eldivenleriyle kurtarış yap! 9 kulüp teklifi, lig puan durumu ve zengin kariyer simülatörü.">
   <meta property="og:image" content="https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=1200&h=630&q=80">
 
   <!-- Fonts & Icons -->
@@ -83,19 +83,10 @@
       background-image: repeating-linear-gradient(0deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 50px, transparent 50px, transparent 100px);
     }
 
-    /* Canvas smoothing & touch control */
     #matchCanvas {
       touch-action: none;
       user-select: none;
       -webkit-user-select: none;
-    }
-
-    @keyframes pulse-subtle {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.03); opacity: 0.9; }
-    }
-    .animate-pulse-subtle {
-      animation: pulse-subtle 2s infinite ease-in-out;
     }
   </style>
 
@@ -130,15 +121,21 @@
           <div class="flex flex-col min-w-0">
             <span class="font-display font-black text-white text-xs sm:text-base tracking-wide flex items-center gap-1">
               <span>NEXT STAR</span> <span class="text-emerald-400">SOCCER</span>
-              <span class="text-[9px] uppercase font-mono px-1 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 font-bold shrink-0">NSS V1.0</span>
+              <span class="text-[9px] uppercase font-mono px-1 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 font-bold shrink-0">NSS V1.2</span>
             </span>
             <span class="text-[9px] sm:text-[10px] text-slate-400 font-medium truncate hidden sm:inline" id="txtNavTagline">Sokaktan Zirveye Futbol Efsanesi</span>
           </div>
         </button>
       </div>
 
-      <!-- Quick Actions -->
+      <!-- Quick Actions (Store, Sound, Language, Portal) -->
       <div class="flex items-center gap-1 sm:gap-2 shrink-0">
+        <!-- Store / Assets Button -->
+        <button id="btnOpenStore" class="px-2 sm:px-2.5 py-1.5 rounded-xl bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-300 text-xs font-bold transition border border-yellow-500/30 flex items-center gap-1 shrink-0" title="Yatırım & Yaşam Tarzı Mağazası">
+          <i class="fa-solid fa-gem text-amber-400 text-xs"></i>
+          <span class="hidden md:inline" id="txtStoreNav">Yatırım & Mülk</span>
+        </button>
+
         <!-- Sound Toggle -->
         <button id="btnSoundToggle" class="p-1.5 sm:px-3 sm:py-1.5 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-slate-300 hover:text-white text-xs font-semibold flex items-center gap-1 transition border border-pitch-700/60 shrink-0" title="Ses Aç/Kapat">
           <i class="fa-solid fa-volume-high text-emerald-400 text-xs" id="soundIcon"></i>
@@ -207,7 +204,7 @@
             🏆
           </div>
           <div class="min-w-0">
-            <div class="text-[9px] text-slate-400 uppercase font-semibold" id="txtHudTrophiesLabel">Kupalar & Ödüller</div>
+            <div class="text-[9px] text-slate-400 uppercase font-semibold" id="txtHudTrophiesLabel">Kupalar</div>
             <div id="hudTrophies" class="font-display font-bold text-yellow-300 text-xs">0 Kupa</div>
           </div>
         </div>
@@ -223,14 +220,14 @@
           </div>
         </div>
 
-        <!-- Overall Rating (OVR) -->
+        <!-- Discipline & Status (Cards / Injury) -->
         <div class="p-2 rounded-xl bg-pitch-950/80 border border-pitch-800 flex items-center gap-2 text-left col-span-2 sm:col-span-1">
-          <div id="hudRatingBox" class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-300 flex items-center justify-center font-display font-black text-xs shrink-0">
-            55
+          <div id="hudStatusIcon" class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-300 flex items-center justify-center font-bold text-xs shrink-0">
+            🟢
           </div>
           <div class="min-w-0">
-            <div class="text-[9px] text-slate-400 uppercase font-semibold">GÜÇ (OVR)</div>
-            <div id="hudTalentTier" class="font-bold text-slate-200 truncate text-[10px]">Mahalle Yıldızı</div>
+            <div class="text-[9px] text-slate-400 uppercase font-semibold" id="txtHudStatusLabel">Durum / Kartlar</div>
+            <div id="hudStatusDesc" class="font-bold text-slate-200 truncate text-[10px]">Formda • 0 Sarı</div>
           </div>
         </div>
 
@@ -256,7 +253,7 @@
           NEXT STAR <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-emerald-400 to-lime-300">SOCCER</span>
         </h1>
         <p class="text-slate-300 text-xs sm:text-sm leading-relaxed" id="txtWelcomeDesc">
-          12 yaşında mahallede top oynayarak başla, mevkini seç (forvet olup 90'a as ya da kaleci olup eldivenlerinle kurtarış yap!), 3 kulüpten teklif al ve Altın Ayakkabı'ya uzan!
+          12 yaşında mahallede top oynayarak başla, mevkini seç (forvet olup falsolu şut çek ya da kaleci olup eldivenlerinle kurtarış yap!), çoklu transfer teklifleri al, puan durumunu takip et ve Altın Ayakkabı'ya uzan!
         </p>
       </div>
 
@@ -293,7 +290,7 @@
       <div class="grid grid-cols-3 gap-2 text-center text-[10px] sm:text-xs text-slate-400 pt-2">
         <div class="p-2.5 rounded-xl bg-pitch-900/60 border border-pitch-800/80">
           <i class="fa-solid fa-futbol text-emerald-400 block mb-1 text-sm"></i>
-          <span>Şut & Fiske</span>
+          <span>Falsolu Şut & Verkaç</span>
         </div>
         <div class="p-2.5 rounded-xl bg-pitch-900/60 border border-pitch-800/80">
           <i class="fa-solid fa-mitten text-amber-400 block mb-1 text-sm"></i>
@@ -301,7 +298,7 @@
         </div>
         <div class="p-2.5 rounded-xl bg-pitch-900/60 border border-pitch-800/80">
           <i class="fa-solid fa-trophy text-yellow-400 block mb-1 text-sm"></i>
-          <span>12'den 40 Yaşa</span>
+          <span>Ligler & Transfer</span>
         </div>
       </div>
 
@@ -367,7 +364,7 @@
     </section>
 
     <!-- =====================================================================
-         SCREEN 3: CHARACTER & POSITION CREATOR (Skin, Hair, Position GK/ST)
+         SCREEN 3: CHARACTER & POSITION CREATOR (Skin, Hair, Eyebrow, Eye Color)
          ===================================================================== -->
     <section id="screenCharacter" class="hidden space-y-5 text-center max-w-lg mx-auto w-full py-2">
       <div class="space-y-1">
@@ -375,7 +372,7 @@
           <span>AŞAMA 2 / 3</span>
         </div>
         <h2 class="text-2xl sm:text-3xl font-display font-black text-white" id="txtTitleChar">Karakterini ve Mevkini Yarat</h2>
-        <p class="text-xs text-slate-300" id="txtDescChar">Saha oyuncusu olup gol mü atacaksın, yoksa kaleci olup eldivenlerinle kalesini gole kapatan bir duvar mı?</p>
+        <p class="text-xs text-slate-300" id="txtDescChar">Saç stilinden kaş ve göz rengine kadar özelleştir, mevkini seç!</p>
       </div>
 
       <!-- Live Dynamic SVG Avatar Display -->
@@ -407,7 +404,7 @@
                 <span>🎩 10 Numara</span>
                 <span class="text-[10px] text-emerald-400">Oyun Kurucu</span>
               </div>
-              <div class="text-[10px] text-slate-400">Pas & Frikik</div>
+              <div class="text-[10px] text-slate-400">Verkaç & Frikik</div>
             </button>
 
             <button onclick="setPlayerPosition('WNG')" class="pos-btn p-2 rounded-xl border border-pitch-700 bg-pitch-950 text-left hover:border-emerald-500 transition" data-pos="WNG">
@@ -415,7 +412,7 @@
                 <span>⚡ Kanat (LW/RW)</span>
                 <span class="text-[10px] text-emerald-400">Fırtına</span>
               </div>
-              <div class="text-[10px] text-slate-400">Hız & Falso</div>
+              <div class="text-[10px] text-slate-400">Orta & Falso</div>
             </button>
 
             <button onclick="setPlayerPosition('GK')" class="pos-btn p-2 rounded-xl border-2 border-amber-500/60 bg-amber-950/20 text-left hover:border-amber-400 transition" data-pos="GK">
@@ -430,7 +427,7 @@
 
       </div>
 
-      <!-- Customization Controls: Skin Tone, Hair Style, Hair Color, Number -->
+      <!-- Customization Controls: Skin Tone, Hair Style, Hair Color, Eyebrow, Eyes -->
       <div class="p-4 rounded-3xl bg-pitch-900/90 border border-pitch-700/80 shadow-2xl space-y-4 text-left">
         
         <!-- Skin Tone -->
@@ -441,7 +438,7 @@
           </div>
         </div>
 
-        <!-- Hair Model & Hair Color -->
+        <!-- Hair Model & Hair Color (Includes CR7 Noodles & Fixed Long Hair) -->
         <div class="grid grid-cols-2 gap-3">
           <div class="space-y-1.5">
             <label class="block text-xs font-semibold text-slate-300" id="lblHairModel">Saç Modeli:</label>
@@ -449,7 +446,8 @@
               <option value="short">Kısa Klasik</option>
               <option value="curly">Kıvırcık / Afro</option>
               <option value="mohawk">Mohikan / Stil</option>
-              <option value="long">Uzun / Dağınık</option>
+              <option value="noodles">⭐ CR7 Noodle (Makarna)</option>
+              <option value="long">Uzun / Dökümlü</option>
               <option value="bald">Sıfır Numara</option>
             </select>
           </div>
@@ -460,9 +458,34 @@
               <option value="#1c1917">Siyah</option>
               <option value="#573a24">Kahverengi</option>
               <option value="#d4a373">Kumral</option>
-              <option value="#eab308">Sarı</option>
+              <option value="#eab308">Sarı / Altın</option>
               <option value="#dc2626">Kızıl</option>
               <option value="#94a3b8">Platin Gri</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Eyebrow Color & Eye Color (Separated) -->
+        <div class="grid grid-cols-2 gap-3">
+          <div class="space-y-1.5">
+            <label class="block text-xs font-semibold text-slate-300" id="lblEyebrowColor">Kaş Rengi:</label>
+            <select id="selectEyebrowColor" class="w-full bg-pitch-950 border border-pitch-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+              <option value="#1c1917">Siyah Kaş</option>
+              <option value="#452a18">Koyu Kahve</option>
+              <option value="#8c5a2c">Kumral</option>
+              <option value="#ca8a04">Sarı Kaş</option>
+              <option value="#991b1b">Kızıl</option>
+            </select>
+          </div>
+
+          <div class="space-y-1.5">
+            <label class="block text-xs font-semibold text-slate-300" id="lblEyeColor">Göz Rengi:</label>
+            <select id="selectEyeColor" class="w-full bg-pitch-950 border border-pitch-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+              <option value="#1c1917">Koyu Siyah</option>
+              <option value="#713f12">Kahverengi</option>
+              <option value="#0284c7">Okyanus Mavisi</option>
+              <option value="#16a34a">Zümrüt Yeşili</option>
+              <option value="#d97706">Ela / Bal Rengi</option>
             </select>
           </div>
         </div>
@@ -526,18 +549,21 @@
     </section>
 
     <!-- =====================================================================
-         SCREEN 5: INTERACTIVE MATCH CANVAS (Mini Game: Shoot or Save!)
+         SCREEN 5: INTERACTIVE MATCH CANVAS (Mini Game: Shoot, Falso, Save!)
          ===================================================================== -->
     <section id="screenMatchPlay" class="hidden space-y-3 text-center max-w-xl mx-auto w-full py-2">
       
-      <!-- Match Info Top Header -->
+      <!-- Match Info Top Header (Scenario, Competition, Target) -->
       <div class="flex items-center justify-between px-2">
         <div class="flex items-center gap-2">
           <span class="w-3 h-3 rounded-full bg-rose-500 animate-ping"></span>
           <span class="text-xs font-mono font-bold text-white uppercase tracking-wider" id="matchHeadline">89' KRİTİK POZİSYON</span>
         </div>
-        <div class="text-xs font-mono font-bold text-amber-300 bg-pitch-900 px-3 py-1 rounded-xl border border-pitch-700" id="matchAttemptScore">
-          Pozisyon: 1 / 2
+        <div class="flex items-center gap-2">
+          <span class="text-[10px] font-mono px-2 py-0.5 rounded-lg bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30" id="badgeScenarioType">Açık Oyun Şutu</span>
+          <div class="text-xs font-mono font-bold text-emerald-400 bg-pitch-900 px-2.5 py-1 rounded-xl border border-pitch-700" id="matchAttemptScore">
+            Pozisyon: 1 / 1
+          </div>
         </div>
       </div>
 
@@ -551,12 +577,12 @@
         <div id="canvasInstructionOverlay" class="absolute inset-x-0 bottom-4 pointer-events-none text-center px-4">
           <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-pitch-950/90 text-emerald-300 border border-emerald-500/40 text-xs font-mono font-bold shadow-2xl backdrop-blur-md animate-pulse">
             <i class="fa-solid fa-hand-pointer"></i>
-            <span id="txtCanvasPrompt">Topu parmağınla geriye çek ve bırak!</span>
+            <span id="txtCanvasPrompt">Topu geriye çek, kavis vererek falso aldır ve bırak!</span>
           </span>
         </div>
 
         <!-- Goal / Save Feedback Splash Banner -->
-        <div id="matchFeedbackSplash" class="hidden absolute inset-0 bg-black/75 backdrop-blur-sm flex flex-col items-center justify-center space-y-2 animate-in zoom-in-50 duration-200">
+        <div id="matchFeedbackSplash" class="hidden absolute inset-0 bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center space-y-2 animate-in zoom-in-50 duration-200">
           <div id="splashIcon" class="text-6xl">⚽</div>
           <div id="splashTitle" class="text-3xl font-display font-black text-white">GOOOOOOL!</div>
           <div id="splashDesc" class="text-xs font-mono text-emerald-400">90'a Harika Bir Vuruş!</div>
@@ -566,8 +592,8 @@
 
       <!-- Quick Tips Bar Below Canvas -->
       <div class="flex items-center justify-between text-[11px] text-slate-400 px-2 pt-1">
-        <span id="txtCanvasHint">İpucu: Ne kadar geriye çekersen şut o kadar sert gider!</span>
-        <button id="btnSkipPosition" class="text-slate-500 hover:text-slate-300 transition text-[10px] underline">Pozisyonu Otomatik Simüle Et</button>
+        <span id="txtCanvasHint">💡 İpucu: Kavisli çekersen Roberto Carlos falsosu alır; düz çekersen mermi gibi gider!</span>
+        <button id="btnSkipPosition" class="text-slate-500 hover:text-slate-300 transition text-[10px] underline">Hızlı Simüle Et</button>
       </div>
 
     </section>
@@ -598,15 +624,15 @@
     </section>
 
     <!-- =====================================================================
-         SCREEN 7: CAREER SEASONS (Ages 17 to 40 Progression)
+         SCREEN 7: CAREER SEASONS (League Tables, Brackets, Transfers, Progression)
          ===================================================================== -->
-    <section id="screenSeasons" class="hidden space-y-5 text-center max-w-xl mx-auto w-full py-2">
+    <section id="screenSeasons" class="hidden space-y-4 text-center max-w-2xl mx-auto w-full py-2">
       
       <!-- Season Header Card -->
       <div class="p-4 rounded-2xl bg-pitch-900 border border-pitch-700 shadow-xl flex items-center justify-between gap-3 text-left">
         <div>
           <div class="text-[10px] text-emerald-400 font-mono font-bold uppercase" id="seasonSubHead">SEZON BAŞLIYOR</div>
-          <h3 class="text-lg font-display font-black text-white flex items-center gap-2" id="seasonTitle">
+          <h3 class="text-base sm:text-lg font-display font-black text-white flex items-center gap-2" id="seasonTitle">
             <span>2028 - 2029 Sezonu</span>
           </h3>
         </div>
@@ -616,12 +642,90 @@
         </div>
       </div>
 
-      <!-- Yearly Story Timeline Container -->
-      <div class="space-y-3 text-left" id="seasonEventsFeed">
-        <!-- Dynamically populated year event cards -->
+      <!-- Interactive Season Tabs: Matches vs League Table vs Cup Brackets -->
+      <div class="flex items-center bg-pitch-900 p-1 rounded-2xl border border-pitch-800">
+        <button id="tabSeasonFeed" class="flex-1 py-2 rounded-xl text-xs font-bold transition bg-emerald-500 text-pitch-950 flex items-center justify-center gap-1.5">
+          <i class="fa-solid fa-gamepad"></i> <span>Fikstür & Olaylar</span>
+        </button>
+        <button id="tabSeasonTable" class="flex-1 py-2 rounded-xl text-xs font-bold transition text-slate-400 hover:text-white flex items-center justify-center gap-1.5">
+          <i class="fa-solid fa-list-ol"></i> <span>Lig Puan Durumu</span>
+        </button>
+        <button id="tabSeasonBrackets" class="flex-1 py-2 rounded-xl text-xs font-bold transition text-slate-400 hover:text-white flex items-center justify-center gap-1.5">
+          <i class="fa-solid fa-sitemap"></i> <span>Kupa Ağacı</span>
+        </button>
       </div>
 
-      <!-- Floating or Docked Action Bar: Play Critical Match vs Next Year -->
+      <!-- Tab View 1: Match Feed & Transfers Box -->
+      <div id="viewSeasonFeed" class="space-y-3 text-left">
+        <div id="transferWindowAlert" class="hidden p-4 rounded-2xl bg-gradient-to-r from-amber-950/80 via-pitch-900 to-amber-950/80 border-2 border-amber-500/60 shadow-xl flex items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <span class="text-3xl animate-bounce">🚨</span>
+            <div>
+              <div class="text-[10px] text-amber-400 font-bold uppercase tracking-wider">RESMİ TRANSFER DÖNEMİ AÇILDI!</div>
+              <div class="text-sm font-display font-black text-white" id="txtTransferAlertCount">Masanda 3 Yeni Kulüp Teklifi Var</div>
+            </div>
+          </div>
+          <button onclick="openTransferDeskModal()" class="px-3.5 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-pitch-950 font-black text-xs uppercase shadow transition shrink-0">
+            Teklifleri İncele 💼
+          </button>
+        </div>
+
+        <div class="space-y-3" id="seasonEventsFeed">
+          <!-- Dynamically populated event cards -->
+        </div>
+      </div>
+
+      <!-- Tab View 2: League Standings Table -->
+      <div id="viewSeasonTable" class="hidden p-4 rounded-2xl bg-pitch-900/90 border border-pitch-800 space-y-3 text-left">
+        <div class="flex items-center justify-between border-b border-pitch-800 pb-2">
+          <span class="text-xs font-display font-bold text-white uppercase tracking-wide">🏆 Süper Lig Puan Tablosu</span>
+          <span class="text-[10px] text-emerald-400 font-mono font-bold">Hafta: 28 / 34</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs text-left">
+            <thead>
+              <tr class="text-slate-400 border-b border-pitch-800 text-[10px] font-mono">
+                <th class="py-1.5">Sıra</th>
+                <th>Kulüp</th>
+                <th class="text-center">O</th>
+                <th class="text-center">G</th>
+                <th class="text-center">B</th>
+                <th class="text-center">M</th>
+                <th class="text-center">Av</th>
+                <th class="text-right font-bold text-white">P</th>
+              </tr>
+            </thead>
+            <tbody id="leagueTableBody" class="divide-y divide-pitch-800/60 font-mono text-slate-300">
+              <!-- Populated dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab View 3: Cup Brackets & Champions Tournaments -->
+      <div id="viewSeasonBrackets" class="hidden p-4 rounded-2xl bg-pitch-900/90 border border-pitch-800 space-y-4 text-left">
+        <div class="space-y-2">
+          <div class="text-xs font-display font-bold text-amber-300 uppercase flex items-center justify-between">
+            <span>🛡️ Ulusal Kupa Eleme Ağacı</span>
+            <span class="text-[10px] text-slate-400">Tek Maç Eleme</span>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs" id="cupBracketsGrid">
+            <!-- Populated dynamically: Son 16 -> Çeyrek -> Yarı -> Final -->
+          </div>
+        </div>
+
+        <div class="pt-3 border-t border-pitch-800 space-y-2">
+          <div class="text-xs font-display font-bold text-emerald-300 uppercase flex items-center justify-between">
+            <span>⭐ Şampiyonlar Turnuvası (Grup B)</span>
+            <span class="text-[10px] text-emerald-400">İlk 2 Üst Tura Çıkar</span>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 text-xs text-center" id="championsGroupGrid">
+            <!-- 4 Group teams -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Fixed/Docked Action Bar: Play Critical Match vs Next Year -->
       <div class="pt-2 flex flex-wrap items-center justify-center gap-3">
         <button id="btnPlaySeasonMatch" class="flex-1 py-3.5 px-6 rounded-2xl bg-gradient-to-r from-emerald-500 via-emerald-400 to-lime-400 text-pitch-950 font-display font-black text-sm uppercase tracking-wide shadow-xl shadow-emerald-500/25 active:scale-95 transition flex items-center justify-center gap-2">
           <i class="fa-solid fa-gamepad"></i>
@@ -697,6 +801,14 @@
           </div>
         </div>
 
+        <!-- Assets & Investments Showcase -->
+        <div class="p-3 rounded-xl bg-pitch-950/80 border border-pitch-800 space-y-1">
+          <div class="text-[10px] text-emerald-400 font-bold uppercase tracking-wider">Sahip Olunan Mülkler & Yatırımlar</div>
+          <div id="retireAssetsList" class="flex flex-wrap gap-1.5 text-xs">
+            <!-- Populated assets -->
+          </div>
+        </div>
+
       </div>
 
       <!-- Action Buttons: Share vs Restart -->
@@ -716,10 +828,74 @@
 
   </main>
 
+  <!-- =====================================================================
+       MODAL 1: TRANSFER DESK MODAL (Çoklu Kulüp Teklifleri Masası)
+       ===================================================================== -->
+  <div id="modalTransferDesk" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md overflow-y-auto">
+    <div class="w-full max-w-xl p-4 sm:p-6 rounded-3xl bg-pitch-900 border-2 border-amber-500/60 shadow-2xl space-y-4 text-left relative animate-in fade-in zoom-in duration-200" style="max-height: 90vh; max-height: 90dvh; overflow-y: auto;">
+      
+      <div class="flex items-center justify-between border-b border-pitch-800 pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-300 flex items-center justify-center text-lg border border-amber-500/40">
+            💼
+          </div>
+          <div>
+            <h3 class="font-display font-black text-white text-base sm:text-lg">Resmi Transfer Masası</h3>
+            <p class="text-xs text-amber-400 font-mono" id="txtTransferDeskSub">Gelen Teklifleri İncele ve Geleceğini Seç</p>
+          </div>
+        </div>
+        <button onclick="closeTransferDeskModal()" class="w-8 h-8 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-slate-400 hover:text-white flex items-center justify-center transition">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Multiple Transfer Offers Grid -->
+      <div id="transferOffersContainer" class="space-y-3">
+        <!-- Dynamically injected multiple club offers -->
+      </div>
+
+      <div class="pt-2 border-t border-pitch-800 flex items-center justify-between">
+        <button onclick="stayAtCurrentClub()" class="w-full py-2.5 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-slate-300 font-bold text-xs uppercase transition border border-pitch-700">
+          Mevcut Kulübümde Kal (Teklifleri Reddet)
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       MODAL 2: STORE / LIFESTYLE & INVESTMENTS MODAL (Yatırım & Mülk Mağazası)
+       ===================================================================== -->
+  <div id="modalStore" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md overflow-y-auto">
+    <div class="w-full max-w-lg p-4 sm:p-6 rounded-3xl bg-pitch-900 border-2 border-yellow-500/60 shadow-2xl space-y-4 text-left relative animate-in fade-in zoom-in duration-200" style="max-height: 90vh; max-height: 90dvh; overflow-y: auto;">
+      
+      <div class="flex items-center justify-between border-b border-pitch-800 pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-yellow-500/20 text-yellow-300 flex items-center justify-center text-lg border border-yellow-500/40">
+            💎
+          </div>
+          <div>
+            <h3 class="font-display font-black text-white text-base">Yatırım, Mülk & Yaşam Tarzı</h3>
+            <p class="text-xs text-yellow-400 font-mono" id="txtStoreBalance">Banka Bakiyesi: €0</p>
+          </div>
+        </div>
+        <button onclick="closeStoreModal()" class="w-8 h-8 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-slate-400 hover:text-white flex items-center justify-center transition">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Store Items Grid -->
+      <div id="storeItemsGrid" class="space-y-2.5 max-h-96 overflow-y-auto pr-1">
+        <!-- Dynamically injected shop items -->
+      </div>
+
+    </div>
+  </div>
+
   <!-- Sound Engine, Canvas Game Engine & Career Orchestration Scripts -->
   <script>
     /* =====================================================================
-       1. DATA DEFINITIONS: COUNTRIES, CLUBS, AWARDS
+       1. DATA DEFINITIONS: COUNTRIES, CLUBS, AWARDS, STORE
        ===================================================================== */
     const COUNTRIES = [
       { code: 'TR', nameTr: 'Türkiye', nameEn: 'Turkey', flag: '🇹🇷', rep: 80 },
@@ -748,21 +924,32 @@
 
     const CLUB_TIERS = {
       starterOffers: [
-        { nameTr: 'Anadolu Yıldızı SK', nameEn: 'Anatolia Stars FC', badge: '⚡', rep: 60, salary: 25000, descTr: 'İlk 11 garantisi, doğrudan gelişim fırsatı!', descEn: 'Guaranteed starter role & fast match growth!' },
-        { nameTr: 'Başkent Akademi GSK', nameEn: 'Capital Academy FC', badge: '🦁', rep: 68, salary: 35000, descTr: 'Modern tesisler, yüksek prestij, kıyasıya forma savaşı.', descEn: 'Top facilities, fierce squad competition.' },
-        { nameTr: 'Genk Sporting (Yurtdışı)', nameEn: 'Genk Sporting (Overseas)', badge: '🦅', rep: 74, salary: 60000, descTr: 'Avrupa yetenek avcısı kulüp, döviz maaş ve vitrin.', descEn: 'European scout haven, higher wage & exposure.' }
+        { nameTr: 'Anadolu Yıldızı SK', nameEn: 'Anatolia Stars FC', badge: '⚡', rep: 60, salary: 35000, descTr: 'İlk 11 garantisi, doğrudan gelişim fırsatı!', descEn: 'Guaranteed starter role & fast match growth!' },
+        { nameTr: 'Başkent Akademi GSK', nameEn: 'Capital Academy FC', badge: '🦁', rep: 68, salary: 50000, descTr: 'Modern tesisler, yüksek prestij, kıyasıya forma savaşı.', descEn: 'Top facilities, fierce squad competition.' },
+        { nameTr: 'Genk Sporting (Yurtdışı)', nameEn: 'Genk Sporting (Overseas)', badge: '🦅', rep: 74, salary: 85000, descTr: 'Avrupa yetenek avcısı kulüp, döviz maaş ve vitrin.', descEn: 'European scout haven, higher wage & exposure.' }
       ],
-      eliteClubs: [
-        { name: 'Real Madrid CF', badge: '👑', minOvr: 84, salary: 12000000 },
-        { name: 'Manchester City', badge: '🌊', minOvr: 83, salary: 11000000 },
-        { name: 'Bayern München', badge: '🔴', minOvr: 82, salary: 9500000 },
-        { name: 'Inter Milano', badge: '🔵', minOvr: 80, salary: 7000000 },
-        { name: 'Paris Saint-Germain', badge: '🗼', minOvr: 81, salary: 10500000 },
-        { name: 'Arsenal FC', badge: '🔴', minOvr: 80, salary: 6500000 },
-        { name: 'Galatasaray A.Ş.', badge: '🦁', minOvr: 75, salary: 3500000 },
-        { name: 'Fenerbahçe SK', badge: '🟡', minOvr: 75, salary: 3500000 }
+      transferMarketPool: [
+        { name: 'Galatasaray A.Ş.', badge: '🦁', league: 'Süper Lig', rep: 78, minOvr: 72, salary: 1800000, fee: 15000000, role: 'İlk 11 Yıldızı' },
+        { name: 'Fenerbahçe SK', badge: '🟡', league: 'Süper Lig', rep: 78, minOvr: 72, salary: 1800000, fee: 14500000, role: 'Kilit Oyuncu' },
+        { name: 'Beşiktaş JK', badge: '🦅', league: 'Süper Lig', rep: 77, minOvr: 71, salary: 1600000, fee: 12000000, role: 'Hücum Lideri' },
+        { name: 'Real Madrid CF', badge: '👑', league: 'La Liga', rep: 95, minOvr: 84, salary: 14000000, fee: 85000000, role: 'Dünya Süperstarı' },
+        { name: 'Manchester City', badge: '🌊', league: 'Premier League', rep: 94, minOvr: 83, salary: 13500000, fee: 80000000, role: 'Kilit Maestro' },
+        { name: 'Bayern München', badge: '🔴', league: 'Bundesliga', rep: 92, minOvr: 82, salary: 11000000, fee: 65000000, role: 'Büyük Santrafor' },
+        { name: 'Arsenal FC', badge: '🔴', league: 'Premier League', rep: 90, minOvr: 80, salary: 8500000, fee: 55000000, role: 'As Takım' },
+        { name: 'Inter Milano', badge: '🔵', league: 'Serie A', rep: 89, minOvr: 79, salary: 7500000, fee: 45000000, role: 'İlk 11' },
+        { name: 'Paris Saint-Germain', badge: '🗼', league: 'Ligue 1', rep: 91, minOvr: 81, salary: 12500000, fee: 70000000, role: 'Süperstar' }
       ]
     };
+
+    const STORE_CATALOG = [
+      { id: 'physio', nameTr: 'Özel Fizyoterapist', nameEn: 'Personal Physiotherapist', icon: '🩺', price: 40000, descTr: 'Sakatlık riskini %60 düşürür, formunu korur.', descEn: 'Reduces injury chances by 60%.' },
+      { id: 'coach', nameTr: 'Özel Şut/Kondisyon Antrenörü', nameEn: 'Personal Shooting Coach', icon: '🏋️', price: 75000, descTr: '+3 OVR Güç ve daha isabetli falso kazandırır.', descEn: '+3 OVR power & precision.' },
+      { id: 'pitch', nameTr: 'Halı Saha Kompleksi Yatırımı', nameEn: 'Local Astro Pitch Complex', icon: '⚽', price: 200000, descTr: 'Her sezon bankana +€35.000 pasif kâr getirir.', descEn: '+€35k passive income each season.' },
+      { id: 'academy', nameTr: 'Next Star Futbol Akademisi', nameEn: 'Next Star Football Academy', icon: '🌟', price: 800000, descTr: 'Geleceğin yıldızlarını yetiştir, her sezon +€140.000 kâr.', descEn: '+€140k annual profit & global legacy.' },
+      { id: 'car', nameTr: 'Süper Spor Araba (Garaj)', nameEn: 'Super Sports Car (Garage)', icon: '🏎️', price: 300000, descTr: 'İtalyan canavarı, prestij ve motivasyon tavan!', descEn: 'Pure Italian horsepower & style.' },
+      { id: 'mansion', nameTr: 'Havuzlu Lüks Malikane', nameEn: 'Luxury Mansion with Pool', icon: '🏰', price: 1200000, descTr: 'Boğaz / Sahil manzaralı dev malikane.', descEn: 'Prime waterfront private mansion.' },
+      { id: 'jet', nameTr: 'Özel VIP Jet', nameEn: 'Private VIP Jet', icon: '✈️', price: 4500000, descTr: 'Dünya turları ve milli maçlara özel uçuş.', descEn: 'Global elite private travel.' }
+    ];
 
     /* =====================================================================
        2. GLOBAL STATE & SOUND ENGINE
@@ -819,19 +1006,29 @@
       }
     };
 
-    /* Player State */
+    /* Player State with Custom Eyebrow, Eye Color & Discipline */
     let player = {
       nick: 'Yeni Oyuncu',
       country: COUNTRIES[0],
       position: 'ST', // ST, CAM, WNG, GK
       jerseyNumber: 9,
       skinTone: SKIN_TONES[1],
-      hairModel: 'short',
+      hairModel: 'short', // short, curly, mohawk, noodles, long, bald
       hairColor: '#1c1917',
+      eyebrowColor: '#1c1917',
+      eyeColor: '#1c1917',
       age: 12,
       ovr: 55,
-      club: { name: 'Mahalle Sahası', badge: '🏡', salary: 0 },
+      club: { name: 'Mahalle Sahası', badge: '🏡', salary: 0, league: 'Mahalle Ligi' },
       wealth: 0,
+      discipline: {
+        yellowCards: 0,
+        suspendedMatches: 0
+      },
+      injury: {
+        isInjured: false,
+        desc: ''
+      },
       stats: {
         matches: 0,
         goals: 0,
@@ -839,11 +1036,12 @@
         saves: 0,
         trophies: 0
       },
+      assets: [],
       awards: []
     };
 
     /* =====================================================================
-       3. SAVE / LOAD ENGINE (Bayrak Oyunu Mantığıyla Kalıcı Cihaz Kaydı)
+       3. SAVE / LOAD ENGINE
        ===================================================================== */
     const SAVE_KEY = 'nss_career_save_v1';
 
@@ -860,7 +1058,7 @@
         if (raw) {
           const parsed = JSON.parse(raw);
           if (parsed && parsed.nick) {
-            player = parsed;
+            player = Object.assign(player, parsed);
             return true;
           }
         }
@@ -888,7 +1086,7 @@
     }
 
     /* =====================================================================
-       4. AVATAR RENDERER (SVG DYNAMIC PREVIEW)
+       4. AVATAR RENDERER (With Fixed Long Hair, CR7 Noodles, Eye & Eyebrows)
        ===================================================================== */
     function renderAvatarSvg() {
       const svg = document.getElementById('svgAvatar');
@@ -896,8 +1094,10 @@
 
       const skin = player.skinTone || SKIN_TONES[1];
       const hairCol = player.hairColor || '#1c1917';
+      const eyebrowCol = player.eyebrowColor || '#1c1917';
+      const eyeCol = player.eyeColor || '#1c1917';
       const isGK = player.position === 'GK';
-      const jerseyCol = isGK ? '#f59e0b' : '#10b981'; // Yellow for keeper, Green for outfield
+      const jerseyCol = isGK ? '#f59e0b' : '#10b981';
 
       let hairSvg = '';
       if (player.hairModel === 'short') {
@@ -912,9 +1112,22 @@
         `;
       } else if (player.hairModel === 'mohawk') {
         hairSvg = `<path d="M 44 14 L 56 14 L 54 36 L 46 36 Z" fill="${hairCol}"/>`;
-      } else if (player.hairModel === 'long') {
+      } else if (player.hairModel === 'noodles') {
+        // CR7 Iconic Frosted Highlights Noodle Hair
         hairSvg = `
-          <path d="M 28 35 Q 50 16 72 35 Q 78 55 70 65 L 66 40 Q 50 25 34 40 L 30 65 Z" fill="${hairCol}"/>
+          <!-- Dark Faded Undercut Sides -->
+          <path d="M 28 42 Q 28 26 50 22 Q 72 26 72 42 L 70 48 Q 50 36 30 48 Z" fill="#1c1917"/>
+          <!-- Textured Golden Blonde Frosted Noodle Curls on Top -->
+          <path d="M 34 26 Q 40 14 50 16 Q 60 14 66 26 Q 50 20 34 26 Z" fill="#facc15"/>
+          <path d="M 40 22 Q 44 14 47 24 Q 50 13 54 24 Q 58 15 62 25" stroke="#fef08a" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <path d="M 36 28 Q 42 22 48 30 Q 54 22 64 28" stroke="#eab308" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        `;
+      } else if (player.hairModel === 'long') {
+        // Completely covers skull top with no bald gaps!
+        hairSvg = `
+          <!-- Full Crown Cover & Flowing Locks over shoulders -->
+          <path d="M 22 45 Q 22 14 50 14 Q 78 14 78 45 L 82 72 Q 74 76 68 62 L 68 40 Q 50 25 32 40 L 32 62 Q 26 76 18 72 Z" fill="${hairCol}"/>
+          <path d="M 30 30 Q 50 20 70 30 Q 50 24 30 30 Z" fill="${hairCol}" opacity="0.9"/>
         `;
       }
 
@@ -934,15 +1147,15 @@
         <!-- Head / Face -->
         <ellipse cx="50" cy="46" rx="20" ry="24" fill="${skin}"/>
         
-        <!-- Eyes -->
-        <ellipse cx="43" cy="45" rx="2.5" ry="3.5" fill="#1c1917"/>
-        <ellipse cx="57" cy="45" rx="2.5" ry="3.5" fill="#1c1917"/>
-        <circle cx="44" cy="44" r="0.8" fill="#ffffff"/>
-        <circle cx="58" cy="44" r="0.8" fill="#ffffff"/>
+        <!-- Eyes with custom eyeColor -->
+        <ellipse cx="43" cy="45" rx="3" ry="3.5" fill="${eyeCol}"/>
+        <ellipse cx="57" cy="45" rx="3" ry="3.5" fill="${eyeCol}"/>
+        <circle cx="44" cy="44" r="0.9" fill="#ffffff"/>
+        <circle cx="58" cy="44" r="0.9" fill="#ffffff"/>
 
-        <!-- Eyebrows -->
-        <path d="M 39 40 Q 43 38 47 40" stroke="${hairCol}" stroke-width="1.8" fill="none" stroke-linecap="round"/>
-        <path d="M 53 40 Q 57 38 61 40" stroke="${hairCol}" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+        <!-- Eyebrows with custom eyebrowColor -->
+        <path d="M 38 39 Q 43 36 48 39" stroke="${eyebrowCol}" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <path d="M 52 39 Q 57 36 62 39" stroke="${eyebrowCol}" stroke-width="2.2" fill="none" stroke-linecap="round"/>
 
         <!-- Nose & Smile -->
         <path d="M 49 48 L 51 51 L 48 52" stroke="#a16207" stroke-width="1.2" fill="none" stroke-linecap="round"/>
@@ -952,11 +1165,10 @@
         <circle cx="30" cy="46" r="4" fill="${skin}"/>
         <circle cx="70" cy="46" r="4" fill="${skin}"/>
 
-        <!-- Hair -->
+        <!-- Hair Model -->
         ${hairSvg}
       `;
 
-      // Update badge label
       const badge = document.getElementById('previewPlayerTitle');
       if (badge) {
         badge.textContent = `${player.position} • #${player.jerseyNumber}`;
@@ -981,7 +1193,7 @@
       const container = document.getElementById('skinPaletteGroup');
       if (!container) return;
       container.innerHTML = '';
-      SKIN_TONES.forEach((color, idx) => {
+      SKIN_TONES.forEach(color => {
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.className = `w-7 h-7 rounded-full border-2 transition ${player.skinTone === color ? 'border-emerald-400 scale-110 shadow-lg' : 'border-pitch-700 hover:scale-105'}`;
@@ -1013,27 +1225,48 @@
 
       document.getElementById('hudTrophies').textContent = `${player.stats.trophies} Kupa`;
       document.getElementById('hudBankBalance').textContent = `€${player.wealth.toLocaleString('tr-TR')}`;
-      document.getElementById('hudRatingBox').textContent = player.ovr;
+      document.getElementById('txtStoreBalance').textContent = `Banka Bakiyesi: €${player.wealth.toLocaleString('tr-TR')}`;
+      
+      // Discipline & Injury Status
+      const statusIcon = document.getElementById('hudStatusIcon');
+      const statusDesc = document.getElementById('hudStatusDesc');
+      if (player.injury && player.injury.isInjured) {
+        statusIcon.textContent = '🩹';
+        statusIcon.className = 'w-7 h-7 rounded-lg bg-rose-500/20 text-rose-300 flex items-center justify-center font-bold text-xs shrink-0';
+        statusDesc.textContent = player.injury.desc || 'Sakatlık';
+      } else if (player.discipline && player.discipline.suspendedMatches > 0) {
+        statusIcon.textContent = '🟥';
+        statusIcon.className = 'w-7 h-7 rounded-lg bg-rose-500/20 text-rose-300 flex items-center justify-center font-bold text-xs shrink-0';
+        statusDesc.textContent = 'Cezalı (Tribünde)';
+      } else {
+        statusIcon.textContent = '🟢';
+        statusIcon.className = 'w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-300 flex items-center justify-center font-bold text-xs shrink-0';
+        statusDesc.textContent = `Formda • ${player.discipline ? player.discipline.yellowCards : 0} Sarı`;
+      }
     }
 
     /* =====================================================================
-       6. INTERACTIVE MATCH CANVAS ENGINE (Shoot or Goalkeeper Save!)
+       6. INTERACTIVE MATCH CANVAS ENGINE (Falso, Crosshair, Scenarios, GK)
        ===================================================================== */
     let canvas, ctx;
     let canvasWidth, canvasHeight;
     let isDragging = false;
     let dragStart = { x: 0, y: 0 };
     let dragCurrent = { x: 0, y: 0 };
+    let dragPoints = []; // Tracks curve for Roberto Carlos / Quaresma style Falso!
 
-    let ball = { x: 300, y: 350, z: 0, vx: 0, vy: 0, vz: 0, radius: 11, inFlight: false, scored: false, saved: false };
-    let goalkeeper = { x: 300, y: 155, width: 44, height: 60, vx: 2 };
+    let ball = { x: 300, y: 350, vx: 0, vy: 0, spin: 0, radius: 10, inFlight: false, scored: false, saved: false, out: false };
+    let goalkeeper = { x: 300, y: 155, vx: 2.2, diveSpeed: 3.5 };
     let gloves = { x: 300, y: 220, radius: 24, dragging: false };
+    let wallDefenders = []; // Free-kick wall
     let matchMode = 'SHOOT'; // 'SHOOT' or 'SAVE'
+    let currentScenario = 'OPEN_PLAY'; // OPEN_PLAY, ONE_TWO, FREE_KICK, CORNER
     let currentMatchCallback = null;
 
-    function initMatchCanvas(mode, callback) {
+    function initMatchCanvas(mode, callback, scenarioType = 'OPEN_PLAY') {
       matchMode = mode;
       currentMatchCallback = callback;
+      currentScenario = scenarioType;
 
       canvas = document.getElementById('matchCanvas');
       ctx = canvas.getContext('2d');
@@ -1042,31 +1275,56 @@
 
       // Reset Ball & Actors
       ball.x = canvasWidth / 2;
-      ball.y = canvasHeight - 60;
-      ball.z = 0;
+      ball.y = canvasHeight - 65;
       ball.vx = 0;
       ball.vy = 0;
-      ball.vz = 0;
+      ball.spin = 0;
       ball.inFlight = false;
       ball.scored = false;
       ball.saved = false;
+      ball.out = false;
+      dragPoints = [];
+
+      // Level-Based Difficulty: GK Speed scales with player age & OVR!
+      let gkBaseSpeed = 1.8; // Age 12 (Neighbourhood)
+      if (player.age >= 16 && player.age < 22) gkBaseSpeed = 2.8; // Pro League
+      else if (player.age >= 22) gkBaseSpeed = 4.0; // European Giants / Elite
 
       goalkeeper.x = canvasWidth / 2;
       goalkeeper.y = 150;
-      goalkeeper.vx = (Math.random() > 0.5 ? 2.2 : -2.2);
+      goalkeeper.vx = (Math.random() > 0.5 ? gkBaseSpeed : -gkBaseSpeed);
 
       gloves.x = canvasWidth / 2;
       gloves.y = 200;
+
+      // Free-kick Wall Setup
+      wallDefenders = [];
+      if (currentScenario === 'FREE_KICK') {
+        const wallCenter = canvasWidth / 2 + (Math.random() > 0.5 ? 40 : -40);
+        for (let i = -1.5; i <= 1.5; i++) {
+          wallDefenders.push({ x: wallCenter + i * 22, y: 240, width: 18, height: 44 });
+        }
+      }
+
+      // Update Header Badges
+      const badgeScenario = document.getElementById('badgeScenarioType');
+      if (badgeScenario) {
+        badgeScenario.textContent = 
+          currentScenario === 'FREE_KICK' ? '🎯 Barajlı Frikik' :
+          currentScenario === 'ONE_TWO' ? '🤝 Verkaç Pozisyonu' :
+          currentScenario === 'CORNER' ? '📐 Korner & Kafa/Vole' : '⚽ Açık Oyun Şutu';
+      }
 
       const overlay = document.getElementById('canvasInstructionOverlay');
       const promptTxt = document.getElementById('txtCanvasPrompt');
       overlay.classList.remove('hidden');
 
       if (matchMode === 'SHOOT') {
-        promptTxt.textContent = currentLang === 'TR' ? '⚽ Topu geriye çekip nişan al ve fırlat!' : '⚽ Drag ball backward to aim & release!';
+        promptTxt.textContent = currentScenario === 'FREE_KICK'
+          ? (currentLang === 'TR' ? '🎯 Barajın yanından falso vererek 90’a as!' : '🎯 Bend it around the wall!')
+          : (currentLang === 'TR' ? '⚽ Geriye çek, kavis vererek falso aldır ve fırlat!' : '⚽ Drag back & curve the shot!');
       } else {
-        promptTxt.textContent = currentLang === 'TR' ? '🧤 Rakip vuruyor! Eldivenleri topun önüne sürükle!' : '🧤 Incoming shot! Drag gloves to block the ball!';
-        // In GK mode, shot fires automatically after 1.2s!
+        promptTxt.textContent = currentLang === 'TR' ? '🧤 Rakip forvet vuruyor! Eldivenleri topun önüne sürükle!' : '🧤 Incoming shot! Drag gloves to block the ball!';
         setTimeout(() => {
           if (!ball.inFlight && matchMode === 'SAVE') {
             shootBallAtGoalKeeper();
@@ -1082,9 +1340,11 @@
       ball.inFlight = true;
       Sound.kick();
       const targetX = canvasWidth * 0.25 + Math.random() * (canvasWidth * 0.5);
-      const targetY = 120 + Math.random() * 80;
-      ball.vx = (targetX - ball.x) / 32;
-      ball.vy = (targetY - ball.y) / 32;
+      const targetY = 125 + Math.random() * 75;
+      const speed = player.age >= 22 ? 22 : 30;
+      ball.vx = (targetX - ball.x) / speed;
+      ball.vy = (targetY - ball.y) / speed;
+      ball.spin = (Math.random() - 0.5) * 0.8;
     }
 
     function setupCanvasEvents() {
@@ -1105,10 +1365,11 @@
 
         if (matchMode === 'SHOOT' && !ball.inFlight) {
           const dist = Math.hypot(pos.x - ball.x, pos.y - ball.y);
-          if (dist < 50) {
+          if (dist < 60) {
             isDragging = true;
             dragStart = { x: ball.x, y: ball.y };
             dragCurrent = pos;
+            dragPoints = [pos];
           }
         } else if (matchMode === 'SAVE') {
           gloves.dragging = true;
@@ -1122,6 +1383,8 @@
         const pos = getPos(e);
         if (isDragging && matchMode === 'SHOOT') {
           dragCurrent = pos;
+          dragPoints.push(pos);
+          if (dragPoints.length > 25) dragPoints.shift();
         } else if (gloves.dragging && matchMode === 'SAVE') {
           gloves.x = Math.max(120, Math.min(canvasWidth - 120, pos.x));
           gloves.y = Math.max(100, Math.min(260, pos.y));
@@ -1131,15 +1394,26 @@
       window.onmouseup = window.ontouchend = (e) => {
         if (isDragging && matchMode === 'SHOOT' && !ball.inFlight) {
           isDragging = false;
-          // Calculate launch vector (pull-back slingshot)
           const dx = dragStart.x - dragCurrent.x;
           const dy = dragStart.y - dragCurrent.y;
-          const power = Math.min(Math.hypot(dx, dy), 120);
+          const power = Math.min(Math.hypot(dx, dy), 125);
 
-          if (power > 15) {
+          if (power > 16 && dy > 5) {
             ball.inFlight = true;
-            ball.vx = (dx / power) * (power * 0.18);
-            ball.vy = (dy / power) * (power * 0.18);
+            const speedFactor = 0.17;
+            ball.vx = (dx / power) * (power * speedFactor);
+            ball.vy = (-Math.abs(dy) / power) * (power * speedFactor);
+
+            // Calculate Falso (Curve Spin) from curved drag gesture!
+            if (dragPoints.length >= 4) {
+              const mid = dragPoints[Math.floor(dragPoints.length / 2)];
+              const straightMidX = (dragStart.x + dragCurrent.x) / 2;
+              const curveDisplacement = mid.x - straightMidX;
+              ball.spin = -curveDisplacement * 0.045; // Curved spin
+            } else {
+              ball.spin = 0;
+            }
+
             Sound.kick();
           }
         }
@@ -1162,13 +1436,13 @@
         ctx.fillRect(0, y, canvasWidth, 40);
       }
 
-      // 2. Draw Goal Frame (2.5D Perspective)
+      // 2. Goal Posts Geometry
       const goalLeft = 140;
       const goalRight = canvasWidth - 140;
       const goalTop = 100;
       const goalBottom = 220;
 
-      // Goal Net
+      // Net Mesh
       ctx.fillStyle = 'rgba(255, 255, 255, 0.12)';
       ctx.fillRect(goalLeft, goalTop, goalRight - goalLeft, goalBottom - goalTop);
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.18)';
@@ -1180,27 +1454,37 @@
         ctx.beginPath(); ctx.moveTo(goalLeft, y); ctx.lineTo(goalRight, y); ctx.stroke();
       }
 
-      // Goal Posts (White Heavy)
+      // Goal Frame
       ctx.strokeStyle = '#ffffff';
       ctx.lineWidth = 6;
       ctx.strokeRect(goalLeft, goalTop, goalRight - goalLeft, goalBottom - goalTop);
 
-      // Penalty Spot & Box Lines
+      // Penalty Box Lines
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
       ctx.lineWidth = 2;
       ctx.strokeRect(90, 180, canvasWidth - 180, canvasHeight);
 
-      // 3. Actors: Goalkeeper & AI Movement
+      // 3. Free Kick Wall (if scenario is FREE_KICK)
+      if (currentScenario === 'FREE_KICK') {
+        wallDefenders.forEach(def => {
+          ctx.fillStyle = '#1e293b'; // Slate shirt
+          ctx.fillRect(def.x - 9, def.y, def.width, def.height);
+          ctx.fillStyle = '#f8d5b8'; // Head
+          ctx.beginPath(); ctx.arc(def.x, def.y - 7, 7, 0, Math.PI * 2); ctx.fill();
+        });
+      }
+
+      // 4. Actors: Goalkeeper
       if (matchMode === 'SHOOT') {
         goalkeeper.x += goalkeeper.vx;
         if (goalkeeper.x < goalLeft + 35 || goalkeeper.x > goalRight - 35) {
           goalkeeper.vx *= -1;
         }
 
-        // Draw AI Goalkeeper
-        ctx.fillStyle = '#f59e0b'; // Gold GK shirt
+        // Draw Goalkeeper
+        ctx.fillStyle = '#f59e0b';
         ctx.fillRect(goalkeeper.x - 14, goalkeeper.y, 28, 45);
-        ctx.fillStyle = '#f8d5b8'; // Face
+        ctx.fillStyle = '#f8d5b8';
         ctx.beginPath(); ctx.arc(goalkeeper.x, goalkeeper.y - 8, 9, 0, Math.PI * 2); ctx.fill();
         // Arms
         ctx.strokeStyle = '#f59e0b'; ctx.lineWidth = 4;
@@ -1213,61 +1497,109 @@
         ctx.fillStyle = '#f59e0b';
         ctx.strokeStyle = '#ffffff';
         ctx.lineWidth = 2.5;
-        // Left Glove
         ctx.beginPath(); ctx.arc(gloves.x - 16, gloves.y, 14, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-        // Right Glove
         ctx.beginPath(); ctx.arc(gloves.x + 16, gloves.y, 14, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
         ctx.fillStyle = '#ffffff';
         ctx.font = 'bold 10px sans-serif';
         ctx.fillText('🧤', gloves.x - 7, gloves.y + 4);
       }
 
-      // 4. Slingshot Aiming Line (When dragging)
-      if (isDragging) {
-        ctx.strokeStyle = '#22c55e';
-        ctx.lineWidth = 3;
-        ctx.setLineDash([6, 6]);
-        ctx.beginPath();
-        ctx.moveTo(ball.x, ball.y);
-        ctx.lineTo(ball.x + (dragStart.x - dragCurrent.x) * 1.5, ball.y + (dragStart.y - dragCurrent.y) * 1.5);
-        ctx.stroke();
-        ctx.setLineDash([]);
+      // 5. TRUE AIMING TRAJECTORY & TARGET CROSSHAIR 🎯 (Fixing Item 5!)
+      if (isDragging && matchMode === 'SHOOT') {
+        const dx = dragStart.x - dragCurrent.x;
+        const dy = dragStart.y - dragCurrent.y;
+        
+        if (dy > 5) {
+          // Calculate exact landing X at goal plane (y = 150)
+          const flightFrames = (ball.y - 150) / (dy * 0.17);
+          let targetLandingX = ball.x + (dx * 0.17) * flightFrames;
+
+          // Estimate falso curve
+          if (dragPoints.length >= 4) {
+            const mid = dragPoints[Math.floor(dragPoints.length / 2)];
+            const straightMidX = (dragStart.x + dragCurrent.x) / 2;
+            const curveDisplacement = mid.x - straightMidX;
+            targetLandingX += (-curveDisplacement * 0.045) * flightFrames * 1.5;
+          }
+
+          const isTargetInGoal = (targetLandingX >= goalLeft && targetLandingX <= goalRight);
+
+          // Draw Trajectory Path Curve
+          ctx.strokeStyle = isTargetInGoal ? '#22c55e' : '#ef4444';
+          ctx.lineWidth = 2.5;
+          ctx.setLineDash([5, 5]);
+          ctx.beginPath();
+          ctx.moveTo(ball.x, ball.y);
+          ctx.quadraticCurveTo((ball.x + targetLandingX) / 2 + (targetLandingX - (ball.x + dx)) * 0.5, (ball.y + 150) / 2, targetLandingX, 150);
+          ctx.stroke();
+          ctx.setLineDash([]);
+
+          // Draw Target Crosshair 🎯 on Goal Plane
+          ctx.fillStyle = isTargetInGoal ? 'rgba(34, 197, 94, 0.85)' : 'rgba(239, 68, 68, 0.85)';
+          ctx.beginPath();
+          ctx.arc(targetLandingX, 150, 8, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.font = 'bold 10px sans-serif';
+          ctx.fillText(isTargetInGoal ? '🎯 HEDEF' : '❌ AUT', targetLandingX - 18, 136);
+        }
       }
 
-      // 5. Ball Physics & Flight
+      // 6. Ball Physics & Flight (With Falso Curve!)
       if (ball.inFlight) {
+        ball.vx += ball.spin; // Apply lateral curve!
         ball.x += ball.vx;
         ball.y += ball.vy;
 
-        // Collision Check in SHOOT mode
+        // Collision with Free Kick Wall
+        if (currentScenario === 'FREE_KICK') {
+          wallDefenders.forEach(def => {
+            if (ball.x >= def.x - 9 && ball.x <= def.x + def.width - 9 && ball.y >= def.y && ball.y <= def.y + def.height && !ball.saved && !ball.scored) {
+              ball.saved = true;
+              ball.vx *= -0.4;
+              ball.vy = 4;
+              Sound.postHit();
+              showMatchSplash(false, 'BARAJA ÇARPTI!', 'Barajı aşamadın, top taca çıktı.');
+            }
+          });
+        }
+
+        // Outfield Collision Logic
         if (matchMode === 'SHOOT') {
-          // Check collision with AI Goalkeeper
+          // Goalkeeper Save Check
           const distGK = Math.hypot(ball.x - goalkeeper.x, ball.y - (goalkeeper.y + 20));
-          if (distGK < 30 && !ball.saved && !ball.scored) {
+          if (distGK < 32 && !ball.saved && !ball.scored && !ball.out) {
             ball.saved = true;
             ball.vx = (Math.random() - 0.5) * 5;
             ball.vy = 4;
             Sound.saveGlove();
-            showMatchSplash(false, 'KALECİ ÇIKARDI!', 'Harika uzandı ve topu kornere çeldi');
+            showMatchSplash(false, 'KALECİ ÇIKARDI!', 'Harika uzandı ve topu kornere çeldi.');
           }
 
-          // Goal Check
-          if (ball.y <= goalBottom && ball.y >= goalTop && ball.x >= goalLeft && ball.x <= goalRight && !ball.saved && !ball.scored) {
-            ball.scored = true;
-            ball.vx *= 0.2;
-            ball.vy *= 0.2;
-            Sound.goal();
-            showMatchSplash(true, 'GOOOOOOOL!', '90’a Mükemmel Bir Şut!');
-          } else if (ball.y < goalTop || ball.x < 40 || ball.x > canvasWidth - 40) {
-            if (!ball.scored && !ball.saved) {
-              ball.saved = true;
+          // Goal Plane Check (y <= 210)
+          if (ball.y <= goalBottom && ball.y >= goalTop && !ball.saved && !ball.scored && !ball.out) {
+            if (ball.x >= goalLeft && ball.x <= goalRight) {
+              ball.scored = true;
+              ball.vx *= 0.2;
+              ball.vy *= 0.2;
+              Sound.goal();
+              showMatchSplash(true, 'GOOOOOOOL!', '90’a Falsolu Mükemmel Bir Şut!');
+            } else {
+              // Strictly OUT if outside posts!
+              ball.out = true;
               Sound.postHit();
-              showMatchSplash(false, 'AUT!', 'Top az farkla direğin yanından auta gitti');
+              showMatchSplash(false, 'AUT / DIŞARI!', 'Top direğin yanından auta gitti.');
+            }
+          } else if (ball.y < goalTop || ball.x < 30 || ball.x > canvasWidth - 30) {
+            if (!ball.scored && !ball.saved && !ball.out) {
+              ball.out = true;
+              Sound.postHit();
+              showMatchSplash(false, 'AUT!', 'Şut çerçeveyi bulmadı.');
             }
           }
         }
 
-        // Collision Check in SAVE mode (Player is Goalkeeper)
+        // Goalkeeper Mode Collision Logic
         if (matchMode === 'SAVE') {
           const distGlove = Math.hypot(ball.x - gloves.x, ball.y - gloves.y);
           if (distGlove < 34 && !ball.saved && !ball.scored) {
@@ -1279,7 +1611,7 @@
           } else if (ball.y <= goalBottom && ball.y >= goalTop && ball.x >= goalLeft && ball.x <= goalRight && !ball.saved && !ball.scored) {
             ball.scored = true;
             Sound.goal();
-            showMatchSplash(false, 'GOL OLDU...', 'Top ağlarla buluştu, toparlanmalısın');
+            showMatchSplash(false, 'GOL OLDU...', 'Top ağlarla buluştu, toparlanmalısın.');
           }
         }
       }
@@ -1296,10 +1628,10 @@
       // Ball Pentagons
       ctx.fillStyle = '#0f172a';
       ctx.beginPath();
-      ctx.arc(ball.x, ball.y, 4, 0, Math.PI * 2);
+      ctx.arc(ball.x, ball.y, 3.5, 0, Math.PI * 2);
       ctx.fill();
 
-      if (!ball.scored && !ball.saved) {
+      if (!ball.scored && !ball.saved && !ball.out) {
         requestAnimationFrame(renderCanvasLoop);
       }
     }
@@ -1344,7 +1676,6 @@
         }
       });
 
-      // Show/Hide Career HUD
       const hud = document.getElementById('careerHud');
       if (['screenStreetIntro', 'screenMatchPlay', 'screenContracts', 'screenSeasons'].includes(screenId)) {
         hud.classList.remove('hidden');
@@ -1360,7 +1691,6 @@
        8. INITIALIZATION & EVENT HANDLERS
        ===================================================================== */
     document.addEventListener('DOMContentLoaded', () => {
-      // 1. Initial State Check
       checkExistingSave();
       initSkinPalette();
       renderAvatarSvg();
@@ -1386,6 +1716,9 @@
         checkExistingSave();
         updateHUD();
       });
+
+      // Store Button
+      document.getElementById('btnOpenStore').addEventListener('click', openStoreModal);
 
       // Save Nick
       document.getElementById('btnSaveNick').addEventListener('click', () => {
@@ -1427,7 +1760,7 @@
         checkExistingSave();
       });
 
-      // Stage 2: Character Customization Listeners
+      // Stage 2 Customization Controls
       document.getElementById('selectHairModel').addEventListener('change', (e) => {
         player.hairModel = e.target.value;
         renderAvatarSvg();
@@ -1436,20 +1769,37 @@
         player.hairColor = e.target.value;
         renderAvatarSvg();
       });
+      document.getElementById('selectEyebrowColor').addEventListener('change', (e) => {
+        player.eyebrowColor = e.target.value;
+        renderAvatarSvg();
+      });
+      document.getElementById('selectEyeColor').addEventListener('change', (e) => {
+        player.eyeColor = e.target.value;
+        renderAvatarSvg();
+      });
       document.getElementById('inputJerseyNumber').addEventListener('input', (e) => {
         player.jerseyNumber = Math.max(1, Math.min(99, parseInt(e.target.value) || 9));
         renderAvatarSvg();
       });
+
+      // Randomize Character
       document.getElementById('btnRandomizeChar').addEventListener('click', () => {
         Sound.whistle();
         player.skinTone = SKIN_TONES[Math.floor(Math.random() * SKIN_TONES.length)];
-        const models = ['short', 'curly', 'mohawk', 'long', 'bald'];
+        const models = ['short', 'curly', 'mohawk', 'noodles', 'long', 'bald'];
         player.hairModel = models[Math.floor(Math.random() * models.length)];
-        const colors = ['#1c1917', '#573a24', '#d4a373', '#eab308', '#dc2626'];
-        player.hairColor = colors[Math.floor(Math.random() * colors.length)];
+        const hairCols = ['#1c1917', '#573a24', '#d4a373', '#eab308', '#dc2626'];
+        player.hairColor = hairCols[Math.floor(Math.random() * hairCols.length)];
+        const browCols = ['#1c1917', '#452a18', '#8c5a2c', '#ca8a04', '#991b1b'];
+        player.eyebrowColor = browCols[Math.floor(Math.random() * browCols.length)];
+        const eyeCols = ['#1c1917', '#713f12', '#0284c7', '#16a34a', '#d97706'];
+        player.eyeColor = eyeCols[Math.floor(Math.random() * eyeCols.length)];
         player.jerseyNumber = Math.floor(1 + Math.random() * 98);
+
         document.getElementById('selectHairModel').value = player.hairModel;
         document.getElementById('selectHairColor').value = player.hairColor;
+        document.getElementById('selectEyebrowColor').value = player.eyebrowColor;
+        document.getElementById('selectEyeColor').value = player.eyeColor;
         document.getElementById('inputJerseyNumber').value = player.jerseyNumber;
         initSkinPalette();
         renderAvatarSvg();
@@ -1459,7 +1809,7 @@
       document.getElementById('btnStartCareerAge12').addEventListener('click', () => {
         Sound.whistle();
         player.age = 12;
-        player.club = { name: currentLang === 'TR' ? 'Mahalle Sahası' : 'Street Ground', badge: '🏡', salary: 0 };
+        player.club = { name: currentLang === 'TR' ? 'Mahalle Sahası' : 'Street Ground', badge: '🏡', salary: 0, league: 'Mahalle Ligi' };
         saveCareer();
         showScreen('screenStreetIntro');
       });
@@ -1468,51 +1818,88 @@
       document.getElementById('btnPlayStreetMatch').addEventListener('click', () => {
         showScreen('screenMatchPlay');
         initMatchCanvas(player.position === 'GK' ? 'SAVE' : 'SHOOT', (success) => {
-          // After street match, fast-forward to age 16 turning point!
           player.age = 16;
           player.ovr += success ? 5 : 2;
           saveCareer();
           showScreen('screenContracts');
           renderContractOffers();
-        });
+        }, 'OPEN_PLAY');
       });
 
       // Skip Position Button
       document.getElementById('btnSkipPosition').addEventListener('click', () => {
-        showMatchSplash(Math.random() > 0.4, 'SİMÜLE EDİLDİ', 'Pozisyon hızlıca tamamlandı.');
+        showMatchSplash(Math.random() > 0.4, 'SİMÜLE EDİLDİ', 'Pozisyon tamamlandı.');
       });
 
-      // Season Play Match
+      // Season Play Match (Picks random scenario: ONE_TWO, FREE_KICK, CORNER, OPEN_PLAY)
       document.getElementById('btnPlaySeasonMatch').addEventListener('click', () => {
+        if (player.discipline && player.discipline.suspendedMatches > 0) {
+          alert('⚠️ Cezalısın! Bu maç tribündesin, maça çıkamazsın.');
+          return;
+        }
+        if (player.injury && player.injury.isInjured) {
+          alert(`🩹 ${player.injury.desc}! Sakatlığın nedeniyle maça çıkamazsın.`);
+          return;
+        }
+
+        const scenarios = ['OPEN_PLAY', 'ONE_TWO', 'FREE_KICK', 'CORNER'];
+        const chosen = scenarios[Math.floor(Math.random() * scenarios.length)];
         showScreen('screenMatchPlay');
-        initMatchCanvas(player.position === 'GK' ? 'SAVE' : 'SHOOT', (success) => {
+        initMatchCanvas(player.position === 'GK' ? 'SAVE' : 'SHOOT', () => {
           showScreen('screenSeasons');
           renderSeasonScreen();
-        });
+        }, chosen);
       });
 
-      // Advance Season Year
+      // Advance Season Year (With Card Suspensions, Injuries, Passive Investments!)
       document.getElementById('btnAdvanceSeasonYear').addEventListener('click', () => {
         Sound.kick();
         player.age++;
-        player.stats.matches += Math.floor(30 + Math.random() * 8);
-        const goalsThisYear = player.position === 'GK' ? 0 : Math.floor(12 + Math.random() * 22);
-        const savesThisYear = player.position === 'GK' ? Math.floor(40 + Math.random() * 30) : 0;
+        player.stats.matches += Math.floor(32 + Math.random() * 6);
+        const goalsThisYear = player.position === 'GK' ? 0 : Math.floor(14 + Math.random() * 20);
+        const savesThisYear = player.position === 'GK' ? Math.floor(45 + Math.random() * 25) : 0;
         player.stats.goals += goalsThisYear;
         player.stats.saves += savesThisYear;
-        player.wealth += player.club.salary || 40000;
+        
+        // Income: Club Salary + Passive Income from Halı Saha/Academy Investments!
+        let yearlyIncome = player.club.salary || 40000;
+        if (player.assets.includes('pitch')) yearlyIncome += 35000;
+        if (player.assets.includes('academy')) yearlyIncome += 140000;
+        player.wealth += yearlyIncome;
 
-        // Check Trophy & Awards
-        if (Math.random() > 0.6) {
+        // Discipline: Yellow cards simulation
+        player.discipline.yellowCards = Math.floor(Math.random() * 6);
+        if (player.discipline.yellowCards >= 4) {
+          player.discipline.suspendedMatches = 1;
+        } else {
+          player.discipline.suspendedMatches = 0;
+        }
+
+        // Injury Simulation (Reduced if Physio is owned)
+        const hasPhysio = player.assets.includes('physio');
+        const injuryRoll = Math.random();
+        if (!hasPhysio && injuryRoll < 0.22) {
+          player.injury.isInjured = true;
+          player.injury.desc = 'Adale Yırtılması (3 Hafta)';
+        } else if (hasPhysio && injuryRoll < 0.08) {
+          player.injury.isInjured = true;
+          player.injury.desc = 'Hafif Bilek Burkulması (1 Hafta)';
+        } else {
+          player.injury.isInjured = false;
+          player.injury.desc = '';
+        }
+
+        // Check Trophies & Individual Awards
+        if (Math.random() > 0.55) {
           player.stats.trophies++;
         }
-        if (goalsThisYear > 25 && !player.awards.includes('Altın Ayakkabı 🥇')) {
+        if (goalsThisYear > 24 && !player.awards.includes('Altın Ayakkabı 🥇')) {
           player.awards.push('Altın Ayakkabı 🥇');
         }
         if (savesThisYear > 55 && !player.awards.includes('Altın Eldiven 🧤')) {
           player.awards.push('Altın Eldiven 🧤');
         }
-        if (player.ovr >= 85 && !player.awards.includes('Ballon d\'Or ⭐')) {
+        if (player.ovr >= 84 && !player.awards.includes('Ballon d\'Or ⭐')) {
           player.awards.push('Ballon d\'Or ⭐');
         }
 
@@ -1523,8 +1910,16 @@
           renderRetirementScreen();
         } else {
           renderSeasonScreen();
+          // Trigger Transfer Window Alert
+          const transferBox = document.getElementById('transferWindowAlert');
+          transferBox.classList.remove('hidden');
         }
       });
+
+      // Season Tabs: Matches vs Standings vs Brackets
+      document.getElementById('tabSeasonFeed').onclick = () => switchSeasonTab('feed');
+      document.getElementById('tabSeasonTable').onclick = () => switchSeasonTab('table');
+      document.getElementById('tabSeasonBrackets').onclick = () => switchSeasonTab('brackets');
 
       // Play Again
       document.getElementById('btnPlayAgain').addEventListener('click', () => {
@@ -1560,7 +1955,6 @@
         grid.appendChild(btn);
       });
 
-      // Tabs: Random vs Manual
       const tabR = document.getElementById('tabCountryRandom');
       const tabM = document.getElementById('tabCountryManual');
       const boxR = document.getElementById('boxCountryRandom');
@@ -1580,7 +1974,6 @@
         boxR.classList.add('hidden');
       };
 
-      // Random Spin
       document.getElementById('btnSpinCountry').onclick = () => {
         let count = 0;
         const max = 12;
@@ -1600,7 +1993,6 @@
         }, 80);
       };
 
-      // Search Filter
       document.getElementById('searchCountryInput').oninput = (e) => {
         const query = e.target.value.toLowerCase();
         Array.from(grid.children).forEach(btn => {
@@ -1653,7 +2045,7 @@
         `;
         card.querySelector('button').onclick = () => {
           Sound.whistle();
-          player.club = { name: currentLang === 'TR' ? club.nameTr : club.nameEn, badge: club.badge, salary: club.salary };
+          player.club = { name: currentLang === 'TR' ? club.nameTr : club.nameEn, badge: club.badge, salary: club.salary, league: 'Süper Lig' };
           player.age = 17;
           saveCareer();
           showScreen('screenSeasons');
@@ -1664,8 +2056,35 @@
     }
 
     /* =====================================================================
-       11. SEASONS PROGRESSION (Ages 17 to 38)
+       11. SEASONS PROGRESSION & TABS (Matches, League Table, Brackets)
        ===================================================================== */
+    function switchSeasonTab(tab) {
+      const feedTab = document.getElementById('tabSeasonFeed');
+      const tableTab = document.getElementById('tabSeasonTable');
+      const bracketsTab = document.getElementById('tabSeasonBrackets');
+      const feedView = document.getElementById('viewSeasonFeed');
+      const tableView = document.getElementById('viewSeasonTable');
+      const bracketsView = document.getElementById('viewSeasonBrackets');
+
+      [feedTab, tableTab, bracketsTab].forEach(t => {
+        t.className = 'flex-1 py-2 rounded-xl text-xs font-bold transition text-slate-400 hover:text-white flex items-center justify-center gap-1.5';
+      });
+      [feedView, tableView, bracketsView].forEach(v => v.classList.add('hidden'));
+
+      if (tab === 'feed') {
+        feedTab.className = 'flex-1 py-2 rounded-xl text-xs font-bold transition bg-emerald-500 text-pitch-950 flex items-center justify-center gap-1.5';
+        feedView.classList.remove('hidden');
+      } else if (tab === 'table') {
+        tableTab.className = 'flex-1 py-2 rounded-xl text-xs font-bold transition bg-emerald-500 text-pitch-950 flex items-center justify-center gap-1.5';
+        tableView.classList.remove('hidden');
+        renderLeagueTable();
+      } else if (tab === 'brackets') {
+        bracketsTab.className = 'flex-1 py-2 rounded-xl text-xs font-bold transition bg-emerald-500 text-pitch-950 flex items-center justify-center gap-1.5';
+        bracketsView.classList.remove('hidden');
+        renderBrackets();
+      }
+    }
+
     function renderSeasonScreen() {
       document.getElementById('seasonTitle').textContent = `${2026 + (player.age - 16)} - ${2027 + (player.age - 16)} Sezonu (Yaş: ${player.age})`;
       document.getElementById('seasonClubDisplay').textContent = `${player.club.badge} ${player.club.name}`;
@@ -1675,47 +2094,205 @@
       feed.innerHTML = `
         <div class="p-4 rounded-2xl bg-pitch-900/90 border border-pitch-800 space-y-2">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-bold text-emerald-400">🔥 Sezon İlerlemesi</span>
+            <span class="text-xs font-bold text-emerald-400">🔥 Sezon Mücadelesi</span>
             <span class="text-[10px] text-slate-400 font-mono">${player.stats.matches} Toplam Maç</span>
           </div>
           <p class="text-xs text-slate-300 leading-relaxed">
-            ${player.club.name} formasıyla taraftarların sevgilisi haline geldin. Bu sezon takımın kaderini belirleyecek dev bir lig derbisi seni bekliyor!
+            ${player.club.name} formasıyla taraftarların sevgilisi haline geldin. Puan tablosunda liderlik savaşı veriyor, kupalarda finale yürüyorsun!
           </p>
         </div>
       `;
+    }
 
-      // Check Transfer Offers if player has high OVR
-      if (player.ovr >= 78 && Math.random() > 0.5) {
-        const elite = CLUB_TIERS.eliteClubs[Math.floor(Math.random() * CLUB_TIERS.eliteClubs.length)];
-        if (elite.name !== player.club.name) {
-          const offerCard = document.createElement('div');
-          offerCard.className = 'p-3.5 rounded-2xl bg-gradient-to-r from-amber-950/60 to-pitch-900 border-2 border-amber-500/60 flex items-center justify-between gap-3';
-          offerCard.innerHTML = `
-            <div class="flex items-center gap-2.5">
-              <span class="text-3xl">${elite.badge}</span>
-              <div>
-                <div class="text-[10px] text-amber-400 font-bold uppercase">DEV TRANSFER TEKLİFİ!</div>
-                <div class="text-sm font-display font-black text-white">${elite.name}</div>
-                <div class="text-[10px] text-slate-400">Maaş: €${elite.salary.toLocaleString('tr-TR')}</div>
-              </div>
-            </div>
-            <button class="px-3 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-pitch-950 font-bold text-xs uppercase shadow transition shrink-0">
-              Kabul Et
-            </button>
-          `;
-          offerCard.querySelector('button').onclick = () => {
-            Sound.whistle();
-            player.club = { name: elite.name, badge: elite.badge, salary: elite.salary };
-            saveCareer();
-            renderSeasonScreen();
-          };
-          feed.prepend(offerCard);
-        }
-      }
+    /* League Table Generator */
+    function renderLeagueTable() {
+      const tbody = document.getElementById('leagueTableBody');
+      const teams = [
+        { name: player.club.name, badge: player.club.badge, p: 68, w: 21, d: 5, l: 2, gd: '+38' },
+        { name: 'Fenerbahçe SK', badge: '🟡', p: 65, w: 20, d: 5, l: 3, gd: '+32' },
+        { name: 'Beşiktaş JK', badge: '🦅', p: 58, w: 17, d: 7, l: 4, gd: '+22' },
+        { name: 'Trabzonspor', badge: '🔴', p: 52, w: 15, d: 7, l: 6, gd: '+14' },
+        { name: 'Başakşehir FK', badge: '🟠', p: 46, w: 13, d: 7, l: 8, gd: '+6' },
+        { name: 'Adana Demirspor', badge: '⚡', p: 40, w: 11, d: 7, l: 10, gd: '+1' }
+      ];
+
+      tbody.innerHTML = '';
+      teams.forEach((t, i) => {
+        const isMyTeam = (t.name === player.club.name);
+        const tr = document.createElement('tr');
+        tr.className = isMyTeam ? 'bg-emerald-950/40 text-emerald-300 font-bold' : 'hover:bg-pitch-800/40';
+        tr.innerHTML = `
+          <td class="py-2 text-slate-400">${i + 1}</td>
+          <td class="text-white flex items-center gap-1.5"><span class="text-sm">${t.badge}</span> <span class="truncate">${t.name}</span></td>
+          <td class="text-center">28</td>
+          <td class="text-center text-emerald-400">${t.w}</td>
+          <td class="text-center text-slate-400">${t.d}</td>
+          <td class="text-center text-rose-400">${t.l}</td>
+          <td class="text-center text-slate-300">${t.gd}</td>
+          <td class="text-right font-black text-amber-300">${t.p}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    /* Cup Brackets & Groups Generator */
+    function renderBrackets() {
+      const grid = document.getElementById('cupBracketsGrid');
+      grid.innerHTML = `
+        <div class="p-2.5 rounded-xl bg-pitch-950 border border-pitch-800">
+          <div class="text-[9px] text-slate-500 uppercase font-bold">Son 16</div>
+          <div class="font-bold text-white text-xs mt-1">${player.club.badge} 3 - 1 RAK</div>
+          <div class="text-[9px] text-emerald-400">Tur Atlandı ✔</div>
+        </div>
+        <div class="p-2.5 rounded-xl bg-pitch-950 border border-pitch-800">
+          <div class="text-[9px] text-slate-500 uppercase font-bold">Çeyrek Final</div>
+          <div class="font-bold text-white text-xs mt-1">${player.club.badge} 2 - 0 DER</div>
+          <div class="text-[9px] text-emerald-400">Tur Atlandı ✔</div>
+        </div>
+        <div class="p-2.5 rounded-xl bg-pitch-950 border border-amber-500/40">
+          <div class="text-[9px] text-amber-400 uppercase font-bold">Yarı Final</div>
+          <div class="font-bold text-white text-xs mt-1">${player.club.badge} vs 🟡</div>
+          <div class="text-[9px] text-amber-300 animate-pulse">Sıradaki Maç ⏳</div>
+        </div>
+        <div class="p-2.5 rounded-xl bg-pitch-950/60 border border-pitch-800 opacity-60">
+          <div class="text-[9px] text-slate-500 uppercase font-bold">Kupa Finali</div>
+          <div class="font-bold text-slate-400 text-xs mt-1">🏆 Kupa Maçı</div>
+          <div class="text-[9px] text-slate-500">Bekleniyor</div>
+        </div>
+      `;
+
+      const groupGrid = document.getElementById('championsGroupGrid');
+      groupGrid.innerHTML = `
+        <div class="p-2 rounded-xl bg-emerald-950/40 border border-emerald-500/40 text-emerald-300">
+          <div class="font-bold">1. ${player.club.badge} ${player.club.name.split(' ')[0]}</div>
+          <div class="text-[10px] text-slate-400">13 Puan • Lider</div>
+        </div>
+        <div class="p-2 rounded-xl bg-pitch-950 border border-pitch-800">
+          <div class="font-bold text-white">2. 🌊 Man. City</div>
+          <div class="text-[10px] text-slate-400">11 Puan • Üst Tur</div>
+        </div>
+        <div class="p-2 rounded-xl bg-pitch-950 border border-pitch-800">
+          <div class="font-bold text-slate-300">3. 🔴 Bayern</div>
+          <div class="text-[10px] text-slate-400">7 Puan</div>
+        </div>
+        <div class="p-2 rounded-xl bg-pitch-950 border border-pitch-800">
+          <div class="font-bold text-slate-400">4. 🦅 Benfica</div>
+          <div class="text-[10px] text-slate-400">2 Puan</div>
+        </div>
+      `;
     }
 
     /* =====================================================================
-       12. RETIREMENT & JUBILEE SCREEN
+       12. MULTI-TRANSFER DESK MODAL LOGIC (Item 7 Upgrade!)
+       ===================================================================== */
+    function openTransferDeskModal() {
+      const modal = document.getElementById('modalTransferDesk');
+      const container = document.getElementById('transferOffersContainer');
+      modal.classList.remove('hidden');
+
+      // Filter eligible clubs
+      const eligible = CLUB_TIERS.transferMarketPool.filter(c => c.name !== player.club.name);
+      // Pick 3 diverse offers
+      const offers = [];
+      const shuffled = [...eligible].sort(() => 0.5 - Math.random());
+      for (let i = 0; i < Math.min(3, shuffled.length); i++) {
+        offers.push(shuffled[i]);
+      }
+
+      container.innerHTML = '';
+      offers.forEach(club => {
+        const card = document.createElement('div');
+        card.className = 'p-3.5 rounded-2xl bg-pitch-950 border border-pitch-700 hover:border-amber-400 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 transition text-left';
+        card.innerHTML = `
+          <div class="flex items-center gap-3">
+            <span class="text-3xl">${club.badge}</span>
+            <div>
+              <div class="text-[10px] font-mono text-amber-400 font-bold uppercase">${club.league} • ${club.role}</div>
+              <h4 class="font-display font-black text-white text-base">${club.name}</h4>
+              <div class="text-xs font-mono text-slate-300">
+                Maaş: <span class="text-emerald-400 font-bold">€${club.salary.toLocaleString('tr-TR')} / Yıl</span>
+                <span class="text-slate-500">•</span> Bonservis: €${(club.fee / 1000000).toFixed(1)}M
+              </div>
+            </div>
+          </div>
+          <button class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-lime-400 hover:from-emerald-400 hover:to-lime-300 text-pitch-950 font-black text-xs uppercase shadow transition shrink-0">
+            Sözleşmeyi İmzala ✍️
+          </button>
+        `;
+        card.querySelector('button').onclick = () => {
+          Sound.whistle();
+          player.club = { name: club.name, badge: club.badge, salary: club.salary, league: club.league };
+          saveCareer();
+          closeTransferDeskModal();
+          renderSeasonScreen();
+          alert(`🎉 TEBRİKLER! ${club.name} ile resmi sözleşme imzaladın!`);
+        };
+        container.appendChild(card);
+      });
+    }
+
+    function closeTransferDeskModal() {
+      document.getElementById('modalTransferDesk').classList.add('hidden');
+    }
+
+    function stayAtCurrentClub() {
+      closeTransferDeskModal();
+      document.getElementById('transferWindowAlert').classList.add('hidden');
+      alert(`🦁 ${player.club.name} kulübünde kalmaya ve efsaneleşmeye devam ediyorsun!`);
+    }
+
+    /* =====================================================================
+       13. STORE & ASSETS MODAL LOGIC (Item 8 Upgrade!)
+       ===================================================================== */
+    function openStoreModal() {
+      const modal = document.getElementById('modalStore');
+      const grid = document.getElementById('storeItemsGrid');
+      modal.classList.remove('hidden');
+
+      grid.innerHTML = '';
+      STORE_CATALOG.forEach(item => {
+        const owned = player.assets.includes(item.id);
+        const canAfford = player.wealth >= item.price;
+
+        const row = document.createElement('div');
+        row.className = `p-3 rounded-2xl border transition flex items-center justify-between gap-3 text-left ${owned ? 'bg-pitch-950/60 border-emerald-500/40' : 'bg-pitch-950 border-pitch-800'}`;
+        row.innerHTML = `
+          <div class="flex items-center gap-3 min-w-0">
+            <span class="text-3xl shrink-0">${item.icon}</span>
+            <div class="min-w-0">
+              <div class="font-display font-bold text-white text-xs sm:text-sm truncate">${currentLang === 'TR' ? item.nameTr : item.nameEn}</div>
+              <div class="text-[10px] text-slate-400 leading-snug">${currentLang === 'TR' ? item.descTr : item.descEn}</div>
+              <div class="text-[11px] font-mono font-bold text-amber-300 mt-0.5">€${item.price.toLocaleString('tr-TR')}</div>
+            </div>
+          </div>
+          <div>
+            ${owned 
+              ? `<span class="px-3 py-1.5 rounded-xl bg-emerald-500/20 text-emerald-400 font-bold text-xs border border-emerald-500/40">Satın Alındı ✔</span>`
+              : `<button class="px-3.5 py-2 rounded-xl font-bold text-xs uppercase shadow transition shrink-0 ${canAfford ? 'bg-amber-400 hover:bg-amber-300 text-pitch-950' : 'bg-pitch-800 text-slate-500 cursor-not-allowed'}" ${!canAfford ? 'disabled' : ''}>Satın Al</button>`
+            }
+          </div>
+        `;
+
+        if (!owned && canAfford) {
+          row.querySelector('button').onclick = () => {
+            player.wealth -= item.price;
+            player.assets.push(item.id);
+            if (item.id === 'coach') player.ovr += 3;
+            Sound.goal();
+            saveCareer();
+            openStoreModal();
+          };
+        }
+        grid.appendChild(row);
+      });
+    }
+
+    function closeStoreModal() {
+      document.getElementById('modalStore').classList.add('hidden');
+    }
+
+    /* =====================================================================
+       14. RETIREMENT & JUBILEE SCREEN
        ===================================================================== */
     function renderRetirementScreen() {
       document.getElementById('retireFlag').textContent = player.country.flag;
@@ -1731,6 +2308,7 @@
       document.getElementById('retireTotalTrophies').textContent = `${player.stats.trophies} 🏆`;
       document.getElementById('retireTotalWealth').textContent = `€${player.wealth.toLocaleString('tr-TR')}`;
 
+      // Awards List
       const awardsContainer = document.getElementById('retireAwardsList');
       awardsContainer.innerHTML = '';
       if (player.awards.length === 0) {
@@ -1742,6 +2320,23 @@
         badge.textContent = a;
         awardsContainer.appendChild(badge);
       });
+
+      // Assets List
+      const assetsContainer = document.getElementById('retireAssetsList');
+      assetsContainer.innerHTML = '';
+      if (!player.assets || player.assets.length === 0) {
+        assetsContainer.innerHTML = '<span class="text-xs text-slate-500 italic">Henüz satın alınmış büyük mülk yok</span>';
+      } else {
+        player.assets.forEach(id => {
+          const item = STORE_CATALOG.find(s => s.id === id);
+          if (item) {
+            const span = document.createElement('span');
+            span.className = 'px-2 py-0.5 rounded-md bg-emerald-950/60 border border-emerald-500/40 text-[11px] font-bold text-emerald-300';
+            span.textContent = `${item.icon} ${item.nameTr}`;
+            assetsContainer.appendChild(span);
+          }
+        });
+      }
     }
   </script>
 
