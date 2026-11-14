@@ -578,7 +578,11 @@
       </div>
 
       <!-- Advance Age Button Bar (Sticky at bottom when needed) -->
-      <div id="advanceBar" class="sticky bottom-6 z-30 pt-4 flex justify-center">
+      <div id="advanceBar" class="sticky bottom-6 z-30 pt-4 flex flex-wrap items-center justify-center gap-3">
+        <button id="btnEarlyRetire" onclick="finishCareerAndShowJubilee()" class="hidden py-3 px-4 rounded-2xl bg-pitch-900 hover:bg-rose-950/60 text-slate-300 hover:text-rose-300 border border-pitch-700 font-bold text-xs transition flex items-center gap-1.5 shadow-lg active:scale-95">
+          <i class="fa-solid fa-flag-checkered text-amber-400"></i>
+          <span id="txtEarlyRetire">Kramponları As (Jübile)</span>
+        </button>
         <button id="btnAdvanceYear" class="py-3.5 px-8 rounded-2xl bg-gradient-to-r from-emerald-500 to-lime-500 hover:from-emerald-400 hover:to-lime-400 text-pitch-950 font-display font-black text-base tracking-wide uppercase shadow-2xl shadow-emerald-500/30 active:scale-[0.98] transition flex items-center gap-2 border border-emerald-400/40">
           <span id="txtAdvanceBtn">SONRAKİ YILA GEÇ</span>
           <span class="px-2 py-0.5 rounded bg-pitch-950/30 text-xs font-mono font-bold" id="badgeNextAge">Yaş: 1</span>
@@ -2519,6 +2523,14 @@
     }
 
     function updateNextAgeButton(nextAge) {
+      const earlyBtn = document.getElementById('btnEarlyRetire');
+      if (earlyBtn) {
+        if (player.age >= 32 && !player.isRetired) {
+          earlyBtn.classList.remove('hidden');
+        } else {
+          earlyBtn.classList.add('hidden');
+        }
+      }
       const badge = document.getElementById('badgeNextAge');
       if (nextAge <= 40) {
         badge.textContent = currentLang === 'TR' ? `Yaş: ${nextAge}` : `Age: ${nextAge}`;
@@ -5244,6 +5256,7 @@
 
 function finishCareerAndShowJubilee() {
       player.isRetired = true;
+      player.retirementAge = player.age || 40;
       if (isAutoPlaying) toggleAutoPlay();
 
       // Determine Archetype
@@ -5743,7 +5756,7 @@ function finishCareerAndShowJubilee() {
               <span class="px-2 py-0.5 rounded-md bg-pitch-950 text-amber-400 font-bold border border-pitch-800 truncate max-w-[180px]">
                 ${archText}
               </span>
-              <span class="text-slate-400 font-mono">${dict.legendAge40}</span>
+              <span class="text-slate-400 font-mono">${item.retirementAge || item.age || 40} ${currentLang === 'TR' ? 'Yaş Jübile' : 'Age Jubilee'}</span>
             </div>
 
             <!-- Mini Stats -->
@@ -5891,7 +5904,7 @@ function finishCareerAndShowJubilee() {
     }
 
     function shareToHallOfFame() {
-      if (!player.isRetired && player.age < 40) return;
+      if (!player.isRetired && player.age < 30) return;
 
       const legend = {
         id: 'fl_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
@@ -5901,6 +5914,8 @@ function finishCareerAndShowJubilee() {
         dominantFoot: player.dominantFoot,
         peakOvr: player.peakOvr,
         archetype: player.archetype,
+        retirementAge: player.retirementAge || player.age || 40,
+        age: player.retirementAge || player.age || 40,
         peakValue: formatCurrency(Math.floor(Math.pow(player.peakOvr / 10, 4) * 12000)),
         bankBalance: player.bankBalance || 0,
         assets: JSON.parse(JSON.stringify(player.assets)),
@@ -6145,24 +6160,74 @@ function finishCareerAndShowJubilee() {
         });
       }
 
-      // Share to WhatsApp
+      // Share to WhatsApp (With Garage/Cars, Assets, Real Retirement Age & Trophies)
       document.getElementById('btnShareWhatsApp').addEventListener('click', () => {
         if (window.pbTracker && window.pbTracker.logEvent) {
           window.pbTracker.logEvent('whatsapp_share', '/football-lottery', player ? player.fullName : 'WhatsApp');
         }
+
+        const carList = player.assets?.cars || [];
+        const houseList = player.assets?.houses || [];
+        const bizList = player.assets?.businesses || [];
+        const allAssets = [...carList, ...houseList, ...bizList];
+
+        let garageSectionTr = carList.length > 0 ? `🏎️ Lüks Garaj: ${carList.join(', ')}\n` : '';
+        let garageSectionEn = carList.length > 0 ? `🏎️ Supercar Garage: ${carList.join(', ')}\n` : '';
+
+        let assetsSectionTr = houseList.length > 0 || bizList.length > 0 ? `🏰 Mülkler: ${[...houseList, ...bizList].join(', ')}\n` : '';
+        let assetsSectionEn = houseList.length > 0 || bizList.length > 0 ? `🏰 Estates: ${[...houseList, ...bizList].join(', ')}\n` : '';
+
+        let wealthSectionTr = (player.bankBalance || 0) > 0 ? `💰 Servet: ${formatCurrency(player.bankBalance)}\n` : '';
+        let wealthSectionEn = (player.bankBalance || 0) > 0 ? `💰 Net Worth: ${formatCurrency(player.bankBalance)}\n` : '';
+
+        const tb = typeof getTrophyBreakdown === 'function' ? getTrophyBreakdown(player.stats) : { total: player.stats.trophies || 0 };
+        const trophyTextTr = tb.total > 0
+          ? `🏆 Kupalar (${tb.total}): ${[
+              tb.wc > 0 ? `${tb.wc}x Dünya Kupası 🌍` : '',
+              tb.ucl > 0 ? `${tb.ucl}x Şampiyonlar Ligi 🌟` : '',
+              tb.league > 0 ? `${tb.league}x Lig Şampiyonu 🏆` : '',
+              tb.domesticCup > 0 ? `${tb.domesticCup}x Ulusal Kupa 🥇` : '',
+              tb.superCup > 0 ? `${tb.superCup}x Süper Kupa ⚡` : ''
+            ].filter(Boolean).join(', ')}\n`
+          : '🏆 Kupa: 0\n';
+
+        const trophyTextEn = tb.total > 0
+          ? `🏆 Trophies (${tb.total}): ${[
+              tb.wc > 0 ? `${tb.wc}x World Cup 🌍` : '',
+              tb.ucl > 0 ? `${tb.ucl}x Champions League 🌟` : '',
+              tb.league > 0 ? `${tb.league}x League Title 🏆` : '',
+              tb.domesticCup > 0 ? `${tb.domesticCup}x Domestic Cup 🥇` : '',
+              tb.superCup > 0 ? `${tb.superCup}x Super Cup ⚡` : ''
+            ].filter(Boolean).join(', ')}\n`
+          : '🏆 Trophies: 0\n';
+
+        const retAge = player.retirementAge || player.age || 40;
+        const retTextTr = `⏱️ Emeklilik: ${retAge} Yaşında Jübile\n`;
+        const retTextEn = `⏱️ Retirement: Age ${retAge} Jubilee\n`;
+
         const text = currentLang === 'TR'
           ? `⚽ Futbolcu Doğum Piyangosu'nda kariyerimi tamamladım!\n\n` +
             `👤 Oyuncu: ${player.fullName} (${player.country.flag} ${player.country.nameTr})\n` +
             `⭐ Zirve OVR: ${player.peakOvr} | Mevki: ${player.position.code}\n` +
-            `📊 İstatistik: ${player.stats.matches} Maç, ${player.stats.goals} Gol, ${player.stats.assists} Asist, 🏆 ${player.stats.trophies} Kupa\n` +
-            `🎖️ Kariyer Kimliği: ${player.archetype}\n\n` +
-            `Sen hangi ülkede, hangi yetenekle doğacaksın? Hemen oyna:\nhttps://pratikbase.com/football-lottery/?ref=whatsapp`
+            `🎖️ Kariyer Kimliği: ${player.archetype}\n` +
+            retTextTr +
+            `📊 İstatistik: ${player.stats.matches} Maç, ${player.stats.goals} Gol, ${player.stats.assists} Asist\n` +
+            trophyTextTr +
+            wealthSectionTr +
+            garageSectionTr +
+            assetsSectionTr +
+            `\nSen hangi ülkede, hangi yetenekle doğacaksın? Hemen oyna:\nhttps://pratikbase.com/football-lottery/?ref=whatsapp`
           : `⚽ Just finished my Football Lottery Career!\n\n` +
             `👤 Player: ${player.fullName} (${player.country.flag} ${player.country.nameEn})\n` +
             `⭐ Peak OVR: ${player.peakOvr} | Pos: ${player.position.code}\n` +
-            `📊 Stats: ${player.stats.matches} Apps, ${player.stats.goals} Goals, ${player.stats.assists} Ast, 🏆 ${player.stats.trophies} Trophies\n` +
-            `🎖️ Identity: ${player.archetype}\n\n` +
-            `Test your football birth lottery now:\nhttps://pratikbase.com/football-lottery/?lang=en&ref=whatsapp`;
+            `🎖️ Identity: ${player.archetype}\n` +
+            retTextEn +
+            `📊 Stats: ${player.stats.matches} Apps, ${player.stats.goals} Goals, ${player.stats.assists} Ast\n` +
+            trophyTextEn +
+            wealthSectionEn +
+            garageSectionEn +
+            assetsSectionEn +
+            `\nTest your football birth lottery now:\nhttps://pratikbase.com/football-lottery/?lang=en&ref=whatsapp`;
 
         window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
       });
