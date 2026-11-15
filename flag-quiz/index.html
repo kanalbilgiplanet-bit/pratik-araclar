@@ -416,6 +416,10 @@
               <div class="text-xl sm:text-2xl font-mono font-black text-cyan-300" id="valResultAvg">1.24s</div>
             </div>
           </div>
+
+          <!-- Live Global Top 100 Rank Showcase (İlk 100 Sıralama Kartı) -->
+          <div id="resultLeaderboardRankBox" class="hidden"></div>
+
           <div id="resultRankMessage" class="text-xs text-emerald-300 font-medium py-1 px-2 rounded-lg bg-emerald-950/60 border border-emerald-500/30">
             <!-- Dynamic feedback based on score -->
           </div>
@@ -1417,6 +1421,15 @@
         document.getElementById('resultSoloCard').classList.remove('hidden');
         document.getElementById('resultPodiumCard').classList.add('hidden');
         document.getElementById('txtPlayAgainBtn').textContent = currentLang === 'TR' ? `YENİDEN OYNA (${totalMatchQ} YENİ BAYRAK)` : `PLAY AGAIN (${totalMatchQ} NEW FLAGS)`;
+        
+        // Show loading rank state
+        const rankBox = document.getElementById('resultLeaderboardRankBox');
+        if (rankBox) {
+          rankBox.className = 'p-3 rounded-xl bg-pitch-900/60 border border-pitch-800 text-center flex items-center justify-center gap-2 text-xs text-slate-400 font-mono';
+          rankBox.innerHTML = `<i class="fa-solid fa-spinner fa-spin text-amber-400"></i> <span>${currentLang === 'TR' ? 'Global İlk 100 sıralaman hesaplanıyor...' : 'Calculating Global Top 100 rank...'}</span>`;
+          rankBox.classList.remove('hidden');
+        }
+
         submitScoreToLeaderboard(correctCount, totalTimeSec);
       } else if (currentMatchMode === 'party' && currentRoomId) {
         // Multi-user room finish
@@ -1450,15 +1463,27 @@
        ===================================================================== */
     let currentLeaderboardTab = 'today';
     let cachedLeaderboardList = [];
+    let lastRecordedRank = null;
 
     async function submitScoreToLeaderboard(score, timeSec) {
       if (!myPlayer.token) return;
       try {
+        const numScore = Number(score);
+        const numTime = Number(timeSec);
+
+        // Keep best score for this user
+        let bestScore = numScore;
+        let bestTime = numTime;
+        if (myPlayer.bestScore > bestScore || (myPlayer.bestScore === bestScore && myPlayer.bestTime < bestTime)) {
+          bestScore = myPlayer.bestScore;
+          bestTime = myPlayer.bestTime;
+        }
+
         const payload = {
           token: myPlayer.token,
           nick: myPlayer.nick,
-          score: Number(score),
-          time: Number(timeSec),
+          score: bestScore,
+          time: bestTime,
           timestamp: Date.now()
         };
 
@@ -1469,8 +1494,96 @@
           body: JSON.stringify(payload)
         });
 
-        fetchLeaderboard();
-      } catch(e) {}
+        // Fresh leaderboard fetch to calculate exact rank
+        const res = await fetch(`${RTDB_BASE_URL}/flag_quiz_leaderboard.json`);
+        const data = await res.json();
+        if (data) {
+          const list = Object.values(data).filter(item => item && item.nick && item.score !== undefined);
+          
+          // Sort by score descending, then by time ascending
+          list.sort((a, b) => {
+            if (b.score !== a.score) return b.score - a.score;
+            return a.time - b.time;
+          });
+
+          cachedLeaderboardList = list;
+          renderLeaderboard();
+
+          // Calculate user's rank
+          const userRank = list.findIndex(item => item.token === myPlayer.token) + 1;
+          const totalCount = list.length;
+          lastRecordedRank = userRank;
+
+          const rankBox = document.getElementById('resultLeaderboardRankBox');
+          if (rankBox && userRank > 0) {
+            if (userRank <= 100) {
+              let badgeTitle = '';
+              let descText = '';
+              let badgeColor = '';
+              let numberColor = 'text-amber-400';
+
+              if (userRank === 1) {
+                badgeTitle = currentLang === 'TR' ? '👑 DÜNYA LİDERİ • 1. SIRA' : '👑 WORLD #1 LEADER';
+                descText = currentLang === 'TR' ? 'İnanılmaz refleks! Global İlk 100 sıralamasında zirvedesin!' : 'Incredible reflex! You sit at the very top of the Global Top 100!';
+                badgeColor = 'from-amber-500/30 via-yellow-500/20 to-amber-500/30 border-2 border-amber-400 shadow-amber-500/25';
+                numberColor = 'text-amber-300 drop-shadow-[0_0_15px_rgba(251,191,36,0.6)]';
+              } else if (userRank === 2) {
+                badgeTitle = currentLang === 'TR' ? '🥈 DÜNYA İKİNCİSİ • İLK 100' : '🥈 WORLD #2 • TOP 100';
+                descText = currentLang === 'TR' ? 'Muazzam derece! Dünya podyumunda 2. sıradasın!' : 'Sensational score! You claimed 2nd place on the world podium!';
+                badgeColor = 'from-slate-400/25 via-slate-300/15 to-slate-400/25 border border-slate-300/70 shadow-slate-400/20';
+                numberColor = 'text-slate-200';
+              } else if (userRank === 3) {
+                badgeTitle = currentLang === 'TR' ? '🥉 DÜNYA ÜÇÜNCÜSÜ • İLK 100' : '🥉 WORLD #3 • TOP 100';
+                descText = currentLang === 'TR' ? 'Müthiş başarı! Dünya podyumunda 3. sıradasın!' : 'Remarkable! You locked in 3rd on the world podium!';
+                badgeColor = 'from-amber-600/25 via-amber-700/15 to-amber-600/25 border border-amber-500/60 shadow-amber-600/20';
+                numberColor = 'text-amber-400';
+              } else if (userRank <= 10) {
+                badgeTitle = currentLang === 'TR' ? '⭐ TOP 10 ELİT SIRALAMA' : '⭐ TOP 10 ELITE';
+                descText = currentLang === 'TR' ? `Tebrikler! ${totalCount} yarışmacı arasından dünyanın en iyi ilk 10'undasın!` : `Congratulations! You placed in the world top 10 among ${totalCount} players!`;
+                badgeColor = 'from-emerald-500/20 via-amber-500/15 to-emerald-500/20 border border-emerald-400/60 shadow-emerald-500/20';
+                numberColor = 'text-emerald-300';
+              } else {
+                badgeTitle = currentLang === 'TR' ? '🏆 GLOBAL İLK 100\'DESİN!' : '🏆 YOU MADE THE GLOBAL TOP 100!';
+                descText = currentLang === 'TR' ? `Tebrikler! ${totalCount} yarışmacı arasından resmi İlk 100 listesine girdin!` : `Congratulations! You officially earned your spot in the Global Top 100 among ${totalCount} players!`;
+                badgeColor = 'from-emerald-950/70 via-pitch-900 to-emerald-950/70 border border-emerald-500/50 shadow-emerald-500/15';
+                numberColor = 'text-emerald-400';
+              }
+
+              rankBox.className = `p-4 rounded-2xl bg-gradient-to-r ${badgeColor} text-center shadow-lg space-y-1.5 animate-in zoom-in duration-300`;
+              rankBox.innerHTML = `
+                <div class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-black/40 text-amber-300 border border-amber-400/40 font-black text-[10px] sm:text-xs uppercase tracking-wider">
+                  ${badgeTitle}
+                </div>
+                <div class="text-3xl sm:text-4xl font-display font-black ${numberColor}">
+                  #${userRank}. ${currentLang === 'TR' ? 'SIRADASIN' : 'RANK'}
+                </div>
+                <p class="text-xs text-slate-200 font-medium">
+                  ${descText}
+                </p>
+              `;
+              rankBox.classList.remove('hidden');
+            } else {
+              // User is outside the top 100
+              const cutoff100 = list[99];
+              const cutoffText = cutoff100 
+                ? (currentLang === 'TR' ? `İlk 100 barajı: <strong>${cutoff100.score}/20 (${Number(cutoff100.time).toFixed(2)}s)</strong>` : `Top 100 Cutoff: <strong>${cutoff100.score}/20 (${Number(cutoff100.time).toFixed(2)}s)</strong>`)
+                : '';
+
+              rankBox.className = 'p-3 rounded-2xl bg-pitch-900/80 border border-pitch-800 text-center space-y-1 animate-in fade-in duration-200';
+              rankBox.innerHTML = `
+                <div class="flex items-center justify-center gap-1.5 text-xs font-bold text-slate-300">
+                  <i class="fa-solid fa-chart-line text-emerald-400"></i>
+                  <span>${currentLang === 'TR' ? 'Global Sıralaman:' : 'Global Rank:'} <strong class="text-amber-300 font-mono text-sm">#${userRank}</strong> <span class="text-slate-400 font-normal">/ ${totalCount}</span></span>
+                </div>
+                ${cutoffText ? `<p class="text-[11px] text-slate-400">${cutoffText}. ${currentLang === 'TR' ? 'Biraz daha hızlanarak İlk 100\'e girebilirsin!' : 'Push your speed to reach the Top 100!'}</p>` : ''}
+              `;
+              rankBox.classList.remove('hidden');
+            }
+          }
+        }
+      } catch(e) {
+        console.error('Leaderboard submit error:', e);
+      }
     }
 
     async function fetchLeaderboard() {
@@ -2015,7 +2128,15 @@
     function shareResultWhatsApp() {
       const correct = userAnswers.filter(a => a.isCorrect).length;
       const totalTime = (userAnswers.reduce((sum, a) => sum + a.timeMs, 0) / 1000).toFixed(2);
-      const text = `🚩 Flag Blitz'te 20 bayraktan ${correct} tanesini ${totalTime} saniyede bildim! Sen beni geçebilir misin?\\nHemen oyna: https://pratikbase.com/flag-quiz/`;
+      let rankText = '';
+      if (lastRecordedRank && lastRecordedRank <= 100) {
+        rankText = currentLang === 'TR' 
+          ? `\n🏆 Global İlk 100'de #${lastRecordedRank}. sıradayım!`
+          : `\n🏆 Ranked #${lastRecordedRank} in Global Top 100!`;
+      }
+      const text = currentLang === 'TR'
+        ? `🚩 Flag Blitz'te 20 bayraktan ${correct} tanesini ${totalTime} saniyede bildim!${rankText}\nSen beni geçebilir misin? Hemen oyna: https://pratikbase.com/flag-quiz/`
+        : `🚩 I answered ${correct} out of 20 flags in ${totalTime}s on Flag Blitz!${rankText}\nCan you beat my score? Play now: https://pratikbase.com/flag-quiz/`;
       window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
     }
 
