@@ -91,7 +91,13 @@
     if (detectedQuery) searchQuery = detectedQuery;
 
     if (utmSource) {
-      referrerSource = 'Kampanya: ' + utmSource;
+      if (utmSource === 'pwa' || utmSource === 'pwa_shortcut') {
+        referrerSource = 'Mobil Uygulama (Ana Ekran)';
+      } else if (utmSource === 'xtweet') {
+        referrerSource = 'Twitter (X Paylaşımı)';
+      } else {
+        referrerSource = 'Kampanya: ' + utmSource;
+      }
     } else {
       const ref = rawDocRef;
       if (!ref || ref.includes(window.location.hostname)) {

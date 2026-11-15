@@ -1148,6 +1148,48 @@
       } catch(e) {}
     }
 
+    function formatReferrerLabel(rawRef) {
+      if (!rawRef) return 'Doğrudan (Direct)';
+      const str = String(rawRef).trim();
+      if (/pwa/i.test(str)) {
+        return 'Mobil Uygulama (Ana Ekran)';
+      }
+      if (/xtweet/i.test(str)) {
+        return 'Twitter (X Paylaşımı)';
+      }
+      return str;
+    }
+
+    function formatReferrerBadge(rawRef) {
+      if (!rawRef) {
+        return '<span class="px-2 py-0.5 rounded bg-slate-800 text-slate-400 text-[11px] font-medium border border-slate-700/60 inline-block">Doğrudan</span>';
+      }
+      const str = String(rawRef).trim();
+      if (/pwa/i.test(str)) {
+        return '<span class="px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/40 text-[11px] font-bold inline-flex items-center gap-1.5"><i class="fa-solid fa-mobile-screen-button text-[10px] text-purple-400"></i> Mobil Uygulama (Ana Ekran)</span>';
+      }
+      if (/xtweet/i.test(str)) {
+        return '<span class="px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 border border-sky-500/40 text-[11px] font-bold inline-flex items-center gap-1.5"><i class="fa-brands fa-x-twitter text-[10px] text-sky-400"></i> Twitter (X Paylaşımı)</span>';
+      }
+      if (/google/i.test(str)) {
+        return '<span class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/40 text-[11px] font-bold inline-flex items-center gap-1.5"><i class="fa-brands fa-google text-[10px] text-blue-400"></i> Google Arama</span>';
+      }
+      if (/whatsapp/i.test(str)) {
+        return '<span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[11px] font-bold inline-flex items-center gap-1.5"><i class="fa-brands fa-whatsapp text-[10px] text-emerald-400"></i> WhatsApp</span>';
+      }
+      if (/instagram/i.test(str)) {
+        return '<span class="px-2 py-0.5 rounded bg-pink-500/20 text-pink-300 border border-pink-500/40 text-[11px] font-bold inline-flex items-center gap-1.5"><i class="fa-brands fa-instagram text-[10px] text-pink-400"></i> Instagram</span>';
+      }
+      if (/reddit/i.test(str)) {
+        return '<span class="px-2 py-0.5 rounded bg-orange-500/20 text-orange-300 border border-orange-500/40 text-[11px] font-bold inline-flex items-center gap-1.5"><i class="fa-brands fa-reddit text-[10px] text-orange-400"></i> Reddit</span>';
+      }
+      if (/kampanya:\s*([^\s]+)/i.test(str)) {
+        const tag = str.replace(/kampanya:\s*/i, '');
+        return `<span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[11px] font-bold inline-flex items-center gap-1.5"><i class="fa-solid fa-bullhorn text-[10px]"></i> Kampanya: ${tag}</span>`;
+      }
+      return `<span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 text-[11px] font-medium border border-slate-700/60 inline-block">${str}</span>`;
+    }
+
     async function fetchLiveData(isManual = false) {
       const refreshIcon = document.getElementById('refreshIcon');
       if (isManual && refreshIcon) refreshIcon.classList.add('fa-spin');
@@ -1192,7 +1234,7 @@
             }
             pageCounts[p].count++;
 
-            const ref = s.referrer || 'Doğrudan (Direct)';
+            const ref = formatReferrerLabel(s.referrer);
             referrerCounts[ref] = (referrerCounts[ref] || 0) + 1;
 
             // Konum Tespiti (Ülke & İl / Şehir)
@@ -1325,6 +1367,8 @@
           else if (/instagram/i.test(refName)) iconClass = 'fa-brands fa-instagram text-pink-400';
           else if (/twitter|x/i.test(refName)) iconClass = 'fa-brands fa-x-twitter text-slate-300';
           else if (/reddit/i.test(refName)) iconClass = 'fa-brands fa-reddit text-orange-500';
+          else if (/pwa|uygulama/i.test(refName)) iconClass = 'fa-solid fa-mobile-screen-button text-purple-400';
+          else if (/kampanya/i.test(refName)) iconClass = 'fa-solid fa-bullhorn text-emerald-400';
           const safeRef = refName.replace(/'/g, "\\'");
 
           return `
@@ -1431,9 +1475,7 @@
                 <div class="text-[11px] text-slate-400 truncate max-w-xs mt-0.5">${s.title || ''}</div>
               </td>
               <td class="py-3 px-3.5">
-                <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 text-[11px] font-medium border border-slate-700/60 inline-block">
-                  ${s.referrer || 'Doğrudan'}
-                </span>
+                ${formatReferrerBadge(s.referrer)}
               </td>
               <td class="py-3 px-3.5 whitespace-nowrap font-mono">
                 <div class="text-slate-300 text-xs">${durationText}</div>
@@ -1478,8 +1520,8 @@
                     <span class="text-emerald-400 font-mono font-bold">${e.page || '/'}</span> sayfasına giriş yaptı
                   </span>
                 </div>
-                <span class="shrink-0 text-[11px] bg-slate-800/80 text-slate-400 px-2 py-0.5 rounded border border-slate-700/50">
-                  ${e.referrer || 'Doğrudan'}
+                <span class="shrink-0">
+                  ${formatReferrerBadge(e.referrer)}
                 </span>
               </div>
             `;
@@ -1849,7 +1891,7 @@
               }
               pageTotals[p].count++;
 
-              const ref = h.referrer || 'Doğrudan';
+              const ref = formatReferrerLabel(h.referrer);
               sourceTotals[ref] = (sourceTotals[ref] || 0) + 1;
               lastFilteredHits.push({ ...h, date: h.date || date, normalizedRef: ref });
 
@@ -2077,6 +2119,8 @@
       else if (/instagram/i.test(sourceName)) iconClass = 'fa-brands fa-instagram text-pink-400';
       else if (/twitter|x/i.test(sourceName)) iconClass = 'fa-brands fa-x-twitter text-slate-200';
       else if (/reddit/i.test(sourceName)) iconClass = 'fa-brands fa-reddit text-orange-500';
+      else if (/pwa|uygulama/i.test(sourceName)) iconClass = 'fa-solid fa-mobile-screen-button text-purple-400';
+      else if (/kampanya/i.test(sourceName)) iconClass = 'fa-solid fa-bullhorn text-emerald-400';
 
       iconBox.innerHTML = `<i class="${iconClass} text-xl"></i>`;
       titleEl.innerText = sourceName;
@@ -2084,7 +2128,7 @@
       // İlgili kayıtları filtrele
       let records = [];
       if (mode === 'live') {
-        records = (lastActiveSessions || []).filter(s => (s.referrer || 'Doğrudan (Direct)') === sourceName).map(s => ({
+        records = (lastActiveSessions || []).filter(s => formatReferrerLabel(s.referrer) === sourceName).map(s => ({
           page: s.page || '/',
           title: s.title || s.page || '/',
           device: s.device || 'Mobil',
@@ -2099,7 +2143,7 @@
           timestamp: s.lastSeen || Date.now()
         }));
       } else {
-        records = (lastFilteredHits || []).filter(h => (h.normalizedRef || h.referrer || 'Doğrudan') === sourceName);
+        records = (lastFilteredHits || []).filter(h => (h.normalizedRef || formatReferrerLabel(h.referrer)) === sourceName);
       }
 
       // Zaman sırasına göre en yeniden en eskiye sırala
