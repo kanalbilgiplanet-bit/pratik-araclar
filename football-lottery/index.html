@@ -634,7 +634,7 @@
         </button>
 
         <!-- 2. Secondary Share & Export Bar (Clean 3-Column Grid) -->
-        <div class="grid grid-cols-3 gap-2">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
           <button id="btnDownloadCard" class="py-2.5 px-2 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-lg shadow-cyan-500/20 active:scale-95 transition" title="Jübile Kartını HD Görsel (PNG) Olarak İndir / Paylaş">
             <i class="fa-solid fa-download text-xs"></i>
             <span id="txtDownloadCard" class="truncate text-[11px] sm:text-xs">HD Kartı İndir</span>
@@ -648,6 +648,11 @@
           <button id="btnShareWhatsApp" class="py-2.5 px-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-600/20 active:scale-95 transition" title="WhatsApp Paylaş">
             <i class="fa-brands fa-whatsapp text-sm"></i>
             <span id="txtShareWA" class="truncate text-[11px] sm:text-xs">WhatsApp</span>
+          </button>
+
+          <button id="btnShareTelegram" class="py-2.5 px-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-lg shadow-sky-600/20 active:scale-95 transition" title="Telegram Paylaş">
+            <i class="fa-brands fa-telegram text-sm"></i>
+            <span id="txtShareTelegram" class="truncate text-[11px] sm:text-xs">Telegram</span>
           </button>
         </div>
 
@@ -1221,115 +1226,120 @@
        ===================================================================== */
     const COUNTRIES = [
       { 
-        nameTr: 'Brezilya', nameEn: 'Brazil', flag: '🇧🇷', weight: 8.5, footballRating: 95, 
+        nameTr: 'Rusya', nameEn: 'Russia', nameRu: 'Россия', nameFr: 'Russie', flag: '🇷🇺', weight: 4.5, footballRating: 84, 
+        firstNames: ['Aleksandr', 'Mikhail', 'Daniil', 'Matvey', 'Artyom', 'Maksim', 'Ivan', 'Dmitry', 'Roman', 'Fedor', 'Anton', 'Denis', 'Stanislav', 'Igor', 'Nikita', 'Aleksei', 'Konstantin', 'Sergei'], 
+        lastNames: ['Golovin', 'Miranchuk', 'Safonov', 'Chalov', 'Tyukavin', 'Pinyaev', 'Smolov', 'Dzyuba', 'Akinfeev', 'Kuzyaev', 'Barinov', 'Fomin', 'Diveev', 'Zakharyan', 'Cheryshev', 'Mostovoy', 'Spertsyan'] 
+      },
+      { 
+        nameTr: 'Brezilya', nameEn: 'Brazil', nameRu: 'Бразилия', nameFr: 'Brésil', flag: '🇧🇷', weight: 8.5, footballRating: 95, 
         firstNames: ['Gabriel', 'Lucas', 'Thiago', 'Matheus', 'Felipe', 'Vinicius', 'Rodrigo', 'Arthur', 'Neymar', 'Rodrygo', 'Endrick', 'Casemiro', 'Alisson', 'Ederson', 'Richarlison', 'Antony', 'Raphinha', 'Marquinhos', 'Danilo', 'Paquetá', 'Bruno', 'Douglas', 'Renan', 'Luiz', 'Caio', 'Igor', 'Murillo', 'Vitor', 'Savinho', 'Joao'], 
         lastNames: ['Silva', 'Santos', 'Oliveira', 'Souza', 'Pereira', 'Lima', 'Costa', 'Ferreira', 'Rodrigues', 'Alves', 'Nascimento', 'Ribeiro', 'Carvalho', 'Gomes', 'Martins', 'Araujo', 'Barbosa', 'Teixeira', 'Cardoso', 'Guimarães', 'Roque', 'Magalhães', 'Militão'] 
       },
       { 
-        nameTr: 'Arjantin', nameEn: 'Argentina', flag: '🇦🇷', weight: 5.5, footballRating: 94, 
+        nameTr: 'Arjantin', nameEn: 'Argentina', nameRu: 'Аргентина', nameFr: 'Argentine', flag: '🇦🇷', weight: 5.5, footballRating: 94, 
         firstNames: ['Mateo', 'Agustin', 'Lautaro', 'Julian', 'Enzo', 'Tomas', 'Facundo', 'Lionel', 'Angel', 'Rodrigo', 'Alexis', 'Emiliano', 'Cristian', 'Nahuel', 'Nicolas', 'Alejandro', 'Thiago', 'Valentin', 'Franco', 'Leandro', 'Guido', 'Lucas', 'Giovanni', 'Exequiel', 'Alejo', 'Maximo'], 
         lastNames: ['Rodriguez', 'Gonzalez', 'Fernandez', 'Lopez', 'Martinez', 'Romero', 'Perez', 'Alvarez', 'Mac Allister', 'De Paul', 'Di Maria', 'Correa', 'Acuna', 'Molina', 'Otamendi', 'Tagliafico', 'Dybala', 'Paredes', 'Palacios', 'Garnacho', 'Barco', 'Carboni'] 
       },
       { 
-        nameTr: 'Fransa', nameEn: 'France', flag: '🇫🇷', weight: 6.0, footballRating: 93, 
+        nameTr: 'Fransa', nameEn: 'France', nameRu: 'Франция', nameFr: 'France', flag: '🇫🇷', weight: 6.0, footballRating: 93, 
         firstNames: ['Antoine', 'Kylian', 'Theo', 'Lucas', 'Maxime', 'Hugo', 'Adrien', 'Eduardo', 'Aurelien', 'Ousmane', 'Marcus', 'Randal', 'Kingsley', 'William', 'Ibrahima', 'Jules', 'Dayot', 'Bradley', 'Warren', 'Christopher', 'Moussa', 'Michael', 'Axel', 'Youssouf', 'Brice'], 
         lastNames: ['Dubois', 'Laurent', 'Moreau', 'Fournier', 'Girard', 'Mercier', 'Mbappe', 'Griezmann', 'Camavinga', 'Tchouameni', 'Dembele', 'Hernandez', 'Kounde', 'Upamecano', 'Saliba', 'Konate', 'Barcola', 'Zaire-Emery', 'Coman', 'Thuram', 'Kolo Muani', 'Olise', 'Nkunku'] 
       },
       { 
-        nameTr: 'Almanya', nameEn: 'Germany', flag: '🇩🇪', weight: 5.0, footballRating: 92, 
+        nameTr: 'Almanya', nameEn: 'Germany', nameRu: 'Германия', nameFr: 'Allemagne', flag: '🇩🇪', weight: 5.0, footballRating: 92, 
         firstNames: ['Lukas', 'Maximilian', 'Felix', 'Jonas', 'Leon', 'Florian', 'Kai', 'Jamal', 'Leroy', 'Joshua', 'Ilkay', 'Toni', 'Manuel', 'Marc', 'Antonio', 'David', 'Niclas', 'Serge', 'Robin', 'Nico', 'Waldemar', 'Maxim', 'Pascal', 'Jan', 'Alexander', 'Deniz'], 
         lastNames: ['Müller', 'Schmidt', 'Schneider', 'Fischer', 'Weber', 'Meyer', 'Wagner', 'Becker', 'Hoffmann', 'Schäfer', 'Koch', 'Bauer', 'Richter', 'Klein', 'Wolf', 'Schröder', 'Neumann', 'Schwarz', 'Zimmermann', 'Kimmich', 'Musiala', 'Wirtz', 'Havertz', 'Rüdiger', 'Kroos', 'Gündoğan', 'Undav', 'Füllkrug'] 
       },
       { 
-        nameTr: 'İngiltere', nameEn: 'England', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', weight: 5.5, footballRating: 92, 
+        nameTr: 'İngiltere', nameEn: 'England', nameRu: 'Англия', nameFr: 'Angleterre', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', weight: 5.5, footballRating: 92, 
         firstNames: ['Harry', 'Oliver', 'George', 'Jack', 'Charlie', 'James', 'Mason', 'Jude', 'Bukayo', 'Phil', 'Declan', 'Trent', 'Cole', 'Marcus', 'Kobbie', 'John', 'Kyle', 'Ollie', 'Anthony', 'Eberechi', 'Conor', 'Levi', 'Jarrod', 'Dominic', 'Rico', 'Harvey'], 
         lastNames: ['Smith', 'Jones', 'Taylor', 'Brown', 'Williams', 'Walker', 'Kane', 'Bellingham', 'Saka', 'Foden', 'Rice', 'Alexander-Arnold', 'Palmer', 'Rashford', 'Mainoo', 'Stones', 'Pickford', 'Watkins', 'Gordon', 'Eze', 'Gallagher', 'Colwill', 'Bowen', 'Lewis', 'Elliott'] 
       },
       { 
-        nameTr: 'İspanya', nameEn: 'Spain', flag: '🇪🇸', weight: 5.0, footballRating: 92, 
+        nameTr: 'İspanya', nameEn: 'Spain', nameRu: 'Испания', nameFr: 'Espagne', flag: '🇪🇸', weight: 5.0, footballRating: 92, 
         firstNames: ['Alejandro', 'Pablo', 'Alvaro', 'David', 'Sergio', 'Daniel', 'Lamine', 'Pedri', 'Gavi', 'Rodri', 'Nico', 'Ferran', 'Dani', 'Mikel', 'Unai', 'Aymeric', 'Robin', 'Marc', 'Martin', 'Alex', 'Pau', 'Fabian', 'Yeremy', 'Inigo', 'Borja', 'Bryan'], 
         lastNames: ['Garcia', 'Martinez', 'Sanchez', 'Perez', 'Gomez', 'Ruiz', 'Hernandez', 'Yamal', 'Williams', 'Morata', 'Olmo', 'Carvajal', 'Merino', 'Simon', 'Laporte', 'Le Normand', 'Cucurella', 'Zubimendi', 'Ruiz', 'Torres', 'Baena', 'Cubarsi', 'Grimaldo', 'Vivian', 'Zaragoza'] 
       },
       { 
-        nameTr: 'Türkiye', nameEn: 'Turkey', flag: '🇹🇷', weight: 6.5, footballRating: 82, 
+        nameTr: 'Türkiye', nameEn: 'Turkey', nameRu: 'Турция', nameFr: 'Turquie', flag: '🇹🇷', weight: 6.5, footballRating: 82, 
         firstNames: ['Arda', 'Barış', 'Semih', 'Kerem', 'Emre', 'Yusuf', 'Can', 'Eren', 'Hakan', 'Ferdi', 'Kenan', 'Cengiz', 'Merih', 'Çağlar', 'İrfan', 'Enes', 'Okay', 'Salih', 'Ozan', 'Altay', 'Uğurcan', 'Cenk', 'Zeki', 'Orkun', 'Bertuğ', 'Yunus', 'İsmail', 'Ahmet', 'Mehmet', 'Burak', 'Oğuz', 'Doğan', 'Taylan', 'Berkan', 'Samet'], 
         lastNames: ['Yılmaz', 'Kaya', 'Demir', 'Çelik', 'Şahin', 'Yıldız', 'Öztürk', 'Aydın', 'Özdemir', 'Arslan', 'Doğan', 'Kılıç', 'Aslan', 'Çetin', 'Kara', 'Koç', 'Kurt', 'Özkan', 'Şimşek', 'Polat', 'Erdoğan', 'Yavuz', 'Korkmaz', 'Güler', 'Bayındır', 'Çakır', 'Aktürkoğlu', 'Yüksek', 'Kahveci', 'Kabak', 'Söyüncü', 'Demiral', 'Tosun', 'Kılıçsoy', 'Akgün'] 
       },
       { 
-        nameTr: 'Portekiz', nameEn: 'Portugal', flag: '🇵🇹', weight: 4.0, footballRating: 90, 
+        nameTr: 'Portekiz', nameEn: 'Portugal', nameRu: 'Португалия', nameFr: 'Portugal', flag: '🇵🇹', weight: 4.0, footballRating: 90, 
         firstNames: ['Bernardo', 'Ruben', 'Joao', 'Diogo', 'Rafael', 'Gonçalo', 'Cristiano', 'Bruno', 'Vitinha', 'Matheus', 'Nuno', 'Pedro', 'Francisco', 'Antonio', 'Renato', 'Danilo', 'Nelson', 'Otavio', 'Fabio', 'Geovany', 'Goncalo', 'Tiago'], 
         lastNames: ['Silva', 'Santos', 'Ferreira', 'Pereira', 'Oliveira', 'Fernandes', 'Dias', 'Cancelo', 'Leao', 'Ramos', 'Jota', 'Mendes', 'Palhinha', 'Neves', 'Inacio', 'Costa', 'Dalot', 'Conceicao', 'Neto', 'Quaresma', 'Carvalho', 'Guerreiro'] 
       },
       { 
-        nameTr: 'İtalya', nameEn: 'Italy', flag: '🇮🇹', weight: 4.5, footballRating: 89, 
+        nameTr: 'İtalya', nameEn: 'Italy', nameRu: 'Италия', nameFr: 'Italie', flag: '🇮🇹', weight: 4.5, footballRating: 89, 
         firstNames: ['Lorenzo', 'Federico', 'Nicolo', 'Alessandro', 'Gianluca', 'Matteo', 'Gianluigi', 'Giacomo', 'Davide', 'Manuel', 'Riccardo', 'Bryan', 'Sandro', 'Destiny', 'Giorgio', 'Andrea', 'Samuele', 'Francesco', 'Michael', 'Cesare'], 
         lastNames: ['Rossi', 'Russo', 'Ferrari', 'Esposito', 'Bianchi', 'Romano', 'Barella', 'Chiesa', 'Donnarumma', 'Bastoni', 'Dimarco', 'Calafiori', 'Tonali', 'Scamacca', 'Raspadori', 'Frattesi', 'Pellegrini', 'Locatelli', 'Udogie', 'Retegui', 'Gatti', 'Buongiorno'] 
       },
       { 
-        nameTr: 'Hollanda', nameEn: 'Netherlands', flag: '🇳🇱', weight: 3.5, footballRating: 88, 
+        nameTr: 'Hollanda', nameEn: 'Netherlands', nameRu: 'Нидерланды', nameFr: 'Pays-Bas', flag: '🇳🇱', weight: 3.5, footballRating: 88, 
         firstNames: ['Frenkie', 'Cody', 'Denzel', 'Tijjani', 'Marten', 'Quinten', 'Virgil', 'Memphis', 'Xavi', 'Nathan', 'Matthijs', 'Micky', 'Jeremie', 'Teun', 'Joey', 'Brian', 'Bart', 'Donyell', 'Lutsharel', 'Stefan', 'Kenneth', 'Joshua'], 
         lastNames: ['de Jong', 'van Dijk', 'Jansen', 'Bakker', 'Visser', 'Smit', 'Gakpo', 'Dumfries', 'Reijnders', 'Simons', 'Ake', 'de Ligt', 'van de Ven', 'Frimpong', 'Koopmeiners', 'Veerman', 'Brobbey', 'Verbruggen', 'Malen', 'Geertruida', 'de Vrij', 'Zirkzee'] 
       },
       { 
-        nameTr: 'Nijerya', nameEn: 'Nigeria', flag: '🇳🇬', weight: 7.0, footballRating: 80, 
+        nameTr: 'Nijerya', nameEn: 'Nigeria', nameRu: 'Нигерия', nameFr: 'Nigeria', flag: '🇳🇬', weight: 7.0, footballRating: 80, 
         firstNames: ['Victor', 'Samuel', 'Kelechi', 'Ademola', 'Chidera', 'Oluwaseun', 'Wilfred', 'Alex', 'Taiwo', 'Terem', 'Moses', 'Calvin', 'Bright', 'Frank', 'Semi', 'Stanley', 'Raphael', 'Cyriel', 'Nathan', 'Chuba'], 
         lastNames: ['Osimhen', 'Chukwueze', 'Nwankwo', 'Okafor', 'Balogun', 'Lookman', 'Ndidi', 'Iwobi', 'Awoniyi', 'Moffi', 'Simon', 'Bassey', 'Osayi-Samuel', 'Onyeka', 'Ajayi', 'Nwabali', 'Onyedika', 'Dessers', 'Tella', 'Akpom'] 
       },
       { 
-        nameTr: 'Fas', nameEn: 'Morocco', flag: '🇲🇦', weight: 3.5, footballRating: 84, 
+        nameTr: 'Fas', nameEn: 'Morocco', nameRu: 'Марокко', nameFr: 'Maroc', flag: '🇲🇦', weight: 3.5, footballRating: 84, 
         firstNames: ['Achraf', 'Hakim', 'Sofyan', 'Yassine', 'Azzedine', 'Bilal', 'Nayef', 'Noussair', 'Brahim', 'Amine', 'Youssef', 'Ismael', 'Ayoub', 'Munir', 'Selim', 'Abde', 'Eliesse', 'Amir', 'Chadi'], 
         lastNames: ['Hakimi', 'Ziyech', 'Amrabat', 'Bounou', 'En-Nesyri', 'Ounahi', 'Aguerd', 'Mazraoui', 'Diaz', 'Adli', 'El Kaabi', 'Saibari', 'Harit', 'El Khannouss', 'Rahimi', 'Ezzalzouli', 'Ben Seghir', 'Richardson', 'Riad'] 
       },
       { 
-        nameTr: 'Japonya', nameEn: 'Japan', flag: '🇯🇵', weight: 4.0, footballRating: 81, 
+        nameTr: 'Japonya', nameEn: 'Japan', nameRu: 'Япония', nameFr: 'Japon', flag: '🇯🇵', weight: 4.0, footballRating: 81, 
         firstNames: ['Takefusa', 'Kaoru', 'Daichi', 'Wataru', 'Ritsu', 'Takumi', 'Hidemasa', 'Ao', 'Ko', 'Takehiro', 'Koki', 'Keito', 'Yukinari', 'Zion', 'Ayase', 'Reo', 'Daizen', 'Shogo', 'Kosei'], 
         lastNames: ['Kubo', 'Mitoma', 'Kamada', 'Endo', 'Doan', 'Minamino', 'Morita', 'Tanaka', 'Itakura', 'Tomiyasu', 'Ogawa', 'Nakamura', 'Sugawara', 'Suzuki', 'Ueda', 'Hatate', 'Maeda', 'Taniguchi', 'Tani'] 
       },
       { 
-        nameTr: 'Güney Kore', nameEn: 'South Korea', flag: '🇰🇷', weight: 3.0, footballRating: 80, 
+        nameTr: 'Güney Kore', nameEn: 'South Korea', nameRu: 'Южная Корея', nameFr: 'Corée du Sud', flag: '🇰🇷', weight: 3.0, footballRating: 80, 
         firstNames: ['Heung-min', 'Kang-in', 'Min-jae', 'Hee-chan', 'Gue-sung', 'Hyun-seok', 'Woo-yeong', 'In-beom', 'Jae-sung', 'Young-woo', 'Seung-gyu', 'Hyun-gyu', 'Han-beom', 'Ji-soo'], 
         lastNames: ['Kim', 'Lee', 'Park', 'Choi', 'Son', 'Jung', 'Hwang', 'Hong', 'Seol', 'Song', 'Bae', 'Oh', 'Lee', 'Cho'] 
       },
       { 
-        nameTr: 'Uruguay', nameEn: 'Uruguay', flag: '🇺🇾', weight: 2.0, footballRating: 87, 
+        nameTr: 'Uruguay', nameEn: 'Uruguay', nameRu: 'Уругвай', nameFr: 'Uruguay', flag: '🇺🇾', weight: 2.0, footballRating: 87, 
         firstNames: ['Federico', 'Darwin', 'Ronald', 'Manuel', 'Rodrigo', 'Facundo', 'Sergio', 'Mathias', 'Sebastian', 'Nicolas', 'Giorgian', 'Nahitan', 'Jose', 'Cristian', 'Luciano', 'Emiliano'], 
         lastNames: ['Valverde', 'Nunez', 'Araujo', 'Bentancur', 'Ugarte', 'Rochet', 'Olivera', 'Caceres', 'de la Cruz', 'Nandez', 'Gimenez', 'Pellistri', 'Torres', 'Olivera', 'Rodriguez', 'Martinez'] 
       },
       { 
-        nameTr: 'Hırvatistan', nameEn: 'Croatia', flag: '🇭🇷', weight: 2.0, footballRating: 86, 
+        nameTr: 'Hırvatistan', nameEn: 'Croatia', nameRu: 'Хорватия', nameFr: 'Croatie', flag: '🇭🇷', weight: 2.0, footballRating: 86, 
         firstNames: ['Luka', 'Mateo', 'Josko', 'Dominik', 'Lovro', 'Borna', 'Andrej', 'Mario', 'Marcelo', 'Josip', 'Martin', 'Nikola', 'Ivan', 'Petar', 'Marco', 'Marin'], 
         lastNames: ['Modric', 'Kovacic', 'Gvardiol', 'Livakovic', 'Majer', 'Sosa', 'Kramaric', 'Pasalic', 'Brozovic', 'Stanisic', 'Sutalo', 'Baturina', 'Vlasic', 'Perisic', 'Sucic', 'Pongracic', 'Erlic'] 
       },
       { 
-        nameTr: 'Norveç', nameEn: 'Norway', flag: '🇳🇴', weight: 2.0, footballRating: 82, 
+        nameTr: 'Norveç', nameEn: 'Norway', nameRu: 'Норвегия', nameFr: 'Norvège', flag: '🇳🇴', weight: 2.0, footballRating: 82, 
         firstNames: ['Erling', 'Martin', 'Alexander', 'Sander', 'Kristoffer', 'Antonio', 'Leo', 'Jens Petter', 'Fredrik', 'Oscar', 'Andreas', 'Jorgen', 'Orjan', 'Patrick', 'David'], 
         lastNames: ['Haaland', 'Odegaard', 'Sorloth', 'Berge', 'Ajer', 'Nusa', 'Ostigard', 'Hauge', 'Aursnes', 'Bobb', 'Schjelderup', 'Strand Larsen', 'Nyland', 'Berg', 'Moller Wolfe'] 
       },
       { 
-        nameTr: 'Kolombiya', nameEn: 'Colombia', flag: '🇨🇴', weight: 3.5, footballRating: 82, 
+        nameTr: 'Kolombiya', nameEn: 'Colombia', nameRu: 'Колумбия', nameFr: 'Colombie', flag: '🇨🇴', weight: 3.5, footballRating: 82, 
         firstNames: ['Luis', 'James', 'Jhon', 'Davinson', 'Yaser', 'Richard', 'Daniel', 'Camilo', 'Jefferson', 'Carlos', 'Mateus', 'Kevin', 'Jhon Elmer', 'Yerry', 'Santiago'], 
         lastNames: ['Diaz', 'Rodriguez', 'Duran', 'Sanchez', 'Asprilla', 'Rios', 'Munoz', 'Vargas', 'Lerma', 'Arias', 'Cuesta', 'Uribe', 'Castano', 'Lucumi', 'Mina', 'Borja'] 
       },
       { 
-        nameTr: 'ABD', nameEn: 'USA', flag: '🇺🇸', weight: 5.0, footballRating: 77, 
+        nameTr: 'ABD', nameEn: 'USA', nameRu: 'США', nameFr: 'États-Unis', flag: '🇺🇸', weight: 5.0, footballRating: 77, 
         firstNames: ['Christian', 'Weston', 'Tyler', 'Timothy', 'Folarin', 'Gio', 'Yunus', 'Antonee', 'Chris', 'Matt', 'Ricardo', 'Joe', 'Malik', 'Brenden', 'Johnny', 'Aidan', 'Patrick'], 
         lastNames: ['Pulisic', 'McKennie', 'Adams', 'Weah', 'Balogun', 'Reyna', 'Musah', 'Robinson', 'Richards', 'Turner', 'Pepi', 'Scally', 'Tillman', 'Aaronson', 'Cardoso', 'Morris', 'Schulte'] 
       },
       { 
-        nameTr: 'San Marino', nameEn: 'San Marino', flag: '🇸🇲', weight: 0.2, footballRating: 30, 
+        nameTr: 'San Marino', nameEn: 'San Marino', nameRu: 'Сан-Марино', nameFr: 'Saint-Marin', flag: '🇸🇲', weight: 0.2, footballRating: 30, 
         firstNames: ['Matteo', 'Filippo', 'Alessandro', 'Nicola', 'Andrea', 'Lorenzo', 'Marcello', 'Danilo', 'Mirko', 'Roberto', 'Michele', 'Simone', 'Elia', 'Nicko', 'Giacomo'], 
         lastNames: ['Vitaioli', 'Nanni', 'Ceccaroli', 'Battistini', 'Mularoni', 'Lazzari', 'Sensoli', 'Rinaldi', 'Palazzi', 'Golinucci', 'Berardi', 'Contadini', 'Benedettini', 'Rossi', 'Tosi'] 
       }
     ];
 
     const POSITIONS = [
-      { code: 'GK', nameTr: 'Kaleci', nameEn: 'Goalkeeper', statLabel: 'Kurtarış / Temiz Ağ' },
-      { code: 'CB', nameTr: 'Stoper (Defans)', nameEn: 'Center Back', statLabel: 'Maç / Müdahale / Gol' },
-      { code: 'LB', nameTr: 'Sol Bek', nameEn: 'Left Back', statLabel: 'Maç / Asist / Müdahale' },
-      { code: 'RB', nameTr: 'Sağ Bek', nameEn: 'Right Back', statLabel: 'Maç / Asist / Müdahale' },
-      { code: 'CM', nameTr: 'Orta Saha', nameEn: 'Central Midfielder', statLabel: 'Maç / Gol / Asist' },
-      { code: 'WNG', nameTr: 'Kanat Forvet', nameEn: 'Winger', statLabel: 'Maç / Gol / Asist' },
-      { code: 'ST', nameTr: 'Santrafor (Golcü)', nameEn: 'Striker', statLabel: 'Maç / Gol / Asist' }
+      { code: 'GK', nameTr: 'Kaleci', nameEn: 'Goalkeeper', nameRu: 'Вратарь', nameFr: 'Gardien de but', statLabel: 'Kurtarış / Temiz Ağ' },
+      { code: 'CB', nameTr: 'Stoper (Defans)', nameEn: 'Center Back', nameRu: 'Центральный защитник', nameFr: 'Défenseur central', statLabel: 'Maç / Müdahale / Gol' },
+      { code: 'LB', nameTr: 'Sol Bek', nameEn: 'Left Back', nameRu: 'Левый защитник', nameFr: 'Latéral gauche', statLabel: 'Maç / Asist / Müdahale' },
+      { code: 'RB', nameTr: 'Sağ Bek', nameEn: 'Right Back', nameRu: 'Правый защитник', nameFr: 'Latéral droit', statLabel: 'Maç / Asist / Müdahale' },
+      { code: 'CM', nameTr: 'Orta Saha', nameEn: 'Central Midfielder', nameRu: 'Полузащитник', nameFr: 'Milieu central', statLabel: 'Maç / Gol / Asist' },
+      { code: 'WNG', nameTr: 'Kanat Forvet', nameEn: 'Winger', nameRu: 'Вингер', nameFr: 'Ailier', statLabel: 'Maç / Gol / Asist' },
+      { code: 'ST', nameTr: 'Santrafor (Golcü)', nameEn: 'Striker', nameRu: 'Центрфорвард (Нападающий)', nameFr: 'Buteur (Avant-centre)', statLabel: 'Maç / Gol / Asist' }
     ];
 
     // 100% Trademark-safe parody clubs categorized by Tier
@@ -1431,16 +1441,16 @@
     let activeChallenger = null;
     const STORAGE_KEY_ACHIEVEMENTS = 'pb_fl_unlocked_achievements';
     const ACHIEVEMENTS_DATA = [
-      { id: 'ballon_dor', icon: '👑', nameTr: "Ballon d'Or Sahibi", nameEn: "Ballon d'Or Winner", descTr: "Dünyanın en iyi futbolcusu seçilerek Ballon d'Or ödülünü kazan.", descEn: "Win the Ballon d'Or trophy as the best player on Earth." },
-      { id: 'golden_boot', icon: '👟', nameTr: 'Altın Ayakkabı', nameEn: 'Golden Boot', descTr: 'Bir sezonda 30\'dan fazla gol atarak Gol Kralı ol.', descEn: 'Score 30+ goals in a single season to win the Golden Boot.' },
-      { id: 'one_club', icon: '🏛️', nameTr: 'Son Mohikan (Totti)', nameEn: 'One-Club Legend', descTr: 'Kariyerin boyunca tek kulüpte en az 15 yıl forma giy.', descEn: 'Remain loyal and play 15+ years for a single club.' },
-      { id: 'journeyman', icon: '🌍', nameTr: 'Evliya Çelebi', nameEn: 'Journeyman Warrior', descTr: 'Kariyerinde en az 5 farklı kulübün formasını giy.', descEn: 'Play for at least 5 different clubs during your career.' },
-      { id: 'gulf_tycoon', icon: '💰', nameTr: 'Körfez Şeyhi', nameEn: 'Gulf Tycoon', descTr: 'Bankada 100 Milyon € üzerinde nakit servet biriktir.', descEn: 'Amass over €100,000,000 in liquid career wealth.' },
-      { id: 'glass_cannon', icon: '🏥', nameTr: 'Yılmayan Savaşçı', nameEn: 'Iron Resolve', descTr: 'Ağır sakatlıklar yaşamana rağmen 40 yaşına ulaşıp jübile yap.', descEn: 'Endure severe injuries and still reach age 40 jubilee.' },
-      { id: 'underdog_hero', icon: '🇸🇲', nameTr: 'Kaderi Yenen Yıldız', nameEn: 'Underdog Hero', descTr: 'Nüfus payı düşük bir ülkede doğup 85+ OVR dünya yıldızı ol.', descEn: 'Spawn in an underdog nation and reach 85+ Peak OVR.' },
-      { id: 'trophy_hoarder', icon: '🏆', nameTr: 'Kupa Canavarı', nameEn: 'Trophy Hoarder', descTr: 'Kariyerin boyunca en az 8 kupa kazan.', descEn: 'Win 8 or more career trophies.' },
-      { id: 'zero_to_hero', icon: '⚡', nameTr: 'Sıfırdan Zirveye', nameEn: 'Zero to Hero', descTr: '60 OVR altında doğup 85+ OVR seviyesine ulaş.', descEn: 'Spawn below 60 OVR and grind to 85+ Peak OVR.' },
-      { id: 'supercar_owner', icon: '🏎️', nameTr: 'Lüks Tutkunu', nameEn: 'Speed & Luxury', descTr: 'Garajına İtalyan Süper Spor Araba ekle.', descEn: 'Add an Italian Supercar to your personal garage.' }
+      { id: 'ballon_dor', icon: '👑', nameTr: "Ballon d'Or Sahibi", nameEn: "Ballon d'Or Winner", nameRu: "Обладатель «Золотого мяча»", nameFr: "Vainqueur du Ballon d'Or", descTr: "Dünyanın en iyi futbolcusu seçilerek Ballon d'Or ödülünü kazan.", descEn: "Win the Ballon d'Or trophy as the best player on Earth.", descRu: "Стань лучшим футболистом планеты и завоюй «Золотой мяч».", descFr: "Soyez élu meilleur joueur du monde et remportez le Ballon d'Or." },
+      { id: 'golden_boot', icon: '👟', nameTr: 'Altın Ayakkabı', nameEn: 'Golden Boot', nameRu: 'Золотая бутса', nameFr: "Soulier d'Or", descTr: 'Bir sezonda 30\'dan fazla gol atarak Gol Kralı ol.', descEn: 'Score 30+ goals in a single season to win the Golden Boot.', descRu: 'Забей более 30 голов за сезон и выиграй «Золотую бутсу».', descFr: "Marquez plus de 30 buts en une saison pour remporter le Soulier d'Or." },
+      { id: 'one_club', icon: '🏛️', nameTr: 'Son Mohikan (Totti)', nameEn: 'One-Club Legend', nameRu: 'Преданная легенда (Один клуб)', nameFr: "Légende d'un seul club", descTr: 'Kariyerin boyunca tek kulüpte en az 15 yıl forma giy.', descEn: 'Remain loyal and play 15+ years for a single club.', descRu: 'Оставайся преданным и проведи 15+ лет в составе одного клуба.', descFr: "Restez fidèle et jouez au moins 15 ans pour un seul club." },
+      { id: 'journeyman', icon: '🌍', nameTr: 'Evliya Çelebi', nameEn: 'Journeyman Warrior', nameRu: 'Странствующий воин', nameFr: 'Globe-trotter insatiable', descTr: 'Kariyerinde en az 5 farklı kulübün formasını giy.', descEn: 'Play for at least 5 different clubs during your career.', descRu: 'Сыграй как минимум за 5 различных клубов за карьеру.', descFr: "Portez le maillot d'au moins 5 clubs différents au cours de votre carrière." },
+      { id: 'gulf_tycoon', icon: '💰', nameTr: 'Körfez Şeyhi', nameEn: 'Gulf Tycoon', nameRu: 'Восточный магнат', nameFr: 'Magnat du Golfe', descTr: 'Bankada 100 Milyon € üzerinde nakit servet biriktir.', descEn: 'Amass over €100,000,000 in liquid career wealth.', descRu: 'Накопи более 100 000 000 € чистыми на банковском счете.', descFr: "Accumulez plus de 100 000 000 € de fortune liquide en banque." },
+      { id: 'glass_cannon', icon: '🏥', nameTr: 'Yılmayan Savaşçı', nameEn: 'Iron Resolve', nameRu: 'Железная воля', nameFr: 'Volonté de fer', descTr: 'Ağır sakatlıklar yaşamana rağmen 40 yaşına ulaşıp jübile yap.', descEn: 'Endure severe injuries and still reach age 40 jubilee.', descRu: 'Преодолей тяжелые травмы и дойди до юбилея в 40 лет.', descFr: "Surmontez de graves blessures et atteignez le jubilé à 40 ans." },
+      { id: 'underdog_hero', icon: '🇸🇲', nameTr: 'Kaderi Yenen Yıldız', nameEn: 'Underdog Hero', nameRu: 'Герой из низов', nameFr: 'Héros inattendu', descTr: 'Nüfus payı düşük bir ülkede doğup 85+ OVR dünya yıldızı ol.', descEn: 'Spawn in an underdog nation and reach 85+ Peak OVR.', descRu: 'Родись в футбольной провинции и доберись до рейтинга 85+ OVR.', descFr: "Naissez dans un petit pays et devenez une star mondiale à 85+ GEN." },
+      { id: 'trophy_hoarder', icon: '🏆', nameTr: 'Kupa Canavarı', nameEn: 'Trophy Hoarder', nameRu: 'Коллекционер кубков', nameFr: 'Chasseur de trophées', descTr: 'Kariyerin boyunca en az 8 kupa kazan.', descEn: 'Win 8 or more career trophies.', descRu: 'Завоюй не менее 8 трофеев за свою футбольную карьеру.', descFr: "Remportez au moins 8 trophées au fil de votre carrière." },
+      { id: 'zero_to_hero', icon: '⚡', nameTr: 'Sıfırdan Zirveye', nameEn: 'Zero to Hero', nameRu: 'Из грязи в князи', nameFr: "De l'ombre à la gloire", descTr: '60 OVR altında doğup 85+ OVR seviyesine ulaş.', descEn: 'Spawn below 60 OVR and grind to 85+ Peak OVR.', descRu: 'Родись с рейтингом ниже 60 и поднимись до 85+ OVR.', descFr: "Commencez à moins de 60 GEN et atteignez les sommets à 85+ GEN." },
+      { id: 'supercar_owner', icon: '🏎️', nameTr: 'Lüks Tutkunu', nameEn: 'Speed & Luxury', nameRu: 'Любитель скорости', nameFr: 'Passion luxe & vitesse', descTr: 'Garajına İtalyan Süper Spor Araba ekle.', descEn: 'Add an Italian Supercar to your personal garage.', descRu: 'Добавь итальянский суперкар в свой личный гараж.', descFr: "Ajoutez une supercar italienne à votre garage personnel." }
     ];
 
     function getUnlockedAchievements() {
@@ -1487,8 +1497,11 @@
 
       container.innerHTML = ACHIEVEMENTS_DATA.map(a => {
         const isDone = unlocked.includes(a.id);
-        const name = currentLang === 'TR' ? a.nameTr : a.nameEn;
-        const desc = currentLang === 'TR' ? a.descTr : a.descEn;
+        const name = currentLang === 'TR' ? a.nameTr : currentLang === 'RU' ? (a.nameRu || a.nameEn) : currentLang === 'FR' ? (a.nameFr || a.nameEn) : a.nameEn;
+        const desc = currentLang === 'TR' ? a.descTr : currentLang === 'RU' ? (a.descRu || a.descEn) : currentLang === 'FR' ? (a.descFr || a.descEn) : a.descEn;
+        const statusBadge = isDone 
+          ? (currentLang === 'TR' ? 'AÇILDI ✓' : currentLang === 'RU' ? 'ОТКРЫТО ✓' : currentLang === 'FR' ? 'DÉBLOQUÉ ✓' : 'UNLOCKED ✓')
+          : (currentLang === 'TR' ? 'KİLİTLİ 🔒' : currentLang === 'RU' ? 'ЗАКРЫТО 🔒' : currentLang === 'FR' ? 'VERROUILLÉ 🔒' : 'LOCKED 🔒');
         return `
           <div class="p-3.5 rounded-2xl border transition flex items-center gap-3.5 ${isDone ? 'bg-amber-500/10 border-amber-500/40' : 'bg-pitch-950/60 border-pitch-800 opacity-60'}">
             <div class="w-11 h-11 rounded-2xl flex items-center justify-center text-2xl shrink-0 ${isDone ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-lg shadow-amber-500/20' : 'bg-pitch-900 text-slate-500 border border-pitch-800'}">
@@ -1498,7 +1511,7 @@
               <div class="flex items-center justify-between gap-2">
                 <h4 class="font-bold text-sm ${isDone ? 'text-white' : 'text-slate-400'}">${name}</h4>
                 <span class="text-[10px] font-mono px-2 py-0.5 rounded-full ${isDone ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold' : 'bg-pitch-900 text-slate-500'}">
-                  ${isDone ? (currentLang === 'TR' ? 'AÇILDI ✓' : 'UNLOCKED ✓') : (currentLang === 'TR' ? 'KİLİTLİ 🔒' : 'LOCKED 🔒')}
+                  ${statusBadge}
                 </span>
               </div>
               <p class="text-xs text-slate-400 mt-0.5">${desc}</p>
@@ -1660,7 +1673,7 @@
     }
 
     /* =====================================================================
-       4. TRANSLATIONS (TR & EN)
+       4. TRANSLATIONS (TR, EN, RU, FR)
        ===================================================================== */
     const I18N = {
       TR: {
@@ -1699,6 +1712,7 @@
         jubileeTitle: 'Kramponlar Duvara Asıldı!',
         jubileeSub: 'Kramponlarını astın! İşte sokaklardan dünya vitrinine uzanan 40 yıllık hayat hikayen.',
         shareWA: 'WhatsApp',
+        shareTelegram: 'Telegram',
         shareWall: 'Duvara Ekle',
         downloadCard: 'HD Kartı İndir',
         cardDownloadHint: 'Kartını HD görsel (PNG) olarak indirip Instagram hikayelerinde veya arkadaş gruplarında paylaşabilirsin.',
@@ -1782,6 +1796,7 @@
         jubileeTitle: 'Boots Hung on the Wall!',
         jubileeSub: 'You have hung up your boots! Here is your 40-year journey from childhood alleys to world spotlight.',
         shareWA: 'WhatsApp',
+        shareTelegram: 'Telegram',
         shareWall: 'Share to Wall',
         downloadCard: 'Download HD Card',
         cardDownloadHint: 'Export your career card as an HD image (PNG) to share on Instagram stories or group chats.',
@@ -1828,8 +1843,204 @@
         docMetricDuration: 'CAREER DURATION',
         docCriticsQuote: '"More than football; an epic rise from dusty grassroots to the pinnacle of world glory."',
         docWatermark: 'pratikbase.com/football-lottery • 40-SEASON DOCUMENTARY'
+      },
+      RU: {
+        pageTitle: 'Футбольная Лотерея Карьеры | Симулятор карьеры 1 из 8 миллиардов',
+        subtitleNav: 'Футбольная Лотерея',
+        soundOn: 'Звук Вкл',
+        soundOff: 'Звук Выкл',
+        heroBadge: '1 из 8 миллиардов: Футбольная лотерея',
+        heroTitle: 'В какой стране и с каким талантом <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-lime-300 to-green-400">ты родишься?</span>',
+        introDesc: 'Каждый год в мире рождается 130 миллионов детей, но лишь 0.001% попадают на мировую арену. Вращай рулетку, доверься лотерее судьбы и проживи карьеру от дворового футбола до мировых финалов с 0 до 40 лет!',
+        btnSpin: 'ИСПЫТАТЬ СУДЬБУ И РОДИТЬСЯ',
+        rouletteCountry: 'Определяем место рождения...',
+        rouletteOdds: 'Готов крутить рулетку!',
+        badge1: '100% Случайная генерация',
+        badge2: 'Реалистичная статистика',
+        badge3: 'Юбилей в 40 лет',
+        explTitle1: 'Генетика и Судьба',
+        expl1: 'Ты можешь родиться вундеркиндом на пляжах Бразилии или жестким защитником в Сан-Марино. Каждая жизнь — уникальный сюжет.',
+        explTitle2: 'Ключевые решения',
+        expl2: 'В 16 лет: школа или профессиональный контракт? В 29: Лига Чемпионов или 25 млн € в год на Ближнем Востоке?',
+        explTitle3: 'Юбилей и Карточка',
+        expl3: 'По завершении карьеры в 40 лет формируется твоя именная цифровая карточка со всеми трофеями, статистикой и заработанным состоянием.',
+        hallBadge: 'ЗАЛ СЛАВЫ',
+        hallTitle: 'Легенды сообщества и архив юбилеев',
+        hallDesc: 'Увековеченные карьеры игроков, дошедших до 40 лет и повесивших бутсы на гвоздь.',
+        hudClub: 'Клуб',
+        hudValue: 'Рыночная стоимость',
+        hudBank: 'Банк / Состояние',
+        hudTrophies: 'Трофеи',
+        hudOvr: 'Общий рейтинг (OVR)',
+        hudStatsTitle: 'Матчи / Голы / Пасы',
+        advanceBtn: 'ПЕРЕЙТИ К СЛЕДУЮЩЕМУ ГОДУ',
+        autoPlay: 'Авто-симуляция',
+        autoPlayStop: 'Пауза',
+        jubileeBadge: 'ЮБИЛЕЙ И ВЕЛИКОЕ НАСЛЕДИЕ',
+        jubileeTitle: 'Бутсы на гвоздь!',
+        jubileeSub: 'Карьера подошла к концу! Вот твоя 40-летняя история от дворовых коробок до мирового признания.',
+        shareWA: 'WhatsApp',
+        shareTelegram: 'Telegram',
+        shareWall: 'В Зал Славы',
+        downloadCard: 'HD Карточка',
+        cardDownloadHint: 'Скачай карточку в формате HD (PNG), чтобы поделиться в Telegram, Instagram или с друзьями.',
+        downloadCardTitle: 'Скачать или поделиться юбилейной картой в HD',
+        copyResultTitle: 'Скопировать результат',
+        copied: 'Скопировано!',
+        playAgain: 'НАЧАТЬ НОВУЮ ЖИЗНЬ',
+        cardPeakOvr: 'ПИКОВЫЙ OVR',
+        cardArchetypeLabel: 'Амплуа карьеры',
+        cardPeakValLabel: 'Пиковая цена',
+        cardNetWorthLabel: 'Заработанный капитал',
+        cardAssetsLabel: 'Личное имущество и активы',
+        cardClubsLabel: 'Клубы за карьеру',
+        cardMatches: 'Матчи',
+        cardGoals: 'Голы',
+        cardAssists: 'Пасы',
+        cardTrophies: 'Трофеи',
+        dilemmaBadge: 'Поворотный момент карьеры',
+        legendAge40: 'Юбилей в 40 лет',
+        statMatches: 'Матчи',
+        statGoals: 'Голы',
+        statAssists: 'Пасы',
+        statTrophies: 'Трофеи',
+        statWealth: 'состояние',
+        clapBtn: 'Аплодисменты',
+        inspectBtn: 'Смотреть карточку',
+        achievementsNav: 'Достижения',
+        achievementsTitle: 'Достижения и значки карьеры',
+        achievementsCompleted: 'Выполнено',
+        shareVersus: '⚔️ ВЫЗВАТЬ ДРУГА НА ДУЭЛЬ (VS)',
+        vsWinnerYou: 'ПОБЕДИТЕЛЬ: ТЫ! 👑',
+        vsWinnerOpponent: 'ПОБЕДИТЕЛЬ: СОПЕРНИК! ⚔️',
+        vsTie: 'НИЧЬЯ! 🤝',
+        museumNav: 'Музей и Гараж',
+        museumTitle: 'Зал трофеев и люксовый гараж',
+        museumSub: 'Кубки, награды и премиальная недвижимость, накопленные за 40 лет карьеры.',
+        tabMuseumTrophies: '🏆 Зал кубков',
+        tabMuseumAssets: '🏎️ Гараж и виллы',
+        btnFUT: '⚽ FUT Карточка',
+        btnDoc: '🎬 Постер фильма',
+        docMetricPeak: 'ПИКОВЫЙ РЕЙТИНГ',
+        docMetricTrophies: 'КУБКИ И ГОЛЫ',
+        docMetricWealth: 'КАПИТАЛ',
+        docMetricDuration: 'ДЛИТЕЛЬНОСТЬ',
+        docCriticsQuote: '"Больше, чем футбол: эпический путь от дворовой грязи к вершинам мировой славы."',
+        docWatermark: 'pratikbase.com/football-lottery • 40 СЕЗОНОВ КАРЬЕРЫ'
+      },
+      FR: {
+        pageTitle: 'Loterie de Carrière Football | Simulateur de Carrière 1 sur 8 Milliards',
+        subtitleNav: 'Loterie Football',
+        soundOn: 'Son Activé',
+        soundOff: 'Son Coupé',
+        heroBadge: '1 sur 8 Milliards : Loterie Football',
+        heroTitle: 'Dans quel pays et avec quel talent <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-lime-300 to-green-400">vas-tu naître ?</span>',
+        introDesc: '130 millions de bébés naissent chaque année, mais seuls 0,001 % atteignent la scène mondiale. Tournez la roulette, acceptez votre loterie de naissance et vivez une carrière authentique de 0 à 40 ans, des terrains de quartier aux grands stades !',
+        btnSpin: 'TIRER MON DESTIN & NAÎTRE',
+        rouletteCountry: 'Tirage du lieu de naissance...',
+        rouletteOdds: 'Prêt à tourner la roue !',
+        badge1: '100% Aléatoire',
+        badge2: 'Stats Réalistes',
+        badge3: 'Jubilé à 40 Ans',
+        explTitle1: 'Génétique & Destin',
+        expl1: 'Vous pouvez naître prodige sur une plage brésilienne ou défenseur rugueux à Saint-Marin. Chaque vie est un scénario unique.',
+        explTitle2: 'Dilemmes Critiques',
+        expl2: 'À 16 ans : école ou contrat pro ? À 29 ans : gloire en Ligue des Champions ou 25 M€/an dans le Golfe ?',
+        explTitle3: 'Jubilé & Carte FUT',
+        expl3: 'À votre retraite à 40 ans, vos statistiques, vos trophées et votre patrimoine sont immortalisés dans une carte de collection digitale.',
+        hallBadge: 'TEMPLE DE LA RENOMMÉE',
+        hallTitle: 'Légendes de la Communauté & Archives des Jubilés',
+        hallDesc: 'Les carrières immortelles des joueurs ayant atteint 40 ans et raccroché les crampons.',
+        hudClub: 'Club',
+        hudValue: 'Valeur marchande',
+        hudBank: 'Banque / Fortune',
+        hudTrophies: 'Trophées',
+        hudOvr: 'Note Générale (GEN)',
+        hudStatsTitle: 'Matchs / Buts / Passes',
+        advanceBtn: 'PASSER À L\'ANNÉE SUIVANTE',
+        autoPlay: 'Avance automatique',
+        autoPlayStop: 'Pause',
+        jubileeBadge: 'JUBILÉ & HÉRITAGE LÉGENDAIRE',
+        jubileeTitle: 'Crampons raccrochés !',
+        jubileeSub: 'Vous avez raccroché les crampons ! Voici le récit de vos 40 ans de carrière, des ruelles de l\'enfance aux projecteurs du monde.',
+        shareWA: 'WhatsApp',
+        shareTelegram: 'Telegram',
+        shareWall: 'Mur des Légendes',
+        downloadCard: 'Télécharger HD',
+        cardDownloadHint: 'Téléchargez votre carte HD (PNG) pour la partager sur vos stories Instagram ou dans vos groupes.',
+        downloadCardTitle: 'Télécharger ou partager la carte de jubilé en HD',
+        copyResultTitle: 'Copier le résumé',
+        copied: 'Copié !',
+        playAgain: 'COMMENCER UNE NOUVELLE VIE',
+        cardPeakOvr: 'GEN MAX',
+        cardArchetypeLabel: 'Identité de Carrière',
+        cardPeakValLabel: 'Valeur Maximale',
+        cardNetWorthLabel: 'Fortune Totale / Banque',
+        cardAssetsLabel: 'Biens personnels & Investissements',
+        cardClubsLabel: 'Clubs fréquentés',
+        cardMatches: 'Matchs',
+        cardGoals: 'Buts',
+        cardAssists: 'Passes',
+        cardTrophies: 'Trophées',
+        dilemmaBadge: 'Tournant de Carrière',
+        legendAge40: 'Jubilé à 40 ans',
+        statMatches: 'Matchs',
+        statGoals: 'Buts',
+        statAssists: 'Passes',
+        statTrophies: 'Trophées',
+        statWealth: 'fortune',
+        clapBtn: 'Applaudir',
+        inspectBtn: 'Voir la carte',
+        achievementsNav: 'Succès',
+        achievementsTitle: 'Succès & Trophées de Carrière',
+        achievementsCompleted: 'Terminé',
+        shareVersus: '⚔️ DÉFIER UN AMI (VS)',
+        vsWinnerYou: 'GAGNANT : VOUS ! 👑',
+        vsWinnerOpponent: 'GAGNANT : ADVERSAIRE ! ⚔️',
+        vsTie: 'MATCH NUL ! 🤝',
+        museumNav: 'Musée & Garage',
+        museumTitle: 'Salle des Trophées & Garage de Luxe',
+        museumSub: 'Trophées remportés, médailles et immobilier de luxe accumulés tout au long de votre carrière.',
+        tabMuseumTrophies: '🏆 Salle des Trophées',
+        tabMuseumAssets: '🏎️ Garage & Propriétés',
+        btnFUT: '⚽ Carte FUT',
+        btnDoc: '🎬 Affiche Documentaire',
+        docMetricPeak: 'NOTE MAX',
+        docMetricTrophies: 'TITRES & BUTS',
+        docMetricWealth: 'FORTUNE',
+        docMetricDuration: 'DURÉE CARRIÈRE',
+        docCriticsQuote: '"Plus qu\'un sport ; l\'épopée sensationnelle d\'un gamin des rues hissé au sommet du monde."',
+        docWatermark: 'pratikbase.com/football-lottery • DOCUMENTAIRE 40 SAISONS'
       }
     };
+
+    // Helper functions for localized country, position, and dominant foot
+    function getCountryName(country) {
+      if (!country) return '';
+      if (currentLang === 'TR') return country.nameTr || country.nameEn || '';
+      if (currentLang === 'RU') return country.nameRu || country.nameEn || country.nameTr || '';
+      if (currentLang === 'FR') return country.nameFr || country.nameEn || country.nameTr || '';
+      return country.nameEn || country.nameTr || '';
+    }
+
+    function getPositionName(pos) {
+      if (!pos) return '';
+      if (currentLang === 'TR') return pos.nameTr || pos.nameEn || '';
+      if (currentLang === 'RU') return pos.nameRu || pos.nameEn || pos.nameTr || '';
+      if (currentLang === 'FR') return pos.nameFr || pos.nameEn || pos.nameTr || '';
+      return pos.nameEn || pos.nameTr || '';
+    }
+
+    function getFootName(foot) {
+      if (!foot) return '';
+      const f = String(foot).toLowerCase();
+      const isLeft = f.includes('sol') || f.includes('left') || f.includes('gauche') || f.includes('лев');
+      const isBoth = f.includes('çift') || f.includes('both') || f.includes('deux') || f.includes('об');
+      if (currentLang === 'TR') return isBoth ? 'Çift Ayak' : isLeft ? 'Sol Ayak' : 'Sağ Ayak';
+      if (currentLang === 'RU') return isBoth ? 'Обе ноги (Амбидекстр)' : isLeft ? 'Левая нога' : 'Правая нога';
+      if (currentLang === 'FR') return isBoth ? 'Ambidextre' : isLeft ? 'Pied gauche' : 'Pied droit';
+      return isBoth ? 'Both Feet' : isLeft ? 'Left Foot' : 'Right Foot';
+    }
 
     // Global Country Flag Image Helper (Fixes Windows Chrome raw ISO letters like DE, BR, TR)
     function getCountryFlagHtml(country, sizeClass = 'w-6 h-4.5') {
@@ -1854,7 +2065,8 @@
         'Norveç': 'no', 'Norway': 'no',
         'Kolombiya': 'co', 'Colombia': 'co',
         'ABD': 'us', 'USA': 'us',
-        'San Marino': 'sm', 'San Marino': 'sm'
+        'San Marino': 'sm', 'San Marino': 'sm',
+        'Rusya': 'ru', 'Russia': 'ru', 'Россия': 'ru', 'Russie': 'ru'
       };
       const iso = codeMap[country.nameTr] || codeMap[country.nameEn] || (country.code ? country.code.toLowerCase() : null);
       if (iso) {
@@ -1866,7 +2078,7 @@
     function formatArchetype(arch) {
       if (!arch) return '';
       if (currentLang === 'TR') return arch;
-      const map = {
+      const mapEn = {
         'FUTBOL İLAHİ (DÜNYA YILDIZI)': 'GLOBAL FOOTBALL ICON',
         'ÖLÜMCÜL BİTİRİCİ (GOL MAKİNESİ)': 'LETHAL FINISHER (GOAL MACHINE)',
         'GEZGİN SAVAŞÇI (EVLİYA ÇELEBİ)': 'JOURNEYMAN WARRIOR',
@@ -1874,12 +2086,40 @@
         'HALI SAHA RESİTALLERİ USTASI': 'GRASSROOTS CULT HERO',
         'SAYGI DEĞER EMEKÇİ': 'RESPECTED PRO VALIANT'
       };
-      return map[arch] || arch;
+      const mapRu = {
+        'FUTBOL İLAHİ (DÜNYA YILDIZI)': 'МИРОВАЯ ИКОНА ФУТБОЛА',
+        'ÖLÜMCÜL BİTİRİCİ (GOL MAKİNESİ)': 'ГОЛЕВАЯ МАШИНА (БОМБАРДИР)',
+        'GEZGİN SAVAŞÇI (EVLİYA ÇELEBİ)': 'СТРАНСТВУЮЩИЙ ВОИН',
+        'KULÜP EFSANESİ & KAPTAN': 'ЛЕГЕНДА КЛУБА И КАПИТАН',
+        'HALI SAHA RESİTALLERİ USTASI': 'КУЛЬТОВЫЙ ДВОРОВЫЙ ГЕРОЙ',
+        'SAYGI DEĞER EMEKÇİ': 'УВАЖАЕМЫЙ ТРУДЯГА ФУТБОЛА'
+      };
+      const mapFr = {
+        'FUTBOL İLAHİ (DÜNYA YILDIZI)': 'ICÔNE MONDIALE DU FOOTBALL',
+        'ÖLÜMCÜL BİTİRİCİ (GOL MAKİNESİ)': 'FINISSEUR D\'ÉLITE (MACHINE À BUTS)',
+        'GEZGİN SAVAŞÇI (EVLİYA ÇELEBİ)': 'GLOBE-TROTTER GUERRIER',
+        'KULÜP EFSANESİ & KAPTAN': 'LÉGENDE DU CLUB & CAPITAINE',
+        'HALI SAHA RESİTALLERİ USTASI': 'HÉROS DU FOOT DE RUE',
+        'SAYGI DEĞER EMEKÇİ': 'SOLDAT RESPECTÉ DU FOOT'
+      };
+      if (currentLang === 'RU') return mapRu[arch] || mapEn[arch] || arch;
+      if (currentLang === 'FR') return mapFr[arch] || mapEn[arch] || arch;
+      return mapEn[arch] || arch;
     }
 
+    const LANG_LABELS = {
+      TR: '🇹🇷 TR',
+      EN: '🇬🇧 EN',
+      RU: '🇷🇺 RU',
+      FR: '🇫🇷 FR'
+    };
+
     function setLanguage(lang) {
-      currentLang = lang;
-      const dict = I18N[lang] || I18N.TR;
+      currentLang = ['TR', 'EN', 'RU', 'FR'].includes(lang) ? lang : 'EN';
+      try {
+        localStorage.setItem('fl_lang', currentLang);
+      } catch (e) {}
+      const dict = I18N[currentLang] || I18N.EN;
 
       const setIfExists = (id, prop, val) => {
         const el = document.getElementById(id);
@@ -1887,7 +2127,7 @@
       };
 
       document.title = dict.pageTitle;
-      setIfExists('langCurrent', 'textContent', lang);
+      setIfExists('langCurrent', 'textContent', LANG_LABELS[currentLang] || currentLang);
       setIfExists('txtSubtitleNav', 'textContent', dict.subtitleNav);
 
       const soundTxt = document.getElementById('txtSoundLabel');
@@ -1954,10 +2194,11 @@
       setIfExists('txtHudOvr', 'textContent', dict.hudOvr);
 
       setIfExists('txtAdvanceBtn', 'textContent', dict.advanceBtn);
-      setIfExists('txtAdvanceBtnTop', 'textContent', currentLang === 'TR' ? '1 Yıl İlerle' : 'Advance 1 Yr');
+      setIfExists('txtAdvanceBtnTop', 'textContent', currentLang === 'TR' ? '1 Yıl İlerle' : currentLang === 'RU' ? '+1 Год' : currentLang === 'FR' ? '+1 An' : 'Advance 1 Yr');
       setIfExists('txtAutoPlay', 'textContent', isAutoPlaying ? dict.autoPlayStop : dict.autoPlay);
       setIfExists('txtRetirementSubtitle', 'textContent', dict.jubileeSub);
       setIfExists('txtShareWA', 'textContent', dict.shareWA);
+      setIfExists('txtShareTelegram', 'textContent', dict.shareTelegram || 'Telegram');
       setIfExists('txtShareWall', 'textContent', dict.shareWall);
       setIfExists('txtDownloadCard', 'textContent', dict.downloadCard);
       setIfExists('txtCardDownloadHint', 'textContent', dict.cardDownloadHint);
@@ -2347,10 +2588,10 @@
       // Update Reveal Banner
       const rFlagEl = document.getElementById('revealFlag');
       if (rFlagEl) rFlagEl.innerHTML = getCountryFlagHtml(birth.country, 'w-14 h-9.5 sm:w-16 sm:h-11 shadow-md');
-      document.getElementById('revealCountryName').textContent = currentLang === 'TR' ? `${birth.country.nameTr}'da Doğdun` : `Born in ${birth.country.nameEn}`;
-      document.getElementById('revealChance').textContent = currentLang === 'TR' ? `Olasılık: %${birth.country.weight.toFixed(1)}` : `Odds: ${birth.country.weight.toFixed(1)}%`;
+      document.getElementById('revealCountryName').textContent = currentLang === 'TR' ? `${birth.country.nameTr}'da Doğdun` : currentLang === 'RU' ? `Родился в: ${getCountryName(birth.country)}` : currentLang === 'FR' ? `Né en : ${getCountryName(birth.country)}` : `Born in ${birth.country.nameEn}`;
+      document.getElementById('revealChance').textContent = currentLang === 'TR' ? `Olasılık: %${birth.country.weight.toFixed(1)}` : currentLang === 'RU' ? `Вероятность: ${birth.country.weight.toFixed(1)}%` : currentLang === 'FR' ? `Probabilité : ${birth.country.weight.toFixed(1)}%` : `Odds: ${birth.country.weight.toFixed(1)}%`;
       document.getElementById('revealPlayerTitle').textContent = birth.fullName;
-      document.getElementById('revealPosFoot').textContent = `${birth.position.code} (${currentLang === 'TR' ? birth.position.nameTr : birth.position.nameEn}) • ${birth.dominantFoot}`;
+      document.getElementById('revealPosFoot').textContent = `${birth.position.code} (${getPositionName(birth.position)}) • ${getFootName(birth.dominantFoot)}`;
 
       const talentTierText = 
         birth.talentScore >= 90 ? (currentLang === 'TR' ? '⭐ Asrın Yeteneği (%0.5)' : '⭐ Generational Prodigy (0.5%)') :
@@ -2556,7 +2797,9 @@
       }
       const badge = document.getElementById('badgeNextAge');
       const badgeTop = document.getElementById('badgeNextAgeTop');
-      const txt = nextAge <= 40 ? (currentLang === 'TR' ? `Yaş: ${nextAge}` : `Age: ${nextAge}`) : (currentLang === 'TR' ? 'Jübile' : 'Retire');
+      const txt = nextAge <= 40 
+        ? (currentLang === 'TR' ? `Yaş: ${nextAge}` : currentLang === 'RU' ? `Возраст: ${nextAge}` : currentLang === 'FR' ? `Âge : ${nextAge}` : `Age: ${nextAge}`)
+        : (currentLang === 'TR' ? 'Jübile' : currentLang === 'RU' ? 'Юбилей' : currentLang === 'FR' ? 'Jubilé' : 'Retire');
       if (badge) badge.textContent = txt;
       if (badgeTop) badgeTop.textContent = txt;
     }
@@ -5314,10 +5557,10 @@ function finishCareerAndShowJubilee() {
       const cFlagEl = document.getElementById('cardFlag');
       if (cFlagEl) cFlagEl.innerHTML = getCountryFlagHtml(player.country, 'w-9 h-6');
       document.getElementById('cardPlayerName').textContent = player.fullName.toUpperCase();
-      document.getElementById('cardSubTitle').textContent = `${player.position.code} (${currentLang === 'TR' ? player.position.nameTr : player.position.nameEn}) • ${player.dominantFoot}`;
+      document.getElementById('cardSubTitle').textContent = `${player.position.code} (${getPositionName(player.position)}) • ${getFootName(player.dominantFoot)}`;
       document.getElementById('cardOvr').textContent = player.peakOvr;
       document.getElementById('cardArchetypeIcon').textContent = icon;
-      document.getElementById('cardArchetypeName').textContent = archetype;
+      document.getElementById('cardArchetypeName').textContent = formatArchetype(archetype);
       document.getElementById('cardPeakValue').textContent = formatCurrency(Math.floor(Math.pow(player.peakOvr / 10, 4) * 12000));
 
       document.getElementById('cardTotalMatches').textContent = player.stats.matches;
@@ -5331,19 +5574,24 @@ function finishCareerAndShowJubilee() {
         const tb = getTrophyBreakdown(player.stats);
         const pills = [];
         if (tb.wc > 0) {
-          pills.push(`<span class="px-2 py-0.5 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40">🌍 ${tb.wc}x ${currentLang === 'TR' ? 'Dünya Kupası' : 'World Cup'}</span>`);
+          const wcLabel = currentLang === 'TR' ? 'Dünya Kupası' : currentLang === 'RU' ? 'Кубок мира' : currentLang === 'FR' ? 'Coupe du Monde' : 'World Cup';
+          pills.push(`<span class="px-2 py-0.5 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40">🌍 ${tb.wc}x ${wcLabel}</span>`);
         }
         if (tb.ucl > 0) {
-          pills.push(`<span class="px-2 py-0.5 rounded-lg bg-indigo-500/20 text-indigo-300 border border-indigo-500/40">🌟 ${tb.ucl}x ${currentLang === 'TR' ? 'Şampiyonlar Ligi' : 'UCL'}</span>`);
+          const uclLabel = currentLang === 'TR' ? 'Şampiyonlar Ligi' : currentLang === 'RU' ? 'Лига Чемпионов' : currentLang === 'FR' ? 'Ligue des Champions' : 'UCL';
+          pills.push(`<span class="px-2 py-0.5 rounded-lg bg-indigo-500/20 text-indigo-300 border border-indigo-500/40">🌟 ${tb.ucl}x ${uclLabel}</span>`);
         }
         if (tb.league > 0) {
-          pills.push(`<span class="px-2 py-0.5 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">🏆 ${tb.league}x ${currentLang === 'TR' ? 'Lig Şampiyonu' : 'League'}</span>`);
+          const leagueLabel = currentLang === 'TR' ? 'Lig Şampiyonu' : currentLang === 'RU' ? 'Чемпион лиги' : currentLang === 'FR' ? 'Championnat' : 'League';
+          pills.push(`<span class="px-2 py-0.5 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">🏆 ${tb.league}x ${leagueLabel}</span>`);
         }
         if (tb.domesticCup > 0) {
-          pills.push(`<span class="px-2 py-0.5 rounded-lg bg-pitch-900 text-slate-300 border border-pitch-700">🥇 ${tb.domesticCup}x ${currentLang === 'TR' ? 'Ulusal Kupa' : 'Cup'}</span>`);
+          const cupLabel = currentLang === 'TR' ? 'Ulusal Kupa' : currentLang === 'RU' ? 'Кубок страны' : currentLang === 'FR' ? 'Coupe Nationale' : 'Cup';
+          pills.push(`<span class="px-2 py-0.5 rounded-lg bg-pitch-900 text-slate-300 border border-pitch-700">🥇 ${tb.domesticCup}x ${cupLabel}</span>`);
         }
         if (tb.superCup > 0) {
-          pills.push(`<span class="px-2 py-0.5 rounded-lg bg-yellow-500/10 text-yellow-300 border border-pitch-700">⚡ ${tb.superCup}x ${currentLang === 'TR' ? 'Süper Kupa' : 'Super Cup'}</span>`);
+          const scLabel = currentLang === 'TR' ? 'Süper Kupa' : currentLang === 'RU' ? 'Суперкубок' : currentLang === 'FR' ? 'Supercoupe' : 'Super Cup';
+          pills.push(`<span class="px-2 py-0.5 rounded-lg bg-yellow-500/10 text-yellow-300 border border-pitch-700">⚡ ${tb.superCup}x ${scLabel}</span>`);
         }
 
         if (pills.length > 0) {
@@ -5503,16 +5751,53 @@ function finishCareerAndShowJubilee() {
     function formatTimeAgo(ts) {
       if (!ts) return '';
       const diff = Date.now() - Number(ts);
-      if (diff < 60000) return currentLang === 'TR' ? 'Az önce' : 'Just now';
+      if (diff < 60000) {
+        if (currentLang === 'TR') return 'Az önce';
+        if (currentLang === 'RU') return 'Только что';
+        if (currentLang === 'FR') return 'À l\'instant';
+        return 'Just now';
+      }
       const mins = Math.floor(diff / 60000);
-      if (mins < 60) return currentLang === 'TR' ? `${mins} dk önce` : `${mins}m ago`;
+      if (mins < 60) {
+        if (currentLang === 'TR') return `${mins} dk önce`;
+        if (currentLang === 'RU') return `${mins} мин назад`;
+        if (currentLang === 'FR') return `Il y a ${mins} min`;
+        return `${mins}m ago`;
+      }
       const hours = Math.floor(mins / 60);
-      if (hours < 24) return currentLang === 'TR' ? `${hours} saat önce` : `${hours}h ago`;
+      if (hours < 24) {
+        if (currentLang === 'TR') return `${hours} saat önce`;
+        if (currentLang === 'RU') return `${hours} ч назад`;
+        if (currentLang === 'FR') return `Il y a ${hours} h`;
+        return `${hours}h ago`;
+      }
       const days = Math.floor(hours / 24);
-      return currentLang === 'TR' ? `${days} gün önce` : `${days}d ago`;
+      if (currentLang === 'TR') return `${days} gün önce`;
+      if (currentLang === 'RU') return `${days} дн назад`;
+      if (currentLang === 'FR') return `Il y a ${days} j`;
+      return `${days}d ago`;
     }
 
     const DEFAULT_LEGENDS = [
+      {
+        id: 'hof_aleksandr_golovin',
+        fullName: 'ALEKSANDR GOLOVIN',
+        country: { flag: '🇷🇺', nameTr: 'Rusya', nameEn: 'Russia', nameRu: 'Россия', nameFr: 'Russie' },
+        position: { code: 'CM', nameTr: 'Merkez Orta Saha', nameEn: 'Central Midfielder', nameRu: 'Полузащитник', nameFr: 'Milieu central' },
+        dominantFoot: 'Sağ Ayak',
+        peakOvr: 85,
+        archetype: 'KULÜP EFSANESİ & KAPTAN',
+        peakValue: '€58.000.000',
+        bankBalance: 46200000,
+        assets: {
+          houses: ['Göl Kenarı Villa'],
+          cars: ['İtalyan Süper Spor Araba'],
+          businesses: ['Espor Kulübü']
+        },
+        stats: { matches: 648, goals: 98, assists: 142, trophies: 7, ballonDor: 0, goldenBoots: 0 },
+        clubHistory: [{ name: 'Moskova Ayıları', badge: '🐻' }, { name: 'Monaco Prensliği', badge: '🇲🇨' }],
+        applause: 289
+      },
       {
         id: 'hof_gabriel_silva',
         fullName: 'GABRIEL SILVA',
@@ -5737,7 +6022,7 @@ function finishCareerAndShowJubilee() {
 
         const posCode = item.position?.code || 'ST';
         const flagHtml = getCountryFlagHtml(item.country, 'w-6 h-4.5');
-        const countryName = currentLang === 'TR' ? (item.country?.nameTr || '') : (item.country?.nameEn || '');
+        const countryName = getCountryName(item.country);
 
         const dict = I18N[currentLang] || I18N.TR;
         const archText = formatArchetype(item.archetype);
@@ -6060,9 +6345,12 @@ function finishCareerAndShowJubilee() {
         }
       });
 
-      // Language Toggle
+      // Language Toggle (Cycles: TR -> EN -> RU -> FR)
+      const AVAILABLE_LANGS = ['TR', 'EN', 'RU', 'FR'];
       document.getElementById('btnLangToggle').addEventListener('click', () => {
-        setLanguage(currentLang === 'TR' ? 'EN' : 'TR');
+        const curIdx = AVAILABLE_LANGS.indexOf(currentLang);
+        const nextLang = AVAILABLE_LANGS[(curIdx + 1) % AVAILABLE_LANGS.length];
+        setLanguage(nextLang);
       });
 
       // Spin & Born
@@ -6184,6 +6472,60 @@ function finishCareerAndShowJubilee() {
         });
       }
 
+      // Share to Telegram (Popular in RU and CIS)
+      const btnTg = document.getElementById('btnShareTelegram');
+      if (btnTg) {
+        btnTg.addEventListener('click', () => {
+          if (window.pbTracker && window.pbTracker.logEvent) {
+            window.pbTracker.logEvent('telegram_share', '/football-lottery', player ? player.fullName : 'Telegram');
+          }
+          if (!player) return;
+          const shareUrl = `https://pratikbase.com/football-lottery/?lang=${currentLang.toLowerCase()}&ref=telegram`;
+          const tb = typeof getTrophyBreakdown === 'function' ? getTrophyBreakdown(player.stats) : { total: player.stats.trophies || 0 };
+          const retAge = player.retirementAge || player.age || 40;
+          
+          let text = '';
+          if (currentLang === 'RU') {
+            text = `⚽ Моя карьера в Футбольной Лотерее 1 из 8 миллиардов!\n\n` +
+                   `👤 Игрок: ${player.fullName} (${player.country.flag} ${getCountryName(player.country)})\n` +
+                   `⭐ Пиковый OVR: ${player.peakOvr} | Позиция: ${player.position.code}\n` +
+                   `🎖️ Амплуа: ${formatArchetype(player.archetype)}\n` +
+                   `⏱️ Юбилей: в ${retAge} лет\n` +
+                   `📊 Статистика: ${player.stats.matches} матчей, ${player.stats.goals} голов, ${player.stats.assists} пасов\n` +
+                   `🏆 Трофеи: ${tb.total} | 💰 Капитал: ${formatCurrency(player.bankBalance || 0)}\n\n` +
+                   `В какой стране родишься ты? Испытай судьбу:`;
+          } else if (currentLang === 'FR') {
+            text = `⚽ Ma carrière dans la Loterie Football 1 sur 8 Milliards !\n\n` +
+                   `👤 Joueur : ${player.fullName} (${player.country.flag} ${getCountryName(player.country)})\n` +
+                   `⭐ GEN Max : ${player.peakOvr} | Poste : ${player.position.code}\n` +
+                   `🎖️ Identité : ${formatArchetype(player.archetype)}\n` +
+                   `⏱️ Jubilé : à ${retAge} ans\n` +
+                   `📊 Stats : ${player.stats.matches} matchs, ${player.stats.goals} buts, ${player.stats.assists} passes\n` +
+                   `🏆 Trophées : ${tb.total} | 💰 Fortune : ${formatCurrency(player.bankBalance || 0)}\n\n` +
+                   `Dans quel pays vas-tu naître ? Tente ta chance :`;
+          } else if (currentLang === 'TR') {
+            text = `⚽ Futbolcu Doğum Piyangosu 40 yaş jübile kartım!\n\n` +
+                   `👤 Oyuncu: ${player.fullName} (${player.country.flag} ${getCountryName(player.country)})\n` +
+                   `⭐ Zirve OVR: ${player.peakOvr} | Mevki: ${player.position.code}\n` +
+                   `🎖️ Unvan: ${player.archetype}\n` +
+                   `⏱️ Jübile: ${retAge} Yaşında\n` +
+                   `📊 İstatistik: ${player.stats.matches} Maç, ${player.stats.goals} Gol, ${player.stats.assists} Asist\n` +
+                   `🏆 Kupa: ${tb.total} | 💰 Servet: ${formatCurrency(player.bankBalance || 0)}\n\n` +
+                   `Hangi ülkede doğacaksın? Hemen oyna:`;
+          } else {
+            text = `⚽ My 40-year Football Career Lottery Card!\n\n` +
+                   `👤 Player: ${player.fullName} (${player.country.flag} ${getCountryName(player.country)})\n` +
+                   `⭐ Peak OVR: ${player.peakOvr} | Pos: ${player.position.code}\n` +
+                   `🎖️ Identity: ${formatArchetype(player.archetype)}\n` +
+                   `⏱️ Jubilee: Age ${retAge}\n` +
+                   `📊 Stats: ${player.stats.matches} Apps, ${player.stats.goals} Goals, ${player.stats.assists} Ast\n` +
+                   `🏆 Trophies: ${tb.total} | 💰 Net Worth: ${formatCurrency(player.bankBalance || 0)}\n\n` +
+                   `Which country will you be born into? Play now:`;
+          }
+          window.open(`https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(text)}`, '_blank');
+        });
+      }
+
       // Share to WhatsApp (With Garage/Cars, Assets, Real Retirement Age & Trophies)
       document.getElementById('btnShareWhatsApp').addEventListener('click', () => {
         if (window.pbTracker && window.pbTracker.logEvent) {
@@ -6280,16 +6622,28 @@ function finishCareerAndShowJubilee() {
         });
       });
 
-      // Auto-detect Language: query param ?lang=en OR foreign browser locale
+      // Auto-detect Language: query param ?lang=XX > localStorage > browser locale
       const urlParams = new URLSearchParams(window.location.search);
       const urlLang = (urlParams.get('lang') || '').toLowerCase();
+      const savedLang = (localStorage.getItem('fl_lang') || '').toUpperCase();
       const browserLang = (navigator.language || navigator.userLanguage || '').toLowerCase();
 
-      if (urlLang === 'en' || (!urlLang && !browserLang.startsWith('tr'))) {
-        setLanguage('EN');
+      let detectedLang = 'EN';
+      if (['tr', 'en', 'ru', 'fr'].includes(urlLang)) {
+        detectedLang = urlLang.toUpperCase();
+      } else if (['TR', 'EN', 'RU', 'FR'].includes(savedLang)) {
+        detectedLang = savedLang;
+      } else if (browserLang.startsWith('tr')) {
+        detectedLang = 'TR';
+      } else if (browserLang.startsWith('ru') || browserLang.startsWith('be') || browserLang.startsWith('kk') || browserLang.startsWith('uk')) {
+        detectedLang = 'RU';
+      } else if (browserLang.startsWith('fr')) {
+        detectedLang = 'FR';
       } else {
-        setLanguage('TR');
+        detectedLang = 'EN';
       }
+
+      setLanguage(detectedLang);
 
       // Achievements Button in Nav
       const btnAch = document.getElementById('btnOpenAchievements');
