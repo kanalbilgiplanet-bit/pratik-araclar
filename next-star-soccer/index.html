@@ -165,7 +165,10 @@
         
         <!-- Player & Age -->
         <div class="p-2 rounded-xl bg-pitch-950/80 border border-pitch-800 flex items-center gap-2 text-left">
-          <div id="hudCountryFlag" class="w-7 h-7 rounded-lg bg-pitch-900 border border-pitch-700 flex items-center justify-center shrink-0 overflow-hidden text-base">🇹🇷</div>
+          <div class="relative w-8 h-8 rounded-xl bg-pitch-900 border border-pitch-700 flex items-center justify-center shrink-0 overflow-hidden">
+            <div id="hudAvatarContainer" class="w-full h-full"></div>
+            <div id="hudCountryFlag" class="absolute -bottom-1 -right-1 text-[11px] leading-none drop-shadow">🇹🇷</div>
+          </div>
           <div class="min-w-0">
             <div id="hudPlayerName" class="font-bold text-white truncate text-xs">Yeni Oyuncu</div>
             <div class="text-[10px] text-emerald-400 font-mono font-semibold flex items-center gap-1">
@@ -574,6 +577,17 @@
           <div class="px-2.5 py-1.5 bg-pitch-900/90 font-mono text-xs font-black text-lime-400 flex items-center gap-1">
             <i class="fa-regular fa-clock text-[10px] animate-spin-slow"></i>
             <span id="tvMatchClock">0'</span>
+          </div>
+        </div>
+
+        <!-- Star Player TV Card (Canlı Oyuncu Kartı) -->
+        <div class="flex items-center gap-2 px-2.5 py-1 rounded-2xl bg-pitch-950/90 border border-emerald-500/40 shadow-lg">
+          <div class="w-7 h-7 rounded-full bg-pitch-900 border border-emerald-400 overflow-hidden shrink-0 flex items-center justify-center shadow" id="tvPlayerAvatarMini">
+            <!-- Injected mini avatar -->
+          </div>
+          <div class="text-left font-display leading-tight hidden xs:block">
+            <div class="text-[11px] font-black text-white truncate max-w-[85px] sm:max-w-[120px]" id="tvPlayerCardName">Yeni Oyuncu</div>
+            <div class="text-[9px] font-mono text-emerald-400 font-bold" id="tvPlayerCardSub">ST • #9 • 55 OVR</div>
           </div>
         </div>
 
@@ -1241,21 +1255,18 @@
     /* =====================================================================
        4. AVATAR RENDERER (With Fixed Long Hair, CR7 Noodles, Eye & Eyebrows)
        ===================================================================== */
-    function renderAvatarSvg() {
-      const svg = document.getElementById('svgAvatar');
-      if (!svg) return;
-
-      const skin = player.skinTone || SKIN_TONES[1];
-      const hairCol = player.hairColor || '#1c1917';
-      const eyebrowCol = player.eyebrowColor || '#1c1917';
-      const eyeCol = player.eyeColor || '#1c1917';
-      const isGK = player.position === 'GK';
+    function getAvatarSvgMarkup(p) {
+      const skin = p.skinTone || SKIN_TONES[1] || '#f8d5b8';
+      const hairCol = p.hairColor || '#1c1917';
+      const eyebrowCol = p.eyebrowColor || '#1c1917';
+      const eyeCol = p.eyeColor || '#1c1917';
+      const isGK = p.position === 'GK';
       const jerseyCol = isGK ? '#f59e0b' : '#10b981';
 
       let hairSvg = '';
-      if (player.hairModel === 'short') {
+      if (p.hairModel === 'short') {
         hairSvg = `<path d="M 30 35 Q 50 18 70 35 Q 72 26 50 22 Q 28 26 30 35 Z" fill="${hairCol}"/>`;
-      } else if (player.hairModel === 'curly') {
+      } else if (p.hairModel === 'curly') {
         hairSvg = `
           <circle cx="34" cy="28" r="8" fill="${hairCol}"/>
           <circle cx="50" cy="24" r="9" fill="${hairCol}"/>
@@ -1263,9 +1274,9 @@
           <circle cx="28" cy="36" r="6" fill="${hairCol}"/>
           <circle cx="72" cy="36" r="6" fill="${hairCol}"/>
         `;
-      } else if (player.hairModel === 'mohawk') {
+      } else if (p.hairModel === 'mohawk') {
         hairSvg = `<path d="M 44 14 L 56 14 L 54 36 L 46 36 Z" fill="${hairCol}"/>`;
-      } else if (player.hairModel === 'noodles') {
+      } else if (p.hairModel === 'noodles') {
         // CR7 Iconic Frosted Highlights Noodle Hair
         hairSvg = `
           <!-- Dark Faded Undercut Sides -->
@@ -1275,16 +1286,17 @@
           <path d="M 40 22 Q 44 14 47 24 Q 50 13 54 24 Q 58 15 62 25" stroke="#fef08a" stroke-width="3" fill="none" stroke-linecap="round"/>
           <path d="M 36 28 Q 42 22 48 30 Q 54 22 64 28" stroke="#eab308" stroke-width="2.5" fill="none" stroke-linecap="round"/>
         `;
-      } else if (player.hairModel === 'long') {
-        // Completely covers skull top with no bald gaps!
+      } else if (p.hairModel === 'long') {
+        // Full Crown Cover & Flowing Locks over shoulders
         hairSvg = `
-          <!-- Full Crown Cover & Flowing Locks over shoulders -->
           <path d="M 22 45 Q 22 14 50 14 Q 78 14 78 45 L 82 72 Q 74 76 68 62 L 68 40 Q 50 25 32 40 L 32 62 Q 26 76 18 72 Z" fill="${hairCol}"/>
           <path d="M 30 30 Q 50 20 70 30 Q 50 24 30 30 Z" fill="${hairCol}" opacity="0.9"/>
         `;
+      } else if (p.hairModel === 'bald') {
+        hairSvg = `<ellipse cx="45" cy="30" rx="8" ry="3" fill="#ffffff" opacity="0.15"/>`;
       }
 
-      svg.innerHTML = `
+      return `
         <!-- Background -->
         <circle cx="50" cy="50" r="48" fill="#06130b"/>
         
@@ -1292,7 +1304,7 @@
         <path d="M 20 88 Q 50 74 80 88 L 84 100 L 16 100 Z" fill="${jerseyCol}"/>
         <!-- Jersey Collar & Number -->
         <path d="M 42 77 Q 50 85 58 77 Z" fill="#ffffff" opacity="0.8"/>
-        <text x="50" y="96" font-family="'Chakra Petch', sans-serif" font-weight="900" font-size="11" fill="#ffffff" text-anchor="middle">${player.jerseyNumber}</text>
+        <text x="50" y="96" font-family="'Chakra Petch', sans-serif" font-weight="900" font-size="11" fill="#ffffff" text-anchor="middle">${p.jerseyNumber || 9}</text>
 
         <!-- Neck -->
         <rect x="44" y="62" width="12" height="16" fill="${skin}"/>
@@ -1321,11 +1333,19 @@
         <!-- Hair Model -->
         ${hairSvg}
       `;
+    }
+
+    function renderAvatarSvg() {
+      const svg = document.getElementById('svgAvatar');
+      if (svg) {
+        svg.innerHTML = getAvatarSvgMarkup(player);
+      }
 
       const badge = document.getElementById('previewPlayerTitle');
       if (badge) {
-        badge.textContent = `${player.position} • #${player.jerseyNumber}`;
+        badge.textContent = `${player.position} • #${player.jerseyNumber || 9}`;
       }
+      updateHUD();
     }
 
     function setPlayerPosition(pos) {
@@ -1408,6 +1428,21 @@
         statusIcon.className = 'w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-300 flex items-center justify-center font-bold text-xs shrink-0';
         statusDesc.textContent = `Formda • ${player.discipline ? player.discipline.yellowCards : 0} Sarı`;
       }
+
+      // Live Custom Character Avatar Injection into Career HUD & TV Scorebug Star Cam
+      const avatarSvg = getAvatarSvgMarkup(player);
+      const hudAvatar = document.getElementById('hudAvatarContainer');
+      if (hudAvatar) {
+        hudAvatar.innerHTML = `<svg viewBox="0 0 100 100" class="w-full h-full">${avatarSvg}</svg>`;
+      }
+      const tvAvatar = document.getElementById('tvPlayerAvatarMini');
+      if (tvAvatar) {
+        tvAvatar.innerHTML = `<svg viewBox="0 0 100 100" class="w-full h-full">${avatarSvg}</svg>`;
+      }
+      const tvName = document.getElementById('tvPlayerCardName');
+      if (tvName) tvName.textContent = player.nick || (currentLang === 'TR' ? 'Yıldız Futbolcu' : 'Star Player');
+      const tvSub = document.getElementById('tvPlayerCardSub');
+      if (tvSub) tvSub.textContent = `${player.position || 'ST'} • #${player.jerseyNumber || 9} • ${player.ovr || 55} OVR`;
     }
 
     /* =====================================================================
@@ -1453,7 +1488,10 @@
       ball.out = false;
       ball.isGroundShot = false;
       ball.trail = [];
+      ball.kickOrigin = { x: ball.x, y: ball.y };
+      ball.kickTime = 0;
       dragPoints = [];
+      updateHUD();
 
       // Level-Based GK Speed (scales with player age & OVR)
       let gkBaseSpeed = 1.8;
@@ -1528,6 +1566,8 @@
     }
 
     function shootBallAtGoalKeeper() {
+      ball.kickOrigin = { x: ball.x, y: ball.y };
+      ball.kickTime = performance.now();
       ball.inFlight = true;
       ball.trail = [];
       Sound.kick();
@@ -1600,6 +1640,8 @@
           const power = Math.min(Math.hypot(aimDx, aimDy), 130);
 
           if (power > 16 && Math.abs(aimDy) > 5) {
+            ball.kickOrigin = { x: ball.x, y: ball.y };
+            ball.kickTime = performance.now();
             ball.inFlight = true;
             ball.trail = [];
             const speedFactor = 0.18;
@@ -1633,6 +1675,364 @@
           gloves.dragging = false;
         }
       };
+    }
+
+        /* =====================================================================
+       5.5 ON-PITCH CUSTOM FOOTBALLER & GOALKEEPER RENDERING ENGINE 🌟
+       ===================================================================== */
+    function drawPitchCustomPlayer(ctx, ballX, ballY, inFlight, dragging, aimPower, aimDx, aimDy) {
+      ctx.save();
+
+      let px, py;
+      let kickProgress = 0;
+
+      if (!inFlight) {
+        // Natural ready shooting stance behind ball
+        const baseX = ballX - 16;
+        const baseY = ballY + 22;
+
+        if (dragging && aimPower > 10) {
+          const pullRatio = Math.min(1, aimPower / 100);
+          const dirX = aimDx / (aimPower || 1);
+          const dirY = aimDy / (aimPower || 1);
+          px = baseX - (dirX * 10 * pullRatio);
+          py = baseY - (dirY * 12 * pullRatio);
+        } else {
+          px = baseX;
+          py = baseY;
+        }
+      } else {
+        const originX = (ball.kickOrigin && ball.kickOrigin.x !== undefined) ? ball.kickOrigin.x : ballX;
+        const originY = (ball.kickOrigin && ball.kickOrigin.y !== undefined) ? ball.kickOrigin.y : ballY;
+        px = originX - 16;
+        py = originY + 22;
+
+        const kickAge = (performance.now() - (ball.kickTime || performance.now())) / 1000;
+        if (kickAge < 0.85) {
+          kickProgress = 1 - (kickAge / 0.85);
+        }
+      }
+
+      const skin = player.skinTone || SKIN_TONES[1] || '#f8d5b8';
+      const hairCol = player.hairColor || '#1c1917';
+      const isGK = player.position === 'GK';
+      const jerseyCol = isGK ? '#f59e0b' : '#10b981';
+      const jerseyTrim = '#ffffff';
+      const shortsCol = '#091e13';
+      const bootsCol = '#111827';
+      const socksCol = '#059669';
+
+      // 1. Soft Turf Shadow
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.38)';
+      ctx.beginPath();
+      ctx.ellipse(px + 10, py + 34, 18, 6, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 2. Legs & Cleats (Back / 3/4 View)
+      // Left Plant Foot (Stable)
+      ctx.fillStyle = socksCol;
+      ctx.fillRect(px + 2, py + 18, 5, 12);
+      ctx.fillStyle = skin;
+      ctx.fillRect(px + 2, py + 13, 5, 6);
+      ctx.fillStyle = bootsCol;
+      ctx.fillRect(px + 1, py + 30, 7, 5);
+      ctx.fillStyle = '#4ade80';
+      ctx.fillRect(px + 2, py + 34, 5, 1.5);
+
+      // Right Kicking Leg (Dynamic based on stance)
+      ctx.save();
+      if (kickProgress > 0) {
+        // High follow-through swing forward
+        const swingUp = kickProgress * 10;
+        ctx.fillStyle = skin;
+        ctx.fillRect(px + 13, py + 11 - swingUp, 5, 7);
+        ctx.fillStyle = socksCol;
+        ctx.fillRect(px + 14, py + 17 - swingUp, 5, 11);
+        ctx.fillStyle = bootsCol;
+        ctx.fillRect(px + 15, py + 27 - swingUp, 8, 5);
+        ctx.fillStyle = '#facc15';
+        ctx.fillRect(px + 16, py + 31 - swingUp, 6, 1.5);
+      } else if (dragging) {
+        // Pullback leg stance
+        ctx.fillStyle = skin;
+        ctx.fillRect(px + 13, py + 14, 5, 6);
+        ctx.fillStyle = socksCol;
+        ctx.fillRect(px + 14, py + 20, 5, 12);
+        ctx.fillStyle = bootsCol;
+        ctx.fillRect(px + 14, py + 32, 7, 5);
+        ctx.fillStyle = '#4ade80';
+        ctx.fillRect(px + 15, py + 36, 5, 1.5);
+      } else {
+        // Neutral ready stance
+        ctx.fillStyle = skin;
+        ctx.fillRect(px + 12, py + 13, 5, 6);
+        ctx.fillStyle = socksCol;
+        ctx.fillRect(px + 12, py + 18, 5, 12);
+        ctx.fillStyle = bootsCol;
+        ctx.fillRect(px + 12, py + 30, 7, 5);
+        ctx.fillStyle = '#4ade80';
+        ctx.fillRect(px + 13, py + 34, 5, 1.5);
+      }
+      ctx.restore();
+
+      // 3. Shorts (Futbol Sortu)
+      ctx.fillStyle = shortsCol;
+      ctx.beginPath();
+      ctx.moveTo(px, py + 12);
+      ctx.lineTo(px + 20, py + 12);
+      ctx.lineTo(px + 19, py + 22);
+      ctx.lineTo(px + 11, py + 22);
+      ctx.lineTo(px + 10, py + 15);
+      ctx.lineTo(px + 9, py + 22);
+      ctx.lineTo(px + 1, py + 22);
+      ctx.closePath();
+      ctx.fill();
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+      ctx.fillRect(px, py + 13, 2, 8);
+      ctx.fillRect(px + 18, py + 13, 2, 8);
+
+      // 4. Arms & Hands
+      ctx.fillStyle = skin;
+      ctx.beginPath();
+      ctx.moveTo(px - 1, py - 4);
+      ctx.lineTo(px - 7, py + 6);
+      ctx.lineTo(px - 4, py + 8);
+      ctx.lineTo(px + 1, py - 2);
+      ctx.fill();
+      ctx.beginPath(); ctx.arc(px - 6, py + 8, 2.5, 0, Math.PI * 2); ctx.fill();
+
+      ctx.beginPath();
+      ctx.moveTo(px + 21, py - 4);
+      ctx.lineTo(px + 27, py + (dragging ? -2 : 6));
+      ctx.lineTo(px + 24, py + (dragging ? 0 : 8));
+      ctx.lineTo(px + 19, py - 2);
+      ctx.fill();
+      ctx.beginPath(); ctx.arc(px + 26, py + (dragging ? -1 : 8), 2.5, 0, Math.PI * 2); ctx.fill();
+
+      // 5. Jersey Torso (Back View)
+      ctx.fillStyle = jerseyCol;
+      ctx.beginPath();
+      ctx.roundRect(px, py - 8, 20, 21, 3);
+      ctx.fill();
+
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+      ctx.fillRect(px, py - 6, 2.5, 17);
+      ctx.fillRect(px + 17.5, py - 6, 2.5, 17);
+
+      ctx.fillStyle = jerseyTrim;
+      ctx.beginPath();
+      ctx.ellipse(px + 10, py - 8, 4.5, 2, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 6. Back Jersey Number (Sirt Numarasi)
+      ctx.fillStyle = '#ffffff';
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
+      ctx.shadowBlur = 3;
+      ctx.font = '900 11px "Chakra Petch", "JetBrains Mono", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(String(player.jerseyNumber || 9), px + 10, py + 3);
+      ctx.shadowBlur = 0;
+
+      // 7. Neck & Head
+      ctx.fillStyle = skin;
+      ctx.fillRect(px + 7.5, py - 13, 5, 6);
+      ctx.beginPath();
+      ctx.ellipse(px + 10, py - 17, 8.5, 9.5, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.beginPath(); ctx.arc(px + 1.5, py - 17, 2, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(px + 18.5, py - 17, 2, 0, Math.PI * 2); ctx.fill();
+
+      // 8. Custom Hair Style (Back View)
+      const hModel = player.hairModel || 'short';
+      ctx.fillStyle = hairCol;
+
+      if (hModel === 'short') {
+        ctx.beginPath();
+        ctx.arc(px + 10, py - 19, 8.5, Math.PI * 0.85, Math.PI * 2.15);
+        ctx.fill();
+        ctx.fillRect(px + 2, py - 20, 16, 7);
+      } else if (hModel === 'curly') {
+        for (let [cx, cy, r] of [
+          [px + 5, py - 22, 5],
+          [px + 10, py - 24, 5.5],
+          [px + 15, py - 22, 5],
+          [px + 2, py - 18, 4],
+          [px + 18, py - 18, 4],
+          [px + 10, py - 19, 6]
+        ]) {
+          ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fill();
+        }
+      } else if (hModel === 'mohawk') {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
+        ctx.fillRect(px + 3, py - 20, 14, 5);
+        ctx.fillStyle = hairCol;
+        ctx.beginPath();
+        ctx.moveTo(px + 6, py - 18);
+        ctx.lineTo(px + 9, py - 28);
+        ctx.lineTo(px + 11, py - 28);
+        ctx.lineTo(px + 14, py - 18);
+        ctx.closePath();
+        ctx.fill();
+      } else if (hModel === 'noodles') {
+        ctx.fillStyle = '#1c1917';
+        ctx.fillRect(px + 2, py - 20, 16, 6);
+        ctx.fillStyle = '#facc15';
+        ctx.beginPath();
+        ctx.arc(px + 10, py - 23, 7.5, Math.PI, 0);
+        ctx.fill();
+        ctx.strokeStyle = '#fef08a';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(px + 7, py - 23, 3.5, 0, Math.PI);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(px + 13, py - 23, 3.5, 0, Math.PI);
+        ctx.stroke();
+      } else if (hModel === 'long') {
+        ctx.beginPath();
+        ctx.arc(px + 10, py - 19, 9, Math.PI, 0);
+        ctx.fill();
+        ctx.fillRect(px + 1, py - 19, 18, 17);
+      } else if (hModel === 'bald') {
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
+        ctx.beginPath();
+        ctx.arc(px + 8, py - 21, 2.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // 9. Floating Star Player Overhead Tag
+      const tagText = '★ ' + (player.nick || 'SEN').toUpperCase() + ' #' + (player.jerseyNumber || 9);
+      ctx.font = 'bold 9px "Space Grotesk", sans-serif';
+      const textWidth = ctx.measureText(tagText).width;
+      const pillWidth = textWidth + 14;
+      const pillY = py - 38;
+
+      ctx.fillStyle = 'rgba(6, 19, 11, 0.9)';
+      ctx.strokeStyle = '#10b981';
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.roundRect(px + 10 - (pillWidth / 2), pillY - 8, pillWidth, 15, 5);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = '#34d399';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(tagText, px + 10, pillY);
+
+      ctx.fillStyle = '#10b981';
+      ctx.beginPath();
+      ctx.moveTo(px + 8, pillY + 7);
+      ctx.lineTo(px + 10, pillY + 10);
+      ctx.lineTo(px + 12, pillY + 7);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    function drawCustomGoalkeeper(ctx, gx, gy) {
+      ctx.save();
+      const skin = player.skinTone || SKIN_TONES[1] || '#f8d5b8';
+      const hairCol = player.hairColor || '#1c1917';
+      const py = gy - 8;
+
+      // 1. Shadow on line
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
+      ctx.beginPath();
+      ctx.ellipse(gx, py + 34, 22, 6, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 2. Legs & Cleats
+      ctx.fillStyle = '#111827';
+      ctx.fillRect(gx - 9, py + 30, 7, 5);
+      ctx.fillRect(gx + 2, py + 30, 7, 5);
+      ctx.fillStyle = '#f59e0b';
+      ctx.fillRect(gx - 8, py + 18, 5, 12);
+      ctx.fillRect(gx + 3, py + 18, 5, 12);
+      ctx.fillStyle = skin;
+      ctx.fillRect(gx - 8, py + 13, 5, 5);
+      ctx.fillRect(gx + 3, py + 13, 5, 5);
+
+      // 3. GK Shorts
+      ctx.fillStyle = '#1e1b4b';
+      ctx.fillRect(gx - 11, py + 10, 22, 11);
+
+      // 4. GK Jersey Torso (Back View - Amber / Gold)
+      ctx.fillStyle = '#f59e0b';
+      ctx.beginPath();
+      ctx.roundRect(gx - 12, py - 9, 24, 22, 3);
+      ctx.fill();
+
+      // Jersey Number
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '900 11px "Chakra Petch", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(String(player.jerseyNumber || 1), gx, py + 2);
+
+      // 5. Neck & Head
+      ctx.fillStyle = skin;
+      ctx.fillRect(gx - 3, py - 14, 6, 6);
+      ctx.beginPath();
+      ctx.ellipse(gx, py - 18, 8.5, 9.5, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 6. Custom Hair
+      const hModel = player.hairModel || 'short';
+      ctx.fillStyle = hairCol;
+      if (hModel === 'short') {
+        ctx.beginPath(); ctx.arc(gx, py - 20, 8.5, Math.PI * 0.85, Math.PI * 2.15); ctx.fill();
+        ctx.fillRect(gx - 8, py - 21, 16, 7);
+      } else if (hModel === 'curly') {
+        for (let [cx, cy, r] of [[gx - 5, py - 23, 5], [gx, py - 25, 5.5], [gx + 5, py - 23, 5], [gx - 8, py - 19, 4], [gx + 8, py - 19, 4]]) {
+          ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fill();
+        }
+      } else if (hModel === 'mohawk') {
+        ctx.fillStyle = hairCol;
+        ctx.beginPath(); ctx.moveTo(gx - 4, py - 19); ctx.lineTo(gx, py - 28); ctx.lineTo(gx + 4, py - 19); ctx.fill();
+      } else if (hModel === 'noodles') {
+        ctx.fillStyle = '#1c1917'; ctx.fillRect(gx - 8, py - 21, 16, 6);
+        ctx.fillStyle = '#facc15'; ctx.beginPath(); ctx.arc(gx, py - 24, 7.5, Math.PI, 0); ctx.fill();
+      } else if (hModel === 'long') {
+        ctx.beginPath(); ctx.arc(gx, py - 20, 9, Math.PI, 0); ctx.fill();
+        ctx.fillRect(gx - 9, py - 20, 18, 17);
+      }
+
+      // 7. Large Goalkeeper Gloves (Interactive at gx, gy)
+      ctx.fillStyle = '#f59e0b';
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath(); ctx.arc(gx - 18, gy, 13, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+      ctx.beginPath(); ctx.arc(gx + 18, gy, 13, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 11px sans-serif';
+      ctx.fillText('🧤', gx - 24, gy + 4);
+      ctx.fillText('🧤', gx + 12, gy + 4);
+
+      // 8. Overhead GK Pill
+      const tagText = '★ ' + (player.nick || 'SEN').toUpperCase() + ' (GK #' + (player.jerseyNumber || 1) + ')';
+      ctx.font = 'bold 9px "Space Grotesk", sans-serif';
+      const textWidth = ctx.measureText(tagText).width;
+      const pillWidth = textWidth + 14;
+      const pillY = py - 38;
+
+      ctx.fillStyle = 'rgba(6, 19, 11, 0.9)';
+      ctx.strokeStyle = '#f59e0b';
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.roundRect(gx - (pillWidth / 2), pillY - 8, pillWidth, 15, 5);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = '#fbbf24';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(tagText, gx, pillY);
+
+      ctx.restore();
     }
 
     function renderCanvasLoop() {
@@ -1748,16 +2148,9 @@
         ctx.beginPath(); ctx.moveTo(goalkeeper.x + 14, goalkeeper.y + 10); ctx.lineTo(goalkeeper.x + 22, goalkeeper.y); ctx.stroke();
       }
 
-      // In GK Mode: Draw Player Gloves
+      // In GK Mode: Draw Player's Customized Goalkeeper
       if (matchMode === 'SAVE') {
-        ctx.fillStyle = '#f59e0b';
-        ctx.strokeStyle = '#ffffff';
-        ctx.lineWidth = 2.5;
-        ctx.beginPath(); ctx.arc(gloves.x - 16, gloves.y, 14, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-        ctx.beginPath(); ctx.arc(gloves.x + 16, gloves.y, 14, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-        ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 10px sans-serif';
-        ctx.fillText('🧤', gloves.x - 7, gloves.y + 4);
+        drawCustomGoalkeeper(ctx, gloves.x, gloves.y);
       }
 
       // 7. REAL-TIME AIMING TRAJECTORY & TARGET CROSSHAIR WITH CURVED FALSO PREVIEW 🎯
@@ -1943,6 +2336,21 @@
             showMatchSplash(false, 'GOL OLDU...', 'Top ağlarla buluştu, toparlanmalısın.');
           }
         }
+      }
+
+      // 8.5 Draw Customized Pitch Footballer (Oyuncunun Forması & Karakteri)
+      if (matchMode === 'SHOOT') {
+        let aimDx = 0, aimDy = 0, power = 0;
+        if (isDragging) {
+          aimDx = dragCurrent.x - dragStart.x;
+          aimDy = dragCurrent.y - dragStart.y;
+          if (aimDy > 5) {
+            aimDx = -aimDx;
+            aimDy = -aimDy;
+          }
+          power = Math.min(Math.hypot(aimDx, aimDy), 130);
+        }
+        drawPitchCustomPlayer(ctx, ball.x, ball.y, ball.inFlight, isDragging, power, aimDx, aimDy);
       }
 
       // 9. Draw Ball (With Ground Shadow & Elevation Render!)
@@ -2162,6 +2570,8 @@
       // Start 12 Year Old Street Intro
       document.getElementById('btnStartCareerAge12').addEventListener('click', () => {
         Sound.whistle();
+        const jNumInput = document.getElementById('inputJerseyNumber');
+        if (jNumInput) player.jerseyNumber = Math.max(1, Math.min(99, parseInt(jNumInput.value) || 9));
         player.age = 12;
         player.club = { name: currentLang === 'TR' ? 'Mahalle Sahası' : 'Street Ground', badge: '🏡', salary: 0, league: 'Mahalle Ligi' };
         saveCareer();
