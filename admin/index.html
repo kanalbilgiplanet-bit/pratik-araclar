@@ -800,18 +800,28 @@
         </div>
 
         <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col">
-          <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
             <div>
               <h3 class="text-base font-bold text-white flex items-center gap-2">
                 <i class="fa-solid fa-city text-indigo-400"></i>
                 En Çok Ziyaret Alan İller / Şehirler
               </h3>
-              <p class="text-xs text-slate-400 mt-0.5">Ziyaretçilerin il ve şehir bazlı toplam dağılımı</p>
+              <p class="text-xs text-slate-400 mt-0.5">Ülkelere göre gruplanmış, açılır menülü il ve şehir dağılımı</p>
             </div>
-            <span id="histCityCountBadge" class="text-xs bg-slate-800 text-slate-300 px-2.5 py-1 rounded-full font-mono">0 Şehir</span>
+            <div class="flex items-center gap-1.5 flex-wrap">
+              <span id="histCityCountBadge" class="text-xs bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-2.5 py-1 rounded-full font-mono">0 Şehir</span>
+              <button id="btnToggleCityViewMode" onclick="toggleCityViewMode()" class="text-[11px] bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white px-2.5 py-1 rounded-lg border border-slate-700 font-semibold transition flex items-center gap-1 cursor-pointer" title="Görünüm Değiştir">
+                <i class="fa-solid fa-list-ul text-indigo-400"></i>
+                <span id="lblCityViewMode">Düz Liste</span>
+              </button>
+              <button id="btnToggleAllCityAccordions" onclick="toggleAllCityAccordions()" class="text-[11px] bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white px-2.5 py-1 rounded-lg border border-slate-700 font-semibold transition flex items-center gap-1 cursor-pointer" title="Tüm Ülkeleri Aç / Kapat">
+                <i class="fa-solid fa-layer-group text-indigo-400"></i>
+                <span id="txtToggleAllAccordions">Tümünü Aç</span>
+              </button>
+            </div>
           </div>
 
-          <div id="histCitiesList" class="space-y-3 flex-1 custom-scroll max-h-[340px] overflow-y-auto pr-1">
+          <div id="histCitiesList" class="space-y-3 flex-1 custom-scroll max-h-[360px] overflow-y-auto pr-1">
             <div class="text-center py-10 text-slate-500 text-sm">
               Kayıt bekleniyor...
             </div>
@@ -2416,7 +2426,285 @@
       if (modal) modal.classList.add('hidden');
     }
 
+    // Ülke ve Şehir Ayrıştırma ve Temiz Bayrak Yardımcıları
+    function parseCityKey(key) {
+      let flag = '';
+      let city = (key || '').trim();
+      let country = 'Diğer';
+
+      const parenMatch = city.match(/\(([^)]+)\)$/);
+      if (parenMatch) {
+        country = parenMatch[1].trim();
+        city = city.replace(/\s*\([^)]+\)$/, '').trim();
+      }
+
+      const m = city.match(/^([\u{1F1E6}-\u{1F1FF}]{2}|\p{Extended_Pictographic}|[a-zA-Z]{2})\s+(.+)$/u);
+      if (m) {
+        flag = m[1];
+        city = m[2].trim();
+      }
+
+      return { flag, city, country };
+    }
+
+    function getCleanFlag(flag, country) {
+      if (flag && flag.length === 2 && /^[a-zA-Z]{2}$/.test(flag)) {
+        const code = flag.toUpperCase();
+        return String.fromCodePoint(...[...code].map(c => 0x1F1E6 + c.charCodeAt(0) - 65));
+      }
+      if (flag && flag.length > 0 && flag !== 'undefined' && flag !== 'null' && !/^[a-zA-Z]{2}$/.test(flag)) {
+        return flag;
+      }
+      const cNorm = (country || '').toLowerCase();
+      if (cNorm.includes('abd') || cNorm.includes('united states') || cNorm.includes('amerika')) return '🇺🇸';
+      if (cNorm.includes('türkiye') || cNorm.includes('turkey')) return '🇹🇷';
+      if (cNorm.includes('almanya') || cNorm.includes('germany')) return '🇩🇪';
+      if (cNorm.includes('ingiltere') || cNorm.includes('united kingdom') || cNorm.includes('britanya')) return '🇬🇧';
+      if (cNorm.includes('fransa') || cNorm.includes('france')) return '🇫🇷';
+      if (cNorm.includes('italya') || cNorm.includes('italy')) return '🇮🇹';
+      if (cNorm.includes('europe') || cNorm.includes('avrupa')) return '🇪🇺';
+      if (cNorm.includes('kanada') || cNorm.includes('canada')) return '🇨🇦';
+      if (cNorm.includes('azerbaycan') || cNorm.includes('azerbaijan')) return '🇦🇿';
+      if (cNorm.includes('hollanda') || cNorm.includes('netherlands')) return '🇳🇱';
+      if (cNorm.includes('rusya') || cNorm.includes('russia')) return '🇷🇺';
+      return '🌍';
+    }
+
+    let currentCityViewMode = 'grouped'; // 'grouped' (açılır menülü ülke bazlı) veya 'flat' (düz liste)
+    let openCityAccordions = new Set();
+    let cachedCityData = null;
+
+    window.toggleCityAccordion = function(countryId) {
+      const content = document.getElementById(`cityAccordionContent_${countryId}`);
+      const icon = document.getElementById(`cityAccordionIcon_${countryId}`);
+      if (!content) return;
+      const isHidden = content.classList.contains('hidden');
+      if (isHidden) {
+        content.classList.remove('hidden');
+        openCityAccordions.add(countryId);
+        if (icon) icon.classList.add('rotate-180', 'text-indigo-400');
+      } else {
+        content.classList.add('hidden');
+        openCityAccordions.delete(countryId);
+        if (icon) icon.classList.remove('rotate-180', 'text-indigo-400');
+      }
+    };
+
+    window.toggleAllCityAccordions = function() {
+      if (!cachedCityData) return;
+      const contents = document.querySelectorAll('[id^="cityAccordionContent_"]');
+      const icons = document.querySelectorAll('[id^="cityAccordionIcon_"]');
+      const btnTxt = document.getElementById('txtToggleAllAccordions');
+      
+      const anyClosed = Array.from(contents).some(c => c.classList.contains('hidden'));
+      const shouldOpen = anyClosed;
+
+      contents.forEach(el => {
+        const id = el.id.replace('cityAccordionContent_', '');
+        if (shouldOpen) {
+          el.classList.remove('hidden');
+          openCityAccordions.add(id);
+        } else {
+          el.classList.add('hidden');
+          openCityAccordions.delete(id);
+        }
+      });
+
+      icons.forEach(ic => {
+        if (shouldOpen) ic.classList.add('rotate-180', 'text-indigo-400');
+        else ic.classList.remove('rotate-180', 'text-indigo-400');
+      });
+
+      if (btnTxt) {
+        btnTxt.textContent = shouldOpen ? 'Tümünü Kapat' : 'Tümünü Aç';
+      }
+    };
+
+    window.toggleCityViewMode = function() {
+      currentCityViewMode = (currentCityViewMode === 'grouped') ? 'flat' : 'grouped';
+      const lbl = document.getElementById('lblCityViewMode');
+      if (lbl) {
+        lbl.textContent = (currentCityViewMode === 'grouped') ? 'Düz Liste' : 'Ülke Gruplu';
+      }
+      if (cachedCityData) {
+        renderCitiesSection(cachedCityData.cityTotals, cachedCityData.baseTotal);
+      }
+    };
+
+    function renderCitiesSection(cityTotals, baseTotal) {
+      const cityContainer = document.getElementById('histCitiesList');
+      if (!cityContainer) return;
+
+      const rawEntries = Object.entries(cityTotals || {});
+      if (rawEntries.length === 0) {
+        const countBadge = document.getElementById('histCityCountBadge');
+        if (countBadge) countBadge.innerText = '0 Şehir';
+        cityContainer.innerHTML = `
+          <div class="text-center py-10 text-slate-500 text-sm">
+            Kayıtlı şehir bulunamadı.
+          </div>
+        `;
+        return;
+      }
+
+      // Şehirleri Ülkeye Göre Grupla
+      const countryGroups = {};
+      let totalCitiesCount = 0;
+
+      rawEntries.forEach(([cityKey, count]) => {
+        const parsed = parseCityKey(cityKey);
+        let country = parsed.country || 'Diğer';
+        if (country === 'US' || country === 'USA' || country === 'United States') country = 'ABD';
+        if (country === 'TR' || country === 'Turkey') country = 'Türkiye';
+        if (country === 'Europe') country = 'Avrupa (Europe)';
+
+        const cleanFlag = getCleanFlag(parsed.flag, country);
+
+        if (!countryGroups[country]) {
+          countryGroups[country] = {
+            country,
+            flag: cleanFlag,
+            totalCount: 0,
+            cities: []
+          };
+        }
+        countryGroups[country].totalCount += count;
+        countryGroups[country].cities.push({
+          name: parsed.city,
+          count: count
+        });
+        totalCitiesCount++;
+      });
+
+      const sortedGroups = Object.values(countryGroups).sort((a, b) => b.totalCount - a.totalCount);
+      sortedGroups.forEach(cg => {
+        cg.cities.sort((a, b) => b.count - a.count);
+      });
+
+      const countBadge = document.getElementById('histCityCountBadge');
+      if (countBadge) {
+        countBadge.innerText = `${sortedGroups.length} Ülke • ${totalCitiesCount} Şehir`;
+      }
+
+      if (currentCityViewMode === 'flat') {
+        // Düz Liste Görünümü
+        const sortedCities = rawEntries.sort((a, b) => b[1] - a[1]);
+        cityContainer.innerHTML = sortedCities.map(([cityKey, count]) => {
+          const parsed = parseCityKey(cityKey);
+          const flag = getCleanFlag(parsed.flag, parsed.country);
+          const pct = baseTotal > 0 ? Math.round((count / baseTotal) * 100) : 0;
+          return `
+            <div class="p-3 bg-slate-950/50 border border-slate-800/80 rounded-xl">
+              <div class="flex items-center justify-between text-xs mb-1.5">
+                <span class="font-medium text-slate-200 flex items-center gap-2 truncate max-w-[240px]">
+                  <span class="text-base leading-none">${flag}</span>
+                  <span class="text-white font-semibold">${parsed.city}</span>
+                  <span class="text-slate-400 text-[11px]">(${parsed.country})</span>
+                </span>
+                <span class="font-bold text-white font-mono">${count} kişi (%${pct})</span>
+              </div>
+              <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                <div class="bg-gradient-to-r from-indigo-500 to-purple-400 h-full rounded-full" style="width: ${pct}%"></div>
+              </div>
+            </div>
+          `;
+        }).join('');
+        return;
+      }
+
+      // Ülke Gruplu Açılır Menü (Kullanıcının İstediği Tasarım)
+      // İlk açılışta en çok ziyaret alan 1. ülkeyi (örneğin ABD) açık getir
+      if (openCityAccordions.size === 0 && sortedGroups.length > 0) {
+        const firstId = sortedGroups[0].country.replace(/[^a-zA-Z0-9]/g, '_');
+        openCityAccordions.add(firstId);
+      }
+
+      cityContainer.innerHTML = sortedGroups.map((cg) => {
+        const countryId = cg.country.replace(/[^a-zA-Z0-9]/g, '_');
+        const countryPct = baseTotal > 0 ? Math.round((cg.totalCount / baseTotal) * 100) : 0;
+        const isOpen = openCityAccordions.has(countryId);
+
+        const citiesHtml = cg.cities.map(c => {
+          const cityPctTotal = baseTotal > 0 ? Math.round((c.count / baseTotal) * 100) : 0;
+          const cityRelPct = cg.totalCount > 0 ? Math.round((c.count / cg.totalCount) * 100) : 0;
+          return `
+            <div class="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800/80 hover:border-slate-700/80 transition flex flex-col gap-1.5">
+              <div class="flex items-center justify-between text-xs">
+                <span class="font-medium text-slate-200 flex items-center gap-2 truncate max-w-[210px]">
+                  <i class="fa-solid fa-location-dot text-indigo-400 text-xs"></i>
+                  <span class="text-white font-semibold">${c.name}</span>
+                </span>
+                <div class="text-right font-mono">
+                  <span class="font-bold text-white text-xs">${c.count} kişi</span>
+                  <span class="text-slate-400 text-[10px] ml-1">(%${cityPctTotal})</span>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <div class="flex-1 bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                  <div class="bg-gradient-to-r from-indigo-500 to-cyan-400 h-full rounded-full transition-all duration-300" style="width: ${cityRelPct}%" title="${cg.country} içindeki payı: %${cityRelPct}"></div>
+                </div>
+                <span class="text-[10px] text-indigo-300 font-mono shrink-0" title="${cg.country} içindeki payı">%${cityRelPct}</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        return `
+          <div class="bg-slate-950/50 border border-slate-800/80 hover:border-slate-700/80 rounded-2xl overflow-hidden transition shadow-sm">
+            <!-- Ülke Başlığı (Tıklanabilir Akordeon / Açılır Menü) -->
+            <button type="button" onclick="toggleCityAccordion('${countryId}')" class="w-full p-3.5 flex flex-col gap-2 text-left hover:bg-slate-800/30 transition group cursor-pointer focus:outline-none">
+              <div class="flex items-center justify-between text-xs w-full">
+                <div class="flex items-center gap-2.5 min-w-0">
+                  <span class="text-2xl leading-none shrink-0">${cg.flag}</span>
+                  <div class="min-w-0">
+                    <div class="flex items-center gap-2">
+                      <span class="text-white text-sm font-bold truncate">${cg.country}</span>
+                      <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 shrink-0">
+                        ${cg.cities.length} Şehir
+                      </span>
+                    </div>
+                    <div class="text-[10px] text-slate-400 font-mono mt-0.5 flex items-center gap-1">
+                      <span>İlleri görmek için tıkla</span>
+                      <i class="fa-solid fa-chevron-down text-[9px] text-indigo-400/80 transition-transform ${isOpen ? 'rotate-180' : ''}"></i>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2 shrink-0">
+                  <div class="text-right font-mono">
+                    <span class="font-bold text-white text-xs sm:text-sm">${cg.totalCount} kişi</span>
+                    <span class="text-indigo-300 text-xs font-bold block sm:inline sm:ml-1">(%${countryPct})</span>
+                  </div>
+                  <div class="w-7 h-7 rounded-xl bg-slate-800/80 flex items-center justify-center text-slate-400 group-hover:text-white group-hover:bg-indigo-600/30 transition border border-slate-700/60">
+                    <i id="cityAccordionIcon_${countryId}" class="fa-solid fa-chevron-down text-xs transition-transform duration-200 ${isOpen ? 'rotate-180 text-indigo-400' : ''}"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                <div class="bg-gradient-to-r from-indigo-500 to-purple-400 h-full rounded-full transition-all duration-300" style="width: ${countryPct}%"></div>
+              </div>
+            </button>
+
+            <!-- Açılır Menü: O Ülkeye Ait İller Listesi -->
+            <div id="cityAccordionContent_${countryId}" class="${isOpen ? '' : 'hidden'} border-t border-slate-800/80 bg-slate-900/50 p-3 space-y-2">
+              <div class="flex items-center justify-between text-[11px] font-mono text-slate-400 border-b border-slate-800/60 pb-1.5 px-1">
+                <span class="flex items-center gap-1.5">
+                  <i class="fa-solid fa-city text-indigo-400 text-xs"></i>
+                  <span class="text-slate-300 font-semibold">${cg.country}</span> İlleri
+                </span>
+                <span>${cg.cities.length} İl / Şehir Kayıtlı</span>
+              </div>
+              <div class="space-y-1.5 max-h-56 overflow-y-auto custom-scroll pr-1">
+                ${citiesHtml}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
     function renderHistoryLocations(countryTotals, countryFlags, cityTotals, baseTotal) {
+      cachedCityData = { cityTotals, baseTotal };
+
       // 1. Ülkeler Listesi
       const countryContainer = document.getElementById('histCountriesList');
       const sortedCountries = Object.entries(countryTotals || {}).sort((a, b) => b[1] - a[1]);
@@ -2431,7 +2719,7 @@
       } else {
         countryContainer.innerHTML = sortedCountries.map(([country, count]) => {
           const pct = baseTotal > 0 ? Math.round((count / baseTotal) * 100) : 0;
-          const flag = countryFlags[country] || '🌍';
+          const flag = getCleanFlag(countryFlags[country], country);
           return `
             <div class="p-3 bg-slate-950/50 border border-slate-800/80 rounded-xl">
               <div class="flex items-center justify-between text-xs mb-1.5">
@@ -2449,36 +2737,8 @@
         }).join('');
       }
 
-      // 2. İller / Şehirler Listesi
-      const cityContainer = document.getElementById('histCitiesList');
-      const sortedCities = Object.entries(cityTotals || {}).sort((a, b) => b[1] - a[1]);
-      document.getElementById('histCityCountBadge').innerText = `${sortedCities.length} Şehir`;
-
-      if (sortedCities.length === 0) {
-        cityContainer.innerHTML = `
-          <div class="text-center py-10 text-slate-500 text-sm">
-            Kayıtlı şehir bulunamadı.
-          </div>
-        `;
-      } else {
-        cityContainer.innerHTML = sortedCities.map(([cityKey, count]) => {
-          const pct = baseTotal > 0 ? Math.round((count / baseTotal) * 100) : 0;
-          return `
-            <div class="p-3 bg-slate-950/50 border border-slate-800/80 rounded-xl">
-              <div class="flex items-center justify-between text-xs mb-1.5">
-                <span class="font-medium text-slate-200 flex items-center gap-2 truncate max-w-[220px]">
-                  <i class="fa-solid fa-location-dot text-indigo-400 text-xs"></i>
-                  ${cityKey}
-                </span>
-                <span class="font-bold text-white font-mono">${count} kişi (%${pct})</span>
-              </div>
-              <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
-                <div class="bg-gradient-to-r from-indigo-500 to-purple-400 h-full rounded-full" style="width: ${pct}%"></div>
-              </div>
-            </div>
-          `;
-        }).join('');
-      }
+      // 2. İller / Şehirler Listesi (Ülke Gruplu Açılır Menü)
+      renderCitiesSection(cityTotals, baseTotal);
     }
 
     // CSV / Excel Dışa Aktarma
