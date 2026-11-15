@@ -1347,9 +1347,9 @@
           osc.type = type;
           osc.frequency.setValueAtTime(freq, now);
 
-          // Use linear ramp to prevent exponential ramp domain/underflow exceptions
+          // Use linear ramp to silence
           gain.gain.setValueAtTime(Math.max(0.001, gainVal), now);
-          gain.gain.linearRampToValueAtTime(0.0001, now + duration);
+          gain.gain.linearRampToValueAtTime(0.00001, now + duration);
 
           osc.connect(gain);
           gain.connect(audioCtx.destination);
@@ -1359,17 +1359,23 @@
 
           const cleanup = () => {
             activeAudioNodes.delete(nodeRef);
+            try { osc.onended = null; } catch (e) {}
             try { osc.stop(); } catch (e) {}
             try { osc.disconnect(); } catch (e) {}
+            try {
+              if (audioCtx) gain.gain.setValueAtTime(0, audioCtx.currentTime);
+            } catch (e) {}
             try { gain.disconnect(); } catch (e) {}
           };
 
           osc.onended = cleanup;
           osc.start(now);
-          osc.stop(now + duration + 0.04);
+          try {
+            osc.stop(now + duration + 0.04);
+          } catch (e) {}
 
           // Hard JS safety timer fallback in case AudioContext timeline was suspended or glitched
-          const timer = setTimeout(cleanup, Math.round((duration * 1000) + 100));
+          const timer = setTimeout(cleanup, Math.round((duration * 1000) + 80));
           audioTimeouts.push(timer);
         } catch (e) {}
       },
@@ -1381,18 +1387,17 @@
 
         // Stop and disconnect every active oscillator and gain node immediately
         activeAudioNodes.forEach(node => {
-          try {
-            if (node.osc) {
-              node.osc.onended = null;
-              node.osc.stop();
-              node.osc.disconnect();
-            }
-          } catch (e) {}
-          try {
-            if (node.gain) {
-              node.gain.disconnect();
-            }
-          } catch (e) {}
+          if (node.osc) {
+            try { node.osc.onended = null; } catch (e) {}
+            try { node.osc.stop(); } catch (e) {}
+            try { node.osc.disconnect(); } catch (e) {}
+          }
+          if (node.gain) {
+            try {
+              if (audioCtx) node.gain.gain.setValueAtTime(0, audioCtx.currentTime);
+            } catch (e) {}
+            try { node.gain.disconnect(); } catch (e) {}
+          }
         });
         activeAudioNodes.clear();
       },
@@ -1408,10 +1413,12 @@
         if (!soundEnabled) return;
         this.stopAll();
         // 3 distinct referee blasts: düt - düt - düüüüüt
-        this.play(2500, 'sine', 0.14, 0.22);
-        const t1 = setTimeout(() => this.play(2500, 'sine', 0.14, 0.22), 220);
-        const t2 = setTimeout(() => this.play(2650, 'sine', 0.38, 0.25), 440);
-        audioTimeouts.push(t1, t2);
+        this.play(2500, 'sine', 0.12, 0.18);
+        const t1 = setTimeout(() => this.play(2500, 'sine', 0.12, 0.18), 180);
+        const t2 = setTimeout(() => this.play(2650, 'sine', 0.28, 0.20), 360);
+        // Automatic full silence stop after final blast ends
+        const t3 = setTimeout(() => this.stopAll(), 750);
+        audioTimeouts.push(t1, t2, t3);
       },
 
       kick() {
@@ -4305,6 +4312,7 @@
 
         tvMatchEngine = {
           isActive: true,
+          isConcluded: false,
           isStreet: isStreet,
           home: homeTeam,
           away: awayTeam,
@@ -4354,12 +4362,19 @@
       }
 
       function advanceSimulationClock() {
-        if (!tvMatchEngine.isActive) return;
+        if (!tvMatchEngine.isActive || tvMatchEngine.isConcluded) return;
+        if (tvMatchEngine.timer) {
+          clearInterval(tvMatchEngine.timer);
+          tvMatchEngine.timer = null;
+        }
         tvMatchEngine.isPausedForAction = false;
 
         tvMatchEngine.timer = setInterval(() => {
-          if (!tvMatchEngine.isActive || tvMatchEngine.isPausedForAction) {
-            clearInterval(tvMatchEngine.timer);
+          if (!tvMatchEngine.isActive || tvMatchEngine.isPausedForAction || tvMatchEngine.isConcluded) {
+            if (tvMatchEngine.timer) {
+              clearInterval(tvMatchEngine.timer);
+              tvMatchEngine.timer = null;
+            }
             return;
           }
 
@@ -4410,12 +4425,18 @@
 
           const nextTargetMin = tvMatchEngine.criticalMinutes[tvMatchEngine.currentPosIdx];
           if (nextTargetMin && tvMatchEngine.minute >= nextTargetMin) {
-            clearInterval(tvMatchEngine.timer);
+            if (tvMatchEngine.timer) {
+              clearInterval(tvMatchEngine.timer);
+              tvMatchEngine.timer = null;
+            }
             tvMatchEngine.minute = nextTargetMin;
             if (clockEl) clockEl.textContent = `${tvMatchEngine.minute}'`;
             triggerCriticalPosition();
           } else if (tvMatchEngine.minute >= 90) {
-            clearInterval(tvMatchEngine.timer);
+            if (tvMatchEngine.timer) {
+              clearInterval(tvMatchEngine.timer);
+              tvMatchEngine.timer = null;
+            }
             tvMatchEngine.minute = 90;
             if (clockEl) clockEl.textContent = "90+3'";
             concludeMatchFullTime();
@@ -4459,6 +4480,13 @@
       }
 
       function concludeMatchFullTime() {
+        if (!tvMatchEngine.isActive || tvMatchEngine.isConcluded) return;
+        tvMatchEngine.isConcluded = true;
+        if (tvMatchEngine.timer) {
+          clearInterval(tvMatchEngine.timer);
+          tvMatchEngine.timer = null;
+        }
+
         Sound.finalWhistle();
 
         const tickerStatus = document.getElementById('tvTickerStatus');
@@ -4504,8 +4532,13 @@
           if (btnFinish) {
             btnFinish.onclick = () => {
               Sound.stopAll();
-              endSplash.classList.add('hidden');
+              if (tvMatchEngine.timer) {
+                clearInterval(tvMatchEngine.timer);
+                tvMatchEngine.timer = null;
+              }
               tvMatchEngine.isActive = false;
+              tvMatchEngine.isConcluded = true;
+              endSplash.classList.add('hidden');
               if (tvMatchEngine.onFinish) {
                 tvMatchEngine.onFinish({
                   goals: tvMatchEngine.matchGoals,
@@ -4530,11 +4563,16 @@
       });
 
       // Skip Position Button (Hızlı Simüle)
-      document.getElementById('btnSkipPosition').addEventListener('click', () => {
-        if (!tvMatchEngine.isActive) return;
-        const isGoal = Math.random() > 0.45;
-        showMatchSplash(isGoal, isGoal ? 'SİMÜLE EDİLDİ: GOOOL!' : 'SİMÜLE EDİLDİ: KAÇTI', isGoal ? 'Pozisyon başarıyla sonuçlandı.' : 'Pozisyonda savunma araya girdi.');
-      });
+      const btnSkipPos = document.getElementById('btnSkipPosition');
+      if (btnSkipPos) {
+        btnSkipPos.addEventListener('click', () => {
+          if (!tvMatchEngine.isActive || tvMatchEngine.isConcluded || tvMatchEngine.isSkipping) return;
+          tvMatchEngine.isSkipping = true;
+          const isGoal = Math.random() > 0.45;
+          showMatchSplash(isGoal, isGoal ? 'SİMÜLE EDİLDİ: GOOOL!' : 'SİMÜLE EDİLDİ: KAÇTI', isGoal ? 'Pozisyon başarıyla sonuçlandı.' : 'Pozisyonda savunma araya girdi.');
+          setTimeout(() => { tvMatchEngine.isSkipping = false; }, 1700);
+        });
+      }
 
       // Season Play Match (2 Pozisyon: 1/2 ve 2/2)
       const btnPlaySeasonMatchEl = document.getElementById('btnPlaySeasonMatch');
