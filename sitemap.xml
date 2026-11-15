@@ -241,4 +241,16 @@
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
+  <url>
+    <loc>https://pratikbase.com/next-star-soccer/</loc>
+    <lastmod>2026-11-15</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://pratikbase.com/games/</loc>
+    <lastmod>2026-11-15</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
 </urlset>
