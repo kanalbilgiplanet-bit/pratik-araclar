@@ -1079,10 +1079,16 @@
         Adale Yırtılması (3 Hafta)! Sakatlığın henüz iyileşmediği için doktor heyeti bu maç sahaya çıkmana onay vermedi.
       </p>
 
-      <!-- Action Button -->
-      <button id="modalGameAlertBtn" onclick="closeGameAlertModal()" class="w-full py-3 px-6 rounded-xl font-display font-black text-xs sm:text-sm uppercase tracking-wider bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-slate-950 shadow-lg shadow-emerald-950/60 transition active:scale-95">
-        ANLADIM
-      </button>
+      <!-- Action Buttons Container -->
+      <div class="space-y-2 mt-4">
+        <button id="modalGameAlertActionBtn" class="hidden w-full py-3.5 px-6 rounded-xl font-display font-black text-xs sm:text-sm uppercase tracking-wider bg-gradient-to-r from-emerald-500 to-lime-400 hover:from-emerald-400 hover:to-lime-300 text-slate-950 shadow-lg shadow-emerald-950/60 transition active:scale-95 flex items-center justify-center gap-2">
+          <i class="fa-solid fa-forward"></i>
+          <span id="modalGameAlertActionText">BU MAÇI ATLA (SONRAKİ MAÇA GEÇ)</span>
+        </button>
+        <button id="modalGameAlertBtn" onclick="closeGameAlertModal()" class="w-full py-2.5 px-6 rounded-xl font-display font-bold text-xs uppercase tracking-wider bg-pitch-800 hover:bg-pitch-700 text-slate-300 border border-pitch-700 transition active:scale-95">
+          ANLADIM
+        </button>
+      </div>
 
     </div>
   </div>
@@ -2994,9 +3000,13 @@
             tag: currentLang === 'TR' ? 'DİSİPLİN KURULU KARARI' : 'DISCIPLINARY SUSPENSION',
             title: currentLang === 'TR' ? 'Cezalısın! Bu Hafta Tribündesin' : 'Suspended for this Match',
             message: currentLang === 'TR'
-              ? `Gördüğün kartlar nedeniyle bu maç cezalı durumdasın (${player.discipline.suspendedMatches} maç kaldı). Takım arkadaşlarına tribünden destek olacaksın!`
-              : `You are suspended for this match due to card disciplinary action.`,
-            btnText: currentLang === 'TR' ? 'TRİBÜNE GEÇ' : 'OK'
+              ? `Gördüğün kartlar nedeniyle bu maç cezalı durumdasın (${player.discipline.suspendedMatches} maç kaldı). Sezonu kaçırmamak ve yaş kaybetmemek için bu maçı tribünden izleyip doğrudan sonraki maça geçebilirsin!`
+              : `You are suspended for this match. Skip this match to serve your penalty and proceed to next match!`,
+            actionBtn: {
+              text: currentLang === 'TR' ? '⏩ BU MAÇI ATLA (SONRAKİ MAÇA GEÇ)' : '⏩ SKIP MATCH (GO TO NEXT)',
+              onClick: () => skipCurrentMatchAndHeal('discipline')
+            },
+            btnText: currentLang === 'TR' ? 'VAZGEÇ' : 'CANCEL'
           });
           return;
         }
@@ -3007,9 +3017,13 @@
             tag: currentLang === 'TR' ? 'KULÜP DOKTORU RAPORU' : 'TEAM DOCTOR REPORT',
             title: currentLang === 'TR' ? 'Sakatlık Nedeniyle Kadro Dışısın!' : 'Out with Injury!',
             message: currentLang === 'TR'
-              ? `<b>${player.injury.desc}</b> nedeniyle sağlık heyeti bu maç sahaya çıkmana onay vermedi. Tedavi sürecinde dinlenmek için 'Sezonu Tamamla' butonunu kullanabilirsin.`
-              : `${player.injury.desc}! Medical team has ruled you out for this match.`,
-            btnText: currentLang === 'TR' ? 'DOKTORA DANIŞTIM (TAMAM)' : 'OK'
+              ? `<b>${player.injury.desc || 'Sakatlık'}</b> nedeniyle sağlık heyeti bu maç sahaya çıkmana onay vermedi. Sezonu kaybetmemek ve yaş ilerletmemek için bu maçı dinlenerek geçebilir, hemen sonraki maça hazırlanabilirsin!`
+              : `<b>${player.injury.desc || 'Injury'}</b>! Medical team has ruled you out for this match. Skip to rest and prepare for next match!`,
+            actionBtn: {
+              text: currentLang === 'TR' ? '⏩ BU MAÇI ATLA & İYİLEŞ (SONRAKİ MAÇA GEÇ)' : '⏩ SKIP & HEAL (GO TO NEXT)',
+              onClick: () => skipCurrentMatchAndHeal('injury')
+            },
+            btnText: currentLang === 'TR' ? 'VAZGEÇ' : 'CANCEL'
           });
           return;
         }
@@ -3735,6 +3749,7 @@
        15. IN-GAME NOTIFICATION & ALERT MODAL LOGIC (No Native alert())
        ===================================================================== */
     let gameAlertCallback = null;
+    let gameAlertActionCallback = null;
 
     function showGameAlert(options = {}) {
       const modal = document.getElementById('modalGameAlert');
@@ -3747,44 +3762,81 @@
       const titleEl = document.getElementById('modalGameAlertTitle');
       const msgEl = document.getElementById('modalGameAlertMsg');
       const btnEl = document.getElementById('modalGameAlertBtn');
+      const actionBtn = document.getElementById('modalGameAlertActionBtn');
+      const actionText = document.getElementById('modalGameAlertActionText');
 
       const type = options.type || 'info'; // 'injury', 'discipline', 'success', 'loyalty', 'info'
       const icon = options.icon || (type === 'injury' ? '🩹' : type === 'discipline' ? '🟥' : type === 'success' ? '🎉' : type === 'loyalty' ? '🦁' : '⚽');
       const tag = options.tag || (type === 'injury' ? 'KULÜP DOKTORU RAPORU' : type === 'discipline' ? 'DİSİPLİN KURULU KARARI' : type === 'success' ? 'RESMİ SÖZLEŞME' : type === 'loyalty' ? 'KULÜP BAĞLILIĞI' : 'BİLGİLENDİRME');
       const title = options.title || (type === 'injury' ? 'Sakatlık Nedeniyle Kadro Dışısın!' : type === 'discipline' ? 'Cezalısın! Maça Çıkamazsın' : 'Oyun Bildirimi');
       const msg = options.message || '';
-      const btnText = options.btnText || (currentLang === 'TR' ? 'ANLADIM' : 'OK');
+      const btnText = options.btnText || (options.actionBtn ? (currentLang === 'TR' ? 'VAZGEÇ' : 'CANCEL') : (currentLang === 'TR' ? 'ANLADIM' : 'OK'));
+      
       gameAlertCallback = options.onConfirm || null;
+
+      // Primary Action Button (e.g. "⏩ BU MAÇI ATLA (SONRAKİ MAÇA GEÇ)")
+      if (actionBtn) {
+        if (options.actionBtn && options.actionBtn.text) {
+          actionBtn.classList.remove('hidden');
+          if (actionText) actionText.textContent = options.actionBtn.text;
+          gameAlertActionCallback = options.actionBtn.onClick || null;
+          actionBtn.onclick = () => {
+            closeGameAlertModal();
+            if (typeof gameAlertActionCallback === 'function') {
+              const cb = gameAlertActionCallback;
+              gameAlertActionCallback = null;
+              cb();
+            }
+          };
+        } else {
+          actionBtn.classList.add('hidden');
+          gameAlertActionCallback = null;
+          actionBtn.onclick = null;
+        }
+      }
 
       // Base classes
       box.className = 'w-full max-w-sm sm:max-w-md p-6 rounded-3xl bg-pitch-900 border-2 shadow-2xl text-center relative animate-in fade-in zoom-in duration-200';
       iconWrapper.className = 'w-16 h-16 mx-auto rounded-2xl flex items-center justify-center text-3xl mb-3 shadow-inner border';
       tagEl.className = 'inline-flex items-center gap-1 px-3 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider border';
-      btnEl.className = 'w-full py-3 px-6 rounded-xl font-display font-black text-xs sm:text-sm uppercase tracking-wider transition active:scale-95 shadow-lg';
+      
+      if (options.actionBtn) {
+        btnEl.className = 'w-full py-2.5 px-6 rounded-xl font-display font-bold text-xs uppercase tracking-wider bg-pitch-800 hover:bg-pitch-700 text-slate-300 border border-pitch-700 transition active:scale-95';
+      } else {
+        btnEl.className = 'w-full py-3 px-6 rounded-xl font-display font-black text-xs sm:text-sm uppercase tracking-wider transition active:scale-95 shadow-lg';
+      }
 
       if (type === 'injury') {
         box.classList.add('border-rose-500/60', 'shadow-rose-950/80');
         iconWrapper.classList.add('bg-rose-500/20', 'text-rose-400', 'border-rose-500/40');
         tagEl.classList.add('bg-rose-500/15', 'text-rose-300', 'border-rose-500/30');
-        btnEl.classList.add('bg-gradient-to-r', 'from-rose-500', 'to-rose-600', 'hover:from-rose-400', 'hover:to-rose-500', 'text-white', 'shadow-rose-950/60');
+        if (!options.actionBtn) {
+          btnEl.classList.add('bg-gradient-to-r', 'from-rose-500', 'to-rose-600', 'hover:from-rose-400', 'hover:to-rose-500', 'text-white', 'shadow-rose-950/60');
+        }
         if (typeof Sound !== 'undefined' && Sound.whistle) Sound.whistle();
       } else if (type === 'discipline') {
         box.classList.add('border-amber-500/60', 'shadow-amber-950/80');
         iconWrapper.classList.add('bg-amber-500/20', 'text-amber-400', 'border-amber-500/40');
         tagEl.classList.add('bg-amber-500/15', 'text-amber-300', 'border-amber-500/30');
-        btnEl.classList.add('bg-gradient-to-r', 'from-amber-500', 'to-amber-600', 'hover:from-amber-400', 'hover:to-amber-500', 'text-slate-950', 'shadow-amber-950/60');
+        if (!options.actionBtn) {
+          btnEl.classList.add('bg-gradient-to-r', 'from-amber-500', 'to-amber-600', 'hover:from-amber-400', 'hover:to-amber-500', 'text-slate-950', 'shadow-amber-950/60');
+        }
         if (typeof Sound !== 'undefined' && Sound.whistle) Sound.whistle();
       } else if (type === 'success' || type === 'loyalty') {
         box.classList.add('border-emerald-500/60', 'shadow-emerald-950/80');
         iconWrapper.classList.add('bg-emerald-500/20', 'text-emerald-400', 'border-emerald-500/40');
         tagEl.classList.add('bg-emerald-500/15', 'text-emerald-300', 'border-emerald-500/30');
-        btnEl.classList.add('bg-gradient-to-r', 'from-emerald-500', 'to-teal-400', 'hover:from-emerald-400', 'hover:to-teal-300', 'text-slate-950', 'shadow-emerald-950/60');
+        if (!options.actionBtn) {
+          btnEl.classList.add('bg-gradient-to-r', 'from-emerald-500', 'to-teal-400', 'hover:from-emerald-400', 'hover:to-teal-300', 'text-slate-950', 'shadow-emerald-950/60');
+        }
         if (typeof Sound !== 'undefined' && Sound.goal) Sound.goal();
       } else {
         box.classList.add('border-pitch-700', 'shadow-black/80');
         iconWrapper.classList.add('bg-pitch-800', 'text-emerald-400', 'border-pitch-700');
         tagEl.classList.add('bg-pitch-800', 'text-slate-300', 'border-pitch-700');
-        btnEl.classList.add('bg-gradient-to-r', 'from-emerald-500', 'to-teal-400', 'hover:from-emerald-400', 'hover:to-teal-300', 'text-slate-950', 'shadow-emerald-950/60');
+        if (!options.actionBtn) {
+          btnEl.classList.add('bg-gradient-to-r', 'from-emerald-500', 'to-teal-400', 'hover:from-emerald-400', 'hover:to-teal-300', 'text-slate-950', 'shadow-emerald-950/60');
+        }
         if (typeof Sound !== 'undefined' && Sound.kick) Sound.kick();
       }
 
@@ -3808,11 +3860,70 @@
       }
     }
 
+    // Skip current single match without advancing entire season year or player age!
+    function skipCurrentMatchAndHeal(type) {
+      closeGameAlertModal();
+
+      // Simulate this 1 single match on player stats
+      player.stats.matches = (player.stats.matches || 0) + 1;
+      if (player.careerHistory && player.careerHistory.length > 0) {
+        const cur = player.careerHistory[player.careerHistory.length - 1];
+        cur.matches = (cur.matches || 0) + 1;
+      }
+
+      // Clear suspensions or injuries
+      if (type === 'discipline' || (player.discipline && player.discipline.suspendedMatches > 0)) {
+        if (player.discipline) {
+          player.discipline.suspendedMatches = 0;
+          player.discipline.yellowCards = 0;
+        }
+      }
+      if (type === 'injury' || (player.injury && player.injury.isInjured)) {
+        if (player.injury) {
+          player.injury.isInjured = false;
+          player.injury.desc = '';
+        }
+      }
+
+      saveCareer();
+      if (typeof Sound !== 'undefined' && Sound.whistle) Sound.whistle();
+      updateHUD();
+      renderSeasonScreen();
+
+      setTimeout(() => {
+        showGameAlert({
+          type: 'success',
+          icon: '✅',
+          tag: currentLang === 'TR' ? 'MAÇ TAMAMLANDI' : 'MATCH SIMULATED',
+          title: type === 'discipline' 
+            ? (currentLang === 'TR' ? 'Cezan Sona Erdi!' : 'Suspension Served!')
+            : (currentLang === 'TR' ? 'Tedavin Tamamlandı!' : 'Fully Recovered!'),
+          message: type === 'discipline'
+            ? (currentLang === 'TR' 
+                ? 'Bu maçı tribünden izledin ve takımın haftayı tamamladı. Cezan bitti, formana kavuştun! Sıradaki maçta ilk 11\'e çıkmaya hazırsın.'
+                : 'You watched from the stands and served your suspension. You are ready for the next match!')
+            : (currentLang === 'TR'
+                ? 'Sağlık heyeti onay verdi ve sakatlığını tamamen atlattın. Kondisyonun yerinde, sıradaki maça hemen çıkabilirsin!'
+                : 'Medical team cleared you to play. You are fit for the next match!'),
+          actionBtn: {
+            text: currentLang === 'TR' ? '⚽ SIRADAKİ MAÇA ÇIK' : '⚽ PLAY NEXT MATCH',
+            onClick: () => {
+              startFullMatch(false, (res) => {
+                showScreen('screenSeasons');
+                renderSeasonScreen();
+              });
+            }
+          },
+          btnText: currentLang === 'TR' ? 'KADROYA DÖN' : 'CLOSE'
+        });
+      }, 250);
+    }
+
     // Keyboard support: Enter / Space / Escape closes alert modal
     window.addEventListener('keydown', (e) => {
       const modal = document.getElementById('modalGameAlert');
       if (modal && !modal.classList.contains('hidden')) {
-        if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
+        if (e.key === 'Escape') {
           e.preventDefault();
           closeGameAlertModal();
         }
@@ -3826,17 +3937,26 @@
       let tag = 'BİLGİLENDİRME';
       let type = 'info';
       let title = 'Oyun Bildirimi';
+      let actionBtn = null;
 
       if (text.includes('🩹') || text.toLowerCase().includes('sakat')) {
         icon = '🩹';
         tag = 'KULÜP DOKTORU RAPORU';
         type = 'injury';
         title = 'Sakatlık Nedeniyle Kadro Dışısın!';
+        actionBtn = {
+          text: currentLang === 'TR' ? '⏩ BU MAÇI ATLA & İYİLEŞ (SONRAKİ MAÇA GEÇ)' : '⏩ SKIP & HEAL',
+          onClick: () => skipCurrentMatchAndHeal('injury')
+        };
       } else if (text.includes('⚠️') || text.includes('🟥') || text.toLowerCase().includes('ceza') || text.toLowerCase().includes('tribündesin')) {
         icon = '🟥';
         tag = 'DİSİPLİN KURULU KARARI';
         type = 'discipline';
         title = 'Cezalısın! Maça Çıkamazsın';
+        actionBtn = {
+          text: currentLang === 'TR' ? '⏩ BU MAÇI ATLA (SONRAKİ MAÇA GEÇ)' : '⏩ SKIP MATCH',
+          onClick: () => skipCurrentMatchAndHeal('discipline')
+        };
       } else if (text.includes('🎉') || text.toLowerCase().includes('tebrikler') || text.toLowerCase().includes('sözleşme')) {
         icon = '✍️';
         tag = 'RESMİ SÖZLEŞME';
@@ -3855,7 +3975,8 @@
         type,
         title,
         message: text.replace(/^[🩹⚠️🎉🦁✍️🏷️✨⚽🟥\s!]+/, '').trim() || text,
-        btnText: 'ANLADIM'
+        actionBtn,
+        btnText: actionBtn ? (currentLang === 'TR' ? 'VAZGEÇ' : 'CANCEL') : (currentLang === 'TR' ? 'ANLADIM' : 'OK')
       });
     };
   </script>
