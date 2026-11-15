@@ -1630,6 +1630,25 @@
     let currentScenario = 'OPEN_PLAY'; // ONE_TWO, CORNER, FREE_KICK, REBOUND, OPEN_PLAY, WING_ATTACK, THROUGH_BALL
     let currentMatchCallback = null;
 
+    // Global TV Broadcast Match Engine instance (shared across all game & canvas functions)
+    let tvMatchEngine = {
+      isActive: false,
+      isStreet: false,
+      home: { name: 'GAL', fullName: 'Galatasaray', badge: '🦁', score: 0 },
+      away: { name: 'FEN', fullName: 'Fenerbahçe', badge: '🟡', score: 0 },
+      league: 'SÜPER LİG',
+      minute: 0,
+      criticalMinutes: [32, 78],
+      scenarios: ['ONE_TWO', 'FREE_KICK'],
+      currentPosIdx: 0,
+      timer: null,
+      onFinish: null,
+      matchGoals: 0,
+      matchAssists: 0,
+      matchSaves: 0,
+      isPausedForAction: false
+    };
+
     // Pre-generated Stadium Crowd for 60fps 3D Tribune Rendering
     const STADIUM_CROWD = (() => {
       const list = [];
@@ -1655,32 +1674,50 @@
     // Team Kit Palette Helper (Matches Screenshot Kits: Portugal Red/Green, Brazil Yellow/Blue, Argentina Sky/White, Real Madrid, etc.)
     function getMatchKitColors() {
       const clubName = (player.club && player.club.name) ? player.club.name.toLowerCase() : '';
+      const oppClubName = (tvMatchEngine && tvMatchEngine.away && tvMatchEngine.away.fullName) ? tvMatchEngine.away.fullName.toLowerCase() : '';
       const countryCode = (player.country && player.country.code) ? player.country.code : 'TR';
 
       let myKit = { shirt: '#dc2626', stripe: '#15803d', shorts: '#15803d', socks: '#dc2626', num: '#fde047' }; // Default Red/Green (Screenshot 1)
       let oppKit = { shirt: '#f8fafc', stripe: '#e2e8f0', shorts: '#581c3c', socks: '#581c3c', num: '#334155' }; // Default White/Burgundy (Screenshot 1)
 
+      // 1. Home / Player Club Kit
       if (clubName.includes('real madrid')) {
         myKit = { shirt: '#ffffff', stripe: '#eab308', shorts: '#ffffff', socks: '#ffffff', num: '#1e293b' };
-        oppKit = { shirt: '#ea580c', stripe: '#c2410c', shorts: '#334155', socks: '#ea580c', num: '#ffffff' };
       } else if (clubName.includes('galatasaray')) {
         myKit = { shirt: '#b91c1c', stripe: '#f59e0b', shorts: '#991b1b', socks: '#f59e0b', num: '#ffffff' };
-        oppKit = { shirt: '#f8fafc', stripe: '#cbd5e1', shorts: '#1e293b', socks: '#f8fafc', num: '#0f172a' };
       } else if (clubName.includes('fenerbahçe')) {
         myKit = { shirt: '#facc15', stripe: '#1e3a8a', shorts: '#1e3a8a', socks: '#facc15', num: '#ffffff' };
-        oppKit = { shirt: '#dc2626', stripe: '#991b1b', shorts: '#dc2626', socks: '#dc2626', num: '#ffffff' };
       } else if (clubName.includes('beşiktaş')) {
         myKit = { shirt: '#f8fafc', stripe: '#0f172a', shorts: '#0f172a', socks: '#f8fafc', num: '#111827' };
-        oppKit = { shirt: '#ea580c', stripe: '#c2410c', shorts: '#334155', socks: '#ea580c', num: '#ffffff' };
       } else if (countryCode === 'BR' || currentScenario === 'WING_ATTACK' || currentScenario === 'REBOUND') {
-        // Brazil Yellow / Blue vs Red (Screenshot 2)
         myKit = { shirt: '#facc15', stripe: '#16a34a', shorts: '#1d4ed8', socks: '#ffffff', num: '#15803d' };
+      } else if (countryCode === 'AR' || currentScenario === 'ONE_TWO' || currentScenario === 'THROUGH_BALL') {
+        myKit = { shirt: '#f8fafc', stripe: '#38bdf8', shorts: '#0f172a', socks: '#0f172a', num: '#0f172a' };
+      }
+
+      // 2. Away / Opponent Kit (Opponent specific colors)
+      if (oppClubName.includes('başakşehir')) {
+        oppKit = { shirt: '#ea580c', stripe: '#1e293b', shorts: '#1e293b', socks: '#ea580c', num: '#ffffff' };
+      } else if (oppClubName.includes('galatasaray')) {
+        oppKit = { shirt: '#b91c1c', stripe: '#f59e0b', shorts: '#991b1b', socks: '#f59e0b', num: '#ffffff' };
+      } else if (oppClubName.includes('fenerbahçe')) {
+        oppKit = { shirt: '#facc15', stripe: '#1e3a8a', shorts: '#1e3a8a', socks: '#facc15', num: '#ffffff' };
+      } else if (oppClubName.includes('beşiktaş')) {
+        oppKit = { shirt: '#f8fafc', stripe: '#0f172a', shorts: '#0f172a', socks: '#f8fafc', num: '#111827' };
+      } else if (oppClubName.includes('trabzonspor')) {
+        oppKit = { shirt: '#831843', stripe: '#0284c7', shorts: '#831843', socks: '#0284c7', num: '#ffffff' };
+      } else if (oppClubName.includes('real madrid')) {
+        oppKit = { shirt: '#ffffff', stripe: '#eab308', shorts: '#ffffff', socks: '#ffffff', num: '#1e293b' };
+      } else if (oppClubName.includes('barcelona')) {
+        oppKit = { shirt: '#1d4ed8', stripe: '#dc2626', shorts: '#1d4ed8', socks: '#dc2626', num: '#facc15' };
+      } else if (countryCode === 'BR' || currentScenario === 'WING_ATTACK' || currentScenario === 'REBOUND') {
         oppKit = { shirt: '#dc2626', stripe: '#b91c1c', shorts: '#b91c1c', socks: '#dc2626', num: '#ffffff' };
       } else if (countryCode === 'AR' || currentScenario === 'ONE_TWO' || currentScenario === 'THROUGH_BALL') {
-        // Argentina SkyBlue/White vs Orange/Grey (Screenshot 3)
-        myKit = { shirt: '#f8fafc', stripe: '#38bdf8', shorts: '#0f172a', socks: '#0f172a', num: '#0f172a' };
         oppKit = { shirt: '#f97316', stripe: '#ea580c', shorts: '#475569', socks: '#f97316', num: '#ffffff' };
+      } else {
+        oppKit = { shirt: '#ea580c', stripe: '#c2410c', shorts: '#334155', socks: '#ea580c', num: '#ffffff' };
       }
+
       return { myKit, oppKit };
     }
 
@@ -2429,14 +2466,14 @@
     // Draw Top-Left Soccer Super Star Scoreboard Overlay (Matches 88' 2-3 / 72' 1-0 / 34' 0-0)
     function drawSoccerSuperStarScoreBug(ctx) {
       const { myKit, oppKit } = getMatchKitColors();
-      const minTxt = (typeof tvMatchEngine !== 'undefined' && tvMatchEngine && tvMatchEngine.isActive)
+      const minTxt = (tvMatchEngine && tvMatchEngine.isActive)
         ? `${tvMatchEngine.minute}'`
-        : "88'";
-      const hScore = (typeof tvMatchEngine !== 'undefined' && tvMatchEngine && tvMatchEngine.home)
-        ? tvMatchEngine.home.score
+        : ((tvMatchEngine && tvMatchEngine.minute) ? `${tvMatchEngine.minute}'` : "0'");
+      const hScore = (tvMatchEngine && tvMatchEngine.home)
+        ? (tvMatchEngine.home.score || 0)
         : 0;
-      const aScore = (typeof tvMatchEngine !== 'undefined' && tvMatchEngine && tvMatchEngine.away)
-        ? tvMatchEngine.away.score
+      const aScore = (tvMatchEngine && tvMatchEngine.away)
+        ? (tvMatchEngine.away.score || 0)
         : 0;
 
       ctx.save();
@@ -3399,12 +3436,12 @@
       if (success) {
         if (player.position === 'GK') {
           player.stats.saves = (player.stats.saves || 0) + 1;
-          if (typeof tvMatchEngine !== 'undefined' && tvMatchEngine && tvMatchEngine.isActive) {
+          if (tvMatchEngine && tvMatchEngine.isActive) {
             tvMatchEngine.matchSaves = (tvMatchEngine.matchSaves || 0) + 1;
           }
         } else {
           player.stats.goals = (player.stats.goals || 0) + 1;
-          if (typeof tvMatchEngine !== 'undefined' && tvMatchEngine && tvMatchEngine.isActive) {
+          if (tvMatchEngine && tvMatchEngine.isActive) {
             tvMatchEngine.matchGoals = (tvMatchEngine.matchGoals || 0) + 1;
             
             // Soccer Super Star: If player passed to a teammate who then scored, record Assist!
@@ -3413,13 +3450,8 @@
               tvMatchEngine.matchAssists = (tvMatchEngine.matchAssists || 0) + 1;
             }
 
-            // Correct Home / Away Score attribution
-            const myClubName = player.club ? player.club.name : 'Kulübün';
-            if (tvMatchEngine.home.fullName === myClubName || tvMatchEngine.isStreet) {
-              tvMatchEngine.home.score = (tvMatchEngine.home.score || 0) + 1;
-            } else {
-              tvMatchEngine.away.score = (tvMatchEngine.away.score || 0) + 1;
-            }
+            // In Next Star Soccer TV simulation, player's team is always homeTeam
+            tvMatchEngine.home.score = (tvMatchEngine.home.score || 0) + 1;
 
             const sb = document.getElementById('tvScoreBoard');
             if (sb) sb.textContent = `${tvMatchEngine.home.score} - ${tvMatchEngine.away.score}`;
@@ -3616,7 +3648,7 @@
       // =====================================================================
       // TV BROADCAST LIVE MATCH ENGINE (0' - 90' Authentic TV Simulation)
       // =====================================================================
-      let tvMatchEngine = {
+      tvMatchEngine = {
         isActive: false,
         isStreet: false,
         home: { name: 'GAL', fullName: 'Galatasaray', badge: '🦁', score: 0 },
