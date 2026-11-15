@@ -1251,19 +1251,26 @@
     ];
 
     /* =====================================================================
-       2. GLOBAL STATE & SOUND ENGINE
+       2. GLOBAL STATE & SOUND ENGINE (Self-Cleaning & Protected Audio Engine)
        ===================================================================== */
     let currentLang = 'TR';
     let soundEnabled = true;
     let audioCtx = null;
+    let activeAudioNodes = new Set();
+    let audioTimeouts = [];
 
     function initAudio() {
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
+      try {
+        if (!audioCtx) {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (AudioContextClass) {
+            audioCtx = new AudioContextClass();
+          }
+        }
+        if (audioCtx && audioCtx.state === 'suspended') {
+          audioCtx.resume().catch(() => {});
+        }
+      } catch (e) {}
     }
 
     const Sound = {
@@ -1271,37 +1278,100 @@
         if (!soundEnabled) return;
         try {
           initAudio();
+          if (!audioCtx) return;
+
+          const now = audioCtx.currentTime;
           const osc = audioCtx.createOscillator();
           const gain = audioCtx.createGain();
+
           osc.type = type;
-          osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-          gain.gain.setValueAtTime(gainVal, audioCtx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+          osc.frequency.setValueAtTime(freq, now);
+
+          // Use linear ramp to prevent exponential ramp domain/underflow exceptions
+          gain.gain.setValueAtTime(Math.max(0.001, gainVal), now);
+          gain.gain.linearRampToValueAtTime(0.0001, now + duration);
+
           osc.connect(gain);
           gain.connect(audioCtx.destination);
-          osc.start();
-          osc.stop(audioCtx.currentTime + duration);
+
+          const nodeRef = { osc, gain };
+          activeAudioNodes.add(nodeRef);
+
+          const cleanup = () => {
+            activeAudioNodes.delete(nodeRef);
+            try { osc.stop(); } catch (e) {}
+            try { osc.disconnect(); } catch (e) {}
+            try { gain.disconnect(); } catch (e) {}
+          };
+
+          osc.onended = cleanup;
+          osc.start(now);
+          osc.stop(now + duration + 0.04);
+
+          // Hard JS safety timer fallback in case AudioContext timeline was suspended or glitched
+          const timer = setTimeout(cleanup, Math.round((duration * 1000) + 100));
+          audioTimeouts.push(timer);
         } catch (e) {}
       },
+
+      stopAll() {
+        // Clear all pending audio timers
+        audioTimeouts.forEach(t => clearTimeout(t));
+        audioTimeouts = [];
+
+        // Stop and disconnect every active oscillator and gain node immediately
+        activeAudioNodes.forEach(node => {
+          try {
+            if (node.osc) {
+              node.osc.onended = null;
+              node.osc.stop();
+              node.osc.disconnect();
+            }
+          } catch (e) {}
+          try {
+            if (node.gain) {
+              node.gain.disconnect();
+            }
+          } catch (e) {}
+        });
+        activeAudioNodes.clear();
+      },
+
       whistle() {
         if (!soundEnabled) return;
-        this.play(2400, 'sine', 0.2, 0.2);
-        setTimeout(() => this.play(2800, 'sine', 0.4, 0.25), 180);
+        this.play(2400, 'sine', 0.15, 0.2);
+        const t = setTimeout(() => this.play(2700, 'sine', 0.22, 0.22), 160);
+        audioTimeouts.push(t);
       },
+
+      finalWhistle() {
+        if (!soundEnabled) return;
+        this.stopAll();
+        // 3 distinct referee blasts: düt - düt - düüüüüt
+        this.play(2500, 'sine', 0.14, 0.22);
+        const t1 = setTimeout(() => this.play(2500, 'sine', 0.14, 0.22), 220);
+        const t2 = setTimeout(() => this.play(2650, 'sine', 0.38, 0.25), 440);
+        audioTimeouts.push(t1, t2);
+      },
+
       kick() {
         this.play(120, 'triangle', 0.12, 0.35);
       },
+
       postHit() {
-        this.play(800, 'square', 0.15, 0.25);
+        this.play(800, 'square', 0.12, 0.22);
       },
+
       saveGlove() {
-        this.play(220, 'sawtooth', 0.18, 0.3);
+        this.play(220, 'sawtooth', 0.16, 0.28);
       },
+
       goal() {
         if (!soundEnabled) return;
-        this.play(440, 'triangle', 0.2, 0.25);
-        setTimeout(() => this.play(660, 'triangle', 0.3, 0.3), 150);
-        setTimeout(() => this.play(880, 'sine', 0.5, 0.35), 300);
+        this.play(440, 'triangle', 0.18, 0.25);
+        const t1 = setTimeout(() => this.play(660, 'triangle', 0.24, 0.28), 150);
+        const t2 = setTimeout(() => this.play(880, 'sine', 0.4, 0.3), 320);
+        audioTimeouts.push(t1, t2);
       }
     };
 
@@ -3484,6 +3554,10 @@
     const SCREENS = ['screenWelcome', 'screenCountry', 'screenCharacter', 'screenStreetIntro', 'screenMatchPlay', 'screenContracts', 'screenSeasons', 'screenRetirement'];
 
     function showScreen(screenId) {
+      if (typeof Sound !== 'undefined' && Sound.stopAll) {
+        Sound.stopAll();
+      }
+
       SCREENS.forEach(id => {
         const el = document.getElementById(id);
         if (el) {
@@ -3522,6 +3596,7 @@
           icon.className = 'fa-solid fa-volume-high text-emerald-400';
           txt.textContent = currentLang === 'TR' ? 'Ses Açık' : 'Sound On';
         } else {
+          Sound.stopAll();
           icon.className = 'fa-solid fa-volume-xmark text-slate-500';
           txt.textContent = currentLang === 'TR' ? 'Sessiz' : 'Muted';
         }
@@ -3837,9 +3912,7 @@
       }
 
       function concludeMatchFullTime() {
-        Sound.whistle();
-        setTimeout(() => Sound.whistle(), 300);
-        setTimeout(() => Sound.whistle(), 600);
+        Sound.finalWhistle();
 
         const tickerStatus = document.getElementById('tvTickerStatus');
         if (tickerStatus) tickerStatus.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span><span class="text-emerald-400 font-bold">🏁 MAÇ SONUCU</span>';
@@ -3873,6 +3946,7 @@
           const btnFinish = document.getElementById('btnFinishMatch');
           if (btnFinish) {
             btnFinish.onclick = () => {
+              Sound.stopAll();
               endSplash.classList.add('hidden');
               tvMatchEngine.isActive = false;
               if (tvMatchEngine.onFinish) {
