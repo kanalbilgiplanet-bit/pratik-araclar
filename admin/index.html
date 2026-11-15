@@ -704,7 +704,7 @@
       </div>
 
       <!-- Günlük Trend Çubuk Grafiği (Bar Chart) -->
-      <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-lg">
+      <div id="dailyTrendCard" class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-lg hidden">
         <div class="flex items-center justify-between mb-4">
           <div>
             <h3 class="text-base font-bold text-white flex items-center gap-2">
@@ -1849,7 +1849,7 @@
         document.getElementById('histTopSourceCount').innerText = 'Kayıt bekleniyor';
       }
 
-      renderTrendChart(dailyTrend);
+      renderTrendChart(dailyTrend, period);
       renderHistoryPagesTable(pageTotals, totalHits);
       renderHistorySourcesList(sortedSources, totalHits);
       renderHistoryLocations(countryTotals, countryFlags, cityTotals, totalUniqueUsers || totalHits);
@@ -1897,12 +1897,18 @@
       `).join('');
     }
 
-    function renderTrendChart(trend) {
+    function renderTrendChart(trend, period) {
+      const card = document.getElementById('dailyTrendCard');
       const container = document.getElementById('dailyTrendChart');
-      if (!trend || trend.length === 0) {
-        container.innerHTML = '<div class="text-center py-12 text-slate-500 text-xs w-full">Kayıtlı trend bulunamadı.</div>';
+
+      // Eğer "Bugün" seçiliyse veya trendde tek bir gün varsa çubuk grafik anlamsız olduğundan kartı tamamen gizle
+      if (period === 'today' || !trend || trend.length <= 1) {
+        if (card) card.classList.add('hidden');
         return;
       }
+
+      if (card) card.classList.remove('hidden');
+      if (!container) return;
 
       const maxHits = Math.max(...trend.map(t => Math.max(t.hits, t.users, 1)));
 
