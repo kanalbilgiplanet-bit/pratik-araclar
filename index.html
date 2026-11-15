@@ -561,6 +561,11 @@
       </div>
 
       <nav class="flex items-center gap-2 sm:gap-3">
+        <!-- Oyunlar Portalı -->
+        <a href="games/" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-emerald-400 hover:text-emerald-300 border border-emerald-500/40 text-xs font-bold transition shadow-sm active:scale-95" title="PratikBase Oyunlar Hub'ı (/games/)">
+          <i class="fa-solid fa-gamepad text-emerald-400"></i>
+          <span>Oyunlar</span>
+        </a>
         <!-- PWA Install Button (Always visible on mobile & desktop) -->
         <button id="pwaNavInstallBtn" class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-500 hover:from-indigo-500 hover:to-cyan-400 text-white border border-indigo-400/30 text-xs font-bold transition shadow-sm shadow-indigo-500/25 active:scale-95" title="Uygulamayı Cihazınıza Yükleyin">
           <i class="fa-solid fa-cloud-arrow-down text-xs"></i>
@@ -633,9 +638,9 @@
       <button data-cat="harita" class="category-btn px-4 py-2 rounded-xl font-medium bg-slate-900/80 border border-slate-800 text-slate-300 hover:bg-slate-800 hover:text-white transition-all">
         <i class="fa-solid fa-map-location-dot mr-1.5 text-cyan-400"></i>Harita & Afet
       </button>
-      <button data-cat="oyun" class="category-btn px-4 py-2 rounded-xl font-medium bg-slate-900/80 border border-slate-800 text-slate-300 hover:bg-slate-800 hover:text-white transition-all">
+      <a href="games/" data-cat="oyun" class="category-btn px-4 py-2 rounded-xl font-medium bg-slate-900/80 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/20 hover:text-white transition-all flex items-center shadow-sm" title="PratikBase Oyunlar Hub'ı (/games/)">
         <i class="fa-solid fa-gamepad mr-1.5 text-emerald-400"></i>Oyunlar
-      </button>
+      </a>
       <button data-cat="mola" class="category-btn px-4 py-2 rounded-xl font-medium bg-slate-900/80 border border-slate-800 text-slate-300 hover:bg-slate-800 hover:text-white transition-all">
         <i class="fa-solid fa-mug-hot mr-1.5 text-amber-400"></i>Mola
       </button>
@@ -2452,7 +2457,12 @@
     }
 
     categoryBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', (e) => {
+        if (btn.getAttribute('data-cat') === 'oyun') {
+          e.preventDefault();
+          window.location.href = 'games/';
+          return;
+        }
         categoryBtns.forEach(b => {
           b.classList.remove('active', 'bg-indigo-600', 'text-white', 'shadow-lg', 'shadow-indigo-600/30');
           b.classList.add('bg-slate-900/80', 'text-slate-300', 'border-slate-800');
