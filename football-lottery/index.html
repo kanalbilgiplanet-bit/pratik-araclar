@@ -644,26 +644,26 @@
           <span id="txtPlayAgain" class="whitespace-nowrap">YENİDEN BİR HAYAT ÇEK</span>
         </button>
 
-        <!-- 2. Secondary Share & Export Bar (Clean 3-Column Grid) -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-          <button id="btnDownloadCard" class="py-2.5 px-2 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-lg shadow-cyan-500/20 active:scale-95 transition" title="Jübile Kartını HD Görsel (PNG) Olarak İndir / Paylaş">
-            <i class="fa-solid fa-download text-xs"></i>
-            <span id="txtDownloadCard" class="truncate text-[11px] sm:text-xs">HD Kartı İndir</span>
+        <!-- 2. Secondary Share & Export Bar (Clean 2x2 Grid so text NEVER truncates) -->
+        <div class="grid grid-cols-2 gap-2">
+          <button id="btnDownloadCard" class="py-3 px-3 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/20 active:scale-95 transition" title="Jübile Kartını HD Görsel (PNG) Olarak İndir / Paylaş">
+            <i class="fa-solid fa-download text-sm text-cyan-200"></i>
+            <span id="txtDownloadCard" class="whitespace-nowrap font-bold">HD Kartı İndir</span>
           </button>
 
-          <button id="btnShareToWall" class="py-2.5 px-2 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-pitch-950 font-display font-black text-xs flex items-center justify-center gap-1.5 shadow-lg shadow-amber-500/25 active:scale-95 transition" title="Efsaneler Duvarında Paylaş">
-            <i class="fa-solid fa-crown text-xs"></i>
-            <span id="txtShareWall" class="truncate text-[11px] sm:text-xs">Duvara Ekle</span>
+          <button id="btnShareToWall" class="py-3 px-3 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-pitch-950 font-display font-black text-xs flex items-center justify-center gap-2 shadow-lg shadow-amber-500/25 active:scale-95 transition" title="Efsaneler Duvarında Paylaş">
+            <i class="fa-solid fa-crown text-sm"></i>
+            <span id="txtShareWall" class="whitespace-nowrap">Duvara Ekle</span>
           </button>
 
-          <button id="btnShareWhatsApp" class="py-2.5 px-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-600/20 active:scale-95 transition" title="WhatsApp Paylaş">
+          <button id="btnShareWhatsApp" class="py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-600/20 active:scale-95 transition" title="WhatsApp Paylaş">
             <i class="fa-brands fa-whatsapp text-sm"></i>
-            <span id="txtShareWA" class="truncate text-[11px] sm:text-xs">WhatsApp</span>
+            <span id="txtShareWA" class="whitespace-nowrap">WhatsApp</span>
           </button>
 
-          <button id="btnShareTelegram" class="py-2.5 px-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-lg shadow-sky-600/20 active:scale-95 transition" title="Telegram Paylaş">
+          <button id="btnShareTelegram" class="py-2.5 px-3 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-lg shadow-sky-600/20 active:scale-95 transition" title="Telegram Paylaş">
             <i class="fa-brands fa-telegram text-sm"></i>
-            <span id="txtShareTelegram" class="truncate text-[11px] sm:text-xs">Telegram</span>
+            <span id="txtShareTelegram" class="whitespace-nowrap">Telegram</span>
           </button>
         </div>
 
@@ -752,7 +752,7 @@
       </div>
 
       <!-- The Digital Collectible Footballer Card (FUT Style Canvas & HTML) -->
-      <div class="max-w-md mx-auto relative group">
+      <div id="jubileeCardWrapper" class="max-w-md mx-auto relative group">
         <div class="p-5 sm:p-6 rounded-3xl bg-gradient-to-b from-pitch-900 via-pitch-950 to-black border-2 border-amber-500/60 shadow-2xl relative overflow-hidden text-left space-y-4 gold-glow" id="jubileeCard">
           
           <!-- Card Header Decor -->
@@ -5314,17 +5314,20 @@
 
     function switchCardView(view) {
       activeCardView = view;
+      const futWrapper = document.getElementById('jubileeCardWrapper');
       const futCard = document.getElementById('jubileeCard');
       const docCard = document.getElementById('documentaryPoster');
       const btnFUT = document.getElementById('btnViewCardFUT');
       const btnDoc = document.getElementById('btnViewCardDoc');
 
       if (view === 'fut') {
+        if (futWrapper) futWrapper.classList.remove('hidden');
         if (futCard) futCard.classList.remove('hidden');
         if (docCard) docCard.classList.add('hidden');
         if (btnFUT) btnFUT.className = 'px-3.5 py-1.5 rounded-xl bg-emerald-500 text-pitch-950 font-display font-bold text-xs uppercase tracking-wider transition shadow-lg';
         if (btnDoc) btnDoc.className = 'px-3.5 py-1.5 rounded-xl bg-pitch-900 hover:bg-pitch-800 text-slate-300 font-display font-bold text-xs uppercase tracking-wider transition border border-pitch-800';
       } else {
+        if (futWrapper) futWrapper.classList.add('hidden');
         if (futCard) futCard.classList.add('hidden');
         if (docCard) docCard.classList.remove('hidden');
         if (btnDoc) btnDoc.className = 'px-3.5 py-1.5 rounded-xl bg-amber-500 text-pitch-950 font-display font-bold text-xs uppercase tracking-wider transition shadow-lg';
@@ -5554,7 +5557,8 @@
       // Dynamic Poster Container Styling based on Country
       const posterContainer = document.getElementById('documentaryPoster');
       if (posterContainer && theme.gradientClass) {
-        posterContainer.className = `max-w-sm sm:max-w-md mx-auto p-5 sm:p-7 rounded-3xl bg-gradient-to-b ${theme.gradientClass} border-2 shadow-2xl relative overflow-hidden text-center space-y-4 transition-all`;
+        const isHidden = (typeof activeCardView !== 'undefined' && activeCardView === 'doc') ? '' : ' hidden';
+        posterContainer.className = `max-w-sm sm:max-w-md mx-auto p-5 sm:p-7 rounded-3xl bg-gradient-to-b ${theme.gradientClass} border-2 shadow-2xl relative overflow-hidden text-center space-y-4 transition-all${isHidden}`;
       }
 
       // Festival Badge
@@ -5850,6 +5854,9 @@ function finishCareerAndShowJubilee() {
 
       // Populate Cinematic Documentary Movie Poster
       populateDocumentaryPoster();
+
+      // Ensure FUT Card is explicitly displayed as default view
+      switchCardView('fut');
 
       // Check all career-end achievements
       checkCareerAchievements(player);
