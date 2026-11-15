@@ -1741,6 +1741,10 @@
         };
       };
 
+      let touchStart = { x: 0, y: 0 };
+      let touchCurrent = { x: 0, y: 0 };
+      let touchPoints = [];
+
       canvas.onmousedown = canvas.ontouchstart = (e) => {
         e.preventDefault();
         const pos = getPos(e);
@@ -1748,12 +1752,15 @@
 
         if (matchMode === 'SHOOT' && !ball.inFlight) {
           const dist = Math.hypot(pos.x - ball.x, pos.y - ball.y);
-          if (dist < 75) {
+          if (dist < 90) {
             isDragging = true;
+            touchStart = { x: pos.x, y: pos.y };
+            touchCurrent = { x: pos.x, y: pos.y };
             dragStart = { x: ball.x, y: ball.y };
-            dragCurrent = pos;
-            dragPoints = [pos];
-            // Auto detect ground vs lofted: top half of ball = ground shot
+            dragCurrent = { x: ball.x, y: ball.y };
+            touchPoints = [{ x: pos.x, y: pos.y, time: performance.now() }];
+            dragPoints = [dragStart];
+            // Ground shot if touch starts near top half of ball
             ball.isGroundShot = (pos.y < ball.y - 4);
           }
         } else if (matchMode === 'SAVE') {
@@ -1767,9 +1774,26 @@
         if (!canvas) return;
         const pos = getPos(e);
         if (isDragging && matchMode === 'SHOOT') {
-          dragCurrent = pos;
-          dragPoints.push(pos);
-          if (dragPoints.length > 35) dragPoints.shift();
+          touchCurrent = pos;
+          touchPoints.push({ x: pos.x, y: pos.y, time: performance.now() });
+          if (touchPoints.length > 30) touchPoints.shift();
+
+          // Calculate direct swipe displacement vector from touch start
+          let sDx = touchCurrent.x - touchStart.x;
+          let sDy = touchCurrent.y - touchStart.y;
+
+          // If pulled downwards like slingshot, invert so shot aims forward
+          if (sDy > 8) {
+            sDx = -sDx;
+            sDy = -sDy;
+          }
+
+          dragStart = { x: ball.x, y: ball.y };
+          dragCurrent = { x: ball.x + sDx, y: ball.y + sDy };
+          dragPoints = touchPoints.map(p => ({
+            x: ball.x + (p.x - touchStart.x),
+            y: ball.y + (p.y - touchStart.y)
+          }));
         } else if (gloves.dragging && matchMode === 'SAVE') {
           gloves.x = Math.max(120, Math.min(canvasWidth - 120, pos.x));
           gloves.y = Math.max(100, Math.min(260, pos.y));
@@ -1779,42 +1803,46 @@
       window.onmouseup = window.ontouchend = (e) => {
         if (isDragging && matchMode === 'SHOOT' && !ball.inFlight) {
           isDragging = false;
-          let aimDx = dragCurrent.x - dragStart.x;
-          let aimDy = dragCurrent.y - dragStart.y;
+          let sDx = touchCurrent.x - touchStart.x;
+          let sDy = touchCurrent.y - touchStart.y;
 
-          // If pulled downwards (slingshot gesture), invert to shoot forward
-          if (aimDy > 5) {
-            aimDx = -aimDx;
-            aimDy = -aimDy;
+          // If pulled downwards like slingshot, invert forward
+          if (sDy > 8) {
+            sDx = -sDx;
+            sDy = -sDy;
           }
 
-          const power = Math.min(Math.hypot(aimDx, aimDy), 130);
+          const power = Math.hypot(sDx, sDy);
 
-          if (power > 16 && Math.abs(aimDy) > 5) {
+          if (power > 16 && Math.abs(sDy) > 6) {
             ball.kickOrigin = { x: ball.x, y: ball.y };
             ball.kickTime = performance.now();
             ball.inFlight = true;
             ball.trail = [];
-            const speedFactor = 0.18;
-            ball.vx = (aimDx / power) * (power * speedFactor);
-            ball.vy = (-Math.abs(aimDy) / power) * (power * speedFactor);
+            ball.isDeflected = false;
+            ball.deflectedFrames = 0;
+
+            const speed = Math.min(Math.max(power * 0.13, 9.5), 17);
+            const angle = Math.atan2(sDy, sDx);
+            ball.vx = Math.cos(angle) * speed;
+            ball.vy = Math.sin(angle) * speed;
             ball.z = 0;
 
-            // Calculate True Magnus Falso from curved gesture
+            // Natural Controlled Falso from curved swipe gesture
             let detectedSpin = 0;
-            if (dragPoints.length >= 2) {
-              const startPt = dragPoints[0];
-              const endPt = dragPoints[dragPoints.length - 1];
+            if (touchPoints.length >= 3) {
+              const startPt = touchPoints[0];
+              const endPt = touchPoints[touchPoints.length - 1];
               const chordLen = Math.hypot(endPt.x - startPt.x, endPt.y - startPt.y);
-              if (chordLen > 15) {
+              if (chordLen > 20) {
                 let maxDev = 0;
-                for (let p of dragPoints) {
+                for (let p of touchPoints) {
                   const dev = (-(endPt.y - startPt.y) * (p.x - startPt.x) + (endPt.x - startPt.x) * (p.y - startPt.y)) / chordLen;
                   if (Math.abs(dev) > Math.abs(maxDev)) maxDev = dev;
                 }
-                const curveRatio = Math.max(-1.5, Math.min(1.5, maxDev / 25));
-                detectedSpin = curveRatio * 0.42;
-                if (Math.abs(detectedSpin) < 0.04) detectedSpin = 0;
+                const curveRatio = Math.max(-1.5, Math.min(1.5, maxDev / 30));
+                detectedSpin = curveRatio * 0.22;
+                if (Math.abs(detectedSpin) < 0.03) detectedSpin = 0;
               }
             }
             ball.spin = detectedSpin;
@@ -2313,71 +2341,78 @@
           aimDy = -aimDy;
         }
 
-        const power = Math.min(Math.hypot(aimDx, aimDy), 130);
+        const power = Math.hypot(aimDx, aimDy);
         if (power > 16 && Math.abs(aimDy) > 5) {
-          const speedFactor = 0.18;
-          const estVx = (aimDx / power) * (power * speedFactor);
-          const estVy = (-Math.abs(aimDy) / power) * (power * speedFactor);
+          const speed = Math.min(Math.max(power * 0.13, 9.5), 17);
+          const angle = Math.atan2(aimDy, aimDx);
+          const estVx = Math.cos(angle) * speed;
+          const estVy = Math.sin(angle) * speed;
 
-          // Flight frames to goal plane y = 150
-          const flightFrames = Math.abs((ball.y - 150) / estVy);
+          // Flight frames to goal line plane y = 175
+          const flightFrames = Math.max(1, Math.abs((ball.y - 175) / estVy));
           let targetLandingX = ball.x + estVx * flightFrames;
 
           // Estimate falso curve from current drag points
           let estSpin = 0;
-          if (dragPoints.length >= 2) {
+          if (dragPoints && dragPoints.length >= 3) {
             const startPt = dragPoints[0];
             const endPt = dragPoints[dragPoints.length - 1];
             const chordLen = Math.hypot(endPt.x - startPt.x, endPt.y - startPt.y);
-            if (chordLen > 15) {
+            if (chordLen > 20) {
               let maxDev = 0;
               for (let p of dragPoints) {
                 const dev = (-(endPt.y - startPt.y) * (p.x - startPt.x) + (endPt.x - startPt.x) * (p.y - startPt.y)) / chordLen;
                 if (Math.abs(dev) > Math.abs(maxDev)) maxDev = dev;
               }
-              const curveRatio = Math.max(-1.5, Math.min(1.5, maxDev / 25));
-              estSpin = curveRatio * 0.42;
-              if (Math.abs(estSpin) < 0.04) estSpin = 0;
+              const curveRatio = Math.max(-1.5, Math.min(1.5, maxDev / 30));
+              estSpin = curveRatio * 0.22;
+              if (Math.abs(estSpin) < 0.03) estSpin = 0;
             }
           }
-          targetLandingX += 0.5 * estSpin * flightFrames * flightFrames;
+          targetLandingX += 0.5 * (estSpin * 0.35) * flightFrames * flightFrames;
 
-          const isTargetInGoal = (targetLandingX >= goalLeft && targetLandingX <= goalRight);
+          const isTargetInGoal = (targetLandingX >= goalLeft + 10 && targetLandingX <= goalRight - 10);
 
           // Draw Trajectory Curved Arc on Pitch
-          ctx.strokeStyle = isTargetInGoal ? (Math.abs(estSpin) > 0.06 ? '#38bdf8' : '#22c55e') : '#ef4444';
+          ctx.strokeStyle = isTargetInGoal ? (Math.abs(estSpin) > 0.05 ? '#38bdf8' : '#22c55e') : '#ef4444';
           ctx.lineWidth = 3;
           ctx.setLineDash([5, 5]);
           ctx.beginPath();
           ctx.moveTo(ball.x, ball.y);
-          const midX = (ball.x + targetLandingX) / 2 + (estSpin * 140);
-          const midY = (ball.y + 150) / 2;
-          ctx.quadraticCurveTo(midX, midY, targetLandingX, 150);
+          const midX = (ball.x + targetLandingX) / 2 + (estSpin * 100);
+          const midY = (ball.y + 175) / 2;
+          ctx.quadraticCurveTo(midX, midY, targetLandingX, 175);
           ctx.stroke();
           ctx.setLineDash([]);
 
           // Draw Target Crosshair 🎯 on Goal Plane
           ctx.fillStyle = isTargetInGoal ? 'rgba(34, 197, 94, 0.9)' : 'rgba(239, 68, 68, 0.9)';
           ctx.beginPath();
-          ctx.arc(targetLandingX, 150, 9, 0, Math.PI * 2);
+          ctx.arc(targetLandingX, 175, 9, 0, Math.PI * 2);
           ctx.fill();
 
           ctx.font = 'bold 10px sans-serif';
           let label = '❌ AUT';
           if (isTargetInGoal) {
-            if (estSpin > 0.08) label = '🌀 SAĞA FALSO (TRIVELA)';
-            else if (estSpin < -0.08) label = '🌀 SOLA FALSO (ROBERTO CARLOS)';
-            else if (ball.isGroundShot) label = '⚡ YERDEN HEDEF';
+            if (estSpin > 0.06) label = '🌀 SAĞA FALSO (TRIVELA)';
+            else if (estSpin < -0.06) label = '🌀 SOLA FALSO (ROBERTO CARLOS)';
+            else if (ball.isGroundShot) label = '⚡ YERDEN KÖŞEYE';
             else label = '🎯 90 HEDEFİ';
           }
-          ctx.fillStyle = isTargetInGoal ? (Math.abs(estSpin) > 0.06 ? '#38bdf8' : '#34d399') : '#f87171';
-          ctx.fillText(label, targetLandingX - 35, 134);
+          ctx.fillStyle = isTargetInGoal ? (Math.abs(estSpin) > 0.05 ? '#38bdf8' : '#34d399') : '#f87171';
+          ctx.fillText(label, targetLandingX - 35, 158);
         }
       }
 
       // 8. Ball Physics & Flight (With Elevation, Curved Falso & Wall Overflight!)
       if (ball.inFlight) {
-        ball.vx += ball.spin;
+        // Apply controlled spin with natural decay
+        if (Math.abs(ball.spin) > 0.001) {
+          ball.vx += ball.spin * 0.35;
+          ball.spin *= 0.985;
+        }
+        ball.vx *= 0.995;
+        ball.vy *= 0.995;
         ball.x += ball.vx;
         ball.y += ball.vy;
 
@@ -2390,7 +2425,7 @@
           const pt1 = ball.trail[i];
           const pt2 = ball.trail[i + 1];
           const alpha = (i + 1) / ball.trail.length;
-          ctx.strokeStyle = Math.abs(ball.spin) > 0.06 ? `rgba(56, 189, 248, ${alpha * 0.75})` : `rgba(255, 255, 255, ${alpha * 0.45})`;
+          ctx.strokeStyle = Math.abs(ball.spin) > 0.05 ? `rgba(56, 189, 248, ${alpha * 0.75})` : `rgba(255, 255, 255, ${alpha * 0.45})`;
           ctx.lineWidth = 2 + alpha * 4;
           ctx.beginPath();
           ctx.moveTo(pt1.x, pt1.y);
@@ -2399,89 +2434,135 @@
         }
 
         // 3D Parabolic Arc for non-ground shots (Height peaks around y = 255)
-        if (!ball.isGroundShot) {
+        if (!ball.isGroundShot && !ball.isDeflected) {
           const startY = canvasHeight - 65;
-          const totalDistY = startY - 150;
+          const totalDistY = startY - 175;
           const progress = Math.max(0, Math.min(1, (startY - ball.y) / totalDistY));
           ball.z = Math.sin(progress * Math.PI) * 36;
+        } else if (ball.isDeflected) {
+          ball.z = Math.max(0, (ball.z || 0) - 1.2);
         } else {
           ball.z = 0;
         }
 
-        // Collision with Free Kick Wall
-        if (currentScenario === 'FREE_KICK') {
+        // Handle Deflection Physics Animation (Sekme Efekti)
+        if (ball.isDeflected) {
+          ball.deflectedFrames = (ball.deflectedFrames || 0) + 1;
+          ball.vx *= 0.96;
+          ball.vy *= 0.96;
+          if (ball.deflectedFrames >= 36) {
+            ball.isDeflected = false;
+            showMatchSplash(false, 'BARAJA ÇARPTI!', 'Barajdaki savunmacı vücudunu siper etti ve top sekip uzaklaştı.');
+          }
+        }
+
+        // Collision with Free Kick Wall (Sekme ve Bloklama Mekanizması)
+        if (currentScenario === 'FREE_KICK' && !ball.saved && !ball.scored && !ball.isDeflected) {
           wallDefenders.forEach(def => {
-            if (ball.x >= def.x - 9 && ball.x <= def.x + def.width - 9 && ball.y >= def.y && ball.y <= def.y + def.height && !ball.saved && !ball.scored) {
-              if (ball.isGroundShot || ball.z <= 22) {
+            if (ball.x + ball.radius >= def.x && ball.x - ball.radius <= def.x + def.width && ball.y >= def.y && ball.y <= def.y + def.height + 6) {
+              if (ball.isGroundShot || ball.z < 34) {
+                ball.isDeflected = true;
                 ball.saved = true;
-                ball.vx *= -0.4;
-                ball.vy = 4;
+                ball.vx = (Math.random() - 0.5) * 5.5;
+                ball.vy = Math.abs(ball.vy) * 0.42 + 2.0; // Bounces back downward onto pitch
+                ball.z = Math.min(ball.z, 10);
+                ball.spin = 0;
                 Sound.postHit();
-                showMatchSplash(false, 'BARAJA ÇARPTI!', ball.isGroundShot ? 'Yerden vuruş barajı geçemedi.' : 'Barajı aşamadın, top taca çıktı.');
               }
             }
           });
         }
 
-        // Outfield Collision Logic
-        if (matchMode === 'SHOOT') {
-          // Goalkeeper Save Check
-          const distGK = Math.hypot(ball.x - goalkeeper.x, ball.y - (goalkeeper.y + 20));
-          if (distGK < 32 && !ball.saved && !ball.scored && !ball.out) {
-            ball.saved = true;
-            ball.vx = (Math.random() - 0.5) * 5;
-            ball.vy = 4;
-            Sound.saveGlove();
-            showMatchSplash(false, 'KALECİ ÇIKARDI!', 'Harika uzandı ve topu kornere çeldi.');
-          }
-
-          // Goal Plane Check (y <= 210)
-          if (ball.y <= goalBottom && ball.y >= goalTop && !ball.saved && !ball.scored && !ball.out) {
-            if (ball.x >= goalLeft && ball.x <= goalRight) {
-              ball.scored = true;
-              ball.vx *= 0.2;
-              ball.vy *= 0.2;
-              Sound.goal();
-
-              let goalDesc = 'Ağları Havalandıran Temiz Bir Gol!';
-              if (ball.isGroundShot) {
-                goalDesc = '⚡ Köşeye Sert ve İsabetli Bir Yerden Şut!';
-              } else if (Math.abs(ball.spin) > 0.06) {
-                goalDesc = '🌀 90’a Roberto Carlos Falsosuyla Mükemmel Gol!';
-              } else if (currentScenario === 'FREE_KICK') {
-                goalDesc = '🎯 Barajın Üstünden Aşan Nefis Frikik Golü!';
-              } else if (currentScenario === 'ONE_TWO') {
-                goalDesc = '🤝 Harika Verkaç ve Kusursuz Tek Vuruş!';
-              } else if (currentScenario === 'CORNER') {
-                goalDesc = '✈️ Havada Nefis Kafa / Vole ile Harika Gol!';
-              } else if (currentScenario === 'REBOUND') {
-                goalDesc = '🚀 Dönen Topa Gelişine Füze Gibi Vuruş!';
+        // Collision with Outfield Defenders (Other scenarios)
+        if (defenders && defenders.length > 0 && !ball.saved && !ball.scored && !ball.isDeflected) {
+          defenders.forEach(def => {
+            if (ball.x + ball.radius >= def.x - 3 && ball.x - ball.radius <= def.x + def.width + 3 && ball.y >= def.y && ball.y <= def.y + def.height + 6) {
+              if (ball.isGroundShot || ball.z < 30) {
+                ball.isDeflected = true;
+                ball.saved = true;
+                ball.vx = (Math.random() - 0.5) * 5.5;
+                ball.vy = Math.abs(ball.vy) * 0.42 + 2.0;
+                ball.z = Math.min(ball.z, 10);
+                ball.spin = 0;
+                Sound.postHit();
               }
-              showMatchSplash(true, 'GOOOOOOOL!', goalDesc);
+            }
+          });
+        }
+
+        // Outfield Collision Logic (Goal Mouth & Goalkeeper)
+        if (matchMode === 'SHOOT' && !ball.saved && !ball.scored && !ball.out && !ball.isDeflected) {
+          const goalLineY = 175;
+
+          // Ball crosses or reaches the goal line
+          if (ball.y <= goalLineY) {
+            if (ball.x >= goalLeft + 10 && ball.x <= goalRight - 10) {
+              // Elevation check: did it clear the crossbar?
+              if (ball.z > 36) {
+                ball.out = true;
+                Sound.postHit();
+                showMatchSplash(false, 'ÜSTTEN AUT!', 'Şut üst direğin üzerinden auta gitti.');
+              } else {
+                // Goalkeeper Save Check at Goal Line
+                const distGK = Math.hypot(ball.x - goalkeeper.x, ball.y - goalkeeper.y);
+                if (distGK < 28) {
+                  ball.saved = true;
+                  ball.vx = (Math.random() - 0.5) * 5;
+                  ball.vy = 4;
+                  Sound.saveGlove();
+                  showMatchSplash(false, 'KALECİ ÇIKARDI!', 'Harika uzandı ve topu kornere çeldi.');
+                } else {
+                  // GOAL! Clean hit into the net!
+                  ball.scored = true;
+                  ball.vx *= 0.18;
+                  ball.vy *= 0.18;
+                  Sound.goal();
+
+                  let goalDesc = 'Ağları Havalandıran Temiz Bir Gol!';
+                  if (ball.isGroundShot) {
+                    goalDesc = '⚡ Köşeye Sert ve İsabetli Bir Yerden Şut!';
+                  } else if (Math.abs(ball.spin) > 0.05) {
+                    goalDesc = '🌀 90’a Roberto Carlos Falsosuyla Mükemmel Gol!';
+                  } else if (currentScenario === 'FREE_KICK') {
+                    goalDesc = '🎯 Barajın Üstünden Aşan Nefis Frikik Golü!';
+                  } else if (currentScenario === 'ONE_TWO') {
+                    goalDesc = '🤝 Harika Verkaç ve Kusursuz Tek Vuruş!';
+                  } else if (currentScenario === 'CORNER') {
+                    goalDesc = '✈️ Havada Nefis Kafa / Vole ile Harika Gol!';
+                  } else if (currentScenario === 'REBOUND') {
+                    goalDesc = '🚀 Dönen Topa Gelişine Füze Gibi Vuruş!';
+                  }
+                  showMatchSplash(true, 'GOOOOOOOL!', goalDesc);
+                }
+              }
             } else {
+              // Outside post margins
               ball.out = true;
-              Sound.postHit();
-              showMatchSplash(false, 'AUT / DIŞARI!', 'Top direğin yanından auta gitti.');
+              if (Math.abs(ball.x - goalLeft) < 14 || Math.abs(ball.x - goalRight) < 14) {
+                Sound.postHit();
+                showMatchSplash(false, 'DİREKTEN DÖNDÜ!', 'Top yan direğe çarpıp auta çıktı.');
+              } else {
+                Sound.postHit();
+                showMatchSplash(false, 'AUT / DIŞARI!', 'Top direğin yanından auta gitti.');
+              }
             }
-          } else if (ball.y < goalTop || ball.x < 30 || ball.x > canvasWidth - 30) {
-            if (!ball.scored && !ball.saved && !ball.out) {
-              ball.out = true;
-              Sound.postHit();
-              showMatchSplash(false, 'AUT!', 'Şut çerçeveyi bulmadı.');
-            }
+          } else if (ball.y < 85 || ball.x < 30 || ball.x > canvasWidth - 30) {
+            ball.out = true;
+            Sound.postHit();
+            showMatchSplash(false, 'AUT!', 'Şut çerçeveyi bulmadı.');
           }
         }
 
         // Goalkeeper Mode Collision Logic
-        if (matchMode === 'SAVE') {
+        if (matchMode === 'SAVE' && !ball.saved && !ball.scored) {
           const distGlove = Math.hypot(ball.x - gloves.x, ball.y - gloves.y);
-          if (distGlove < 34 && !ball.saved && !ball.scored) {
+          if (distGlove < 34) {
             ball.saved = true;
             ball.vx = (Math.random() - 0.5) * 6;
             ball.vy = -3;
             Sound.saveGlove();
             showMatchSplash(true, 'MÜTHİŞ KURTARIŞ!', '90’a giden topu eldivenlerinle çeldin!');
-          } else if (ball.y <= goalBottom && ball.y >= goalTop && ball.x >= goalLeft && ball.x <= goalRight && !ball.saved && !ball.scored) {
+          } else if (ball.y <= 175 && ball.x >= goalLeft && ball.x <= goalRight) {
             ball.scored = true;
             Sound.goal();
             showMatchSplash(false, 'GOL OLDU...', 'Top ağlarla buluştu, toparlanmalısın.');
@@ -2499,7 +2580,7 @@
             aimDx = -aimDx;
             aimDy = -aimDy;
           }
-          power = Math.min(Math.hypot(aimDx, aimDy), 130);
+          power = Math.hypot(aimDx, aimDy);
         }
         drawPitchCustomPlayer(ctx, ball.x, ball.y, ball.inFlight, isDragging, power, aimDx, aimDy);
       }
@@ -2529,7 +2610,7 @@
       ctx.arc(ball.x, renderY, 3.5 * renderScale, 0, Math.PI * 2);
       ctx.fill();
 
-      if (!ball.scored && !ball.saved && !ball.out) {
+      if (!ball.scored && !ball.out && (!ball.saved || ball.isDeflected)) {
         requestAnimationFrame(renderCanvasLoop);
       }
     }
@@ -2547,17 +2628,25 @@
 
       if (success) {
         if (player.position === 'GK') {
-          player.stats.saves++;
-          if (typeof tvMatchEngine !== 'undefined' && tvMatchEngine.isActive) {
-            tvMatchEngine.matchSaves++;
+          player.stats.saves = (player.stats.saves || 0) + 1;
+          if (typeof tvMatchEngine !== 'undefined' && tvMatchEngine && tvMatchEngine.isActive) {
+            tvMatchEngine.matchSaves = (tvMatchEngine.matchSaves || 0) + 1;
           }
         } else {
-          player.stats.goals++;
-          if (typeof tvMatchEngine !== 'undefined' && tvMatchEngine.isActive) {
-            tvMatchEngine.matchGoals++;
-            tvMatchEngine.home.score++;
+          player.stats.goals = (player.stats.goals || 0) + 1;
+          if (typeof tvMatchEngine !== 'undefined' && tvMatchEngine && tvMatchEngine.isActive) {
+            tvMatchEngine.matchGoals = (tvMatchEngine.matchGoals || 0) + 1;
+            tvMatchEngine.home.score = (tvMatchEngine.home.score || 0) + 1;
             const sb = document.getElementById('tvScoreBoard');
             if (sb) sb.textContent = `${tvMatchEngine.home.score} - ${tvMatchEngine.away.score}`;
+            const tickerStatus = document.getElementById('tvTickerStatus');
+            if (tickerStatus) {
+              tickerStatus.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span><span class="text-emerald-400 font-bold">⚽ GOOOOOL!</span>';
+            }
+            const tickerText = document.getElementById('tvTickerText');
+            if (tickerText) {
+              tickerText.textContent = `${tvMatchEngine.minute}' - GOOOOOOOL! ${player.nick || 'Yıldız Futbolcu'} topu ağlara yolladı! ${tvMatchEngine.home.fullName} ${tvMatchEngine.home.score} - ${tvMatchEngine.away.score} ${tvMatchEngine.away.fullName}`;
+            }
           }
         }
         player.ovr = Math.min(99, player.ovr + 1);
@@ -3029,6 +3118,16 @@
         }
 
         startFullMatch(false, (res) => {
+          player.stats.matches = (player.stats.matches || 0) + 1;
+          if (!player.careerHistory) player.careerHistory = [];
+          if (player.careerHistory.length > 0) {
+            const cur = player.careerHistory[player.careerHistory.length - 1];
+            cur.matches = (cur.matches || 0) + 1;
+            if (res && res.goals) cur.goals = (cur.goals || 0) + res.goals;
+            if (res && res.saves) cur.saves = (cur.saves || 0) + res.saves;
+          }
+          saveCareer();
+          updateHUD();
           showScreen('screenSeasons');
           renderSeasonScreen();
         });
@@ -3909,6 +4008,16 @@
             text: currentLang === 'TR' ? '⚽ SIRADAKİ MAÇA ÇIK' : '⚽ PLAY NEXT MATCH',
             onClick: () => {
               startFullMatch(false, (res) => {
+                player.stats.matches = (player.stats.matches || 0) + 1;
+                if (!player.careerHistory) player.careerHistory = [];
+                if (player.careerHistory.length > 0) {
+                  const cur = player.careerHistory[player.careerHistory.length - 1];
+                  cur.matches = (cur.matches || 0) + 1;
+                  if (res && res.goals) cur.goals = (cur.goals || 0) + res.goals;
+                  if (res && res.saves) cur.saves = (cur.saves || 0) + res.saves;
+                }
+                saveCareer();
+                updateHUD();
                 showScreen('screenSeasons');
                 renderSeasonScreen();
               });
