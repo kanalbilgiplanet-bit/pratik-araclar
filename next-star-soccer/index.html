@@ -574,24 +574,24 @@
     <section id="screenMatchPlay" class="hidden space-y-3 text-center max-w-2xl mx-auto w-full py-1">
       
       <!-- Top TV Broadcast Bar: Score Bug (Sol Üst) + TV Watermark (Sağ Üst) -->
-      <div class="flex items-center justify-between gap-2 px-1">
+      <div class="flex items-center justify-between gap-1.5 sm:gap-2 px-1 overflow-x-auto no-scrollbar whitespace-nowrap">
         <!-- Official TV Score Bug -->
-        <div class="flex items-center rounded-2xl bg-pitch-950/95 border border-pitch-700/80 shadow-2xl overflow-hidden font-display divide-x divide-pitch-800">
+        <div class="flex flex-row flex-nowrap items-center rounded-2xl bg-pitch-950/95 border border-pitch-700/80 shadow-2xl overflow-hidden font-display divide-x divide-pitch-800 shrink-0">
           <!-- Competition Tag -->
-          <div class="px-2.5 py-1.5 bg-pitch-900/90 flex items-center gap-1.5 text-[10px] font-mono font-bold text-amber-400">
+          <div class="px-2 sm:px-2.5 py-1.5 bg-pitch-900/90 flex items-center gap-1.5 text-[10px] font-mono font-bold text-amber-400 shrink-0">
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
             <span id="tvMatchLeague">SÜPER LİG</span>
           </div>
           <!-- Team Badges & Score -->
-          <div class="flex items-center gap-2 px-3 py-1.5 text-xs font-black text-white">
-            <span id="tvHomeBadge" class="text-base">🦁</span>
-            <span id="tvHomeName" class="font-display font-black tracking-wide">GAL</span>
-            <span id="tvScoreBoard" class="px-2.5 py-0.5 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 font-mono text-sm font-black shadow-inner">0 - 0</span>
-            <span id="tvAwayName" class="font-display font-black tracking-wide text-slate-300">FEN</span>
-            <span id="tvAwayBadge" class="text-base">🟡</span>
+          <div class="flex flex-row flex-nowrap items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 text-xs font-black text-white shrink-0 whitespace-nowrap">
+            <span id="tvHomeBadge" class="text-base shrink-0">🦁</span>
+            <span id="tvHomeName" class="font-display font-black tracking-wide shrink-0">GAL</span>
+            <span id="tvScoreBoard" class="px-2 sm:px-2.5 py-0.5 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 font-mono text-xs sm:text-sm font-black shadow-inner shrink-0 whitespace-nowrap">0 - 0</span>
+            <span id="tvAwayName" class="font-display font-black tracking-wide text-slate-300 shrink-0">FEN</span>
+            <span id="tvAwayBadge" class="text-base shrink-0">🟡</span>
           </div>
           <!-- Live Match Clock -->
-          <div class="px-2.5 py-1.5 bg-pitch-900/90 font-mono text-xs font-black text-lime-400 flex items-center gap-1">
+          <div class="px-2 sm:px-2.5 py-1.5 bg-pitch-900/90 font-mono text-xs font-black text-lime-400 flex items-center gap-1 shrink-0">
             <i class="fa-regular fa-clock text-[10px] animate-spin-slow"></i>
             <span id="tvMatchClock">0'</span>
           </div>
@@ -654,10 +654,10 @@
         <div id="matchEndSplash" class="hidden absolute inset-0 bg-pitch-950/95 backdrop-blur-md flex flex-col items-center justify-center p-4 space-y-3 animate-in zoom-in-50 duration-200 z-30 text-center">
           <div class="text-4xl">🏁</div>
           <div class="text-[10px] font-mono uppercase tracking-widest text-amber-400 font-bold">Maç Sona Erdi • 90+3'</div>
-          <div class="flex items-center gap-3 text-lg font-display font-black text-white">
-            <span id="endHomeName">GAL</span>
-            <span id="endScore" class="px-3 py-1 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-2xl font-mono">2 - 1</span>
-            <span id="endAwayName">FEN</span>
+          <div class="flex flex-row flex-nowrap items-center justify-center gap-2 sm:gap-3 text-base sm:text-xl font-display font-black text-white whitespace-nowrap px-2 w-full max-w-sm sm:max-w-md mx-auto">
+            <span id="endHomeName" class="truncate max-w-[110px] sm:max-w-[160px] text-right shrink">GAL</span>
+            <span id="endScore" class="px-3 py-1 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-xl sm:text-2xl font-mono shrink-0 shadow-inner">2 - 1</span>
+            <span id="endAwayName" class="truncate max-w-[110px] sm:max-w-[160px] text-left text-slate-300 shrink">FEN</span>
           </div>
           <div id="endSummaryText" class="text-xs text-slate-300 font-mono">⚽ 1 Gol Attın • ⭐ 8.8 Maç Puanı</div>
           <button id="btnFinishMatch" class="px-6 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-lime-400 hover:from-emerald-400 hover:to-lime-300 text-pitch-950 font-display font-black text-xs uppercase shadow-xl transition">
@@ -4001,9 +4001,15 @@
         if (endSplash) {
           endSplash.classList.remove('hidden');
           const elEndHome = document.getElementById('endHomeName');
-          if (elEndHome) elEndHome.textContent = tvMatchEngine.home.fullName;
+          if (elEndHome) {
+            elEndHome.textContent = `${tvMatchEngine.home.badge || ''} ${tvMatchEngine.home.name || tvMatchEngine.home.fullName}`.trim();
+            elEndHome.title = tvMatchEngine.home.fullName;
+          }
           const elEndAway = document.getElementById('endAwayName');
-          if (elEndAway) elEndAway.textContent = tvMatchEngine.away.fullName;
+          if (elEndAway) {
+            elEndAway.textContent = `${tvMatchEngine.away.name || tvMatchEngine.away.fullName} ${tvMatchEngine.away.badge || ''}`.trim();
+            elEndAway.title = tvMatchEngine.away.fullName;
+          }
           const elEndScore = document.getElementById('endScore');
           if (elEndScore) elEndScore.textContent = `${tvMatchEngine.home.score} - ${tvMatchEngine.away.score}`;
 
