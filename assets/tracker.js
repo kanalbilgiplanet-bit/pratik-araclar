@@ -55,27 +55,56 @@
   else if (/Macintosh|Mac OS/i.test(ua)) os = 'macOS';
   else if (/Linux/i.test(ua)) os = 'Linux';
 
-  // 5. Trafik Kaynağı
-  let referrerSource = safeGet('pb_ref_source');
-  if (!referrerSource) {
-    const urlParams = new URLSearchParams(window.location.search);
-    const utmSource = urlParams.get('utm_source') || urlParams.get('source') || urlParams.get('ref');
+  // 5. Trafik Kaynağı, Tam Referans URL'si ve Arama Terimi (Keyword) Tespiti
+  const urlParams = new URLSearchParams(window.location.search);
+  const utmSource = urlParams.get('utm_source') || urlParams.get('source') || urlParams.get('ref');
+  const rawDocRef = document.referrer || '';
+  const isExternalRef = rawDocRef && !rawDocRef.includes(window.location.hostname);
+
+  // Arama terimi / kampanya detayı yakalama (URL veya Referrer içinden)
+  function extractSearchKeyword(refUrl, searchParams) {
+    const directTerm = searchParams.get('utm_term') || searchParams.get('q') || searchParams.get('query') || searchParams.get('keyword') || searchParams.get('text');
+    if (directTerm) return directTerm.trim();
+    if (refUrl) {
+      try {
+        const refObj = new URL(refUrl);
+        const refTerm = refObj.searchParams.get('q') || refObj.searchParams.get('query') || refObj.searchParams.get('text') || refObj.searchParams.get('p') || refObj.searchParams.get('wd');
+        if (refTerm) return refTerm.trim();
+      } catch(e) {}
+    }
+    return '';
+  }
+
+  let referrerSource = safeSessionGet('pb_ref_source');
+  let referrerUrl = safeSessionGet('pb_ref_url') || '';
+  let searchQuery = safeSessionGet('pb_search_query') || '';
+
+  // Yeni bir dış referans veya UTM parametresi varsa her zaman güncelle
+  if (!referrerSource || isExternalRef || utmSource) {
+    if (isExternalRef) {
+      referrerUrl = rawDocRef;
+    } else if (window.location.search) {
+      referrerUrl = window.location.pathname + window.location.search;
+    }
+
+    const detectedQuery = extractSearchKeyword(rawDocRef, urlParams);
+    if (detectedQuery) searchQuery = detectedQuery;
 
     if (utmSource) {
       referrerSource = 'Kampanya: ' + utmSource;
     } else {
-      const ref = document.referrer;
+      const ref = rawDocRef;
       if (!ref || ref.includes(window.location.hostname)) {
-        referrerSource = 'Doğrudan (Direct)';
+        referrerSource = safeGet('pb_ref_source') || 'Doğrudan (Direct)';
       } else if (/whatsapp/i.test(ref) || /wa\.me/i.test(ref)) {
         referrerSource = 'WhatsApp';
-      } else if (/google\./i.test(ref)) {
+      } else if (/google\./i.test(ref) || /com\.google\.android\.googlequicksearchbox/i.test(ref)) {
         referrerSource = 'Google Arama';
       } else if (/instagram\./i.test(ref)) {
         referrerSource = 'Instagram';
       } else if (/t\.co|twitter\.com|x\.com/i.test(ref)) {
         referrerSource = 'Twitter (X)';
-      } else if (/reddit\.com|redd\.it/i.test(ref)) {
+      } else if (/reddit\.com|redd\.it|com\.reddit\.frontpage/i.test(ref)) {
         referrerSource = 'Reddit';
       } else if (/facebook\.com|fb\.com/i.test(ref)) {
         referrerSource = 'Facebook';
@@ -85,6 +114,8 @@
         referrerSource = 'YouTube';
       } else if (/yandex\./i.test(ref)) {
         referrerSource = 'Yandex';
+      } else if (/bing\.com/i.test(ref)) {
+        referrerSource = 'Bing Arama';
       } else {
         try {
           referrerSource = new URL(ref).hostname.replace('www.', '');
@@ -93,6 +124,10 @@
         }
       }
     }
+
+    safeSessionSet('pb_ref_source', referrerSource);
+    if (referrerUrl) safeSessionSet('pb_ref_url', referrerUrl);
+    if (searchQuery) safeSessionSet('pb_search_query', searchQuery);
     safeSet('pb_ref_source', referrerSource);
   }
 
@@ -175,6 +210,8 @@
       device: deviceType,
       os: os,
       referrer: referrerSource,
+      referrerUrl: referrerUrl,
+      searchQuery: searchQuery,
       screen: screenResolution,
       timezone: timezone,
       country: geo.country,
@@ -221,6 +258,8 @@
       title: pageInfo.title,
       device: deviceType,
       referrer: referrerSource,
+      referrerUrl: referrerUrl,
+      searchQuery: searchQuery,
       country: geo.country,
       city: geo.city,
       flag: geo.flag,
@@ -245,6 +284,8 @@
         device: deviceType,
         os: os,
         referrer: referrerSource,
+        referrerUrl: referrerUrl,
+        searchQuery: searchQuery,
         country: geo.country,
         city: geo.city,
         flag: geo.flag,

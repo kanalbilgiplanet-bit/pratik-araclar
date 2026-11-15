@@ -764,7 +764,7 @@
                 <i class="fa-solid fa-route text-blue-400"></i>
                 Geçmiş Trafik Kanalları
               </h3>
-              <p class="text-xs text-slate-400 mt-0.5">Ziyaretçiler geçmişte hangi platformlardan geldi?</p>
+              <p class="text-xs text-slate-400 mt-0.5">Kanala tıklayarak hangi sayfalara/linklere gelindiğini ve arama detaylarını inceleyin</p>
             </div>
           </div>
 
@@ -890,6 +890,36 @@
 
   </div>
 
+  <!-- ========================================== -->
+  <!-- TRAFİK KANALI DETAY & ARAMA ANALİZİ MODALI -->
+  <!-- ========================================== -->
+  <div id="trafficSourceModal" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md hidden flex items-center justify-center p-3 sm:p-6" onclick="if(event.target === this) closeTrafficSourceModal()">
+    <div class="bg-slate-900 border border-slate-700/80 rounded-2xl w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+      <!-- Modal Üst Başlık -->
+      <div class="p-4 sm:p-5 border-b border-slate-800 flex items-center justify-between gap-3 bg-slate-950/60">
+        <div class="flex items-center gap-3 min-w-0">
+          <div id="tsModalIconBox" class="w-10 h-10 rounded-xl bg-blue-500/15 border border-blue-500/30 flex items-center justify-center text-lg shrink-0">
+            <i class="fa-solid fa-route text-blue-400"></i>
+          </div>
+          <div class="min-w-0">
+            <div class="flex items-center gap-2 flex-wrap">
+              <h3 id="tsModalTitle" class="text-base sm:text-lg font-extrabold text-white truncate">Kaynak Detayı</h3>
+              <span id="tsModalBadge" class="text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">0 Ziyaret</span>
+            </div>
+            <p id="tsModalSubtitle" class="text-xs text-slate-400 mt-0.5 truncate">Bu kanaldan gelen ziyaretçilerin indiği sayfalar, arama terimleri ve alt bağlantılar</p>
+          </div>
+        </div>
+        <button onclick="closeTrafficSourceModal()" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-rose-500/20 text-slate-400 hover:text-rose-400 border border-slate-700 transition flex items-center justify-center shrink-0">
+          <i class="fa-solid fa-xmark text-base"></i>
+        </button>
+      </div>
+
+      <!-- Modal İçerik Gövdesi -->
+      <div id="tsModalBody" class="p-4 sm:p-6 overflow-y-auto custom-scroll space-y-6 flex-1">
+      </div>
+    </div>
+  </div>
+
 
   <!-- ========================================== -->
   <!-- 4. JAVASCRIPT MANTIĞI & GÜVENLİK -->
@@ -900,6 +930,8 @@
     let pollInterval = null;
     let currentFilter = 'today';
     let cachedDailyStats = null;
+    let lastActiveSessions = [];
+    let lastFilteredHits = [];
     let previousOnlineCount = 0;
     let audioAlertEnabled = localStorage.getItem('pb_audio_alert') === 'true';
 
@@ -1178,6 +1210,7 @@
           playVisitorChime();
         }
         previousOnlineCount = currentCount;
+        lastActiveSessions = activeSessions;
 
         renderDashboard(activeSessions, pageCounts, referrerCounts, locationCounts, mobileCount, desktopCount);
 
@@ -1292,13 +1325,15 @@
           else if (/instagram/i.test(refName)) iconClass = 'fa-brands fa-instagram text-pink-400';
           else if (/twitter|x/i.test(refName)) iconClass = 'fa-brands fa-x-twitter text-slate-300';
           else if (/reddit/i.test(refName)) iconClass = 'fa-brands fa-reddit text-orange-500';
+          const safeRef = refName.replace(/'/g, "\\'");
 
           return `
-            <div class="p-3 bg-slate-950/50 border border-slate-800/80 rounded-xl">
+            <div onclick="openTrafficSourceModal('${safeRef}', 'live')" class="p-3 bg-slate-950/50 hover:bg-slate-800/70 border border-slate-800/80 hover:border-blue-500/40 rounded-xl cursor-pointer transition group">
               <div class="flex items-center justify-between text-xs mb-1.5">
-                <span class="font-medium text-slate-200 flex items-center gap-2">
+                <span class="font-medium text-slate-200 group-hover:text-white flex items-center gap-2">
                   <i class="${iconClass}"></i>
                   ${refName}
+                  <span class="text-[10px] text-blue-400 opacity-75 group-hover:opacity-100 font-mono ml-1">Detay &rarr;</span>
                 </span>
                 <span class="font-bold text-white font-mono">${count} kişi (%${pct})</span>
               </div>
@@ -1742,6 +1777,7 @@
       const countryFlags = {};
       const cityTotals = {};
       const dailyTrend = [];
+      lastFilteredHits = [];
 
       selectedDates.forEach(date => {
         const dayData = allDays[date];
@@ -1815,6 +1851,7 @@
 
               const ref = h.referrer || 'Doğrudan';
               sourceTotals[ref] = (sourceTotals[ref] || 0) + 1;
+              lastFilteredHits.push({ ...h, date: h.date || date, normalizedRef: ref });
 
               // Eğer unique_users yoksa hit bazlı konum al
               if (h.country && (!dayData.unique_users || Object.keys(dayData.unique_users).length === 0)) {
@@ -1987,13 +2024,15 @@
         else if (/instagram/i.test(sourceName)) iconClass = 'fa-brands fa-instagram text-pink-400';
         else if (/twitter|x/i.test(sourceName)) iconClass = 'fa-brands fa-x-twitter text-slate-300';
         else if (/reddit/i.test(sourceName)) iconClass = 'fa-brands fa-reddit text-orange-500';
+        const safeSource = sourceName.replace(/'/g, "\\'");
 
         return `
-          <div class="p-3 bg-slate-950/50 border border-slate-800/80 rounded-xl">
+          <div onclick="openTrafficSourceModal('${safeSource}', 'history')" class="p-3 bg-slate-950/50 hover:bg-slate-800/70 border border-slate-800/80 hover:border-blue-500/40 rounded-xl cursor-pointer transition group">
             <div class="flex items-center justify-between text-xs mb-1.5">
-              <span class="font-medium text-slate-200 flex items-center gap-2">
+              <span class="font-medium text-slate-200 group-hover:text-white flex items-center gap-2">
                 <i class="${iconClass}"></i>
                 ${sourceName}
+                <span class="text-[10px] text-blue-400 opacity-75 group-hover:opacity-100 font-mono ml-1">Detay &rarr;</span>
               </span>
               <span class="font-bold text-white font-mono">${count} kişi (%${pct})</span>
             </div>
@@ -2003,6 +2042,322 @@
           </div>
         `;
       }).join('');
+    }
+
+    // Sayfa Bazlı Google SEO Arama Niyeti Haritası
+    const PAGE_SEARCH_INTENT_MAP = {
+      '/hangi-kanalda': 'bugün hangi maç hangi kanalda, şifresiz maç yayınları, trt 1 atv canlı maç akışı',
+      '/milli-mac-canli': 'türkiye fransa maçı canlı izle, uluslar ligi puan durumu, milli maç hangi kanalda',
+      '/next-star-soccer': 'next star soccer oyna, online futbol kariyer oyunu, frikik şut çekme oyunu',
+      '/hali-saha-kadro': 'halı saha kadro kurucu, ilk 11 oluşturucu, saha dizilişi yapma',
+      '/acil-durum-radar': 'son depremler, acil durum radarı, yakınımdaki deprem toplanma alanları',
+      '/maas-hesaplayici': '2026 netten brüte maaş hesaplama, zam oranı hesaplayıcı, mesai ücreti',
+      '/kpss-puan-hesaplama': 'kpss puan hesaplama, önlisans ortaöğretim lisans kpss net hesaplama',
+      '/': 'pratikbase, online pratik araçlar, canlı maç ve oyun merkezi'
+    };
+
+    function getInferredSearchIntent(pagePath, pageTitle) {
+      const cleanPath = (pagePath || '/').replace(/\/$/, '') || '/';
+      if (PAGE_SEARCH_INTENT_MAP[cleanPath]) return PAGE_SEARCH_INTENT_MAP[cleanPath];
+      return (pageTitle || cleanPath).replace(/ - PratikBase.*$/i, '').toLowerCase();
+    }
+
+    function openTrafficSourceModal(sourceName, mode = 'history') {
+      const modal = document.getElementById('trafficSourceModal');
+      const titleEl = document.getElementById('tsModalTitle');
+      const badgeEl = document.getElementById('tsModalBadge');
+      const subEl = document.getElementById('tsModalSubtitle');
+      const iconBox = document.getElementById('tsModalIconBox');
+      const bodyEl = document.getElementById('tsModalBody');
+      if (!modal || !bodyEl) return;
+
+      let iconClass = 'fa-solid fa-link text-slate-300';
+      if (/whatsapp/i.test(sourceName)) iconClass = 'fa-brands fa-whatsapp text-emerald-400';
+      else if (/google/i.test(sourceName)) iconClass = 'fa-brands fa-google text-blue-400';
+      else if (/instagram/i.test(sourceName)) iconClass = 'fa-brands fa-instagram text-pink-400';
+      else if (/twitter|x/i.test(sourceName)) iconClass = 'fa-brands fa-x-twitter text-slate-200';
+      else if (/reddit/i.test(sourceName)) iconClass = 'fa-brands fa-reddit text-orange-500';
+
+      iconBox.innerHTML = `<i class="${iconClass} text-xl"></i>`;
+      titleEl.innerText = sourceName;
+
+      // İlgili kayıtları filtrele
+      let records = [];
+      if (mode === 'live') {
+        records = (lastActiveSessions || []).filter(s => (s.referrer || 'Doğrudan (Direct)') === sourceName).map(s => ({
+          page: s.page || '/',
+          title: s.title || s.page || '/',
+          device: s.device || 'Mobil',
+          os: s.os || '',
+          country: s.country || 'Türkiye',
+          city: s.city || '',
+          flag: s.flag || '🇹🇷',
+          referrerUrl: s.referrerUrl || '',
+          searchQuery: s.searchQuery || '',
+          time: 'Şu an Canlı',
+          date: new Date().toLocaleDateString('en-CA'),
+          timestamp: s.lastSeen || Date.now()
+        }));
+      } else {
+        records = (lastFilteredHits || []).filter(h => (h.normalizedRef || h.referrer || 'Doğrudan') === sourceName);
+      }
+
+      // Zaman sırasına göre en yeniden en eskiye sırala
+      records.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+      const totalCount = records.length;
+      badgeEl.innerText = `${totalCount} Ziyaret (${mode === 'live' ? 'Canlı' : 'Seçili Dönem'})`;
+
+      const isSearchEngine = /google|yandex|bing/i.test(sourceName);
+      const isRedditApp = /com\.reddit\.frontpage/i.test(sourceName);
+
+      if (isSearchEngine) {
+        subEl.innerText = 'Google/Arama Motoru üzerinden hangi sayfalara inildiği, arama niyeti kelimeleri ve ziyaretçi detayları';
+      } else if (isRedditApp || /reddit/i.test(sourceName)) {
+        subEl.innerText = 'Reddit (Web & Mobil Uygulama) üzerinden gelen bağlantı detayları ve ziyaret edilen sayfalar';
+      } else {
+        subEl.innerText = `${sourceName} kanalından gelen ziyaretçilerin indiği sayfalar, alt bağlantılar ve zaman çizelgesi`;
+      }
+
+      if (totalCount === 0) {
+        bodyEl.innerHTML = `
+          <div class="text-center py-12 text-slate-400 text-sm">
+            Bu kaynak için seçili dönemde detaylı kayıt bulunamadı.
+          </div>
+        `;
+        modal.classList.remove('hidden');
+        return;
+      }
+
+      // 1. Hangi Sayfalara / Araçlara Gelindi? (Landing Pages Breakdown)
+      const pageMap = {};
+      const subLinksMap = {};
+      let mobileCount = 0;
+
+      records.forEach(r => {
+        if (r.device === 'Mobil') mobileCount++;
+        const p = r.page || '/';
+        if (!pageMap[p]) {
+          pageMap[p] = { count: 0, title: r.title || p, queries: new Set() };
+        }
+        pageMap[p].count++;
+        if (r.searchQuery) pageMap[p].queries.add(r.searchQuery);
+
+        // Alt referans URL'si veya uygulama URI tespiti
+        let subLink = r.referrerUrl || '';
+        if (!subLink) {
+          if (isRedditApp) subLink = 'android-app://com.reddit.frontpage (Reddit Mobil Uygulaması)';
+          else if (/google/i.test(sourceName)) subLink = 'https://www.google.com.tr/ (Organik Arama Sonucu)';
+          else if (/twitter|x/i.test(sourceName)) subLink = 'https://t.co/ (X / Twitter Paylaşım Bağlantısı)';
+          else if (/whatsapp/i.test(sourceName)) subLink = 'WhatsApp Sohbet / Grup Paylaşımı';
+        }
+        if (subLink) {
+          subLinksMap[subLink] = (subLinksMap[subLink] || 0) + 1;
+        }
+      });
+
+      const sortedPages = Object.entries(pageMap).sort((a, b) => b[1].count - a[1].count);
+      const sortedSubLinks = Object.entries(subLinksMap).sort((a, b) => b[1] - a[1]);
+      const mobPct = Math.round((mobileCount / totalCount) * 100);
+
+      // Bilgi Notu (Google Şifreli Arama & Reddit App Açıklaması)
+      let infoBannerHtml = '';
+      if (isSearchEngine) {
+        infoBannerHtml = `
+          <div class="p-3.5 rounded-xl bg-blue-500/10 border border-blue-500/30 text-xs text-slate-300 flex items-start gap-3">
+            <i class="fa-brands fa-google text-blue-400 text-base mt-0.5 shrink-0"></i>
+            <div>
+              <div class="font-bold text-white mb-0.5">Google Organik Arama & Anahtar Kelime Analizi</div>
+              <p class="text-slate-400 leading-relaxed">
+                Google, HTTPS güvenlik protokolü gereği kullanıcıların arama kutusuna yazdığı metni dış sitelerden gizler (<code class="text-blue-300">strict-origin-when-cross-origin</code>). Ancak ziyaretçinin <strong>Google'dan tıklayarak doğrudan hangi sayfaya/araca indiği</strong> kesin olarak kaydedilir. Aşağıda her aracın karşısında o sayfaya trafik getiren <strong>Google arama terimleri</strong> ve varsa doğrudan yakalanan <code class="text-emerald-300">?q= / utm_term</code> kelimeleri listelenmiştir.
+              </p>
+            </div>
+          </div>
+        `;
+      } else if (isRedditApp || /reddit/i.test(sourceName)) {
+        infoBannerHtml = `
+          <div class="p-3.5 rounded-xl bg-orange-500/10 border border-orange-500/30 text-xs text-slate-300 flex items-start gap-3">
+            <i class="fa-brands fa-reddit text-orange-400 text-base mt-0.5 shrink-0"></i>
+            <div>
+              <div class="font-bold text-white mb-0.5">Reddit Trafik & Alt Link Analizi</div>
+              <p class="text-slate-400 leading-relaxed">
+                <code class="text-orange-300">com.reddit.frontpage</code> kaydı, ziyaretçinin tarayıcıdan değil doğrudan <strong>Reddit Resmi Android Mobil Uygulaması</strong> içindeki bir paylaşıma tıklayarak geldiğini gösterir. Web üzerinden gelen tıklamalarda tam alt dizin (<code class="text-orange-300">reddit.com/r/...</code>) gönderildiğinde aşağıda doğrudan tıklanabilir link olarak yer alır.
+              </p>
+            </div>
+          </div>
+        `;
+      }
+
+      // İniş Sayfaları & Arama Terimleri Tablosu
+      const pagesHtml = sortedPages.map(([path, info]) => {
+        const pct = Math.round((info.count / totalCount) * 100);
+        const explicitQueries = Array.from(info.queries);
+        const seoIntent = getInferredSearchIntent(path, info.title);
+
+        return `
+          <tr class="hover:bg-slate-800/40 transition">
+            <td class="py-2.5 px-3">
+              <a href="${path}" target="_blank" class="text-emerald-400 hover:underline font-bold font-mono flex items-center gap-1.5">
+                ${path}
+                <i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-slate-500"></i>
+              </a>
+              <div class="text-[11px] text-slate-400 font-sans truncate max-w-xs">${info.title}</div>
+            </td>
+            <td class="py-2.5 px-3 font-sans">
+              ${explicitQueries.length > 0
+                ? `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[11px] font-bold"><i class="fa-solid fa-magnifying-glass text-[10px]"></i> "${explicitQueries.join('", "')}"</span>`
+                : isSearchEngine
+                  ? `<div class="text-[11px] text-blue-300/90 flex items-center gap-1.5"><i class="fa-solid fa-magnifying-glass text-[10px] text-blue-400"></i> <span>${seoIntent}</span></div>`
+                  : `<span class="text-[11px] text-slate-400">Doğrudan bu sayfaya paylaşılan linkten giriş</span>`
+              }
+            </td>
+            <td class="py-2.5 px-3 text-right font-mono font-bold text-white whitespace-nowrap">${info.count} kişi</td>
+            <td class="py-2.5 px-3 text-right font-mono font-bold text-emerald-400 whitespace-nowrap">%${pct}</td>
+          </tr>
+        `;
+      }).join('');
+
+      // Alt Referans Linkleri (Tıklanabilir)
+      const subLinksHtml = sortedSubLinks.map(([linkText, count]) => {
+        const isHttp = /^https?:\/\//i.test(linkText) && !linkText.includes(' ');
+        const cleanUrl = linkText.split(' ')[0];
+        const canOpen = /^https?:\/\//i.test(cleanUrl);
+
+        return `
+          <div class="p-2.5 bg-slate-950/70 border border-slate-800 rounded-xl flex items-center justify-between gap-3 text-xs">
+            <div class="min-w-0 flex items-center gap-2">
+              <i class="fa-solid fa-share-from-square text-blue-400 shrink-0"></i>
+              ${canOpen
+                ? `<a href="${cleanUrl}" target="_blank" rel="noopener" class="text-blue-400 hover:underline font-mono truncate">${linkText} <i class="fa-solid fa-arrow-up-right-from-square text-[10px] ml-1"></i></a>`
+                : `<span class="text-slate-300 font-mono truncate">${linkText}</span>`
+              }
+            </div>
+            <span class="shrink-0 font-mono font-bold text-white bg-slate-800 px-2.5 py-0.5 rounded-full">${count} ziyaret</span>
+          </div>
+        `;
+      }).join('');
+
+      // Tek Tek Ziyaretçi Kayıtları (Son 50 Kayıt)
+      const visitorRowsHtml = records.slice(0, 50).map(r => {
+        const locText = r.city ? `${r.flag || '🇹🇷'} ${r.city}, ${r.country || 'Türkiye'}` : `${r.flag || '🇹🇷'} ${r.country || 'Türkiye'}`;
+        const devBadge = r.device === 'Mobil'
+          ? '<span class="text-emerald-400"><i class="fa-solid fa-mobile-screen mr-1"></i>Mobil</span>'
+          : '<span class="text-blue-400"><i class="fa-solid fa-laptop mr-1"></i>Masaüstü</span>';
+
+        let detailHtml = '';
+        if (r.searchQuery) {
+          detailHtml = `<span class="text-emerald-300 font-semibold"><i class="fa-solid fa-magnifying-glass mr-1"></i>"${r.searchQuery}"</span>`;
+        } else if (r.referrerUrl && /^https?:\/\//i.test(r.referrerUrl)) {
+          detailHtml = `<a href="${r.referrerUrl}" target="_blank" rel="noopener" class="text-blue-400 hover:underline font-mono truncate block max-w-[230px]" title="${r.referrerUrl}">${r.referrerUrl} <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i></a>`;
+        } else if (r.referrerUrl) {
+          detailHtml = `<span class="text-slate-400 font-mono text-[11px]">${r.referrerUrl}</span>`;
+        } else if (isSearchEngine) {
+          detailHtml = `<span class="text-blue-300/80 text-[11px]"><i class="fa-solid fa-magnifying-glass text-[10px] mr-1"></i>${getInferredSearchIntent(r.page, r.title).split(',')[0]}</span>`;
+        } else if (isRedditApp) {
+          detailHtml = `<span class="text-orange-300 text-[11px]">Reddit Android App</span>`;
+        } else {
+          detailHtml = `<span class="text-slate-500 text-[11px]">${sourceName}</span>`;
+        }
+
+        return `
+          <tr class="hover:bg-slate-800/40 transition">
+            <td class="py-2 px-3 font-mono text-[11px] text-slate-400 whitespace-nowrap">${r.date ? r.date.slice(5) + ' • ' : ''}${r.time || '--:--'}</td>
+            <td class="py-2 px-3">
+              <a href="${r.page || '/'}" target="_blank" class="text-emerald-400 hover:underline font-mono font-bold text-xs">${r.page || '/'}</a>
+            </td>
+            <td class="py-2 px-3 font-sans text-xs">${detailHtml}</td>
+            <td class="py-2 px-3 font-sans text-xs text-slate-300 whitespace-nowrap">${locText}</td>
+            <td class="py-2 px-3 font-sans text-xs whitespace-nowrap">${devBadge}</td>
+          </tr>
+        `;
+      }).join('');
+
+      bodyEl.innerHTML = `
+        ${infoBannerHtml}
+
+        <!-- 3 Özet KPI -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div class="p-3.5 bg-slate-950/70 border border-slate-800 rounded-xl">
+            <div class="text-[11px] text-slate-400 uppercase font-semibold">Bu Kanaldan Toplam Giriş</div>
+            <div class="text-xl font-black text-white font-mono mt-1">${totalCount} Ziyaret</div>
+          </div>
+          <div class="p-3.5 bg-slate-950/70 border border-slate-800 rounded-xl">
+            <div class="text-[11px] text-slate-400 uppercase font-semibold">En Çok İndiği Sayfa</div>
+            <div class="text-sm font-bold text-emerald-400 font-mono mt-1 truncate">${sortedPages[0] ? sortedPages[0][0] : '-'} (${sortedPages[0] ? sortedPages[0][1].count : 0})</div>
+          </div>
+          <div class="p-3.5 bg-slate-950/70 border border-slate-800 rounded-xl">
+            <div class="text-[11px] text-slate-400 uppercase font-semibold">Cihaz Dağılımı</div>
+            <div class="text-sm font-bold text-white font-mono mt-1">%${mobPct} Mobil • %${100 - mobPct} Masaüstü</div>
+          </div>
+        </div>
+
+        <!-- 1. Hangi Sayfalara / Araçlara Gelindi & Arama Niyeti -->
+        <div class="bg-slate-950/50 border border-slate-800 rounded-xl p-4">
+          <h4 class="text-sm font-bold text-white mb-3 flex items-center gap-2">
+            <i class="fa-solid fa-bullseye text-emerald-400"></i>
+            Hangi Sayfalara Geldiler & Arama Konuları
+          </h4>
+          <div class="overflow-x-auto custom-scroll">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-900/90 text-slate-400 uppercase border-b border-slate-800">
+                <tr>
+                  <th class="py-2 px-3">İniş Sayfası (Araç)</th>
+                  <th class="py-2 px-3">Arama Terimi / Konu Niyeti</th>
+                  <th class="py-2 px-3 text-right">Ziyaret</th>
+                  <th class="py-2 px-3 text-right">Oran</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-800/60 font-mono">
+                ${pagesHtml}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 2. Tespit Edilen Alt Bağlantılar / Kaynak Linkleri -->
+        <div class="bg-slate-950/50 border border-slate-800 rounded-xl p-4">
+          <h4 class="text-sm font-bold text-white mb-3 flex items-center gap-2">
+            <i class="fa-solid fa-link text-blue-400"></i>
+            Tespit Edilen Kaynak Bağlantıları (Referrer URL / App URI)
+          </h4>
+          <div class="space-y-2">
+            ${subLinksHtml}
+          </div>
+        </div>
+
+        <!-- 3. Tek Tek Ziyaretçi Kayıtları -->
+        <div class="bg-slate-950/50 border border-slate-800 rounded-xl p-4">
+          <div class="flex items-center justify-between mb-3">
+            <h4 class="text-sm font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-clock-rotate-left text-amber-400"></i>
+              Ziyaretçi Zaman Çizelgesi (${Math.min(records.length, 50)} Kayıt)
+            </h4>
+          </div>
+          <div class="overflow-x-auto custom-scroll max-h-72 overflow-y-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-900/90 text-slate-400 uppercase border-b border-slate-800 sticky top-0">
+                <tr>
+                  <th class="py-2 px-3">Tarih & Saat</th>
+                  <th class="py-2 px-3">Girdiği Sayfa</th>
+                  <th class="py-2 px-3">Kaynak Link / Arama Detayı</th>
+                  <th class="py-2 px-3">Konum</th>
+                  <th class="py-2 px-3">Cihaz</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-800/60">
+                ${visitorRowsHtml}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeTrafficSourceModal() {
+      const modal = document.getElementById('trafficSourceModal');
+      if (modal) modal.classList.add('hidden');
     }
 
     function renderHistoryLocations(countryTotals, countryFlags, cityTotals, baseTotal) {
@@ -2077,7 +2432,7 @@
         return;
       }
 
-      let csv = '\uFEFFTarih,Sayfa Yolu,Sayfa Basligi,Cihaz,Trafik Kaynagi,Ulke,Il_Sehir,Saat\n';
+      let csv = '\uFEFFTarih,Sayfa Yolu,Sayfa Basligi,Cihaz,Trafik Kaynagi,Arama Terimi,Kaynak Linki (Referrer URL),Ulke,Il_Sehir,Saat\n';
 
       for (const [date, dayData] of Object.entries(cachedDailyStats)) {
         if (dayData && dayData.hits) {
@@ -2088,6 +2443,8 @@
               `"${(hit.title || '').replace(/"/g, '""')}"`,
               hit.device || 'Mobil',
               `"${hit.referrer || 'Dogrudan'}"`,
+              `"${(hit.searchQuery || '').replace(/"/g, '""')}"`,
+              `"${(hit.referrerUrl || '').replace(/"/g, '""')}"`,
               `"${hit.country || ''}"`,
               `"${hit.city || ''}"`,
               hit.time || ''
@@ -2146,9 +2503,20 @@
     async function simulateTestVisitor() {
       const testId = 'test_' + Date.now();
       const demoPages = ['/milli-mac-canli/', '/hangi-kanalda/', '/acil-durum-radar/', '/hali-saha-kadro/', '/maas-hesaplayici/'];
-      const demoRefs = ['WhatsApp', 'Google Arama', 'Instagram', 'Doğrudan'];
+      const demoRefs = ['WhatsApp', 'Google Arama', 'Instagram', 'Twitter (X)', 'Reddit', 'Doğrudan'];
       const randomPage = demoPages[Math.floor(Math.random() * demoPages.length)];
       const randomRef = demoRefs[Math.floor(Math.random() * demoRefs.length)];
+
+      let demoRefUrl = '';
+      let demoQuery = '';
+      if (randomRef === 'Google Arama') {
+        demoRefUrl = 'https://www.google.com.tr/';
+        demoQuery = randomPage.includes('milli') ? 'fransa türkiye maçı' : (randomPage.includes('hangi') ? 'bugün hangi maç var' : 'maaş hesaplama');
+      } else if (randomRef === 'Reddit') {
+        demoRefUrl = 'https://www.reddit.com/r/superlig/comments/turkiye_milli_takim/';
+      } else if (randomRef === 'Twitter (X)') {
+        demoRefUrl = 'https://t.co/v29sKz19';
+      }
 
       const payload = {
         id: testId,
@@ -2157,6 +2525,8 @@
         device: Math.random() > 0.3 ? 'Mobil' : 'Masaüstü',
         os: 'Android',
         referrer: randomRef,
+        referrerUrl: demoRefUrl,
+        searchQuery: demoQuery,
         screen: '390x844',
         timezone: 'Europe/Istanbul',
         lastSeen: Date.now(),
@@ -2186,6 +2556,8 @@
           title: 'Test Ziyaretçi Denemesi',
           device: payload.device,
           referrer: randomRef,
+          referrerUrl: demoRefUrl,
+          searchQuery: demoQuery,
           timestamp: Date.now()
         })
       });
@@ -2213,6 +2585,8 @@
           title: 'Test Ziyaretçi Denemesi',
           device: payload.device,
           referrer: randomRef,
+          referrerUrl: demoRefUrl,
+          searchQuery: demoQuery,
           timestamp: Date.now()
         })
       });
