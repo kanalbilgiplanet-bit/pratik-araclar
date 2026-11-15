@@ -2050,7 +2050,7 @@
     let dragCurrent = { x: 0, y: 0 };
     let dragPoints = []; // Stores all touch trail points for true curve calculation
 
-    let ball = { x: 300, y: 350, z: 0, vx: 0, vy: 0, spin: 0, radius: 10, inFlight: false, scored: false, saved: false, out: false, isGroundShot: false, trail: [] };
+    let ball = { x: 300, y: 350, z: 0, vx: 0, vy: 0, spin: 0, radius: 10, inFlight: false, scored: false, saved: false, out: false, isGroundShot: false, hasReboundedOnce: false, isReboundingFromPost: false, trail: [] };
     let goalkeeper = { x: 300, y: 155, vx: 2.2, diveSpeed: 3.5 };
     let gloves = { x: 300, y: 220, radius: 24, dragging: false };
     let wallDefenders = []; // Free-kick wall
@@ -2182,6 +2182,8 @@
       ball.isGroundShot = false;
       ball.isPassing = false;
       ball.isVolleyPose = false;
+      ball.hasReboundedOnce = false;
+      ball.isReboundingFromPost = false;
       ball.trail = [];
       ball.kickOrigin = { x: ball.x, y: ball.y };
       ball.kickTime = 0;
@@ -3721,8 +3723,42 @@
             }
           }
 
-          // Handle Deflection Physics Animation (Sekme Efekti)
-          if (ball.isDeflected) {
+          // Handle Post Rebound Physics Animation (Direkten dönen top sahaya geri düşüyor ve pozisyon devam ediyor)
+          if (ball.isReboundingFromPost) {
+            ball.deflectedFrames = (ball.deflectedFrames || 0) + 1;
+            ball.vx *= 0.94;
+            ball.vy *= 0.94;
+            ball.z = Math.max(0, (ball.z || 0) - 1.1);
+
+            // Once the ball slows down or bounces back into the penalty box, settle ball for follow-up shot!
+            if (ball.deflectedFrames >= 28 || (ball.y >= 250 && Math.hypot(ball.vx, ball.vy) < 2.8)) {
+              ball.isReboundingFromPost = false;
+              ball.isDeflected = false;
+              ball.inFlight = false;
+              ball.vx = 0;
+              ball.vy = 0;
+              ball.spin = 0;
+              ball.z = 0;
+              ball.trail = [];
+              ball.saved = false;
+              ball.out = false;
+              ball.kickOrigin = { x: ball.x, y: ball.y };
+
+              // Keep ball safely within penalty box bounds
+              ball.x = Math.max(140, Math.min(canvasWidth - 140, ball.x));
+              ball.y = Math.max(240, Math.min(340, ball.y));
+
+              // Scatter or displace goalkeeper
+              goalkeeper.x = Math.max(goalLeft + 25, Math.min(goalRight - 25, goalkeeper.x + (Math.random() - 0.5) * 55));
+
+              const overlay = document.getElementById('canvasInstructionOverlay');
+              const promptTxt = document.getElementById('txtCanvasPrompt');
+              if (promptTxt) promptTxt.textContent = '⚡ Dönen top önünde kaldı! Kaleyi gör ve tek vuruşla 90\'a tamamla!';
+              if (overlay) overlay.classList.remove('hidden');
+
+              Sound.kick();
+            }
+          } else if (ball.isDeflected) {
             ball.deflectedFrames = (ball.deflectedFrames || 0) + 1;
             ball.vx *= 0.96;
             ball.vy *= 0.96;
@@ -3777,21 +3813,48 @@
               const isCrossbar = (ball.x >= goalLeft - 4 && ball.x <= goalRight + 4) && (ball.z >= 33 && ball.z <= 38);
 
               if (isLeftPost || isRightPost || isCrossbar) {
-                ball.isDeflected = true;
-                ball.saved = true;
                 Sound.postHit();
 
-                ball.vy = Math.abs(ball.vy) * 0.45 + 2.5;
-                if (isLeftPost) {
-                  ball.vx = -Math.abs(ball.vx) * 0.5 - 2.5;
-                } else if (isRightPost) {
-                  ball.vx = Math.abs(ball.vx) * 0.5 + 2.5;
+                // DİREKTEN DÖNEN TOP: İlk direkte pozisyon bitmesin, sahaya dönsün ve oyuncu tamamlayabilsin!
+                if (!ball.hasReboundedOnce) {
+                  ball.hasReboundedOnce = true;
+                  ball.isReboundingFromPost = true;
+                  ball.isDeflected = true;
+                  ball.savedRibbon = null;
+                  ball.deflectedFrames = 0;
+
+                  // Ceza sahası içine sekme (aşağı doğru y: 260..330)
+                  ball.vy = Math.min(8.5, Math.abs(ball.vy) * 0.65 + 4.5);
+                  if (isLeftPost) {
+                    ball.vx = Math.abs(ball.vx || 3) * 0.5 + 2.8;
+                  } else if (isRightPost) {
+                    ball.vx = -Math.abs(ball.vx || 3) * 0.5 - 2.8;
+                  } else {
+                    ball.vx = (Math.random() - 0.5) * 4;
+                  }
+                  ball.z = Math.min(ball.z, 16);
+                  ball.spin = 0;
+
+                  const pBanner = document.getElementById('passFeedbackBanner');
+                  const pTitle = document.getElementById('passBannerTitle');
+                  const pSub = document.getElementById('passBannerSub');
+                  if (pBanner && pTitle && pSub) {
+                    pTitle.textContent = isCrossbar ? '💥 ÜST DİREKTEN DÖNDÜ!' : '💥 YAN DİREKTEN DÖNDÜ!';
+                    pSub.textContent = 'Pozisyon devam ediyor! Dönen topu kaleye tamamla!';
+                    pBanner.classList.remove('hidden');
+                    setTimeout(() => { if (pBanner) pBanner.classList.add('hidden'); }, 1800);
+                  }
+
+                  const tickerText = document.getElementById('tvTickerText');
+                  if (tickerText) {
+                    tickerText.textContent = `${tvMatchEngine.minute}' - DİREKTEN DÖNDÜ! Top direkten sahaya sekti, karambol şansı devam ediyor!`;
+                  }
+                  return;
                 } else {
-                  ball.z = Math.min(ball.z, 20);
-                  ball.vx = (Math.random() - 0.5) * 4;
+                  ball.isDeflected = true;
+                  ball.saved = true;
+                  showMatchSplash(false, 'YİNE DİREK!', 'Top ikinci kez direğe çarparak oyun alanını terk etti.');
                 }
-                ball.spin = 0;
-                showMatchSplash(false, 'DİREKTEN DÖNDÜ!', isCrossbar ? 'Üst direğe çarpan top sahaya geri döndü!' : 'Yan direğe çarpan top sahaya geri döndü!');
               } else if (ball.z > 38) {
                 ball.out = true;
                 Sound.postHit();
@@ -3803,7 +3866,7 @@
                   ball.vx = (Math.random() - 0.5) * 5;
                   ball.vy = 4;
                   Sound.saveGlove();
-                  showMatchSplash(false, 'KALECİ ÇIKARDI!', 'Harika uzandı ve topu kornere çeldi.');
+                  showMatchSplash(false, 'KALECİ ÇIKARDI!', ball.hasReboundedOnce ? 'Dönen toptaki vuruşunda kaleci devleşti.' : 'Harika uzandı ve topu kornere çeldi.');
                 } else {
                   ball.scored = true;
                   ball.vx *= 0.18;
@@ -3811,7 +3874,9 @@
                   Sound.goal();
 
                   let goalDesc = 'Ağları Havalandıran Temiz Bir Gol!';
-                  if (currentScenario === 'FREE_KICK') {
+                  if (ball.hasReboundedOnce) {
+                    goalDesc = '🔥 Direkten Dönen Topu Kusursuz Bir Vuruşla Tamamlayıp Ağlara Gönderdin!';
+                  } else if (currentScenario === 'FREE_KICK') {
                     goalDesc = (Math.abs(ball.spin) > 0.05)
                       ? '🎯 Barajın Üstünden 90’a Roberto Carlos Falsosuyla Harika Frikik Golü!'
                       : '🎯 Barajın Üstünden Aşan Nefis Frikik Golü!';
@@ -3828,17 +3893,17 @@
                   } else if (Math.abs(ball.spin) > 0.05) {
                     goalDesc = '🌀 90’a Roberto Carlos Falsosuyla Mükemmel Gol!';
                   }
-                  showMatchSplash(true, 'GOOOOOOOL!', goalDesc);
+                  showMatchSplash(true, ball.hasReboundedOnce ? 'DÖNEN TOP VE GOOOL!' : 'GOOOOOOOL!', goalDesc);
                 }
               } else {
                 ball.out = true;
                 Sound.postHit();
-                showMatchSplash(false, 'AUT / DIŞARI!', 'Top direğin yanından auta gitti.');
+                showMatchSplash(false, 'AUT / DIŞARI!', ball.hasReboundedOnce ? 'Dönen toptaki vuruş auta gitti.' : 'Top direğin yanından auta gitti.');
               }
             } else if (ball.y < 65 || ball.x < 18 || ball.x > canvasWidth - 18) {
               ball.out = true;
               Sound.postHit();
-              showMatchSplash(false, 'AUT!', 'Şut çerçeveyi bulmadı.');
+              showMatchSplash(false, 'AUT!', ball.hasReboundedOnce ? 'Dönen toptaki vuruş çerçeveyi bulmadı.' : 'Şut çerçeveyi bulmadı.');
             }
           }
 
