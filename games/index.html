@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="tr" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>PratikBase Games | Ücretsiz Web Oyunları, Canlı Düellolar & Simülasyonlar</title>
+  <meta name="description" content="Sokak futbolundan TV maç motorlu Next Star Soccer'a, 20 bayraklı canlı Flag Blitz düellosundan futbolcu piyangosuna en popüler ücretsiz web oyunları!">
+  <meta name="keywords" content="web oyunları, ücretsiz online oyunlar, next star soccer, flag quiz, bayrak oyunu, futbolcu piyangosu, doğum piyangosu, halı saha kadro kurucu, browser games">
+  <link rel="canonical" href="https://pratikbase.com/games/">
+
+  <!-- Open Graph / Social Meta -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="PratikBase Games | Canlı Web Oyunları & Arcade">
+  <meta property="og:description" content="Sıfır indirme, tarayıcıda anında oyna! Futbol kariyer simülatörü, canlı bayrak düellosu ve efsanevi oyunlar.">
+  <meta property="og:url" content="https://pratikbase.com/games/">
+
+  <!-- Tailwind CSS & Fonts -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            pitch: {
+              950: '#06130b',
+              900: '#0b2014',
+              850: '#0f2b1b',
+              800: '#153824',
+              700: '#1d4a31'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            display: ['Space Grotesk', 'Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          }
+        }
+      }
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&family=Space+Grotesk:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    /* Arcade glow */
+    .arcade-glow {
+      background: radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.18) 0%, rgba(245, 158, 11, 0.05) 35%, rgba(6, 19, 11, 0.98) 75%);
+    }
+    .neon-border-green {
+      box-shadow: 0 0 25px rgba(16, 185, 129, 0.15);
+    }
+    .neon-border-amber {
+      box-shadow: 0 0 25px rgba(245, 158, 11, 0.15);
+    }
+    .neon-border-blue {
+      box-shadow: 0 0 25px rgba(6, 182, 212, 0.15);
+    }
+    .neon-border-purple {
+      box-shadow: 0 0 25px rgba(168, 85, 247, 0.15);
+    }
+    button, a {
+      touch-action: manipulation;
+    }
+  </style>
+</head>
+
+<body class="bg-pitch-950 text-slate-100 font-sans antialiased min-h-screen flex flex-col selection:bg-emerald-500 selection:text-pitch-950 arcade-glow">
+
+  <!-- Top Navigation Bar (Pure Games Ecosystem - Zero links to external tools) -->
+  <header class="border-b border-pitch-800 bg-pitch-900/90 backdrop-blur-md sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="/games/" class="flex items-center gap-3 group text-white">
+        <span class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-400 via-emerald-500 to-lime-400 flex items-center justify-center text-pitch-950 font-black text-xl shadow-lg shadow-emerald-500/25 group-hover:scale-105 transition">
+          🎮
+        </span>
+        <div class="flex flex-col">
+          <div class="font-display font-black text-base sm:text-lg tracking-tight text-white flex items-center gap-2">
+            <span>GAMES</span>
+            <span class="text-emerald-400">ARENA</span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 animate-pulse">
+              CANLI
+            </span>
+          </div>
+          <span class="text-[10px] text-slate-400 font-mono -mt-0.5" id="txtHeaderTagline">Ücretsiz Canlı Web Oyunları & Simülasyonlar</span>
+        </div>
+      </a>
+
+      <!-- Controls: Sound, Language -->
+      <div class="flex items-center gap-2">
+        <!-- Sound Toggle -->
+        <button id="btnSoundToggle" onclick="toggleSound()" class="w-9 h-9 rounded-xl bg-pitch-850 hover:bg-pitch-800 text-slate-300 hover:text-white flex items-center justify-center text-xs transition border border-pitch-700/80" title="Ses Aç/Kapat">
+          <i id="soundIcon" class="fa-solid fa-volume-high text-emerald-400"></i>
+        </button>
+
+        <!-- Language Switcher (TR / EN) -->
+        <button id="btnLangToggle" onclick="toggleLang()" class="px-3 py-1.5 rounded-xl bg-pitch-850 hover:bg-pitch-800 text-slate-200 text-xs font-mono font-bold transition border border-pitch-700/80 flex items-center gap-1.5">
+          <span id="langFlag">🇹🇷</span>
+          <span id="langLabel">TR</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Main Content Hub -->
+  <main class="flex-1 max-w-6xl w-full mx-auto px-4 py-8 sm:py-12 space-y-8">
+
+    <!-- Hero Title & Quick Stats -->
+    <div class="text-center space-y-3 max-w-3xl mx-auto">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xs font-mono font-bold tracking-wide uppercase">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+        <span id="heroBadge">Tarayıcıda Anında Oyna • Sıfır İndirme</span>
+      </div>
+
+      <h1 class="text-3xl sm:text-5xl font-display font-black text-white tracking-tight leading-tight" id="heroTitle">
+        Oyun Dünyasına <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-emerald-400 to-lime-300">Hoş Geldin!</span>
+      </h1>
+
+      <p class="text-slate-300 text-xs sm:text-base leading-relaxed" id="heroSubtitle">
+        Sokak futbolundan TV yayın skorbordlu Next Star Soccer'a, 20 bayraklı canlı Flag Blitz düellosundan yaşam piyangosuna en popüler oyunları keşfet ve arkadaşlarına meydan oku!
+      </p>
+
+      <!-- Stat Badges Strip -->
+      <div class="flex flex-wrap items-center justify-center gap-2 pt-2">
+        <span class="px-3 py-1 rounded-xl bg-pitch-900 border border-pitch-800 text-[11px] font-mono text-slate-300 flex items-center gap-1.5">
+          <i class="fa-solid fa-gamepad text-emerald-400"></i> <strong class="text-white">5</strong> <span id="lblStatGames">Aktif Oyun</span>
+        </span>
+        <span class="px-3 py-1 rounded-xl bg-pitch-900 border border-pitch-800 text-[11px] font-mono text-slate-300 flex items-center gap-1.5">
+          <i class="fa-solid fa-bolt text-amber-400"></i> <span id="lblStatPlay">Anında Başla</span>
+        </span>
+        <span class="px-3 py-1 rounded-xl bg-pitch-900 border border-pitch-800 text-[11px] font-mono text-slate-300 flex items-center gap-1.5">
+          <i class="fa-solid fa-users text-sky-400"></i> <span id="lblStatLive">Canlı Çok Oyunculu Odalar</span>
+        </span>
+      </div>
+    </div>
+
+    <!-- Category Filter Tabs -->
+    <div class="flex items-center justify-center gap-2 overflow-x-auto no-scrollbar py-2">
+      <button onclick="filterCategory('all')" class="cat-btn px-4 py-2 rounded-xl text-xs font-bold transition border border-emerald-500/50 bg-emerald-500/20 text-emerald-300 shadow-lg" data-category="all">
+        🌟 <span id="tabAll">Tüm Oyunlar</span>
+      </button>
+      <button onclick="filterCategory('football')" class="cat-btn px-4 py-2 rounded-xl text-xs font-bold transition border border-pitch-800 bg-pitch-900 text-slate-400 hover:text-white hover:border-pitch-700" data-category="football">
+        ⚽ <span id="tabFootball">Futbol & Spor</span>
+      </button>
+      <button onclick="filterCategory('quiz')" class="cat-btn px-4 py-2 rounded-xl text-xs font-bold transition border border-pitch-800 bg-pitch-900 text-slate-400 hover:text-white hover:border-pitch-700" data-category="quiz">
+        ⚡ <span id="tabQuiz">Hız & Refleks</span>
+      </button>
+      <button onclick="filterCategory('sim')" class="cat-btn px-4 py-2 rounded-xl text-xs font-bold transition border border-pitch-800 bg-pitch-900 text-slate-400 hover:text-white hover:border-pitch-700" data-category="sim">
+        🌍 <span id="tabSim">Simülasyon & Yaşam</span>
+      </button>
+    </div>
+
+    <!-- Games Grid Showcase -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="gamesContainer">
+
+      <!-- =============================================================== -->
+      <!-- GAME 1: Next Star Soccer (NSS V1.2) - FEATURED FLAGSHIP -->
+      <!-- =============================================================== -->
+      <article class="game-card flex flex-col justify-between rounded-3xl bg-gradient-to-b from-pitch-900 via-pitch-950 to-pitch-950 border-2 border-emerald-500/50 p-6 hover:border-emerald-400 transition-all duration-300 hover:shadow-2xl hover:shadow-emerald-500/20 group relative overflow-hidden neon-border-green" data-category="football">
+        <div class="absolute -right-8 -bottom-8 text-9xl text-emerald-500/5 group-hover:text-emerald-500/10 transition pointer-events-none">
+          <i class="fa-solid fa-futbol"></i>
+        </div>
+
+        <div class="space-y-4 relative">
+          <!-- Top Badges -->
+          <div class="flex items-center justify-between">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">
+              <i class="fa-solid fa-crown text-amber-400"></i> <span class="badge-flagship">YILDIZ OYUN</span>
+            </span>
+            <span class="text-xs font-mono font-bold px-2.5 py-1 rounded-xl bg-pitch-800 border border-pitch-700 text-emerald-400">
+              V1.2 CANLI TV
+            </span>
+          </div>
+
+          <!-- Title & Icon -->
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-400 via-emerald-500 to-lime-400 flex items-center justify-center text-pitch-950 text-2xl font-black shadow-lg shadow-emerald-500/25 group-hover:scale-105 transition">
+              ⭐
+            </div>
+            <div>
+              <h2 class="text-xl font-display font-black text-white group-hover:text-emerald-300 transition leading-tight">
+                Next Star Soccer
+              </h2>
+              <div class="text-xs text-emerald-400 font-mono font-semibold">
+                Futbolcu Kariyeri & TV Maç Motoru
+              </div>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <p class="text-xs text-slate-300 leading-relaxed">
+            12 yaşında mahalle arsasında başla! Özel saç stili, ten rengi ve sırt numaranla kendi futbolcunu yarat. TV yayın skorbordu, Roberto Carlos muz falsosu ve kaleci moduyla Şampiyonlar Ligi kupasını kaldır!
+          </p>
+
+          <!-- Feature Pills -->
+          <div class="flex flex-wrap gap-1.5 pt-1 text-[10px] font-mono">
+            <span class="px-2 py-0.5 rounded-lg bg-pitch-850 text-slate-300 border border-pitch-700">📺 Canlı TV Skorbordu</span>
+            <span class="px-2 py-0.5 rounded-lg bg-pitch-850 text-slate-300 border border-pitch-700">🌀 Falsolu Şut & Verkaç</span>
+            <span class="px-2 py-0.5 rounded-lg bg-pitch-850 text-slate-300 border border-pitch-700">🧤 Kaleci Modu</span>
+            <span class="px-2 py-0.5 rounded-lg bg-pitch-850 text-slate-300 border border-pitch-700">🏆 Transfer Masası</span>
+          </div>
+        </div>
+
+        <!-- Play Button -->
+        <div class="pt-6 relative">
+          <a href="/next-star-soccer/" class="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-amber-400 via-emerald-500 to-lime-400 hover:from-amber-300 hover:to-lime-300 text-pitch-950 font-display font-black text-sm uppercase tracking-wide flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/25 group-hover:shadow-emerald-500/50 active:scale-95 transition">
+            <i class="fa-solid fa-play text-xs"></i>
+            <span>Sahaya Çık & Hemen Oyna</span>
+            <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
+          </a>
+        </div>
+      </article>
+
+      <!-- =============================================================== -->
+      <!-- GAME 2: Flag Blitz (Ülke Bayrakları Düellosu) -->
+      <!-- =============================================================== -->
+      <article class="game-card flex flex-col justify-between rounded-3xl bg-gradient-to-b from-pitch-900 via-pitch-950 to-pitch-950 border-2 border-amber-500/40 p-6 hover:border-amber-400 transition-all duration-300 hover:shadow-2xl hover:shadow-amber-500/20 group relative overflow-hidden neon-border-amber" data-category="quiz">
+        <div class="absolute -right-8 -bottom-8 text-9xl text-amber-500/5 group-hover:text-amber-500/10 transition pointer-events-none">
+          <i class="fa-solid fa-flag"></i>
+        </div>
+
+        <div class="space-y-4 relative">
+          <!-- Top Badges -->
+          <div class="flex items-center justify-between">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+              <i class="fa-solid fa-bolt text-emerald-400"></i> <span>CANLI ÇOK OYUNCULU</span>
+            </span>
+            <span class="text-xs font-mono font-bold px-2.5 py-1 rounded-xl bg-pitch-800 border border-pitch-700 text-amber-400">
+              20 BAYRAK
+            </span>
+          </div>
+
+          <!-- Title & Icon -->
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-rose-500 via-amber-500 to-yellow-400 flex items-center justify-center text-pitch-950 text-2xl font-black shadow-lg shadow-amber-500/25 group-hover:scale-105 transition">
+              🚩
+            </div>
+            <div>
+              <h2 class="text-xl font-display font-black text-white group-hover:text-amber-300 transition leading-tight">
+                Flag Blitz
+              </h2>
+              <div class="text-xs text-amber-400 font-mono font-semibold">
+                Ülke Bayrakları Canlı Düello
+              </div>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Hangi ülkenin bayrağı? Soru başı 5 saniye, saliseler yarışıyor! İster tek başına 20 bayrağı bilip Global İlk 100 listesine gir, ister arkadaşlarınla 2-8 kişilik canlı oda kurup yarış!
+          </p>
+
+          <!-- Feature Pills -->
+          <div class="flex flex-wrap gap-1.5 pt-1 text-[10px] font-mono">
+            <span class="px-2 py-0.5 rounded-lg bg-pitch-850 text-slate-300 border border-pitch-700">⏱️ Soru Başı 5 Saniye</span>
+            <span class="px-2 py-0.5 rounded-lg bg-pitch-850 text-slate-300 border border-pitch-700">👥 Canlı Özel Oda (2-8P)</span>
+            <span class="px-2 py-0.5 rounded-lg bg-pitch-850 text-slate-300 border border-pitch-700">🏆 Global Top 100</span>
+          </div>
+        </div>
+
+        <!-- Play Button -->
+        <div class="pt-6 relative">
+          <a href="/flag-quiz/" class="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-500 to-rose-500 hover:from-amber-300 hover:to-rose-400 text-pitch-950 font-display font-black text-sm uppercase tracking-wide flex items-center justify-center gap-2 shadow-lg shadow-amber-500/25 group-hover:shadow-amber-500/50 active:scale-95 transition">
+            <i class="fa-solid fa-bolt text-xs"></i>
+            <span>Düelloya Katıl & Oyna</span>
+            <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
+          </a>
+        </div>
+      </article>
+
+      <!-- =============================================================== -->
+      <!-- GAME 3: The Football Lottery (Futbolcu Doğum Piyangosu) -->
+      <!-- =============================================================== -->
+      <article class="game-card flex flex-col justify-between rounded-3xl bg-gradient-to-b from-pitch-900 via-pitch-950 to-pitch-950 border border-pitch-700/80 p-6 hover:border-emerald-500/60 transition-all duration-300 hover:shadow-2xl hover:shadow-emerald-500/15 group relative overflow-hidden" data-category="football">
+        <div class="absolute -right-8 -bottom-8 text-9xl text-emerald-500/5 group-hover:text-emerald-500/10 transition pointer-events-none">
+          <i class="fa-solid fa-dice"></i>
+        </div>
+
+        <div class="space-y-4 relative">
+          <!-- Top Badges -->
+          <div class="flex items-center justify-between">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+              <i class="fa-solid fa-star text-emerald-400"></i> <span>SİMÜLASYON</span>
+            </span>
+            <span class="text-xs font-mono font-bold px-2.5 py-1 rounded-xl bg-pitch-800 border border-pitch-700 text-slate-300">
+              195 ÜLKE
+            </span>
+          </div>
+
+          <!-- Title & Icon -->
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 to-green-600 flex items-center justify-center text-pitch-950 text-2xl font-black shadow-lg shadow-emerald-500/25 group-hover:scale-105 transition">
+              ⚽
+            </div>
+            <div>
+              <h2 class="text-xl font-display font-black text-white group-hover:text-emerald-300 transition leading-tight">
+                The Football Lottery
+              </h2>
+              <div class="text-xs text-emerald-400 font-mono font-semibold">
+                Futbolcu Doğum Piyangosu
+              </div>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Rastgele bir ülkede, rastgele genetik yetenekle doğup sokak maçlarından Ballon d'Or'a ve 40 yaş jübilesine uzanan efsanevi futbolcu kariyer simülatörü!
+          </p>
+
+          <!-- Feature Pills -->
+          <div class="flex flex-wrap gap-1.5 pt-1 text-[10px] font-mono">
+            <span class="px-2 py-0.5 rounded-lg bg-pitch-850 text-slate-300 border border-pitch-700">🌐 195 Ülke Olasılığı</span>
+            <span class="px-2 py-0.5 rounded-lg bg-pitch-850 text-slate-300 border border-pitch-700">💎 Finans & Gayrimenkul</span>
+            <span class="px-2 py-0.5 rounded-lg bg-pitch-850 text-slate-300 border border-pitch-700">🏅 FUT Jübile Kartı</span>
+          </div>
+        </div>
+
+        <!-- Play Button -->
+        <div class="pt-6 relative">
+          <a href="/football-lottery/" class="w-full py-3.5 px-4 rounded-2xl bg-pitch-800 hover:bg-emerald-600 hover:text-pitch-950 text-white font-display font-black text-sm uppercase tracking-wide flex items-center justify-center gap-2 border border-pitch-700 hover:border-emerald-500 active:scale-95 transition">
+            <i class="fa-solid fa-dice text-xs"></i>
+            <span>Kariyer Piyangonu Çek</span>
+            <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
+          </a>
+        </div>
+      </article>
+
+      <!-- =============================================================== -->
+      <!-- GAME 4: The Birth Lottery (8 Milyarda 1) -->
+      <!-- =============================================================== -->
+      <article class="game-card flex flex-col justify-between rounded-3xl bg-gradient-to-b from-pitch-900 via-pitch-950 to-pitch-950 border border-pitch-700/80 p-6 hover:border-amber-500/60 transition-all duration-300 hover:shadow-2xl hover:shadow-amber-500/15 group relative overflow-hidden" data-category="sim">
+        <div class="absolute -right-8 -bottom-8 text-9xl text-amber-500/5 group-hover:text-amber-500/10 transition pointer-events-none">
+          <i class="fa-solid fa-earth-americas"></i>
+        </div>
+
+        <div class="space-y-4 relative">
+          <!-- Top Badges -->
+          <div class="flex items-center justify-between">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+              <i class="fa-solid fa-chart-pie text-amber-400"></i> <span>BM VERİLERİ</span>
+            </span>
+            <span class="text-xs font-mono font-bold px-2.5 py-1 rounded-xl bg-pitch-800 border border-pitch-700 text-slate-300">
+              8 MİLYARDA 1
+            </span>
+          </div>
+
+          <!-- Title & Icon -->
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-600 via-yellow-600 to-amber-700 flex items-center justify-center text-white text-2xl font-black shadow-lg shadow-amber-500/25 group-hover:scale-105 transition">
+              🌍
+            </div>
+            <div>
+              <h2 class="text-xl font-display font-black text-white group-hover:text-amber-300 transition leading-tight">
+                The Birth Lottery
+              </h2>
+              <div class="text-xs text-amber-400 font-mono font-semibold">
+                8 Milyarda 1 Yaşam Simülasyonu
+              </div>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Hiçbirimiz seçmedik nerede doğacağımızı! Gerçek Birleşmiş Milletler demografi ve gelir verileriyle dünyadaki 8 milyar insandan biri olarak rastgele bir kaderi yaşayın.
+          </p>
+
+          <!-- Feature Pills -->
+          <div class="flex flex-wrap gap-1.5 pt-1 text-[10px] font-mono">
+            <span class="px-2 py-0.5 rounded-lg bg-pitch-850 text-slate-300 border border-pitch-700">📊 Gerçek BM İstatistikleri</span>
+            <span class="px-2 py-0.5 rounded-lg bg-pitch-850 text-slate-300 border border-pitch-700">🔮 Yıl Yıl Yaşam Çarkı</span>
+            <span class="px-2 py-0.5 rounded-lg bg-pitch-850 text-slate-300 border border-pitch-700">💰 Gelir & Sağlık Eğrisi</span>
+          </div>
+        </div>
+
+        <!-- Play Button -->
+        <div class="pt-6 relative">
+          <a href="/birth-lottery/" class="w-full py-3.5 px-4 rounded-2xl bg-pitch-800 hover:bg-amber-600 hover:text-pitch-950 text-white font-display font-black text-sm uppercase tracking-wide flex items-center justify-center gap-2 border border-pitch-700 hover:border-amber-500 active:scale-95 transition">
+            <i class="fa-solid fa-earth-americas text-xs"></i>
+            <span>Dünyaya Gelişini Gör</span>
+            <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
+          </a>
+        </div>
+      </article>
+
+      <!-- =============================================================== -->
+      <!-- GAME 5: Halı Saha Kadro Kurucu & Taktik Tahtası -->
+      <!-- =============================================================== -->
+      <article class="game-card flex flex-col justify-between rounded-3xl bg-gradient-to-b from-pitch-900 via-pitch-950 to-pitch-950 border border-pitch-700/80 p-6 hover:border-cyan-500/60 transition-all duration-300 hover:shadow-2xl hover:shadow-cyan-500/15 group relative overflow-hidden" data-category="football">
+        <div class="absolute -right-8 -bottom-8 text-9xl text-cyan-500/5 group-hover:text-cyan-500/10 transition pointer-events-none">
+          <i class="fa-solid fa-clipboard-list"></i>
+        </div>
+
+        <div class="space-y-4 relative">
+          <!-- Top Badges -->
+          <div class="flex items-center justify-between">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+              <i class="fa-solid fa-users text-cyan-400"></i> <span>TAKIM & TAKTİK</span>
+            </span>
+            <span class="text-xs font-mono font-bold px-2.5 py-1 rounded-xl bg-pitch-800 border border-pitch-700 text-slate-300">
+              WHATSAPP KART
+            </span>
+          </div>
+
+          <!-- Title & Icon -->
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center text-pitch-950 text-2xl font-black shadow-lg shadow-cyan-500/25 group-hover:scale-105 transition">
+              📋
+            </div>
+            <div>
+              <h2 class="text-xl font-display font-black text-white group-hover:text-cyan-300 transition leading-tight">
+                Halı Saha Kadro
+              </h2>
+              <div class="text-xs text-cyan-400 font-mono font-semibold">
+                İnteraktif Taktik Tahtası & Eşitleme
+              </div>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Halı saha maçı öncesi kadroları otomatik dengeleyin! Oyuncuları sahada mevkilere dizin, güç dengesini görün ve tek tıkla WhatsApp grubuna görsel kadro kartı atın.
+          </p>
+
+          <!-- Feature Pills -->
+          <div class="flex flex-wrap gap-1.5 pt-1 text-[10px] font-mono">
+            <span class="px-2 py-0.5 rounded-lg bg-pitch-850 text-slate-300 border border-pitch-700">🎴 Sürükle-Bırak Saha</span>
+            <span class="px-2 py-0.5 rounded-lg bg-pitch-850 text-slate-300 border border-pitch-700">⚖️ Güç Seviyesi Dengeleme</span>
+            <span class="px-2 py-0.5 rounded-lg bg-pitch-850 text-slate-300 border border-pitch-700">📲 WhatsApp Paylaşımı</span>
+          </div>
+        </div>
+
+        <!-- Play Button -->
+        <div class="pt-6 relative">
+          <a href="/hali-saha-kadro/" class="w-full py-3.5 px-4 rounded-2xl bg-pitch-800 hover:bg-cyan-600 hover:text-pitch-950 text-white font-display font-black text-sm uppercase tracking-wide flex items-center justify-center gap-2 border border-pitch-700 hover:border-cyan-500 active:scale-95 transition">
+            <i class="fa-solid fa-users text-xs"></i>
+            <span>Kadro Kur & Dengele</span>
+            <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
+          </a>
+        </div>
+      </article>
+
+      <!-- =============================================================== -->
+      <!-- GAME 6: PopNDodge: Balon Patlatma (Arcade Mini Game) -->
+      <!-- =============================================================== -->
+      <article class="game-card flex flex-col justify-between rounded-3xl bg-gradient-to-b from-pitch-900 via-pitch-950 to-pitch-950 border border-pitch-700/80 p-6 hover:border-purple-500/60 transition-all duration-300 hover:shadow-2xl hover:shadow-purple-500/15 group relative overflow-hidden" data-category="quiz">
+        <div class="absolute -right-8 -bottom-8 text-9xl text-purple-500/5 group-hover:text-purple-500/10 transition pointer-events-none">
+          <i class="fa-solid fa-gamepad"></i>
+        </div>
+
+        <div class="space-y-4 relative">
+          <!-- Top Badges -->
+          <div class="flex items-center justify-between">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30">
+              <i class="fa-solid fa-mug-hot text-purple-400"></i> <span>MOLA & ARCADE</span>
+            </span>
+            <span class="text-xs font-mono font-bold px-2.5 py-1 rounded-xl bg-pitch-800 border border-pitch-700 text-slate-300">
+              GOOGLE PLAY
+            </span>
+          </div>
+
+          <!-- Title & Icon -->
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-purple-500 to-indigo-600 flex items-center justify-center text-white text-2xl font-black shadow-lg shadow-purple-500/25 group-hover:scale-105 transition">
+              🎈
+            </div>
+            <div>
+              <h2 class="text-xl font-display font-black text-white group-hover:text-purple-300 transition leading-tight">
+                PopNDodge
+              </h2>
+              <div class="text-xs text-purple-400 font-mono font-semibold">
+                Balon Patlatma & Refleks Oyunu
+              </div>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Hızlı balonları patlat, engellerden kaçın, reflekslerini test et! Zihin molası için tasarlanmış bağımlılık yapıcı yerli arcade oyunu.
+          </p>
+
+          <!-- Feature Pills -->
+          <div class="flex flex-wrap gap-1.5 pt-1 text-[10px] font-mono">
+            <span class="px-2 py-0.5 rounded-lg bg-pitch-850 text-slate-300 border border-pitch-700">⚡ Hızlı Reaksiyon</span>
+            <span class="px-2 py-0.5 rounded-lg bg-pitch-850 text-slate-300 border border-pitch-700">💥 Özel Güç Balonları</span>
+            <span class="px-2 py-0.5 rounded-lg bg-pitch-850 text-slate-300 border border-pitch-700">📱 Android Play Store</span>
+          </div>
+        </div>
+
+        <!-- Play Button -->
+        <div class="pt-6 relative">
+          <a href="https://play.google.com/store/apps/details?id=com.popndodge.game" target="_blank" rel="noopener" class="w-full py-3.5 px-4 rounded-2xl bg-pitch-800 hover:bg-purple-600 hover:text-white text-white font-display font-black text-sm uppercase tracking-wide flex items-center justify-center gap-2 border border-pitch-700 hover:border-purple-500 active:scale-95 transition">
+            <i class="fa-brands fa-google-play text-xs"></i>
+            <span>Google Play'de Gör</span>
+            <i class="fa-solid fa-arrow-up-right-from-square text-xs group-hover:translate-x-1 transition-transform"></i>
+          </a>
+        </div>
+      </article>
+
+    </div>
+
+    <!-- Arcade Community & Leaderboard Teaser -->
+    <div class="p-6 rounded-3xl bg-pitch-900/80 border border-pitch-800 text-center space-y-3 max-w-2xl mx-auto shadow-xl">
+      <div class="w-10 h-10 rounded-2xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 flex items-center justify-center mx-auto text-lg">
+        🏆
+      </div>
+      <h3 class="text-lg font-display font-black text-white" id="txtBottomTitle">
+        Global Sıralamalarda Yerini Al
+      </h3>
+      <p class="text-xs text-slate-300 leading-relaxed" id="txtBottomDesc">
+        Oyunlarda kazandığın tüm başarılar ve rekorlar tarayıcında anında saklanır. Flag Blitz'de ilk 100'e gir, Next Star Soccer'da 40 yaş jübilesini efsane olarak tamamla!
+      </p>
+    </div>
+
+  </main>
+
+  <!-- Clean Footer (No links to external tools) -->
+  <footer class="border-t border-pitch-800 bg-pitch-900/80 py-6 text-center text-xs text-slate-400 font-mono">
+    <div class="max-w-4xl mx-auto px-4 space-y-1">
+      <div>🎮 <strong>PratikBase Games</strong> • Tüm Hakları Saklıdır © 2026</div>
+      <div class="text-[11px] text-slate-500">Tarayıcı tabanlı ücretsiz oyunlar & canlı simülasyonlar</div>
+    </div>
+  </footer>
+
+  <!-- Interactive Logic: Filter, Sound, Language -->
+  <script>
+    /* =====================================================================
+       1. CATEGORY FILTER SYSTEM
+       ===================================================================== */
+    function filterCategory(cat) {
+      const cards = document.querySelectorAll('.game-card');
+      const buttons = document.querySelectorAll('.cat-btn');
+
+      buttons.forEach(btn => {
+        if (btn.getAttribute('data-category') === cat) {
+          btn.className = 'cat-btn px-4 py-2 rounded-xl text-xs font-bold transition border border-emerald-500/50 bg-emerald-500/20 text-emerald-300 shadow-lg';
+        } else {
+          btn.className = 'cat-btn px-4 py-2 rounded-xl text-xs font-bold transition border border-pitch-800 bg-pitch-900 text-slate-400 hover:text-white hover:border-pitch-700';
+        }
+      });
+
+      cards.forEach(card => {
+        const cardCat = card.getAttribute('data-category');
+        if (cat === 'all' || cardCat === cat) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+      playBeep();
+    }
+
+    /* =====================================================================
+       2. WEB AUDIO SOUND FX
+       ===================================================================== */
+    let soundEnabled = true;
+    let audioCtx = null;
+
+    function playBeep() {
+      if (!soundEnabled) return;
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(540, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.08);
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.08);
+      } catch(e) {}
+    }
+
+    function toggleSound() {
+      soundEnabled = !soundEnabled;
+      const icon = document.getElementById('soundIcon');
+      if (icon) {
+        icon.className = soundEnabled ? 'fa-solid fa-volume-high text-emerald-400' : 'fa-solid fa-volume-xmark text-slate-500';
+      }
+      if (soundEnabled) playBeep();
+    }
+
+    /* =====================================================================
+       3. LANGUAGE TOGGLE SYSTEM (TR / EN)
+       ===================================================================== */
+    let currentLang = 'TR';
+
+    function toggleLang() {
+      currentLang = currentLang === 'TR' ? 'EN' : 'TR';
+      document.getElementById('langLabel').textContent = currentLang;
+      document.getElementById('langFlag').textContent = currentLang === 'TR' ? '🇹🇷' : '🇬🇧';
+
+      if (currentLang === 'EN') {
+        document.getElementById('txtHeaderTagline').textContent = 'Free Web Games, Live Duels & Simulations';
+        document.getElementById('heroBadge').textContent = 'Instant Play in Browser • Zero Downloads';
+        document.getElementById('heroTitle').innerHTML = 'Welcome to the <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-emerald-400 to-lime-300">Games Arena!</span>';
+        document.getElementById('heroSubtitle').textContent = 'From street football to TV broadcast Next Star Soccer, 20-flag live Flag Blitz duels to life lotteries, discover top games and challenge friends!';
+        document.getElementById('lblStatGames').textContent = 'Active Games';
+        document.getElementById('lblStatPlay').textContent = 'Instant Play';
+        document.getElementById('lblStatLive').textContent = 'Live Multiplayer Rooms';
+        document.getElementById('tabAll').textContent = 'All Games';
+        document.getElementById('tabFootball').textContent = 'Football & Sports';
+        document.getElementById('tabQuiz').textContent = 'Speed & Reflex';
+        document.getElementById('tabSim').textContent = 'Simulation & Life';
+        document.getElementById('txtBottomTitle').textContent = 'Climb the Global Leaderboards';
+        document.getElementById('txtBottomDesc').textContent = 'Your achievements and records are saved right in your browser. Reach the Flag Blitz Top 100 and retire as a legend in Next Star Soccer!';
+      } else {
+        document.getElementById('txtHeaderTagline').textContent = 'Ücretsiz Canlı Web Oyunları & Simülasyonlar';
+        document.getElementById('heroBadge').textContent = 'Tarayıcıda Anında Oyna • Sıfır İndirme';
+        document.getElementById('heroTitle').innerHTML = 'Oyun Dünyasına <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-emerald-400 to-lime-300">Hoş Geldin!</span>';
+        document.getElementById('heroSubtitle').textContent = 'Sokak futbolundan TV yayın skorbordlu Next Star Soccer\'a, 20 bayraklı canlı Flag Blitz düellosundan yaşam piyangosuna en popüler oyunları keşfet ve arkadaşlarına meydan oku!';
+        document.getElementById('lblStatGames').textContent = 'Aktif Oyun';
+        document.getElementById('lblStatPlay').textContent = 'Anında Başla';
+        document.getElementById('lblStatLive').textContent = 'Canlı Çok Oyunculu Odalar';
+        document.getElementById('tabAll').textContent = 'Tüm Oyunlar';
+        document.getElementById('tabFootball').textContent = 'Futbol & Spor';
+        document.getElementById('tabQuiz').textContent = 'Hız & Refleks';
+        document.getElementById('tabSim').textContent = 'Simülasyon & Yaşam';
+        document.getElementById('txtBottomTitle').textContent = 'Global Sıralamalarda Yerini Al';
+        document.getElementById('txtBottomDesc').textContent = 'Oyunlarda kazandığın tüm başarılar ve rekorlar tarayıcında anında saklanır. Flag Blitz\'de ilk 100\'e gir, Next Star Soccer\'da 40 yaş jübilesini efsane olarak tamamla!';
+      }
+      playBeep();
+    }
+  </script>
+</body>
+</html>

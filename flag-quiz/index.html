@@ -87,7 +87,7 @@
   <header class="border-b border-pitch-800 bg-pitch-900/90 backdrop-blur-md sticky top-0 z-40">
     <div class="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <a href="/" class="flex items-center gap-2 group text-white">
+        <a href="/games/" class="flex items-center gap-2 group text-white" title="Oyunlar Arenası">
           <span class="w-8 h-8 rounded-xl bg-gradient-to-br from-emerald-500 to-lime-500 flex items-center justify-center text-pitch-950 font-black shadow-lg shadow-emerald-500/20 group-hover:scale-105 transition">
             🚩
           </span>
@@ -103,6 +103,11 @@
 
       <!-- Controls: Language, Sound, Player Profile -->
       <div class="flex items-center gap-2">
+        <!-- Back to Games Hub -->
+        <a href="/games/" class="px-2.5 py-1 rounded-lg bg-emerald-950/70 hover:bg-emerald-900 text-emerald-300 border border-emerald-500/30 text-xs font-bold transition flex items-center gap-1.5" title="Tüm Oyunlar">
+          <i class="fa-solid fa-gamepad text-[11px]"></i>
+          <span class="hidden xs:inline">Oyunlar</span>
+        </a>
         <!-- Sound Toggle -->
         <button id="btnSoundToggle" onclick="toggleSound()" class="w-8 h-8 rounded-lg bg-pitch-800 hover:bg-pitch-700 text-slate-300 hover:text-white flex items-center justify-center text-xs transition border border-pitch-700" title="Ses Aç/Kapat">
           <i id="soundIcon" class="fa-solid fa-volume-high"></i>
@@ -453,10 +458,16 @@
             <span id="txtShareWhatsAppBtn">Skorunu WhatsApp'ta Paylaş</span>
           </button>
 
-          <!-- Back to Home -->
-          <button onclick="goHome()" class="w-full py-2 text-xs text-slate-400 hover:text-white font-bold transition" id="btnBackToHome">
-            Ana Menüye Dön
-          </button>
+          <!-- Back to Home / Games Hub -->
+          <div class="flex items-center gap-2 pt-1">
+            <button onclick="goHome()" class="flex-1 py-2 rounded-xl bg-pitch-900 border border-pitch-800 text-xs text-slate-300 hover:text-white font-bold transition" id="btnBackToHome">
+              Ana Menüye Dön
+            </button>
+            <a href="/games/" class="flex-1 py-2 rounded-xl bg-pitch-900 border border-emerald-500/30 text-xs text-emerald-400 hover:text-emerald-300 font-bold transition flex items-center justify-center gap-1.5" title="Tüm Oyunlar">
+              <i class="fa-solid fa-gamepad text-[11px]"></i>
+              <span>Tüm Oyunlar</span>
+            </a>
+          </div>
 
         </div>
 
