@@ -593,21 +593,21 @@
     <section id="screenMatchPlay" class="hidden space-y-3 text-center max-w-2xl mx-auto w-full py-1">
       
       <!-- Top TV Broadcast Bar: Score Bug (Sol Üst) + TV Watermark (Sağ Üst) -->
-      <div class="flex items-center justify-between gap-1.5 sm:gap-2 px-1 overflow-x-auto no-scrollbar whitespace-nowrap">
-        <!-- Official TV Score Bug -->
-        <div class="flex flex-row flex-nowrap items-center rounded-2xl bg-pitch-950/95 border border-pitch-700/80 shadow-2xl overflow-hidden font-display divide-x divide-pitch-800 shrink-0">
-          <!-- Competition Tag -->
+      <div class="flex items-center justify-between gap-1 sm:gap-2 px-1 w-full">
+        <!-- Official TV Score Bug: Home - Score - Away (Never clipped or squeezed by TV badge) -->
+        <div class="flex flex-row flex-nowrap items-center rounded-2xl bg-pitch-950/95 border border-pitch-700/80 shadow-2xl overflow-hidden font-display divide-x divide-pitch-800 shrink min-w-0">
+          <!-- Competition Tag (Compact on small phones) -->
           <div class="px-2 sm:px-2.5 py-1.5 bg-pitch-900/90 flex items-center gap-1.5 text-[10px] font-mono font-bold text-amber-400 shrink-0">
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span id="tvMatchLeague">SÜPER LİG</span>
+            <span id="tvMatchLeague" class="hidden xs:inline">SÜPER LİG</span>
           </div>
-          <!-- Team Badges & Score -->
-          <div class="flex flex-row flex-nowrap items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 text-xs font-black text-white shrink-0 whitespace-nowrap">
-            <span id="tvHomeBadge" class="text-base shrink-0">🦁</span>
+          <!-- Team Badges & Score: RIVAL / OPPONENT ALWAYS PROMINENTLY VISIBLE -->
+          <div class="flex flex-row flex-nowrap items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 text-xs font-black text-white shrink-0 whitespace-nowrap">
+            <span id="tvHomeBadge" class="text-sm sm:text-base shrink-0">🦁</span>
             <span id="tvHomeName" class="font-display font-black tracking-wide shrink-0">GAL</span>
             <span id="tvScoreBoard" class="px-2 sm:px-2.5 py-0.5 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 font-mono text-xs sm:text-sm font-black shadow-inner shrink-0 whitespace-nowrap">0 - 0</span>
-            <span id="tvAwayName" class="font-display font-black tracking-wide text-slate-300 shrink-0">FEN</span>
-            <span id="tvAwayBadge" class="text-base shrink-0">🟡</span>
+            <span id="tvAwayName" class="font-display font-black tracking-wide text-amber-300 font-extrabold shrink-0" title="Rakip Takım">FEN</span>
+            <span id="tvAwayBadge" class="text-sm sm:text-base shrink-0">🟡</span>
           </div>
           <!-- Live Match Clock -->
           <div class="px-2 sm:px-2.5 py-1.5 bg-pitch-900/90 font-mono text-xs font-black text-lime-400 flex items-center gap-1 shrink-0">
@@ -616,20 +616,20 @@
           </div>
         </div>
 
-        <!-- Star Player TV Card (Canlı Oyuncu Kartı) -->
-        <div class="flex items-center gap-2 px-2.5 py-1 rounded-2xl bg-pitch-950/90 border border-emerald-500/40 shadow-lg">
+        <!-- Star Player TV Card (Desktop / Tablet only to save mobile space) -->
+        <div class="hidden md:flex items-center gap-2 px-2.5 py-1 rounded-2xl bg-pitch-950/90 border border-emerald-500/40 shadow-lg shrink-0">
           <div class="w-7 h-7 rounded-full bg-pitch-900 border border-emerald-400 overflow-hidden shrink-0 flex items-center justify-center shadow" id="tvPlayerAvatarMini">
             <!-- Injected mini avatar -->
           </div>
-          <div class="text-left font-display leading-tight hidden xs:block">
+          <div class="text-left font-display leading-tight">
             <div class="text-[11px] font-black text-white truncate max-w-[85px] sm:max-w-[120px]" id="tvPlayerCardName">Yeni Oyuncu</div>
             <div class="text-[9px] font-mono text-emerald-400 font-bold" id="tvPlayerCardSub">ST • #9 • 55 OVR</div>
           </div>
         </div>
 
-        <!-- TV Station Bug / Channel Logo (Sağ Üst) -->
-        <div class="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-pitch-950/90 border border-pitch-800 shadow-lg shrink-0">
-          <span class="text-xs font-display font-black tracking-wider text-white">NEXT<span class="text-emerald-400">STAR</span> TV</span>
+        <!-- TV Station Bug / Channel Logo (Compact on mobile so it NEVER covers opponent) -->
+        <div class="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 rounded-xl bg-pitch-950/90 border border-pitch-800 shadow-lg shrink-0">
+          <span class="text-xs font-display font-black tracking-wider text-white hidden sm:inline">NEXT<span class="text-emerald-400">STAR</span> TV</span>
           <span class="px-1.5 py-0.5 rounded bg-rose-500 text-white font-mono font-black text-[9px] uppercase animate-pulse flex items-center gap-1">
             <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
             CANLI
@@ -2908,6 +2908,12 @@
       const aScore = (tvMatchEngine && tvMatchEngine.away)
         ? (tvMatchEngine.away.score || 0)
         : 0;
+      const hName = (tvMatchEngine && tvMatchEngine.home && tvMatchEngine.home.name)
+        ? tvMatchEngine.home.name
+        : 'EV';
+      const aName = (tvMatchEngine && tvMatchEngine.away && tvMatchEngine.away.name)
+        ? tvMatchEngine.away.name
+        : 'RAKİP';
 
       ctx.save();
       const bx = 18, by = 18;
@@ -2973,6 +2979,23 @@
       ctx.strokeText(String(aScore), cardX + 83, by + 22);
       ctx.fillStyle = '#ffffff';
       ctx.fillText(String(aScore), cardX + 83, by + 22);
+
+      // 3. Team Matchup Pill Under Scoreboard: [ BEŞ vs BAŞ ] (Always visible on canvas!)
+      const tagW = 106;
+      ctx.fillStyle = 'rgba(10, 15, 25, 0.94)';
+      ctx.beginPath();
+      ctx.roundRect(cardX, by + 44, tagW, 19, 6);
+      ctx.fill();
+
+      ctx.font = '900 10px "Chakra Petch", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#ffffff';
+      ctx.fillText(hName, cardX + 24, by + 53.5);
+      ctx.fillStyle = '#94a3b8';
+      ctx.fillText('vs', cardX + 53, by + 53.5);
+      ctx.fillStyle = '#facc15'; // Bright Gold for Opponent!
+      ctx.fillText(aName, cardX + 82, by + 53.5);
 
       ctx.restore();
     }
@@ -4248,9 +4271,9 @@
         const elTickerStatus = document.getElementById('tvTickerStatus');
         if (elTickerStatus) elTickerStatus.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span><span>CANLI YAYIN</span>';
         const elScenBadge = document.getElementById('tvScenarioBadge');
-        if (elScenBadge) elScenBadge.textContent = 'Karşılaşma Başlıyor';
+        if (elScenBadge) elScenBadge.textContent = `${homeTeam.name} vs ${awayTeam.name}`;
         const elTickerText = document.getElementById('tvTickerText');
-        if (elTickerText) elTickerText.textContent = 'Hakem başlama düdüğünü çaldı! Karşılaşma santra vuruşuyla başladı.';
+        if (elTickerText) elTickerText.textContent = `Hakem düdüğü çaldı! ${homeTeam.fullName} ile ${awayTeam.fullName} karşı karşıya geliyor.`;
 
         const endSplash = document.getElementById('matchEndSplash');
         if (endSplash) endSplash.classList.add('hidden');
