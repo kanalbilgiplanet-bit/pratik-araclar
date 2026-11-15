@@ -139,8 +139,14 @@
         </button>
       </div>
 
-      <!-- Quick Actions (Store, Sound, Language, Portal) -->
+      <!-- Quick Actions (Profiles, Store, Sound, Language, Portal) -->
       <div class="flex items-center gap-1 sm:gap-2 shrink-0">
+        <!-- Switch Profile / Accounts Button -->
+        <button id="btnSwitchProfileNav" onclick="openProfileManagerModal()" class="px-2 sm:px-2.5 py-1.5 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-emerald-300 hover:text-white text-xs font-bold transition border border-pitch-700/60 flex items-center gap-1.5 shrink-0" title="Kayıtlı Kariyerlerim & Hesap Değiştir">
+          <i class="fa-solid fa-users text-emerald-400"></i>
+          <span class="hidden sm:inline">Kariyerlerim</span>
+        </button>
+
         <!-- Store / Assets Button -->
         <button id="btnOpenStore" class="px-2 sm:px-2.5 py-1.5 rounded-xl bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-300 text-xs font-bold transition border border-yellow-500/30 flex items-center gap-1 shrink-0" title="Yatırım & Yaşam Tarzı Mağazası">
           <i class="fa-solid fa-gem text-amber-400 text-xs"></i>
@@ -271,35 +277,48 @@
         </p>
       </div>
 
-      <!-- Player Identity Card (Nick Input) -->
-      <div class="p-4 sm:p-5 rounded-2xl bg-pitch-900/90 border border-pitch-700/80 shadow-xl space-y-3 text-left">
-        <label class="block text-xs font-bold text-slate-300 flex items-center justify-between">
-          <span id="lblPlayerNick">Oyuncu Adı / Nick:</span>
-          <span class="text-[10px] text-emerald-400 font-mono">Kayıtlı Profil</span>
-        </label>
-        <div class="flex items-center gap-2">
-          <input type="text" id="inputPlayerNick" maxlength="24" class="flex-1 bg-pitch-950 border border-pitch-700 rounded-xl px-3.5 py-2.5 text-sm text-white font-bold placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition" placeholder="Örn: Yeni Oyuncu">
-          <button id="btnSaveNick" class="px-3.5 py-2.5 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-xs font-bold text-emerald-300 border border-pitch-700 transition shrink-0" title="Kaydet">
-            <i class="fa-solid fa-floppy-disk mr-1"></i> <span id="txtBtnSaveNick">Kaydet</span>
-          </button>
+      <!-- Saved Accounts / Profiles Section -->
+      <div id="sectionSavedProfiles" class="space-y-3 text-left">
+        <div class="flex items-center justify-between px-1">
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-bold text-slate-200 flex items-center gap-1.5">
+              <i class="fa-solid fa-users text-emerald-400"></i>
+              <span>Kayıtlı Kariyerlerim / Hesaplarım</span>
+            </span>
+            <span id="savedProfilesCountBadge" class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-mono text-[10px] font-bold">0 Hesap</span>
+          </div>
+          <span class="text-[10px] text-slate-400">Aynı cihazda çoklu kariyer</span>
+        </div>
+
+        <!-- Dynamic List of Saved Account Cards -->
+        <div id="savedProfilesContainer" class="space-y-2.5">
+          <!-- Injected via renderSavedProfilesUI() -->
         </div>
       </div>
 
-      <!-- Actions: Resume Career vs Start New -->
-      <div class="space-y-3">
-        <!-- Resume Button (Shown only if save exists) -->
-        <button id="btnResumeCareer" class="hidden w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-emerald-500 via-emerald-600 to-green-600 hover:from-emerald-400 hover:to-green-500 text-pitch-950 font-display font-black text-base sm:text-lg tracking-wide uppercase shadow-xl shadow-emerald-500/25 active:scale-[0.98] transition flex items-center justify-center gap-2 group">
-          <i class="fa-solid fa-play text-pitch-950 group-hover:scale-110 transition"></i>
-          <span id="txtBtnResume">Kariyerine Devam Et</span>
-        </button>
-
-        <!-- New Career Button -->
-        <button id="btnStartNewCareer" class="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-pitch-950 font-display font-black text-base sm:text-lg tracking-wide uppercase shadow-xl shadow-amber-500/25 active:scale-[0.98] transition flex items-center justify-center gap-2 group">
+      <!-- Start Brand New Account (Clean Slate) Card -->
+      <div class="p-4 sm:p-5 rounded-2xl bg-gradient-to-b from-pitch-900/90 to-pitch-950/90 border border-amber-500/30 shadow-xl space-y-3 text-left">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-amber-300 flex items-center gap-1.5">
+            <i class="fa-solid fa-circle-plus text-amber-400"></i>
+            <span>Sıfırdan Yeni Hesap / Yeni Kariyer Aç</span>
+          </span>
+          <span class="text-[10px] text-emerald-400 font-mono">12 Yaş • Sıfır Kulüp Geçmişi</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <input type="text" id="inputNewPlayerNick" maxlength="24" class="flex-1 bg-pitch-950 border border-pitch-700 focus:border-amber-400 rounded-xl px-3.5 py-2.5 text-sm text-white font-bold placeholder-slate-500 focus:outline-none transition" placeholder="Yeni Oyuncu Adı (Örn: Semih Kılıçsoy)">
+        </div>
+        <button id="btnStartNewCareer" class="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-pitch-950 font-display font-black text-sm sm:text-base tracking-wide uppercase shadow-xl shadow-amber-500/25 active:scale-[0.98] transition flex items-center justify-center gap-2 group">
           <i class="fa-solid fa-bolt text-pitch-950 group-hover:rotate-12 transition"></i>
-          <span id="txtBtnNewCareer">YENİ OYUNCU / YENİ KARİYER</span>
+          <span>+ SIFIRDAN YENİ HESAP / KARİYER BAŞLAT</span>
         </button>
+        <p class="text-[10px] text-slate-400 leading-relaxed font-sans">
+          💡 <b>Not:</b> Yeni hesap açtığında önceki kariyerlerin asla silinmez. Aynı telefondan dilediğin an yukarıdaki listeden eski hesaplarına geri dönebilirsin. Yeni kariyer temiz istatistikler ve amatör mahalle takımıyla başlar.
+        </p>
+      </div>
 
-        <!-- Back to Games Portal -->
+      <!-- Quick Link to Games Portal -->
+      <div>
         <a href="/games/" class="w-full py-3 px-4 rounded-2xl bg-pitch-900/90 hover:bg-pitch-850 text-slate-300 hover:text-white text-xs font-bold transition border border-pitch-700/80 flex items-center justify-center gap-2 group">
           <i class="fa-solid fa-gamepad text-emerald-400 group-hover:scale-110 transition"></i>
           <span>TÜM OYUNLAR & ARCADE ARENASI (/GAMES/)</span>
@@ -1104,6 +1123,47 @@
     </div>
   </div>
 
+  <!-- =====================================================================
+       MODAL 5: PROFILE & ACCOUNT MANAGER (Kariyerler ve Hesap Değiştirme)
+       ===================================================================== -->
+  <div id="modalProfileManager" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md transition-all duration-200">
+    <div class="w-full max-w-lg p-5 sm:p-6 rounded-3xl bg-pitch-900 border-2 border-emerald-500/50 shadow-2xl text-left relative max-h-[90vh] flex flex-col space-y-4">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between pb-3 border-b border-pitch-800">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center justify-center text-lg">
+            👥
+          </div>
+          <div>
+            <h3 class="text-base sm:text-lg font-display font-black text-white">Kayıtlı Kariyerler & Hesap Değiştir</h3>
+            <p class="text-[11px] text-slate-400 font-sans">Aynı cihazdaki kayıtlı oyuncuların arasında anında geçiş yap</p>
+          </div>
+        </div>
+        <button onclick="closeProfileManagerModal()" class="w-8 h-8 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-slate-400 hover:text-white flex items-center justify-center transition">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Accounts List Container -->
+      <div id="modalProfileListContainer" class="space-y-2.5 overflow-y-auto max-h-72 pr-1">
+        <!-- Injected via renderSavedProfilesUI() -->
+      </div>
+
+      <!-- Modal Bottom Actions -->
+      <div class="pt-3 border-t border-pitch-800 space-y-2">
+        <button onclick="startBrandNewCareer()" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-pitch-950 font-display font-black text-xs uppercase shadow transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-circle-plus"></i>
+          <span>+ SIFIRDAN YENİ HESAP / KARİYER BAŞLAT</span>
+        </button>
+        <button onclick="closeProfileManagerModal()" class="w-full py-2 rounded-xl bg-pitch-800 hover:bg-pitch-750 text-slate-400 font-bold text-xs uppercase transition border border-pitch-700">
+          Kapat
+        </button>
+      </div>
+
+    </div>
+  </div>
+
   <!-- Sound Engine, Canvas Game Engine & Career Orchestration Scripts -->
   <script>
     /* =====================================================================
@@ -1424,64 +1484,367 @@
     };
 
     /* =====================================================================
-       3. SAVE / LOAD ENGINE
+       3. SAVE / LOAD ENGINE & MULTI-ACCOUNT PROFILE MANAGER
        ===================================================================== */
-    const SAVE_KEY = 'nss_career_save_v1';
+    const PROFILES_INDEX_KEY = 'nss_profiles_v2';
+    const ACTIVE_PROFILE_ID_KEY = 'nss_active_profile_id_v2';
+    const LEGACY_SAVE_KEY = 'nss_career_save_v1';
 
-    function saveCareer() {
-      try {
-        localStorage.setItem(SAVE_KEY, JSON.stringify(player));
-      } catch (e) {}
-      updateHUD();
+    function getProfileSaveKey(id) {
+      return 'nss_profile_data_' + id;
     }
 
-    function loadSavedCareer() {
+    function createFreshPlayer(nick, position = 'ST') {
+      const profileId = 'prof_' + Date.now() + '_' + Math.floor(100 + Math.random() * 900);
+      return {
+        id: profileId,
+        nick: nick || `Oyuncu_${Math.floor(100 + Math.random() * 900)}`,
+        createdAt: Date.now(),
+        lastPlayedAt: Date.now(),
+        country: COUNTRIES[0],
+        position: position, // ST, CAM, WNG, GK
+        jerseyNumber: 9,
+        skinTone: SKIN_TONES[1],
+        hairModel: 'short',
+        hairColor: '#1c1917',
+        eyebrowColor: '#1c1917',
+        eyeColor: '#1c1917',
+        age: 12,
+        ovr: 55,
+        club: { name: currentLang === 'TR' ? 'Mahalle Sahası' : 'Street Ground', badge: '🏡', salary: 0, league: 'Mahalle Ligi' },
+        wealth: 0,
+        discipline: {
+          yellowCards: 0,
+          suspendedMatches: 0
+        },
+        injury: {
+          isInjured: false,
+          desc: ''
+        },
+        stats: {
+          matches: 0,
+          goals: 0,
+          assists: 0,
+          saves: 0,
+          trophies: 0
+        },
+        assets: [],
+        awards: [],
+        careerHistory: [
+          {
+            clubName: currentLang === 'TR' ? 'Mahalle Sahası' : 'Street Ground',
+            badge: '🏡',
+            league: 'Mahalle Ligi',
+            startAge: 12,
+            endAge: 16,
+            matches: 0,
+            goals: 0,
+            saves: 0,
+            trophies: 0,
+            salary: 0
+          }
+        ]
+      };
+    }
+
+    function extractProfileHeader(p) {
+      return {
+        id: p.id || ('prof_' + Date.now()),
+        nick: p.nick || 'İsimsiz',
+        age: p.age || 12,
+        ovr: p.ovr || 55,
+        position: p.position || 'ST',
+        jerseyNumber: p.jerseyNumber || 9,
+        clubName: p.club ? p.club.name : (currentLang === 'TR' ? 'Mahalle Sahası' : 'Street Ground'),
+        clubBadge: p.club ? (p.club.badge || '🏡') : '🏡',
+        countryFlag: (p.country && p.country.flag) ? p.country.flag : '🇹🇷',
+        stats: p.stats || { matches: 0, goals: 0, saves: 0, trophies: 0 },
+        wealth: p.wealth || 0,
+        lastPlayedAt: p.lastPlayedAt || Date.now()
+      };
+    }
+
+    function getAllProfiles() {
       try {
-        const raw = localStorage.getItem(SAVE_KEY);
+        const raw = localStorage.getItem(PROFILES_INDEX_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            return parsed;
+          }
+        }
+      } catch (e) {}
+
+      // Auto-migrate legacy save if present
+      try {
+        const legRaw = localStorage.getItem(LEGACY_SAVE_KEY);
+        if (legRaw) {
+          const legPlayer = JSON.parse(legRaw);
+          if (legPlayer && legPlayer.nick) {
+            if (!legPlayer.id) legPlayer.id = 'prof_legacy_' + Date.now();
+            const header = extractProfileHeader(legPlayer);
+            localStorage.setItem(PROFILES_INDEX_KEY, JSON.stringify([header]));
+            localStorage.setItem(getProfileSaveKey(legPlayer.id), JSON.stringify(legPlayer));
+            localStorage.setItem(ACTIVE_PROFILE_ID_KEY, legPlayer.id);
+            return [header];
+          }
+        }
+      } catch (e) {}
+
+      return [];
+    }
+
+    function saveCareer() {
+      if (!player.id) {
+        player.id = 'prof_' + Date.now() + '_' + Math.floor(100 + Math.random() * 900);
+      }
+      player.lastPlayedAt = Date.now();
+
+      try {
+        // 1. Save full player object
+        localStorage.setItem(getProfileSaveKey(player.id), JSON.stringify(player));
+
+        // 2. Update profiles index list
+        let profiles = [];
+        try {
+          const raw = localStorage.getItem(PROFILES_INDEX_KEY);
+          if (raw) profiles = JSON.parse(raw) || [];
+        } catch (e) {}
+        if (!Array.isArray(profiles)) profiles = [];
+
+        const header = extractProfileHeader(player);
+        const existingIdx = profiles.findIndex(pr => pr.id === player.id);
+        if (existingIdx >= 0) {
+          profiles[existingIdx] = header;
+        } else {
+          profiles.unshift(header);
+        }
+        localStorage.setItem(PROFILES_INDEX_KEY, JSON.stringify(profiles));
+
+        // 3. Update active profile id & legacy key
+        localStorage.setItem(ACTIVE_PROFILE_ID_KEY, player.id);
+        localStorage.setItem(LEGACY_SAVE_KEY, JSON.stringify(player));
+      } catch (e) {
+        console.error('saveCareer error:', e);
+      }
+
+      updateHUD();
+      renderSavedProfilesUI();
+    }
+
+    function loadSavedCareer(targetProfileId = null) {
+      try {
+        const profiles = getAllProfiles();
+        if (!profiles || profiles.length === 0) return false;
+
+        let targetId = targetProfileId;
+        if (!targetId) {
+          targetId = localStorage.getItem(ACTIVE_PROFILE_ID_KEY);
+        }
+        if (!targetId || !profiles.some(pr => pr.id === targetId)) {
+          targetId = profiles[0].id;
+        }
+
+        const raw = localStorage.getItem(getProfileSaveKey(targetId)) || localStorage.getItem(LEGACY_SAVE_KEY);
         if (raw) {
           const parsed = JSON.parse(raw);
           if (parsed && parsed.nick) {
-            player = Object.assign(player, parsed);
+            player = Object.assign(createFreshPlayer(parsed.nick, parsed.position || 'ST'), parsed);
+            player.id = targetId;
+            localStorage.setItem(ACTIVE_PROFILE_ID_KEY, targetId);
+
             if (!player.careerHistory || !Array.isArray(player.careerHistory) || player.careerHistory.length === 0) {
               player.careerHistory = [
                 {
                   clubName: player.age < 17 ? 'Mahalle Sahası' : (player.club ? player.club.name : 'Mahalle Sahası'),
-                  badge: player.club ? player.club.badge : '🏡',
-                  league: player.age < 17 ? 'Mahalle Ligi' : (player.club ? player.club.league || 'Süper Lig' : 'Süper Lig'),
+                  badge: player.club ? (player.club.badge || '🏡') : '🏡',
+                  league: player.age < 17 ? 'Mahalle Ligi' : (player.club ? (player.club.league || 'Süper Lig') : 'Süper Lig'),
                   startAge: 12,
                   endAge: player.age,
-                  matches: player.stats ? player.stats.matches : 0,
-                  goals: player.stats ? player.stats.goals : 0,
-                  saves: player.stats ? player.stats.saves : 0,
-                  trophies: player.stats ? player.stats.trophies : 0,
-                  salary: player.club ? player.club.salary : 0
+                  matches: player.stats ? (player.stats.matches || 0) : 0,
+                  goals: player.stats ? (player.stats.goals || 0) : 0,
+                  saves: player.stats ? (player.stats.saves || 0) : 0,
+                  trophies: player.stats ? (player.stats.trophies || 0) : 0,
+                  salary: player.club ? (player.club.salary || 0) : 0
                 }
               ];
             }
             return true;
           }
         }
-      } catch (e) {}
+      } catch (e) {
+        console.error('loadSavedCareer error:', e);
+      }
       return false;
     }
 
     function checkExistingSave() {
       const exists = loadSavedCareer();
-      const resumeBtn = document.getElementById('btnResumeCareer');
-      const inputNick = document.getElementById('inputPlayerNick');
+      renderSavedProfilesUI();
+      return exists;
+    }
 
-      if (exists && player.age >= 12) {
-        resumeBtn.classList.remove('hidden');
-        document.getElementById('txtBtnResume').textContent = 
-          currentLang === 'TR' 
-            ? `${player.nick} ile Devam Et (${player.age} Yaş • ${player.club.name})`
-            : `Resume with ${player.nick} (Age ${player.age} • ${player.club.name})`;
-        inputNick.value = player.nick;
-      } else {
-        resumeBtn.classList.add('hidden');
-        inputNick.value = `Oyuncu_${Math.floor(100 + Math.random() * 900)}`;
-        player.nick = inputNick.value;
+    function deleteProfileById(profileId) {
+      try {
+        let profiles = getAllProfiles();
+        const target = profiles.find(pr => pr.id === profileId);
+        const targetName = target ? target.nick : 'Bu hesap';
+
+        if (!confirm(`"${targetName}" kariyer hesabını silmek istediğinize emin misiniz?\nBu işlem geri alınamaz!`)) {
+          return;
+        }
+
+        profiles = profiles.filter(pr => pr.id !== profileId);
+        localStorage.setItem(PROFILES_INDEX_KEY, JSON.stringify(profiles));
+        localStorage.removeItem(getProfileSaveKey(profileId));
+
+        const activeId = localStorage.getItem(ACTIVE_PROFILE_ID_KEY);
+        if (activeId === profileId) {
+          if (profiles.length > 0) {
+            loadSavedCareer(profiles[0].id);
+          } else {
+            localStorage.removeItem(ACTIVE_PROFILE_ID_KEY);
+            localStorage.removeItem(LEGACY_SAVE_KEY);
+            player = createFreshPlayer('Yeni Oyuncu', 'ST');
+          }
+        }
+
+        renderSavedProfilesUI();
+        updateHUD();
+        renderAvatarSvg();
+        Sound.whistle();
+      } catch (e) {
+        console.error(e);
       }
+    }
+
+    function selectAndPlayProfile(profileId) {
+      Sound.whistle();
+      if (loadSavedCareer(profileId)) {
+        updateHUD();
+        renderAvatarSvg();
+        closeProfileManagerModal();
+        if (player.age < 16) {
+          showScreen('screenStreetIntro');
+        } else if (player.age < 38) {
+          showScreen('screenSeasons');
+          renderSeasonScreen();
+        } else {
+          showScreen('screenRetirement');
+          renderRetirementScreen();
+        }
+      }
+    }
+
+    function startBrandNewCareer(customNick = '') {
+      Sound.whistle();
+      // 1. Save current active player first so their progress is preserved
+      if (player && player.id) {
+        saveCareer();
+      }
+
+      // 2. Grab new nickname
+      const inputEl = document.getElementById('inputNewPlayerNick');
+      const inputNick = (customNick || (inputEl ? inputEl.value.trim() : '') || `Yıldız_${Math.floor(100 + Math.random() * 900)}`);
+
+      // 3. Create 100% CLEAN fresh player (12 yo, amateur, 0 past clubs, 0 stats)
+      player = createFreshPlayer(inputNick, 'ST');
+      setPlayerPosition('ST');
+      saveCareer();
+
+      if (inputEl) inputEl.value = '';
+      closeProfileManagerModal();
+      renderSavedProfilesUI();
+
+      // 4. Enter Country & Character Stage
+      showScreen('screenCountry');
+      initCountryStage();
+    }
+
+    function openProfileManagerModal() {
+      renderSavedProfilesUI();
+      const modal = document.getElementById('modalProfileManager');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeProfileManagerModal() {
+      const modal = document.getElementById('modalProfileManager');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function renderSavedProfilesUI() {
+      const profiles = getAllProfiles();
+      const activeId = localStorage.getItem(ACTIVE_PROFILE_ID_KEY) || (player ? player.id : null);
+
+      const countBadge = document.getElementById('savedProfilesCountBadge');
+      if (countBadge) {
+        countBadge.textContent = `${profiles.length} Hesap`;
+      }
+
+      const welcomeContainer = document.getElementById('savedProfilesContainer');
+      const modalContainer = document.getElementById('modalProfileListContainer');
+
+      const renderList = (container) => {
+        if (!container) return;
+        container.innerHTML = '';
+
+        if (!profiles || profiles.length === 0) {
+          container.innerHTML = `
+            <div class="p-4 rounded-2xl bg-pitch-900/60 border border-pitch-800 text-center text-xs text-slate-400">
+              <i class="fa-solid fa-user-slash text-slate-500 text-lg block mb-1"></i>
+              Henüz kayıtlı bir kariyerin yok. Aşağıdan ilk oyuncunu oluşturarak başlayabilirsin!
+            </div>
+          `;
+          return;
+        }
+
+        profiles.forEach(prof => {
+          const isActive = prof.id === activeId;
+          const card = document.createElement('div');
+          card.className = `p-3 sm:p-4 rounded-2xl border transition text-left flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 ${
+            isActive 
+              ? 'bg-gradient-to-r from-emerald-950/70 via-pitch-900 to-emerald-950/70 border-emerald-500/70 shadow-lg ring-1 ring-emerald-500/50' 
+              : 'bg-pitch-950/80 border-pitch-800 hover:border-pitch-700'
+          }`;
+
+          const statText = prof.position === 'GK'
+            ? `🧤 ${prof.stats?.saves || 0} Kurtarış`
+            : `⚽ ${prof.stats?.goals || 0} Gol`;
+
+          card.innerHTML = `
+            <div class="flex items-center gap-3 min-w-0">
+              <div class="w-11 h-11 rounded-xl bg-pitch-900 border border-pitch-700 flex items-center justify-center text-xl shrink-0 shadow">
+                ${prof.clubBadge || '⚽'}
+              </div>
+              <div class="min-w-0">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="font-display font-black text-white text-sm sm:text-base truncate">${prof.nick}</span>
+                  ${isActive ? '<span class="px-2 py-0.5 rounded text-[9px] font-mono font-black bg-emerald-500 text-pitch-950">AKTİF HESAP</span>' : ''}
+                </div>
+                <div class="text-[11px] font-mono text-emerald-400 font-bold">
+                  ${prof.position} • #${prof.jerseyNumber || 9} • ${prof.age} Yaş • ${prof.ovr} OVR
+                </div>
+                <div class="text-[10px] text-slate-300 font-sans truncate">
+                  ${prof.clubName} • ${statText} • 🏆 ${prof.stats?.trophies || 0} Kupa
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 self-end sm:self-center shrink-0">
+              <button onclick="selectAndPlayProfile('${prof.id}')" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-lime-400 hover:from-emerald-400 hover:to-lime-300 text-pitch-950 font-display font-black text-xs uppercase shadow transition flex items-center gap-1.5 active:scale-95">
+                <i class="fa-solid fa-play"></i>
+                <span>${isActive ? 'Devam Et' : 'Bu Hesaba Geç'}</span>
+              </button>
+              <button onclick="deleteProfileById('${prof.id}')" class="w-8 h-8 rounded-xl bg-pitch-800 hover:bg-rose-500/20 text-slate-400 hover:text-rose-400 border border-pitch-700 hover:border-rose-500/40 flex items-center justify-center text-xs transition" title="Bu Kariyeri Sil">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </div>
+          `;
+          container.appendChild(card);
+        });
+      };
+
+      renderList(welcomeContainer);
+      renderList(modalContainer);
     }
 
     /* =====================================================================
@@ -3649,29 +4012,31 @@
       });
 
       // Resume Career
-      document.getElementById('btnResumeCareer').addEventListener('click', () => {
-        Sound.whistle();
-        if (player.age < 16) {
-          showScreen('screenStreetIntro');
-        } else if (player.age < 38) {
-          showScreen('screenSeasons');
-          renderSeasonScreen();
-        } else {
-          showScreen('screenRetirement');
-          renderRetirementScreen();
-        }
-      });
+      const resumeBtn = document.getElementById('btnResumeCareer');
+      if (resumeBtn) {
+        resumeBtn.addEventListener('click', () => {
+          Sound.whistle();
+          if (player.age < 16) {
+            showScreen('screenStreetIntro');
+          } else if (player.age < 38) {
+            showScreen('screenSeasons');
+            renderSeasonScreen();
+          } else {
+            showScreen('screenRetirement');
+            renderRetirementScreen();
+          }
+        });
+      }
 
-      // Start New Career
-      document.getElementById('btnStartNewCareer').addEventListener('click', () => {
-        Sound.whistle();
-        const inputNick = document.getElementById('inputPlayerNick').value.trim();
-        player.nick = inputNick || 'Yeni Oyuncu';
-        player.position = 'ST';
-        setPlayerPosition('ST');
-        showScreen('screenCountry');
-        initCountryStage();
-      });
+      // Start New Career (100% Clean Slate & Multi-Profile Safe)
+      const btnStartNew = document.getElementById('btnStartNewCareer');
+      if (btnStartNew) {
+        btnStartNew.addEventListener('click', () => {
+          const inputEl = document.getElementById('inputNewPlayerNick') || document.getElementById('inputPlayerNick');
+          const nick = inputEl ? inputEl.value.trim() : '';
+          startBrandNewCareer(nick);
+        });
+      }
 
       // Home / Reset
       document.getElementById('btnNavHome').addEventListener('click', () => {
@@ -3731,6 +4096,20 @@
         if (jNumInput) player.jerseyNumber = Math.max(1, Math.min(99, parseInt(jNumInput.value) || 9));
         player.age = 12;
         player.club = { name: currentLang === 'TR' ? 'Mahalle Sahası' : 'Street Ground', badge: '🏡', salary: 0, league: 'Mahalle Ligi' };
+        player.careerHistory = [
+          {
+            clubName: player.club.name,
+            badge: '🏡',
+            league: 'Mahalle Ligi',
+            startAge: 12,
+            endAge: 16,
+            matches: 0,
+            goals: 0,
+            saves: 0,
+            trophies: 0,
+            salary: 0
+          }
+        ];
         saveCareer();
         showScreen('screenStreetIntro');
       });
@@ -4203,9 +4582,8 @@
       document.getElementById('tabSeasonTable').onclick = () => switchSeasonTab('table');
       document.getElementById('tabSeasonBrackets').onclick = () => switchSeasonTab('brackets');
 
-      // Play Again
+      // Play Again (Ana Menüye ve Kariyer Listesine Dön)
       document.getElementById('btnPlayAgain').addEventListener('click', () => {
-        localStorage.removeItem(SAVE_KEY);
         showScreen('screenWelcome');
         checkExistingSave();
       });
