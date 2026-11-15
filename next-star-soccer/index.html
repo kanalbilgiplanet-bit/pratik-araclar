@@ -669,6 +669,21 @@
           <div id="splashDesc" class="text-xs font-mono text-emerald-400">90'a Harika Bir Vuruş!</div>
         </div>
 
+        <!-- Live TV Match Simulation Overlay (Between positions so screen never stays frozen) -->
+        <div id="tvSimulationOverlay" class="hidden absolute inset-0 bg-pitch-950/85 backdrop-blur-sm flex flex-col items-center justify-center p-4 space-y-3 z-15 transition-opacity duration-200">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/40 text-xs font-mono font-bold shadow-lg">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+            <span>📺 CANLI YAYIN • MÜCADELE SÜRÜYOR</span>
+          </div>
+          <div class="text-sm sm:text-base font-display font-black text-white px-4 text-center max-w-md" id="tvSimCommentary">
+            Orta sahada kıran kırana mücadele, takımlar pozisyon arıyor...
+          </div>
+          <div class="flex items-center gap-2 text-[10px] font-mono text-slate-400">
+            <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+            <span>Sıradaki Pozisyon İçin Dakikalar İlerliyor...</span>
+          </div>
+        </div>
+
         <!-- Full Time Match End Banner (Hakem son düdüğü çaldığında) -->
         <div id="matchEndSplash" class="hidden absolute inset-0 bg-pitch-950/95 backdrop-blur-md flex flex-col items-center justify-center p-4 space-y-3 animate-in zoom-in-50 duration-200 z-30 text-center">
           <div class="text-4xl">🏁</div>
@@ -4017,10 +4032,30 @@
 
       setTimeout(() => {
         splash.classList.add('hidden');
+
+        // Immediately clean up previous shot artifacts so the pitch never feels stuck/frozen
+        if (ball) {
+          ball.savedRibbon = null;
+          ball.inFlight = false;
+          ball.isDeflected = false;
+          ball.trail = [];
+          ball.scored = false;
+          ball.saved = false;
+          ball.out = false;
+        }
+        dragPoints = [];
+        isDragging = false;
+
+        // Show live simulation transition overlay while minutes tick to next position
+        const simOverlay = document.getElementById('tvSimulationOverlay');
+        if (simOverlay && tvMatchEngine && tvMatchEngine.isActive && !tvMatchEngine.isConcluded) {
+          simOverlay.classList.remove('hidden');
+        }
+
         if (currentMatchCallback) {
           currentMatchCallback(success);
         }
-      }, 1600);
+      }, 1100);
     }
 
     /* =====================================================================
@@ -4358,6 +4393,8 @@
         if (endSplash) endSplash.classList.add('hidden');
         const feedbackSplash = document.getElementById('matchFeedbackSplash');
         if (feedbackSplash) feedbackSplash.classList.add('hidden');
+        const simOverlay = document.getElementById('tvSimulationOverlay');
+        if (simOverlay) simOverlay.classList.add('hidden');
 
         showScreen('screenMatchPlay');
         advanceSimulationClock();
@@ -4423,6 +4460,8 @@
             const line = TV_COMMENTARY[Math.floor(Math.random() * TV_COMMENTARY.length)];
             if (scenBadge) scenBadge.textContent = 'Mücadele Sürüyor';
             if (tickerText) tickerText.textContent = `${tvMatchEngine.minute}' - ${line}`;
+            const simCommentary = document.getElementById('tvSimCommentary');
+            if (simCommentary) simCommentary.textContent = line;
           }
 
           const nextTargetMin = tvMatchEngine.criticalMinutes[tvMatchEngine.currentPosIdx];
@@ -4447,6 +4486,9 @@
       }
 
       function triggerCriticalPosition() {
+        const simOverlay = document.getElementById('tvSimulationOverlay');
+        if (simOverlay) simOverlay.classList.add('hidden');
+
         tvMatchEngine.isPausedForAction = true;
         Sound.whistle();
 
@@ -4475,9 +4517,7 @@
 
         initMatchCanvas(player.position === 'GK' ? 'SAVE' : 'SHOOT', (success) => {
           tvMatchEngine.currentPosIdx++;
-          setTimeout(() => {
-            advanceSimulationClock();
-          }, 400);
+          advanceSimulationClock();
         }, scenario);
       }
 
@@ -4488,6 +4528,9 @@
           clearInterval(tvMatchEngine.timer);
           tvMatchEngine.timer = null;
         }
+
+        const simOverlay = document.getElementById('tvSimulationOverlay');
+        if (simOverlay) simOverlay.classList.add('hidden');
 
         Sound.finalWhistle();
 
@@ -4541,6 +4584,8 @@
               tvMatchEngine.isActive = false;
               tvMatchEngine.isConcluded = true;
               endSplash.classList.add('hidden');
+              const simOverlay = document.getElementById('tvSimulationOverlay');
+              if (simOverlay) simOverlay.classList.add('hidden');
               if (tvMatchEngine.onFinish) {
                 tvMatchEngine.onFinish({
                   goals: tvMatchEngine.matchGoals,
