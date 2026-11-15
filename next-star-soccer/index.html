@@ -160,7 +160,7 @@
         </button>
 
         <!-- Games Hub Link -->
-        <a href="/games/" class="px-2.5 py-1.5 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-emerald-300 hover:text-white text-xs font-bold transition border border-pitch-700/60 flex items-center gap-1.5 shrink-0" title="Tüm Oyunlar Portalı">
+        <a href="/games/" onclick="handleGamesPortalClick(event)" class="px-2.5 py-1.5 rounded-xl bg-pitch-800 hover:bg-pitch-700 text-emerald-300 hover:text-white text-xs font-bold transition border border-pitch-700/60 flex items-center gap-1.5 shrink-0" title="Tüm Oyunlar Portalı">
           <i class="fa-solid fa-gamepad text-emerald-400"></i>
           <span class="hidden sm:inline">Tüm Oyunlar</span>
         </a>
@@ -1864,12 +1864,6 @@
             ball.isDeflected = false;
             ball.deflectedFrames = 0;
 
-            const speed = Math.min(Math.max(power * 0.13, 9.5), 17);
-            const angle = Math.atan2(sDy, sDx);
-            ball.vx = Math.cos(angle) * speed;
-            ball.vy = Math.sin(angle) * speed;
-            ball.z = 0;
-
             // Natural Controlled Falso from curved swipe gesture
             let detectedSpin = 0;
             if (touchPoints.length >= 3) {
@@ -1887,7 +1881,49 @@
                 if (Math.abs(detectedSpin) < 0.03) detectedSpin = 0;
               }
             }
-            ball.spin = detectedSpin;
+
+            // SOCCER SUPER STAR: Hedef Takım Arkadaşına Pas Kontrolü
+            let passTarget = targetTeammate;
+            if (!passTarget && teammates && teammates.length > 0) {
+              const swipeAngle = Math.atan2(sDy, sDx);
+              for (let tm of teammates) {
+                if (tm.active) {
+                  const tmAngle = Math.atan2((tm.y + 15) - ball.y, tm.x - ball.x);
+                  let diff = Math.abs(swipeAngle - tmAngle);
+                  if (diff > Math.PI) diff = 2 * Math.PI - diff;
+                  if (diff < 0.38) {
+                    passTarget = tm;
+                    break;
+                  }
+                }
+              }
+            }
+
+            if (passTarget) {
+              // Takım arkadaşına kavisli, isabetli ve yerden akıllı pas
+              ball.isPassing = true;
+              ball.targetTeammate = passTarget;
+              ball.isGroundShot = true; // Paslar havadan değil ayağa yerden gider
+              const pDx = passTarget.x - ball.x;
+              const pDy = (passTarget.y + 15) - ball.y;
+              const pDist = Math.hypot(pDx, pDy);
+              const pSpeed = Math.min(14, Math.max(9, pDist * 0.085));
+              ball.vx = (pDx / (pDist || 1)) * pSpeed;
+              ball.vy = (pDy / (pDist || 1)) * pSpeed;
+              ball.z = 0;
+              ball.spin = 0;
+            } else {
+              // Kaleye doğrudan şut
+              ball.isPassing = false;
+              ball.targetTeammate = null;
+              ball.isGroundShot = (Math.abs(sDy) < 18 || (Math.abs(detectedSpin) < 0.04 && sDy > -25));
+              const speed = Math.min(Math.max(power * 0.13, 9.5), 17);
+              const angle = Math.atan2(sDy, sDx);
+              ball.vx = Math.cos(angle) * speed;
+              ball.vy = Math.sin(angle) * speed;
+              ball.z = 0;
+              ball.spin = detectedSpin;
+            }
 
             Sound.kick();
           }
@@ -2343,7 +2379,8 @@
     }
 
     function renderCanvasLoop() {
-      if (!canvas || !ctx) return;
+      try {
+        if (!canvas || !ctx) return;
 
       // 1. Clear & Draw Pitch
       ctx.fillStyle = '#0a2315';
@@ -2622,11 +2659,12 @@
         if (teammates && teammates.length > 0 && !ball.saved && !ball.scored && !ball.out && !ball.isDeflected) {
           for (let tm of teammates) {
             if (tm.active) {
-              const dist = Math.hypot(ball.x - tm.x, (ball.y - (ball.z || 0)) - (tm.y + 15));
-              if (dist < 28) {
+              const dist = Math.hypot(ball.x - tm.x, ball.y - (tm.y + 15));
+              if (dist < 36) {
                 // PAS BAŞARIYLA TAMAMLANDI!
                 Sound.kick();
                 hasPassedThisTurn = true;
+                ball.isPassing = false;
                 if (typeof tvMatchEngine !== 'undefined' && tvMatchEngine && tvMatchEngine.isActive) {
                   tvMatchEngine.hasPassedInPosition = true;
                 }
@@ -2681,7 +2719,7 @@
         }
 
         // Collision with Free Kick Wall (Sekme ve Bloklama Mekanizması)
-        if (currentScenario === 'FREE_KICK' && !ball.saved && !ball.scored && !ball.isDeflected) {
+        if (currentScenario === 'FREE_KICK' && !ball.saved && !ball.scored && !ball.isDeflected && !ball.isPassing) {
           wallDefenders.forEach(def => {
             if (ball.x + ball.radius >= def.x && ball.x - ball.radius <= def.x + def.width && ball.y >= def.y && ball.y <= def.y + def.height + 6) {
               if (ball.isGroundShot || ball.z < 34) {
@@ -2715,63 +2753,80 @@
           });
         }
 
-        // Outfield Collision Logic (Goal Mouth & Goalkeeper)
-        if (matchMode === 'SHOOT' && !ball.saved && !ball.scored && !ball.out && !ball.isDeflected) {
+        // Outfield Collision Logic (Goal Mouth, Posts, Crossbar & Goalkeeper)
+        if (matchMode === 'SHOOT' && !ball.saved && !ball.scored && !ball.out && !ball.isDeflected && !ball.isPassing) {
           const goalLineY = 200;
 
           // Ball crosses or reaches the goal line
           if (ball.y <= goalLineY) {
-            if (ball.x >= goalLeft + 10 && ball.x <= goalRight - 10) {
-              // Elevation check: did it clear the crossbar?
-              if (ball.z > 36) {
-                ball.out = true;
-                Sound.postHit();
-                showMatchSplash(false, 'ÜSTTEN AUT!', 'Şut üst direğin üzerinden auta gitti.');
-              } else {
-                // Goalkeeper Save Check at Goal Line
-                const distGK = Math.hypot(ball.x - goalkeeper.x, ball.y - goalkeeper.y);
-                if (distGK < 28) {
-                  ball.saved = true;
-                  ball.vx = (Math.random() - 0.5) * 5;
-                  ball.vy = 4;
-                  Sound.saveGlove();
-                  showMatchSplash(false, 'KALECİ ÇIKARDI!', 'Harika uzandı ve topu kornere çeldi.');
-                } else {
-                  // GOAL! Clean hit into the net!
-                  ball.scored = true;
-                  ball.vx *= 0.18;
-                  ball.vy *= 0.18;
-                  Sound.goal();
+            // Post or Crossbar Collision Checks (Direk & Üst Direk Fiziği)
+            const isLeftPost = Math.abs(ball.x - goalLeft) <= (ball.radius + 2);
+            const isRightPost = Math.abs(ball.x - goalRight) <= (ball.radius + 2);
+            const isCrossbar = (ball.x >= goalLeft - 4 && ball.x <= goalRight + 4) && (ball.z >= 33 && ball.z <= 38);
 
-                  let goalDesc = 'Ağları Havalandıran Temiz Bir Gol!';
-                  if (hasPassedThisTurn) {
-                    goalDesc = '🤝 Harika Paslaşma & Asist! Kusursuz Bitiriş!';
-                  } else if (ball.isGroundShot) {
-                    goalDesc = '⚡ Köşeye Sert ve İsabetli Bir Yerden Şut!';
-                  } else if (Math.abs(ball.spin) > 0.05) {
-                    goalDesc = '🌀 90’a Roberto Carlos Falsosuyla Mükemmel Gol!';
-                  } else if (currentScenario === 'FREE_KICK') {
-                    goalDesc = '🎯 Barajın Üstünden Aşan Nefis Frikik Golü!';
-                  } else if (currentScenario === 'ONE_TWO') {
-                    goalDesc = '🤝 Harika Verkaç ve Kusursuz Tek Vuruş!';
-                  } else if (currentScenario === 'WING_ATTACK' || currentScenario === 'CORNER') {
-                    goalDesc = '✈️ Kanattan Gelen Kavisli Topla Nefis Bitiriş!';
-                  } else if (currentScenario === 'REBOUND') {
-                    goalDesc = '🚀 Dönen Topa Gelişine Füze Gibi Vuruş!';
-                  }
-                  showMatchSplash(true, 'GOOOOOOOL!', goalDesc);
+            if (isLeftPost || isRightPost || isCrossbar) {
+              ball.isDeflected = true;
+              ball.saved = true;
+              Sound.postHit();
+
+              // Physical ricochet off the post/bar back onto pitch!
+              ball.vy = Math.abs(ball.vy) * 0.45 + 2.5; // Bounces forward away from goal
+              if (isLeftPost) {
+                ball.vx = -Math.abs(ball.vx) * 0.5 - 2.5;
+              } else if (isRightPost) {
+                ball.vx = Math.abs(ball.vx) * 0.5 + 2.5;
+              } else {
+                ball.z = Math.min(ball.z, 20);
+                ball.vx = (Math.random() - 0.5) * 4;
+              }
+              ball.spin = 0;
+              showMatchSplash(false, 'DİREKTEN DÖNDÜ!', isCrossbar ? 'Üst direğe çarpan top sahaya geri döndü!' : 'Yan direğe çarpan top sahaya geri döndü!');
+            } else if (ball.z > 38) {
+              // Üstten Aut
+              ball.out = true;
+              Sound.postHit();
+              showMatchSplash(false, 'ÜSTTEN AUT!', 'Şut üst direğin üzerinden auta gitti.');
+            } else if (ball.x > goalLeft + ball.radius + 2 && ball.x < goalRight - ball.radius - 2) {
+              // Goalkeeper Save Check at Goal Line
+              const distGK = Math.hypot(ball.x - goalkeeper.x, ball.y - goalkeeper.y);
+              if (distGK < 28) {
+                ball.saved = true;
+                ball.vx = (Math.random() - 0.5) * 5;
+                ball.vy = 4;
+                Sound.saveGlove();
+                showMatchSplash(false, 'KALECİ ÇIKARDI!', 'Harika uzandı ve topu kornere çeldi.');
+              } else {
+                // GOAL! Clean hit into the net!
+                ball.scored = true;
+                ball.vx *= 0.18;
+                ball.vy *= 0.18;
+                Sound.goal();
+
+                let goalDesc = 'Ağları Havalandıran Temiz Bir Gol!';
+                if (currentScenario === 'FREE_KICK') {
+                  goalDesc = (Math.abs(ball.spin) > 0.05) 
+                    ? '🎯 Barajın Üstünden 90’a Roberto Carlos Falsosuyla Harika Frikik Golü!'
+                    : '🎯 Barajın Üstünden Aşan Nefis Frikik Golü!';
+                } else if (hasPassedThisTurn) {
+                  goalDesc = '🤝 Harika Paslaşma & Asist! Kusursuz Bitiriş!';
+                } else if (currentScenario === 'WING_ATTACK' || currentScenario === 'CORNER') {
+                  goalDesc = '📐 Kanat Akını & Çaprazdan Köşeye Harika Plase!';
+                } else if (currentScenario === 'ONE_TWO') {
+                  goalDesc = '🤝 Harika Verkaç ve Kusursuz Tek Vuruş!';
+                } else if (currentScenario === 'REBOUND') {
+                  goalDesc = '🚀 Dönen Topa Gelişine Füze Gibi Vuruş!';
+                } else if (ball.isGroundShot) {
+                  goalDesc = '⚡ Köşeye Sert ve İsabetli Bir Yerden Şut!';
+                } else if (Math.abs(ball.spin) > 0.05) {
+                  goalDesc = '🌀 90’a Roberto Carlos Falsosuyla Mükemmel Gol!';
                 }
+                showMatchSplash(true, 'GOOOOOOOL!', goalDesc);
               }
             } else {
               // Outside post margins
               ball.out = true;
-              if (Math.abs(ball.x - goalLeft) < 14 || Math.abs(ball.x - goalRight) < 14) {
-                Sound.postHit();
-                showMatchSplash(false, 'DİREKTEN DÖNDÜ!', 'Top yan direğe çarpıp auta çıktı.');
-              } else {
-                Sound.postHit();
-                showMatchSplash(false, 'AUT / DIŞARI!', 'Top direğin yanından auta gitti.');
-              }
+              Sound.postHit();
+              showMatchSplash(false, 'AUT / DIŞARI!', 'Top direğin yanından auta gitti.');
             }
           } else if (ball.y < 85 || ball.x < 30 || ball.x > canvasWidth - 30) {
             ball.out = true;
@@ -2840,7 +2895,11 @@
       if (!ball.scored && !ball.out && (!ball.saved || ball.isDeflected)) {
         requestAnimationFrame(renderCanvasLoop);
       }
+    } catch (loopErr) {
+      console.error('NSS renderCanvasLoop exception:', loopErr);
+      if (ball && ball.inFlight) ball.inFlight = false;
     }
+  }
 
     function showMatchSplash(success, title, desc) {
       const splash = document.getElementById('matchFeedbackSplash');
@@ -2936,6 +2995,7 @@
       initSkinPalette();
       setPlayerPosition(player.position || 'ST');
       renderAvatarSvg();
+      initMobileNavigationGuard();
 
       // Sound Toggle
       document.getElementById('btnSoundToggle').addEventListener('click', () => {
@@ -3233,9 +3293,10 @@
         const minute = tvMatchEngine.minute;
 
         const badgeMap = {
-          'ONE_TWO': { badge: '🤝 Takım Oyunu / Ver-Kaç', text: `${minute}' - TEHLİKELİ ATAK! Takım arkadaşın ver-kaça girdi, top sende! İster falsoyla vur, ister tek pasla bitir!` },
-          'CORNER': { badge: '📐 Kanat Ortası & Korner', text: `${minute}' - KORNER KAZANILDI! Ceza sahasına kavisli orta geliyor, havada kafa veya voleyi yapıştır!` },
-          'FREE_KICK': { badge: '🎯 Barajlı Serbest Vuruş', text: `${minute}' - SERBEST VURUŞ! Ceza sahası önünde baraj kuruldu! Roberto Carlos gibi falso verip 90'a as!` },
+          'ONE_TWO': { badge: '🤝 Takım Oyunu / Ver-Kaç', text: `${minute}' - TEHLİKELİ ATAK! Takım arkadaşın ver-kaça girdi, top sende! İster pas ver, ister kaleyi gör!` },
+          'WING_ATTACK': { badge: '⚡ Kanat Hücumu & Bindirme', text: `${minute}' - KANAT AKINI! Kanattan ceza sahasına sokuldun, ister arkadaşına al da at de, ister kaleyi gör!` },
+          'CORNER': { badge: '📐 Köşe Vuruşu & Korner', text: `${minute}' - KORNER KAZANILDI! Ceza sahasına kavisli nefis bir orta kes veya doğrudan kaleyi dene!` },
+          'FREE_KICK': { badge: '🎯 Barajlı Serbest Vuruş', text: `${minute}' - TEHLİKELİ FRİKİK! Ceza sahası önünde baraj kuruldu! 90'a Roberto Carlos falsosuyla as!` },
           'REBOUND': { badge: '⚡ Ceza Yayı Dönen Top', text: `${minute}' - DÖNEN TOP! Savunmadan seken top önünde kaldı! Gelişine füze gibi 90'a yolla!` },
           'OPEN_PLAY': { badge: '⚽ Ara Pası & Karşı Karşıya', text: `${minute}' - KRİTİK POZİSYON! Savunma arkasına sarktın, kaleciyle karşı karşıyasın!` }
         };
@@ -4341,6 +4402,98 @@
         btnText: actionBtn ? (currentLang === 'TR' ? 'VAZGEÇ' : 'CANCEL') : (currentLang === 'TR' ? 'ANLADIM' : 'OK')
       });
     };
+
+    // =====================================================================
+    // 16. ANDROID GERİ TUŞU (ÜÇGEN ◁) & GÜVENLİ ÇIKIŞ KORUMASI 🛡️
+    // =====================================================================
+    function initMobileNavigationGuard() {
+      try {
+        window.history.pushState({ page: 'nss_game' }, '', window.location.href);
+      } catch (err) {}
+
+      window.addEventListener('popstate', (e) => {
+        // 1. Açık herhangi bir modal varsa önce modalı kapat (Oyundan fırlatmayı engelle)
+        const openModals = [
+          'modalGameAlert',
+          'modalCareerHistory',
+          'modalStore',
+          'modalTransferDesk'
+        ];
+        let modalClosed = false;
+        for (let mId of openModals) {
+          const m = document.getElementById(mId);
+          if (m && !m.classList.contains('hidden')) {
+            m.classList.add('hidden');
+            modalClosed = true;
+          }
+        }
+        if (modalClosed) {
+          try { window.history.pushState({ page: 'nss_game' }, '', window.location.href); } catch (err) {}
+          return;
+        }
+
+        // 2. Canlı maç esnasındaysa maçı duraklat, yanlışlıkla çıkmayı önle
+        if (typeof tvMatchEngine !== 'undefined' && tvMatchEngine && tvMatchEngine.isActive) {
+          try { window.history.pushState({ page: 'nss_game' }, '', window.location.href); } catch (err) {}
+          showGameAlert({
+            type: 'info',
+            icon: '⏸️',
+            tag: 'MAÇ DEVAM EDİYOR',
+            title: 'Maçtan Ayrılmak İstiyor musun?',
+            message: 'Karşılaşma devam ediyor! Sahadan çıkarsan maç mevcut skorla sonuçlanacaktır.',
+            actionBtn: {
+              text: '⚽ MAÇA DÖN VE OYNA',
+              onClick: () => {}
+            },
+            btnText: 'MAÇI BİTİR',
+            onConfirm: () => {
+              concludeMatchFullTime();
+            }
+          });
+          return;
+        }
+
+        // 3. Kariyer ekranındaysa kullanıcıya onay sor
+        try { window.history.pushState({ page: 'nss_game' }, '', window.location.href); } catch (err) {}
+        showGameAlert({
+          type: 'info',
+          icon: '⚽',
+          tag: 'GÜVENLİ ÇIKIŞ',
+          title: 'Oyundan Çıkmak İstiyor musun?',
+          message: 'Tüm kariyer ilerlemen ve başarıların otomatik olarak kaydedildi.',
+          actionBtn: {
+            text: '⚽ OYUNDA KAL',
+            onClick: () => {}
+          },
+          btnText: 'ÇIKIŞ YAP',
+          onConfirm: () => {
+            window.location.href = '/games/';
+          }
+        });
+      });
+    }
+
+    function handleGamesPortalClick(e) {
+      if (typeof tvMatchEngine !== 'undefined' && tvMatchEngine && tvMatchEngine.isActive) {
+        if (e) e.preventDefault();
+        showGameAlert({
+          type: 'info',
+          icon: '⚽',
+          tag: 'MAÇ SÜRÜYOR',
+          title: 'Canlı Maç Devam Ediyor',
+          message: 'Sahada kritik anlar yaşanıyor! Maçı bırakıp Tüm Oyunlar merkezine gitmek istediğine emin misin?',
+          actionBtn: {
+            text: '⚽ SAHAYA DÖN',
+            onClick: () => {}
+          },
+          btnText: 'PORTALA GİT',
+          onConfirm: () => {
+            window.location.href = '/games/';
+          }
+        });
+        return false;
+      }
+    }
   </script>
 
   <!-- Realtime Analytics Tracker -->
