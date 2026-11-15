@@ -1058,7 +1058,7 @@
       </div>
 
       <!-- Lifetime Stats Summary -->
-      <div class="grid grid-cols-4 gap-2 text-center p-3 rounded-2xl bg-pitch-950 border border-pitch-800">
+      <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-center p-3 rounded-2xl bg-pitch-950 border border-pitch-800">
         <div class="p-1.5">
           <div class="text-[9px] text-slate-400 uppercase font-mono font-bold">Toplam Kulüp</div>
           <div id="histSummaryClubs" class="text-base font-display font-black text-white">1</div>
@@ -1074,6 +1074,10 @@
         <div class="p-1.5">
           <div class="text-[9px] text-slate-400 uppercase font-mono font-bold">Kupalar</div>
           <div id="histSummaryTrophies" class="text-base font-display font-black text-yellow-300">0 🏆</div>
+        </div>
+        <div class="p-1.5 col-span-2 sm:col-span-1 border-t sm:border-t-0 sm:border-l border-pitch-800 pt-2 sm:pt-1.5">
+          <div class="text-[9px] text-slate-400 uppercase font-mono font-bold">Kart Raporu</div>
+          <div id="histSummaryCards" class="text-sm font-mono font-black text-slate-200">0 🟨 • 0 🟥</div>
         </div>
       </div>
 
@@ -1500,7 +1504,9 @@
           goals: 0,
           saves: 0,
           trophies: 0,
-          salary: 0
+          salary: 0,
+          yellowCards: 0,
+          redCards: 0
         }
       ]
     };
@@ -1563,7 +1569,9 @@
             goals: 0,
             saves: 0,
             trophies: 0,
-            salary: 0
+            salary: 0,
+            yellowCards: 0,
+            redCards: 0
           }
         ]
       };
@@ -1687,7 +1695,9 @@
                   goals: player.stats ? (player.stats.goals || 0) : 0,
                   saves: player.stats ? (player.stats.saves || 0) : 0,
                   trophies: player.stats ? (player.stats.trophies || 0) : 0,
-                  salary: player.club ? (player.club.salary || 0) : 0
+                  salary: player.club ? (player.club.salary || 0) : 0,
+                  yellowCards: 0,
+                  redCards: 0
                 }
               ];
             }
@@ -4672,6 +4682,16 @@
                 if (res && res.goals) cur.goals = (cur.goals || 0) + res.goals;
                 if (res && res.assists) cur.assists = (cur.assists || 0) + res.assists;
                 if (res && res.saves) cur.saves = (cur.saves || 0) + res.saves;
+
+                const curCards = getEntryCards(cur);
+                if (Math.random() < 0.10) {
+                  cur.yellowCards = (curCards.yellow || 0) + 1;
+                  if (!player.discipline) player.discipline = { yellowCards: 0, suspendedMatches: 0 };
+                  player.discipline.yellowCards = (player.discipline.yellowCards || 0) + 1;
+                  if (player.discipline.yellowCards >= 4) {
+                    player.discipline.suspendedMatches = 1;
+                  }
+                }
               }
               saveCareer();
               updateHUD();
@@ -4750,6 +4770,12 @@
           currentClubEntry.goals = (currentClubEntry.goals || 0) + goalsThisYear;
           currentClubEntry.saves = (currentClubEntry.saves || 0) + savesThisYear;
           currentClubEntry.trophies = (currentClubEntry.trophies || 0) + trophiesThisYear;
+
+          const curCards = getEntryCards(currentClubEntry);
+          const yellowCardsThisYear = Math.floor(1 + Math.random() * 4);
+          const redCardsThisYear = Math.random() < 0.12 ? 1 : 0;
+          currentClubEntry.yellowCards = (curCards.yellow || 0) + yellowCardsThisYear;
+          currentClubEntry.redCards = (curCards.red || 0) + redCardsThisYear;
         }
 
         saveCareer();
@@ -4925,7 +4951,9 @@
             goals: 0,
             saves: 0,
             trophies: 0,
-            salary: club.salary
+            salary: club.salary,
+            yellowCards: 0,
+            redCards: 0
           });
 
           saveCareer();
@@ -5161,7 +5189,9 @@
             goals: 0,
             saves: 0,
             trophies: 0,
-            salary: club.salary
+            salary: club.salary,
+            yellowCards: 0,
+            redCards: 0
           });
 
           saveCareer();
@@ -5216,6 +5246,30 @@
       if (modal) modal.classList.add('hidden');
     }
 
+    function getEntryCards(entry) {
+      if (!entry) return { yellow: 0, red: 0 };
+      if (entry.yellowCards !== undefined && entry.redCards !== undefined) {
+        return { yellow: Number(entry.yellowCards) || 0, red: Number(entry.redCards) || 0 };
+      }
+      const matches = Number(entry.matches) || 0;
+      if (matches <= 0) {
+        entry.yellowCards = 0;
+        entry.redCards = 0;
+        return { yellow: 0, red: 0 };
+      }
+
+      const isStreet = (entry.clubName && (entry.clubName.includes('Mahalle') || entry.clubName.includes('Street'))) || entry.league === 'Mahalle Ligi';
+      if (isStreet) {
+        entry.yellowCards = Math.min(2, Math.floor(matches / 15));
+        entry.redCards = 0;
+      } else {
+        const seed = ((matches * 17) + (entry.clubName ? entry.clubName.length : 3)) % 5;
+        entry.yellowCards = Math.max(0, Math.floor(matches / 11) + (seed > 2 ? 1 : 0));
+        entry.redCards = (matches >= 75) ? Math.floor(matches / 90) : (matches >= 45 && seed === 4 ? 1 : 0);
+      }
+      return { yellow: entry.yellowCards, red: entry.redCards };
+    }
+
     function renderCareerHistoryModal() {
       if (!player.careerHistory || !Array.isArray(player.careerHistory) || player.careerHistory.length === 0) {
         player.careerHistory = [
@@ -5229,7 +5283,9 @@
             goals: player.stats ? player.stats.goals : 0,
             saves: player.stats ? player.stats.saves : 0,
             trophies: player.stats ? player.stats.trophies : 0,
-            salary: player.club ? player.club.salary || 0 : 0
+            salary: player.club ? player.club.salary || 0 : 0,
+            yellowCards: 0,
+            redCards: 0
           }
         ];
       }
@@ -5239,13 +5295,25 @@
       let totalMatches = 0;
       let totalGoals = 0;
       let totalSaves = 0;
+      let totalYellow = 0;
+      let totalRed = 0;
       let totalTrophies = player.stats ? (player.stats.trophies || 0) : 0;
+      let hasMutatedCards = false;
 
       player.careerHistory.forEach(c => {
         totalMatches += (c.matches || 0);
         totalGoals += (c.goals || 0);
         totalSaves += (c.saves || 0);
+        const hadYellow = c.yellowCards !== undefined;
+        const cards = getEntryCards(c);
+        if (!hadYellow) hasMutatedCards = true;
+        totalYellow += (cards.yellow || 0);
+        totalRed += (cards.red || 0);
       });
+
+      if (hasMutatedCards && typeof saveCareer === 'function') {
+        saveCareer();
+      }
 
       if (player.stats) {
         if (player.stats.matches > totalMatches) totalMatches = player.stats.matches;
@@ -5258,12 +5326,16 @@
       const elGoals = document.getElementById('histSummaryGoals');
       const lblStat2 = document.getElementById('lblHistStat2');
       const elTrophies = document.getElementById('histSummaryTrophies');
+      const elCards = document.getElementById('histSummaryCards');
 
       if (elClubs) elClubs.textContent = totalClubs;
       if (elMatches) elMatches.textContent = totalMatches;
       if (lblStat2) lblStat2.textContent = player.position === 'GK' ? 'Kurtarışlar' : 'Goller';
       if (elGoals) elGoals.textContent = player.position === 'GK' ? totalSaves : totalGoals;
       if (elTrophies) elTrophies.textContent = `${totalTrophies} 🏆`;
+      if (elCards) {
+        elCards.innerHTML = `<span class="text-amber-400 font-bold">${totalYellow} 🟨</span> <span class="text-slate-500">•</span> <span class="text-rose-400 font-bold">${totalRed} 🟥</span>`;
+      }
 
       // Render Clubs in reverse chronological order
       const listEl = document.getElementById('careerHistoryClubsList');
@@ -5288,6 +5360,8 @@
           ? `🧤 ${entry.saves || 0} Kurtarış` 
           : `⚽ ${entry.goals || 0} Gol`;
 
+        const cards = getEntryCards(entry);
+
         card.innerHTML = `
           <div class="flex items-center gap-3 min-w-0">
             <span class="text-3xl shrink-0 p-1.5 rounded-xl bg-pitch-900 border border-pitch-800">${entry.badge || '⚽'}</span>
@@ -5297,6 +5371,16 @@
                 ${isCurrent ? '<span class="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">MEVCUT KULÜP</span>' : '<span class="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-pitch-900 text-slate-400 border border-pitch-800">ESKİ KULÜP</span>'}
               </div>
               <div class="text-[11px] font-mono text-amber-400 font-bold">${entry.league || 'Profesyonel Lig'} • ${ageLabel}</div>
+              <div class="flex items-center gap-1.5 mt-1.5 text-[11px] font-mono flex-wrap">
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-amber-500/15 text-amber-300 border border-amber-500/30 font-bold" title="${entry.clubName} formasıyla ${cards.yellow} sarı kart">
+                  <span class="w-2 h-2.5 rounded-[2px] bg-amber-400 inline-block shadow-sm"></span>
+                  <span>${cards.yellow} Sarı</span>
+                </span>
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-rose-500/15 text-rose-300 border border-rose-500/30 font-bold" title="${entry.clubName} formasıyla ${cards.red} kırmızı kart">
+                  <span class="w-2 h-2.5 rounded-[2px] bg-rose-500 inline-block shadow-sm"></span>
+                  <span>${cards.red} Kırmızı</span>
+                </span>
+              </div>
             </div>
           </div>
           <div class="flex items-center gap-3 self-end sm:self-center font-mono text-xs shrink-0">
@@ -5581,6 +5665,16 @@
                   if (res && res.goals) cur.goals = (cur.goals || 0) + res.goals;
                   if (res && res.assists) cur.assists = (cur.assists || 0) + res.assists;
                   if (res && res.saves) cur.saves = (cur.saves || 0) + res.saves;
+
+                  const curCards = getEntryCards(cur);
+                  if (Math.random() < 0.10) {
+                    cur.yellowCards = (curCards.yellow || 0) + 1;
+                    if (!player.discipline) player.discipline = { yellowCards: 0, suspendedMatches: 0 };
+                    player.discipline.yellowCards = (player.discipline.yellowCards || 0) + 1;
+                    if (player.discipline.yellowCards >= 4) {
+                      player.discipline.suspendedMatches = 1;
+                    }
+                  }
                 }
                 saveCareer();
                 updateHUD();
