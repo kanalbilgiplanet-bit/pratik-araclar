@@ -3856,7 +3856,6 @@
                   if (tickerText) {
                     tickerText.textContent = `${tvMatchEngine.minute}' - DİREKTEN DÖNDÜ! Top direkten sahaya sekti, karambol şansı devam ediyor!`;
                   }
-                  return;
                 } else {
                   ball.isDeflected = true;
                   ball.saved = true;
@@ -3947,6 +3946,9 @@
       } catch (loopErr) {
         console.error('NSS renderCanvasLoop exception:', loopErr);
         if (ball && ball.inFlight) ball.inFlight = false;
+        if (ball && !ball.scored && !ball.out) {
+          requestAnimationFrame(renderCanvasLoop);
+        }
       }
     }
 
