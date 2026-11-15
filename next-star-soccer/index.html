@@ -549,21 +549,41 @@
     </section>
 
     <!-- =====================================================================
-         SCREEN 5: INTERACTIVE MATCH CANVAS (Mini Game: Shoot, Falso, Save!)
+         SCREEN 5: TV BROADCAST LIVE MATCH & INTERACTIVE ENGINE
          ===================================================================== -->
-    <section id="screenMatchPlay" class="hidden space-y-3 text-center max-w-xl mx-auto w-full py-2">
+    <section id="screenMatchPlay" class="hidden space-y-3 text-center max-w-2xl mx-auto w-full py-1">
       
-      <!-- Match Info Top Header (Scenario, Competition, Target) -->
-      <div class="flex items-center justify-between px-2">
-        <div class="flex items-center gap-2">
-          <span class="w-3 h-3 rounded-full bg-rose-500 animate-ping"></span>
-          <span class="text-xs font-mono font-bold text-white uppercase tracking-wider" id="matchHeadline">89' KRİTİK POZİSYON</span>
-        </div>
-        <div class="flex items-center gap-2">
-          <span class="text-[10px] font-mono px-2 py-0.5 rounded-lg bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30" id="badgeScenarioType">Açık Oyun Şutu</span>
-          <div class="text-xs font-mono font-bold text-emerald-400 bg-pitch-900 px-2.5 py-1 rounded-xl border border-pitch-700" id="matchAttemptScore">
-            Pozisyon: 1 / 1
+      <!-- Top TV Broadcast Bar: Score Bug (Sol Üst) + TV Watermark (Sağ Üst) -->
+      <div class="flex items-center justify-between gap-2 px-1">
+        <!-- Official TV Score Bug -->
+        <div class="flex items-center rounded-2xl bg-pitch-950/95 border border-pitch-700/80 shadow-2xl overflow-hidden font-display divide-x divide-pitch-800">
+          <!-- Competition Tag -->
+          <div class="px-2.5 py-1.5 bg-pitch-900/90 flex items-center gap-1.5 text-[10px] font-mono font-bold text-amber-400">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span id="tvMatchLeague">SÜPER LİG</span>
           </div>
+          <!-- Team Badges & Score -->
+          <div class="flex items-center gap-2 px-3 py-1.5 text-xs font-black text-white">
+            <span id="tvHomeBadge" class="text-base">🦁</span>
+            <span id="tvHomeName" class="font-display font-black tracking-wide">GAL</span>
+            <span id="tvScoreBoard" class="px-2.5 py-0.5 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 font-mono text-sm font-black shadow-inner">0 - 0</span>
+            <span id="tvAwayName" class="font-display font-black tracking-wide text-slate-300">FEN</span>
+            <span id="tvAwayBadge" class="text-base">🟡</span>
+          </div>
+          <!-- Live Match Clock -->
+          <div class="px-2.5 py-1.5 bg-pitch-900/90 font-mono text-xs font-black text-lime-400 flex items-center gap-1">
+            <i class="fa-regular fa-clock text-[10px] animate-spin-slow"></i>
+            <span id="tvMatchClock">0'</span>
+          </div>
+        </div>
+
+        <!-- TV Station Bug / Channel Logo (Sağ Üst) -->
+        <div class="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-pitch-950/90 border border-pitch-800 shadow-lg shrink-0">
+          <span class="text-xs font-display font-black tracking-wider text-white">NEXT<span class="text-emerald-400">STAR</span> TV</span>
+          <span class="px-1.5 py-0.5 rounded bg-rose-500 text-white font-mono font-black text-[9px] uppercase animate-pulse flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
+            CANLI
+          </span>
         </div>
       </div>
 
@@ -577,36 +597,51 @@
         <div id="canvasInstructionOverlay" class="absolute inset-x-0 bottom-4 pointer-events-none text-center px-4">
           <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-pitch-950/90 text-emerald-300 border border-emerald-500/40 text-xs font-mono font-bold shadow-2xl backdrop-blur-md animate-pulse">
             <i class="fa-solid fa-hand-pointer"></i>
-            <span id="txtCanvasPrompt">Topu geriye çek, kavis vererek falso aldır ve bırak!</span>
+            <span id="txtCanvasPrompt">Topu sürükle, kavis vererek 90'a Roberto Carlos falsosu aldır!</span>
           </span>
         </div>
 
         <!-- Goal / Save Feedback Splash Banner -->
-        <div id="matchFeedbackSplash" class="hidden absolute inset-0 bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center space-y-2 animate-in zoom-in-50 duration-200">
+        <div id="matchFeedbackSplash" class="hidden absolute inset-0 bg-black/85 backdrop-blur-sm flex flex-col items-center justify-center space-y-2 animate-in zoom-in-50 duration-200 z-20">
           <div id="splashIcon" class="text-6xl">⚽</div>
           <div id="splashTitle" class="text-3xl font-display font-black text-white">GOOOOOOL!</div>
           <div id="splashDesc" class="text-xs font-mono text-emerald-400">90'a Harika Bir Vuruş!</div>
         </div>
 
-      </div>
-
-      <!-- Shot Height & Control Bar (Yerden Şut vs Havadan / Frikik) -->
-      <div class="flex items-center justify-between gap-2 px-2 pt-1" id="shotControlsBar">
-        <div class="flex items-center gap-1.5 bg-pitch-900/90 p-1 rounded-xl border border-pitch-800">
-          <span class="text-[10px] text-slate-400 font-bold px-1.5 uppercase font-mono">Vuruş:</span>
-          <button id="btnShotLift" onclick="setShotElevation('LIFT')" class="px-2.5 py-1 rounded-lg text-xs font-bold transition bg-emerald-500 text-pitch-950 flex items-center gap-1">
-            <span>🚀 Havadan / Frikik</span>
-          </button>
-          <button id="btnShotGround" onclick="setShotElevation('GROUND')" class="px-2.5 py-1 rounded-lg text-xs font-bold transition text-slate-400 hover:text-white flex items-center gap-1">
-            <span>⚡ Yerden Sert Şut</span>
+        <!-- Full Time Match End Banner (Hakem son düdüğü çaldığında) -->
+        <div id="matchEndSplash" class="hidden absolute inset-0 bg-pitch-950/95 backdrop-blur-md flex flex-col items-center justify-center p-4 space-y-3 animate-in zoom-in-50 duration-200 z-30 text-center">
+          <div class="text-4xl">🏁</div>
+          <div class="text-[10px] font-mono uppercase tracking-widest text-amber-400 font-bold">Maç Sona Erdi • 90+3'</div>
+          <div class="flex items-center gap-3 text-lg font-display font-black text-white">
+            <span id="endHomeName">GAL</span>
+            <span id="endScore" class="px-3 py-1 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-2xl font-mono">2 - 1</span>
+            <span id="endAwayName">FEN</span>
+          </div>
+          <div id="endSummaryText" class="text-xs text-slate-300 font-mono">⚽ 1 Gol Attın • ⭐ 8.8 Maç Puanı</div>
+          <button id="btnFinishMatch" class="px-6 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-lime-400 hover:from-emerald-400 hover:to-lime-300 text-pitch-950 font-display font-black text-xs uppercase shadow-xl transition">
+            Devam Et ➔
           </button>
         </div>
-        <button id="btnSkipPosition" class="text-slate-500 hover:text-slate-300 transition text-[10px] underline shrink-0">Hızlı Simüle Et</button>
+
       </div>
 
-      <!-- Quick Tips Bar Below Canvas -->
-      <div class="flex items-center justify-between text-[11px] text-slate-400 px-2 pt-0.5">
-        <span id="txtCanvasHint">💡 İpucu: Parmağını hedefe doğru kaydır! Havadan vurursan barajı aşar, yerden vurursan köşeye füze gibi gider.</span>
+      <!-- TV Commentary Ticker (Canlı Maç Spikeri Şeridi) -->
+      <div class="rounded-2xl bg-pitch-950/90 border border-pitch-800 p-2.5 shadow-xl flex items-center gap-2.5 text-left">
+        <div class="w-8 h-8 rounded-xl bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 flex items-center justify-center text-sm shrink-0">
+          🎙️
+        </div>
+        <div class="min-w-0 flex-1">
+          <div class="text-[10px] font-mono text-amber-400 font-bold uppercase flex items-center gap-1.5" id="tvTickerStatus">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+            <span>CANLI ANLATIM</span>
+            <span class="text-slate-500">•</span>
+            <span id="tvScenarioBadge" class="text-slate-300">Maç Başlıyor</span>
+          </div>
+          <div id="tvTickerText" class="text-xs text-white font-medium truncate font-sans">
+            Hakem düdüğü çaldı, maç başlıyor! İki takıma da başarılar.
+          </div>
+        </div>
+        <button id="btnSkipPosition" class="text-slate-500 hover:text-slate-300 transition text-[10px] underline shrink-0 px-2 py-1">Hızlı Simüle</button>
       </div>
 
     </section>
@@ -1376,42 +1411,24 @@
     }
 
     /* =====================================================================
-       6. INTERACTIVE MATCH CANVAS ENGINE (Falso, Crosshair, Scenarios, GK)
+       6. INTERACTIVE MATCH CANVAS ENGINE (Intuitive Falso, Teammates & Physics)
        ===================================================================== */
     let canvas, ctx;
     let canvasWidth, canvasHeight;
     let isDragging = false;
     let dragStart = { x: 0, y: 0 };
     let dragCurrent = { x: 0, y: 0 };
-    let dragPoints = []; // Tracks curve for Roberto Carlos / Quaresma style Falso!
+    let dragPoints = []; // Stores all touch trail points for true curve calculation
 
-    let ball = { x: 300, y: 350, z: 0, vx: 0, vy: 0, spin: 0, radius: 10, inFlight: false, scored: false, saved: false, out: false, isGroundShot: false };
+    let ball = { x: 300, y: 350, z: 0, vx: 0, vy: 0, spin: 0, radius: 10, inFlight: false, scored: false, saved: false, out: false, isGroundShot: false, trail: [] };
     let goalkeeper = { x: 300, y: 155, vx: 2.2, diveSpeed: 3.5 };
     let gloves = { x: 300, y: 220, radius: 24, dragging: false };
     let wallDefenders = []; // Free-kick wall
+    let teammate = { active: false, x: 0, y: 0, label: 'Takım Arkadaşı' };
+    let defenders = []; // Opponent defenders on pitch
     let matchMode = 'SHOOT'; // 'SHOOT' or 'SAVE'
-    let currentScenario = 'OPEN_PLAY'; // OPEN_PLAY, ONE_TWO, FREE_KICK, CORNER
+    let currentScenario = 'OPEN_PLAY'; // ONE_TWO, CORNER, FREE_KICK, REBOUND, OPEN_PLAY
     let currentMatchCallback = null;
-    let shotElevationMode = 'LIFT'; // 'LIFT' (Havadan / Frikik) or 'GROUND' (Yerden Şut)
-
-    function setShotElevation(mode) {
-      shotElevationMode = mode;
-      const btnLift = document.getElementById('btnShotLift');
-      const btnGround = document.getElementById('btnShotGround');
-      if (btnLift && btnGround) {
-        if (mode === 'GROUND') {
-          btnGround.className = 'px-2.5 py-1 rounded-lg text-xs font-bold transition bg-emerald-500 text-pitch-950 flex items-center gap-1';
-          btnLift.className = 'px-2.5 py-1 rounded-lg text-xs font-bold transition text-slate-400 hover:text-white flex items-center gap-1';
-          const pTxt = document.getElementById('txtCanvasPrompt');
-          if (pTxt) pTxt.textContent = '⚡ Yerden Sert Şut: Kaleye doğru sürükle! Top çim üzerinde hızla köşeye gider.';
-        } else {
-          btnLift.className = 'px-2.5 py-1 rounded-lg text-xs font-bold transition bg-emerald-500 text-pitch-950 flex items-center gap-1';
-          btnGround.className = 'px-2.5 py-1 rounded-lg text-xs font-bold transition text-slate-400 hover:text-white flex items-center gap-1';
-          const pTxt = document.getElementById('txtCanvasPrompt');
-          if (pTxt) pTxt.textContent = '🚀 Havadan / Frikik: Kaleye doğru çek ve bırak! Barajın üstünden aşır.';
-        }
-      }
-    }
 
     function initMatchCanvas(mode, callback, scenarioType = 'OPEN_PLAY') {
       matchMode = mode;
@@ -1423,7 +1440,7 @@
       canvasWidth = canvas.width;
       canvasHeight = canvas.height;
 
-      // Reset Ball & Actors
+      // Reset Ball & Flight Physics
       ball.x = canvasWidth / 2;
       ball.y = canvasHeight - 65;
       ball.z = 0;
@@ -1434,24 +1451,14 @@
       ball.scored = false;
       ball.saved = false;
       ball.out = false;
-      ball.isGroundShot = (shotElevationMode === 'GROUND');
+      ball.isGroundShot = false;
+      ball.trail = [];
       dragPoints = [];
 
-      // Show/Hide Shot Height Controls in UI
-      const shotBar = document.getElementById('shotControlsBar');
-      if (shotBar) {
-        if (matchMode === 'SHOOT') {
-          shotBar.classList.remove('hidden');
-          setShotElevation(currentScenario === 'FREE_KICK' ? 'LIFT' : shotElevationMode);
-        } else {
-          shotBar.classList.add('hidden');
-        }
-      }
-
-      // Level-Based Difficulty: GK Speed scales with player age & OVR!
-      let gkBaseSpeed = 1.8; // Age 12 (Neighbourhood)
-      if (player.age >= 16 && player.age < 22) gkBaseSpeed = 2.8; // Pro League
-      else if (player.age >= 22) gkBaseSpeed = 4.0; // European Giants / Elite
+      // Level-Based GK Speed (scales with player age & OVR)
+      let gkBaseSpeed = 1.8;
+      if (player.age >= 16 && player.age < 22) gkBaseSpeed = 2.8;
+      else if (player.age >= 22) gkBaseSpeed = 4.0;
 
       goalkeeper.x = canvasWidth / 2;
       goalkeeper.y = 150;
@@ -1460,22 +1467,43 @@
       gloves.x = canvasWidth / 2;
       gloves.y = 200;
 
-      // Free-kick Wall Setup
+      // Reset Actors for Scenario
       wallDefenders = [];
+      teammate = { active: false, x: 0, y: 0, label: '' };
+      defenders = [];
+
       if (currentScenario === 'FREE_KICK') {
         const wallCenter = canvasWidth / 2 + (Math.random() > 0.5 ? 40 : -40);
         for (let i = -1.5; i <= 1.5; i++) {
           wallDefenders.push({ x: wallCenter + i * 22, y: 240, width: 18, height: 44 });
         }
-      }
-
-      // Update Header Badges
-      const badgeScenario = document.getElementById('badgeScenarioType');
-      if (badgeScenario) {
-        badgeScenario.textContent = 
-          currentScenario === 'FREE_KICK' ? '🎯 Barajlı Frikik' :
-          currentScenario === 'ONE_TWO' ? '🤝 Verkaç Pozisyonu' :
-          currentScenario === 'CORNER' ? '📐 Korner & Kafa/Vole' : '⚽ Açık Oyun Şutu';
+        ball.x = canvasWidth / 2;
+        ball.y = canvasHeight - 65;
+      } else if (currentScenario === 'ONE_TWO') {
+        teammate = { active: true, x: 215, y: 315, label: 'Takım Arkadaşı (Verkaç) 🏃' };
+        defenders = [{ x: 385, y: 230, width: 20, height: 40 }];
+        ball.x = 285;
+        ball.y = 350;
+      } else if (currentScenario === 'CORNER') {
+        teammate = { active: true, x: 535, y: 175, label: 'Korner / Kanat Ortası 👟' };
+        defenders = [
+          { x: 260, y: 205, width: 20, height: 40 },
+          { x: 340, y: 210, width: 20, height: 40 }
+        ];
+        ball.x = 300;
+        ball.y = 320;
+      } else if (currentScenario === 'REBOUND') {
+        teammate = { active: true, x: 420, y: 290, label: 'Dönen Top Fırsatı ⚡' };
+        defenders = [
+          { x: 250, y: 230, width: 20, height: 40 },
+          { x: 360, y: 225, width: 20, height: 40 }
+        ];
+        ball.x = 300;
+        ball.y = 340;
+      } else {
+        defenders = [{ x: 380, y: 245, width: 20, height: 40 }];
+        ball.x = canvasWidth / 2;
+        ball.y = canvasHeight - 65;
       }
 
       const overlay = document.getElementById('canvasInstructionOverlay');
@@ -1484,10 +1512,10 @@
 
       if (matchMode === 'SHOOT') {
         promptTxt.textContent = currentScenario === 'FREE_KICK'
-          ? (currentLang === 'TR' ? '🎯 Barajın yanından veya üstünden falso vererek 90’a as!' : '🎯 Bend it over or around the wall!')
-          : (currentLang === 'TR' ? '⚽ Kaleye doğru sürükle, kavis vererek falso aldır!' : '⚽ Swipe towards goal to shoot!');
+          ? '🎯 Parmağınla yay çizerek barajın üstünden 90’a Roberto Carlos falsosu ver!'
+          : '⚽ Parmağını kaleye doğru kaydır! Yay çizersen top havada muz gibi falso alır!';
       } else {
-        promptTxt.textContent = currentLang === 'TR' ? '🧤 Rakip forvet vuruyor! Eldivenleri topun önüne sürükle!' : '🧤 Incoming shot! Drag gloves to block the ball!';
+        promptTxt.textContent = '🧤 Rakip şut çekiyor! Eldivenleri uçurarak topun önüne geç!';
         setTimeout(() => {
           if (!ball.inFlight && matchMode === 'SAVE') {
             shootBallAtGoalKeeper();
@@ -1501,13 +1529,14 @@
 
     function shootBallAtGoalKeeper() {
       ball.inFlight = true;
+      ball.trail = [];
       Sound.kick();
       const targetX = canvasWidth * 0.25 + Math.random() * (canvasWidth * 0.5);
       const targetY = 125 + Math.random() * 75;
       const speed = player.age >= 22 ? 22 : 30;
       ball.vx = (targetX - ball.x) / speed;
       ball.vy = (targetY - ball.y) / speed;
-      ball.spin = (Math.random() - 0.5) * 0.8;
+      ball.spin = (Math.random() - 0.5) * 0.6;
     }
 
     function setupCanvasEvents() {
@@ -1528,17 +1557,13 @@
 
         if (matchMode === 'SHOOT' && !ball.inFlight) {
           const dist = Math.hypot(pos.x - ball.x, pos.y - ball.y);
-          if (dist < 65) {
+          if (dist < 75) {
             isDragging = true;
             dragStart = { x: ball.x, y: ball.y };
             dragCurrent = pos;
             dragPoints = [pos];
-            // If touched noticeably above the ball center, automatically select GROUND
-            if (pos.y < ball.y - 4) {
-              setShotElevation('GROUND');
-            } else if (pos.y > ball.y + 4) {
-              setShotElevation('LIFT');
-            }
+            // Auto detect ground vs lofted: top half of ball = ground shot
+            ball.isGroundShot = (pos.y < ball.y - 4);
           }
         } else if (matchMode === 'SAVE') {
           gloves.dragging = true;
@@ -1553,7 +1578,7 @@
         if (isDragging && matchMode === 'SHOOT') {
           dragCurrent = pos;
           dragPoints.push(pos);
-          if (dragPoints.length > 25) dragPoints.shift();
+          if (dragPoints.length > 35) dragPoints.shift();
         } else if (gloves.dragging && matchMode === 'SAVE') {
           gloves.x = Math.max(120, Math.min(canvasWidth - 120, pos.x));
           gloves.y = Math.max(100, Math.min(260, pos.y));
@@ -1566,7 +1591,7 @@
           let aimDx = dragCurrent.x - dragStart.x;
           let aimDy = dragCurrent.y - dragStart.y;
 
-          // If dragged downwards (slingshot gesture), invert so pulling down shoots UP towards goal:
+          // If pulled downwards (slingshot gesture), invert to shoot forward
           if (aimDy > 5) {
             aimDx = -aimDx;
             aimDy = -aimDy;
@@ -1576,22 +1601,30 @@
 
           if (power > 16 && Math.abs(aimDy) > 5) {
             ball.inFlight = true;
+            ball.trail = [];
             const speedFactor = 0.18;
             ball.vx = (aimDx / power) * (power * speedFactor);
             ball.vy = (-Math.abs(aimDy) / power) * (power * speedFactor);
-            ball.isGroundShot = (shotElevationMode === 'GROUND');
             ball.z = 0;
 
-            // Calculate Falso (Curve Spin) from curved drag gesture!
-            if (dragPoints.length >= 4) {
-              const mid = dragPoints[Math.floor(dragPoints.length / 2)];
-              const straightMidX = (dragStart.x + dragCurrent.x) / 2;
-              const curveDisplacement = mid.x - straightMidX;
-              ball.spin = (curveDisplacement / 22) * 0.15;
-              if (Math.abs(ball.spin) < 0.02) ball.spin = 0;
-            } else {
-              ball.spin = 0;
+            // Calculate True Magnus Falso from curved gesture
+            let detectedSpin = 0;
+            if (dragPoints.length >= 2) {
+              const startPt = dragPoints[0];
+              const endPt = dragPoints[dragPoints.length - 1];
+              const chordLen = Math.hypot(endPt.x - startPt.x, endPt.y - startPt.y);
+              if (chordLen > 15) {
+                let maxDev = 0;
+                for (let p of dragPoints) {
+                  const dev = (-(endPt.y - startPt.y) * (p.x - startPt.x) + (endPt.x - startPt.x) * (p.y - startPt.y)) / chordLen;
+                  if (Math.abs(dev) > Math.abs(maxDev)) maxDev = dev;
+                }
+                const curveRatio = Math.max(-1.5, Math.min(1.5, maxDev / 25));
+                detectedSpin = curveRatio * 0.42;
+                if (Math.abs(detectedSpin) < 0.04) detectedSpin = 0;
+              }
             }
+            ball.spin = detectedSpin;
 
             Sound.kick();
           }
@@ -1633,39 +1666,83 @@
         ctx.beginPath(); ctx.moveTo(goalLeft, y); ctx.lineTo(goalRight, y); ctx.stroke();
       }
 
-      // Goal Frame
+      // White Goal Frame (Posts + Crossbar)
       ctx.strokeStyle = '#ffffff';
       ctx.lineWidth = 6;
-      ctx.strokeRect(goalLeft, goalTop, goalRight - goalLeft, goalBottom - goalTop);
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(goalLeft, goalBottom);
+      ctx.lineTo(goalLeft, goalTop);
+      ctx.lineTo(goalRight, goalTop);
+      ctx.lineTo(goalRight, goalBottom);
+      ctx.stroke();
 
-      // Penalty Box Lines
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+      // Penalty Box Markings
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
       ctx.lineWidth = 2;
-      ctx.strokeRect(90, 180, canvasWidth - 180, canvasHeight);
+      ctx.strokeRect(90, 180, canvasWidth - 180, 190);
+      // Penalty Spot
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath(); ctx.arc(canvasWidth / 2, 280, 3, 0, Math.PI * 2); ctx.fill();
 
-      // 3. Free Kick Wall (if scenario is FREE_KICK)
+      // 3. Draw Free Kick Wall Defenders
       if (currentScenario === 'FREE_KICK') {
         wallDefenders.forEach(def => {
-          ctx.fillStyle = '#1e293b'; // Slate shirt
-          ctx.fillRect(def.x - 9, def.y, def.width, def.height);
-          ctx.fillStyle = '#f8d5b8'; // Head
-          ctx.beginPath(); ctx.arc(def.x, def.y - 7, 7, 0, Math.PI * 2); ctx.fill();
+          ctx.fillStyle = '#1e293b';
+          ctx.fillRect(def.x, def.y, def.width, def.height);
+          ctx.fillStyle = '#f8d5b8';
+          ctx.beginPath(); ctx.arc(def.x + def.width / 2, def.y - 7, 7, 0, Math.PI * 2); ctx.fill();
+          ctx.fillStyle = '#0f172a';
+          ctx.beginPath(); ctx.arc(def.x + def.width / 2, def.y - 10, 6, Math.PI, 0); ctx.fill();
+          ctx.strokeStyle = '#334155';
+          ctx.lineWidth = 1;
+          ctx.strokeRect(def.x, def.y, def.width, def.height);
         });
       }
 
-      // 4. Actors: Goalkeeper
+      // 4. Draw Teammate (Takım Arkadaşı)
+      if (teammate && teammate.active) {
+        ctx.fillStyle = '#065f46';
+        ctx.fillRect(teammate.x - 11, teammate.y, 22, 38);
+        ctx.fillStyle = '#f8d5b8';
+        ctx.beginPath(); ctx.arc(teammate.x, teammate.y - 7, 7.5, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#1c1917';
+        ctx.beginPath(); ctx.arc(teammate.x, teammate.y - 11, 6.5, Math.PI, 0); ctx.fill();
+        ctx.fillStyle = '#34d399';
+        ctx.font = 'bold 9px sans-serif';
+        ctx.fillText(teammate.label || 'Takım Arkadaşı', teammate.x - 28, teammate.y - 16);
+      }
+
+      // 5. Draw Opponent Defenders
+      if (defenders && defenders.length > 0) {
+        defenders.forEach(def => {
+          ctx.fillStyle = '#991b1b';
+          ctx.fillRect(def.x - 10, def.y, def.width || 20, def.height || 38);
+          ctx.fillStyle = '#f8d5b8';
+          ctx.beginPath(); ctx.arc(def.x, def.y - 7, 7, 0, Math.PI * 2); ctx.fill();
+          ctx.fillStyle = '#f87171';
+          ctx.font = 'bold 8px sans-serif';
+          ctx.fillText('Defans', def.x - 14, def.y - 14);
+        });
+      }
+
+      // 6. Draw Goalkeeper
       if (matchMode === 'SHOOT') {
-        goalkeeper.x += goalkeeper.vx;
-        if (goalkeeper.x < goalLeft + 35 || goalkeeper.x > goalRight - 35) {
-          goalkeeper.vx *= -1;
+        if (!ball.inFlight) {
+          goalkeeper.x += goalkeeper.vx;
+          if (goalkeeper.x < goalLeft + 35 || goalkeeper.x > goalRight - 35) {
+            goalkeeper.vx *= -1;
+          }
+        } else {
+          const targetX = ball.x + (ball.vx * 15);
+          if (goalkeeper.x < targetX - 5) goalkeeper.x += goalkeeper.diveSpeed;
+          else if (goalkeeper.x > targetX + 5) goalkeeper.x -= goalkeeper.diveSpeed;
         }
 
-        // Draw Goalkeeper
-        ctx.fillStyle = '#f59e0b';
+        ctx.fillStyle = '#eab308';
         ctx.fillRect(goalkeeper.x - 14, goalkeeper.y, 28, 45);
         ctx.fillStyle = '#f8d5b8';
         ctx.beginPath(); ctx.arc(goalkeeper.x, goalkeeper.y - 8, 9, 0, Math.PI * 2); ctx.fill();
-        // Arms
         ctx.strokeStyle = '#f59e0b'; ctx.lineWidth = 4;
         ctx.beginPath(); ctx.moveTo(goalkeeper.x - 14, goalkeeper.y + 10); ctx.lineTo(goalkeeper.x - 22, goalkeeper.y); ctx.stroke();
         ctx.beginPath(); ctx.moveTo(goalkeeper.x + 14, goalkeeper.y + 10); ctx.lineTo(goalkeeper.x + 22, goalkeeper.y); ctx.stroke();
@@ -1683,7 +1760,7 @@
         ctx.fillText('🧤', gloves.x - 7, gloves.y + 4);
       }
 
-      // 5. TRUE AIMING TRAJECTORY & TARGET CROSSHAIR 🎯
+      // 7. REAL-TIME AIMING TRAJECTORY & TARGET CROSSHAIR WITH CURVED FALSO PREVIEW 🎯
       if (isDragging && matchMode === 'SHOOT') {
         let aimDx = dragCurrent.x - dragStart.x;
         let aimDy = dragCurrent.y - dragStart.y;
@@ -1702,49 +1779,80 @@
           const flightFrames = Math.abs((ball.y - 150) / estVy);
           let targetLandingX = ball.x + estVx * flightFrames;
 
-          // Estimate falso curve
-          if (dragPoints.length >= 4) {
-            const mid = dragPoints[Math.floor(dragPoints.length / 2)];
-            const straightMidX = (dragStart.x + dragCurrent.x) / 2;
-            const curveDisplacement = mid.x - straightMidX;
-            const estSpin = (curveDisplacement / 22) * 0.15;
-            targetLandingX += 0.5 * estSpin * flightFrames * flightFrames;
+          // Estimate falso curve from current drag points
+          let estSpin = 0;
+          if (dragPoints.length >= 2) {
+            const startPt = dragPoints[0];
+            const endPt = dragPoints[dragPoints.length - 1];
+            const chordLen = Math.hypot(endPt.x - startPt.x, endPt.y - startPt.y);
+            if (chordLen > 15) {
+              let maxDev = 0;
+              for (let p of dragPoints) {
+                const dev = (-(endPt.y - startPt.y) * (p.x - startPt.x) + (endPt.x - startPt.x) * (p.y - startPt.y)) / chordLen;
+                if (Math.abs(dev) > Math.abs(maxDev)) maxDev = dev;
+              }
+              const curveRatio = Math.max(-1.5, Math.min(1.5, maxDev / 25));
+              estSpin = curveRatio * 0.42;
+              if (Math.abs(estSpin) < 0.04) estSpin = 0;
+            }
           }
+          targetLandingX += 0.5 * estSpin * flightFrames * flightFrames;
 
           const isTargetInGoal = (targetLandingX >= goalLeft && targetLandingX <= goalRight);
 
-          // Draw Trajectory Path Curve
-          ctx.strokeStyle = isTargetInGoal ? '#22c55e' : '#ef4444';
-          ctx.lineWidth = 2.5;
+          // Draw Trajectory Curved Arc on Pitch
+          ctx.strokeStyle = isTargetInGoal ? (Math.abs(estSpin) > 0.06 ? '#38bdf8' : '#22c55e') : '#ef4444';
+          ctx.lineWidth = 3;
           ctx.setLineDash([5, 5]);
           ctx.beginPath();
           ctx.moveTo(ball.x, ball.y);
-          ctx.quadraticCurveTo(
-            (ball.x + targetLandingX) / 2,
-            (ball.y + 150) / 2,
-            targetLandingX,
-            150
-          );
+          const midX = (ball.x + targetLandingX) / 2 + (estSpin * 140);
+          const midY = (ball.y + 150) / 2;
+          ctx.quadraticCurveTo(midX, midY, targetLandingX, 150);
           ctx.stroke();
           ctx.setLineDash([]);
 
           // Draw Target Crosshair 🎯 on Goal Plane
-          ctx.fillStyle = isTargetInGoal ? 'rgba(34, 197, 94, 0.85)' : 'rgba(239, 68, 68, 0.85)';
+          ctx.fillStyle = isTargetInGoal ? 'rgba(34, 197, 94, 0.9)' : 'rgba(239, 68, 68, 0.9)';
           ctx.beginPath();
-          ctx.arc(targetLandingX, 150, 8, 0, Math.PI * 2);
+          ctx.arc(targetLandingX, 150, 9, 0, Math.PI * 2);
           ctx.fill();
 
           ctx.font = 'bold 10px sans-serif';
-          const label = isTargetInGoal ? (shotElevationMode === 'GROUND' ? '⚡ YERDEN HEDEF' : '🎯 HEDEF') : '❌ AUT';
-          ctx.fillText(label, targetLandingX - 24, 136);
+          let label = '❌ AUT';
+          if (isTargetInGoal) {
+            if (estSpin > 0.08) label = '🌀 SAĞA FALSO (TRIVELA)';
+            else if (estSpin < -0.08) label = '🌀 SOLA FALSO (ROBERTO CARLOS)';
+            else if (ball.isGroundShot) label = '⚡ YERDEN HEDEF';
+            else label = '🎯 90 HEDEFİ';
+          }
+          ctx.fillStyle = isTargetInGoal ? (Math.abs(estSpin) > 0.06 ? '#38bdf8' : '#34d399') : '#f87171';
+          ctx.fillText(label, targetLandingX - 35, 134);
         }
       }
 
-      // 6. Ball Physics & Flight (With Elevation & Wall Overflight!)
+      // 8. Ball Physics & Flight (With Elevation, Curved Falso & Wall Overflight!)
       if (ball.inFlight) {
         ball.vx += ball.spin;
         ball.x += ball.vx;
         ball.y += ball.vy;
+
+        // Ball Trail (Glowing comet tail showing the curve!)
+        if (!ball.trail) ball.trail = [];
+        ball.trail.push({ x: ball.x, y: ball.y - (ball.z || 0) });
+        if (ball.trail.length > 14) ball.trail.shift();
+
+        for (let i = 0; i < ball.trail.length - 1; i++) {
+          const pt1 = ball.trail[i];
+          const pt2 = ball.trail[i + 1];
+          const alpha = (i + 1) / ball.trail.length;
+          ctx.strokeStyle = Math.abs(ball.spin) > 0.06 ? `rgba(56, 189, 248, ${alpha * 0.75})` : `rgba(255, 255, 255, ${alpha * 0.45})`;
+          ctx.lineWidth = 2 + alpha * 4;
+          ctx.beginPath();
+          ctx.moveTo(pt1.x, pt1.y);
+          ctx.lineTo(pt2.x, pt2.y);
+          ctx.stroke();
+        }
 
         // 3D Parabolic Arc for non-ground shots (Height peaks around y = 255)
         if (!ball.isGroundShot) {
@@ -1760,7 +1868,6 @@
         if (currentScenario === 'FREE_KICK') {
           wallDefenders.forEach(def => {
             if (ball.x >= def.x - 9 && ball.x <= def.x + def.width - 9 && ball.y >= def.y && ball.y <= def.y + def.height && !ball.saved && !ball.scored) {
-              // If the shot is grounded OR not high enough to clear the wall (<= 22px):
               if (ball.isGroundShot || ball.z <= 22) {
                 ball.saved = true;
                 ball.vx *= -0.4;
@@ -1768,7 +1875,6 @@
                 Sound.postHit();
                 showMatchSplash(false, 'BARAJA ÇARPTI!', ball.isGroundShot ? 'Yerden vuruş barajı geçemedi.' : 'Barajı aşamadın, top taca çıktı.');
               }
-              // If ball.z > 22, it flies cleanly OVER the heads of the wall!
             }
           });
         }
@@ -1795,19 +1901,20 @@
 
               let goalDesc = 'Ağları Havalandıran Temiz Bir Gol!';
               if (ball.isGroundShot) {
-                goalDesc = 'Köşeye Sert ve İsabetli Bir Yerden Şut!';
-              } else if (Math.abs(ball.spin) > 0.05) {
-                goalDesc = '90’a Roberto Carlos Falsosuyla Mükemmel Gol!';
+                goalDesc = '⚡ Köşeye Sert ve İsabetli Bir Yerden Şut!';
+              } else if (Math.abs(ball.spin) > 0.06) {
+                goalDesc = '🌀 90’a Roberto Carlos Falsosuyla Mükemmel Gol!';
               } else if (currentScenario === 'FREE_KICK') {
-                goalDesc = 'Barajın Üstünden Aşan Nefis Frikik Golü!';
+                goalDesc = '🎯 Barajın Üstünden Aşan Nefis Frikik Golü!';
               } else if (currentScenario === 'ONE_TWO') {
-                goalDesc = 'Harika Verkaç ve Kusursuz Tek Vuruş!';
+                goalDesc = '🤝 Harika Verkaç ve Kusursuz Tek Vuruş!';
               } else if (currentScenario === 'CORNER') {
-                goalDesc = 'Havada Nefis Kafa / Vole ile Harika Gol!';
+                goalDesc = '✈️ Havada Nefis Kafa / Vole ile Harika Gol!';
+              } else if (currentScenario === 'REBOUND') {
+                goalDesc = '🚀 Dönen Topa Gelişine Füze Gibi Vuruş!';
               }
               showMatchSplash(true, 'GOOOOOOOL!', goalDesc);
             } else {
-              // Strictly OUT if outside posts!
               ball.out = true;
               Sound.postHit();
               showMatchSplash(false, 'AUT / DIŞARI!', 'Top direğin yanından auta gitti.');
@@ -1838,7 +1945,7 @@
         }
       }
 
-      // Draw Ball (With Ground Shadow & Elevation Render!)
+      // 9. Draw Ball (With Ground Shadow & Elevation Render!)
       const renderY = ball.y - (ball.z || 0);
       const renderScale = 1 + ((ball.z || 0) / 90);
 
@@ -1880,8 +1987,20 @@
       descEl.textContent = desc;
 
       if (success) {
-        if (player.position === 'GK') player.stats.saves++;
-        else player.stats.goals++;
+        if (player.position === 'GK') {
+          player.stats.saves++;
+          if (typeof tvMatchEngine !== 'undefined' && tvMatchEngine.isActive) {
+            tvMatchEngine.matchSaves++;
+          }
+        } else {
+          player.stats.goals++;
+          if (typeof tvMatchEngine !== 'undefined' && tvMatchEngine.isActive) {
+            tvMatchEngine.matchGoals++;
+            tvMatchEngine.home.score++;
+            const sb = document.getElementById('tvScoreBoard');
+            if (sb) sb.textContent = `${tvMatchEngine.home.score} - ${tvMatchEngine.away.score}`;
+          }
+        }
         player.ovr = Math.min(99, player.ovr + 1);
         saveCareer();
       }
@@ -1909,7 +2028,7 @@
       });
 
       const hud = document.getElementById('careerHud');
-      if (['screenStreetIntro', 'screenMatchPlay', 'screenContracts', 'screenSeasons'].includes(screenId)) {
+      if (['screenStreetIntro', 'screenContracts', 'screenSeasons'].includes(screenId)) {
         hud.classList.remove('hidden');
         updateHUD();
       } else {
@@ -2049,74 +2168,239 @@
         showScreen('screenStreetIntro');
       });
 
-      // Multi-Position Match Orchestrator (Item 1: 1/2 ve 2/2 Pozisyonlarını Sırayla Oynatır!)
-      let matchOrchestrator = {
+      // =====================================================================
+      // TV BROADCAST LIVE MATCH ENGINE (0' - 90' Authentic TV Simulation)
+      // =====================================================================
+      let tvMatchEngine = {
         isActive: false,
         isStreet: false,
-        currentPos: 1,
-        totalPositions: 2,
-        scenarios: [],
+        home: { name: 'GAL', fullName: 'Galatasaray', badge: '🦁', score: 0 },
+        away: { name: 'FEN', fullName: 'Fenerbahçe', badge: '🟡', score: 0 },
+        league: 'SÜPER LİG',
+        minute: 0,
+        criticalMinutes: [32, 78],
+        scenarios: ['ONE_TWO', 'FREE_KICK'],
+        currentPosIdx: 0,
+        timer: null,
         onFinish: null,
         matchGoals: 0,
-        matchSaves: 0
+        matchSaves: 0,
+        isPausedForAction: false
       };
 
+      const TV_COMMENTARY = [
+        'Orta sahada kıran kırana mücadele, iki takım da açık vermiyor.',
+        'Sol kanattan bindirme denemesi, savunmamız kademeye girerek topu taca yolladı.',
+        'Kısa paslarla rakip yarı alana yerleşmeye çalışıyoruz.',
+        'Sağ kanattan gelen sert ortaya kalecimiz çift yumrukla müdahale etti.',
+        'Taktik savaşı devam ediyor; antrenör kenardan sık sık direktifler veriyor.',
+        'Orta alanda şık çalımlar! Rakip savunma dengesini kaybetmeye başladı.',
+        'Seyirciler tezahüratlarla takımlarını ileriye itiyor.'
+      ];
+
       function startFullMatch(isStreet, onFinish) {
-        const scenarioPool = ['OPEN_PLAY', 'ONE_TWO', 'FREE_KICK', 'CORNER'];
-        const sc1 = isStreet ? 'OPEN_PLAY' : scenarioPool[Math.floor(Math.random() * scenarioPool.length)];
-        let sc2 = isStreet ? 'ONE_TWO' : scenarioPool[Math.floor(Math.random() * scenarioPool.length)];
+        if (tvMatchEngine.timer) clearInterval(tvMatchEngine.timer);
+
+        let homeTeam, awayTeam, leagueName;
+        if (isStreet) {
+          homeTeam = { name: 'MAH', fullName: 'Mahalle Yıldızları', badge: '🏡', score: 0 };
+          awayTeam = { name: 'SOK', fullName: 'Sokak Gücü FC', badge: '⚡', score: 0 };
+          leagueName = 'SOKAK DERBİSİ';
+        } else {
+          const myClubName = player.club ? player.club.name : 'Kulübün';
+          const myBadge = player.club ? player.club.badge : '⚽';
+          const myShort = myClubName.replace(/[^a-zA-ZğüşıöçĞÜŞİÖÇ]/g, '').substring(0, 3).toUpperCase() || 'KUL';
+          homeTeam = { name: myShort, fullName: myClubName, badge: myBadge, score: 0 };
+
+          const pool = CLUB_TIERS.transferMarketPool.filter(c => c.name !== myClubName);
+          const opp = (pool.length > 0) ? pool[Math.floor(Math.random() * pool.length)] : { name: 'Rakip FK', badge: '🛡️' };
+          const oppShort = opp.name.replace(/[^a-zA-ZğüşıöçĞÜŞİÖÇ]/g, '').substring(0, 3).toUpperCase() || 'RAK';
+          awayTeam = { name: oppShort, fullName: opp.name, badge: opp.badge, score: 0 };
+          leagueName = player.club ? (player.club.league || 'SÜPER LİG') : 'SÜPER LİG';
+        }
+
+        const scenarioPool = ['ONE_TWO', 'CORNER', 'FREE_KICK', 'REBOUND', 'OPEN_PLAY'];
+        const shuffled = [...scenarioPool].sort(() => 0.5 - Math.random());
+        const sc1 = isStreet ? 'ONE_TWO' : shuffled[0];
+        let sc2 = isStreet ? 'OPEN_PLAY' : (shuffled[1] || 'FREE_KICK');
         if (sc2 === sc1) sc2 = (sc1 === 'FREE_KICK' ? 'OPEN_PLAY' : 'FREE_KICK');
 
-        matchOrchestrator = {
+        const min1 = Math.floor(25 + Math.random() * 14);
+        const min2 = Math.floor(70 + Math.random() * 14);
+
+        tvMatchEngine = {
           isActive: true,
           isStreet: isStreet,
-          currentPos: 1,
-          totalPositions: 2,
+          home: homeTeam,
+          away: awayTeam,
+          league: leagueName,
+          minute: 0,
+          criticalMinutes: [min1, min2],
           scenarios: [sc1, sc2],
+          currentPosIdx: 0,
+          timer: null,
           onFinish: onFinish,
           matchGoals: 0,
-          matchSaves: 0
+          matchSaves: 0,
+          isPausedForAction: false
         };
 
-        runMatchPosition();
-      }
+        // Reset TV Scoreboard & Header
+        const elLeague = document.getElementById('tvMatchLeague');
+        if (elLeague) elLeague.textContent = leagueName;
+        const elHomeBadge = document.getElementById('tvHomeBadge');
+        if (elHomeBadge) elHomeBadge.textContent = homeTeam.badge;
+        const elHomeName = document.getElementById('tvHomeName');
+        if (elHomeName) elHomeName.textContent = homeTeam.name;
+        const elAwayBadge = document.getElementById('tvAwayBadge');
+        if (elAwayBadge) elAwayBadge.textContent = awayTeam.badge;
+        const elAwayName = document.getElementById('tvAwayName');
+        if (elAwayName) elAwayName.textContent = awayTeam.name;
+        const elScore = document.getElementById('tvScoreBoard');
+        if (elScore) elScore.textContent = '0 - 0';
+        const elClock = document.getElementById('tvMatchClock');
+        if (elClock) elClock.textContent = "0'";
+        const elTickerStatus = document.getElementById('tvTickerStatus');
+        if (elTickerStatus) elTickerStatus.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span><span>CANLI YAYIN</span>';
+        const elScenBadge = document.getElementById('tvScenarioBadge');
+        if (elScenBadge) elScenBadge.textContent = 'Karşılaşma Başlıyor';
+        const elTickerText = document.getElementById('tvTickerText');
+        if (elTickerText) elTickerText.textContent = 'Hakem başlama düdüğünü çaldı! Karşılaşma santra vuruşuyla başladı.';
 
-      function runMatchPosition() {
-        const pIdx = matchOrchestrator.currentPos;
-        const total = matchOrchestrator.totalPositions;
-        const scenario = matchOrchestrator.scenarios[pIdx - 1];
-
-        const minute = pIdx === 1 ? Math.floor(28 + Math.random() * 15) : Math.floor(76 + Math.random() * 14);
-        const headlineEl = document.getElementById('matchHeadline');
-        if (headlineEl) headlineEl.textContent = `${minute}' KRİTİK POZİSYON`;
-
-        const scoreEl = document.getElementById('matchAttemptScore');
-        if (scoreEl) scoreEl.textContent = `Pozisyon: ${pIdx} / ${total}`;
+        const endSplash = document.getElementById('matchEndSplash');
+        if (endSplash) endSplash.classList.add('hidden');
+        const feedbackSplash = document.getElementById('matchFeedbackSplash');
+        if (feedbackSplash) feedbackSplash.classList.add('hidden');
 
         showScreen('screenMatchPlay');
-        initMatchCanvas(player.position === 'GK' ? 'SAVE' : 'SHOOT', (success) => {
-          if (success) {
-            if (player.position === 'GK') matchOrchestrator.matchSaves++;
-            else matchOrchestrator.matchGoals++;
+        advanceSimulationClock();
+      }
+
+      function advanceSimulationClock() {
+        if (!tvMatchEngine.isActive) return;
+        tvMatchEngine.isPausedForAction = false;
+
+        tvMatchEngine.timer = setInterval(() => {
+          if (!tvMatchEngine.isActive || tvMatchEngine.isPausedForAction) {
+            clearInterval(tvMatchEngine.timer);
+            return;
           }
 
-          if (matchOrchestrator.currentPos < matchOrchestrator.totalPositions) {
-            matchOrchestrator.currentPos++;
-            setTimeout(() => {
-              runMatchPosition();
-            }, 350);
-          } else {
-            matchOrchestrator.isActive = false;
-            setTimeout(() => {
-              if (matchOrchestrator.onFinish) {
-                matchOrchestrator.onFinish({
-                  goals: matchOrchestrator.matchGoals,
-                  saves: matchOrchestrator.matchSaves
+          tvMatchEngine.minute += Math.floor(2 + Math.random() * 2);
+          const clockEl = document.getElementById('tvMatchClock');
+          if (clockEl) clockEl.textContent = `${tvMatchEngine.minute}'`;
+
+          const scenBadge = document.getElementById('tvScenarioBadge');
+          const tickerText = document.getElementById('tvTickerText');
+
+          if (tvMatchEngine.minute === 45) {
+            if (scenBadge) scenBadge.textContent = 'İlk Yarı Bitti';
+            if (tickerText) tickerText.textContent = '45\' İLK YARI BİTTİ! Takımlar soyunma odasına gidiyor.';
+          } else if (tvMatchEngine.minute === 46) {
+            if (scenBadge) scenBadge.textContent = 'İkinci Yarı';
+            if (tickerText) tickerText.textContent = '46\' İKİNCİ YARI BAŞLADI! İki takım da sahaya galibiyet için çıktı.';
+          } else if (Math.random() < 0.35) {
+            const line = TV_COMMENTARY[Math.floor(Math.random() * TV_COMMENTARY.length)];
+            if (scenBadge) scenBadge.textContent = 'Mücadele Sürüyor';
+            if (tickerText) tickerText.textContent = `${tvMatchEngine.minute}' - ${line}`;
+          }
+
+          const nextTargetMin = tvMatchEngine.criticalMinutes[tvMatchEngine.currentPosIdx];
+          if (nextTargetMin && tvMatchEngine.minute >= nextTargetMin) {
+            clearInterval(tvMatchEngine.timer);
+            tvMatchEngine.minute = nextTargetMin;
+            if (clockEl) clockEl.textContent = `${tvMatchEngine.minute}'`;
+            triggerCriticalPosition();
+          } else if (tvMatchEngine.minute >= 90) {
+            clearInterval(tvMatchEngine.timer);
+            tvMatchEngine.minute = 90;
+            if (clockEl) clockEl.textContent = "90+3'";
+            concludeMatchFullTime();
+          }
+        }, 130);
+      }
+
+      function triggerCriticalPosition() {
+        tvMatchEngine.isPausedForAction = true;
+        Sound.whistle();
+
+        const scenario = tvMatchEngine.scenarios[tvMatchEngine.currentPosIdx] || 'OPEN_PLAY';
+        const minute = tvMatchEngine.minute;
+
+        const badgeMap = {
+          'ONE_TWO': { badge: '🤝 Takım Oyunu / Ver-Kaç', text: `${minute}' - TEHLİKELİ ATAK! Takım arkadaşın ver-kaça girdi, top sende! İster falsoyla vur, ister tek pasla bitir!` },
+          'CORNER': { badge: '📐 Kanat Ortası & Korner', text: `${minute}' - KORNER KAZANILDI! Ceza sahasına kavisli orta geliyor, havada kafa veya voleyi yapıştır!` },
+          'FREE_KICK': { badge: '🎯 Barajlı Serbest Vuruş', text: `${minute}' - SERBEST VURUŞ! Ceza sahası önünde baraj kuruldu! Roberto Carlos gibi falso verip 90'a as!` },
+          'REBOUND': { badge: '⚡ Ceza Yayı Dönen Top', text: `${minute}' - DÖNEN TOP! Savunmadan seken top önünde kaldı! Gelişine füze gibi 90'a yolla!` },
+          'OPEN_PLAY': { badge: '⚽ Ara Pası & Karşı Karşıya', text: `${minute}' - KRİTİK POZİSYON! Savunma arkasına sarktın, kaleciyle karşı karşıyasın!` }
+        };
+
+        const scInfo = (player.position === 'GK') 
+          ? { badge: '🧤 Kaleci Refleks Kurtarışı', text: `${minute}' - RAKİP ATAK! Forvet 90'a sert vuruyor, eldivenleri uçurarak kurtarışı yap!` }
+          : (badgeMap[scenario] || badgeMap['OPEN_PLAY']);
+
+        const tickerStatus = document.getElementById('tvTickerStatus');
+        if (tickerStatus) tickerStatus.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping"></span><span class="text-rose-400 font-bold">🚨 TEHLİKELİ POZİSYON</span>';
+        const scenBadge = document.getElementById('tvScenarioBadge');
+        if (scenBadge) scenBadge.textContent = scInfo.badge;
+        const tickerText = document.getElementById('tvTickerText');
+        if (tickerText) tickerText.textContent = scInfo.text;
+
+        initMatchCanvas(player.position === 'GK' ? 'SAVE' : 'SHOOT', (success) => {
+          tvMatchEngine.currentPosIdx++;
+          setTimeout(() => {
+            advanceSimulationClock();
+          }, 400);
+        }, scenario);
+      }
+
+      function concludeMatchFullTime() {
+        Sound.whistle();
+        setTimeout(() => Sound.whistle(), 300);
+        setTimeout(() => Sound.whistle(), 600);
+
+        const tickerStatus = document.getElementById('tvTickerStatus');
+        if (tickerStatus) tickerStatus.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span><span class="text-emerald-400 font-bold">🏁 MAÇ SONUCU</span>';
+        const scenBadge = document.getElementById('tvScenarioBadge');
+        if (scenBadge) scenBadge.textContent = 'Karşılaşma Tamamlandı';
+        const tickerText = document.getElementById('tvTickerText');
+        if (tickerText) tickerText.textContent = `90+3' Hakem son düdüğü çaldı! Maç sona erdi: ${tvMatchEngine.home.fullName} ${tvMatchEngine.home.score} - ${tvMatchEngine.away.score} ${tvMatchEngine.away.fullName}`;
+
+        const endSplash = document.getElementById('matchEndSplash');
+        if (endSplash) {
+          endSplash.classList.remove('hidden');
+          const elEndHome = document.getElementById('endHomeName');
+          if (elEndHome) elEndHome.textContent = tvMatchEngine.home.fullName;
+          const elEndAway = document.getElementById('endAwayName');
+          if (elEndAway) elEndAway.textContent = tvMatchEngine.away.fullName;
+          const elEndScore = document.getElementById('endScore');
+          if (elEndScore) elEndScore.textContent = `${tvMatchEngine.home.score} - ${tvMatchEngine.away.score}`;
+
+          const rating = player.position === 'GK' 
+            ? (7.0 + tvMatchEngine.matchSaves * 1.2).toFixed(1)
+            : (6.5 + tvMatchEngine.matchGoals * 1.5).toFixed(1);
+
+          const statLabel = player.position === 'GK' 
+            ? `🧤 ${tvMatchEngine.matchSaves} Kurtarış Yaptın`
+            : `⚽ ${tvMatchEngine.matchGoals} Gol Attın`;
+
+          const elSummary = document.getElementById('endSummaryText');
+          if (elSummary) elSummary.textContent = `${statLabel} • ⭐ ${rating} Maç Puanı • +3 OVR Gelişim`;
+
+          const btnFinish = document.getElementById('btnFinishMatch');
+          if (btnFinish) {
+            btnFinish.onclick = () => {
+              endSplash.classList.add('hidden');
+              tvMatchEngine.isActive = false;
+              if (tvMatchEngine.onFinish) {
+                tvMatchEngine.onFinish({
+                  goals: tvMatchEngine.matchGoals,
+                  saves: tvMatchEngine.matchSaves
                 });
               }
-            }, 350);
+            };
           }
-        }, scenario);
+        }
       }
 
       // Play First Street Match (2 Pozisyon: 1/2 ve 2/2)
@@ -2130,9 +2414,11 @@
         });
       });
 
-      // Skip Position Button
+      // Skip Position Button (Hızlı Simüle)
       document.getElementById('btnSkipPosition').addEventListener('click', () => {
-        showMatchSplash(Math.random() > 0.4, 'SİMÜLE EDİLDİ', 'Pozisyon tamamlandı.');
+        if (!tvMatchEngine.isActive) return;
+        const isGoal = Math.random() > 0.45;
+        showMatchSplash(isGoal, isGoal ? 'SİMÜLE EDİLDİ: GOOOL!' : 'SİMÜLE EDİLDİ: KAÇTI', isGoal ? 'Pozisyon başarıyla sonuçlandı.' : 'Pozisyonda savunma araya girdi.');
       });
 
       // Season Play Match (2 Pozisyon: 1/2 ve 2/2)
