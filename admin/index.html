@@ -820,7 +820,7 @@
 
       </div>
 
-      <!-- Sayfa & Araç Bazlı Etkileşim ve Dönüşüm Raporu (WhatsApp, Kart İndir, Duvara Ekle, Kopyala) -->
+      <!-- Sayfa & Araç Bazlı Etkileşim ve Dönüşüm Raporu (WhatsApp, Telegram, Kart İndir, Duvara Ekle) -->
       <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-lg space-y-4">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800/80 pb-4">
           <div>
@@ -828,7 +828,7 @@
               <i class="fa-solid fa-bolt text-amber-400"></i>
               Sayfa & Araç Bazlı Etkileşim ve Dönüşüm Raporu
             </h3>
-            <p class="text-xs text-slate-400 mt-0.5">Ziyaretçiler hangi araçta hangi butonları kullandı? (WhatsApp, Kart İndir, Duvara Ekle, Kopyala, Yeniden Başlat)</p>
+            <p class="text-xs text-slate-400 mt-0.5">Ziyaretçiler hangi araçta hangi butonları kullandı? (WhatsApp, Telegram, Kart İndir, Duvara Ekle, Yeniden Başlat)</p>
           </div>
           <div class="flex items-center gap-2">
             <span id="histTotalEventsBadge" class="text-xs bg-amber-500/20 text-amber-300 border border-amber-500/40 px-3 py-1 rounded-full font-mono font-bold">0 Toplam Eylem</span>
@@ -856,10 +856,10 @@
             <div id="kpiEventWall" class="text-xl font-black text-white font-mono mt-1">0</div>
           </div>
           <div class="p-3.5 bg-slate-950/60 rounded-xl border border-slate-800">
-            <div class="text-[11px] font-semibold text-slate-300 flex items-center gap-1.5 uppercase tracking-wider">
-              <i class="fa-solid fa-copy text-sm"></i> Sonuç Kopyalama
+            <div class="text-[11px] font-semibold text-sky-400 flex items-center gap-1.5 uppercase tracking-wider">
+              <i class="fa-brands fa-telegram text-sm"></i> Telegram Paylaşımı
             </div>
-            <div id="kpiEventCopy" class="text-xl font-black text-white font-mono mt-1">0</div>
+            <div id="kpiEventTelegram" class="text-xl font-black text-white font-mono mt-1">0</div>
           </div>
         </div>
 
@@ -872,7 +872,7 @@
                 <th class="py-2.5 px-3 text-center">💬 WhatsApp</th>
                 <th class="py-2.5 px-3 text-center">🖼️ Kart İndir</th>
                 <th class="py-2.5 px-3 text-center">👑 Duvara Ekle</th>
-                <th class="py-2.5 px-3 text-center">📋 Kopyala</th>
+                <th class="py-2.5 px-3 text-center">✈️ Telegram</th>
                 <th class="py-2.5 px-3 text-center">🔄 Yeniden Başlat</th>
                 <th class="py-2.5 px-3 text-right">Toplam Eylem</th>
               </tr>
@@ -1733,7 +1733,7 @@
       let waEvents = 0;
       let downloadEvents = 0;
       let wallEvents = 0;
-      let copyEvents = 0;
+      let telegramEvents = 0;
       let playAgainEvents = 0;
       const pageEventTotals = {};
       const pageTotals = {};
@@ -1758,22 +1758,22 @@
               const p = ev.page || '/';
 
               if (!pageEventTotals[p]) {
-                pageEventTotals[p] = { wa: 0, download: 0, wall: 0, copy: 0, playAgain: 0, total: 0 };
+                pageEventTotals[p] = { wa: 0, tg: 0, download: 0, wall: 0, playAgain: 0, total: 0 };
               }
               pageEventTotals[p].total++;
 
               if (act === 'whatsapp_share') {
                 waEvents++;
                 pageEventTotals[p].wa++;
+              } else if (act === 'telegram_share') {
+                telegramEvents++;
+                pageEventTotals[p].tg++;
               } else if (act === 'card_download' || act === 'card_share_native') {
                 downloadEvents++;
                 pageEventTotals[p].download++;
               } else if (act === 'wall_add') {
                 wallEvents++;
                 pageEventTotals[p].wall++;
-              } else if (act === 'copy_result') {
-                copyEvents++;
-                pageEventTotals[p].copy++;
               } else if (act === 'play_again') {
                 playAgainEvents++;
                 pageEventTotals[p].playAgain++;
@@ -1863,8 +1863,8 @@
       if (elDl) elDl.innerText = downloadEvents;
       const elWl = document.getElementById('kpiEventWall');
       if (elWl) elWl.innerText = wallEvents;
-      const elCp = document.getElementById('kpiEventCopy');
-      if (elCp) elCp.innerText = copyEvents;
+      const elTg = document.getElementById('kpiEventTelegram');
+      if (elTg) elTg.innerText = telegramEvents;
       renderEventsTable(pageEventTotals);
     }
 
@@ -1888,9 +1888,9 @@
             <span class="text-emerald-400 font-bold font-mono">${page}</span>
           </td>
           <td class="py-2.5 px-3 text-center text-emerald-400 font-bold">${ev.wa || 0}</td>
+          <td class="py-2.5 px-3 text-center text-sky-400 font-bold">${ev.tg || 0}</td>
           <td class="py-2.5 px-3 text-center text-cyan-400 font-bold">${ev.download || 0}</td>
           <td class="py-2.5 px-3 text-center text-amber-400 font-bold">${ev.wall || 0}</td>
-          <td class="py-2.5 px-3 text-center text-slate-300 font-bold">${ev.copy || 0}</td>
           <td class="py-2.5 px-3 text-center text-slate-400">${ev.playAgain || 0}</td>
           <td class="py-2.5 px-3 text-right font-bold text-white">${ev.total}</td>
         </tr>

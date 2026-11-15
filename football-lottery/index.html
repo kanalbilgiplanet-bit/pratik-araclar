@@ -2206,8 +2206,7 @@
       if (downloadBtn) downloadBtn.title = dict.downloadCardTitle;
       setIfExists('txtPlayAgain', 'textContent', dict.playAgain);
 
-      const copyBtn = document.getElementById('btnCopyResult');
-      if (copyBtn) copyBtn.title = dict.copyResultTitle;
+
 
       setIfExists('txtJubileeBadge', 'textContent', dict.jubileeBadge);
       setIfExists('txtJubileeTitle', 'textContent', dict.jubileeTitle);
@@ -6598,29 +6597,7 @@ function finishCareerAndShowJubilee() {
         window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
       });
 
-      // Copy Result
-      const copyBtnEl = document.getElementById('btnCopyResult');
-      if (copyBtnEl) copyBtnEl.addEventListener('click', () => {
-        if (window.pbTracker && window.pbTracker.logEvent) {
-          window.pbTracker.logEvent('copy_result', '/football-lottery', player ? player.fullName : 'Copy');
-        }
-        const text = currentLang === 'TR'
-          ? `⚽ ${player.fullName} (${player.country.flag}) - Futbolcu Doğum Piyangosu\n` +
-            `Zirve OVR: ${player.peakOvr} | ${player.stats.matches} Maç | ${player.stats.goals} Gol | 🏆 ${player.stats.trophies} Kupa | Unvan: ${player.archetype}\n` +
-            `https://pratikbase.com/football-lottery/?ref=copy`
-          : `⚽ ${player.fullName} (${player.country.flag}) - Football Career Lottery\n` +
-            `Peak OVR: ${player.peakOvr} | ${player.stats.matches} Apps | ${player.stats.goals} Goals | 🏆 ${player.stats.trophies} Trophies | Archetype: ${formatArchetype(player.archetype)}\n` +
-            `https://pratikbase.com/football-lottery/?lang=en&ref=copy`;
 
-        navigator.clipboard.writeText(text).then(() => {
-          const btnTxt = document.getElementById('txtCopyResult');
-          if (btnTxt) {
-            const old = btnTxt.textContent;
-            btnTxt.textContent = currentLang === 'TR' ? 'Kopyalandı! ✔' : 'Copied! ✔';
-            setTimeout(() => btnTxt.textContent = old, 2000);
-          }
-        });
-      });
 
       // Auto-detect Language: query param ?lang=XX > localStorage > browser locale
       const urlParams = new URLSearchParams(window.location.search);
