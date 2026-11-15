@@ -150,7 +150,7 @@
         <div class="space-y-2 max-w-2xl">
           <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs font-bold">
             <span class="w-2 h-2 rounded-full bg-rose-400 animate-ping"></span>
-            <span>GÜNÜN RESMİ TV YAYIN AKIŞI • 12 KASIM 2026</span>
+            <span id="heroDateBadge">GÜNÜN RESMİ TV YAYIN AKIŞI • 15 KASIM 2026</span>
           </div>
           <h1 class="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight">
             Bugün Hangi Maç, Saat Kaçta, <span class="bg-gradient-to-r from-rose-400 via-amber-300 to-emerald-400 bg-clip-text text-transparent">Hangi Kanalda Şifresiz?</span>
@@ -216,17 +216,17 @@
       <!-- Date Filter Tabs -->
       <div class="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none text-xs font-semibold">
         <span class="text-slate-500 shrink-0 mr-1 text-[11px] font-bold uppercase tracking-wider">Tarih:</span>
-        <button class="date-filter active px-3.5 py-1.5 rounded-xl bg-rose-600 text-white font-bold transition shadow-sm shadow-rose-600/30 whitespace-nowrap" data-date="today">
-          Bugün (13 Kasım Cuma)
+        <button id="btnFilterToday" class="date-filter active px-3.5 py-1.5 rounded-xl bg-rose-600 text-white font-bold transition shadow-sm shadow-rose-600/30 whitespace-nowrap" data-date="today">
+          Bugün (15 Kasım Pazar)
         </button>
-        <button class="date-filter px-3.5 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:bg-slate-800 transition whitespace-nowrap" data-date="tomorrow">
-          Yarın (14 Kasım)
+        <button id="btnFilterTomorrow" class="date-filter px-3.5 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:bg-slate-800 transition whitespace-nowrap" data-date="tomorrow">
+          Yarın (16 Kasım Pazartesi)
         </button>
-        <button class="date-filter px-3.5 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:bg-slate-800 transition whitespace-nowrap" data-date="weekend">
-          Pazar (15 Kasım • Milli Maç)
+        <button id="btnFilterYesterday" class="date-filter px-3.5 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:bg-slate-800 transition whitespace-nowrap" data-date="yesterday">
+          Dün (14 Kasım • Bitenler)
         </button>
-        <button class="date-filter px-3.5 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:bg-slate-800 transition whitespace-nowrap" data-date="yesterday">
-          Dün (12 Kasım • Bitenler)
+        <button id="btnFilterUpcoming" class="date-filter px-3.5 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:bg-slate-800 transition whitespace-nowrap" data-date="upcoming">
+          Gelecek Günler
         </button>
         <button class="date-filter px-3.5 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:bg-slate-800 transition whitespace-nowrap" data-date="all">
           Tüm Maçlar
@@ -505,215 +505,23 @@
     // MAÇ YAYIN REHBERİ VERİTABANI (Dinamik ve Kapsamlı Liste)
     // ========================================================
     const MATCHES_DB = [
-      {
-        id: "m1",
-        dateCategory: "yesterday",
-        dateText: "12 Kasım Perşembe",
-        dateTime: "2026-11-12T20:00:00+03:00",
-        time: "20:00",
-        tournament: "UEFA Uluslar A Ligi",
-        category: "turkey",
-        home: { name: "Türkiye", flag: "🇹🇷", isNational: true },
-        away: { name: "Belçika", flag: "🇧🇪", isNational: true },
-        venue: "İzmir Gürsel Aksel Stadyumu",
-        channel: "ATV",
-        channelType: "free",
-        badgeText: "ŞİFRESİZ YAYIN",
-        badgeColor: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40",
-        radio: "A Spor Radyo",
-        notes: "Ulusal açık kanal ATV & atv.com.tr canlı yayın. Şifresiz.",
-        liveLink: "/milli-mac-canli/",
-        isLiveNow: false,
-        isFinished: true,
-        liveScore: "1 - 2",
-        liveClock: "FT",
-        isFeatured: false
-      },
-      {
-        id: "m2",
-        dateCategory: "yesterday",
-        dateText: "12 Kasım Perşembe",
-        dateTime: "2026-11-12T20:45:00+03:00",
-        time: "20:45",
-        tournament: "Turkish Airlines EuroLeague",
-        category: "basketball",
-        home: { name: "Fenerbahçe Beko", flag: "🇹🇷", isNational: false },
-        away: { name: "Maccabi Tel Aviv", flag: "🇮🇱", isNational: false },
-        venue: "Ülker Spor ve Etkinlik Salonu",
-        channel: "S Sport & S Sport Plus",
-        channelType: "pay",
-        badgeText: "PLATFORM YAYINI",
-        badgeColor: "bg-blue-500/20 text-blue-300 border-blue-500/40",
-        radio: "Radyo Fenerbahçe",
-        notes: "S Sport Plus uygulaması ve Tivibu/Turkcell TV+.",
-        liveLink: null,
-        isLiveNow: false,
-        isFinished: true,
-        liveScore: "84 - 82",
-        liveClock: "MS",
-        isFeatured: false
-      },
-      {
-        id: "m3",
-        dateCategory: "yesterday",
-        dateText: "12 Kasım Perşembe",
-        dateTime: "2026-11-12T22:45:00+03:00",
-        time: "22:45",
-        tournament: "UEFA Uluslar A Ligi",
-        category: "uefa",
-        home: { name: "Fransa", flag: "🇫🇷", isNational: true },
-        away: { name: "İtalya", flag: "🇮🇹", isNational: true },
-        venue: "Stade de France (Paris)",
-        channel: "TV8.5 & Exxen",
-        channelType: "free",
-        badgeText: "ŞİFRESİZ YAYIN",
-        badgeColor: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40",
-        radio: "Radyo Trafik",
-        notes: "TV8.5 Türksat uydusunda tamamen şifresiz.",
-        liveLink: null,
-        isLiveNow: false,
-        isFinished: true,
-        liveScore: "1 - 3",
-        liveClock: "FT",
-        isFeatured: false
-      },
-      {
-        id: "m4",
-        dateCategory: "yesterday",
-        dateText: "12 Kasım Perşembe",
-        dateTime: "2026-11-12T22:45:00+03:00",
-        time: "22:45",
-        tournament: "UEFA Uluslar B Ligi",
-        category: "uefa",
-        home: { name: "İngiltere", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", isNational: true },
-        away: { name: "Yunanistan", flag: "🇬🇷", isNational: true },
-        venue: "Wembley Stadyumu (Londra)",
-        channel: "Exxen",
-        channelType: "pay",
-        badgeText: "DİJİTAL ABONELİK",
-        badgeColor: "bg-amber-500/20 text-amber-300 border-amber-500/40",
-        radio: "BBC 5 Live",
-        notes: "Exxen spor paketi aboneliği ile canlı.",
-        liveLink: null,
-        isLiveNow: false,
-        isFinished: true,
-        liveScore: "2 - 1",
-        liveClock: "FT",
-        isFeatured: false
-      },
-      {
-        id: "m5",
-        dateCategory: "today",
-        dateText: "13 Kasım Cuma",
-        dateTime: "2026-11-13T18:00:00+03:00",
-        time: "18:00",
-        tournament: "U21 Avrupa Şampiyonası Elemeleri",
-        category: "turkey",
-        home: { name: "Türkiye U21", flag: "🇹🇷", isNational: true },
-        away: { name: "Gürcistan U21", flag: "🇬🇪", isNational: true },
-        venue: "Pendik Stadyumu (İstanbul)",
-        channel: "A Spor",
-        channelType: "free",
-        badgeText: "ŞİFRESİZ YAYIN",
-        badgeColor: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40",
-        radio: "A Spor Radyo",
-        notes: "Türksat uydusunda açık kanal A Spor.",
-        liveLink: null,
-        isLiveNow: false,
-        isFinished: false,
-        liveScore: null,
-        liveClock: null,
-        isFeatured: false
-      },
-      {
-        id: "m7",
-        dateCategory: "today",
-        dateText: "13 Kasım Cuma",
-        dateTime: "2026-11-13T20:30:00+03:00",
-        time: "20:30",
-        tournament: "Turkish Airlines EuroLeague",
-        category: "basketball",
-        home: { name: "Anadolu Efes", flag: "🇹🇷", isNational: false },
-        away: { name: "Real Madrid", flag: "🇪🇸", isNational: false },
-        venue: "Basketbol Gelişim Merkezi",
-        channel: "S Sport & S Sport Plus",
-        channelType: "pay",
-        badgeText: "PLATFORM YAYINI",
-        badgeColor: "bg-blue-500/20 text-blue-300 border-blue-500/40",
-        radio: "Kral Spor",
-        notes: "S Sport Plus uygulaması ve D-Smart.",
-        liveLink: null,
-        isLiveNow: false,
-        isFinished: false,
-        liveScore: null,
-        liveClock: null,
-        isFeatured: false
-      },
-      {
-        id: "m6",
-        dateCategory: "today",
-        dateText: "13 Kasım Cuma",
-        dateTime: "2026-11-13T22:45:00+03:00",
-        time: "22:45",
-        tournament: "UEFA Uluslar A Ligi",
-        category: "uefa",
-        home: { name: "Almanya", flag: "🇩🇪", isNational: true },
-        away: { name: "Hollanda", flag: "🇳🇱", isNational: true },
-        venue: "Allianz Arena (Münih)",
-        channel: "TV8.5 & Exxen",
-        channelType: "free",
-        badgeText: "ŞİFRESİZ YAYIN",
-        badgeColor: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40",
-        radio: "TRT Radyo 1",
-        notes: "TV8.5 HD şifresiz ekranlarda canlı.",
-        liveLink: null,
-        isLiveNow: false,
-        isFinished: false,
-        liveScore: null,
-        liveClock: null,
-        isFeatured: false
-      },
-      {
-        id: "m11",
-        dateCategory: "tomorrow",
-        dateText: "14 Kasım Cumartesi",
-        dateTime: "2026-11-14T19:00:00+03:00",
-        time: "19:00",
-        tournament: "Trendyol Süper Lig",
-        category: "superlig",
-        home: { name: "Galatasaray", flag: "🇹🇷", isNational: false },
-        away: { name: "Trabzonspor", flag: "🇹🇷", isNational: false },
-        venue: "RAMS Park (İstanbul)",
-        channel: "beIN Sports 1",
-        channelType: "pay",
-        badgeText: "LİG TV / BEIN",
-        badgeColor: "bg-purple-500/20 text-purple-300 border-purple-500/40",
-        radio: "Lig Radyo",
-        notes: "beIN Sports 1 HD ekranlarında canlı.",
-        liveLink: null,
-        isLiveNow: false,
-        isFinished: false,
-        liveScore: null,
-        liveClock: null,
-        isFeatured: false
-      },
+      // --- BUGÜN: 15 KASIM PAZAR ---
       {
         id: "m8",
-        dateCategory: "weekend",
-        dateText: "15 Kasım Pazar",
         dateTime: "2026-11-15T22:45:00+03:00",
+        dateText: "15 Kasım Pazar",
         time: "22:45",
         tournament: "UEFA Uluslar A Ligi (Grup Finali)",
         category: "turkey",
         home: { name: "Fransa", flag: "🇫🇷", isNational: true },
         away: { name: "Türkiye", flag: "🇹🇷", isNational: true },
         venue: "Matmut Atlantique (Bordeaux)",
-        channel: "TRT 1",
+        channel: "TRT 1 & tabii",
         channelType: "free",
         badgeText: "ŞİFRESİZ YAYIN",
         badgeColor: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40",
         radio: "TRT Radyo 1",
-        notes: "Grup liderliği için dev maç! TRT 1 ve tabii'de şifresiz.",
+        notes: "Grup liderliği için dev maç! TRT 1 ve tabii uygulamasında şifresiz.",
         liveLink: "/milli-mac-canli/",
         isLiveNow: false,
         isFinished: false,
@@ -722,34 +530,9 @@
         isFeatured: true
       },
       {
-        id: "m10",
-        dateCategory: "weekend",
-        dateText: "15 Kasım Pazar",
-        dateTime: "2026-11-15T19:00:00+03:00",
-        time: "19:00",
-        tournament: "İtalya Serie A (Türk Yıldızlar)",
-        category: "turkey",
-        home: { name: "Juventus (Kenan Yıldız)", flag: "🇮🇹", isNational: false },
-        away: { name: "Inter (Hakan Çalhanoğlu)", flag: "🇮🇹", isNational: false },
-        venue: "Allianz Stadyumu (Torino)",
-        channel: "S Sport 2 & Tivibu Spor 1",
-        channelType: "pay",
-        badgeText: "PLATFORM YAYINI",
-        badgeColor: "bg-blue-500/20 text-blue-300 border-blue-500/40",
-        radio: "Tivibu Spor",
-        notes: "Milli yıldızlarımız Kenan Yıldız ve Hakan Çalhanoğlu karşı karşıya.",
-        liveLink: null,
-        isLiveNow: false,
-        isFinished: false,
-        liveScore: null,
-        liveClock: null,
-        isFeatured: false
-      },
-      {
         id: "m12",
-        dateCategory: "weekend",
-        dateText: "15 Kasım Pazar",
         dateTime: "2026-11-15T19:00:00+03:00",
+        dateText: "15 Kasım Pazar",
         time: "19:00",
         tournament: "Trendyol Süper Lig",
         category: "superlig",
@@ -770,10 +553,32 @@
         isFeatured: false
       },
       {
-        id: "m9",
-        dateCategory: "weekend",
+        id: "m10",
+        dateTime: "2026-11-15T19:00:00+03:00",
         dateText: "15 Kasım Pazar",
+        time: "19:00",
+        tournament: "İtalya Serie A (Türk Yıldızlar)",
+        category: "turkey",
+        home: { name: "Juventus (Kenan Yıldız)", flag: "🇮🇹", isNational: false },
+        away: { name: "Inter (Hakan Çalhanoğlu)", flag: "🇮🇹", isNational: false },
+        venue: "Allianz Stadyumu (Torino)",
+        channel: "S Sport 2 & Tivibu Spor 1",
+        channelType: "pay",
+        badgeText: "PLATFORM YAYINI",
+        badgeColor: "bg-blue-500/20 text-blue-300 border-blue-500/40",
+        radio: "Tivibu Spor",
+        notes: "Milli yıldızlarımız Kenan Yıldız ve Hakan Çalhanoğlu karşı karşıya.",
+        liveLink: null,
+        isLiveNow: false,
+        isFinished: false,
+        liveScore: null,
+        liveClock: null,
+        isFeatured: false
+      },
+      {
+        id: "m9",
         dateTime: "2026-11-15T22:00:00+03:00",
+        dateText: "15 Kasım Pazar",
         time: "22:00",
         tournament: "İspanya La Liga (Türk Yıldız)",
         category: "turkey",
@@ -791,6 +596,244 @@
         isFinished: false,
         liveScore: null,
         liveClock: null,
+        isFeatured: false
+      },
+      {
+        id: "m14",
+        dateTime: "2026-11-15T20:00:00+03:00",
+        dateText: "15 Kasım Pazar",
+        time: "20:00",
+        tournament: "UEFA Uluslar B Ligi",
+        category: "uefa",
+        home: { name: "İngiltere", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", isNational: true },
+        away: { name: "İrlanda Cum.", flag: "🇮🇪", isNational: true },
+        venue: "Wembley Stadyumu",
+        channel: "TV8.5 & Exxen",
+        channelType: "free",
+        badgeText: "ŞİFRESİZ YAYIN",
+        badgeColor: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40",
+        radio: "Radyo Gol",
+        notes: "TV8.5 açık kanalında şifresiz canlı.",
+        liveLink: null,
+        isLiveNow: false,
+        isFinished: false,
+        liveScore: null,
+        liveClock: null,
+        isFeatured: false
+      },
+
+      // --- YARIN: 16 KASIM PAZARTESİ ---
+      {
+        id: "m15",
+        dateTime: "2026-11-16T22:45:00+03:00",
+        dateText: "16 Kasım Pazartesi",
+        time: "22:45",
+        tournament: "UEFA Uluslar A Ligi",
+        category: "uefa",
+        home: { name: "İspanya", flag: "🇪🇸", isNational: true },
+        away: { name: "İsviçre", flag: "🇨🇭", isNational: true },
+        venue: "Heliodoro Rodríguez López",
+        channel: "TV8.5 & Exxen",
+        channelType: "free",
+        badgeText: "ŞİFRESİZ YAYIN",
+        badgeColor: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40",
+        radio: "TRT Radyo 1",
+        notes: "TV8.5 HD şifresiz ekranlarda canlı.",
+        liveLink: null,
+        isLiveNow: false,
+        isFinished: false,
+        liveScore: null,
+        liveClock: null,
+        isFeatured: false
+      },
+      {
+        id: "m16",
+        dateTime: "2026-11-16T22:45:00+03:00",
+        dateText: "16 Kasım Pazartesi",
+        time: "22:45",
+        tournament: "UEFA Uluslar A Ligi",
+        category: "uefa",
+        home: { name: "Hırvatistan", flag: "🇭🇷", isNational: true },
+        away: { name: "Portekiz", flag: "🇵🇹", isNational: true },
+        venue: "Poljud Stadyumu",
+        channel: "Exxen",
+        channelType: "pay",
+        badgeText: "DİJİTAL ABONELİK",
+        badgeColor: "bg-amber-500/20 text-amber-300 border-amber-500/40",
+        radio: "Radyo Gol",
+        notes: "Exxen canlı yayın.",
+        liveLink: null,
+        isLiveNow: false,
+        isFinished: false,
+        liveScore: null,
+        liveClock: null,
+        isFeatured: false
+      },
+      {
+        id: "m17",
+        dateTime: "2026-11-16T20:00:00+03:00",
+        dateText: "16 Kasım Pazartesi",
+        time: "20:00",
+        tournament: "Trendyol 1. Lig",
+        category: "superlig",
+        home: { name: "Amed SK", flag: "🇹🇷", isNational: false },
+        away: { name: "Iğdır FK", flag: "🇹🇷", isNational: false },
+        venue: "Diyarbakır Stadyumu",
+        channel: "TRT Spor & beIN Sports Max 1",
+        channelType: "free",
+        badgeText: "ŞİFRESİZ YAYIN",
+        badgeColor: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40",
+        radio: "TRT Radyo 1",
+        notes: "TRT Spor ekranlarında tamamen şifresiz.",
+        liveLink: null,
+        isLiveNow: false,
+        isFinished: false,
+        liveScore: null,
+        liveClock: null,
+        isFeatured: false
+      },
+
+      // --- DÜN: 14 KASIM CUMARTESİ (BİTENLER) ---
+      {
+        id: "m11",
+        dateTime: "2026-11-14T19:00:00+03:00",
+        dateText: "14 Kasım Cumartesi",
+        time: "19:00",
+        tournament: "Trendyol Süper Lig",
+        category: "superlig",
+        home: { name: "Galatasaray", flag: "🇹🇷", isNational: false },
+        away: { name: "Trabzonspor", flag: "🇹🇷", isNational: false },
+        venue: "RAMS Park (İstanbul)",
+        channel: "beIN Sports 1",
+        channelType: "pay",
+        badgeText: "LİG TV / BEIN",
+        badgeColor: "bg-purple-500/20 text-purple-300 border-purple-500/40",
+        radio: "Lig Radyo",
+        notes: "beIN Sports 1 HD ekranlarında canlı yayınlandı.",
+        liveLink: null,
+        isLiveNow: false,
+        isFinished: true,
+        liveScore: "2 - 1",
+        liveClock: "MS",
+        isFeatured: false
+      },
+      {
+        id: "m20",
+        dateTime: "2026-11-14T22:45:00+03:00",
+        dateText: "14 Kasım Cumartesi",
+        time: "22:45",
+        tournament: "UEFA Uluslar A Ligi",
+        category: "uefa",
+        home: { name: "Almanya", flag: "🇩🇪", isNational: true },
+        away: { name: "Bosna Hersek", flag: "🇧🇦", isNational: true },
+        venue: "Europa-Park Stadion",
+        channel: "TV8.5 & Exxen",
+        channelType: "free",
+        badgeText: "ŞİFRESİZ YAYIN",
+        badgeColor: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40",
+        radio: "TRT Radyo 1",
+        notes: "TV8.5 ekranlarında canlı yayınlandı.",
+        liveLink: null,
+        isLiveNow: false,
+        isFinished: true,
+        liveScore: "7 - 0",
+        liveClock: "MS",
+        isFeatured: false
+      },
+
+      // --- GELECEK GÜNLER: 17 KASIM SALI VE SONRASI ---
+      {
+        id: "m18",
+        dateTime: "2026-11-17T20:00:00+03:00",
+        dateText: "17 Kasım Salı",
+        time: "20:00",
+        tournament: "U21 Avrupa Şampiyonası Elemeleri",
+        category: "turkey",
+        home: { name: "Karadağ U21", flag: "🇲🇪", isNational: true },
+        away: { name: "Türkiye U21", flag: "🇹🇷", isNational: true },
+        venue: "Podgorica City Stadium",
+        channel: "A Spor",
+        channelType: "free",
+        badgeText: "ŞİFRESİZ YAYIN",
+        badgeColor: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40",
+        radio: "A Spor Radyo",
+        notes: "A Spor açık kanalında canlı.",
+        liveLink: null,
+        isLiveNow: false,
+        isFinished: false,
+        liveScore: null,
+        liveClock: null,
+        isFeatured: false
+      },
+      {
+        id: "m19",
+        dateTime: "2026-11-17T22:45:00+03:00",
+        dateText: "17 Kasım Salı",
+        time: "22:45",
+        tournament: "UEFA Uluslar A Ligi",
+        category: "uefa",
+        home: { name: "Macaristan", flag: "🇭🇺", isNational: true },
+        away: { name: "Almanya", flag: "🇩🇪", isNational: true },
+        venue: "Puskás Aréna",
+        channel: "TV8.5 & Exxen",
+        channelType: "free",
+        badgeText: "ŞİFRESİZ YAYIN",
+        badgeColor: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40",
+        radio: "TRT Radyo 1",
+        notes: "TV8.5 HD şifresiz.",
+        liveLink: null,
+        isLiveNow: false,
+        isFinished: false,
+        liveScore: null,
+        liveClock: null,
+        isFeatured: false
+      },
+
+      // --- GEÇMİŞ: 12-13 KASIM ---
+      {
+        id: "m5",
+        dateTime: "2026-11-13T18:00:00+03:00",
+        dateText: "13 Kasım Cuma",
+        time: "18:00",
+        tournament: "U21 Avrupa Şampiyonası Elemeleri",
+        category: "turkey",
+        home: { name: "Türkiye U21", flag: "🇹🇷", isNational: true },
+        away: { name: "Gürcistan U21", flag: "🇬🇪", isNational: true },
+        venue: "Pendik Stadyumu (İstanbul)",
+        channel: "A Spor",
+        channelType: "free",
+        badgeText: "ŞİFRESİZ YAYIN",
+        badgeColor: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40",
+        radio: "A Spor Radyo",
+        notes: "Türksat uydusunda açık kanal A Spor.",
+        liveLink: null,
+        isLiveNow: false,
+        isFinished: true,
+        liveScore: "3 - 0",
+        liveClock: "MS",
+        isFeatured: false
+      },
+      {
+        id: "m1",
+        dateTime: "2026-11-12T20:00:00+03:00",
+        dateText: "12 Kasım Perşembe",
+        time: "20:00",
+        tournament: "UEFA Uluslar A Ligi",
+        category: "turkey",
+        home: { name: "Türkiye", flag: "🇹🇷", isNational: true },
+        away: { name: "Belçika", flag: "🇧🇪", isNational: true },
+        venue: "İzmir Gürsel Aksel Stadyumu",
+        channel: "ATV",
+        channelType: "free",
+        badgeText: "ŞİFRESİZ YAYIN",
+        badgeColor: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40",
+        radio: "A Spor Radyo",
+        notes: "Ulusal açık kanal ATV & atv.com.tr canlı yayın. Şifresiz.",
+        liveLink: "/milli-mac-canli/",
+        isLiveNow: false,
+        isFinished: true,
+        liveScore: "1 - 2",
+        liveClock: "FT",
         isFeatured: false
       }
     ];
@@ -821,6 +864,65 @@
       return `<span class="text-sm shrink-0">${flagCode}</span>`;
     }
 
+    // ========================================================
+    // DİNAMİK TARİH MOTORU (Gerçek Zamana Göre Güncel Takvim)
+    // ========================================================
+    const TR_DAYS = ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'];
+    const TR_MONTHS = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
+
+    function getLocalDateKey(dateObj) {
+      const y = dateObj.getFullYear();
+      const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+      const d = String(dateObj.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
+
+    function formatTRDate(dateObj, withDay = true) {
+      const day = dateObj.getDate();
+      const month = TR_MONTHS[dateObj.getMonth()];
+      if (withDay) {
+        return `${day} ${month} ${TR_DAYS[dateObj.getDay()]}`;
+      }
+      return `${day} ${month}`;
+    }
+
+    const nowRef = new Date();
+    const todayKey = getLocalDateKey(nowRef);
+    const yesterdayRef = new Date(nowRef.getTime() - 86400000);
+    const yesterdayKey = getLocalDateKey(yesterdayRef);
+    const tomorrowRef = new Date(nowRef.getTime() + 86400000);
+    const tomorrowKey = getLocalDateKey(tomorrowRef);
+
+    function computeMatchDateCategory(m) {
+      const mKey = m.dateTime ? m.dateTime.slice(0, 10) : "";
+      if (mKey === todayKey) return 'today';
+      if (mKey === tomorrowKey) return 'tomorrow';
+      if (mKey === yesterdayKey || (mKey < todayKey && m.isFinished)) return 'yesterday';
+      if (mKey > tomorrowKey) return 'upcoming';
+      return 'past';
+    }
+
+    function initDynamicDateLabels() {
+      // 1. Hero Date Badge
+      const heroBadge = document.getElementById('heroDateBadge');
+      if (heroBadge) {
+        heroBadge.textContent = `GÜNÜN RESMİ TV YAYIN AKIŞI • ${nowRef.getDate()} ${TR_MONTHS[nowRef.getMonth()].toUpperCase()} ${nowRef.getFullYear()}`;
+      }
+
+      // 2. Tab Buttons
+      const btnToday = document.getElementById('btnFilterToday');
+      if (btnToday) btnToday.textContent = `Bugün (${formatTRDate(nowRef)})`;
+
+      const btnTomorrow = document.getElementById('btnFilterTomorrow');
+      if (btnTomorrow) btnTomorrow.textContent = `Yarın (${formatTRDate(tomorrowRef)})`;
+
+      const btnYesterday = document.getElementById('btnFilterYesterday');
+      if (btnYesterday) btnYesterday.textContent = `Dün (${formatTRDate(yesterdayRef, false)} • Bitenler)`;
+
+      const btnUpcoming = document.getElementById('btnFilterUpcoming');
+      if (btnUpcoming) btnUpcoming.textContent = 'Gelecek Günler';
+    }
+
     // FILTER STATE
     let selectedDate = "today";
     let selectedCat = "all";
@@ -843,10 +945,14 @@
       if (!container) return;
       
       const filtered = MATCHES_DB.filter(m => {
-        // Date Filter
-        if (selectedDate !== 'all' && m.dateCategory !== selectedDate) {
-          return false;
-        }
+        // Dynamic Real-Time Date Filter
+        const cat = computeMatchDateCategory(m);
+        if (selectedDate === 'today' && cat !== 'today') return false;
+        if (selectedDate === 'tomorrow' && cat !== 'tomorrow') return false;
+        if (selectedDate === 'yesterday' && cat !== 'yesterday') return false;
+        if (selectedDate === 'upcoming' && cat !== 'upcoming') return false;
+        // 'all' includes all
+
         // Category Filter
         if (selectedCat === 'free' && m.channelType !== 'free') return false;
         if (selectedCat === 'turkey' && m.category !== 'turkey') return false;
@@ -1354,6 +1460,7 @@
     }
 
     // INITIALIZE
+    initDynamicDateLabels();
     updateCounters();
     renderMatches();
     renderChat();
