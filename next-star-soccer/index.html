@@ -621,8 +621,8 @@
       <!-- Interactive Canvas Stage Box -->
       <div class="relative w-full rounded-3xl overflow-hidden border-2 border-emerald-500/50 shadow-2xl bg-pitch-950">
         
-        <!-- Canvas Element -->
-        <canvas id="matchCanvas" width="600" height="420" class="w-full h-auto block"></canvas>
+        <!-- Canvas Element (Soccer Super Star 3D Perspective Stadium View) -->
+        <canvas id="matchCanvas" width="600" height="560" class="w-full h-auto block select-none" style="touch-action: none;"></canvas>
 
         <!-- Quick Pass Feedback Banner (Soccer Super Star Style) -->
         <div id="passFeedbackBanner" class="hidden absolute top-4 inset-x-4 pointer-events-none flex justify-center z-20">
@@ -1630,6 +1630,60 @@
     let currentScenario = 'OPEN_PLAY'; // ONE_TWO, CORNER, FREE_KICK, REBOUND, OPEN_PLAY, WING_ATTACK, THROUGH_BALL
     let currentMatchCallback = null;
 
+    // Pre-generated Stadium Crowd for 60fps 3D Tribune Rendering
+    const STADIUM_CROWD = (() => {
+      const list = [];
+      const shirtColors = ['#ffffff', '#ef4444', '#3b82f6', '#eab308', '#10b981', '#f97316', '#e2e8f0', '#991b1b', '#1d4ed8'];
+      const skinColors = ['#f8d5b8', '#e0ac69', '#c68642', '#8d5524'];
+      for (let row = 0; row < 6; row++) {
+        const y = 30 + row * 12;
+        for (let x = 12; x < 588; x += 11) {
+          // Leave white stairways at x=178..202 and x=405..429
+          if ((x > 176 && x < 204) || (x > 404 && x < 432)) continue;
+          list.push({
+            x: x + ((row % 2) * 4) + (Math.random() * 2 - 1),
+            y: y + (Math.random() * 2 - 1),
+            shirt: shirtColors[Math.floor(Math.random() * shirtColors.length)],
+            skin: skinColors[Math.floor(Math.random() * skinColors.length)],
+            phase: Math.random() * Math.PI * 2
+          });
+        }
+      }
+      return list;
+    })();
+
+    // Team Kit Palette Helper (Matches Screenshot Kits: Portugal Red/Green, Brazil Yellow/Blue, Argentina Sky/White, Real Madrid, etc.)
+    function getMatchKitColors() {
+      const clubName = (player.club && player.club.name) ? player.club.name.toLowerCase() : '';
+      const countryCode = (player.country && player.country.code) ? player.country.code : 'TR';
+
+      let myKit = { shirt: '#dc2626', stripe: '#15803d', shorts: '#15803d', socks: '#dc2626', num: '#fde047' }; // Default Red/Green (Screenshot 1)
+      let oppKit = { shirt: '#f8fafc', stripe: '#e2e8f0', shorts: '#581c3c', socks: '#581c3c', num: '#334155' }; // Default White/Burgundy (Screenshot 1)
+
+      if (clubName.includes('real madrid')) {
+        myKit = { shirt: '#ffffff', stripe: '#eab308', shorts: '#ffffff', socks: '#ffffff', num: '#1e293b' };
+        oppKit = { shirt: '#ea580c', stripe: '#c2410c', shorts: '#334155', socks: '#ea580c', num: '#ffffff' };
+      } else if (clubName.includes('galatasaray')) {
+        myKit = { shirt: '#b91c1c', stripe: '#f59e0b', shorts: '#991b1b', socks: '#f59e0b', num: '#ffffff' };
+        oppKit = { shirt: '#f8fafc', stripe: '#cbd5e1', shorts: '#1e293b', socks: '#f8fafc', num: '#0f172a' };
+      } else if (clubName.includes('fenerbahçe')) {
+        myKit = { shirt: '#facc15', stripe: '#1e3a8a', shorts: '#1e3a8a', socks: '#facc15', num: '#ffffff' };
+        oppKit = { shirt: '#dc2626', stripe: '#991b1b', shorts: '#dc2626', socks: '#dc2626', num: '#ffffff' };
+      } else if (clubName.includes('beşiktaş')) {
+        myKit = { shirt: '#f8fafc', stripe: '#0f172a', shorts: '#0f172a', socks: '#f8fafc', num: '#111827' };
+        oppKit = { shirt: '#ea580c', stripe: '#c2410c', shorts: '#334155', socks: '#ea580c', num: '#ffffff' };
+      } else if (countryCode === 'BR' || currentScenario === 'WING_ATTACK' || currentScenario === 'REBOUND') {
+        // Brazil Yellow / Blue vs Red (Screenshot 2)
+        myKit = { shirt: '#facc15', stripe: '#16a34a', shorts: '#1d4ed8', socks: '#ffffff', num: '#15803d' };
+        oppKit = { shirt: '#dc2626', stripe: '#b91c1c', shorts: '#b91c1c', socks: '#dc2626', num: '#ffffff' };
+      } else if (countryCode === 'AR' || currentScenario === 'ONE_TWO' || currentScenario === 'THROUGH_BALL') {
+        // Argentina SkyBlue/White vs Orange/Grey (Screenshot 3)
+        myKit = { shirt: '#f8fafc', stripe: '#38bdf8', shorts: '#0f172a', socks: '#0f172a', num: '#0f172a' };
+        oppKit = { shirt: '#f97316', stripe: '#ea580c', shorts: '#475569', socks: '#f97316', num: '#ffffff' };
+      }
+      return { myKit, oppKit };
+    }
+
     function initMatchCanvas(mode, callback, scenarioType = 'OPEN_PLAY') {
       matchMode = mode;
       currentMatchCallback = callback;
@@ -1640,21 +1694,24 @@
 
       canvas = document.getElementById('matchCanvas');
       ctx = canvas.getContext('2d');
-      canvasWidth = canvas.width;
-      canvasHeight = canvas.height;
+      canvasWidth = canvas.width;   // 600
+      canvasHeight = canvas.height; // 560
 
       // Reset Ball & Flight Physics
       ball.x = canvasWidth / 2;
-      ball.y = canvasHeight - 65;
+      ball.y = 435;
       ball.z = 0;
       ball.vx = 0;
       ball.vy = 0;
       ball.spin = 0;
+      ball.rotation = 0;
       ball.inFlight = false;
       ball.scored = false;
       ball.saved = false;
       ball.out = false;
       ball.isGroundShot = false;
+      ball.isPassing = false;
+      ball.isVolleyPose = false;
       ball.trail = [];
       ball.kickOrigin = { x: ball.x, y: ball.y };
       ball.kickTime = 0;
@@ -1662,91 +1719,108 @@
       updateHUD();
 
       // Level-Based GK Speed (scales with player age & OVR)
-      let gkBaseSpeed = 1.8;
-      if (player.age >= 16 && player.age < 22) gkBaseSpeed = 2.8;
-      else if (player.age >= 22) gkBaseSpeed = 4.0;
+      let gkBaseSpeed = 1.6;
+      if (player.age >= 16 && player.age < 22) gkBaseSpeed = 2.4;
+      else if (player.age >= 22) gkBaseSpeed = 3.4;
 
       goalkeeper.x = canvasWidth / 2;
-      goalkeeper.y = 150;
+      goalkeeper.y = 148;
       goalkeeper.vx = (Math.random() > 0.5 ? gkBaseSpeed : -gkBaseSpeed);
 
       gloves.x = canvasWidth / 2;
-      gloves.y = 200;
+      gloves.y = 155;
 
-      // Reset Actors for Scenario (Soccer Super Star Çoklu Pas & Pozisyon Mimarisi)
+      // Reset Actors for Scenario (Soccer Super Star 3D Perspective Layouts)
       wallDefenders = [];
       teammates = [];
       defenders = [];
 
+      const defenderHairs = ['#451a03', '#d97706', '#78350f', '#fde047', '#06b6d4'];
+
       if (currentScenario === 'FREE_KICK') {
-        const wallCenter = canvasWidth / 2 + (Math.random() > 0.5 ? 36 : -36);
-        for (let i = -1.5; i <= 1.5; i++) {
-          wallDefenders.push({ x: wallCenter + i * 22, y: 235, width: 18, height: 44 });
-        }
+        // Screenshot 1 Layout: 5-man wall + left teammate + right wing runner
+        const wallBaseX = 142;
+        const spacings = [0, 38, 72, 108, 185];
+        spacings.forEach((offset, idx) => {
+          wallDefenders.push({
+            x: wallBaseX + offset,
+            y: 262,
+            width: 24,
+            height: 52,
+            hair: defenderHairs[idx % defenderHairs.length],
+            isMohawk: idx === 4
+          });
+        });
         teammates = [
-          { x: 445, y: 265, label: 'Kısa Pas İstiyor 👟', active: true }
+          { x: 515, y: 292, num: 9, label: 'Kanat Koşusu ⚡', active: true, dir: -1, starX: 415, starY: 108 },
+          { x: 64, y: 256, num: 11, label: 'Sol Destek 👟', active: true, dir: 1, starX: 190, starY: 108 }
         ];
-        ball.x = canvasWidth / 2;
-        ball.y = canvasHeight - 65;
-      } else if (currentScenario === 'ONE_TWO') {
+        ball.x = 262;
+        ball.y = 435;
+      } else if (currentScenario === 'ONE_TWO' || currentScenario === 'THROUGH_BALL') {
+        // Screenshot 3 Layout: #10 with lunging cyan-haired defender + teammates #9 running into box
         teammates = [
-          { x: 195, y: 285, label: 'Ver-Kaç Koşusu 🏃', active: true }
+          { x: 430, y: 235, num: 9, label: 'Araya Kaçıyor 🏃', active: true, dir: -1, starX: 205, starY: 105 },
+          { x: 285, y: 232, num: 8, label: 'Merkez Koşusu ⚡', active: true, dir: 1, starX: 405, starY: 105 }
         ];
         defenders = [
-          { x: 310, y: 260, width: 22, height: 42 }
+          { x: 378, y: 358, width: 26, height: 52, hair: '#06b6d4', isMohawk: true, isLunging: true },
+          { x: 120, y: 248, width: 24, height: 48, hair: '#78350f' },
+          { x: 345, y: 238, width: 24, height: 48, hair: '#92400e' },
+          { x: 505, y: 235, width: 24, height: 48, hair: '#b45309' }
         ];
-        ball.x = 295;
-        ball.y = 355;
+        ball.x = 272;
+        ball.y = 415;
       } else if (currentScenario === 'WING_ATTACK' || currentScenario === 'CORNER') {
+        // Screenshot 2 Layout: Wing cross -> Acrobatic Volley in box!
         teammates = [
-          { x: 310, y: 240, label: 'Ceza Sahasında Boşta ⚡', active: true },
-          { x: 180, y: 225, label: 'Arka Direk Koşusu 🏃', active: true }
+          { x: 315, y: 285, num: 10, label: 'Voleye Hazır ⚡', active: true, dir: -1, starX: 195, starY: 105, triggersVolley: true },
+          { x: 535, y: 350, num: 11, label: 'Sağ Kanat 🏃', active: true, dir: -1, starX: 410, starY: 108 }
         ];
         defenders = [
-          { x: 260, y: 205, width: 20, height: 40 },
-          { x: 380, y: 225, width: 20, height: 40 }
+          { x: 252, y: 245, width: 24, height: 48, hair: '#78350f' },
+          { x: 455, y: 262, width: 24, height: 48, hair: '#1e293b', isLunging: true },
+          { x: 105, y: 345, width: 24, height: 50, hair: '#92400e', num: 7 }
         ];
-        ball.x = 485;
-        ball.y = 325;
-      } else if (currentScenario === 'THROUGH_BALL') {
-        teammates = [
-          { x: 410, y: 270, label: 'Araya Sızıyor ⚡', active: true }
-        ];
-        defenders = [
-          { x: 345, y: 285, width: 22, height: 42 },
-          { x: 240, y: 250, width: 20, height: 40 }
-        ];
-        ball.x = 290;
-        ball.y = 355;
+        ball.x = 420;
+        ball.y = 465;
       } else if (currentScenario === 'REBOUND') {
+        // Screenshot 2 Direct Acrobatic Rebound / Volley!
+        ball.isVolleyPose = true;
         teammates = [
-          { x: 205, y: 280, label: 'Boşta Pas İstiyor 👟', active: true }
+          { x: 535, y: 345, num: 11, label: 'Kanatta Boşta 👟', active: true, dir: -1, starX: 415, starY: 105 }
         ];
         defenders = [
-          { x: 260, y: 235, width: 20, height: 40 },
-          { x: 360, y: 230, width: 20, height: 40 }
+          { x: 252, y: 242, width: 24, height: 48, hair: '#78350f' },
+          { x: 458, y: 258, width: 24, height: 48, hair: '#1e293b', isLunging: true },
+          { x: 105, y: 348, width: 24, height: 50, hair: '#92400e', num: 7 }
         ];
-        ball.x = 295;
-        ball.y = 340;
+        ball.x = 345;
+        ball.y = 305;
       } else {
         // OPEN_PLAY
         teammates = [
-          { x: 215, y: 280, label: 'Boşta Pas İstiyor 🏃', active: true },
-          { x: 420, y: 275, label: 'Kanat Desteği ⚡', active: true }
+          { x: 185, y: 265, num: 11, label: 'Sol Forvet 🏃', active: true, dir: 1, starX: 198, starY: 106 },
+          { x: 435, y: 255, num: 9, label: 'Sağ Forvet ⚡', active: true, dir: -1, starX: 405, starY: 106 }
         ];
-        defenders = [{ x: 360, y: 250, width: 20, height: 40 }];
-        ball.x = canvasWidth / 2;
-        ball.y = canvasHeight - 65;
+        defenders = [
+          { x: 255, y: 248, width: 24, height: 48, hair: '#78350f' },
+          { x: 358, y: 248, width: 24, height: 48, hair: '#fde047' }
+        ];
+        ball.x = 300;
+        ball.y = 435;
       }
+
+      ball.kickOrigin = { x: ball.x, y: ball.y };
 
       const overlay = document.getElementById('canvasInstructionOverlay');
       const promptTxt = document.getElementById('txtCanvasPrompt');
       overlay.classList.remove('hidden');
 
       if (matchMode === 'SHOOT') {
-        promptTxt.textContent = '👟 İster arkadaşına pas verip pozisyonu büyüt, ister doğrudan 90’a Roberto Carlos falsosuyla vur!';
+        promptTxt.textContent = '⚽ Topun üzerinden kaleye veya arkadaşına doğru kavisli çizgi çek!';
       } else {
-        promptTxt.textContent = '🧤 Rakip şut çekiyor! Eldivenleri uçurarak topun önüne geç!';
+        promptTxt.textContent = '🧤 Rakip şut çekiyor! Eldivenleri sürükleyerek kurtarışı yap!';
         setTimeout(() => {
           if (!ball.inFlight && matchMode === 'SAVE') {
             shootBallAtGoalKeeper();
@@ -1764,12 +1838,12 @@
       ball.inFlight = true;
       ball.trail = [];
       Sound.kick();
-      const targetX = canvasWidth * 0.25 + Math.random() * (canvasWidth * 0.5);
-      const targetY = 125 + Math.random() * 75;
-      const speed = player.age >= 22 ? 22 : 30;
+      const targetX = 165 + Math.random() * 270;
+      const targetY = 105 + Math.random() * 50;
+      const speed = player.age >= 22 ? 22 : 28;
       ball.vx = (targetX - ball.x) / speed;
       ball.vy = (targetY - ball.y) / speed;
-      ball.spin = (Math.random() - 0.5) * 0.6;
+      ball.spin = (Math.random() - 0.5) * 0.5;
     }
 
     function setupCanvasEvents() {
@@ -1794,7 +1868,7 @@
 
         if (matchMode === 'SHOOT' && !ball.inFlight) {
           const dist = Math.hypot(pos.x - ball.x, pos.y - ball.y);
-          if (dist < 90) {
+          if (dist < 130) {
             isDragging = true;
             touchStart = { x: pos.x, y: pos.y };
             touchCurrent = { x: pos.x, y: pos.y };
@@ -1802,8 +1876,7 @@
             dragCurrent = { x: ball.x, y: ball.y };
             touchPoints = [{ x: pos.x, y: pos.y, time: performance.now() }];
             dragPoints = [dragStart];
-            // Ground shot if touch starts near top half of ball
-            ball.isGroundShot = (pos.y < ball.y - 4);
+            ball.isGroundShot = false;
           }
         } else if (matchMode === 'SAVE') {
           gloves.dragging = true;
@@ -1818,27 +1891,31 @@
         if (isDragging && matchMode === 'SHOOT') {
           touchCurrent = pos;
           touchPoints.push({ x: pos.x, y: pos.y, time: performance.now() });
-          if (touchPoints.length > 30) touchPoints.shift();
+          if (touchPoints.length > 35) touchPoints.shift();
 
-          // Calculate direct swipe displacement vector from touch start
           let sDx = touchCurrent.x - touchStart.x;
           let sDy = touchCurrent.y - touchStart.y;
 
-          // If pulled downwards like slingshot, invert so shot aims forward
-          if (sDy > 8) {
+          // Support both direct forward drawing (Soccer Super Star) and slingshot pullback
+          if (sDy > 14) {
             sDx = -sDx;
             sDy = -sDy;
           }
 
           dragStart = { x: ball.x, y: ball.y };
           dragCurrent = { x: ball.x + sDx, y: ball.y + sDy };
-          dragPoints = touchPoints.map(p => ({
-            x: ball.x + (p.x - touchStart.x),
-            y: ball.y + (p.y - touchStart.y)
-          }));
+          dragPoints = touchPoints.map(p => {
+            let pdx = p.x - touchStart.x;
+            let pdy = p.y - touchStart.y;
+            if ((touchCurrent.y - touchStart.y) > 14) {
+              pdx = -pdx;
+              pdy = -pdy;
+            }
+            return { x: ball.x + pdx, y: ball.y + pdy };
+          });
         } else if (gloves.dragging && matchMode === 'SAVE') {
-          gloves.x = Math.max(120, Math.min(canvasWidth - 120, pos.x));
-          gloves.y = Math.max(100, Math.min(260, pos.y));
+          gloves.x = Math.max(140, Math.min(canvasWidth - 140, pos.x));
+          gloves.y = Math.max(85, Math.min(185, pos.y));
         }
       };
 
@@ -1848,8 +1925,7 @@
           let sDx = touchCurrent.x - touchStart.x;
           let sDy = touchCurrent.y - touchStart.y;
 
-          // If pulled downwards like slingshot, invert forward
-          if (sDy > 8) {
+          if (sDy > 14) {
             sDx = -sDx;
             sDy = -sDy;
           }
@@ -1866,19 +1942,19 @@
 
             // Natural Controlled Falso from curved swipe gesture
             let detectedSpin = 0;
-            if (touchPoints.length >= 3) {
-              const startPt = touchPoints[0];
-              const endPt = touchPoints[touchPoints.length - 1];
+            if (dragPoints.length >= 3) {
+              const startPt = dragPoints[0];
+              const endPt = dragPoints[dragPoints.length - 1];
               const chordLen = Math.hypot(endPt.x - startPt.x, endPt.y - startPt.y);
               if (chordLen > 20) {
                 let maxDev = 0;
-                for (let p of touchPoints) {
+                for (let p of dragPoints) {
                   const dev = (-(endPt.y - startPt.y) * (p.x - startPt.x) + (endPt.x - startPt.x) * (p.y - startPt.y)) / chordLen;
                   if (Math.abs(dev) > Math.abs(maxDev)) maxDev = dev;
                 }
-                const curveRatio = Math.max(-1.5, Math.min(1.5, maxDev / 30));
-                detectedSpin = curveRatio * 0.22;
-                if (Math.abs(detectedSpin) < 0.03) detectedSpin = 0;
+                const curveRatio = Math.max(-1.6, Math.min(1.6, maxDev / 28));
+                detectedSpin = curveRatio * 0.24;
+                if (Math.abs(detectedSpin) < 0.025) detectedSpin = 0;
               }
             }
 
@@ -1891,7 +1967,7 @@
                   const tmAngle = Math.atan2((tm.y + 15) - ball.y, tm.x - ball.x);
                   let diff = Math.abs(swipeAngle - tmAngle);
                   if (diff > Math.PI) diff = 2 * Math.PI - diff;
-                  if (diff < 0.38) {
+                  if (diff < 0.36) {
                     passTarget = tm;
                     break;
                   }
@@ -1900,29 +1976,42 @@
             }
 
             if (passTarget) {
-              // Takım arkadaşına kavisli, isabetli ve yerden akıllı pas
               ball.isPassing = true;
               ball.targetTeammate = passTarget;
-              ball.isGroundShot = true; // Paslar havadan değil ayağa yerden gider
+              ball.isGroundShot = true;
               const pDx = passTarget.x - ball.x;
               const pDy = (passTarget.y + 15) - ball.y;
               const pDist = Math.hypot(pDx, pDy);
-              const pSpeed = Math.min(14, Math.max(9, pDist * 0.085));
+              const pSpeed = Math.min(14, Math.max(9.5, pDist * 0.085));
               ball.vx = (pDx / (pDist || 1)) * pSpeed;
               ball.vy = (pDy / (pDist || 1)) * pSpeed;
               ball.z = 0;
               ball.spin = 0;
+              ball.savedRibbon = null;
             } else {
-              // Kaleye doğrudan şut
               ball.isPassing = false;
               ball.targetTeammate = null;
-              ball.isGroundShot = (Math.abs(sDy) < 18 || (Math.abs(detectedSpin) < 0.04 && sDy > -25));
-              const speed = Math.min(Math.max(power * 0.13, 9.5), 17);
+              ball.isGroundShot = (Math.abs(sDy) < 22 && Math.abs(detectedSpin) < 0.03);
+              const speed = Math.min(Math.max(power * 0.11, 10), 16.5);
               const angle = Math.atan2(sDy, sDx);
               ball.vx = Math.cos(angle) * speed;
               ball.vy = Math.sin(angle) * speed;
               ball.z = 0;
               ball.spin = detectedSpin;
+
+              // Save the white ribbon geometry so it stays visible while ball flies (just like Screenshots 1 & 2!)
+              const estFrames = Math.max(1, Math.abs((ball.y - 148) / (ball.vy || -10)));
+              const endX = ball.x + ball.vx * estFrames + 0.5 * (ball.spin * 0.35) * estFrames * estFrames;
+              const ctrlX = (ball.x + endX) / 2 - (ball.spin * 150);
+              const ctrlY = (ball.y + 135) / 2;
+              ball.savedRibbon = {
+                x0: ball.x,
+                y0: ball.y,
+                cx: ctrlX,
+                cy: ctrlY,
+                x1: Math.max(80, Math.min(520, endX)),
+                y1: 122
+              };
             }
 
             Sound.kick();
@@ -1934,447 +2023,993 @@
       };
     }
 
-        /* =====================================================================
-       5.5 ON-PITCH CUSTOM FOOTBALLER & GOALKEEPER RENDERING ENGINE 🌟
+    /* =====================================================================
+       5.5 SOCCER SUPER STAR 3D STADIUM, CROWD, RIBBON & HUMANOID ENGINE 🌟
        ===================================================================== */
-    function drawPitchCustomPlayer(ctx, ballX, ballY, inFlight, dragging, aimPower, aimDx, aimDy) {
-      ctx.save();
 
+    // Draw Tapered 3D White Curve Ribbon (Exact match to Screenshot 1 & 2)
+    function drawTaperedWhiteRibbon(ctx, x0, y0, cx, cy, x1, y1, color = 'rgba(255, 255, 255, 0.92)') {
+      ctx.save();
+      const steps = 28;
+      const leftPts = [];
+      const rightPts = [];
+
+      for (let i = 0; i <= steps; i++) {
+        const t = i / steps;
+        const inv = 1 - t;
+        const px = inv * inv * x0 + 2 * inv * t * cx + t * t * x1;
+        const py = inv * inv * y0 + 2 * inv * t * cy + t * t * y1;
+
+        // Derivative tangent
+        const tx = 2 * inv * (cx - x0) + 2 * t * (x1 - cx);
+        const ty = 2 * inv * (cy - y0) + 2 * t * (y1 - cy);
+        const len = Math.hypot(tx, ty) || 1;
+        const nx = -ty / len;
+        const ny = tx / len;
+
+        // Width tapers from 1.5px at ball to 8.5px near goal, then hooks at tip
+        const halfW = 1.2 + Math.sin(t * Math.PI * 0.88) * 7.2;
+        leftPts.push({ x: px + nx * halfW, y: py + ny * halfW });
+        rightPts.push({ x: px - nx * halfW, y: py - ny * halfW });
+      }
+
+      const grad = ctx.createLinearGradient(x0, y0, x1, y1);
+      grad.addColorStop(0, 'rgba(255, 255, 255, 0.15)');
+      grad.addColorStop(0.25, 'rgba(255, 255, 255, 0.78)');
+      grad.addColorStop(1, color);
+
+      ctx.fillStyle = grad;
+      ctx.shadowColor = 'rgba(255, 255, 255, 0.5)';
+      ctx.shadowBlur = 8;
+      ctx.beginPath();
+      ctx.moveTo(leftPts[0].x, leftPts[0].y);
+      for (let i = 1; i <= steps; i++) ctx.lineTo(leftPts[i].x, leftPts[i].y);
+      for (let i = steps; i >= 0; i--) ctx.lineTo(rightPts[i].x, rightPts[i].y);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // Draw Yellow Directional Arrow & Golden Star (Exact match to Screenshot 3)
+    function drawYellowPassArrowAndStar(ctx, x0, y0, tm, isHighlighted) {
+      ctx.save();
+      const targetX = tm.x + (tm.dir || -1) * 14;
+      const targetY = tm.y + 8;
+
+      // 1. Primary Yellow Arrow from Ball to Teammate's Run Spot
+      const grad = ctx.createLinearGradient(x0, y0, targetX, targetY);
+      grad.addColorStop(0, 'rgba(250, 204, 21, 0.25)');
+      grad.addColorStop(1, isHighlighted ? 'rgba(250, 204, 21, 0.98)' : 'rgba(250, 204, 21, 0.72)');
+
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = isHighlighted ? 6.5 : 4.5;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(x0, y0);
+      ctx.lineTo(targetX, targetY);
+      ctx.stroke();
+
+      // Arrowhead at teammate run spot
+      const ang1 = Math.atan2(targetY - y0, targetX - x0);
+      ctx.fillStyle = isHighlighted ? '#facc15' : 'rgba(250, 204, 21, 0.85)';
+      ctx.beginPath();
+      ctx.moveTo(targetX + Math.cos(ang1) * 6, targetY + Math.sin(ang1) * 6);
+      ctx.lineTo(targetX - Math.cos(ang1 - 0.55) * 13, targetY - Math.sin(ang1 - 0.55) * 13);
+      ctx.lineTo(targetX - Math.cos(ang1 + 0.55) * 13, targetY - Math.sin(ang1 + 0.55) * 13);
+      ctx.closePath();
+      ctx.fill();
+
+      // 2. Secondary Yellow Arrow from Teammate to Golden Star in Goal Corner!
+      const starX = tm.starX || 205;
+      const starY = tm.starY || 105;
+      const grad2 = ctx.createLinearGradient(targetX, targetY - 12, starX, starY);
+      grad2.addColorStop(0, 'rgba(250, 204, 21, 0.18)');
+      grad2.addColorStop(1, isHighlighted ? 'rgba(250, 204, 21, 0.95)' : 'rgba(250, 204, 21, 0.6)');
+
+      ctx.strokeStyle = grad2;
+      ctx.lineWidth = isHighlighted ? 5.5 : 3.5;
+      ctx.beginPath();
+      ctx.moveTo(targetX, targetY - 14);
+      ctx.lineTo(starX + 18, starY + 8);
+      ctx.stroke();
+
+      const ang2 = Math.atan2((starY + 8) - (targetY - 14), (starX + 18) - targetX);
+      ctx.beginPath();
+      ctx.moveTo(starX + 18, starY + 8);
+      ctx.lineTo(starX + 18 - Math.cos(ang2 - 0.55) * 12, starY + 8 - Math.sin(ang2 - 0.55) * 12);
+      ctx.lineTo(starX + 18 - Math.cos(ang2 + 0.55) * 12, starY + 8 - Math.sin(ang2 + 0.55) * 12);
+      ctx.closePath();
+      ctx.fill();
+
+      // 3. 3D Golden Star inside Goal Net (Screenshot 3!)
+      drawGoldenGoalStar(ctx, starX, starY, isHighlighted ? 14 : 11);
+      ctx.restore();
+    }
+
+    function drawGoldenGoalStar(ctx, cx, cy, outerR) {
+      ctx.save();
+      ctx.fillStyle = '#facc15';
+      ctx.strokeStyle = '#ca8a04';
+      ctx.lineWidth = 1.5;
+      ctx.shadowColor = '#facc15';
+      ctx.shadowBlur = 10;
+      ctx.beginPath();
+      const innerR = outerR * 0.45;
+      for (let i = 0; i < 10; i++) {
+        const r = (i % 2 === 0) ? outerR : innerR;
+        const a = (i * Math.PI) / 5 - Math.PI / 2;
+        const x = cx + Math.cos(a) * r;
+        const y = cy + Math.sin(a) * r;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // Draw Stadium Tribunes, Crowd, Camera Crane & LED Ad Boards
+    function drawStadiumAndPitch3D(ctx, goalLeft, goalRight, goalTop, goalBottom) {
+      const now = performance.now();
+
+      // 1. Upper Stadium Roof Fascia Banner (y: 0..22)
+      ctx.fillStyle = '#172554';
+      ctx.fillRect(0, 0, canvasWidth, 22);
+      for (let bx = 0; bx < canvasWidth; bx += 120) {
+        ctx.fillStyle = (bx / 120) % 2 === 0 ? '#dc2626' : '#1e3a8a';
+        ctx.fillRect(bx, 0, 120, 20);
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'italic 900 9px "Chakra Petch", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('NEXT STAR SOCCER', bx + 60, 13);
+      }
+
+      // 2. Grandstand Seating Background (y: 22..108)
+      const tribuneGrad = ctx.createLinearGradient(0, 22, 0, 108);
+      tribuneGrad.addColorStop(0, '#1e293b');
+      tribuneGrad.addColorStop(0.5, '#334155');
+      tribuneGrad.addColorStop(1, '#7f1d1d');
+      ctx.fillRect(0, 22, canvasWidth, 86);
+
+      // Horizontal Tribune Tiers / Steps
+      for (let ty = 26; ty < 106; ty += 12) {
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.55)';
+        ctx.fillRect(0, ty, canvasWidth, 5);
+        ctx.fillStyle = 'rgba(220, 38, 38, 0.35)';
+        ctx.fillRect(0, ty + 5, canvasWidth, 5);
+      }
+
+      // White Concrete Stairways (Aisles)
+      ctx.fillStyle = '#e2e8f0';
+      // Left stairway (perspective slant)
+      ctx.beginPath();
+      ctx.moveTo(188, 22);
+      ctx.lineTo(208, 22);
+      ctx.lineTo(182, 108);
+      ctx.lineTo(160, 108);
+      ctx.closePath();
+      ctx.fill();
+      // Right stairway
+      ctx.beginPath();
+      ctx.moveTo(410, 22);
+      ctx.lineTo(432, 22);
+      ctx.lineTo(438, 108);
+      ctx.lineTo(414, 108);
+      ctx.closePath();
+      ctx.fill();
+
+      // Stair step lines
+      ctx.strokeStyle = '#94a3b8';
+      ctx.lineWidth = 1;
+      for (let sy = 26; sy < 108; sy += 6) {
+        ctx.beginPath();
+        ctx.moveTo(164, sy); ctx.lineTo(202, sy);
+        ctx.moveTo(412, sy); ctx.lineTo(436, sy);
+        ctx.stroke();
+      }
+
+      // Cheering Spectators in Grandstands
+      for (let i = 0; i < STADIUM_CROWD.length; i++) {
+        const sp = STADIUM_CROWD[i];
+        const bob = Math.sin(now * 0.004 + sp.phase) > 0.65 ? -1.5 : 0;
+        // Torso
+        ctx.fillStyle = sp.shirt;
+        ctx.fillRect(sp.x - 3, sp.y + bob, 6, 6);
+        // Head
+        ctx.fillStyle = sp.skin;
+        ctx.beginPath();
+        ctx.arc(sp.x, sp.y - 2.5 + bob, 2.3, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Yellow-vested Stadium Stewards in Stairways
+      for (let [sx, sy] of [[186, 54], [12, 96], [562, 96]]) {
+        ctx.fillStyle = '#1e293b';
+        ctx.fillRect(sx - 2, sy + 5, 4, 6);
+        ctx.fillStyle = '#eab308';
+        ctx.fillRect(sx - 3, sy - 1, 6, 6);
+        ctx.fillStyle = '#f8d5b8';
+        ctx.beginPath(); ctx.arc(sx, sy - 3, 2.2, 0, Math.PI * 2); ctx.fill();
+      }
+
+      // Stadium Wall & Hanging National/Club Flags (y: 96..114)
+      ctx.fillStyle = '#cbd5e1';
+      ctx.fillRect(0, 98, canvasWidth, 16);
+      for (let fx of [55, 145, 470, 545]) {
+        ctx.fillStyle = '#dc2626';
+        ctx.fillRect(fx, 99, 20, 12);
+        ctx.fillStyle = '#16a34a';
+        ctx.fillRect(fx, 99, 8, 12);
+        ctx.fillStyle = '#facc15';
+        ctx.beginPath(); ctx.arc(fx + 8, 105, 2.5, 0, Math.PI * 2); ctx.fill();
+      }
+
+      // 3. Pitch-Side LED Advertising Boards (y: 112..136)
+      const ledGrad = ctx.createLinearGradient(0, 112, canvasWidth, 112);
+      ledGrad.addColorStop(0, '#1d4ed8');
+      ledGrad.addColorStop(0.28, '#e11d48');
+      ledGrad.addColorStop(0.5, '#2563eb');
+      ledGrad.addColorStop(0.75, '#db2777');
+      ledGrad.addColorStop(1, '#e11d48');
+      ctx.fillStyle = ledGrad;
+      ctx.fillRect(0, 112, canvasWidth, 24);
+
+      // "GO!" Banner behind goal center
+      ctx.fillStyle = '#38bdf8';
+      ctx.fillRect(245, 96, 125, 22);
+      ctx.fillStyle = '#1e3a8a';
+      ctx.font = 'italic 900 18px "Chakra Petch", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('GO!', 308, 113);
+
+      // LED Board Texts ("Soccer Superstar / Next Star")
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'italic 900 10px "Chakra Petch", sans-serif';
+      for (let lx of [42, 195, 385, 545]) {
+        ctx.fillText('NEXT STAR', lx, 123);
+        ctx.fillText('SOCCER', lx, 132);
+      }
+
+      // 4. Lush 3D Perspective Football Turf (y: 136..560)
+      ctx.fillStyle = '#3d9e41';
+      ctx.fillRect(0, 136, canvasWidth, canvasHeight - 136);
+
+      // Perspective Diagonal Mowed Grass Stripes (Like Screenshot 1 & 3!)
+      const numStripes = 9;
+      for (let i = -2; i < numStripes; i++) {
+        if (i % 2 === 0) {
+          ctx.fillStyle = 'rgba(74, 185, 78, 0.52)';
+          ctx.beginPath();
+          const topX1 = 60 + i * 75;
+          const topX2 = topX1 + 75;
+          const botX1 = -140 + i * 115;
+          const botX2 = botX1 + 115;
+          ctx.moveTo(topX1, 136);
+          ctx.lineTo(topX2, 136);
+          ctx.lineTo(botX2, canvasHeight);
+          ctx.lineTo(botX1, canvasHeight);
+          ctx.closePath();
+          ctx.fill();
+        }
+      }
+
+      // Horizontal Mowed Turf Bands for Depth
+      for (let gy = 158; gy < canvasHeight; gy += 52) {
+        ctx.fillStyle = ((gy / 52) % 2 === 0) ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.04)';
+        ctx.fillRect(0, gy, canvasWidth, 26);
+      }
+
+      // 5. White Perspective Pitch Markings (Goal Line, 6-Yard Box, 18-Yard Box, Penalty Arc)
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.82)';
+      ctx.lineWidth = 2.5;
+
+      // Goal Line
+      ctx.beginPath();
+      ctx.moveTo(0, goalBottom);
+      ctx.lineTo(canvasWidth, goalBottom);
+      ctx.stroke();
+
+      // 6-Yard Box (Altıpas - Perspective Trapezoid)
+      ctx.beginPath();
+      ctx.moveTo(105, goalBottom);
+      ctx.lineTo(82, 206);
+      ctx.lineTo(518, 206);
+      ctx.lineTo(495, goalBottom);
+      ctx.stroke();
+
+      // 18-Yard Penalty Box Line & Penalty Arc (Ceza Sahası & Ceza Yayı)
+      ctx.beginPath();
+      ctx.moveTo(0, 318);
+      ctx.lineTo(canvasWidth, 318);
+      ctx.stroke();
+
+      // Penalty Spot
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+      ctx.beginPath();
+      ctx.ellipse(canvasWidth / 2, 254, 4.5, 2.2, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Penalty Box Arc (Ceza Yayı)
+      ctx.beginPath();
+      ctx.ellipse(canvasWidth / 2, 318, 128, 34, 0, 0.05, Math.PI - 0.05);
+      ctx.stroke();
+
+      // 6. 3D Goal Net & Frame with Depth
+      const backLeft = goalLeft + 14;
+      const backRight = goalRight - 14;
+      const backTop = goalTop + 7;
+      const backBottom = goalBottom - 14;
+
+      // Turf shadow inside goal
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.18)';
+      ctx.beginPath();
+      ctx.moveTo(goalLeft, goalBottom);
+      ctx.lineTo(backLeft, backBottom);
+      ctx.lineTo(backRight, backBottom);
+      ctx.lineTo(goalRight, goalBottom);
+      ctx.closePath();
+      ctx.fill();
+
+      // Side & Back Net Support Poles
+      ctx.strokeStyle = 'rgba(203, 213, 225, 0.7)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(goalLeft, goalTop); ctx.lineTo(backLeft, backTop);
+      ctx.moveTo(goalRight, goalTop); ctx.lineTo(backRight, backTop);
+      ctx.moveTo(backLeft, backTop); ctx.lineTo(backRight, backTop);
+      ctx.moveTo(backLeft, backTop); ctx.lineTo(backLeft, backBottom);
+      ctx.moveTo(backRight, backTop); ctx.lineTo(backRight, backBottom);
+      ctx.moveTo(backLeft, backBottom); ctx.lineTo(backRight, backBottom);
+      ctx.moveTo(goalLeft, goalBottom); ctx.lineTo(backLeft, backBottom);
+      ctx.moveTo(goalRight, goalBottom); ctx.lineTo(backRight, backBottom);
+      ctx.stroke();
+
+      // Outer vertical tension poles (like Screenshot 1 & 2)
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.65)';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(goalLeft - 14, 72); ctx.lineTo(goalLeft - 14, goalBottom - 4);
+      ctx.moveTo(goalRight + 14, 72); ctx.lineTo(goalRight + 14, goalBottom - 4);
+      ctx.stroke();
+
+      // Dense Diamond / Hexagonal Goal Net Mesh
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(goalLeft, goalTop, goalRight - goalLeft, goalBottom - goalTop);
+      ctx.clip();
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.48)';
+      ctx.lineWidth = 1;
+      for (let nx = goalLeft - 80; nx < goalRight + 80; nx += 10) {
+        ctx.beginPath();
+        ctx.moveTo(nx, goalTop);
+        ctx.lineTo(nx + 55, goalBottom);
+        ctx.moveTo(nx + 55, goalTop);
+        ctx.lineTo(nx, goalBottom);
+        ctx.stroke();
+      }
+      ctx.restore();
+
+      // Water Bottles & Pitch Microphones around Goal
+      for (let bx of [goalLeft - 20, goalLeft + 14, goalRight - 18, goalRight + 16]) {
+        ctx.fillStyle = '#0f172a';
+        ctx.fillRect(bx, goalBottom - 4, 5, 7);
+        ctx.fillStyle = '#38bdf8';
+        ctx.fillRect(bx + 1, goalBottom - 6, 3, 2);
+      }
+
+      // Main Front White Goal Posts & Crossbar
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 6.5;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.35)';
+      ctx.shadowBlur = 4;
+      ctx.beginPath();
+      ctx.moveTo(goalLeft, goalBottom);
+      ctx.lineTo(goalLeft, goalTop);
+      ctx.lineTo(goalRight, goalTop);
+      ctx.lineTo(goalRight, goalBottom);
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+
+      // Broadcast Jib Camera Crane Arm (Top-Left over Goal, just like Screenshot 1 & 3!)
+      ctx.strokeStyle = '#0f172a';
+      ctx.lineWidth = 3.5;
+      ctx.beginPath();
+      ctx.moveTo(315, 45);
+      ctx.lineTo(96, 94);
+      ctx.stroke();
+      ctx.fillStyle = '#1e293b';
+      ctx.beginPath();
+      ctx.ellipse(94, 95, 7, 4.5, -0.2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Draw Top-Left Soccer Super Star Scoreboard Overlay (Matches 88' 2-3 / 72' 1-0 / 34' 0-0)
+    function drawSoccerSuperStarScoreBug(ctx) {
+      const { myKit, oppKit } = getMatchKitColors();
+      const minTxt = (typeof tvMatchEngine !== 'undefined' && tvMatchEngine && tvMatchEngine.isActive)
+        ? `${tvMatchEngine.minute}'`
+        : "88'";
+      const hScore = (typeof tvMatchEngine !== 'undefined' && tvMatchEngine && tvMatchEngine.home)
+        ? tvMatchEngine.home.score
+        : 0;
+      const aScore = (typeof tvMatchEngine !== 'undefined' && tvMatchEngine && tvMatchEngine.away)
+        ? tvMatchEngine.away.score
+        : 0;
+
+      ctx.save();
+      const bx = 18, by = 18;
+
+      // 1. Black Minute Pill (Left)
+      ctx.fillStyle = 'rgba(10, 10, 14, 0.94)';
+      ctx.beginPath();
+      ctx.roundRect(bx, by + 4, 54, 34, 8);
+      ctx.fill();
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'italic 900 16px "Chakra Petch", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(minTxt, bx + 26, by + 22);
+
+      // 2. White Scoreboard Container
+      const cardX = bx + 48;
+      ctx.fillStyle = '#ffffff';
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.45)';
+      ctx.shadowBlur = 8;
+      ctx.beginPath();
+      ctx.roundRect(cardX, by, 106, 42, 8);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      // Home Team Split Color Box
+      ctx.save();
+      ctx.beginPath();
+      ctx.roundRect(cardX + 2, by + 2, 42, 38, 6);
+      ctx.clip();
+      ctx.fillStyle = myKit.shirt;
+      ctx.fillRect(cardX + 2, by + 2, 42, 24);
+      ctx.fillStyle = myKit.shorts;
+      ctx.fillRect(cardX + 2, by + 26, 42, 14);
+      ctx.restore();
+
+      // Away Team Split Color Box
+      ctx.save();
+      ctx.beginPath();
+      ctx.roundRect(cardX + 62, by + 2, 42, 38, 6);
+      ctx.clip();
+      ctx.fillStyle = oppKit.shirt;
+      ctx.fillRect(cardX + 62, by + 2, 42, 24);
+      ctx.fillStyle = oppKit.shorts;
+      ctx.fillRect(cardX + 62, by + 26, 42, 14);
+      ctx.restore();
+
+      // Center Dash
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(cardX + 49, by + 19, 8, 3.5);
+
+      // Score Numbers with Crisp Outline
+      ctx.font = '900 20px "Chakra Petch", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.lineWidth = 3.5;
+      ctx.strokeStyle = '#0f172a';
+
+      ctx.strokeText(String(hScore), cardX + 23, by + 22);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillText(String(hScore), cardX + 23, by + 22);
+
+      ctx.strokeText(String(aScore), cardX + 83, by + 22);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillText(String(aScore), cardX + 83, by + 22);
+
+      ctx.restore();
+    }
+
+    // Draw 3D-Styled Humanoid Defender or Teammate on Pitch
+    function drawHumanoidActor(ctx, x, y, kit, options = {}) {
+      ctx.save();
+      // Perspective scale based on Y position on pitch
+      const scale = options.scale || (0.76 + Math.max(0, (y - 160) / 380) * 0.45);
+      ctx.translate(x, y);
+      ctx.scale(scale, scale);
+
+      const skin = options.skin || '#e8b993';
+      const hair = options.hair || '#3f2305';
+      const role = options.role || 'DEFENDER'; // 'WALL', 'DEFENDER', 'TEAMMATE'
+
+      // 1. Ground Shadow on Grass
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.32)';
+      ctx.beginPath();
+      ctx.ellipse(2, 38, 15, 4.5, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      if (role === 'WALL') {
+        // Wall Defender Posture (Hands covering groin, shoulder-to-shoulder like Screenshot 1)
+        // Socks & Legs
+        ctx.fillStyle = kit.socks;
+        ctx.fillRect(-6, 22, 4.5, 13);
+        ctx.fillRect(2, 22, 4.5, 13);
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(-6, 22, 4.5, 2);
+        ctx.fillRect(2, 22, 4.5, 2);
+        // Knees
+        ctx.fillStyle = skin;
+        ctx.fillRect(-6, 17, 4.5, 5);
+        ctx.fillRect(2, 17, 4.5, 5);
+        // Cleats
+        ctx.fillStyle = '#f59e0b';
+        ctx.fillRect(-7, 34, 5.5, 4);
+        ctx.fillRect(2, 34, 5.5, 4);
+        // Shorts
+        ctx.fillStyle = kit.shorts;
+        ctx.beginPath();
+        ctx.roundRect(-8, 6, 16, 12, 2);
+        ctx.fill();
+        // Shirt Torso
+        ctx.fillStyle = kit.shirt;
+        ctx.beginPath();
+        ctx.roundRect(-9.5, -14, 19, 21, 3);
+        ctx.fill();
+        // Collar
+        ctx.strokeStyle = kit.shorts;
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(-3, -14); ctx.lineTo(0, -10); ctx.lineTo(3, -14);
+        ctx.stroke();
+        // Arms folded down protecting groin
+        ctx.strokeStyle = skin;
+        ctx.lineWidth = 3.5;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(-9, -9); ctx.lineTo(-3, 7);
+        ctx.moveTo(9, -9); ctx.lineTo(3, 7);
+        ctx.stroke();
+        // Clasped hands
+        ctx.fillStyle = skin;
+        ctx.beginPath(); ctx.arc(0, 8, 3.5, 0, Math.PI * 2); ctx.fill();
+      } else if (role === 'TEAMMATE') {
+        // Teammate Running Stride (Back/3-Quarter view with Jersey Number like #9 & #11 in Screenshots!)
+        const runBob = Math.sin(performance.now() * 0.008 + x) * 2.5;
+        // Left & Right Legs in stride
+        ctx.fillStyle = kit.socks;
+        ctx.fillRect(-6, 20 + runBob * 0.5, 4.5, 13);
+        ctx.fillRect(2, 18 - runBob * 0.5, 4.5, 13);
+        ctx.fillStyle = skin;
+        ctx.fillRect(-6, 15, 4.5, 5);
+        ctx.fillRect(2, 14, 4.5, 5);
+        // Cleats
+        ctx.fillStyle = '#f8fafc';
+        ctx.fillRect(-7, 32 + runBob * 0.5, 6, 4);
+        ctx.fillRect(2, 30 - runBob * 0.5, 6, 4);
+        // Shorts
+        ctx.fillStyle = kit.shorts;
+        ctx.beginPath();
+        ctx.roundRect(-8.5, 5, 17, 11, 2);
+        ctx.fill();
+        // Arms pumping
+        ctx.strokeStyle = skin;
+        ctx.lineWidth = 3.5;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(-9, -8); ctx.lineTo(-14, 1);
+        ctx.moveTo(9, -8); ctx.lineTo(14, -2);
+        ctx.stroke();
+        // Jersey Torso
+        ctx.fillStyle = kit.shirt;
+        ctx.beginPath();
+        ctx.roundRect(-9.5, -14, 19, 20, 3);
+        ctx.fill();
+        if (kit.stripe && kit.stripe !== kit.shirt) {
+          ctx.fillStyle = kit.stripe;
+          ctx.fillRect(-3, -14, 6, 20);
+        }
+        // Back Jersey Number
+        if (options.num) {
+          ctx.fillStyle = kit.num || '#ffffff';
+          ctx.font = '900 10px "Chakra Petch", sans-serif';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(String(options.num), 0, -4);
+        }
+      } else {
+        // Active Outfield Defender (Athletic marking/lunging stance like Screenshot 2 & 3!)
+        const lunge = options.isLunging ? 4 : 0;
+        // Wide athletic legs
+        ctx.strokeStyle = skin;
+        ctx.lineWidth = 4.2;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(-5, 13); ctx.lineTo(-10 - lunge, 24);
+        ctx.moveTo(5, 13); ctx.lineTo(10 + lunge, 23);
+        ctx.stroke();
+        // Socks
+        ctx.strokeStyle = kit.socks;
+        ctx.lineWidth = 4.2;
+        ctx.beginPath();
+        ctx.moveTo(-10 - lunge, 23); ctx.lineTo(-13 - lunge, 34);
+        ctx.moveTo(10 + lunge, 22); ctx.lineTo(13 + lunge, 34);
+        ctx.stroke();
+        // Cleats
+        ctx.fillStyle = '#facc15';
+        ctx.beginPath();
+        ctx.ellipse(-14 - lunge, 35, 4, 2, 0, 0, Math.PI * 2);
+        ctx.ellipse(14 + lunge, 35, 4, 2, 0, 0, Math.PI * 2);
+        ctx.fill();
+        // Shorts
+        ctx.fillStyle = kit.shorts;
+        ctx.beginPath();
+        ctx.moveTo(-8, 5); ctx.lineTo(8, 5);
+        ctx.lineTo(11 + lunge * 0.5, 15); ctx.lineTo(-11 - lunge * 0.5, 15);
+        ctx.closePath();
+        ctx.fill();
+        // Outstretched arms
+        ctx.strokeStyle = skin;
+        ctx.lineWidth = 3.5;
+        ctx.beginPath();
+        ctx.moveTo(-9, -9); ctx.lineTo(-18, -5);
+        ctx.moveTo(9, -9); ctx.lineTo(17, -2);
+        ctx.stroke();
+        // Torso
+        ctx.fillStyle = kit.shirt;
+        ctx.beginPath();
+        ctx.roundRect(-9.5, -14, 19, 20, 3);
+        ctx.fill();
+        if (options.num) {
+          ctx.fillStyle = '#ffffff';
+          ctx.font = '900 10px "Chakra Petch", sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText(String(options.num), 0, -2);
+        }
+      }
+
+      // Neck & Head
+      ctx.fillStyle = skin;
+      ctx.fillRect(-2.5, -18, 5, 5);
+      ctx.beginPath();
+      ctx.ellipse(0, -22, 5.5, 6.5, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Hair
+      ctx.fillStyle = hair;
+      if (options.isMohawk) {
+        ctx.beginPath();
+        ctx.moveTo(-3, -26); ctx.lineTo(0, -32); ctx.lineTo(3, -26);
+        ctx.closePath();
+        ctx.fill();
+      } else {
+        ctx.beginPath();
+        ctx.arc(0, -24, 5.6, Math.PI * 0.85, Math.PI * 2.15);
+        ctx.fill();
+      }
+
+      ctx.restore();
+    }
+
+    // Draw Neon-Lime Goalkeeper in Athletic Ready / Diving Stance (Exact match to Screenshots 1, 2, 3)
+    function drawNeonGoalkeeper(ctx, gx, gy, inFlight) {
+      ctx.save();
+      ctx.translate(gx, gy);
+      const diveTilt = inFlight ? Math.max(-0.45, Math.min(0.45, (ball.x - gx) * 0.008)) : 0;
+      ctx.rotate(diveTilt);
+
+      // Shadow
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+      ctx.beginPath();
+      ctx.ellipse(0, 14, 16, 4, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Neon-Lime Socks & Wide Bent Legs
+      ctx.strokeStyle = '#a3e635';
+      ctx.lineWidth = 4;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(-6, -2); ctx.lineTo(-10, 12);
+      ctx.moveTo(6, -2); ctx.lineTo(10, 12);
+      ctx.stroke();
+
+      // Dark Cleats
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(-13, 11, 6, 3.5);
+      ctx.fillRect(7, 11, 6, 3.5);
+
+      // Neon Shorts & Torso
+      ctx.fillStyle = '#84cc16';
+      ctx.beginPath();
+      ctx.roundRect(-8, -8, 16, 9, 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#a3e635';
+      ctx.beginPath();
+      ctx.roundRect(-9, -24, 18, 17, 3);
+      ctx.fill();
+
+      // Raised Arms & Goalkeeper Gloves
+      ctx.strokeStyle = '#a3e635';
+      ctx.lineWidth = 3.5;
+      ctx.beginPath();
+      ctx.moveTo(-8, -21); ctx.lineTo(-17, -30);
+      ctx.moveTo(8, -21); ctx.lineTo(17, -30);
+      ctx.stroke();
+
+      // White/Green GK Gloves
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(-18, -31, 4, 0, Math.PI * 2);
+      ctx.arc(18, -31, 4, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Head
+      ctx.fillStyle = '#8d5524';
+      ctx.beginPath();
+      ctx.arc(0, -29, 5, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    // Draw Main Star Kicker (#7 / #10 Back View OR Screenshot 2 Mid-Air Scissor Volley Pose!)
+    function drawPitchCustomPlayer(ctx, ballX, ballY, inFlight, dragging, aimPower, aimDx, aimDy) {
+      const { myKit } = getMatchKitColors();
+      const skin = player.skinTone || '#e0ac69';
+      const hairCol = player.hairColor || '#f43f5e'; // Pinkish/Blonde star hair default or custom
+
+      // Check if player should render in Screenshot 2 Acrobatic Volley Pose!
+      if (ball.isVolleyPose || (hasPassedThisTurn && (currentScenario === 'WING_ATTACK' || currentScenario === 'CORNER'))) {
+        ctx.save();
+        const vx = (inFlight && ball.kickOrigin) ? ball.kickOrigin.x - 32 : ballX - 32;
+        const vy = (inFlight && ball.kickOrigin) ? ball.kickOrigin.y + 8 : ballY + 8;
+
+        // Ground shadow far below airborne player (Screenshot 2!)
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.28)';
+        ctx.beginPath();
+        ctx.ellipse(vx + 10, vy + 46, 26, 7, -0.15, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.translate(vx, vy);
+        ctx.rotate(-0.48); // Mid-air horizontal scissor tilt
+
+        // Outstretched arms
+        ctx.strokeStyle = skin;
+        ctx.lineWidth = 4.5;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(-8, -12); ctx.lineTo(-26, -24);
+        ctx.moveTo(8, -10); ctx.lineTo(22, -18);
+        ctx.stroke();
+
+        // Torso (Yellow/Team Shirt)
+        ctx.fillStyle = myKit.shirt;
+        ctx.beginPath();
+        ctx.roundRect(-10, -16, 20, 22, 4);
+        ctx.fill();
+
+        // Shorts
+        ctx.fillStyle = myKit.shorts;
+        ctx.beginPath();
+        ctx.roundRect(-9, 3, 18, 12, 3);
+        ctx.fill();
+
+        // Lower tucked leg (white sock)
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 5;
+        ctx.beginPath();
+        ctx.moveTo(-4, 12); ctx.lineTo(-16, 22);
+        ctx.stroke();
+
+        // High extended kicking leg striking ball at apex!
+        ctx.strokeStyle = skin;
+        ctx.lineWidth = 5;
+        ctx.beginPath();
+        ctx.moveTo(6, 8); ctx.lineTo(20, -2);
+        ctx.stroke();
+        ctx.strokeStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.moveTo(20, -2); ctx.lineTo(34, -12);
+        ctx.stroke();
+        ctx.fillStyle = '#0f172a';
+        ctx.beginPath();
+        ctx.ellipse(36, -13, 5, 3, -0.4, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Head & Star Hair
+        ctx.fillStyle = skin;
+        ctx.beginPath();
+        ctx.arc(0, -22, 6.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = hairCol;
+        ctx.beginPath();
+        ctx.arc(-1, -24, 6.5, Math.PI * 0.8, Math.PI * 2.1);
+        ctx.fill();
+
+        ctx.restore();
+        return;
+      }
+
+      // Standard Foreground 3D Back-View Kicker (#7 / #10 like Screenshot 1 & 3)
+      ctx.save();
       let px, py;
       let kickProgress = 0;
 
       if (!inFlight) {
-        // Natural ready shooting stance behind ball
-        const baseX = ballX - 16;
-        const baseY = ballY + 22;
-
-        if (dragging && aimPower > 10) {
-          const pullRatio = Math.min(1, aimPower / 100);
-          const dirX = aimDx / (aimPower || 1);
-          const dirY = aimDy / (aimPower || 1);
-          px = baseX - (dirX * 10 * pullRatio);
-          py = baseY - (dirY * 12 * pullRatio);
-        } else {
-          px = baseX;
-          py = baseY;
-        }
+        px = ballX - 42;
+        py = ballY + 26;
       } else {
         const originX = (ball.kickOrigin && ball.kickOrigin.x !== undefined) ? ball.kickOrigin.x : ballX;
         const originY = (ball.kickOrigin && ball.kickOrigin.y !== undefined) ? ball.kickOrigin.y : ballY;
-        px = originX - 16;
-        py = originY + 22;
-
+        px = originX - 42;
+        py = originY + 26;
         const kickAge = (performance.now() - (ball.kickTime || performance.now())) / 1000;
-        if (kickAge < 0.85) {
-          kickProgress = 1 - (kickAge / 0.85);
-        }
+        if (kickAge < 0.85) kickProgress = 1 - (kickAge / 0.85);
       }
 
-      const skin = player.skinTone || SKIN_TONES[1] || '#f8d5b8';
-      const hairCol = player.hairColor || '#1c1917';
-      const isGK = player.position === 'GK';
-      const jerseyCol = isGK ? '#f59e0b' : '#10b981';
-      const jerseyTrim = '#ffffff';
-      const shortsCol = '#091e13';
-      const bootsCol = '#111827';
-      const socksCol = '#059669';
+      // Foreground Perspective Scale (1.32x larger in foreground!)
+      ctx.translate(px, py);
+      ctx.scale(1.32, 1.32);
 
-      // 1. Soft Turf Shadow
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.38)';
+      // 1. Turf Shadow
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.36)';
       ctx.beginPath();
-      ctx.ellipse(px + 10, py + 34, 18, 6, 0, 0, Math.PI * 2);
+      ctx.ellipse(12, 38, 20, 6, 0, 0, Math.PI * 2);
       ctx.fill();
 
-      // 2. Legs & Cleats (Back / 3/4 View)
-      // Left Plant Foot (Stable)
-      ctx.fillStyle = socksCol;
-      ctx.fillRect(px + 2, py + 18, 5, 12);
+      // 2. Left & Right Athletic Legs, High Socks & Cleats
+      // Left Leg
       ctx.fillStyle = skin;
-      ctx.fillRect(px + 2, py + 13, 5, 6);
-      ctx.fillStyle = bootsCol;
-      ctx.fillRect(px + 1, py + 30, 7, 5);
-      ctx.fillStyle = '#4ade80';
-      ctx.fillRect(px + 2, py + 34, 5, 1.5);
+      ctx.fillRect(-1, 14, 6, 7);
+      ctx.fillStyle = myKit.socks;
+      ctx.fillRect(-2, 20, 6, 15);
+      ctx.fillStyle = myKit.stripe || '#16a34a';
+      ctx.fillRect(-2, 21, 6, 2.5);
+      ctx.fillStyle = '#22c55e';
+      ctx.beginPath(); ctx.ellipse(0, 36, 5, 3, 0, 0, Math.PI * 2); ctx.fill();
 
-      // Right Kicking Leg (Dynamic based on stance)
-      ctx.save();
-      if (kickProgress > 0) {
-        // High follow-through swing forward
-        const swingUp = kickProgress * 10;
-        ctx.fillStyle = skin;
-        ctx.fillRect(px + 13, py + 11 - swingUp, 5, 7);
-        ctx.fillStyle = socksCol;
-        ctx.fillRect(px + 14, py + 17 - swingUp, 5, 11);
-        ctx.fillStyle = bootsCol;
-        ctx.fillRect(px + 15, py + 27 - swingUp, 8, 5);
-        ctx.fillStyle = '#facc15';
-        ctx.fillRect(px + 16, py + 31 - swingUp, 6, 1.5);
-      } else if (dragging) {
-        // Pullback leg stance
-        ctx.fillStyle = skin;
-        ctx.fillRect(px + 13, py + 14, 5, 6);
-        ctx.fillStyle = socksCol;
-        ctx.fillRect(px + 14, py + 20, 5, 12);
-        ctx.fillStyle = bootsCol;
-        ctx.fillRect(px + 14, py + 32, 7, 5);
-        ctx.fillStyle = '#4ade80';
-        ctx.fillRect(px + 15, py + 36, 5, 1.5);
-      } else {
-        // Neutral ready stance
-        ctx.fillStyle = skin;
-        ctx.fillRect(px + 12, py + 13, 5, 6);
-        ctx.fillStyle = socksCol;
-        ctx.fillRect(px + 12, py + 18, 5, 12);
-        ctx.fillStyle = bootsCol;
-        ctx.fillRect(px + 12, py + 30, 7, 5);
-        ctx.fillStyle = '#4ade80';
-        ctx.fillRect(px + 13, py + 34, 5, 1.5);
-      }
-      ctx.restore();
+      // Right Kicking Leg
+      const swing = kickProgress * 12;
+      ctx.fillStyle = skin;
+      ctx.fillRect(15, 14 - swing, 6, 7);
+      ctx.fillStyle = myKit.socks;
+      ctx.fillRect(16, 20 - swing, 6, 15);
+      ctx.fillStyle = myKit.stripe || '#16a34a';
+      ctx.fillRect(16, 21 - swing, 6, 2.5);
+      ctx.fillStyle = '#22c55e';
+      ctx.beginPath(); ctx.ellipse(19, 36 - swing, 5.5, 3, 0, 0, Math.PI * 2); ctx.fill();
 
-      // 3. Shorts (Futbol Sortu)
-      ctx.fillStyle = shortsCol;
+      // 3. Shorts
+      ctx.fillStyle = myKit.shorts;
       ctx.beginPath();
-      ctx.moveTo(px, py + 12);
-      ctx.lineTo(px + 20, py + 12);
-      ctx.lineTo(px + 19, py + 22);
-      ctx.lineTo(px + 11, py + 22);
-      ctx.lineTo(px + 10, py + 15);
-      ctx.lineTo(px + 9, py + 22);
-      ctx.lineTo(px + 1, py + 22);
+      ctx.moveTo(-3, 4);
+      ctx.lineTo(23, 4);
+      ctx.lineTo(22, 17);
+      ctx.lineTo(12, 17);
+      ctx.lineTo(10, 10);
+      ctx.lineTo(8, 17);
+      ctx.lineTo(-2, 17);
       ctx.closePath();
       ctx.fill();
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
-      ctx.fillRect(px, py + 13, 2, 8);
-      ctx.fillRect(px + 18, py + 13, 2, 8);
 
-      // 4. Arms & Hands
-      ctx.fillStyle = skin;
+      // 4. Muscular Arms Out for Balance
+      ctx.strokeStyle = skin;
+      ctx.lineWidth = 5;
+      ctx.lineCap = 'round';
       ctx.beginPath();
-      ctx.moveTo(px - 1, py - 4);
-      ctx.lineTo(px - 7, py + 6);
-      ctx.lineTo(px - 4, py + 8);
-      ctx.lineTo(px + 1, py - 2);
-      ctx.fill();
-      ctx.beginPath(); ctx.arc(px - 6, py + 8, 2.5, 0, Math.PI * 2); ctx.fill();
-
-      ctx.beginPath();
-      ctx.moveTo(px + 21, py - 4);
-      ctx.lineTo(px + 27, py + (dragging ? -2 : 6));
-      ctx.lineTo(px + 24, py + (dragging ? 0 : 8));
-      ctx.lineTo(px + 19, py - 2);
-      ctx.fill();
-      ctx.beginPath(); ctx.arc(px + 26, py + (dragging ? -1 : 8), 2.5, 0, Math.PI * 2); ctx.fill();
-
-      // 5. Jersey Torso (Back View)
-      ctx.fillStyle = jerseyCol;
-      ctx.beginPath();
-      ctx.roundRect(px, py - 8, 20, 21, 3);
-      ctx.fill();
-
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
-      ctx.fillRect(px, py - 6, 2.5, 17);
-      ctx.fillRect(px + 17.5, py - 6, 2.5, 17);
-
-      ctx.fillStyle = jerseyTrim;
-      ctx.beginPath();
-      ctx.ellipse(px + 10, py - 8, 4.5, 2, 0, 0, Math.PI * 2);
-      ctx.fill();
-
-      // 6. Back Jersey Number (Sirt Numarasi)
-      ctx.fillStyle = '#ffffff';
-      ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
-      ctx.shadowBlur = 3;
-      ctx.font = '900 11px "Chakra Petch", "JetBrains Mono", sans-serif';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(String(player.jerseyNumber || 9), px + 10, py + 3);
-      ctx.shadowBlur = 0;
-
-      // 7. Neck & Head
-      ctx.fillStyle = skin;
-      ctx.fillRect(px + 7.5, py - 13, 5, 6);
-      ctx.beginPath();
-      ctx.ellipse(px + 10, py - 17, 8.5, 9.5, 0, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.beginPath(); ctx.arc(px + 1.5, py - 17, 2, 0, Math.PI * 2); ctx.fill();
-      ctx.beginPath(); ctx.arc(px + 18.5, py - 17, 2, 0, Math.PI * 2); ctx.fill();
-
-      // 8. Custom Hair Style (Back View)
-      const hModel = player.hairModel || 'short';
-      ctx.fillStyle = hairCol;
-
-      if (hModel === 'short') {
-        ctx.beginPath();
-        ctx.arc(px + 10, py - 19, 8.5, Math.PI * 0.85, Math.PI * 2.15);
-        ctx.fill();
-        ctx.fillRect(px + 2, py - 20, 16, 7);
-      } else if (hModel === 'curly') {
-        for (let [cx, cy, r] of [
-          [px + 5, py - 22, 5],
-          [px + 10, py - 24, 5.5],
-          [px + 15, py - 22, 5],
-          [px + 2, py - 18, 4],
-          [px + 18, py - 18, 4],
-          [px + 10, py - 19, 6]
-        ]) {
-          ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fill();
-        }
-      } else if (hModel === 'mohawk') {
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
-        ctx.fillRect(px + 3, py - 20, 14, 5);
-        ctx.fillStyle = hairCol;
-        ctx.beginPath();
-        ctx.moveTo(px + 6, py - 18);
-        ctx.lineTo(px + 9, py - 28);
-        ctx.lineTo(px + 11, py - 28);
-        ctx.lineTo(px + 14, py - 18);
-        ctx.closePath();
-        ctx.fill();
-      } else if (hModel === 'noodles') {
-        ctx.fillStyle = '#1c1917';
-        ctx.fillRect(px + 2, py - 20, 16, 6);
-        ctx.fillStyle = '#facc15';
-        ctx.beginPath();
-        ctx.arc(px + 10, py - 23, 7.5, Math.PI, 0);
-        ctx.fill();
-        ctx.strokeStyle = '#fef08a';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.arc(px + 7, py - 23, 3.5, 0, Math.PI);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.arc(px + 13, py - 23, 3.5, 0, Math.PI);
-        ctx.stroke();
-      } else if (hModel === 'long') {
-        ctx.beginPath();
-        ctx.arc(px + 10, py - 19, 9, Math.PI, 0);
-        ctx.fill();
-        ctx.fillRect(px + 1, py - 19, 18, 17);
-      } else if (hModel === 'bald') {
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
-        ctx.beginPath();
-        ctx.arc(px + 8, py - 21, 2.5, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      // 9. Floating Star Player Overhead Tag
-      const tagText = '★ ' + (player.nick || 'SEN').toUpperCase() + ' #' + (player.jerseyNumber || 9);
-      ctx.font = 'bold 9px "Space Grotesk", sans-serif';
-      const textWidth = ctx.measureText(tagText).width;
-      const pillWidth = textWidth + 14;
-      const pillY = py - 38;
-
-      ctx.fillStyle = 'rgba(6, 19, 11, 0.9)';
-      ctx.strokeStyle = '#10b981';
-      ctx.lineWidth = 1.2;
-      ctx.beginPath();
-      ctx.roundRect(px + 10 - (pillWidth / 2), pillY - 8, pillWidth, 15, 5);
-      ctx.fill();
+      ctx.moveTo(-4, -14); ctx.lineTo(-11, 2);
+      ctx.moveTo(24, -14); ctx.lineTo(31, 0);
       ctx.stroke();
 
-      ctx.fillStyle = '#34d399';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(tagText, px + 10, pillY);
-
-      ctx.fillStyle = '#10b981';
+      // 5. Broad-Shouldered Jersey Back
+      ctx.fillStyle = myKit.shirt;
       ctx.beginPath();
-      ctx.moveTo(px + 8, pillY + 7);
-      ctx.lineTo(px + 10, pillY + 10);
-      ctx.lineTo(px + 12, pillY + 7);
+      ctx.moveTo(-7, -19);
+      ctx.lineTo(27, -19);
+      ctx.lineTo(22, 6);
+      ctx.lineTo(-2, 6);
       ctx.closePath();
       ctx.fill();
+
+      // Vertical Stripes if Argentina/Striped kit
+      if (myKit.shirt === '#f8fafc' && myKit.stripe === '#38bdf8') {
+        ctx.fillStyle = '#38bdf8';
+        ctx.fillRect(-1, -19, 5, 25);
+        ctx.fillRect(16, -19, 5, 25);
+      }
+
+      // Sleeve Cuffs
+      ctx.fillStyle = myKit.shorts;
+      ctx.fillRect(-8, -14, 4, 4);
+      ctx.fillRect(24, -14, 4, 4);
+
+      // 6. Crisp Jersey Number on Back (#7 or #10 or Player Number)
+      ctx.fillStyle = myKit.num || '#fde047';
+      ctx.font = '900 16px "Chakra Petch", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(String(player.jerseyNumber || 7), 10, -6);
+
+      // 7. Neck, Head & Hair
+      ctx.fillStyle = skin;
+      ctx.fillRect(6.5, -24, 7, 6);
+      ctx.beginPath();
+      ctx.ellipse(10, -29, 7.5, 8.5, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = hairCol;
+      ctx.beginPath();
+      ctx.arc(10, -31, 7.6, Math.PI * 0.82, Math.PI * 2.18);
+      ctx.fill();
+      ctx.fillRect(3, -32, 14, 6);
 
       ctx.restore();
     }
 
     function drawCustomGoalkeeper(ctx, gx, gy) {
-      ctx.save();
-      const skin = player.skinTone || SKIN_TONES[1] || '#f8d5b8';
-      const hairCol = player.hairColor || '#1c1917';
-      const py = gy - 8;
-
-      // 1. Shadow on line
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
-      ctx.beginPath();
-      ctx.ellipse(gx, py + 34, 22, 6, 0, 0, Math.PI * 2);
-      ctx.fill();
-
-      // 2. Legs & Cleats
-      ctx.fillStyle = '#111827';
-      ctx.fillRect(gx - 9, py + 30, 7, 5);
-      ctx.fillRect(gx + 2, py + 30, 7, 5);
-      ctx.fillStyle = '#f59e0b';
-      ctx.fillRect(gx - 8, py + 18, 5, 12);
-      ctx.fillRect(gx + 3, py + 18, 5, 12);
-      ctx.fillStyle = skin;
-      ctx.fillRect(gx - 8, py + 13, 5, 5);
-      ctx.fillRect(gx + 3, py + 13, 5, 5);
-
-      // 3. GK Shorts
-      ctx.fillStyle = '#1e1b4b';
-      ctx.fillRect(gx - 11, py + 10, 22, 11);
-
-      // 4. GK Jersey Torso (Back View - Amber / Gold)
-      ctx.fillStyle = '#f59e0b';
-      ctx.beginPath();
-      ctx.roundRect(gx - 12, py - 9, 24, 22, 3);
-      ctx.fill();
-
-      // Jersey Number
-      ctx.fillStyle = '#ffffff';
-      ctx.font = '900 11px "Chakra Petch", sans-serif';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(String(player.jerseyNumber || 1), gx, py + 2);
-
-      // 5. Neck & Head
-      ctx.fillStyle = skin;
-      ctx.fillRect(gx - 3, py - 14, 6, 6);
-      ctx.beginPath();
-      ctx.ellipse(gx, py - 18, 8.5, 9.5, 0, 0, Math.PI * 2);
-      ctx.fill();
-
-      // 6. Custom Hair
-      const hModel = player.hairModel || 'short';
-      ctx.fillStyle = hairCol;
-      if (hModel === 'short') {
-        ctx.beginPath(); ctx.arc(gx, py - 20, 8.5, Math.PI * 0.85, Math.PI * 2.15); ctx.fill();
-        ctx.fillRect(gx - 8, py - 21, 16, 7);
-      } else if (hModel === 'curly') {
-        for (let [cx, cy, r] of [[gx - 5, py - 23, 5], [gx, py - 25, 5.5], [gx + 5, py - 23, 5], [gx - 8, py - 19, 4], [gx + 8, py - 19, 4]]) {
-          ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fill();
-        }
-      } else if (hModel === 'mohawk') {
-        ctx.fillStyle = hairCol;
-        ctx.beginPath(); ctx.moveTo(gx - 4, py - 19); ctx.lineTo(gx, py - 28); ctx.lineTo(gx + 4, py - 19); ctx.fill();
-      } else if (hModel === 'noodles') {
-        ctx.fillStyle = '#1c1917'; ctx.fillRect(gx - 8, py - 21, 16, 6);
-        ctx.fillStyle = '#facc15'; ctx.beginPath(); ctx.arc(gx, py - 24, 7.5, Math.PI, 0); ctx.fill();
-      } else if (hModel === 'long') {
-        ctx.beginPath(); ctx.arc(gx, py - 20, 9, Math.PI, 0); ctx.fill();
-        ctx.fillRect(gx - 9, py - 20, 18, 17);
-      }
-
-      // 7. Large Goalkeeper Gloves (Interactive at gx, gy)
-      ctx.fillStyle = '#f59e0b';
-      ctx.strokeStyle = '#ffffff';
-      ctx.lineWidth = 2.5;
-      ctx.beginPath(); ctx.arc(gx - 18, gy, 13, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-      ctx.beginPath(); ctx.arc(gx + 18, gy, 13, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-      ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 11px sans-serif';
-      ctx.fillText('🧤', gx - 24, gy + 4);
-      ctx.fillText('🧤', gx + 12, gy + 4);
-
-      // 8. Overhead GK Pill
-      const tagText = '★ ' + (player.nick || 'SEN').toUpperCase() + ' (GK #' + (player.jerseyNumber || 1) + ')';
-      ctx.font = 'bold 9px "Space Grotesk", sans-serif';
-      const textWidth = ctx.measureText(tagText).width;
-      const pillWidth = textWidth + 14;
-      const pillY = py - 38;
-
-      ctx.fillStyle = 'rgba(6, 19, 11, 0.9)';
-      ctx.strokeStyle = '#f59e0b';
-      ctx.lineWidth = 1.2;
-      ctx.beginPath();
-      ctx.roundRect(gx - (pillWidth / 2), pillY - 8, pillWidth, 15, 5);
-      ctx.fill();
-      ctx.stroke();
-
-      ctx.fillStyle = '#fbbf24';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(tagText, gx, pillY);
-
-      ctx.restore();
+      drawNeonGoalkeeper(ctx, gx, gy, ball.inFlight);
     }
 
-    /* =====================================================================
-       5.6 SOCCER SUPER STAR TEAMMATE RENDERING ENGINE 👟
-       ===================================================================== */
-    function drawTeammate(ctx, tm, isAimingAt) {
-      if (!tm || !tm.active) return;
+    // Draw Classic Pentagonal Telstar Football
+    function drawPentagonFootball(ctx, bx, by, groundY, radius, scale) {
       ctx.save();
-      const tx = tm.x;
-      const ty = tm.y;
-
-      // 1. Glowing Turf Target Ring (Soccer Super Star style!)
-      ctx.strokeStyle = isAimingAt ? '#38bdf8' : 'rgba(52, 211, 153, 0.75)';
-      ctx.lineWidth = isAimingAt ? 3.5 : 2;
-      if (isAimingAt) {
-        ctx.shadowColor = '#38bdf8';
-        ctx.shadowBlur = 12;
-      }
+      // Ground shadow
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.38)';
       ctx.beginPath();
-      ctx.ellipse(tx, ty + 36, 18, 6, 0, 0, Math.PI * 2);
+      ctx.ellipse(bx, groundY + 3, radius * 0.95, radius * 0.42, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      const r = radius * scale;
+      // 3D Spherical Shaded Ball Body
+      const ballGrad = ctx.createRadialGradient(bx - r * 0.3, by - r * 0.3, r * 0.1, bx, by, r);
+      ballGrad.addColorStop(0, '#ffffff');
+      ballGrad.addColorStop(0.75, '#f1f5f9');
+      ballGrad.addColorStop(1, '#cbd5e1');
+
+      ctx.fillStyle = ballGrad;
+      ctx.beginPath();
+      ctx.arc(bx, by, r, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 1.2;
       ctx.stroke();
-      ctx.shadowBlur = 0;
 
-      // 2. Teammate Legs & Cleats
-      ctx.fillStyle = '#111827';
-      ctx.fillRect(tx - 7, ty + 30, 6, 5);
-      ctx.fillRect(tx + 2, ty + 30, 6, 5);
-      ctx.fillStyle = '#059669'; // Socks
-      ctx.fillRect(tx - 6, ty + 18, 5, 12);
-      ctx.fillRect(tx + 3, ty + 18, 5, 12);
-      ctx.fillStyle = '#f8d5b8'; // Skin
-      ctx.fillRect(tx - 6, ty + 13, 5, 5);
-      ctx.fillRect(tx + 3, ty + 13, 5, 5);
-
-      // 3. Shorts
-      ctx.fillStyle = '#091e13';
-      ctx.fillRect(tx - 9, ty + 11, 19, 10);
-
-      // 4. Jersey Torso (Emerald Kit)
-      ctx.fillStyle = '#10b981';
+      // Rotating Pentagon Panels
+      ctx.save();
       ctx.beginPath();
-      ctx.roundRect(tx - 10, ty - 8, 20, 20, 3);
-      ctx.fill();
+      ctx.arc(bx, by, r, 0, Math.PI * 2);
+      ctx.clip();
 
-      // Jersey stripe
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(tx - 2, ty - 8, 4, 20);
-
-      // 5. Head & Hair
-      ctx.fillStyle = '#f8d5b8';
-      ctx.fillRect(tx - 3, ty - 13, 6, 5);
+      const rot = ball.rotation || 0;
+      ctx.fillStyle = '#0f172a';
+      // Center pentagon
       ctx.beginPath();
-      ctx.ellipse(tx, ty - 17, 7.5, 8.5, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = '#1c1917';
-      ctx.beginPath();
-      ctx.arc(tx, ty - 19, 7.5, Math.PI * 0.9, Math.PI * 2.1);
-      ctx.fill();
-
-      // 6. Overhead Floating Badge / Indicator (Soccer Super Star)
-      const badgeText = isAimingAt ? '🎯 PAS ALMAYA HAZIR!' : (tm.label || '👟 PAS İSTEĞİ ➔');
-      ctx.font = 'bold 9px "Space Grotesk", sans-serif';
-      const textW = ctx.measureText(badgeText).width;
-      const pillW = textW + 14;
-      const pillY = ty - 32;
-
-      ctx.fillStyle = isAimingAt ? 'rgba(56, 189, 248, 0.95)' : 'rgba(16, 185, 129, 0.9)';
-      ctx.beginPath();
-      ctx.roundRect(tx - pillW / 2, pillY - 7, pillW, 15, 7);
-      ctx.fill();
-
-      ctx.fillStyle = isAimingAt ? '#020617' : '#ffffff';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(badgeText, tx, pillY);
-
-      // Downward pointer triangle
-      ctx.fillStyle = isAimingAt ? '#38bdf8' : '#10b981';
-      ctx.beginPath();
-      ctx.moveTo(tx - 3, pillY + 8);
-      ctx.lineTo(tx, pillY + 11);
-      ctx.lineTo(tx + 3, pillY + 8);
+      for (let i = 0; i < 5; i++) {
+        const a = rot + (i * Math.PI * 2) / 5;
+        const px = bx + Math.cos(a) * (r * 0.38);
+        const py = by + Math.sin(a) * (r * 0.38);
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
       ctx.closePath();
       ctx.fill();
 
+      // Seam lines & outer pentagon patches
+      ctx.strokeStyle = '#1e293b';
+      ctx.lineWidth = 1;
+      for (let i = 0; i < 5; i++) {
+        const a = rot + (i * Math.PI * 2) / 5;
+        const p1x = bx + Math.cos(a) * (r * 0.36);
+        const p1y = by + Math.sin(a) * (r * 0.36);
+        const p2x = bx + Math.cos(a) * (r * 0.85);
+        const p2y = by + Math.sin(a) * (r * 0.85);
+        ctx.beginPath();
+        ctx.moveTo(p1x, p1y);
+        ctx.lineTo(p2x, p2y);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(bx + Math.cos(a) * (r * 0.98), by + Math.sin(a) * (r * 0.98), r * 0.28, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
       ctx.restore();
     }
 
@@ -2382,139 +3017,52 @@
       try {
         if (!canvas || !ctx) return;
 
-      // 1. Clear & Draw Pitch
-      ctx.fillStyle = '#0a2315';
-      ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+        const goalLeft = 148;
+        const goalRight = 452;
+        const goalTop = 82;
+        const goalBottom = 158;
+        const { myKit, oppKit } = getMatchKitColors();
 
-      // Grass Stripes
-      for (let y = 0; y < canvasHeight; y += 40) {
-        ctx.fillStyle = ((y / 40) % 2 === 0) ? 'rgba(34, 197, 94, 0.04)' : 'rgba(0, 0, 0, 0.05)';
-        ctx.fillRect(0, y, canvasWidth, 40);
-      }
+        // 1. Draw 3D Stadium Tribunes, Crowd, Ad Boards, Perspective Turf & Goal Net
+        drawStadiumAndPitch3D(ctx, goalLeft, goalRight, goalTop, goalBottom);
 
-      // 2. Goal Posts Geometry
-      const goalLeft = 140;
-      const goalRight = canvasWidth - 140;
-      const goalTop = 100;
-      const goalBottom = 200;
+        // 2. Draw Top-Left Soccer Super Star Scoreboard Bug
+        drawSoccerSuperStarScoreBug(ctx);
 
-      // Net Mesh
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.12)';
-      ctx.fillRect(goalLeft, goalTop, goalRight - goalLeft, goalBottom - goalTop);
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.18)';
-      ctx.lineWidth = 1;
-      for (let x = goalLeft; x <= goalRight; x += 15) {
-        ctx.beginPath(); ctx.moveTo(x, goalTop); ctx.lineTo(x, goalBottom); ctx.stroke();
-      }
-      for (let y = goalTop; y <= goalBottom; y += 15) {
-        ctx.beginPath(); ctx.moveTo(goalLeft, y); ctx.lineTo(goalRight, y); ctx.stroke();
-      }
-
-      // White Goal Frame (Posts + Crossbar)
-      ctx.strokeStyle = '#ffffff';
-      ctx.lineWidth = 6;
-      ctx.lineCap = 'round';
-      ctx.beginPath();
-      ctx.moveTo(goalLeft, goalBottom);
-      ctx.lineTo(goalLeft, goalTop);
-      ctx.lineTo(goalRight, goalTop);
-      ctx.lineTo(goalRight, goalBottom);
-      ctx.stroke();
-
-      // Penalty Box Markings
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
-      ctx.lineWidth = 2;
-      ctx.strokeRect(90, 180, canvasWidth - 180, 190);
-      // Penalty Spot
-      ctx.fillStyle = '#ffffff';
-      ctx.beginPath(); ctx.arc(canvasWidth / 2, 280, 3, 0, Math.PI * 2); ctx.fill();
-
-      // 3. Draw Free Kick Wall Defenders
-      if (currentScenario === 'FREE_KICK') {
-        wallDefenders.forEach(def => {
-          ctx.fillStyle = '#1e293b';
-          ctx.fillRect(def.x, def.y, def.width, def.height);
-          ctx.fillStyle = '#f8d5b8';
-          ctx.beginPath(); ctx.arc(def.x + def.width / 2, def.y - 7, 7, 0, Math.PI * 2); ctx.fill();
-          ctx.fillStyle = '#0f172a';
-          ctx.beginPath(); ctx.arc(def.x + def.width / 2, def.y - 10, 6, Math.PI, 0); ctx.fill();
-          ctx.strokeStyle = '#334155';
-          ctx.lineWidth = 1;
-          ctx.strokeRect(def.x, def.y, def.width, def.height);
-        });
-      }
-
-      // 4. Draw Teammates (Soccer Super Star Takım Arkadaşları)
-      if (teammates && teammates.length > 0) {
-        teammates.forEach(tm => {
-          if (tm.active) {
-            drawTeammate(ctx, tm, targetTeammate === tm);
+        // 3. Draw Goalkeeper
+        if (matchMode === 'SHOOT') {
+          if (!ball.inFlight) {
+            goalkeeper.x += goalkeeper.vx;
+            if (goalkeeper.x < goalLeft + 38 || goalkeeper.x > goalRight - 38) {
+              goalkeeper.vx *= -1;
+            }
+          } else {
+            const targetX = ball.x + (ball.vx * 14);
+            if (goalkeeper.x < targetX - 5) goalkeeper.x += goalkeeper.diveSpeed;
+            else if (goalkeeper.x > targetX + 5) goalkeeper.x -= goalkeeper.diveSpeed;
           }
-        });
-      }
-
-      // 5. Draw Opponent Defenders
-      if (defenders && defenders.length > 0) {
-        defenders.forEach(def => {
-          ctx.fillStyle = '#991b1b';
-          ctx.fillRect(def.x - 10, def.y, def.width || 20, def.height || 38);
-          ctx.fillStyle = '#f8d5b8';
-          ctx.beginPath(); ctx.arc(def.x, def.y - 7, 7, 0, Math.PI * 2); ctx.fill();
-          ctx.fillStyle = '#f87171';
-          ctx.font = 'bold 8px sans-serif';
-          ctx.fillText('Defans', def.x - 14, def.y - 14);
-        });
-      }
-
-      // 6. Draw Goalkeeper
-      if (matchMode === 'SHOOT') {
-        if (!ball.inFlight) {
-          goalkeeper.x += goalkeeper.vx;
-          if (goalkeeper.x < goalLeft + 35 || goalkeeper.x > goalRight - 35) {
-            goalkeeper.vx *= -1;
-          }
-        } else {
-          const targetX = ball.x + (ball.vx * 15);
-          if (goalkeeper.x < targetX - 5) goalkeeper.x += goalkeeper.diveSpeed;
-          else if (goalkeeper.x > targetX + 5) goalkeeper.x -= goalkeeper.diveSpeed;
+          drawNeonGoalkeeper(ctx, goalkeeper.x, goalkeeper.y, ball.inFlight);
+        } else if (matchMode === 'SAVE') {
+          drawCustomGoalkeeper(ctx, gloves.x, gloves.y);
         }
 
-        ctx.fillStyle = '#eab308';
-        ctx.fillRect(goalkeeper.x - 14, goalkeeper.y, 28, 45);
-        ctx.fillStyle = '#f8d5b8';
-        ctx.beginPath(); ctx.arc(goalkeeper.x, goalkeeper.y - 8, 9, 0, Math.PI * 2); ctx.fill();
-        ctx.strokeStyle = '#f59e0b'; ctx.lineWidth = 4;
-        ctx.beginPath(); ctx.moveTo(goalkeeper.x - 14, goalkeeper.y + 10); ctx.lineTo(goalkeeper.x - 22, goalkeeper.y); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(goalkeeper.x + 14, goalkeeper.y + 10); ctx.lineTo(goalkeeper.x + 22, goalkeeper.y); ctx.stroke();
-      }
+        // 4. Determine Aiming State & Target Teammate
+        targetTeammate = null;
+        let aimDx = 0, aimDy = 0, aimPower = 0;
+        if (isDragging && matchMode === 'SHOOT') {
+          aimDx = dragCurrent.x - dragStart.x;
+          aimDy = dragCurrent.y - dragStart.y;
+          if (aimDy > 10) {
+            aimDx = -aimDx;
+            aimDy = -aimDy;
+          }
+          aimPower = Math.hypot(aimDx, aimDy);
 
-      // In GK Mode: Draw Player's Customized Goalkeeper
-      if (matchMode === 'SAVE') {
-        drawCustomGoalkeeper(ctx, gloves.x, gloves.y);
-      }
-
-      // 7. REAL-TIME AIMING TRAJECTORY & TARGET CROSSHAIR (Soccer Super Star Pas & Şut Motoru) 🎯
-      targetTeammate = null;
-      if (isDragging && matchMode === 'SHOOT') {
-        let aimDx = dragCurrent.x - dragStart.x;
-        let aimDy = dragCurrent.y - dragStart.y;
-        if (aimDy > 5) {
-          aimDx = -aimDx;
-          aimDy = -aimDy;
-        }
-
-        const power = Math.hypot(aimDx, aimDy);
-        if (power > 14 && Math.abs(aimDy) > 4) {
-          const speed = Math.min(Math.max(power * 0.13, 9.5), 17);
-          const angle = Math.atan2(aimDy, aimDx);
-
-          // Check if swipe trajectory points towards any active teammate
-          if (teammates && teammates.length > 0) {
+          if (aimPower > 14 && Math.abs(aimDy) > 4 && teammates && teammates.length > 0) {
+            const angle = Math.atan2(aimDy, aimDx);
             for (let tm of teammates) {
               if (tm.active) {
-                const tmDx = tm.x - ball.x;
-                const tmDy = (tm.y + 15) - ball.y;
-                const angleToTm = Math.atan2(tmDy, tmDx);
+                const angleToTm = Math.atan2((tm.y + 15) - ball.y, tm.x - ball.x);
                 let angleDiff = Math.abs(angle - angleToTm);
                 if (angleDiff > Math.PI) angleDiff = 2 * Math.PI - angleDiff;
                 if (angleDiff < 0.35) {
@@ -2524,382 +3072,318 @@
               }
             }
           }
-
-          if (targetTeammate) {
-            // ==========================================
-            // PAS HEDEFİ YÖRÜNGESİ (Soccer Super Star Pass)
-            // ==========================================
-            ctx.strokeStyle = '#38bdf8';
-            ctx.lineWidth = 3.5;
-            ctx.setLineDash([6, 4]);
-            ctx.beginPath();
-            ctx.moveTo(ball.x, ball.y);
-            const midX = (ball.x + targetTeammate.x) / 2;
-            const midY = (ball.y + targetTeammate.y) / 2 - 12;
-            ctx.quadraticCurveTo(midX, midY, targetTeammate.x, targetTeammate.y + 15);
-            ctx.stroke();
-            ctx.setLineDash([]);
-
-            // Glowing Pass Target Crosshair
-            ctx.fillStyle = 'rgba(56, 189, 248, 0.95)';
-            ctx.beginPath();
-            ctx.arc(targetTeammate.x, targetTeammate.y + 15, 10, 0, Math.PI * 2);
-            ctx.fill();
-
-            ctx.font = 'bold 10px sans-serif';
-            ctx.fillStyle = '#38bdf8';
-            ctx.fillText('👟 PAS ➔ ' + (targetTeammate.label || 'Takım Arkadaşı'), targetTeammate.x - 45, targetTeammate.y - 38);
-          } else {
-            // ==========================================
-            // KALEYE ŞUT YÖRÜNGESİ (Curved Shot at Goal)
-            // ==========================================
-            const estVx = Math.cos(angle) * speed;
-            const estVy = Math.sin(angle) * speed;
-
-            const flightFrames = Math.max(1, Math.abs((ball.y - 200) / estVy));
-            let targetLandingX = ball.x + estVx * flightFrames;
-
-            // Estimate falso curve from current drag points
-            let estSpin = 0;
-            if (dragPoints && dragPoints.length >= 3) {
-              const startPt = dragPoints[0];
-              const endPt = dragPoints[dragPoints.length - 1];
-              const chordLen = Math.hypot(endPt.x - startPt.x, endPt.y - startPt.y);
-              if (chordLen > 20) {
-                let maxDev = 0;
-                for (let p of dragPoints) {
-                  const dev = (-(endPt.y - startPt.y) * (p.x - startPt.x) + (endPt.x - startPt.x) * (p.y - startPt.y)) / chordLen;
-                  if (Math.abs(dev) > Math.abs(maxDev)) maxDev = dev;
-                }
-                const curveRatio = Math.max(-1.5, Math.min(1.5, maxDev / 30));
-                estSpin = curveRatio * 0.22;
-                if (Math.abs(estSpin) < 0.03) estSpin = 0;
-              }
-            }
-            targetLandingX += 0.5 * (estSpin * 0.35) * flightFrames * flightFrames;
-
-            const isTargetInGoal = (targetLandingX >= goalLeft + 10 && targetLandingX <= goalRight - 10);
-
-            // Draw Trajectory Curved Arc on Pitch
-            ctx.strokeStyle = isTargetInGoal ? (Math.abs(estSpin) > 0.05 ? '#38bdf8' : '#22c55e') : '#ef4444';
-            ctx.lineWidth = 3;
-            ctx.setLineDash([5, 5]);
-            ctx.beginPath();
-            ctx.moveTo(ball.x, ball.y);
-            const midX = (ball.x + targetLandingX) / 2 + (estSpin * 100);
-            const midY = (ball.y + 200) / 2;
-            ctx.quadraticCurveTo(midX, midY, targetLandingX, 200);
-            ctx.stroke();
-            ctx.setLineDash([]);
-
-            // Draw Target Crosshair 🎯 on Goal Plane
-            ctx.fillStyle = isTargetInGoal ? 'rgba(34, 197, 94, 0.9)' : 'rgba(239, 68, 68, 0.9)';
-            ctx.beginPath();
-            ctx.arc(targetLandingX, 200, 9, 0, Math.PI * 2);
-            ctx.fill();
-
-            ctx.font = 'bold 10px sans-serif';
-            let label = '❌ AUT';
-            if (isTargetInGoal) {
-              if (estSpin > 0.06) label = '🌀 SAĞA FALSO (TRIVELA)';
-              else if (estSpin < -0.06) label = '🌀 SOLA FALSO (ROBERTO CARLOS)';
-              else if (ball.isGroundShot) label = '⚡ YERDEN KÖŞEYE';
-              else label = '🎯 90 HEDEFİ';
-            }
-            ctx.fillStyle = isTargetInGoal ? (Math.abs(estSpin) > 0.05 ? '#38bdf8' : '#34d399') : '#f87171';
-            ctx.fillText(label, targetLandingX - 35, 185);
-          }
-        }
-      }
-
-      // 8. Ball Physics & Flight (With Elevation, Curved Falso, Passing & Wall Collision!)
-      if (ball.inFlight) {
-        // Apply controlled spin with natural decay
-        if (Math.abs(ball.spin) > 0.001) {
-          ball.vx += ball.spin * 0.35;
-          ball.spin *= 0.985;
-        }
-        ball.vx *= 0.995;
-        ball.vy *= 0.995;
-        ball.x += ball.vx;
-        ball.y += ball.vy;
-
-        // Ball Trail (Glowing comet tail showing the curve!)
-        if (!ball.trail) ball.trail = [];
-        ball.trail.push({ x: ball.x, y: ball.y - (ball.z || 0) });
-        if (ball.trail.length > 14) ball.trail.shift();
-
-        for (let i = 0; i < ball.trail.length - 1; i++) {
-          const pt1 = ball.trail[i];
-          const pt2 = ball.trail[i + 1];
-          const alpha = (i + 1) / ball.trail.length;
-          ctx.strokeStyle = Math.abs(ball.spin) > 0.05 ? `rgba(56, 189, 248, ${alpha * 0.75})` : `rgba(255, 255, 255, ${alpha * 0.45})`;
-          ctx.lineWidth = 2 + alpha * 4;
-          ctx.beginPath();
-          ctx.moveTo(pt1.x, pt1.y);
-          ctx.lineTo(pt2.x, pt2.y);
-          ctx.stroke();
         }
 
-        // 3D Parabolic Arc for non-ground shots
-        if (!ball.isGroundShot && !ball.isDeflected) {
-          const startY = (ball.kickOrigin && ball.kickOrigin.y) || (canvasHeight - 65);
-          const totalDistY = Math.max(1, startY - 200);
-          const progress = Math.max(0, Math.min(1, (startY - ball.y) / totalDistY));
-          ball.z = Math.sin(progress * Math.PI) * 36;
-        } else if (ball.isDeflected) {
-          ball.z = Math.max(0, (ball.z || 0) - 1.2);
-        } else {
-          ball.z = 0;
-        }
-
-        // ==========================================
-        // SOCCER SUPER STAR: PAS YAKALAMA MEKANİZMASI
-        // ==========================================
-        if (teammates && teammates.length > 0 && !ball.saved && !ball.scored && !ball.out && !ball.isDeflected) {
-          for (let tm of teammates) {
+        // 5. Draw Yellow Pass Arrows & Golden Goal Star when Teammates are Active (Screenshot 3!)
+        if (matchMode === 'SHOOT' && teammates && teammates.length > 0 && !ball.inFlight) {
+          teammates.forEach(tm => {
             if (tm.active) {
-              const dist = Math.hypot(ball.x - tm.x, ball.y - (tm.y + 15));
-              if (dist < 36) {
-                // PAS BAŞARIYLA TAMAMLANDI!
-                Sound.kick();
-                hasPassedThisTurn = true;
-                ball.isPassing = false;
-                if (typeof tvMatchEngine !== 'undefined' && tvMatchEngine && tvMatchEngine.isActive) {
-                  tvMatchEngine.hasPassedInPosition = true;
-                }
-                currentAttackPhase = 2;
-
-                ball.inFlight = false;
-                ball.vx = 0;
-                ball.vy = 0;
-                ball.spin = 0;
-                ball.z = 0;
-                ball.x = tm.x;
-                ball.y = tm.y + 15;
-                ball.trail = [];
-                ball.isDeflected = false;
-                ball.kickOrigin = { x: ball.x, y: ball.y };
-
-                // Takım arkadaşı pası aldı, şimdi şut aşaması
-                tm.active = false;
-
-                // Kaleciyi yeni açıya göre ayarla
-                const newGkTarget = (goalLeft + goalRight) / 2 + (ball.x - canvasWidth / 2) * 0.22;
-                goalkeeper.x = Math.max(goalLeft + 25, Math.min(goalRight - 25, newGkTarget));
-
-                // Pas Başarı Bildirimi
-                const pBanner = document.getElementById('passFeedbackBanner');
-                if (pBanner) {
-                  pBanner.classList.remove('hidden');
-                  setTimeout(() => { if (pBanner) pBanner.classList.add('hidden'); }, 1400);
-                }
-
-                // Yönergeyi güncelle
-                const overlay = document.getElementById('canvasInstructionOverlay');
-                const promptTxt = document.getElementById('txtCanvasPrompt');
-                if (promptTxt) promptTxt.textContent = '⚽ Harika pas aldın! Şimdi kaleyi gör ve 90\'a bitirici vuruşu yap!';
-                if (overlay) overlay.classList.remove('hidden');
-
-                break;
+              if (targetTeammate === tm || (!isDragging && currentScenario !== 'FREE_KICK')) {
+                drawYellowPassArrowAndStar(ctx, ball.x, ball.y, tm, targetTeammate === tm);
               }
             }
-          }
+          });
         }
 
-        // Handle Deflection Physics Animation (Sekme Efekti)
-        if (ball.isDeflected) {
-          ball.deflectedFrames = (ball.deflectedFrames || 0) + 1;
-          ball.vx *= 0.96;
-          ball.vy *= 0.96;
-          if (ball.deflectedFrames >= 36) {
-            ball.isDeflected = false;
-            showMatchSplash(false, 'BARAJA ÇARPTI!', 'Barajdaki savunmacı vücudunu siper etti ve top sekip uzaklaştı.');
+        // 6. Draw White Tapered 3D Curve Ribbon while Aiming OR while Ball is in Flight (Screenshots 1 & 2!)
+        if (isDragging && matchMode === 'SHOOT' && !targetTeammate && aimPower > 14 && Math.abs(aimDy) > 4) {
+          const speed = Math.min(Math.max(aimPower * 0.11, 10), 16.5);
+          const angle = Math.atan2(aimDy, aimDx);
+          const estVx = Math.cos(angle) * speed;
+          const estVy = Math.sin(angle) * speed;
+          const flightFrames = Math.max(1, Math.abs((ball.y - goalBottom) / (estVy || -10)));
+          let targetLandingX = ball.x + estVx * flightFrames;
+
+          let estSpin = 0;
+          if (dragPoints && dragPoints.length >= 3) {
+            const startPt = dragPoints[0];
+            const endPt = dragPoints[dragPoints.length - 1];
+            const chordLen = Math.hypot(endPt.x - startPt.x, endPt.y - startPt.y);
+            if (chordLen > 20) {
+              let maxDev = 0;
+              for (let p of dragPoints) {
+                const dev = (-(endPt.y - startPt.y) * (p.x - startPt.x) + (endPt.x - startPt.x) * (p.y - startPt.y)) / chordLen;
+                if (Math.abs(dev) > Math.abs(maxDev)) maxDev = dev;
+              }
+              const curveRatio = Math.max(-1.6, Math.min(1.6, maxDev / 28));
+              estSpin = curveRatio * 0.24;
+              if (Math.abs(estSpin) < 0.025) estSpin = 0;
+            }
           }
+          targetLandingX += 0.5 * (estSpin * 0.35) * flightFrames * flightFrames;
+          const clampedEndX = Math.max(70, Math.min(530, targetLandingX));
+          const ctrlX = (ball.x + clampedEndX) / 2 - (estSpin * 150);
+          const ctrlY = (ball.y + 135) / 2;
+
+          drawTaperedWhiteRibbon(ctx, ball.x, ball.y, ctrlX, ctrlY, clampedEndX, 122);
+        } else if (ball.inFlight && ball.savedRibbon && !ball.isPassing) {
+          const r = ball.savedRibbon;
+          drawTaperedWhiteRibbon(ctx, r.x0, r.y0, r.cx, r.cy, r.x1, r.y1, 'rgba(255, 255, 255, 0.85)');
         }
 
-        // Collision with Free Kick Wall (Sekme ve Bloklama Mekanizması)
-        if (currentScenario === 'FREE_KICK' && !ball.saved && !ball.scored && !ball.isDeflected && !ball.isPassing) {
+        // 7. Depth-Sorted 3D Actors (Wall Defenders, Outfield Defenders, Teammates)
+        const actorsToDraw = [];
+        if (currentScenario === 'FREE_KICK') {
           wallDefenders.forEach(def => {
-            if (ball.x + ball.radius >= def.x && ball.x - ball.radius <= def.x + def.width && ball.y >= def.y && ball.y <= def.y + def.height + 6) {
-              if (ball.isGroundShot || ball.z < 34) {
-                ball.isDeflected = true;
-                ball.saved = true;
-                ball.vx = (Math.random() - 0.5) * 5.5;
-                ball.vy = Math.abs(ball.vy) * 0.42 + 2.0; // Bounces back downward onto pitch
-                ball.z = Math.min(ball.z, 10);
-                ball.spin = 0;
-                Sound.postHit();
-              }
-            }
+            actorsToDraw.push({
+              y: def.y,
+              draw: () => drawHumanoidActor(ctx, def.x, def.y, oppKit, { role: 'WALL', hair: def.hair, isMohawk: def.isMohawk })
+            });
           });
         }
-
-        // Collision with Outfield Defenders (Araya Girme & Blok)
-        if (defenders && defenders.length > 0 && !ball.saved && !ball.scored && !ball.isDeflected) {
+        if (defenders && defenders.length > 0) {
           defenders.forEach(def => {
-            if (ball.x + ball.radius >= def.x - 3 && ball.x - ball.radius <= def.x + def.width + 3 && ball.y >= def.y && ball.y <= def.y + def.height + 6) {
-              if (ball.isGroundShot || ball.z < 30) {
-                ball.isDeflected = true;
-                ball.saved = true;
-                ball.vx = (Math.random() - 0.5) * 5.5;
-                ball.vy = Math.abs(ball.vy) * 0.42 + 2.0;
-                ball.z = Math.min(ball.z, 10);
-                ball.spin = 0;
-                Sound.postHit();
-                showMatchSplash(false, 'SAVUNMA ARAYA GİRDİ!', 'Rakip savunma pozisyona müdahale ederek tehlikeyi uzaklaştırdı.');
-              }
+            actorsToDraw.push({
+              y: def.y,
+              draw: () => drawHumanoidActor(ctx, def.x, def.y, oppKit, { role: 'DEFENDER', hair: def.hair, isMohawk: def.isMohawk, isLunging: def.isLunging, num: def.num })
+            });
+          });
+        }
+        if (teammates && teammates.length > 0) {
+          teammates.forEach(tm => {
+            if (tm.active) {
+              actorsToDraw.push({
+                y: tm.y,
+                draw: () => drawHumanoidActor(ctx, tm.x, tm.y, myKit, { role: 'TEAMMATE', num: tm.num || 9, hair: '#27272a' })
+              });
             }
           });
         }
+        // Sort back-to-front by Y coordinate
+        actorsToDraw.sort((a, b) => a.y - b.y);
+        actorsToDraw.forEach(a => a.draw());
 
-        // Outfield Collision Logic (Goal Mouth, Posts, Crossbar & Goalkeeper)
-        if (matchMode === 'SHOOT' && !ball.saved && !ball.scored && !ball.out && !ball.isDeflected && !ball.isPassing) {
-          const goalLineY = 200;
+        // 8. Ball Physics & Flight
+        if (ball.inFlight) {
+          if (Math.abs(ball.spin) > 0.001) {
+            ball.vx += ball.spin * 0.35;
+            ball.spin *= 0.985;
+          }
+          ball.vx *= 0.995;
+          ball.vy *= 0.995;
+          ball.x += ball.vx;
+          ball.y += ball.vy;
+          ball.rotation = (ball.rotation || 0) + 0.28;
 
-          // Ball crosses or reaches the goal line
-          if (ball.y <= goalLineY) {
-            // Post or Crossbar Collision Checks (Direk & Üst Direk Fiziği)
-            const isLeftPost = Math.abs(ball.x - goalLeft) <= (ball.radius + 2);
-            const isRightPost = Math.abs(ball.x - goalRight) <= (ball.radius + 2);
-            const isCrossbar = (ball.x >= goalLeft - 4 && ball.x <= goalRight + 4) && (ball.z >= 33 && ball.z <= 38);
+          // 3D Parabolic Arc for non-ground shots
+          if (!ball.isGroundShot && !ball.isDeflected) {
+            const startY = (ball.kickOrigin && ball.kickOrigin.y) || 435;
+            const totalDistY = Math.max(1, startY - goalBottom);
+            const progress = Math.max(0, Math.min(1, (startY - ball.y) / totalDistY));
+            ball.z = Math.sin(progress * Math.PI) * 36;
+          } else if (ball.isDeflected) {
+            ball.z = Math.max(0, (ball.z || 0) - 1.2);
+          } else {
+            ball.z = 0;
+          }
 
-            if (isLeftPost || isRightPost || isCrossbar) {
-              ball.isDeflected = true;
-              ball.saved = true;
-              Sound.postHit();
+          // ==========================================
+          // SOCCER SUPER STAR: PAS YAKALAMA MEKANİZMASI
+          // ==========================================
+          if (teammates && teammates.length > 0 && !ball.saved && !ball.scored && !ball.out && !ball.isDeflected) {
+            for (let tm of teammates) {
+              if (tm.active) {
+                const dist = Math.hypot(ball.x - tm.x, ball.y - (tm.y + 15));
+                if (dist < 38) {
+                  Sound.kick();
+                  hasPassedThisTurn = true;
+                  ball.isPassing = false;
+                  ball.savedRibbon = null;
+                  if (tm.triggersVolley) ball.isVolleyPose = true;
+                  if (typeof tvMatchEngine !== 'undefined' && tvMatchEngine && tvMatchEngine.isActive) {
+                    tvMatchEngine.hasPassedInPosition = true;
+                  }
+                  currentAttackPhase = 2;
 
-              // Physical ricochet off the post/bar back onto pitch!
-              ball.vy = Math.abs(ball.vy) * 0.45 + 2.5; // Bounces forward away from goal
-              if (isLeftPost) {
-                ball.vx = -Math.abs(ball.vx) * 0.5 - 2.5;
-              } else if (isRightPost) {
-                ball.vx = Math.abs(ball.vx) * 0.5 + 2.5;
-              } else {
-                ball.z = Math.min(ball.z, 20);
-                ball.vx = (Math.random() - 0.5) * 4;
-              }
-              ball.spin = 0;
-              showMatchSplash(false, 'DİREKTEN DÖNDÜ!', isCrossbar ? 'Üst direğe çarpan top sahaya geri döndü!' : 'Yan direğe çarpan top sahaya geri döndü!');
-            } else if (ball.z > 38) {
-              // Üstten Aut
-              ball.out = true;
-              Sound.postHit();
-              showMatchSplash(false, 'ÜSTTEN AUT!', 'Şut üst direğin üzerinden auta gitti.');
-            } else if (ball.x > goalLeft + ball.radius + 2 && ball.x < goalRight - ball.radius - 2) {
-              // Goalkeeper Save Check at Goal Line
-              const distGK = Math.hypot(ball.x - goalkeeper.x, ball.y - goalkeeper.y);
-              if (distGK < 28) {
-                ball.saved = true;
-                ball.vx = (Math.random() - 0.5) * 5;
-                ball.vy = 4;
-                Sound.saveGlove();
-                showMatchSplash(false, 'KALECİ ÇIKARDI!', 'Harika uzandı ve topu kornere çeldi.');
-              } else {
-                // GOAL! Clean hit into the net!
-                ball.scored = true;
-                ball.vx *= 0.18;
-                ball.vy *= 0.18;
-                Sound.goal();
+                  ball.inFlight = false;
+                  ball.vx = 0;
+                  ball.vy = 0;
+                  ball.spin = 0;
+                  ball.z = 0;
+                  ball.x = tm.x;
+                  ball.y = tm.y + 15;
+                  ball.trail = [];
+                  ball.isDeflected = false;
+                  ball.kickOrigin = { x: ball.x, y: ball.y };
 
-                let goalDesc = 'Ağları Havalandıran Temiz Bir Gol!';
-                if (currentScenario === 'FREE_KICK') {
-                  goalDesc = (Math.abs(ball.spin) > 0.05) 
-                    ? '🎯 Barajın Üstünden 90’a Roberto Carlos Falsosuyla Harika Frikik Golü!'
-                    : '🎯 Barajın Üstünden Aşan Nefis Frikik Golü!';
-                } else if (hasPassedThisTurn) {
-                  goalDesc = '🤝 Harika Paslaşma & Asist! Kusursuz Bitiriş!';
-                } else if (currentScenario === 'WING_ATTACK' || currentScenario === 'CORNER') {
-                  goalDesc = '📐 Kanat Akını & Çaprazdan Köşeye Harika Plase!';
-                } else if (currentScenario === 'ONE_TWO') {
-                  goalDesc = '🤝 Harika Verkaç ve Kusursuz Tek Vuruş!';
-                } else if (currentScenario === 'REBOUND') {
-                  goalDesc = '🚀 Dönen Topa Gelişine Füze Gibi Vuruş!';
-                } else if (ball.isGroundShot) {
-                  goalDesc = '⚡ Köşeye Sert ve İsabetli Bir Yerden Şut!';
-                } else if (Math.abs(ball.spin) > 0.05) {
-                  goalDesc = '🌀 90’a Roberto Carlos Falsosuyla Mükemmel Gol!';
+                  tm.active = false;
+
+                  const newGkTarget = (goalLeft + goalRight) / 2 + (ball.x - canvasWidth / 2) * 0.22;
+                  goalkeeper.x = Math.max(goalLeft + 28, Math.min(goalRight - 28, newGkTarget));
+
+                  const pBanner = document.getElementById('passFeedbackBanner');
+                  if (pBanner) {
+                    pBanner.classList.remove('hidden');
+                    setTimeout(() => { if (pBanner) pBanner.classList.add('hidden'); }, 1400);
+                  }
+
+                  const overlay = document.getElementById('canvasInstructionOverlay');
+                  const promptTxt = document.getElementById('txtCanvasPrompt');
+                  if (promptTxt) promptTxt.textContent = '⚽ Harika pas aldın! Şimdi kaleye kavisli çizgini çek ve 90\'a bitir!';
+                  if (overlay) overlay.classList.remove('hidden');
+
+                  break;
                 }
-                showMatchSplash(true, 'GOOOOOOOL!', goalDesc);
               }
-            } else {
-              // Outside post margins
+            }
+          }
+
+          // Handle Deflection Physics Animation (Sekme Efekti)
+          if (ball.isDeflected) {
+            ball.deflectedFrames = (ball.deflectedFrames || 0) + 1;
+            ball.vx *= 0.96;
+            ball.vy *= 0.96;
+            if (ball.deflectedFrames >= 34) {
+              ball.isDeflected = false;
+              showMatchSplash(false, 'SAVUNMADAN SEKTİ!', 'Top savunma bloğuna çarparak uzaklaştı.');
+            }
+          }
+
+          // Collision with Free Kick Wall
+          if (currentScenario === 'FREE_KICK' && !ball.saved && !ball.scored && !ball.isDeflected && !ball.isPassing) {
+            wallDefenders.forEach(def => {
+              if (ball.x + ball.radius >= def.x - 12 && ball.x - ball.radius <= def.x + 12 && ball.y >= def.y - 10 && ball.y <= def.y + 36) {
+                if (ball.isGroundShot || ball.z < 30) {
+                  ball.isDeflected = true;
+                  ball.saved = true;
+                  ball.vx = (Math.random() - 0.5) * 5.5;
+                  ball.vy = Math.abs(ball.vy) * 0.42 + 2.0;
+                  ball.z = Math.min(ball.z, 10);
+                  ball.spin = 0;
+                  Sound.postHit();
+                }
+              }
+            });
+          }
+
+          // Collision with Outfield Defenders
+          if (defenders && defenders.length > 0 && !ball.saved && !ball.scored && !ball.isDeflected) {
+            defenders.forEach(def => {
+              if (ball.x + ball.radius >= def.x - 13 && ball.x - ball.radius <= def.x + 13 && ball.y >= def.y - 8 && ball.y <= def.y + 34) {
+                if (ball.isGroundShot || ball.z < 28) {
+                  ball.isDeflected = true;
+                  ball.saved = true;
+                  ball.vx = (Math.random() - 0.5) * 5.5;
+                  ball.vy = Math.abs(ball.vy) * 0.42 + 2.0;
+                  ball.z = Math.min(ball.z, 10);
+                  ball.spin = 0;
+                  Sound.postHit();
+                  showMatchSplash(false, 'SAVUNMA ARAYA GİRDİ!', 'Rakip savunma pozisyona müdahale ederek tehlikeyi uzaklaştırdı.');
+                }
+              }
+            });
+          }
+
+          // Outfield Collision Logic (Goal Mouth, Posts, Crossbar & Goalkeeper)
+          if (matchMode === 'SHOOT' && !ball.saved && !ball.scored && !ball.out && !ball.isDeflected && !ball.isPassing) {
+            const goalLineY = goalBottom; // 158
+
+            if (ball.y <= goalLineY) {
+              const isLeftPost = Math.abs(ball.x - goalLeft) <= (ball.radius + 2);
+              const isRightPost = Math.abs(ball.x - goalRight) <= (ball.radius + 2);
+              const isCrossbar = (ball.x >= goalLeft - 4 && ball.x <= goalRight + 4) && (ball.z >= 33 && ball.z <= 38);
+
+              if (isLeftPost || isRightPost || isCrossbar) {
+                ball.isDeflected = true;
+                ball.saved = true;
+                Sound.postHit();
+
+                ball.vy = Math.abs(ball.vy) * 0.45 + 2.5;
+                if (isLeftPost) {
+                  ball.vx = -Math.abs(ball.vx) * 0.5 - 2.5;
+                } else if (isRightPost) {
+                  ball.vx = Math.abs(ball.vx) * 0.5 + 2.5;
+                } else {
+                  ball.z = Math.min(ball.z, 20);
+                  ball.vx = (Math.random() - 0.5) * 4;
+                }
+                ball.spin = 0;
+                showMatchSplash(false, 'DİREKTEN DÖNDÜ!', isCrossbar ? 'Üst direğe çarpan top sahaya geri döndü!' : 'Yan direğe çarpan top sahaya geri döndü!');
+              } else if (ball.z > 38) {
+                ball.out = true;
+                Sound.postHit();
+                showMatchSplash(false, 'ÜSTTEN AUT!', 'Şut üst direğin üzerinden auta gitti.');
+              } else if (ball.x > goalLeft + ball.radius + 2 && ball.x < goalRight - ball.radius - 2) {
+                const distGK = Math.hypot(ball.x - goalkeeper.x, ball.y - goalkeeper.y);
+                if (distGK < 28) {
+                  ball.saved = true;
+                  ball.vx = (Math.random() - 0.5) * 5;
+                  ball.vy = 4;
+                  Sound.saveGlove();
+                  showMatchSplash(false, 'KALECİ ÇIKARDI!', 'Harika uzandı ve topu kornere çeldi.');
+                } else {
+                  ball.scored = true;
+                  ball.vx *= 0.18;
+                  ball.vy *= 0.18;
+                  Sound.goal();
+
+                  let goalDesc = 'Ağları Havalandıran Temiz Bir Gol!';
+                  if (currentScenario === 'FREE_KICK') {
+                    goalDesc = (Math.abs(ball.spin) > 0.05)
+                      ? '🎯 Barajın Üstünden 90’a Roberto Carlos Falsosuyla Harika Frikik Golü!'
+                      : '🎯 Barajın Üstünden Aşan Nefis Frikik Golü!';
+                  } else if (hasPassedThisTurn) {
+                    goalDesc = '🤝 Harika Paslaşma & Asist! Kusursuz Bitiriş!';
+                  } else if (currentScenario === 'WING_ATTACK' || currentScenario === 'CORNER') {
+                    goalDesc = '📐 Kanat Akını & Çaprazdan Köşeye Harika Plase!';
+                  } else if (currentScenario === 'ONE_TWO') {
+                    goalDesc = '🤝 Harika Verkaç ve Kusursuz Tek Vuruş!';
+                  } else if (currentScenario === 'REBOUND') {
+                    goalDesc = '🚀 Ceza Sahasında Füze Gibi Bitirici Vuruş!';
+                  } else if (ball.isGroundShot) {
+                    goalDesc = '⚡ Köşeye Sert ve İsabetli Bir Yerden Şut!';
+                  } else if (Math.abs(ball.spin) > 0.05) {
+                    goalDesc = '🌀 90’a Roberto Carlos Falsosuyla Mükemmel Gol!';
+                  }
+                  showMatchSplash(true, 'GOOOOOOOL!', goalDesc);
+                }
+              } else {
+                ball.out = true;
+                Sound.postHit();
+                showMatchSplash(false, 'AUT / DIŞARI!', 'Top direğin yanından auta gitti.');
+              }
+            } else if (ball.y < 65 || ball.x < 18 || ball.x > canvasWidth - 18) {
               ball.out = true;
               Sound.postHit();
-              showMatchSplash(false, 'AUT / DIŞARI!', 'Top direğin yanından auta gitti.');
+              showMatchSplash(false, 'AUT!', 'Şut çerçeveyi bulmadı.');
             }
-          } else if (ball.y < 85 || ball.x < 30 || ball.x > canvasWidth - 30) {
-            ball.out = true;
-            Sound.postHit();
-            showMatchSplash(false, 'AUT!', 'Şut çerçeveyi bulmadı.');
+          }
+
+          // Goalkeeper Mode Collision Logic
+          if (matchMode === 'SAVE' && !ball.saved && !ball.scored) {
+            const distGlove = Math.hypot(ball.x - gloves.x, ball.y - gloves.y);
+            if (distGlove < 34) {
+              ball.saved = true;
+              ball.vx = (Math.random() - 0.5) * 6;
+              ball.vy = -3;
+              Sound.saveGlove();
+              showMatchSplash(true, 'MÜTHİŞ KURTARIŞ!', '90’a giden topu eldivenlerinle çeldin!');
+            } else if (ball.y <= goalBottom && ball.x >= goalLeft && ball.x <= goalRight) {
+              ball.scored = true;
+              Sound.goal();
+              showMatchSplash(false, 'GOL OLDU...', 'Top ağlarla buluştu, toparlanmalısın.');
+            }
           }
         }
 
-        // Goalkeeper Mode Collision Logic
-        if (matchMode === 'SAVE' && !ball.saved && !ball.scored) {
-          const distGlove = Math.hypot(ball.x - gloves.x, ball.y - gloves.y);
-          if (distGlove < 34) {
-            ball.saved = true;
-            ball.vx = (Math.random() - 0.5) * 6;
-            ball.vy = -3;
-            Sound.saveGlove();
-            showMatchSplash(true, 'MÜTHİŞ KURTARIŞ!', '90’a giden topu eldivenlerinle çeldin!');
-          } else if (ball.y <= 175 && ball.x >= goalLeft && ball.x <= goalRight) {
-            ball.scored = true;
-            Sound.goal();
-            showMatchSplash(false, 'GOL OLDU...', 'Top ağlarla buluştu, toparlanmalısın.');
-          }
+        // 9. Draw Classic Pentagonal Football (Telstar Style with 3D Shading & Rotation)
+        const renderY = ball.y - (ball.z || 0);
+        const renderScale = 1 + ((ball.z || 0) / 90);
+        drawPentagonFootball(ctx, ball.x, renderY, ball.y, ball.radius, renderScale);
+
+        // 10. Draw Foreground Star Kicker (#7 / #10 Back View or Acrobatic Volley Pose)
+        if (matchMode === 'SHOOT') {
+          drawPitchCustomPlayer(ctx, ball.x, ball.y, ball.inFlight, isDragging, aimPower, aimDx, aimDy);
         }
-      }
 
-      // 8.5 Draw Customized Pitch Footballer (Oyuncunun Forması & Karakteri)
-      if (matchMode === 'SHOOT') {
-        let aimDx = 0, aimDy = 0, power = 0;
-        if (isDragging) {
-          aimDx = dragCurrent.x - dragStart.x;
-          aimDy = dragCurrent.y - dragStart.y;
-          if (aimDy > 5) {
-            aimDx = -aimDx;
-            aimDy = -aimDy;
-          }
-          power = Math.hypot(aimDx, aimDy);
+        if (!ball.scored && !ball.out && (!ball.saved || ball.isDeflected)) {
+          requestAnimationFrame(renderCanvasLoop);
         }
-        drawPitchCustomPlayer(ctx, ball.x, ball.y, ball.inFlight, isDragging, power, aimDx, aimDy);
+      } catch (loopErr) {
+        console.error('NSS renderCanvasLoop exception:', loopErr);
+        if (ball && ball.inFlight) ball.inFlight = false;
       }
-
-      // 9. Draw Ball (With Ground Shadow & Elevation Render!)
-      const renderY = ball.y - (ball.z || 0);
-      const renderScale = 1 + ((ball.z || 0) / 90);
-
-      // Ball Shadow on Turf
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
-      ctx.beginPath();
-      ctx.ellipse(ball.x, ball.y, ball.radius * 0.85, ball.radius * 0.45, 0, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Ball Body
-      ctx.fillStyle = '#ffffff';
-      ctx.beginPath();
-      ctx.arc(ball.x, renderY, ball.radius * renderScale, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.strokeStyle = '#1c1917';
-      ctx.lineWidth = 1.5;
-      ctx.stroke();
-
-      // Ball Center Pentagon
-      ctx.fillStyle = '#0f172a';
-      ctx.beginPath();
-      ctx.arc(ball.x, renderY, 3.5 * renderScale, 0, Math.PI * 2);
-      ctx.fill();
-
-      if (!ball.scored && !ball.out && (!ball.saved || ball.isDeflected)) {
-        requestAnimationFrame(renderCanvasLoop);
-      }
-    } catch (loopErr) {
-      console.error('NSS renderCanvasLoop exception:', loopErr);
-      if (ball && ball.inFlight) ball.inFlight = false;
     }
-  }
 
     function showMatchSplash(success, title, desc) {
       const splash = document.getElementById('matchFeedbackSplash');
