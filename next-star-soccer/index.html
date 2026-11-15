@@ -777,7 +777,7 @@
       <!-- Tab View 2: League Standings Table -->
       <div id="viewSeasonTable" class="hidden p-4 rounded-2xl bg-pitch-900/90 border border-pitch-800 space-y-3 text-left">
         <div class="flex items-center justify-between border-b border-pitch-800 pb-2">
-          <span class="text-xs font-display font-bold text-white uppercase tracking-wide">🏆 Süper Lig Puan Tablosu</span>
+          <span id="txtLeagueTableTitle" class="text-xs font-display font-bold text-white uppercase tracking-wide">🏆 Puan Tablosu</span>
           <span class="text-[10px] text-emerald-400 font-mono font-bold">Hafta: 28 / 34</span>
         </div>
         <div class="overflow-x-auto">
@@ -805,7 +805,7 @@
       <div id="viewSeasonBrackets" class="hidden p-4 rounded-2xl bg-pitch-900/90 border border-pitch-800 space-y-4 text-left">
         <div class="space-y-2">
           <div class="text-xs font-display font-bold text-amber-300 uppercase flex items-center justify-between">
-            <span>🛡️ Ulusal Kupa Eleme Ağacı</span>
+            <span id="txtCupBracketTitle">🛡️ Ulusal Kupa Eleme Ağacı</span>
             <span class="text-[10px] text-slate-400">Tek Maç Eleme</span>
           </div>
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs" id="cupBracketsGrid">
@@ -1119,9 +1119,9 @@
 
     const CLUB_TIERS = {
       starterOffers: [
-        { nameTr: 'Anadolu Gücü FK (Süper Lig)', nameEn: 'Anatolian Power FC (Pro League)', badge: '⚡', rep: 60, salary: 35000, descTr: 'İlk 11 garantisi, doğrudan profesyonel lig vitrini!', descEn: 'Guaranteed starter role & fast match growth!' },
-        { nameTr: 'Başkent Akademi GSK', nameEn: 'Capital Academy FC', badge: '🦁', rep: 68, salary: 50000, descTr: 'Modern tesisler, yüksek prestij, kıyasıya forma savaşı.', descEn: 'Top facilities, fierce squad competition.' },
-        { nameTr: 'Genk Sporting (Yurtdışı)', nameEn: 'Genk Sporting (Overseas)', badge: '🦅', rep: 74, salary: 85000, descTr: 'Avrupa yetenek avcısı kulüp, döviz maaş ve vitrin.', descEn: 'European scout haven, higher wage & exposure.' }
+        { nameTr: 'Anadolu Gücü FK (Süper Lig)', nameEn: 'Anatolian Power FC (Pro League)', badge: '⚡', rep: 60, salary: 35000, league: 'Süper Lig', descTr: 'İlk 11 garantisi, doğrudan profesyonel lig vitrini!', descEn: 'Guaranteed starter role & fast match growth!' },
+        { nameTr: 'Başkent Akademi GSK', nameEn: 'Capital Academy FC', badge: '🦁', rep: 68, salary: 50000, league: 'Süper Lig', descTr: 'Modern tesisler, yüksek prestij, kıyasıya forma savaşı.', descEn: 'Top facilities, fierce squad competition.' },
+        { nameTr: 'Genk Sporting (Yurtdışı)', nameEn: 'Genk Sporting (Overseas)', badge: '🦅', rep: 74, salary: 85000, league: 'Pro League', descTr: 'Avrupa yetenek avcısı kulüp, döviz maaş ve vitrin.', descEn: 'European scout haven, higher wage & exposure.' }
       ],
       transferMarketPool: [
         { name: 'Galatasaray A.Ş.', badge: '🦁', league: 'Süper Lig', rep: 78, minOvr: 72, salary: 1800000, fee: 15000000, role: 'İlk 11 Yıldızı' },
@@ -1135,6 +1135,93 @@
         { name: 'Paris Saint-Germain', badge: '🗼', league: 'Ligue 1', rep: 91, minOvr: 81, salary: 12500000, fee: 70000000, role: 'Süperstar' }
       ]
     };
+
+    const LEAGUE_ROSTERS = {
+      'La Liga': [
+        { name: 'Real Madrid CF', badge: '👑' },
+        { name: 'FC Barcelona', badge: '🔵🔴' },
+        { name: 'Atlético Madrid', badge: '🔴⚪' },
+        { name: 'Sevilla FC', badge: '⚪🔴' },
+        { name: 'Villarreal CF', badge: '🟡' },
+        { name: 'Real Sociedad', badge: '🔵⚪' }
+      ],
+      'Premier League': [
+        { name: 'Manchester City', badge: '🌊' },
+        { name: 'Arsenal FC', badge: '🔴' },
+        { name: 'Liverpool FC', badge: '🔴' },
+        { name: 'Chelsea FC', badge: '🔵' },
+        { name: 'Manchester United', badge: '😈' },
+        { name: 'Tottenham Hotspur', badge: '⚪' }
+      ],
+      'Bundesliga': [
+        { name: 'Bayern München', badge: '🔴' },
+        { name: 'Borussia Dortmund', badge: '🟡' },
+        { name: 'Bayer Leverkusen', badge: '💊' },
+        { name: 'RB Leipzig', badge: '⚪🔴' },
+        { name: 'Eintracht Frankfurt', badge: '🦅' },
+        { name: 'VfB Stuttgart', badge: '⚪' }
+      ],
+      'Serie A': [
+        { name: 'Inter Milano', badge: '🔵' },
+        { name: 'AC Milan', badge: '🔴⚫' },
+        { name: 'Juventus', badge: '⚪⚫' },
+        { name: 'SSC Napoli', badge: '🩵' },
+        { name: 'AS Roma', badge: '🐺' },
+        { name: 'SS Lazio', badge: '🦅' }
+      ],
+      'Ligue 1': [
+        { name: 'Paris Saint-Germain', badge: '🗼' },
+        { name: 'AS Monaco', badge: '🔴⚪' },
+        { name: 'Olympique Marseille', badge: '⚪🔵' },
+        { name: 'Olympique Lyon', badge: '🦁' },
+        { name: 'Lille OSC', badge: '🔴' },
+        { name: 'Stade Rennais', badge: '🔴⚫' }
+      ],
+      'Pro League': [
+        { name: 'Genk Sporting', badge: '🦅' },
+        { name: 'Club Brugge', badge: '🔵⚫' },
+        { name: 'RSC Anderlecht', badge: '🟣' },
+        { name: 'Standard Liège', badge: '🔴' },
+        { name: 'Royal Antwerp', badge: '🔴⚪' },
+        { name: 'KAA Gent', badge: '🔵⚪' }
+      ],
+      'Süper Lig': [
+        { name: 'Galatasaray A.Ş.', badge: '🦁' },
+        { name: 'Fenerbahçe SK', badge: '🟡' },
+        { name: 'Beşiktaş JK', badge: '🦅' },
+        { name: 'Trabzonspor', badge: '🔴' },
+        { name: 'Başakşehir FK', badge: '🟠' },
+        { name: 'Adana Demirspor', badge: '⚡' }
+      ]
+    };
+
+    function getPlayerLeague() {
+      if (!player || !player.club) return 'Süper Lig';
+      let l = player.club.league;
+      const cname = player.club.name || '';
+      // Automatic detection for Real Madrid and European clubs even in old saves
+      if (!l || l === 'Süper Lig') {
+        if (cname.includes('Real Madrid') || cname.includes('Barcelona') || cname.includes('Atlético')) l = 'La Liga';
+        else if (cname.includes('Manchester') || cname.includes('Arsenal') || cname.includes('Chelsea') || cname.includes('Liverpool') || cname.includes('Tottenham')) l = 'Premier League';
+        else if (cname.includes('Bayern') || cname.includes('Dortmund') || cname.includes('Leverkusen') || cname.includes('Leipzig')) l = 'Bundesliga';
+        else if (cname.includes('Inter') || cname.includes('Milan') || cname.includes('Juventus') || cname.includes('Napoli') || cname.includes('Roma')) l = 'Serie A';
+        else if (cname.includes('Paris') || cname.includes('Monaco') || cname.includes('Marseille') || cname.includes('Lyon')) l = 'Ligue 1';
+        else if (cname.includes('Genk') || cname.includes('Brugge') || cname.includes('Anderlecht')) l = 'Pro League';
+      }
+      l = l || 'Süper Lig';
+      player.club.league = l;
+      return l;
+    }
+
+    function getNationalCupName(league) {
+      if (league === 'La Liga') return 'Copa del Rey (İspanya)';
+      if (league === 'Premier League') return 'FA Cup (İngiltere)';
+      if (league === 'Bundesliga') return 'DFB-Pokal (Almanya)';
+      if (league === 'Serie A') return 'Coppa Italia (İtalya)';
+      if (league === 'Ligue 1') return 'Coupe de France (Fransa)';
+      if (league === 'Pro League') return 'Beker van België (Belçika)';
+      return 'Türkiye Kupası';
+    }
 
     const STORE_CATALOG = [
       { id: 'physio', nameTr: 'Özel Fizyoterapist', nameEn: 'Personal Physiotherapist', icon: '🩺', price: 40000, descTr: 'Sakatlık riskini %60 düşürür, formunu korur.', descEn: 'Reduces injury chances by 60%.' },
@@ -2689,11 +2776,11 @@
           const myShort = myClubName.replace(/[^a-zA-ZğüşıöçĞÜŞİÖÇ]/g, '').substring(0, 3).toUpperCase() || 'KUL';
           homeTeam = { name: myShort, fullName: myClubName, badge: myBadge, score: 0 };
 
-          const pool = CLUB_TIERS.transferMarketPool.filter(c => c.name !== myClubName);
-          const opp = (pool.length > 0) ? pool[Math.floor(Math.random() * pool.length)] : { name: 'Rakip FK', badge: '🛡️' };
+          leagueName = getPlayerLeague();
+          const roster = (LEAGUE_ROSTERS[leagueName] || LEAGUE_ROSTERS['Süper Lig']).filter(c => c.name !== myClubName);
+          const opp = (roster.length > 0) ? roster[Math.floor(Math.random() * roster.length)] : { name: 'Rakip FK', badge: '🛡️' };
           const oppShort = opp.name.replace(/[^a-zA-ZğüşıöçĞÜŞİÖÇ]/g, '').substring(0, 3).toUpperCase() || 'RAK';
           awayTeam = { name: oppShort, fullName: opp.name, badge: opp.badge, score: 0 };
-          leagueName = player.club ? (player.club.league || 'SÜPER LİG') : 'SÜPER LİG';
         }
 
         const scenarioPool = ['ONE_TWO', 'CORNER', 'FREE_KICK', 'REBOUND', 'OPEN_PLAY'];
@@ -3205,38 +3292,50 @@
     }
 
     function renderSeasonScreen() {
+      const currentLeague = getPlayerLeague();
       document.getElementById('seasonTitle').textContent = `${2026 + (player.age - 16)} - ${2027 + (player.age - 16)} Sezonu (Yaş: ${player.age})`;
-      document.getElementById('seasonClubDisplay').textContent = `${player.club.badge} ${player.club.name}`;
+      document.getElementById('seasonClubDisplay').textContent = `${player.club.badge} ${player.club.name} • ${currentLeague}`;
       document.getElementById('seasonSalaryDisplay').textContent = `Maaş: €${(player.club.salary || 30000).toLocaleString('tr-TR')} / Yıl`;
 
       const feed = document.getElementById('seasonEventsFeed');
       feed.innerHTML = `
         <div class="p-4 rounded-2xl bg-pitch-900/90 border border-pitch-800 space-y-2">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-bold text-emerald-400">🔥 Sezon Mücadelesi</span>
+            <span class="text-xs font-bold text-emerald-400">🔥 ${currentLeague} Mücadelesi</span>
             <span class="text-[10px] text-slate-400 font-mono">${player.stats.matches} Toplam Maç</span>
           </div>
           <p class="text-xs text-slate-300 leading-relaxed">
-            ${player.club.name} formasıyla taraftarların sevgilisi haline geldin. Puan tablosunda liderlik savaşı veriyor, kupalarda finale yürüyorsun!
+            ${player.club.name} formasıyla ${currentLeague} liginde taraftarların sevgilisi haline geldin. Puan tablosunda liderlik savaşı veriyor, kupalarda finale yürüyorsun!
           </p>
         </div>
       `;
     }
 
-    /* League Table Generator */
+    /* Dynamic League Table Generator based on Player's Current League */
     function renderLeagueTable() {
       const tbody = document.getElementById('leagueTableBody');
-      const teams = [
+      const leagueName = getPlayerLeague();
+
+      const titleEl = document.getElementById('txtLeagueTableTitle');
+      if (titleEl) {
+        titleEl.textContent = `🏆 ${leagueName.toUpperCase()} PUAN TABLOSU`;
+      }
+
+      const roster = LEAGUE_ROSTERS[leagueName] || LEAGUE_ROSTERS['Süper Lig'];
+      // Filter out player's club if already in roster to avoid duplicates
+      const rivals = roster.filter(t => t.name !== player.club.name);
+
+      const teamList = [
         { name: player.club.name, badge: player.club.badge, p: 68, w: 21, d: 5, l: 2, gd: '+38' },
-        { name: 'Fenerbahçe SK', badge: '🟡', p: 65, w: 20, d: 5, l: 3, gd: '+32' },
-        { name: 'Beşiktaş JK', badge: '🦅', p: 58, w: 17, d: 7, l: 4, gd: '+22' },
-        { name: 'Trabzonspor', badge: '🔴', p: 52, w: 15, d: 7, l: 6, gd: '+14' },
-        { name: 'Başakşehir FK', badge: '🟠', p: 46, w: 13, d: 7, l: 8, gd: '+6' },
-        { name: 'Adana Demirspor', badge: '⚡', p: 40, w: 11, d: 7, l: 10, gd: '+1' }
+        { name: rivals[0]?.name || 'Rakip 1', badge: rivals[0]?.badge || '🟡', p: 65, w: 20, d: 5, l: 3, gd: '+32' },
+        { name: rivals[1]?.name || 'Rakip 2', badge: rivals[1]?.badge || '🔴', p: 58, w: 17, d: 7, l: 4, gd: '+22' },
+        { name: rivals[2]?.name || 'Rakip 3', badge: rivals[2]?.badge || '⚪', p: 52, w: 15, d: 7, l: 6, gd: '+14' },
+        { name: rivals[3]?.name || 'Rakip 4', badge: rivals[3]?.badge || '🔵', p: 46, w: 13, d: 7, l: 8, gd: '+6' },
+        { name: rivals[4]?.name || 'Rakip 5', badge: rivals[4]?.badge || '⚡', p: 40, w: 11, d: 7, l: 10, gd: '+1' }
       ];
 
       tbody.innerHTML = '';
-      teams.forEach((t, i) => {
+      teamList.forEach((t, i) => {
         const isMyTeam = (t.name === player.club.name);
         const tr = document.createElement('tr');
         tr.className = isMyTeam ? 'bg-emerald-950/40 text-emerald-300 font-bold' : 'hover:bg-pitch-800/40';
@@ -3254,9 +3353,21 @@
       });
     }
 
-    /* Cup Brackets & Groups Generator */
+    /* Cup Brackets & Groups Generator (Dynamic by League) */
     function renderBrackets() {
       const grid = document.getElementById('cupBracketsGrid');
+      const leagueName = getPlayerLeague();
+
+      const cupTitleEl = document.getElementById('txtCupBracketTitle');
+      if (cupTitleEl) {
+        cupTitleEl.textContent = `🛡️ ${getNationalCupName(leagueName)} Eleme Ağacı`;
+      }
+
+      const roster = LEAGUE_ROSTERS[leagueName] || LEAGUE_ROSTERS['Süper Lig'];
+      const rivals = roster.filter(t => t.name !== player.club.name);
+      const semiRival = rivals[0] || { name: 'Derbi Rakibi', badge: '🛡️' };
+      const semiShort = semiRival.name.replace(/[^a-zA-ZğüşıöçĞÜŞİÖÇ]/g, '').substring(0, 3).toUpperCase() || 'RAK';
+
       grid.innerHTML = `
         <div class="p-2.5 rounded-xl bg-pitch-950 border border-pitch-800">
           <div class="text-[9px] text-slate-500 uppercase font-bold">Son 16</div>
@@ -3270,7 +3381,7 @@
         </div>
         <div class="p-2.5 rounded-xl bg-pitch-950 border border-amber-500/40">
           <div class="text-[9px] text-amber-400 uppercase font-bold">Yarı Final</div>
-          <div class="font-bold text-white text-xs mt-1">${player.club.badge} vs 🟡</div>
+          <div class="font-bold text-white text-xs mt-1">${player.club.badge} vs ${semiRival.badge} ${semiShort}</div>
           <div class="text-[9px] text-amber-300 animate-pulse">Sıradaki Maç ⏳</div>
         </div>
         <div class="p-2.5 rounded-xl bg-pitch-950/60 border border-pitch-800 opacity-60">
@@ -3280,22 +3391,36 @@
         </div>
       `;
 
+      // Champions League Group with No Duplicate of Player's Club
+      const uclPool = [
+        { name: 'Real Madrid', badge: '👑' },
+        { name: 'Man. City', badge: '🌊' },
+        { name: 'Bayern', badge: '🔴' },
+        { name: 'Paris SG', badge: '🗼' },
+        { name: 'Inter Milano', badge: '🔵' },
+        { name: 'Benfica', badge: '🦅' }
+      ].filter(c => !player.club.name.toLowerCase().includes(c.name.split(' ')[0].toLowerCase()));
+
+      const ucl2 = uclPool[0] || { name: 'Man. City', badge: '🌊' };
+      const ucl3 = uclPool[1] || { name: 'Bayern', badge: '🔴' };
+      const ucl4 = uclPool[2] || { name: 'Benfica', badge: '🦅' };
+
       const groupGrid = document.getElementById('championsGroupGrid');
       groupGrid.innerHTML = `
         <div class="p-2 rounded-xl bg-emerald-950/40 border border-emerald-500/40 text-emerald-300">
-          <div class="font-bold">1. ${player.club.badge} ${player.club.name.split(' ')[0]}</div>
+          <div class="font-bold truncate">1. ${player.club.badge} ${player.club.name.split(' ')[0]}</div>
           <div class="text-[10px] text-slate-400">13 Puan • Lider</div>
         </div>
         <div class="p-2 rounded-xl bg-pitch-950 border border-pitch-800">
-          <div class="font-bold text-white">2. 🌊 Man. City</div>
+          <div class="font-bold text-white truncate">2. ${ucl2.badge} ${ucl2.name}</div>
           <div class="text-[10px] text-slate-400">11 Puan • Üst Tur</div>
         </div>
         <div class="p-2 rounded-xl bg-pitch-950 border border-pitch-800">
-          <div class="font-bold text-slate-300">3. 🔴 Bayern</div>
+          <div class="font-bold text-slate-300 truncate">3. ${ucl3.badge} ${ucl3.name}</div>
           <div class="text-[10px] text-slate-400">7 Puan</div>
         </div>
         <div class="p-2 rounded-xl bg-pitch-950 border border-pitch-800">
-          <div class="font-bold text-slate-400">4. 🦅 Benfica</div>
+          <div class="font-bold text-slate-400 truncate">4. ${ucl4.badge} ${ucl4.name}</div>
           <div class="text-[10px] text-slate-400">2 Puan</div>
         </div>
       `;
