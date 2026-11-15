@@ -896,6 +896,33 @@
         </div>
       </div>
 
+      <!-- Flag Blitz Canlı Oda & Düello Maç Sonuçları -->
+      <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-lg space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800/80 pb-4">
+          <div>
+            <h3 class="text-base font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-gamepad text-emerald-400"></i>
+              Flag Blitz: Canlı Oda &amp; Düello Maç Sonuçları
+            </h3>
+            <p class="text-xs text-slate-400 mt-0.5">Arkadaşlarla Canlı Oda ve karşılıklı düello modunda oynanan maçlar, skorlar ve podyum sıralamaları</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <span id="partyMatchCountBadge" class="text-xs bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-3 py-1 rounded-full font-mono font-bold">0 Maç</span>
+            <button onclick="loadPartyMatchResults()" class="px-2.5 py-1 text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg border border-slate-700 transition flex items-center gap-1.5" title="Yenile">
+              <i class="fa-solid fa-arrows-rotate"></i> Yenile
+            </button>
+          </div>
+        </div>
+
+        <!-- Zaman Bazlı Gruplanmış Maç Listesi -->
+        <div id="partyMatchesTimelineContainer" class="space-y-4">
+          <div class="text-center py-8 text-slate-500 text-xs">
+            <i class="fa-solid fa-spinner fa-spin text-base text-emerald-400 mb-2 block"></i>
+            Canlı oda maçları yükleniyor...
+          </div>
+        </div>
+      </div>
+
     </main>
 
   </div>
@@ -1120,6 +1147,7 @@
         histTab.classList.remove('hidden');
         histBtn.className = 'px-3 py-1.5 rounded-lg font-bold transition flex items-center gap-1.5 bg-blue-500 text-white shadow whitespace-nowrap';
         loadHistoricalStats(currentFilter);
+        loadPartyMatchResults();
       }
     }
 
@@ -1785,6 +1813,7 @@
         const res = await fetch(`${RTDB_URL}/stats/daily.json?t=${Date.now()}`);
         cachedDailyStats = await res.json() || {};
         processAndRenderHistory(period, cachedDailyStats);
+        loadPartyMatchResults();
       } catch(e) {
         console.warn('Geçmiş verisi okunamadı:', e);
       }
@@ -2802,6 +2831,274 @@
       a.download = `pratikbase_ziyaretci_raporu_${new Date().toLocaleDateString('en-CA')}.csv`;
       a.click();
       URL.revokeObjectURL(url);
+    }
+
+    // ==========================================
+    // FLAG BLITZ: CANLI ODA & DÜELLO MAÇ SONUÇLARI
+    // ==========================================
+    let cachedPartyMatches = [];
+
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    async function loadPartyMatchResults() {
+      const container = document.getElementById('partyMatchesTimelineContainer');
+      const badge = document.getElementById('partyMatchCountBadge');
+      if (!container) return;
+
+      container.innerHTML = `
+        <div class="text-center py-6 text-slate-500 text-xs">
+          <i class="fa-solid fa-spinner fa-spin text-emerald-400 text-base mb-1.5 block"></i>
+          Canlı oda maçları yükleniyor...
+        </div>
+      `;
+
+      try {
+        const [matchesRes, roomsRes] = await Promise.all([
+          fetch(`${RTDB_URL}/flag_quiz_matches.json?t=${Date.now()}`).then(r => r.json()).catch(() => null),
+          fetch(`${RTDB_URL}/flag_quiz_rooms.json?t=${Date.now()}`).then(r => r.json()).catch(() => null)
+        ]);
+
+        const allMatchesMap = {};
+
+        // 1. Ingest rooms from /flag_quiz_rooms
+        if (roomsRes && typeof roomsRes === 'object') {
+          for (const [roomId, room] of Object.entries(roomsRes)) {
+            if (!room || !room.players) continue;
+            const playersList = Object.values(room.players || {});
+            if (playersList.length === 0) continue;
+
+            const sortedPlayers = [...playersList].sort((a, b) => {
+              if ((b.score || 0) !== (a.score || 0)) return (b.score || 0) - (a.score || 0);
+              return (a.time || 0) - (b.time || 0);
+            });
+
+            const qCount = room.questionCount || (room.questions ? room.questions.length : 20);
+            const winner = sortedPlayers[0];
+            const finishedCount = sortedPlayers.filter(p => p.hasFinished).length;
+
+            allMatchesMap[roomId] = {
+              roomId: roomId,
+              timestamp: room.createdAt || Date.now(),
+              questionCount: qCount,
+              playerCount: sortedPlayers.length,
+              status: finishedCount >= sortedPlayers.length ? 'finished' : (room.status || 'in_progress'),
+              winner: winner ? {
+                nick: winner.nick || 'İsimsiz',
+                score: winner.score || 0,
+                time: Number(winner.time || 0).toFixed(2)
+              } : null,
+              players: sortedPlayers.map((p, idx) => ({
+                rank: idx + 1,
+                nick: p.nick || 'Oyuncu',
+                score: p.score || 0,
+                time: Number(p.time || 0).toFixed(2),
+                isHost: !!p.isHost,
+                hasFinished: !!p.hasFinished
+              }))
+            };
+          }
+        }
+
+        // 2. Ingest archived matches from /flag_quiz_matches (overriding / supplementing)
+        if (matchesRes && typeof matchesRes === 'object') {
+          for (const [roomId, match] of Object.entries(matchesRes)) {
+            if (!match) continue;
+            allMatchesMap[roomId] = Object.assign({}, allMatchesMap[roomId] || {}, match);
+          }
+        }
+
+        cachedPartyMatches = Object.values(allMatchesMap).sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+        renderPartyMatches(cachedPartyMatches);
+      } catch (err) {
+        console.error('Error loading party matches:', err);
+        container.innerHTML = `
+          <div class="text-center py-6 text-rose-400 text-xs">
+            <i class="fa-solid fa-triangle-exclamation text-base mb-1 block"></i>
+            Canlı oda maçları yüklenirken hata oluştu.
+          </div>
+        `;
+      }
+    }
+
+    function renderPartyMatches(matches) {
+      const container = document.getElementById('partyMatchesTimelineContainer');
+      const badge = document.getElementById('partyMatchCountBadge');
+      if (!container) return;
+
+      if (badge) badge.textContent = `${matches.length} Maç`;
+
+      if (matches.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-8 text-slate-500 text-xs">
+            <i class="fa-solid fa-trophy text-2xl text-slate-600 mb-2 block"></i>
+            Henüz kaydedilmiş canlı oda maçı bulunmuyor.
+          </div>
+        `;
+        return;
+      }
+
+      // Group matches chronologically by Date
+      const groups = {};
+      const todayStr = new Date().toLocaleDateString('tr-TR');
+      const yesterdayDate = new Date();
+      yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+      const yesterdayStr = yesterdayDate.toLocaleDateString('tr-TR');
+
+      matches.forEach(m => {
+        const d = new Date(m.timestamp || Date.now());
+        const dateKey = d.toLocaleDateString('tr-TR');
+        let label = d.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric', weekday: 'long' });
+        if (dateKey === todayStr) label = `Bugün (${label})`;
+        else if (dateKey === yesterdayStr) label = `Dün (${label})`;
+
+        if (!groups[dateKey]) {
+          groups[dateKey] = {
+            label: label,
+            matches: []
+          };
+        }
+        groups[dateKey].matches.push(m);
+      });
+
+      let html = '';
+
+      for (const [dateKey, group] of Object.entries(groups)) {
+        html += `
+          <div class="space-y-3">
+            <div class="flex items-center gap-2 text-xs font-bold text-slate-300 bg-slate-950/70 border border-slate-800/80 px-3.5 py-2 rounded-xl">
+              <i class="fa-regular fa-calendar-days text-emerald-400"></i>
+              <span>${group.label}</span>
+              <span class="ml-auto text-[11px] font-mono font-semibold text-slate-400 bg-slate-800/80 px-2 py-0.5 rounded-md border border-slate-700/60">${group.matches.length} Maç</span>
+            </div>
+            <div class="space-y-2.5">
+        `;
+
+        group.matches.forEach(m => {
+          const matchTime = new Date(m.timestamp).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+          const isFinished = m.status === 'finished' || (m.players && m.players.length > 0 && m.players.every(p => p.hasFinished));
+          const winner = m.winner;
+
+          html += `
+            <div class="p-3.5 bg-slate-950/50 border border-slate-800 rounded-xl hover:border-slate-700/80 transition">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div class="flex items-center gap-2.5 flex-wrap">
+                  <span class="font-mono font-bold text-xs text-white bg-slate-800 px-2.5 py-1 rounded-lg border border-slate-700 shadow-sm">
+                    <i class="fa-solid fa-hashtag text-[10px] text-slate-400 mr-0.5"></i>${escapeHtml(m.roomId)}
+                  </span>
+                  <span class="text-xs text-slate-400 font-mono flex items-center gap-1">
+                    <i class="fa-regular fa-clock text-slate-500"></i>${matchTime}
+                  </span>
+                  <span class="text-xs bg-purple-500/15 text-purple-300 border border-purple-500/30 px-2 py-0.5 rounded-md font-mono font-medium">
+                    ${m.questionCount || 20} Soru
+                  </span>
+                  <span class="text-xs bg-blue-500/15 text-blue-300 border border-blue-500/30 px-2 py-0.5 rounded-md font-mono font-medium flex items-center gap-1">
+                    <i class="fa-solid fa-users text-[10px]"></i>${m.playerCount || 1} Oyuncu
+                  </span>
+                  ${isFinished ? 
+                    '<span class="text-[11px] bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-md font-semibold">Tamamlandı ✔</span>' :
+                    '<span class="text-[11px] bg-amber-500/15 text-amber-400 border border-amber-500/30 px-2 py-0.5 rounded-md font-semibold">Devam Ediyor ⏳</span>'
+                  }
+                </div>
+
+                <div class="flex items-center gap-2 justify-between sm:justify-end">
+                  ${winner ? `
+                    <div class="text-xs font-semibold text-amber-300 bg-amber-500/10 border border-amber-500/30 px-2.5 py-1 rounded-lg flex items-center gap-1.5 truncate max-w-[260px]">
+                      <span class="text-sm">🥇</span>
+                      <span class="truncate text-white">${escapeHtml(winner.nick)}</span>
+                      <span class="font-mono text-amber-400">(${winner.score}/${m.questionCount} • ${winner.time}s)</span>
+                    </div>
+                  ` : ''}
+
+                  <button onclick="togglePartyMatchAccordion('${escapeHtml(m.roomId)}')" class="text-xs bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 hover:text-white px-2.5 py-1 rounded-lg transition flex items-center gap-1.5 shrink-0">
+                    <span>Podyum</span>
+                    <i id="matchChevron_${escapeHtml(m.roomId)}" class="fa-solid fa-chevron-down text-[10px] transition-transform"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Podyum / Oyuncu Detay Tablosu (Akordeon) -->
+              <div id="matchDetail_${escapeHtml(m.roomId)}" class="hidden mt-3 pt-3 border-t border-slate-800/80">
+                <div class="overflow-x-auto">
+                  <table class="w-full text-left text-xs font-mono">
+                    <thead class="text-slate-400 border-b border-slate-800/60 text-[11px] uppercase tracking-wider">
+                      <tr>
+                        <th class="py-2 px-2.5">Sıra</th>
+                        <th class="py-2 px-2.5">Oyuncu</th>
+                        <th class="py-2 px-2.5 text-center">Doğru / Toplam</th>
+                        <th class="py-2 px-2.5 text-center">Başarı</th>
+                        <th class="py-2 px-2.5 text-center">Süre</th>
+                        <th class="py-2 px-2.5 text-right">Durum</th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-800/40">
+                      ${(m.players || []).map(p => {
+                        let rankBadge = `<span class="text-slate-400 font-bold">#${p.rank}</span>`;
+                        if (p.rank === 1) rankBadge = '<span class="text-base">🥇</span> <strong class="text-amber-400">1.</strong>';
+                        else if (p.rank === 2) rankBadge = '<span class="text-base">🥈</span> <strong class="text-slate-300">2.</strong>';
+                        else if (p.rank === 3) rankBadge = '<span class="text-base">🥉</span> <strong class="text-amber-600">3.</strong>';
+
+                        const totalQ = m.questionCount || 20;
+                        const pct = Math.round(((p.score || 0) / totalQ) * 100);
+
+                        return `
+                          <tr class="hover:bg-slate-900/40 transition">
+                            <td class="py-2 px-2.5 flex items-center gap-1.5">${rankBadge}</td>
+                            <td class="py-2 px-2.5 font-sans font-bold text-white">
+                              ${escapeHtml(p.nick)}
+                              ${p.isHost ? '<span class="ml-1.5 text-[10px] font-mono font-semibold bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 px-1.5 py-0.5 rounded">Kurucu</span>' : ''}
+                            </td>
+                            <td class="py-2 px-2.5 text-center font-bold ${p.rank === 1 ? 'text-amber-400' : 'text-emerald-400'}">
+                              ${p.score || 0} / ${totalQ}
+                            </td>
+                            <td class="py-2 px-2.5 text-center text-slate-300 font-semibold">%${pct}</td>
+                            <td class="py-2 px-2.5 text-center text-slate-300 font-semibold">${p.time || 0}s</td>
+                            <td class="py-2 px-2.5 text-right">
+                              ${p.hasFinished ? 
+                                '<span class="text-emerald-400 font-semibold">Bitirdi ✔</span>' :
+                                '<span class="text-slate-500">Devam Ediyor</span>'
+                              }
+                            </td>
+                          </tr>
+                        `;
+                      }).join('')}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+
+        html += `
+            </div>
+          </div>
+        `;
+      }
+
+      container.innerHTML = html;
+    }
+
+    function togglePartyMatchAccordion(roomId) {
+      const detailEl = document.getElementById(`matchDetail_${roomId}`);
+      const chevronEl = document.getElementById(`matchChevron_${roomId}`);
+      if (!detailEl) return;
+
+      const isHidden = detailEl.classList.contains('hidden');
+      if (isHidden) {
+        detailEl.classList.remove('hidden');
+        if (chevronEl) chevronEl.style.transform = 'rotate(180deg)';
+      } else {
+        detailEl.classList.add('hidden');
+        if (chevronEl) chevronEl.style.transform = 'rotate(0deg)';
+      }
     }
 
     // Bugünün İstatistiklerini Sıfırla

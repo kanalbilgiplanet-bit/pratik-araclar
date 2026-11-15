@@ -2008,6 +2008,8 @@
     function launchSynchronizedCountdown(questions) {
       clearInterval(partyRoomPollInterval);
       if (questions && questions.length) currentQuestions = questions;
+      userAnswers = [];
+      lastArchivedMatchHash = '';
 
       const overlay = document.getElementById('overlayCountdown');
       const numEl = document.getElementById('countdownNumber');
@@ -2060,21 +2062,74 @@
       partyRoomPollInterval = setInterval(pollPartyPodium, 1500);
     }
 
+    let lastArchivedMatchHash = '';
+
     async function pollPartyPodium() {
       if (!currentRoomId) return;
       try {
-        const res = await fetch(`${RTDB_BASE_URL}/flag_quiz_rooms/${currentRoomId}/players.json`);
-        const playersObj = await res.json();
-        if (!playersObj) return;
+        const res = await fetch(`${RTDB_BASE_URL}/flag_quiz_rooms/${currentRoomId}.json`);
+        const roomData = await res.json();
+        if (!roomData || !roomData.players) return;
 
-        const players = Object.values(playersObj);
+        const players = Object.values(roomData.players);
         renderPodiumRanks(players);
+        archiveMatchResultToAdmin(currentRoomId, roomData, players);
+      } catch(e) {}
+    }
+
+    async function archiveMatchResultToAdmin(roomId, roomData, players) {
+      if (!roomId || !players || !players.length) return;
+      const finishedCount = players.filter(p => p.hasFinished).length;
+      if (finishedCount === 0) return;
+
+      const sortedPlayers = [...players].sort((a, b) => {
+        if ((b.score || 0) !== (a.score || 0)) return (b.score || 0) - (a.score || 0);
+        return (a.time || 0) - (b.time || 0);
+      });
+
+      const hash = `${roomId}_${finishedCount}_${sortedPlayers.map(p => (p.score||0) + '_' + (p.time||0)).join('_')}`;
+      if (lastArchivedMatchHash === hash) return;
+      lastArchivedMatchHash = hash;
+
+      const winner = sortedPlayers[0] || null;
+      const qCount = (roomData && roomData.questions && roomData.questions.length) ? roomData.questions.length : getMatchTotalQuestions();
+
+      const matchRecord = {
+        roomId: roomId,
+        timestamp: (roomData && roomData.createdAt) || Date.now(),
+        finishedAt: Date.now(),
+        questionCount: qCount,
+        playerCount: sortedPlayers.length,
+        status: (finishedCount >= sortedPlayers.length) ? 'finished' : 'in_progress',
+        winner: winner ? {
+          nick: winner.nick || 'İsimsiz',
+          score: winner.score || 0,
+          time: Number(winner.time || 0).toFixed(2)
+        } : null,
+        players: sortedPlayers.map((p, idx) => ({
+          rank: idx + 1,
+          nick: p.nick || 'Oyuncu',
+          score: p.score || 0,
+          time: Number(p.time || 0).toFixed(2),
+          isHost: !!p.isHost,
+          hasFinished: !!p.hasFinished
+        }))
+      };
+
+      try {
+        await fetch(`${RTDB_BASE_URL}/flag_quiz_matches/${roomId}.json`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(matchRecord)
+        });
       } catch(e) {}
     }
 
     function renderPodiumRanks(players) {
       const container = document.getElementById('podiumRanksList');
       if (!container) return;
+
+      const matchTotal = getMatchTotalQuestions();
 
       // Sort players: Score DESC, then Time ASC (lower time wins in ties!)
       players.sort((a, b) => {
@@ -2101,11 +2156,11 @@
             ${medal}
             <div class="min-w-0">
               <div class="font-bold text-white truncate">${escapeHtml(p.nick)} ${isMe ? '(Sen)' : ''}</div>
-              <div class="text-[10px] text-slate-400 font-mono">${p.hasFinished ? 'Yarışmayı Bitirdi ✔' : `Soru ${p.currentQ || 0}/${TOTAL_QUESTIONS}`}</div>
+              <div class="text-[10px] text-slate-400 font-mono">${p.hasFinished ? 'Yarışmayı Bitirdi ✔' : `Soru ${p.currentQ || 0}/${matchTotal}`}</div>
             </div>
           </div>
           <div class="text-right font-mono shrink-0">
-            <div class="text-sm font-black ${idx === 0 ? 'text-amber-400' : 'text-emerald-400'}">${p.score || 0} / ${TOTAL_QUESTIONS}</div>
+            <div class="text-sm font-black ${idx === 0 ? 'text-amber-400' : 'text-emerald-400'}">${p.score || 0} / ${matchTotal}</div>
             <div class="text-[11px] text-slate-300 font-semibold">${Number(p.time || 0).toFixed(2)}s</div>
           </div>
         `;
