@@ -4079,25 +4079,29 @@
       // Store Button
       document.getElementById('btnOpenStore').addEventListener('click', openStoreModal);
 
-      // Save Nick
-      document.getElementById('btnSaveNick').addEventListener('click', () => {
-        const val = document.getElementById('inputPlayerNick').value.trim();
-        if (val) {
-          player.nick = val;
-          saveCareer();
-          Sound.whistle();
-          showGameAlert({
-            type: 'info',
-            icon: '🏷️',
-            tag: currentLang === 'TR' ? 'PROFİL GÜNCELLENDİ' : 'PROFILE UPDATED',
-            title: currentLang === 'TR' ? 'Oyuncu Adı Kaydedildi' : 'Player Name Saved',
-            message: currentLang === 'TR'
-              ? `Futbolcu adın <b>${player.nick}</b> olarak başarıyla güncellendi.`
-              : `Player name successfully saved as <b>${player.nick}</b>.`,
-            btnText: currentLang === 'TR' ? 'HARİKA' : 'AWESOME'
-          });
-        }
-      });
+      // Save Nick (Safe check)
+      const btnSaveNick = document.getElementById('btnSaveNick');
+      if (btnSaveNick) {
+        btnSaveNick.addEventListener('click', () => {
+          const inputNick = document.getElementById('inputPlayerNick');
+          const val = inputNick ? inputNick.value.trim() : '';
+          if (val) {
+            player.nick = val;
+            saveCareer();
+            Sound.whistle();
+            showGameAlert({
+              type: 'info',
+              icon: '🏷️',
+              tag: currentLang === 'TR' ? 'PROFİL GÜNCELLENDİ' : 'PROFILE UPDATED',
+              title: currentLang === 'TR' ? 'Oyuncu Adı Kaydedildi' : 'Player Name Saved',
+              message: currentLang === 'TR'
+                ? `Futbolcu adın <b>${player.nick}</b> olarak başarıyla güncellendi.`
+                : `Player name successfully saved as <b>${player.nick}</b>.`,
+              btnText: currentLang === 'TR' ? 'HARİKA' : 'AWESOME'
+            });
+          }
+        });
+      }
 
       // Resume Career
       const resumeBtn = document.getElementById('btnResumeCareer');
@@ -4533,61 +4537,72 @@
       });
 
       // Season Play Match (2 Pozisyon: 1/2 ve 2/2)
-      document.getElementById('btnPlaySeasonMatch').addEventListener('click', () => {
-        if (player.discipline && player.discipline.suspendedMatches > 0) {
-          showGameAlert({
-            type: 'discipline',
-            icon: '🟥',
-            tag: currentLang === 'TR' ? 'DİSİPLİN KURULU KARARI' : 'DISCIPLINARY SUSPENSION',
-            title: currentLang === 'TR' ? 'Cezalısın! Bu Hafta Tribündesin' : 'Suspended for this Match',
-            message: currentLang === 'TR'
-              ? `Gördüğün kartlar nedeniyle bu maç cezalı durumdasın (${player.discipline.suspendedMatches} maç kaldı). Sezonu kaçırmamak ve yaş kaybetmemek için bu maçı tribünden izleyip doğrudan sonraki maça geçebilirsin!`
-              : `You are suspended for this match. Skip this match to serve your penalty and proceed to next match!`,
-            actionBtn: {
-              text: currentLang === 'TR' ? '⏩ BU MAÇI ATLA (SONRAKİ MAÇA GEÇ)' : '⏩ SKIP MATCH (GO TO NEXT)',
-              onClick: () => skipCurrentMatchAndHeal('discipline')
-            },
-            btnText: currentLang === 'TR' ? 'VAZGEÇ' : 'CANCEL'
-          });
-          return;
-        }
-        if (player.injury && player.injury.isInjured) {
-          showGameAlert({
-            type: 'injury',
-            icon: '🩹',
-            tag: currentLang === 'TR' ? 'KULÜP DOKTORU RAPORU' : 'TEAM DOCTOR REPORT',
-            title: currentLang === 'TR' ? 'Sakatlık Nedeniyle Kadro Dışısın!' : 'Out with Injury!',
-            message: currentLang === 'TR'
-              ? `<b>${player.injury.desc || 'Sakatlık'}</b> nedeniyle sağlık heyeti bu maç sahaya çıkmana onay vermedi. Sezonu kaybetmemek ve yaş ilerletmemek için bu maçı dinlenerek geçebilir, hemen sonraki maça hazırlanabilirsin!`
-              : `<b>${player.injury.desc || 'Injury'}</b>! Medical team has ruled you out for this match. Skip to rest and prepare for next match!`,
-            actionBtn: {
-              text: currentLang === 'TR' ? '⏩ BU MAÇI ATLA & İYİLEŞ (SONRAKİ MAÇA GEÇ)' : '⏩ SKIP & HEAL (GO TO NEXT)',
-              onClick: () => skipCurrentMatchAndHeal('injury')
-            },
-            btnText: currentLang === 'TR' ? 'VAZGEÇ' : 'CANCEL'
-          });
-          return;
-        }
+      const btnPlaySeasonMatchEl = document.getElementById('btnPlaySeasonMatch');
+      if (btnPlaySeasonMatchEl) {
+        btnPlaySeasonMatchEl.addEventListener('click', () => {
+          try {
+            Sound.whistle();
+            if (player.discipline && player.discipline.suspendedMatches > 0) {
+              showGameAlert({
+                type: 'discipline',
+                icon: '🟥',
+                tag: currentLang === 'TR' ? 'DİSİPLİN KURULU KARARI' : 'DISCIPLINARY SUSPENSION',
+                title: currentLang === 'TR' ? 'Cezalısın! Bu Hafta Tribündesin' : 'Suspended for this Match',
+                message: currentLang === 'TR'
+                  ? `Gördüğün kartlar nedeniyle bu maç cezalı durumdasın (${player.discipline.suspendedMatches} maç kaldı). Sezonu kaçırmamak ve yaş kaybetmemek için bu maçı tribünden izleyip doğrudan sonraki maça geçebilirsin!`
+                  : `You are suspended for this match. Skip this match to serve your penalty and proceed to next match!`,
+                actionBtn: {
+                  text: currentLang === 'TR' ? '⏩ BU MAÇI ATLA (SONRAKİ MAÇA GEÇ)' : '⏩ SKIP MATCH (GO TO NEXT)',
+                  onClick: () => skipCurrentMatchAndHeal('discipline')
+                },
+                btnText: currentLang === 'TR' ? 'VAZGEÇ' : 'CANCEL'
+              });
+              return;
+            }
+            if (player.injury && player.injury.isInjured) {
+              showGameAlert({
+                type: 'injury',
+                icon: '🩹',
+                tag: currentLang === 'TR' ? 'KULÜP DOKTORU RAPORU' : 'TEAM DOCTOR REPORT',
+                title: currentLang === 'TR' ? 'Sakatlık Nedeniyle Kadro Dışısın!' : 'Out with Injury!',
+                message: currentLang === 'TR'
+                  ? `<b>${player.injury.desc || 'Sakatlık'}</b> nedeniyle sağlık heyeti bu maç sahaya çıkmana onay vermedi. Sezonu kaybetmemek ve yaş ilerletmemek için bu maçı dinlenerek geçebilir, hemen sonraki maça hazırlanabilirsin!`
+                  : `<b>${player.injury.desc || 'Injury'}</b>! Medical team has ruled you out for this match. Skip to rest and prepare for next match!`,
+                actionBtn: {
+                  text: currentLang === 'TR' ? '⏩ BU MAÇI ATLA & İYİLEŞ (SONRAKİ MAÇA GEÇ)' : '⏩ SKIP & HEAL (GO TO NEXT)',
+                  onClick: () => skipCurrentMatchAndHeal('injury')
+                },
+                btnText: currentLang === 'TR' ? 'VAZGEÇ' : 'CANCEL'
+              });
+              return;
+            }
 
-        startFullMatch(false, (res) => {
-          player.stats.matches = (player.stats.matches || 0) + 1;
-          if (!player.careerHistory) player.careerHistory = [];
-          if (player.careerHistory.length > 0) {
-            const cur = player.careerHistory[player.careerHistory.length - 1];
-            cur.matches = (cur.matches || 0) + 1;
-            if (res && res.goals) cur.goals = (cur.goals || 0) + res.goals;
-            if (res && res.assists) cur.assists = (cur.assists || 0) + res.assists;
-            if (res && res.saves) cur.saves = (cur.saves || 0) + res.saves;
+            startFullMatch(false, (res) => {
+              if (!player.stats) player.stats = { matches: 0, goals: 0, assists: 0, saves: 0, trophies: 0 };
+              player.stats.matches = (player.stats.matches || 0) + 1;
+              if (!player.careerHistory) player.careerHistory = [];
+              if (player.careerHistory.length > 0) {
+                const cur = player.careerHistory[player.careerHistory.length - 1];
+                cur.matches = (cur.matches || 0) + 1;
+                if (res && res.goals) cur.goals = (cur.goals || 0) + res.goals;
+                if (res && res.assists) cur.assists = (cur.assists || 0) + res.assists;
+                if (res && res.saves) cur.saves = (cur.saves || 0) + res.saves;
+              }
+              saveCareer();
+              updateHUD();
+              showScreen('screenSeasons');
+              renderSeasonScreen();
+            });
+          } catch (err) {
+            console.error('Error starting season match:', err);
           }
-          saveCareer();
-          updateHUD();
-          showScreen('screenSeasons');
-          renderSeasonScreen();
         });
-      });
+      }
 
       // Advance Season Year (With Card Suspensions, Injuries, Passive Investments!)
-      document.getElementById('btnAdvanceSeasonYear').addEventListener('click', () => {
+      const btnAdvanceSeasonYearEl = document.getElementById('btnAdvanceSeasonYear');
+      if (btnAdvanceSeasonYearEl) {
+        btnAdvanceSeasonYearEl.addEventListener('click', () => {
         Sound.kick();
         player.age++;
         const matchesThisYear = Math.floor(32 + Math.random() * 6);
@@ -4661,31 +4676,41 @@
           renderSeasonScreen();
           // Trigger Transfer Window Alert
           const transferBox = document.getElementById('transferWindowAlert');
-          transferBox.classList.remove('hidden');
+          if (transferBox) transferBox.classList.remove('hidden');
         }
       });
+    }
 
       // Season Tabs: Matches vs Standings vs Brackets
-      document.getElementById('tabSeasonFeed').onclick = () => switchSeasonTab('feed');
-      document.getElementById('tabSeasonTable').onclick = () => switchSeasonTab('table');
-      document.getElementById('tabSeasonBrackets').onclick = () => switchSeasonTab('brackets');
+      const tabFeed = document.getElementById('tabSeasonFeed');
+      if (tabFeed) tabFeed.onclick = () => switchSeasonTab('feed');
+      const tabTable = document.getElementById('tabSeasonTable');
+      if (tabTable) tabTable.onclick = () => switchSeasonTab('table');
+      const tabBrackets = document.getElementById('tabSeasonBrackets');
+      if (tabBrackets) tabBrackets.onclick = () => switchSeasonTab('brackets');
 
       // Play Again (Ana Menüye ve Kariyer Listesine Dön)
-      document.getElementById('btnPlayAgain').addEventListener('click', () => {
-        showScreen('screenWelcome');
-        checkExistingSave();
-      });
+      const btnAgain = document.getElementById('btnPlayAgain');
+      if (btnAgain) {
+        btnAgain.addEventListener('click', () => {
+          showScreen('screenWelcome');
+          checkExistingSave();
+        });
+      }
 
       // Share WhatsApp
-      document.getElementById('btnShareWhatsApp').addEventListener('click', () => {
-        const text = `⭐ Next Star Soccer'da (NSS) efsane kariyerimi tamamladım!\n` +
-          `👤 Oyuncu: ${player.nick} (${player.country.flag})\n` +
-          `⚽ Mevki: ${player.position} • Yaş: ${player.age} (Jübile)\n` +
-          `📊 İstatistik: ${player.stats.matches} Maç • ${player.stats.goals} Gol • ${player.stats.saves} Kurtarış\n` +
-          `🏆 Kupalar: ${player.stats.trophies} Kupa • Servet: €${player.wealth.toLocaleString('tr-TR')}\n` +
-          `Sen de kendi futbol efsaneni yarat: https://pratikbase.com/next-star-soccer/`;
-        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
-      });
+      const btnShareWA = document.getElementById('btnShareWhatsApp');
+      if (btnShareWA) {
+        btnShareWA.addEventListener('click', () => {
+          const text = `⭐ Next Star Soccer'da (NSS) efsane kariyerimi tamamladım!\n` +
+            `👤 Oyuncu: ${player.nick} (${player.country.flag})\n` +
+            `⚽ Mevki: ${player.position} • Yaş: ${player.age} (Jübile)\n` +
+            `📊 İstatistik: ${player.stats.matches} Maç • ${player.stats.goals} Gol • ${player.stats.saves} Kurtarış\n` +
+            `🏆 Kupalar: ${player.stats.trophies} Kupa • Servet: €${player.wealth.toLocaleString('tr-TR')}\n` +
+            `Sen de kendi futbol efsaneni yarat: https://pratikbase.com/next-star-soccer/`;
+          window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+        });
+      }
     });
 
     /* =====================================================================
