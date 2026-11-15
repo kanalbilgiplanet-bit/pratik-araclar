@@ -1004,10 +1004,10 @@
       }
       myPlayer.nick = nick;
 
-      // 3. Get personal best
+      // 3. Get personal best (Strictly capped to TOTAL_QUESTIONS = 20)
       try {
         const best = JSON.parse(localStorage.getItem(STORAGE_KEY_BEST) || '{}');
-        myPlayer.bestScore = Number(best.score || 0);
+        myPlayer.bestScore = Math.min(20, Math.max(0, Number(best.score || 0)));
         myPlayer.bestTime = Number(best.time || 999.99);
       } catch(e) {}
 
@@ -1357,14 +1357,16 @@
       document.getElementById('valResultTime').textContent = `${totalTimeSec}s`;
       document.getElementById('valResultAvg').textContent = `${avgTimeSec}s`;
 
-      // Update personal best in localStorage
-      if (correctCount > myPlayer.bestScore || (correctCount === myPlayer.bestScore && totalTimeSec < myPlayer.bestTime)) {
-        myPlayer.bestScore = correctCount;
-        myPlayer.bestTime = Number(totalTimeSec);
-        try {
-          localStorage.setItem(STORAGE_KEY_BEST, JSON.stringify({ score: myPlayer.bestScore, time: myPlayer.bestTime }));
-        } catch(e) {}
-        updateIdentityUI();
+      // Update personal best in localStorage (ONLY for standard 20-question solo blitz)
+      if (currentMatchMode === 'solo' && totalMatchQ === TOTAL_QUESTIONS) {
+        if (correctCount > myPlayer.bestScore || (correctCount === myPlayer.bestScore && totalTimeSec < myPlayer.bestTime)) {
+          myPlayer.bestScore = Math.min(TOTAL_QUESTIONS, correctCount);
+          myPlayer.bestTime = Number(totalTimeSec);
+          try {
+            localStorage.setItem(STORAGE_KEY_BEST, JSON.stringify({ score: myPlayer.bestScore, time: myPlayer.bestTime }));
+          } catch(e) {}
+          updateIdentityUI();
+        }
       }
 
       // Check result mood & trophy
@@ -1479,16 +1481,22 @@
     async function submitScoreToLeaderboard(score, timeSec) {
       if (!myPlayer.token) return;
       try {
-        const numScore = Number(score);
-        const numTime = Number(timeSec);
+        let numScore = Number(score);
+        let numTime = Number(timeSec);
 
-        // Keep best score for this user
+        // Sanity Check: Solo Blitz is strictly 20 questions!
+        if (numScore > TOTAL_QUESTIONS) numScore = TOTAL_QUESTIONS;
+
+        // Keep best score for 20-question solo blitz
         let bestScore = numScore;
         let bestTime = numTime;
-        if (myPlayer.bestScore > bestScore || (myPlayer.bestScore === bestScore && myPlayer.bestTime < bestTime)) {
-          bestScore = myPlayer.bestScore;
-          bestTime = myPlayer.bestTime;
+        if (myPlayer.bestScore > 0 && myPlayer.bestScore <= TOTAL_QUESTIONS) {
+          if (myPlayer.bestScore > bestScore || (myPlayer.bestScore === bestScore && myPlayer.bestTime < bestTime)) {
+            bestScore = myPlayer.bestScore;
+            bestTime = myPlayer.bestTime;
+          }
         }
+        bestScore = Math.min(TOTAL_QUESTIONS, Math.max(0, bestScore));
 
         const payload = {
           token: myPlayer.token,
@@ -1509,7 +1517,7 @@
         const res = await fetch(`${RTDB_BASE_URL}/flag_quiz_leaderboard.json`);
         const data = await res.json();
         if (data) {
-          const list = Object.values(data).filter(item => item && item.nick && item.score !== undefined);
+          const list = Object.values(data).filter(item => item && item.nick && item.score !== undefined && Number(item.score) <= TOTAL_QUESTIONS);
           
           // Sort by score descending, then by time ascending
           list.sort((a, b) => {
@@ -1609,7 +1617,7 @@
           return;
         }
 
-        const list = Object.values(data).filter(item => item && item.nick && item.score !== undefined);
+        const list = Object.values(data).filter(item => item && item.nick && item.score !== undefined && Number(item.score) <= TOTAL_QUESTIONS);
         cachedLeaderboardList = list;
         renderLeaderboard();
       } catch(e) {
@@ -1673,7 +1681,7 @@
             </span>
           </div>
           <div class="flex items-center gap-3 font-mono shrink-0">
-            <span class="font-bold text-emerald-400">${entry.score}/20</span>
+            <span class="font-bold text-emerald-400">${Math.min(TOTAL_QUESTIONS, Number(entry.score))}/${TOTAL_QUESTIONS}</span>
             <span class="text-amber-300 font-semibold">${Number(entry.time).toFixed(2)}s</span>
           </div>
         `;
