@@ -37,12 +37,6 @@
       "description": "Rastgele futbolcu ve transfer piyango oyunu."
     },
     {
-      "name": "Doğum Piyangosu",
-      "short_name": "Doğum",
-      "url": "/birth-lottery/?source=pwa_shortcut",
-      "description": "Dünyaya geliş şansınızı simüle edin."
-    },
-    {
       "name": "Kıdem Tazminatı",
       "short_name": "Tazminat",
       "url": "/tazminat-hesaplayici/?source=pwa_shortcut",
