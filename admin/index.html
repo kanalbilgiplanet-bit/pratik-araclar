@@ -2186,6 +2186,18 @@
             </div>
           </div>
         `;
+      } else if (/twitter|x/i.test(sourceName)) {
+        infoBannerHtml = `
+          <div class="p-3.5 rounded-xl bg-sky-500/10 border border-sky-500/30 text-xs text-slate-300 flex items-start gap-3">
+            <i class="fa-brands fa-x-twitter text-sky-400 text-base mt-0.5 shrink-0"></i>
+            <div>
+              <div class="font-bold text-white mb-0.5">X (Twitter) ve t.co Yönlendirme Analizi</div>
+              <p class="text-slate-400 leading-relaxed">
+                Twitter (X), kullanıcı gizliliği ve tarayıcı güvenlik standardı gereği (<code class="text-sky-300">strict-origin-when-cross-origin</code>) tüm linkleri kendi <code class="text-sky-300">https://t.co/</code> kısaltma servisiyle iletir. Tarayıcılar tweet atan hesabı veya tweet ID'sini dış sitelere göndermez. Paylaşımı X'te bulmak için arama çubuğuna <code class="text-emerald-300">url:pratikbase.com/football-lottery</code> veya <code class="text-emerald-300">"pratikbase.com"</code> yazarak paylaşan hesapları görebilirsiniz.
+              </p>
+            </div>
+          </div>
+        `;
       }
 
       // İniş Sayfaları & Arama Terimleri Tablosu
