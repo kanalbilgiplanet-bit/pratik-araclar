@@ -512,7 +512,7 @@
               <i class="fa-solid fa-crown text-amber-400"></i> <span id="txtHallBadge">EFSANELER DUVARI</span>
             </div>
             <h2 class="text-xl sm:text-2xl font-display font-black text-white mt-1" id="txtHallTitle">Topluluk Efsaneleri & Jübile Karneleri</h2>
-            <p class="text-slate-400 text-xs" id="txtHallDesc">40 yaşına ulaşıp kramponlarını asan oyuncuların ölümsüzleşen kariyerleri.</p>
+            <p class="text-slate-400 text-xs" id="txtHallDesc">Kramponlarını asarak jübilesini yapan efsanelerin ölümsüzleşen kariyer karneleri.</p>
           </div>
           <!-- Live Realtime Community Pool Badge & Refresh -->
           <div class="flex items-center gap-2">
@@ -1698,7 +1698,7 @@
         expl3: 'Kariyerin bitince tüm istatistiklerin, kazandığın kupalar ve kariyer unvanınla sana özel dijital futbolcu kartın hazırlanır.',
         hallBadge: 'EFSANELER DUVARI',
         hallTitle: 'Topluluk Efsaneleri & Jübile Karneleri',
-        hallDesc: '40 yaşına ulaşıp kramponlarını asan oyuncuların ölümsüzleşen kariyerleri.',
+        hallDesc: 'Kramponlarını asarak jübilesini yapan efsanelerin ölümsüzleşen kariyer karneleri.',
         hudClub: 'Kulüp',
         hudValue: 'Piyasa Değeri',
         hudBank: 'Banka / Servet',
@@ -2075,36 +2075,89 @@
       return `<span class="inline-flex items-center justify-center">${country.flag || '⚽'}</span>`;
     }
 
-    function formatArchetype(arch) {
+    function hashString(str) {
+      let hash = 0;
+      for (let i = 0; i < str.length; i++) {
+        hash = ((hash << 5) - hash) + str.charCodeAt(i);
+        hash |= 0;
+      }
+      return hash;
+    }
+
+    function formatArchetype(arch, peakOvr, item) {
       if (!arch) return '';
-      if (currentLang === 'TR') return arch;
+
+      // Realistic Re-classification: Fix old data where low OVR players were titled "FUTBOL İLAHİ"
+      let cleanArch = arch;
+      const peak = Number(peakOvr) || (item ? Number(item.peakOvr || item.ovr) : 0);
+      
+      if (peak > 0) {
+        if (cleanArch.includes('İLAHİ') || cleanArch.includes('ICON') || cleanArch.includes('ИКОНА') || cleanArch.includes('ICÔNE') || cleanArch.includes('GOAT')) {
+          if (peak < 75) {
+            cleanArch = 'ÇİLEKEŞ GÖREV ADAMI (EMEKÇİ)';
+          } else if (peak < 87) {
+            cleanArch = ((item?.stats?.trophies || 0) >= 6) ? 'KUPA AVCISI ŞAMPİYON' : 'SAYGIN LİG MAESTROSU';
+          } else if (peak < 93) {
+            cleanArch = 'DÜNYA YILDIZI SÜPERSTAR';
+          } else {
+            cleanArch = 'FUTBOL İLAHİ (DÜNYA GOAT\'U)';
+          }
+        }
+      }
+
+      if (currentLang === 'TR') return cleanArch;
+
       const mapEn = {
-        'FUTBOL İLAHİ (DÜNYA YILDIZI)': 'GLOBAL FOOTBALL ICON',
+        'FUTBOL İLAHİ (DÜNYA GOAT\'U)': 'GENERATIONAL GOAT (WORLD ICON)',
+        'FUTBOL İLAHİ (DÜNYA YILDIZI)': 'WORLD-CLASS SUPERSTAR',
+        'DÜNYA YILDIZI SÜPERSTAR': 'WORLD-CLASS SUPERSTAR',
+        'DÜNYA KLASI SÜPERSTAR GOLCÜ': 'WORLD-CLASS SUPERSTAR STRIKER',
+        'KUPA AVCISI ŞAMPİYON': 'SERIAL TROPHY HOARDER',
         'ÖLÜMCÜL BİTİRİCİ (GOL MAKİNESİ)': 'LETHAL FINISHER (GOAL MACHINE)',
         'GEZGİN SAVAŞÇI (EVLİYA ÇELEBİ)': 'JOURNEYMAN WARRIOR',
+        'KULÜP EFSANESİ & BÜYÜK KAPTAN': 'CLUB LEGEND & SKIPPER',
         'KULÜP EFSANESİ & KAPTAN': 'CLUB LEGEND & SKIPPER',
-        'HALI SAHA RESİTALLERİ USTASI': 'GRASSROOTS CULT HERO',
-        'SAYGI DEĞER EMEKÇİ': 'RESPECTED PRO VALIANT'
+        'SAYGIN LİG MAESTROSU': 'RESPECTED LEAGUE MAESTRO',
+        'ÇİLEKEŞ GÖREV ADAMI (EMEKÇİ)': 'RELIABLE SQUAD VALIANT',
+        'SAYGI DEĞER EMEKÇİ': 'RELIABLE SQUAD VALIANT',
+        'HALI SAHA RESİTALLERİ USTASI': 'GRASSROOTS CULT HERO'
       };
+
       const mapRu = {
-        'FUTBOL İLAHİ (DÜNYA YILDIZI)': 'МИРОВАЯ ИКОНА ФУТБОЛА',
-        'ÖLÜMCÜL BİTİRİCİ (GOL MAKİNESİ)': 'ГОЛЕВАЯ МАШИНА (БОМБАРДИР)',
+        'FUTBOL İLAHİ (DÜNYA GOAT\'U)': 'МИРОВОЙ GOAT (ИКОНА ФУТБОЛА)',
+        'FUTBOL İLAHİ (DÜNYA YILDIZI)': 'МИРОВАЯ СУПЕРЗВЕЗДА',
+        'DÜNYA YILDIZI SÜPERSTAR': 'МИРОВАЯ СУПЕРЗВЕЗДА',
+        'DÜNYA KLASI SÜPERSTAR GOLCÜ': 'СУПЕРЗВЕЗДНЫЙ БОМБАРДИР',
+        'KUPA AVCISI ŞAMPİYON': 'КОЛЛЕКЦИОНЕР КУБКОВ',
+        'ÖLÜMCÜL BİTİRİCİ (GOL MAKİNESİ)': 'ГОЛЕВАЯ МАШИНА (СНАЙПЕР)',
         'GEZGİN SAVAŞÇI (EVLİYA ÇELEBİ)': 'СТРАНСТВУЮЩИЙ ВОИН',
+        'KULÜP EFSANESİ & BÜYÜK KAPTAN': 'ЛЕГЕНДА КЛУБА И ВЕЛИКИЙ КАПИТАН',
         'KULÜP EFSANESİ & KAPTAN': 'ЛЕГЕНДА КЛУБА И КАПИТАН',
-        'HALI SAHA RESİTALLERİ USTASI': 'КУЛЬТОВЫЙ ДВОРОВЫЙ ГЕРОЙ',
-        'SAYGI DEĞER EMEKÇİ': 'УВАЖАЕМЫЙ ТРУДЯГА ФУТБОЛА'
+        'SAYGIN LİG MAESTROSU': 'МАЭСТРО ВЫСШЕЙ ЛИГИ',
+        'ÇİLEKEŞ GÖREV ADAMI (EMEKÇİ)': 'НАДЕЖНЫЙ БОЕЦ (ТРУДЯГА)',
+        'SAYGI DEĞER EMEKÇİ': 'НАДЕЖНЫЙ БОЕЦ (ТРУДЯГА)',
+        'HALI SAHA RESİTALLERİ USTASI': 'КУЛЬТОВЫЙ ДВОРОВЫЙ ГЕРОЙ'
       };
+
       const mapFr = {
-        'FUTBOL İLAHİ (DÜNYA YILDIZI)': 'ICÔNE MONDIALE DU FOOTBALL',
-        'ÖLÜMCÜL BİTİRİCİ (GOL MAKİNESİ)': 'FINISSEUR D\'ÉLITE (MACHINE À BUTS)',
+        'FUTBOL İLAHİ (DÜNYA GOAT\'U)': 'LE GOAT MONDIAL (ICÔNE HISTORIQUE)',
+        'FUTBOL İLAHİ (DÜNYA YILDIZI)': 'SUPERSTAR INTERNATIONALE',
+        'DÜNYA YILDIZI SÜPERSTAR': 'SUPERSTAR INTERNATIONALE',
+        'DÜNYA KLASI SÜPERSTAR GOLCÜ': 'BUTEUR SUPERSTAR MONDIAL',
+        'KUPA AVCISI ŞAMPİYON': 'COLLECTIONNEUR DE TROPHÉES',
+        'ÖLÜMCÜL BİTİRİCİ (GOL MAKİNESİ)': 'MACHINE À BUTS (FINISSEUR CLINIQUE)',
         'GEZGİN SAVAŞÇI (EVLİYA ÇELEBİ)': 'GLOBE-TROTTER GUERRIER',
+        'KULÜP EFSANESİ & BÜYÜK KAPTAN': 'LÉGENDE DU CLUB & GRAND CAPITAINE',
         'KULÜP EFSANESİ & KAPTAN': 'LÉGENDE DU CLUB & CAPITAINE',
-        'HALI SAHA RESİTALLERİ USTASI': 'HÉROS DU FOOT DE RUE',
-        'SAYGI DEĞER EMEKÇİ': 'SOLDAT RESPECTÉ DU FOOT'
+        'SAYGIN LİG MAESTROSU': 'MAESTRO RESPECTÉ DU CHAMPIONNAT',
+        'ÇİLEKEŞ GÖREV ADAMI (EMEKÇİ)': 'SOLDAT DE DEVOIR COMBATSIF',
+        'SAYGI DEĞER EMEKÇİ': 'SOLDAT RESPECTÉ DU FOOT',
+        'HALI SAHA RESİTALLERİ USTASI': 'HÉROS DU FOOT DE QUARTIER'
       };
-      if (currentLang === 'RU') return mapRu[arch] || mapEn[arch] || arch;
-      if (currentLang === 'FR') return mapFr[arch] || mapEn[arch] || arch;
-      return mapEn[arch] || arch;
+
+      if (currentLang === 'RU') return mapRu[cleanArch] || mapEn[cleanArch] || cleanArch;
+      if (currentLang === 'FR') return mapFr[cleanArch] || mapEn[cleanArch] || cleanArch;
+      return mapEn[cleanArch] || cleanArch;
     }
 
     const LANG_LABELS = {
@@ -2850,13 +2903,13 @@
         return;
       }
 
-      // Phase 4: Senior Pro Career (Ages 18 - 34)
-      if (age <= 34) {
+      // Phase 4: Senior Pro Career (Ages 18 - 33)
+      if (age <= 33) {
         handleSeniorProAge(age);
         return;
       }
 
-      // Phase 5: Veteran & Sunset (Ages 35 - 40)
+      // Phase 5: Veteran & Sunset (Ages 34 - 40)
       handleVeteranAge(age);
     }
 
@@ -3285,6 +3338,53 @@
 
     // Ages 35-40: Veterans
     function handleVeteranAge(age) {
+      // Natural Retirement Check between ages 34 and 39 (Not everyone plays until 40!)
+      if (age >= 34 && age < 40) {
+        let retireChance = 0;
+        if (player.severeInjuries > 0 || player.ovr < 66) {
+          retireChance = age === 34 ? 0.35 : age === 35 ? 0.50 : age === 36 ? 0.65 : 0.85;
+        } else {
+          retireChance = age === 35 ? 0.12 : age === 36 ? 0.22 : age === 37 ? 0.38 : age === 38 ? 0.55 : age === 39 ? 0.75 : 0;
+        }
+
+        if (Math.random() < retireChance) {
+          player.isRetired = true;
+          player.retirementAge = age;
+
+          let farewellDesc = '';
+          if (currentLang === 'TR') {
+            farewellDesc = (player.severeInjuries > 0)
+              ? `Nükseden diz ve kas sakatlıklarının ardından ${age} yaşında sağlığını düşünerek kramponları asma kararı aldın. Taraftarlar seni ayakta alkışlarla uğurladı.`
+              : (player.ovr >= 85)
+              ? `Zirvede bırakmak en büyük erdemdir. ${age} yaşında efsanevi kariyerine alkışlar ve gözyaşlarıyla nokta koydun!`
+              : `Yılların getirdiği fiziksel yorgunluk sonrası ${age} yaşında aktif futbolculuk kariyerine veda ettin.`;
+          } else if (currentLang === 'RU') {
+            farewellDesc = `В возрасте ${age} лет ты принял решение повесить бутсы на гвоздь под бурные овации трибун.`;
+          } else if (currentLang === 'FR') {
+            farewellDesc = `À l'âge de ${age} ans, vous décidez de raccrocher vos crampons sous les ovations chaleureuses du public.`;
+          } else {
+            farewellDesc = `At age ${age}, you hung up your boots to thunderous standing ovations.`;
+          }
+
+          addTimelineEvent({
+            age,
+            badge: currentLang === 'TR' ? 'JÜBİLE' : 'JUBILEE',
+            badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
+            title: currentLang === 'TR' ? `${age} Yaşında Jübile! Kramponlar Asıldı` : `Age ${age} Jubilee! Boots Hung Up`,
+            desc: farewellDesc,
+            statDelta: [
+              { text: `OVR: ${player.ovr}`, color: 'bg-pitch-950 text-slate-300' },
+              { text: `Banka: ${formatCurrency(player.bankBalance)}`, color: 'bg-amber-500/10 text-amber-300' }
+            ],
+            icon: 'fa-flag-checkered'
+          });
+
+          Sound.whistle();
+          finishCareerAndShowJubilee();
+          return;
+        }
+      }
+
       player.ovr = Math.max(62, player.ovr - (Math.random() < 0.7 ? 2 : 1));
       player.marketValue = Math.floor(player.marketValue * 0.5);
 
@@ -3292,6 +3392,7 @@
       player.stats.matches += matchCount;
       let yearGoals = 0;
       let yearAssists = 0;
+      let yearCleans = 0;
       if (player.position.code === 'ST') {
         yearGoals = Math.max(4, Math.round(matchCount * 0.42 * (player.ovr / 80)));
         yearAssists = Math.max(1, Math.round(yearGoals * 0.25));
@@ -5520,30 +5621,99 @@
 
 function finishCareerAndShowJubilee() {
       player.isRetired = true;
-      player.retirementAge = player.age || 40;
+      player.retirementAge = player.retirementAge || player.age || 37;
       if (isAutoPlaying) toggleAutoPlay();
 
-      // Determine Archetype
+      // Determine Balanced & Realistic Archetype based on Peak OVR, goals, and legacy
+      const peak = player.peakOvr || player.ovr || 50;
+      const goals = player.stats?.goals || 0;
+      const trophies = player.stats?.trophies || 0;
+      const bdor = player.stats?.ballonDor || 0;
+      const clubsCount = (player.clubHistory || []).length;
+      const tb = typeof getTrophyBreakdown === 'function' ? getTrophyBreakdown(player.stats) : { wc: 0, ucl: 0 };
+
       let archetype = '';
       let icon = '⚽';
-      if (player.stats.trophies >= 8 || player.peakOvr >= 90) {
-        archetype = currentLang === 'TR' ? 'FUTBOL İLAHİ (DÜNYA YILDIZI)' : 'GLOBAL FOOTBALL ICON';
+
+      // 1. TIER 1: EFSANELERİN EFSANESİ / DÜNYA GOAT'U (93+ Peak OVR veya 90+ & Ballon d'Or / Dünya Kupası / ŞL)
+      if (peak >= 93 || (peak >= 90 && (bdor >= 1 || tb.wc >= 1 || tb.ucl >= 2))) {
+        archetype = currentLang === 'TR' ? 'FUTBOL İLAHİ (DÜNYA GOAT\'U)' :
+                    currentLang === 'RU' ? 'МИРОВОЙ GOAT (ИКОНА ФУТБОЛА)' :
+                    currentLang === 'FR' ? 'LE GOAT MONDIAL (ICÔNE HISTORIQUE)' :
+                    'GENERATIONAL GOAT (WORLD ICON)';
         icon = '👑';
-      } else if (player.stats.goals >= 250) {
-        archetype = currentLang === 'TR' ? 'ÖLÜMCÜL BİTİRİCİ (GOL MAKİNESİ)' : 'LETHAL FINISHER (GOAL MACHINE)';
+      }
+      // 2. TIER 2: DÜNYA ÇAPINDA SÜPERSTAR (87 - 92 Peak OVR)
+      else if (peak >= 87) {
+        if (goals >= 250) {
+          archetype = currentLang === 'TR' ? 'DÜNYA KLASI SÜPERSTAR GOLCÜ' :
+                      currentLang === 'RU' ? 'СУПЕРЗВЕЗДНЫЙ БОМБАРДИР' :
+                      currentLang === 'FR' ? 'BUTEUR SUPERSTAR MONDIAL' :
+                      'WORLD-CLASS SUPERSTAR STRIKER';
+          icon = '⚡';
+        } else {
+          archetype = currentLang === 'TR' ? 'DÜNYA YILDIZI SÜPERSTAR' :
+                      currentLang === 'RU' ? 'МИРОВАЯ СУПЕРЗВЕЗДА' :
+                      currentLang === 'FR' ? 'SUPERSTAR INTERNATIONALE' :
+                      'WORLD-CLASS SUPERSTAR';
+          icon = '🌟';
+        }
+      }
+      // 3. TIER 3: ÖLÜMCÜL BİTİRİCİ (GOL MAKİNESİ) - 78+ OVR ve 200+ Gol
+      else if (goals >= 200 && peak >= 78) {
+        archetype = currentLang === 'TR' ? 'ÖLÜMCÜL BİTİRİCİ (GOL MAKİNESİ)' :
+                    currentLang === 'RU' ? 'ГОЛЕВАЯ МАШИНА (СНАЙПЕР)' :
+                    currentLang === 'FR' ? 'MACHINE À BUTS (FINISSEUR CLINIQUE)' :
+                    'LETHAL FINISHER (GOAL MACHINE)';
         icon = '🎯';
-      } else if (player.clubHistory.length >= 6) {
-        archetype = currentLang === 'TR' ? 'GEZGİN SAVAŞÇI (EVLİYA ÇELEBİ)' : 'JOURNEYMAN WARRIOR';
-        icon = '🧭';
-      } else if (player.stats.trophies >= 4) {
-        archetype = currentLang === 'TR' ? 'KULÜP EFSANESİ & KAPTAN' : 'CLUB LEGEND & SKIPPER';
+      }
+      // 4. TIER 4: KULÜP EFSANESİ & BÜYÜK KAPTAN (78+ OVR & sadakat / az transfer veya kaptan)
+      else if (peak >= 78 && (player.isCaptain || clubsCount <= 3) && trophies >= 3) {
+        archetype = currentLang === 'TR' ? 'KULÜP EFSANESİ & BÜYÜK KAPTAN' :
+                    currentLang === 'RU' ? 'ЛЕГЕНДА КЛУБА И ВЕЛИКИЙ КАПИТАН' :
+                    currentLang === 'FR' ? 'LÉGENDE DU CLUB & GRAND CAPITAINE' :
+                    'CLUB LEGEND & SKIPPER';
         icon = '⭐';
-      } else if (player.peakOvr <= 68) {
-        archetype = currentLang === 'TR' ? 'HALI SAHA RESİTALLERİ USTASI' : 'GRASSROOTS CULT HERO';
-        icon = '🛡️';
-      } else {
-        archetype = currentLang === 'TR' ? 'SAYGI DEĞER EMEKÇİ' : 'RESPECTED PRO VALIANT';
+      }
+      // 5. TIER 5: KUPA KOLEKSİYONERİ (80+ OVR ve 6+ Kupa)
+      else if (trophies >= 6 && peak >= 80) {
+        archetype = currentLang === 'TR' ? 'KUPA AVCISI ŞAMPİYON' :
+                    currentLang === 'RU' ? 'КОЛЛЕКЦИОНЕР КУБКОВ' :
+                    currentLang === 'FR' ? 'COLLECTIONNEUR DE TROPHÉES' :
+                    'SERIAL TROPHY HOARDER';
+        icon = '🏆';
+      }
+      // 6. TIER 6: GEZGİN SAVAŞÇI (EVLİYA ÇELEBİ) - 5+ Kulüp
+      else if (clubsCount >= 5) {
+        archetype = currentLang === 'TR' ? 'GEZGİN SAVAŞÇI (EVLİYA ÇELEBİ)' :
+                    currentLang === 'RU' ? 'СТРАНСТВУЮЩИЙ ВОИН' :
+                    currentLang === 'FR' ? 'GLOBE-TROTTER GUERRIER' :
+                    'JOURNEYMAN WARRIOR';
+        icon = '🧭';
+      }
+      // 7. TIER 7: SAYGIN LİG MAESTROSU (76 - 86 OVR)
+      else if (peak >= 76) {
+        archetype = currentLang === 'TR' ? 'SAYGIN LİG MAESTROSU' :
+                    currentLang === 'RU' ? 'МАЭСТРО ВЫСШЕЙ ЛИГИ' :
+                    currentLang === 'FR' ? 'MAESTRO RESPECTÉ DU CHAMPIONNAT' :
+                    'RESPECTED LEAGUE MAESTRO';
         icon = '🎖️';
+      }
+      // 8. TIER 8: ÇİLEKEŞ GÖREV ADAMI (70 - 75 OVR - 72 OVR BURAYA GİRER!)
+      else if (peak >= 70) {
+        archetype = currentLang === 'TR' ? 'ÇİLEKEŞ GÖREV ADAMI (EMEKÇİ)' :
+                    currentLang === 'RU' ? 'НАДЕЖНЫЙ БОЕЦ (ТРУДЯГА)' :
+                    currentLang === 'FR' ? 'SOLDAT DE DEVOIR COMBATSIF' :
+                    'RELIABLE SQUAD VALIANT';
+        icon = '🛡️';
+      }
+      // 9. TIER 9: HALI SAHA RESİTALLERİ USTASI (< 70 OVR)
+      else {
+        archetype = currentLang === 'TR' ? 'HALI SAHA RESİTALLERİ USTASI' :
+                    currentLang === 'RU' ? 'КУЛЬТОВЫЙ ДВОРОВЫЙ ГEРОЙ' :
+                    currentLang === 'FR' ? 'HÉROS DU FOOT DE QUARTIER' :
+                    'GRASSROOTS CULT HERO';
+        icon = '⚽';
       }
       player.archetype = archetype;
 
@@ -5781,6 +5951,7 @@ function finishCareerAndShowJubilee() {
       {
         id: 'hof_aleksandr_golovin',
         fullName: 'ALEKSANDR GOLOVIN',
+        retirementAge: 36,
         country: { flag: '🇷🇺', nameTr: 'Rusya', nameEn: 'Russia', nameRu: 'Россия', nameFr: 'Russie' },
         position: { code: 'CM', nameTr: 'Merkez Orta Saha', nameEn: 'Central Midfielder', nameRu: 'Полузащитник', nameFr: 'Milieu central' },
         dominantFoot: 'Sağ Ayak',
@@ -5800,6 +5971,7 @@ function finishCareerAndShowJubilee() {
       {
         id: 'hof_gabriel_silva',
         fullName: 'GABRIEL SILVA',
+        retirementAge: 38,
         country: { flag: '🇧🇷', nameTr: 'Brezilya', nameEn: 'Brazil' },
         position: { code: 'ST', nameTr: 'Santrafor', nameEn: 'Striker' },
         dominantFoot: 'Sağ Ayak',
@@ -5819,6 +5991,7 @@ function finishCareerAndShowJubilee() {
       {
         id: 'hof_samuel_osimhen',
         fullName: 'SAMUEL OSIMHEN',
+        retirementAge: 35,
         country: { flag: '🇳🇬', nameTr: 'Nijerya', nameEn: 'Nigeria' },
         position: { code: 'RW', nameTr: 'Sağ Kanat', nameEn: 'Right Wing' },
         dominantFoot: 'Sol Ayak',
@@ -5838,6 +6011,7 @@ function finishCareerAndShowJubilee() {
       {
         id: 'hof_takumi_minamino',
         fullName: 'TAKUMI MINAMINO',
+        retirementAge: 37,
         country: { flag: '🇯🇵', nameTr: 'Japonya', nameEn: 'Japan' },
         position: { code: 'CAM', nameTr: 'Ofansif Orta Saha', nameEn: 'Attacking Midfielder' },
         dominantFoot: 'Sol Ayak',
@@ -5857,6 +6031,7 @@ function finishCareerAndShowJubilee() {
       {
         id: 'hof_lucas_hernandez',
         fullName: 'LUCAS HERNANDEZ',
+        retirementAge: 36,
         country: { flag: '🇫🇷', nameTr: 'Fransa', nameEn: 'France' },
         position: { code: 'CB', nameTr: 'Stoper', nameEn: 'Centre-Back' },
         dominantFoot: 'Sağ Ayak',
@@ -5876,6 +6051,7 @@ function finishCareerAndShowJubilee() {
       {
         id: 'hof_emre_demir',
         fullName: 'EMRE DEMİR',
+        retirementAge: 34,
         country: { flag: '🇹🇷', nameTr: 'Türkiye', nameEn: 'Turkey' },
         position: { code: 'CAM', nameTr: 'On Numara', nameEn: 'Playmaker' },
         dominantFoot: 'Sol Ayak',
@@ -6024,8 +6200,21 @@ function finishCareerAndShowJubilee() {
         const countryName = getCountryName(item.country);
 
         const dict = I18N[currentLang] || I18N.TR;
-        const archText = formatArchetype(item.archetype);
+        const archText = formatArchetype(item.archetype, item.peakOvr, item);
         const timeAgoStr = formatTimeAgo(item.timestamp || item.date);
+
+        // Derive authentic, varied retirement age (34 - 39) if missing or old flat 40
+        let retAge = item.retirementAge;
+        if (!retAge || retAge === 40) {
+          const hash = Math.abs(hashString(item.fullName || item.id || ''));
+          if (item.peakOvr >= 90) {
+            retAge = 37 + (hash % 3); // 37, 38, 39
+          } else if (item.peakOvr >= 80) {
+            retAge = 35 + (hash % 4); // 35, 36, 37, 38
+          } else {
+            retAge = 34 + (hash % 4); // 34, 35, 36, 37
+          }
+        }
 
         // Community badge
         let badgeHtml = '';
@@ -6062,7 +6251,7 @@ function finishCareerAndShowJubilee() {
               <span class="px-2 py-0.5 rounded-md bg-pitch-950 text-amber-400 font-bold border border-pitch-800 truncate max-w-[180px]">
                 ${archText}
               </span>
-              <span class="text-slate-400 font-mono">${item.retirementAge || item.age || 40} ${currentLang === 'TR' ? 'Yaş Jübile' : 'Age Jubilee'}</span>
+              <span class="text-slate-400 font-mono">${retAge} ${currentLang === 'TR' ? 'Yaş Jübile' : currentLang === 'RU' ? 'лет (Юбилей)' : currentLang === 'FR' ? 'ans (Jubilé)' : 'Age Jubilee'}</span>
             </div>
 
             <!-- Mini Stats -->
