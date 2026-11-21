@@ -1,13 +1,16 @@
-// FRONTARIS - ULTRA NET VE SADE OYUN MOTORU
+// FRONTARIS - ONLINE DÜNYA SAVAŞI, İTTİFAK VE ORTAK TAARRUZ MOTORU
 
 let map = null;
 let countryLayers = {};
 let cityMarkers = {};
+let cityTerritoryCircles = {};
 
 const gameState = {
+  commanderName: "Mareşal",
   playerCountryId: null,
   enemyCountryIds: new Set(),
-  conqueredCountryIds: new Set(), // Fethedilmiş ve kalıcı MAVİ olan ülkeler
+  conqueredCountryIds: new Set(), // Fethedilmiş kalıcı MAVİ topraklar
+  alliedCountryIds: new Set(),    // İttifaklarımız (YEŞİL)
   money: 1500,
   gameSpeed: 1,
   
@@ -22,11 +25,15 @@ const gameState = {
 
   // Seçili açık şehir ve hedef ülke
   selectedCity: null,
-  pendingTargetCountryId: null
+  pendingTargetCountryId: null,
+
+  // Oda ve Telsiz
+  roomCode: "FRNT-1944",
+  radioMessages: []
 };
 
 // ==========================================
-// SES EFEKTLERİ (Web Audio API)
+// SES EFEKTLERİ MOTORU (Web Audio API)
 // ==========================================
 class SimpleAudio {
   constructor() { this.ctx = null; }
@@ -46,6 +53,17 @@ class SimpleAudio {
     g.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.05);
     osc.connect(g); g.connect(this.ctx.destination);
     osc.start(); osc.stop(this.ctx.currentTime + 0.05);
+  }
+  radioBeep() {
+    this.init(); if (!this.ctx) return;
+    const osc = this.ctx.createOscillator();
+    const g = this.ctx.createGain();
+    osc.type = 'square';
+    osc.frequency.setValueAtTime(850, this.ctx.currentTime);
+    g.gain.setValueAtTime(0.08, this.ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.08);
+    osc.connect(g); g.connect(this.ctx.destination);
+    osc.start(); osc.stop(this.ctx.currentTime + 0.08);
   }
   siren() {
     this.init(); if (!this.ctx) return;
@@ -106,7 +124,145 @@ function showToast(msg, type = "normal") {
 }
 
 // ==========================================
-// 1. AÇILIŞ: ÜLKE SEÇİM LİSTESİNİ OLUŞTUR
+// 1. OTOMATİK KAYIT & OYUN YÜKLEME (PERSISTENCE)
+// ==========================================
+const SAVE_KEY = "frontaris_save_v2";
+
+function saveGameState() {
+  if (!gameState.playerCountryId) return;
+  const saveObj = {
+    commanderName: gameState.commanderName,
+    playerCountryId: gameState.playerCountryId,
+    money: gameState.money,
+    enemyCountryIds: Array.from(gameState.enemyCountryIds),
+    conqueredCountryIds: Array.from(gameState.conqueredCountryIds),
+    alliedCountryIds: Array.from(gameState.alliedCountryIds),
+    roomCode: gameState.roomCode,
+    cities: {}
+  };
+
+  Object.values(WORLD_NATIONS).forEach(nation => {
+    nation.cities.forEach(c => {
+      saveObj.cities[c.id] = {
+        controller: c.controller,
+        health: c.health,
+        infantry: c.infantry,
+        tanks: c.tanks,
+        baseLvl: c.baseLvl
+      };
+    });
+  });
+
+  try {
+    localStorage.setItem(SAVE_KEY, JSON.stringify(saveObj));
+  } catch (e) {
+    console.error("Save error:", e);
+  }
+}
+
+function loadSavedGameState() {
+  const dataStr = localStorage.getItem(SAVE_KEY);
+  if (!dataStr) return null;
+  try {
+    return JSON.parse(dataStr);
+  } catch (e) {
+    return null;
+  }
+}
+
+function checkSavedGameOnStartup() {
+  const saved = loadSavedGameState();
+  const authModal = document.getElementById("commander-auth-screen");
+  const savedCard = document.getElementById("saved-game-card");
+  const newForm = document.getElementById("new-commander-form");
+
+  // URL'den Oda Kodu oku (?room=FRNT-XXXX)
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.has("room")) {
+    gameState.roomCode = urlParams.get("room");
+  }
+  document.getElementById("room-code-display").innerText = gameState.roomCode;
+
+  if (saved && saved.playerCountryId && WORLD_NATIONS[saved.playerCountryId]) {
+    const nation = WORLD_NATIONS[saved.playerCountryId];
+    document.getElementById("saved-commander-title").innerText = `Komutan: ${saved.commanderName}`;
+    document.getElementById("saved-game-desc").innerText = `${nation.flag} ${nation.name} • 💰 ${Math.floor(saved.money)}M $ • ${saved.alliedCountryIds ? saved.alliedCountryIds.length : 0} İttifak Paktı`;
+    savedCard.style.display = "block";
+    newForm.style.display = "none";
+  } else {
+    savedCard.style.display = "none";
+    newForm.style.display = "flex";
+  }
+  authModal.style.display = "flex";
+}
+
+function resumeSavedGame() {
+  const saved = loadSavedGameState();
+  if (!saved) return;
+
+  sfx.victory();
+  gameState.commanderName = saved.commanderName;
+  gameState.playerCountryId = saved.playerCountryId;
+  gameState.money = saved.money || 1500;
+  gameState.enemyCountryIds = new Set(saved.enemyCountryIds || []);
+  gameState.conqueredCountryIds = new Set(saved.conqueredCountryIds || []);
+  gameState.alliedCountryIds = new Set(saved.alliedCountryIds || []);
+  gameState.roomCode = saved.roomCode || gameState.roomCode;
+
+  // Şehir durumlarını geri yükle
+  if (saved.cities) {
+    Object.values(WORLD_NATIONS).forEach(nation => {
+      nation.cities.forEach(c => {
+        if (saved.cities[c.id]) {
+          const sc = saved.cities[c.id];
+          c.controller = sc.controller;
+          c.health = sc.health;
+          c.infantry = sc.infantry;
+          c.tanks = sc.tanks;
+          c.baseLvl = sc.baseLvl || 1;
+        }
+      });
+    });
+  }
+
+  // Arayüzü aç
+  document.getElementById("commander-auth-screen").style.display = "none";
+  document.getElementById("game-screen").style.display = "flex";
+  
+  const nation = WORLD_NATIONS[gameState.playerCountryId];
+  document.getElementById("player-flag-pill").innerText = `${nation.flag} ${nation.name.toUpperCase()}`;
+  document.getElementById("player-commander-name").innerText = gameState.commanderName;
+  document.getElementById("room-code-display").innerText = gameState.roomCode;
+
+  initMap(nation);
+  updateTopBar();
+  renderOnlineCommanders();
+  showToast(`🎖️ Tekrar hoş geldiniz, Komutan ${gameState.commanderName}! Sefer kaldığı yerden devam ediyor.`, "victory");
+}
+
+function promptNewGame() {
+  localStorage.removeItem(SAVE_KEY);
+  document.getElementById("saved-game-card").style.display = "none";
+  document.getElementById("new-commander-form").style.display = "flex";
+}
+
+function submitCommanderName() {
+  const input = document.getElementById("input-commander-name");
+  let name = input.value.trim();
+  if (!name) name = "Mareşal_" + Math.floor(1000 + Math.random() * 9000);
+  
+  sfx.click();
+  gameState.commanderName = name;
+  document.getElementById("player-commander-name").innerText = gameState.commanderName;
+
+  // Giriş modalını kapat, ülke seçim ekranını aç
+  document.getElementById("commander-auth-screen").style.display = "none";
+  document.getElementById("country-select-screen").style.display = "flex";
+  renderCountryPicker();
+}
+
+// ==========================================
+// 2. ÜLKE SEÇİMİ & SEFERİ BAŞLATMA
 // ==========================================
 function renderCountryPicker() {
   const listEl = document.getElementById("country-selection-list");
@@ -136,15 +292,19 @@ function selectCountryAndStart(countryId) {
 
   // Üst barı güncelle
   document.getElementById("player-flag-pill").innerText = `${nation.flag} ${nation.name.toUpperCase()}`;
+  document.getElementById("player-commander-name").innerText = gameState.commanderName;
 
   // Haritayı başlat
   initMap(nation);
   updateTopBar();
-  showToast(`🎖️ Komutan! ${nation.name} (${nation.flag}) yönetiminize geçti. Vatan toprakları MAVİ olarak parlıyor!`, "victory");
+  renderOnlineCommanders();
+  saveGameState();
+
+  showToast(`🎖️ Komutan ${gameState.commanderName}! ${nation.name} (${nation.flag}) yönetiminize geçti. Vatan toprakları MAVİ olarak parlıyor!`, "victory");
 }
 
 // ==========================================
-// 2. HARİTA KURULUMU
+// 3. HARİTA MOTORU & DİNAMİK POLİGONLAR
 // ==========================================
 function initMap(playerNation) {
   const initialCenter = playerNation.cities[0] 
@@ -162,7 +322,7 @@ function initMap(playerNation) {
 
   L.control.zoom({ position: 'bottomright' }).addTo(map);
 
-  // Askeri Taktik Harita Katmanı (Tamamen Ücretsiz, Filigransız & API Key İstemez)
+  // Esri World Dark Gray - Filigransız ve API Keysiz Tertemiz Askeri Harita
   L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
     maxZoom: 16,
     attribution: ''
@@ -171,7 +331,7 @@ function initMap(playerNation) {
   renderCountryPolygons();
   renderCities();
 
-  // Gerçek Sınırlara Odaklan
+  // Odaklan
   if (countryLayers[playerNation.id]) {
     try {
       map.fitBounds(countryLayers[playerNation.id].getBounds(), { padding: [30, 30] });
@@ -184,7 +344,7 @@ function initMap(playerNation) {
 }
 
 function getPolygonStyle(cId) {
-  // Seçilen Vatan Ülkesi veya FETHEDİLMİŞ ÜLKE -> TAM MAVİ
+  // 1. Seçilen Vatan Ülkesi veya FETHEDİLMİŞ ÜLKE -> TAM MAVİ
   if (cId === gameState.playerCountryId || gameState.conqueredCountryIds.has(cId)) {
     return {
       fillColor: "#0077ff",
@@ -194,7 +354,17 @@ function getPolygonStyle(cId) {
     };
   }
 
-  // Ülkenin şehirlerinin ele geçirilme durumunu kontrol et
+  // 2. MÜTTEFİK DEVLET (PAKT ÜYESİ) -> PARLAK YEŞİL
+  if (gameState.alliedCountryIds.has(cId)) {
+    return {
+      fillColor: "#00c853",
+      fillOpacity: 0.55,
+      color: "#69f0ae",
+      weight: 3
+    };
+  }
+
+  // 3. Şehirlerinin ele geçirilme durumunu kontrol et
   const nation = WORLD_NATIONS[cId];
   if (nation && nation.cities && nation.cities.length > 0) {
     const totalCities = nation.cities.length;
@@ -212,7 +382,7 @@ function getPolygonStyle(cId) {
       };
     }
 
-    // Şehirlerinden en az biri (örn. Selanik) ele geçirildiyse -> HÂKİMİYET MAVİSİ
+    // Şehirlerinden en az biri ele geçirildiyse -> HÂKİMİYET MAVİSİ
     if (capturedCities > 0) {
       return {
         fillColor: "#0055cc",
@@ -224,7 +394,7 @@ function getPolygonStyle(cId) {
     }
   }
 
-  // Savaş Açılmış Düşman (Henüz hiçbir şehri alınmadıysa) -> KIRMIZI
+  // 4. Savaş Açılmış Düşman (Henüz hiçbir şehri alınmadıysa) -> KIRMIZI
   if (gameState.enemyCountryIds.has(cId)) {
     return {
       fillColor: "#d50000",
@@ -234,7 +404,7 @@ function getPolygonStyle(cId) {
     };
   }
 
-  // Tarafsız -> Koyu Gri
+  // 5. Tarafsız -> Koyu Askeri Gri
   return {
     fillColor: "#1e293b",
     fillOpacity: 0.35,
@@ -278,20 +448,24 @@ function renderCountryPolygons() {
       const countryName = feature.properties.name || feature.properties.name_en;
       countryLayers[iso] = layer;
 
-      // Gerçek Ülke İsmi Tooltip
-      layer.bindTooltip(`<strong>${countryName}</strong>`, {
-        sticky: true,
-        className: 'tactical-tooltip'
-      });
+      // Tooltip
+      layer.bindTooltip(() => {
+        if (iso === gameState.playerCountryId || gameState.conqueredCountryIds.has(iso)) {
+          return `<strong>${countryName} (🔵 MAVİ VATAN)</strong>`;
+        }
+        if (gameState.alliedCountryIds.has(iso)) {
+          return `<strong>${countryName} (🤝 YEŞİL MÜTTEFİK)</strong>`;
+        }
+        if (gameState.enemyCountryIds.has(iso)) {
+          return `<strong>${countryName} (🔴 KIRMIZI DÜŞMAN)</strong>`;
+        }
+        return `<strong>${countryName}</strong>`;
+      }, { sticky: true, className: 'tactical-tooltip' });
 
       // Hover
       layer.on('mouseover', function() {
         if (gameState.attackMode) return;
-        this.setStyle({
-          weight: 3,
-          color: '#ffffff',
-          fillOpacity: 0.65
-        });
+        this.setStyle({ weight: 3, color: '#ffffff', fillOpacity: 0.65 });
       });
 
       layer.on('mouseout', function() {
@@ -299,7 +473,7 @@ function renderCountryPolygons() {
         this.setStyle(getPolygonStyle(iso));
       });
 
-      // Dokunma / Tıklama
+      // Tıklama
       layer.on('click', function(e) {
         L.DomEvent.stopPropagation(e);
         if (gameState.attackMode) return;
@@ -316,33 +490,47 @@ function updateCountryStyles() {
 }
 
 // ==========================================
-// 3. ŞEHİRLER VE MARKERLAR
+// 4. ŞEHİRLER, BÖLGELER & TANK LOGOLARI
 // ==========================================
 function getCityOwner(city) {
   return city.controller || city.originalCountry;
 }
-
-let cityTerritoryCircles = {};
 
 function renderCityTerritory(city) {
   if (cityTerritoryCircles[city.id]) {
     map.removeLayer(cityTerritoryCircles[city.id]);
   }
 
-  const isMine = (getCityOwner(city) === gameState.playerCountryId);
-  const isEnemy = gameState.enemyCountryIds.has(getCityOwner(city));
+  const owner = getCityOwner(city);
+  const isMine = (owner === gameState.playerCountryId);
+  const isAlly = gameState.alliedCountryIds.has(owner);
+  const isEnemy = gameState.enemyCountryIds.has(owner);
 
-  const fillColor = isMine ? "#0077ff" : isEnemy ? "#d50000" : "#334155";
-  const strokeColor = isMine ? "#00e5ff" : isEnemy ? "#ff1744" : "#64748b";
-  const opacity = isMine ? 0.40 : isEnemy ? 0.30 : 0.15;
+  let fillColor = "#334155";
+  let strokeColor = "#64748b";
+  let opacity = 0.15;
+
+  if (isMine) {
+    fillColor = "#0077ff";
+    strokeColor = "#00e5ff";
+    opacity = 0.40;
+  } else if (isAlly) {
+    fillColor = "#00c853";
+    strokeColor = "#69f0ae";
+    opacity = 0.35;
+  } else if (isEnemy) {
+    fillColor = "#d50000";
+    strokeColor = "#ff1744";
+    opacity = 0.30;
+  }
 
   const circle = L.circle([city.lat, city.lng], {
     radius: city.tier === "big" ? 75000 : 55000,
     fillColor: fillColor,
     fillOpacity: opacity,
     color: strokeColor,
-    weight: isMine ? 2.5 : 1.5,
-    dashArray: isMine ? "" : "4, 4",
+    weight: isMine || isAlly ? 2.5 : 1.5,
+    dashArray: isMine || isAlly ? "" : "4, 4",
     interactive: false
   }).addTo(map);
 
@@ -368,7 +556,6 @@ function renderCities() {
   });
 }
 
-// TANK LOGOSU VE SVG ÇİZİCİ
 function getTankSvg(color = "#00e5ff", size = 20) {
   return `<svg class="tank-svg" viewBox="0 0 32 32" width="${size}" height="${size}" style="vertical-align:middle; display:inline-block;">
     <rect x="18" y="7" width="13" height="3" rx="1" fill="${color}" />
@@ -383,27 +570,35 @@ function getTankSvg(color = "#00e5ff", size = 20) {
 }
 
 function createCityMarker(city) {
-  const isMine = (getCityOwner(city) === gameState.playerCountryId);
-  const isEnemy = gameState.enemyCountryIds.has(getCityOwner(city));
+  const owner = getCityOwner(city);
+  const isMine = (owner === gameState.playerCountryId);
+  const isAlly = gameState.alliedCountryIds.has(owner);
+  const isEnemy = gameState.enemyCountryIds.has(owner);
 
   let colorClass = "gray";
   let tankColor = "#90a4ae";
+  let labelText = city.name;
+
   if (isMine) {
     colorClass = "blue";
     tankColor = "#00e5ff";
+    labelText = `★ ${city.name} (MAVİ)`;
+  } else if (isAlly) {
+    colorClass = "green";
+    tankColor = "#69f0ae";
+    labelText = `🤝 ${city.name} (MÜTTEFİK)`;
   } else if (isEnemy) {
     colorClass = "red";
     tankColor = "#ff5252";
   }
 
   const symbol = city.tier === "big" ? "🏛️" : "📍";
-  const labelText = isMine ? `★ ${city.name} (MAVİ)` : city.name;
 
   const html = `
     <div class="simple-city-pin">
       <div class="pin-circle ${colorClass}">${symbol}</div>
       <div class="pin-name ${colorClass}">${labelText}</div>
-      <div style="font-size:9px; background:rgba(0,0,0,0.85); padding:1px 4px; border-radius:3px; margin-top:1px; white-space:nowrap; border: 1px solid ${isMine ? '#00e5ff' : isEnemy ? '#ff5252' : '#475569'};">
+      <div style="font-size:9px; background:rgba(0,0,0,0.85); padding:1px 4px; border-radius:3px; margin-top:1px; white-space:nowrap; border: 1px solid ${isMine ? '#00e5ff' : isAlly ? '#00e676' : isEnemy ? '#ff5252' : '#475569'};">
         🪖${city.infantry} ${getTankSvg(tankColor, 12)}${city.tanks}
       </div>
     </div>
@@ -431,12 +626,11 @@ function updateCityMarker(city) {
   newMarker.addTo(map);
   cityMarkers[city.id] = newMarker;
 
-  // Bölge hâkimiyet çemberini de MAVİ yap
   renderCityTerritory(city);
 }
 
 // ==========================================
-// 4. ETKİLEŞİMLER: ÜLKEYE VEYA ŞEHRE DOKUNUNCA
+// 5. ETKİLEŞİM & DİPLOMASİ (SAVAŞ & İTTİFAK)
 // ==========================================
 function handleCountryClick(countryId, fallbackName) {
   sfx.click();
@@ -447,30 +641,43 @@ function handleCountryClick(countryId, fallbackName) {
     showToast(`🔵 ${nation.name} fethedilmiş vatan toprağınızdır (MAVİ). Şehirlerinizi yönetmek için mavi şehirlere dokunun.`);
     return;
   }
-  // Zaten savaşta mıyız?
-  if (gameState.enemyCountryIds.has(countryId)) {
-    showToast(`🔴 ${nation.name} ile savaştasınız! Şehirlerine dokunup taarruz edin.`);
+
+  // Müttefik Devlete dokununca
+  if (gameState.alliedCountryIds.has(countryId)) {
+    showToast(`🤝 ${nation.name} müttefikimizdir (YEŞİL). Düşmanlara karşı ortak taarruzlarda ordularını seferber eder.`);
     return;
   }
 
-  // SAVAŞ AÇMA POPUP'I
+  // Zaten savaşta mıyız?
+  if (gameState.enemyCountryIds.has(countryId)) {
+    showToast(`🔴 ${nation.name} ile savaştasınız! Kırmızı şehirlerine dokunup taarruz edin.`);
+    return;
+  }
+
+  // SAVAŞ VEYA İTTİFAK POPUP'I
   openCountryWarCard(countryId, fallbackName);
 }
 
 function openCountryWarCard(countryId, fallbackName) {
-  if (countryId === gameState.playerCountryId || gameState.conqueredCountryIds.has(countryId)) {
-    return; // Fethedilen ülkeye asla savaş açma kartı çıkmaz!
+  if (countryId === gameState.playerCountryId || gameState.conqueredCountryIds.has(countryId) || gameState.alliedCountryIds.has(countryId)) {
+    return;
   }
   const nation = ensureNationData(countryId, fallbackName);
   gameState.pendingTargetCountryId = countryId;
 
   document.getElementById("war-card-flag").innerText = nation.flag || "🌍";
   document.getElementById("war-card-name").innerText = nation.name.toUpperCase();
-  document.getElementById("war-card-status").innerText = "Bu ülke şu anda tarafsızdır.";
+  document.getElementById("war-card-status").innerText = "Bu ülke şu anda tarafsızdır. Diplomasi seçin:";
   
+  // Savaş butonu
   const warBtn = document.getElementById("war-card-btn");
-  warBtn.innerText = `⚔️ ${nation.name.toUpperCase()} DEVLETİNE SAVAŞ AÇ (KIRMIZI YAP)!`;
+  warBtn.innerText = `⚔️ ${nation.name.toUpperCase()} DEVLETİNE SAVAŞ AÇ (KIRMIZI)`;
   warBtn.onclick = () => declareWar(countryId, fallbackName);
+
+  // İttifak butonu
+  const allyBtn = document.getElementById("ally-card-btn");
+  allyBtn.innerText = `🤝 ${nation.name.toUpperCase()} İLE İTTİFAK KUR (YEŞİL)`;
+  allyBtn.onclick = () => proposeAlliance(countryId, fallbackName);
 
   document.getElementById("country-war-card").style.display = "block";
 }
@@ -483,14 +690,37 @@ function declareWar(countryId, fallbackName) {
   sfx.siren();
   const nation = ensureNationData(countryId, fallbackName);
   gameState.enemyCountryIds.add(countryId);
+  gameState.alliedCountryIds.delete(countryId);
 
   closeCountryWarCard();
   closeSheet();
 
   updateCountryStyles();
   renderCities();
+  updateTopBar();
+  saveGameState();
 
-  showToast(`🚨 DİKKAT! ${nation.name} (${nation.flag || '🌍'}) devletine SAVAŞ İLAN EDİLDİ! Gerçek sınırları KIRMIZI alarmda!`, "war");
+  showToast(`🚨 DİKKAT! ${nation.name} (${nation.flag || '🌍'}) devletine SAVAŞ İLAN EDİLDİ! Sınırları KIRMIZI alarmda!`, "war");
+  addRadioMessage(`⚔️ SAVAŞ BİLDİRİSİ: ${gameState.commanderName}, ${nation.name} devletine resmen savaş ilan etti!`, "enemy");
+}
+
+function proposeAlliance(countryId, fallbackName) {
+  sfx.victory();
+  const nation = ensureNationData(countryId, fallbackName);
+  gameState.alliedCountryIds.add(countryId);
+  gameState.enemyCountryIds.delete(countryId);
+
+  closeCountryWarCard();
+  closeSheet();
+
+  updateCountryStyles();
+  renderCities();
+  updateTopBar();
+  renderOnlineCommanders();
+  saveGameState();
+
+  showToast(`🤝 <strong>İTTİFAK PAKTI İMZALANDI!</strong> ${nation.name} (${nation.flag || '🌍'}) artık müttefikimiz! Sınırları ve orduları YEŞİL oldu!`, "victory");
+  addRadioMessage(`🤝 İTTİFAK PAKTI: ${gameState.commanderName} ile ${nation.name} komutanlığı arasında askeri ittifak kuruldu! Ortak taarruzlar devrede.`, "ally");
 }
 
 function handleCityClick(city) {
@@ -500,8 +730,12 @@ function handleCityClick(city) {
   if (gameState.attackMode) {
     const owner = getCityOwner(city);
 
-    if (owner === gameState.playerCountryId) {
-      showToast("⚠️ Kendi şehrinize saldıramazsınız! Kırmızı bir düşman şehri seçin.");
+    if (owner === gameState.playerCountryId || gameState.conqueredCountryIds.has(owner)) {
+      showToast("⚠️ Kendi vatan toprağınıza saldıramazsınız! Kırmızı bir düşman şehri seçin.");
+      return;
+    }
+    if (gameState.alliedCountryIds.has(owner)) {
+      showToast("⚠️ Müttefik şehirlerine saldıramazsınız! Onlar sizin pakt üyenizdir.");
       return;
     }
     if (!gameState.enemyCountryIds.has(owner)) {
@@ -510,7 +744,7 @@ function handleCityClick(city) {
     }
 
     // Taarruz başlat!
-    startMarch(gameState.attackSourceCityId, city.id, gameState.attackUnitType);
+    executeAttackWithAllies(city);
     cancelAttack();
     return;
   }
@@ -520,7 +754,7 @@ function handleCityClick(city) {
 }
 
 // ==========================================
-// 5. ŞEHİR ALT MENÜSÜ (BOTTOM SHEET)
+// 6. ŞEHİR YÖNETİM MENÜSÜ (BOTTOM SHEET)
 // ==========================================
 function closeSheet() {
   document.getElementById("city-bottom-sheet").style.display = "none";
@@ -530,8 +764,10 @@ function openCitySheet(city) {
   closeCountryWarCard();
   gameState.selectedCity = city;
 
-  const isMine = (getCityOwner(city) === gameState.playerCountryId);
-  const isEnemy = gameState.enemyCountryIds.has(getCityOwner(city));
+  const owner = getCityOwner(city);
+  const isMine = (owner === gameState.playerCountryId || gameState.conqueredCountryIds.has(owner));
+  const isAlly = gameState.alliedCountryIds.has(owner);
+  const isEnemy = gameState.enemyCountryIds.has(owner);
 
   document.getElementById("sh-city-name").innerText = city.name.toUpperCase();
   document.getElementById("sh-icon").innerText = city.tier === "big" ? "🏛️" : "📍";
@@ -540,6 +776,9 @@ function openCitySheet(city) {
   if (isMine) {
     statusPill.className = "sheet-status-pill blue";
     statusPill.innerText = "DOST TOPRAK (MAVİ)";
+  } else if (isAlly) {
+    statusPill.className = "sheet-status-pill green";
+    statusPill.innerText = "MÜTTEFİK ŞEHRİ (YEŞİL)";
   } else if (isEnemy) {
     statusPill.className = "sheet-status-pill red";
     statusPill.innerText = "DÜŞMAN ŞEHRİ (KIRMIZI)";
@@ -548,14 +787,12 @@ function openCitySheet(city) {
     statusPill.innerText = "TARAFSIZ ŞEHİR";
   }
 
-  // Can durumu
   const hpPill = document.getElementById("sh-city-hp");
   hpPill.innerText = `CAN: ${city.health}/${city.maxHealth} ${city.health === city.maxHealth ? "(TAM GÜÇ)" : "(YARALI)"}`;
 
-  // Şehir açıklaması
   const noteEl = document.getElementById("sh-city-desc");
   if (city.tier === "big") {
-    noteEl.innerHTML = "★ <strong>BÜYÜK METROPOL:</strong> Ele geçirmek için <strong>2 BİRLİK</strong> gerekir!";
+    noteEl.innerHTML = "★ <strong>BÜYÜK METROPOL:</strong> Ele geçirmek için <strong>2 BİRLİK</strong> (veya Müttefik ile Ortak Taarruz) gerekir!";
     noteEl.style.color = "#ffb74d";
   } else {
     noteEl.innerHTML = "• <strong>KÜÇÜK ŞEHİR:</strong> 1 birlik vardığında hemen teslim olur ve MAVİ olur!";
@@ -564,32 +801,34 @@ function openCitySheet(city) {
 
   // Panel kısımları
   document.getElementById("sh-player-actions").style.display = isMine ? "block" : "none";
+  document.getElementById("sh-ally-actions").style.display = isAlly ? "block" : "none";
   document.getElementById("sh-enemy-actions").style.display = isEnemy ? "block" : "none";
-  document.getElementById("sh-neutral-actions").style.display = (!isMine && !isEnemy) ? "block" : "none";
+  document.getElementById("sh-neutral-actions").style.display = (!isMine && !isAlly && !isEnemy) ? "block" : "none";
 
   if (isMine) {
     document.getElementById("sh-count-soldiers").innerText = city.infantry;
     document.getElementById("sh-count-tanks").innerText = city.tanks;
-  } else if (!isMine && !isEnemy) {
+  } else if (!isMine && !isAlly && !isEnemy) {
     document.getElementById("btn-declare-war-sheet").onclick = () => declareWar(city.originalCountry);
+    document.getElementById("btn-propose-ally-sheet").onclick = () => proposeAlliance(city.originalCountry);
   }
 
   document.getElementById("city-bottom-sheet").style.display = "block";
 }
 
 // ==========================================
-// 6. SALDIRI EMRİ VE 2 DAKİKALIK İNTİKAL
+// 7. ORTAK TAARRUZ & İNTİKAL (JOINT ATTACK)
 // ==========================================
 function orderAttack(unitType) {
   const city = gameState.selectedCity;
   if (!city) return;
 
   if (unitType === "infantry" && city.infantry <= 0) {
-    showToast("⚠️ Bu şehirde piyade birliği kalmadı!");
+    showToast("⚠️ Bu şehirde intikal ettirilecek piyade kalmadı!");
     return;
   }
   if (unitType === "tank" && city.tanks <= 0) {
-    showToast("⚠️ Bu şehirde tank birliği kalmadı!");
+    showToast("⚠️ Bu şehirde intikal ettirilecek tank kalmadı!");
     return;
   }
 
@@ -629,32 +868,72 @@ function findCity(id) {
   return null;
 }
 
-function startMarch(fromId, toId, unitType) {
+function executeAttackWithAllies(targetCity) {
+  const fromCity = findCity(gameState.attackSourceCityId);
+  const unitType = gameState.attackUnitType;
+  const wantJoint = document.getElementById("chk-joint-ally-attack") ? document.getElementById("chk-joint-ally-attack").checked : true;
+
+  // 1. Kendi birliğimiz yola çıkar (MAVİ)
+  startMarch(fromCity.id, targetCity.id, unitType, false /* isAlly */);
+
+  // 2. Müttefikimiz varsa ortak taarruz için müttefik birliğini de yola çıkar! (YEŞİL)
+  if (wantJoint && gameState.alliedCountryIds.size > 0) {
+    let bestAllyCity = null;
+    let bestDist = Infinity;
+
+    Object.values(WORLD_NATIONS).forEach(nation => {
+      if (gameState.alliedCountryIds.has(nation.id)) {
+        nation.cities.forEach(ac => {
+          const d = Math.hypot(ac.lat - targetCity.lat, ac.lng - targetCity.lng);
+          if (d < bestDist) {
+            bestDist = d;
+            bestAllyCity = ac;
+          }
+        });
+      }
+    });
+
+    if (bestAllyCity) {
+      setTimeout(() => {
+        startMarch(bestAllyCity.id, targetCity.id, "tank", true /* isAlly */);
+        showToast(`🤝 <strong>ORTAK TAARRUZ BAŞLADI!</strong> Müttefikimiz [${bestAllyCity.name}] üssünden ${targetCity.name} hedefine destek tank birliği intikale geçti!`, "victory");
+        addRadioMessage(`🛡️ ORTAK TAARRUZ: [${bestAllyCity.name}] üssünden ${targetCity.name} şehrine taarruz desteği sevk edildi!`, "ally");
+      }, 400);
+    }
+  }
+}
+
+function startMarch(fromId, toId, unitType, isAlly = false) {
   const fromCity = findCity(fromId);
   const toCity = findCity(toId);
   if (!fromCity || !toCity) return;
 
-  if (unitType === "infantry") fromCity.infantry--;
-  else fromCity.tanks--;
+  if (!isAlly) {
+    if (unitType === "infantry") fromCity.infantry--;
+    else fromCity.tanks--;
+    updateCityMarker(fromCity);
+    updateTopBar();
+    saveGameState();
+  }
 
-  updateCityMarker(fromCity);
-  updateTopBar();
   sfx.click();
 
   // 2 DAKİKA (120 saniye) intikal süresi
   const durationMs = 120 * 1000;
   const marchId = gameState.marchCounter++;
+  const lineColor = isAlly ? "#00e676" : "#ff1744";
 
-  // Haritada çizgi ve hareket eden ikon
+  // Haritada çizgi
   const line = L.polyline([[fromCity.lat, fromCity.lng], [toCity.lat, toCity.lng]], {
-    color: '#ff1744',
+    color: lineColor,
     weight: 3,
-    dashArray: '5, 8'
+    dashArray: isAlly ? '8, 6' : '5, 8'
   }).addTo(map);
 
+  const tankCol = isAlly ? "#00e676" : "#ff1744";
   const iconHtml = (unitType === "tank")
-    ? `<div style="transform:translate(-50%,-50%); filter:drop-shadow(0 0 8px #ff1744);">${getTankSvg('#ff1744', 28)}</div>`
-    : `<div style="font-size:24px; filter:drop-shadow(0 0 8px #ff1744); transform:translate(-50%,-50%);">🪖</div>`;
+    ? `<div style="transform:translate(-50%,-50%); filter:drop-shadow(0 0 8px ${tankCol});">${getTankSvg(tankCol, 28)}</div>`
+    : `<div style="font-size:24px; filter:drop-shadow(0 0 8px ${tankCol}); transform:translate(-50%,-50%);">${isAlly ? '🎖️' : '🪖'}</div>`;
 
   const mIcon = L.divIcon({
     html: iconHtml,
@@ -671,12 +950,13 @@ function startMarch(fromId, toId, unitType) {
     elapsedMs: 0,
     progress: 0,
     line: line,
-    marker: marker
+    marker: marker,
+    isAlly: isAlly
   };
 
   gameState.marches.push(marchObj);
   renderMarchesBar();
-  showToast(`⚡ ${fromCity.name} ➔ ${toCity.name} hedefine ${unitType === "tank" ? "Zırhlı Tank" : "Piyade"} yola çıktı (2 dk)!`);
+  showToast(`⚡ ${fromCity.name} ➔ ${toCity.name} hedefine ${isAlly ? "Müttefik Tankı" : (unitType === "tank" ? "Zırhlı Tank" : "Piyade")} yola çıktı (2 dk)!`);
 }
 
 function updateMarches(deltaMs) {
@@ -689,7 +969,6 @@ function updateMarches(deltaMs) {
     m.elapsedMs += adjDelta;
     m.progress = Math.min(1, m.elapsedMs / m.durationMs);
 
-    // Pozisyon interpolasyonu
     const lat = m.fromCity.lat + (m.toCity.lat - m.fromCity.lat) * m.progress;
     const lng = m.fromCity.lng + (m.toCity.lng - m.fromCity.lng) * m.progress;
     m.marker.setLatLng([lat, lng]);
@@ -712,7 +991,7 @@ function resolveCityAttack(march) {
 
   // KÜÇÜK ŞEHİR Mİ BÜYÜK ŞEHİR Mİ?
   if (city.tier === "small") {
-    // 1 BİRLİKLE ŞEHİR DOĞRUDAN DÜŞER!
+    // 1 BİRLİKLE ŞEHİR DÜŞER!
     city.controller = gameState.playerCountryId;
     city.health = city.maxHealth;
 
@@ -723,28 +1002,25 @@ function resolveCityAttack(march) {
     city.tanks = capturedTanks + (march.unitType === "tank" ? 1 : 0);
 
     sfx.victory();
-    showToast(`🏆 <strong>ZAFER!</strong> [${city.name}] fethedildi! Şehirdeki <strong>+${capturedInf} Piyade</strong> ve <strong>+${capturedTanks} Tank</strong> teslim olup MAVİ ordumuza katıldı!`, "victory");
+    const heroText = march.isAlly ? "Müttefikimiz ile Ortak Taarruzda" : "Taarruzumuzla";
+    showToast(`🏆 <strong>ZAFER!</strong> [${city.name}] ${heroText} fethedildi ve MAVİ oldu! Şehirdeki <strong>+${capturedInf} Piyade</strong> ve <strong>+${capturedTanks} Tank</strong> teslim olup MAVİ ordumuza katıldı!`, "victory");
 
   } else {
-    // BÜYÜK ŞEHİR: 1 BİRLİK DAHA GEREKİR!
+    // BÜYÜK METROPOL: 1 BİRLİK DAHA GEREKİR (Ortak taarruzda her gelen birlik can düşürür!)
     city.health--;
 
     if (city.health <= 0) {
-      // 2. birlik de vurdu ve şehir düştü!
       city.controller = gameState.playerCountryId;
       city.health = city.maxHealth;
 
-      // YENDİĞİMİZ METROPOLDEKİ DÜŞMAN BİRLİKLERİ BİZE KATILIR!
       const capturedInf = Math.max(2, city.infantry || 2);
       const capturedTanks = Math.max(2, city.tanks || 2);
       city.infantry = capturedInf + (march.unitType === "infantry" ? 1 : 0);
       city.tanks = capturedTanks + (march.unitType === "tank" ? 1 : 0);
 
       sfx.victory();
-      showToast(`🏆 <strong>BÜYÜK METROPOL FETHEDİLDİ!</strong> [${city.name}] teslim oldu! Düşmanın <strong>+${capturedInf} Piyade</strong> ve <strong>+${capturedTanks} Zırhlı Tankı</strong> MAVİ ordumuza katıldı!`, "victory");
-
+      showToast(`🏆 <strong>BÜYÜK METROPOL FETHEDİLDİ!</strong> [${city.name}] çifte taarruz ile tamamen düştü! Düşmanın <strong>+${capturedInf} Piyade</strong> ve <strong>+${capturedTanks} Zırhlı Tankı</strong> MAVİ ordumuza katıldı!`, "victory");
     } else {
-      // 1 birlik daha gerekiyor uyarısı!
       showToast(`⚔️ <strong>ŞİDDETLİ ÇARPIŞMA!</strong> [${city.name}] savunması yaralandı! Ele geçirmek için <strong>1 BİRLİK DAHA GEREKİYOR!</strong>`, "war");
     }
   }
@@ -753,6 +1029,7 @@ function resolveCityAttack(march) {
   updateCountryStyles();
   checkCountryDefeat(city.originalCountry);
   updateTopBar();
+  saveGameState();
 }
 
 function checkCountryDefeat(countryId) {
@@ -766,7 +1043,9 @@ function checkCountryDefeat(countryId) {
   if (allCaptured || capitalCaptured) {
     sfx.victory();
 
-    // Ülkenin kalan tüm şehirleri de teslim olur ve MAVİ olur!
+    gameState.conqueredCountryIds.add(countryId);
+    gameState.enemyCountryIds.delete(countryId);
+
     nation.cities.forEach(c => {
       c.controller = gameState.playerCountryId;
       updateCityMarker(c);
@@ -780,10 +1059,11 @@ function checkCountryDefeat(countryId) {
       updateCityMarker(capital);
     }
 
-    showToast(`👑 <strong>TARİHİ ZAFER!</strong> ${nation.name} tamamen teslim oldu! Tüm toprakları MAVİ vatanımıza katıldı! (+${bonusInf} Piyade, +${bonusTanks} Tank)`, "victory");
+    showToast(`👑 <strong>TARİHİ ZAFER!</strong> ${nation.name} tamamen teslim oldu! Tüm toprakları kalıcı olarak MAVİ vatanımıza katıldı! (+${bonusInf} Piyade, +${bonusTanks} Tank)`, "victory");
+    addRadioMessage(`👑 ZAFER: ${gameState.commanderName}, ${nation.name} devletini tamamen fethetti!`, "system");
 
-    gameState.enemyCountryIds.delete(countryId);
     updateCountryStyles();
+    saveGameState();
   }
 }
 
@@ -803,16 +1083,18 @@ function renderMarchesBar() {
     const sec = remSec % 60;
     const timeStr = `${min}:${sec < 10 ? '0' : ''}${sec}`;
 
-    const iconHtml = (m.unitType === "tank") ? getTankSvg("#ff5252", 15) : "🪖";
+    const iconCol = m.isAlly ? "#00e676" : "#ff5252";
+    const iconHtml = (m.unitType === "tank") ? getTankSvg(iconCol, 15) : (m.isAlly ? "🎖️" : "🪖");
+    const namePrefix = m.isAlly ? "🤝 Müttefik Tankı" : (m.unitType === "tank" ? "🚜 Tank" : "🪖 Asker");
 
     html += `
-      <div class="march-item">
+      <div class="march-item" style="border-color:${iconCol};">
         <div class="march-title">
-          <span>${iconHtml} ${m.unitType === "tank" ? "Tank" : "Asker"}: ${m.fromCity.name} ➔ ${m.toCity.name}</span>
-          <span style="color:#ff5252;">${timeStr}</span>
+          <span>${iconHtml} ${namePrefix}: ${m.fromCity.name} ➔ ${m.toCity.name}</span>
+          <span style="color:${iconCol};">${timeStr}</span>
         </div>
         <div class="march-progress">
-          <div class="march-fill" style="width:${Math.round(m.progress * 100)}%;"></div>
+          <div class="march-fill" style="width:${Math.round(m.progress * 100)}%; background:${iconCol};"></div>
         </div>
       </div>
     `;
@@ -821,7 +1103,105 @@ function renderMarchesBar() {
 }
 
 // ==========================================
-// 7. ŞEHİR İÇİ ÜRETİM VE ÜS
+// 8. ASKERİ TELSİZ & ONLINE SOHBET
+// ==========================================
+function toggleRadioPanel() {
+  sfx.radioBeep();
+  const drawer = document.getElementById("radio-drawer");
+  drawer.style.display = (drawer.style.display === "none") ? "flex" : "none";
+}
+
+function renderOnlineCommanders() {
+  const container = document.getElementById("online-commanders-list");
+  if (!container) return;
+
+  const list = [
+    { name: gameState.commanderName, nation: gameState.playerCountryId || "TR", role: "mine", rank: "Mareşal" }
+  ];
+
+  // Müttefik komutanlar
+  gameState.alliedCountryIds.forEach(id => {
+    const n = WORLD_NATIONS[id];
+    list.push({ name: `General_${n ? n.name : id}`, nation: id, role: "ally", rank: "Korgeneral (Müttefik)" });
+  });
+
+  // Düşman komutanlar
+  gameState.enemyCountryIds.forEach(id => {
+    const n = WORLD_NATIONS[id];
+    list.push({ name: `Komutan_${n ? n.name : id}`, nation: id, role: "enemy", rank: "Düşman Lider" });
+  });
+
+  // Diğer dünya komutanları
+  if (list.length < 4) {
+    list.push({ name: "Commander_Alex", nation: "USA", role: "neutral", rank: "Tümgeneral" });
+    list.push({ name: "General_Zhukov", nation: "RUS", role: "neutral", rank: "Orgeneral" });
+  }
+
+  let html = "";
+  list.forEach(c => {
+    const roleClass = c.role === "mine" ? "mine" : c.role === "ally" ? "ally" : c.role === "enemy" ? "enemy" : "";
+    html += `
+      <div class="commander-item">
+        <span><strong>${c.name}</strong> <small style="color:#78909c;">(${c.nation})</small></span>
+        <span class="c-status ${roleClass}">${c.rank}</span>
+      </div>
+    `;
+  });
+  container.innerHTML = html;
+}
+
+function addRadioMessage(text, type = "normal", author = null) {
+  const box = document.getElementById("radio-messages-box");
+  if (!box) return;
+
+  const msgDiv = document.createElement("div");
+  msgDiv.className = `chat-msg ${type}`;
+  msgDiv.innerHTML = `<span class="author">${author || (type === "system" ? "📡 SİSTEM:" : type === "ally" ? "🤝 MÜTTEFİK:" : "👤 KOMUTAN:")}</span> <span class="text">${text}</span>`;
+  box.appendChild(msgDiv);
+  box.scrollTop = box.scrollHeight;
+}
+
+function sendRadioMessage() {
+  const input = document.getElementById("radio-chat-input");
+  const txt = input.value.trim();
+  if (!txt) return;
+
+  sfx.radioBeep();
+  addRadioMessage(txt, "normal", `🎖️ ${gameState.commanderName}:`);
+  input.value = "";
+
+  // Otomatik Müttefik / Telsiz Cevabı
+  setTimeout(() => {
+    if (gameState.alliedCountryIds.size > 0) {
+      const allyId = Array.from(gameState.alliedCountryIds)[0];
+      const allyNation = WORLD_NATIONS[allyId];
+      addRadioMessage(`Emredersiniz Komutan ${gameState.commanderName}! ${allyNation ? allyNation.name : 'Müttefik'} ordusu ortak taarruz için tetikte bekliyor.`, "ally", `🤝 General_${allyId}:`);
+      sfx.radioBeep();
+    } else {
+      addRadioMessage(`Mesajınız küresel askeri frekansta yayınlandı. İttifak teklifleri bekleniyor.`, "system");
+    }
+  }, 1200);
+}
+
+function copyGameInvite() {
+  sfx.click();
+  const url = window.location.origin + window.location.pathname + `?room=${gameState.roomCode}`;
+  navigator.clipboard.writeText(url).then(() => {
+    showToast(`🔗 <strong>DAVET LİNKİ KOPYALANDI!</strong> Arkadaşına gönder, aynı odada ittifak kurup birlikte savaşın!`, "victory");
+  }).catch(() => {
+    showToast(`Oda Kodu: ${gameState.roomCode}`);
+  });
+}
+
+// Enter ile mesaj gönderme
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && document.activeElement && document.activeElement.id === "radio-chat-input") {
+    sendRadioMessage();
+  }
+});
+
+// ==========================================
+// 9. ŞEHİR İÇİ ÜRETİM VE ÜS
 // ==========================================
 function buildMilitaryBase() {
   const city = gameState.selectedCity;
@@ -835,6 +1215,7 @@ function buildMilitaryBase() {
   city.baseLvl = (city.baseLvl || 1) + 1;
   showToast(`🏢 [${city.name}] Askeri Üssü kuruldu/yükseltildi!`);
   updateTopBar();
+  saveGameState();
 }
 
 function recruitUnit(type) {
@@ -861,10 +1242,11 @@ function recruitUnit(type) {
 
   updateCityMarker(city);
   updateTopBar();
+  saveGameState();
 }
 
 // ==========================================
-// 8. OYUN DÖNGÜSÜ & ZAMAN
+// 10. OYUN DÖNGÜSÜ & ZAMAN
 // ==========================================
 function updateTopBar() {
   let inf = 0;
@@ -881,6 +1263,7 @@ function updateTopBar() {
   document.getElementById("val-money").innerText = `${Math.floor(gameState.money)}M $`;
   document.getElementById("val-soldiers").innerText = inf;
   document.getElementById("val-tanks").innerText = tanks;
+  document.getElementById("val-allies").innerText = `${gameState.alliedCountryIds.size} İttifak`;
 }
 
 let lastTime = performance.now();
@@ -890,8 +1273,9 @@ function gameLoop(now) {
 
   if (gameState.playerCountryId) {
     updateMarches(delta);
-    // Düzenli para geliri
-    gameState.money += (delta / 1000) * 5 * gameState.gameSpeed;
+    // Düzenli para geliri (her şehir + müttefik ticareti)
+    const allyBonus = gameState.alliedCountryIds.size * 3;
+    gameState.money += (delta / 1000) * (5 + allyBonus) * gameState.gameSpeed;
     updateTopBar();
   }
 
@@ -909,8 +1293,8 @@ document.querySelectorAll(".spd-btn").forEach(btn => {
   };
 });
 
-// Başlangıç: Sayfa açılır açılmaz ÜLKE SEÇİM MENÜSÜNÜ GÖSTER!
+// Başlangıç: Sayfa açılır açılmaz Komutan Girişi / Kayıt Kontrolü
 window.addEventListener("DOMContentLoaded", () => {
-  renderCountryPicker();
+  checkSavedGameOnStartup();
   requestAnimationFrame(gameLoop);
 });

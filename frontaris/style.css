@@ -639,17 +639,465 @@ body, html {
   cursor: pointer;
 }
 
-/* TOASTS */
-#toast-container {
-  position: fixed;
-  bottom: 16px;
-  right: 16px;
-  z-index: 99999;
+/* =========================================
+   KOMUTAN GİRİŞİ & KAYITLI OYUN KARTI
+   ========================================= */
+.auth-modal {
+  max-width: 480px !important;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 10px 0;
+}
+
+.auth-form label {
+  font-family: var(--font-title);
+  font-size: 13px;
+  color: var(--blue-glow);
+  letter-spacing: 1px;
+}
+
+.input-row {
+  display: flex;
+  gap: 8px;
+}
+
+.input-row input {
+  flex: 1;
+  background: #060e18;
+  border: 1px solid #1c3d64;
+  color: #fff;
+  font-family: var(--font-title);
+  font-size: 14px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  outline: none;
+}
+
+.input-row input:focus {
+  border-color: var(--blue-glow);
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.4);
+}
+
+.input-row button {
+  background: linear-gradient(135deg, #0077ff, #0055cc);
+  border: 1px solid var(--blue-glow);
+  color: #fff;
+  font-family: var(--font-title);
+  font-weight: 700;
+  padding: 0 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  letter-spacing: 1px;
+}
+
+.room-share-tip {
+  font-size: 12px;
+  color: #78909c;
+  line-height: 1.4;
+  margin-top: 6px;
+}
+
+/* KAYITLI OYUN DEVAM KARTI */
+.saved-game-box {
+  background: #071322;
+  border: 1px solid var(--blue-glow);
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
   display: flex;
   flex-direction: column;
   gap: 8px;
-  pointer-events: none;
+  margin-bottom: 12px;
 }
+
+.save-status-badge {
+  display: inline-block;
+  align-self: center;
+  font-size: 11px;
+  font-weight: 700;
+  background: rgba(0, 230, 118, 0.2);
+  border: 1px solid #00e676;
+  color: #00e676;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.saved-game-box h3 {
+  font-family: var(--font-title);
+  font-size: 18px;
+  color: #fff;
+}
+
+.saved-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.btn-resume-game {
+  background: linear-gradient(135deg, #00c853, #007e33);
+  border: 1px solid #69f0ae;
+  color: #fff;
+  font-family: var(--font-title);
+  font-weight: 700;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  letter-spacing: 1px;
+}
+
+.btn-new-game-alt {
+  background: transparent;
+  border: 1px solid #37474f;
+  color: #90a4ae;
+  font-size: 12px;
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* ÜST BAR KOMUTAN ROZETİ & TELSİZ */
+.commander-tag {
+  font-family: var(--font-title);
+  font-size: 11px;
+  background: rgba(0, 229, 255, 0.15);
+  border: 1px solid var(--blue-glow);
+  color: var(--blue-glow);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.text-green {
+  border-color: #00e676 !important;
+  color: #69f0ae !important;
+}
+
+.btn-radio-toggle {
+  background: #0d1e33;
+  border: 1px solid #1c4370;
+  color: #90caf9;
+  font-family: var(--font-title);
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-radio-toggle:hover {
+  border-color: var(--blue-glow);
+  color: #fff;
+}
+
+/* İTTİFAK YEŞİL STİLLERİ */
+.pin-circle.green {
+  background: #00c853;
+  border-color: #69f0ae;
+  box-shadow: 0 0 14px #00e676;
+}
+
+.pin-name.green {
+  background: #007e33 !important;
+  border: 1.5px solid #00e676 !important;
+  color: #ffffff !important;
+  font-weight: 900 !important;
+  box-shadow: 0 0 12px rgba(0, 230, 118, 0.7) !important;
+}
+
+.sheet-status-pill.green {
+  background: rgba(0, 230, 118, 0.2);
+  color: #69f0ae;
+  border: 1px solid #00e676;
+}
+
+.btn-propose-ally, .btn-big-ally {
+  background: linear-gradient(135deg, #00c853 0%, #007e33 100%);
+  border: 1px solid #69f0ae;
+  color: #fff;
+  font-family: var(--font-title);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.diplomacy-choices, .diplomacy-btn-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.ally-box {
+  background: #061c10;
+  border: 1px solid #00e676;
+  border-radius: 8px;
+  padding: 14px;
+  text-align: center;
+}
+
+.ally-emblem {
+  font-size: 34px;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.ally-box h4 {
+  font-family: var(--font-title);
+  color: #69f0ae;
+  margin-bottom: 4px;
+}
+
+.ally-box p {
+  font-size: 12px;
+  color: #c8e6c9;
+  line-height: 1.4;
+}
+
+/* ORTAK TAARRUZ SEÇENEĞİ */
+.joint-attack-toggle {
+  font-size: 12px;
+  color: #69f0ae;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.joint-attack-toggle input {
+  accent-color: #00e676;
+  width: 16px;
+  height: 16px;
+}
+
+/* =========================================
+   CANLI TELSİZ VE KOMUTANLAR ODASI (DRAWER)
+   ========================================= */
+.radio-panel {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  width: 340px;
+  height: calc(100vh - 50px);
+  background: rgba(7, 14, 24, 0.98);
+  border-left: 2px solid #1c4370;
+  box-shadow: -10px 0 30px rgba(0,0,0,0.8);
+  z-index: 3000;
+  display: flex;
+  flex-direction: column;
+  animation: slideInRight 0.25s ease-out;
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+.radio-header {
+  padding: 12px;
+  border-bottom: 1px solid #1a3556;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.radio-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-title);
+  font-size: 13px;
+  color: #fff;
+}
+
+.live-pulse {
+  font-size: 10px;
+  background: rgba(0, 230, 118, 0.2);
+  border: 1px solid #00e676;
+  color: #00e676;
+  padding: 1px 6px;
+  border-radius: 10px;
+  animation: pulseLive 1.5s infinite;
+}
+
+@keyframes pulseLive {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.radio-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 12px;
+  gap: 12px;
+}
+
+.room-share-box {
+  background: #0a1728;
+  border: 1px solid #1c3f68;
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+.room-share-box .lbl {
+  font-size: 10px;
+  color: #78909c;
+}
+
+.code-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 3px;
+}
+
+.code-row strong {
+  font-family: var(--font-title);
+  color: var(--blue-glow);
+  font-size: 16px;
+  letter-spacing: 2px;
+}
+
+.btn-copy-link {
+  background: #0f2742;
+  border: 1px solid #1e4f85;
+  color: #90caf9;
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.commanders-section h4, .chat-section h4 {
+  font-family: var(--font-title);
+  font-size: 11px;
+  color: #90caf9;
+  margin-bottom: 6px;
+}
+
+.commanders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 110px;
+  overflow-y: auto;
+}
+
+.commander-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #08121f;
+  border: 1px solid #152b44;
+  padding: 5px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+.commander-item .c-status {
+  font-size: 10px;
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+.commander-item .c-status.mine {
+  background: rgba(0, 119, 255, 0.2);
+  color: #00e5ff;
+}
+
+.commander-item .c-status.ally {
+  background: rgba(0, 230, 118, 0.2);
+  color: #69f0ae;
+}
+
+.commander-item .c-status.enemy {
+  background: rgba(255, 34, 51, 0.2);
+  color: #ff5252;
+}
+
+/* SOHBET KISMI */
+.chat-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.chat-messages {
+  flex: 1;
+  background: #040910;
+  border: 1px solid #152a42;
+  border-radius: 8px;
+  padding: 8px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.chat-msg {
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+.chat-msg .author {
+  font-weight: 700;
+  color: var(--blue-glow);
+  margin-right: 4px;
+}
+
+.chat-msg.system .author {
+  color: #00e676;
+}
+
+.chat-msg.ally .author {
+  color: #69f0ae;
+}
+
+.chat-input-row {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.chat-input-row input {
+  flex: 1;
+  background: #060e17;
+  border: 1px solid #1b3858;
+  color: #fff;
+  font-size: 12px;
+  padding: 7px 10px;
+  border-radius: 6px;
+  outline: none;
+}
+
+.chat-input-row button {
+  background: #0077ff;
+  border: 1px solid var(--blue-glow);
+  color: #fff;
+  font-family: var(--font-title);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 0 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+@media (max-width: 600px) {
+  .radio-panel {
+    width: 100%;
+  }
+}
+
 
 .toast {
   background: rgba(6, 14, 24, 0.96);
