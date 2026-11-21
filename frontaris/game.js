@@ -957,39 +957,14 @@ document.getElementById("sound-toggle-btn").onclick = function() {
 };
 
 // ==========================================
-// DİKEY EKRAN KİLİDİ KONTROLLERİ
+// EKRAN VE YÖN DEĞİŞİMİ UYUMU
 // ==========================================
-const blockerEl = document.getElementById("portrait-blocker");
-const btnForceLandscape = document.getElementById("btn-force-landscape");
-const btnIgnorePortrait = document.getElementById("btn-ignore-portrait");
-
-if (btnForceLandscape) {
-  btnForceLandscape.onclick = async function() {
-    sfx.playClick();
-    try {
-      if (document.documentElement.requestFullscreen) {
-        await document.documentElement.requestFullscreen();
-      }
-      if (screen.orientation && screen.orientation.lock) {
-        await screen.orientation.lock("landscape").catch(() => {});
-      }
-    } catch (e) {
-      console.log("Yatay kilit desteği:", e);
-    }
-    blockerEl.classList.add("dismissed");
-    setTimeout(() => { if (map) map.invalidateSize(); }, 300);
-    showToast("🔄 Tam ekran modu etkinleştirildi!");
-  };
-}
-
-if (btnIgnorePortrait) {
-  btnIgnorePortrait.onclick = function() {
-    sfx.playClick();
-    blockerEl.classList.add("dismissed");
-    setTimeout(() => { if (map) map.invalidateSize(); }, 300);
-    showToast("▶️ Dikey modda devam ediliyor. İyi oyunlar, Komutan!");
-  };
-}
+window.addEventListener("resize", () => {
+  if (map) map.invalidateSize();
+});
+window.addEventListener("orientationchange", () => {
+  setTimeout(() => { if (map) map.invalidateSize(); }, 200);
+});
 
 // ==========================================
 // BAŞLANGIÇ ÇAĞRISI

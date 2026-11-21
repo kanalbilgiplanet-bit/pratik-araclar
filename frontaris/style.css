@@ -41,121 +41,63 @@ body, html {
 }
 
 /* =========================================
-   PORTRAIT LOCK OVERLAY (OYUN DİKEY OYNANMAZ)
+   RESPONSIVE MODAL ANIMATIONS & MOBILE RULES
    ========================================= */
-.portrait-overlay {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 999999;
-  background: radial-gradient(circle at center, #111e2e 0%, #050b11 100%);
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 24px;
+@keyframes slideInUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
 }
 
-.blocker-content {
-  background: rgba(8, 16, 26, 0.95);
-  border: 2px solid #ff3344;
-  border-radius: 16px;
-  padding: 32px 28px;
-  max-width: 420px;
-  box-shadow: 0 0 40px rgba(255, 51, 68, 0.35);
-  animation: pulseBlocker 2s infinite ease-in-out;
-}
-
-.phone-rotate-icon {
-  font-size: 56px;
-  margin-bottom: 16px;
-  animation: rotatePhone 2.5s infinite ease-in-out;
-  display: inline-block;
-}
-
-.blocker-content h2 {
-  font-family: var(--font-display);
-  font-size: 20px;
-  color: #ff5252;
-  letter-spacing: 2px;
-  margin-bottom: 10px;
-}
-
-.blocker-content p {
-  font-size: 17px;
-  color: #eceff1;
-  margin-bottom: 14px;
-}
-
-.blocker-content .sub-alert {
-  font-size: 14px;
-  font-weight: 700;
-  color: #00e5ff;
-  background: rgba(0, 229, 255, 0.1);
-  padding: 10px 14px;
-  border-radius: 8px;
-  border: 1px dashed #00e5ff;
-  margin-bottom: 16px;
-}
-
-.blocker-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: 100%;
-}
-
-.btn-rotate-action {
-  background: linear-gradient(135deg, #0088ff 0%, #0055b3 100%);
-  border: 1px solid #00e5ff;
-  color: #fff;
-  font-family: var(--font-display);
-  font-size: 13px;
-  font-weight: 700;
-  padding: 12px;
-  border-radius: 8px;
-  cursor: pointer;
-  letter-spacing: 1px;
-  box-shadow: 0 0 15px rgba(0, 136, 255, 0.4);
-  transition: all 0.2s;
-}
-
-.btn-rotate-action:hover {
-  background: linear-gradient(135deg, #00b0ff 0%, #0070e0 100%);
-  transform: translateY(-2px);
-}
-
-.btn-continue-portrait {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid #455a64;
-  color: #cfd8dc;
-  font-family: var(--font-body);
-  font-size: 13px;
-  font-weight: 600;
-  padding: 10px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.btn-continue-portrait:hover {
-  background: rgba(255, 255, 255, 0.15);
-  color: #fff;
-  border-color: #90a4ae;
-}
-
-/* Engeli kaldır sınıfı */
-.portrait-overlay.dismissed {
-  display: none !important;
-}
-
-/* Dikey ekran algılama (CSS media query) */
-@media screen and (orientation: portrait), (max-aspect-ratio: 1/1) {
-  .portrait-overlay:not(.dismissed) {
-    display: flex !important;
+@media (max-width: 640px) {
+  .tactical-modal {
+    width: 100% !important;
+    height: 80vh !important;
+    top: auto !important;
+    bottom: 0 !important;
+    border-left: none !important;
+    border-top: 2px solid var(--border-tactical) !important;
+    border-radius: 16px 16px 0 0 !important;
+    animation: slideInUp 0.25s ease-out !important;
+  }
+  .operations-hud {
+    width: calc(100% - 24px) !important;
+    max-height: 120px !important;
+  }
+  .banner-box {
+    padding: 6px 12px !important;
+    max-width: 90vw !important;
+  }
+  .banner-box h2 {
+    font-size: 13px !important;
+  }
+  .banner-box p {
+    font-size: 11px !important;
+  }
+  #top-bar {
+    padding: 0 8px !important;
+    gap: 4px !important;
+  }
+  .game-title {
+    font-size: 15px !important;
+    letter-spacing: 1px !important;
+  }
+  .stats-panel {
+    gap: 8px !important;
+    padding: 2px 6px !important;
+  }
+  .stat-item .label {
+    display: none !important;
+  }
+  .time-controls {
+    gap: 4px !important;
+  }
+  #game-date-display {
+    font-size: 10px !important;
+    padding: 3px 6px !important;
+  }
+  .spd-btn {
+    padding: 4px 6px !important;
+    font-size: 10px !important;
   }
 }
 

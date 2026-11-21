@@ -13,31 +13,11 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=3">
 </head>
 <body>
 
-  <!-- PORTRAIT BLOCKER OVERLAY (Oyun Dikey Oynanmaz) -->
-  <div id="portrait-blocker" class="portrait-overlay">
-    <div class="blocker-content">
-      <div class="phone-rotate-icon">📱 ➔ 🔄</div>
-      <h2>KOMUTA MERKEZİ UYARISI</h2>
-      <p><strong>FRONTARIS</strong> en iyi deneyim için <strong>yatay ekranda</strong> oynanır.</p>
-      <div class="sub-alert">Cihazınızın "Otomatik Döndürme" özelliğini açıp telefonu yan tutabilirsiniz.</div>
-
-      <!-- ALTERNATİF ÇÖZÜM BUTONLARI -->
-      <div class="blocker-buttons">
-        <button id="btn-force-landscape" class="btn-rotate-action">
-          🔄 EKRANI YATAY ÇEVİR (TAM EKRAN)
-        </button>
-        <button id="btn-ignore-portrait" class="btn-continue-portrait">
-          ▶️ Yine de Dikey Oyna (Engeli Kaldır)
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- MAIN HUD WRAPPER (LANDSCAPE) -->
+  <!-- MAIN HUD WRAPPER (HER CİHAZDA ÇALIŞIR: DİKEY & YATAY) -->
   <div id="app-container">
     
     <!-- TOP WAR ROOM STATUS BAR -->
@@ -269,7 +249,7 @@
   <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <!-- World GeoData & Frontaris Game Logic -->
-  <script src="world-data.js"></script>
-  <script src="game.js"></script>
+  <script src="world-data.js?v=3"></script>
+  <script src="game.js?v=3"></script>
 </body>
 </html>
