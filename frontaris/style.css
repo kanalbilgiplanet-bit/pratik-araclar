@@ -1,25 +1,15 @@
-/* FRONTARIS - WAR ROOM THEME CSS */
+/* FRONTARIS - ULTRA NET & SADE SAVAŞ OYUNU STİLİ */
 :root {
-  --bg-dark: #070d14;
-  --bg-panel: rgba(10, 20, 32, 0.94);
-  --border-tactical: #1b3a57;
-  --border-glow: #00d2ff;
-  
-  --player-blue: #0088ff;
-  --player-blue-glow: #00e5ff;
-  --player-blue-bg: rgba(0, 136, 255, 0.18);
-  
-  --enemy-red: #ff2a2a;
-  --enemy-red-glow: #ff5252;
-  --enemy-red-bg: rgba(255, 42, 42, 0.22);
-  
-  --neutral-gray: #455a64;
-  --neutral-border: #263238;
-  
-  --gold: #ffb300;
-  --green: #00e676;
-  --font-display: 'Orbitron', -apple-system, sans-serif;
-  --font-body: 'Rajdhani', -apple-system, sans-serif;
+  --bg-deep: #090e17;
+  --panel-bg: rgba(14, 23, 38, 0.96);
+  --border-blue: #00bcd4;
+  --blue-vatan: #0077ff;
+  --blue-glow: #00e5ff;
+  --red-enemy: #ff2233;
+  --red-glow: #ff5252;
+  --gray-neutral: #455a64;
+  --font-title: 'Orbitron', sans-serif;
+  --font-text: 'Rajdhani', sans-serif;
 }
 
 * {
@@ -34,203 +24,200 @@ body, html {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background-color: var(--bg-dark);
-  color: #e0f2fe;
-  font-family: var(--font-body);
+  background-color: var(--bg-deep);
+  color: #fff;
+  font-family: var(--font-text);
   font-size: 15px;
 }
 
 /* =========================================
-   RESPONSIVE MODAL ANIMATIONS & MOBILE RULES
+   1. AÇILIŞ ÜLKE SEÇİM EKRANI (EN BAŞTA ÇIKAR)
    ========================================= */
-@keyframes slideInUp {
-  from { transform: translateY(100%); }
-  to { transform: translateY(0); }
+.country-picker-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 99999;
+  background: radial-gradient(circle at center, #0f1c2e 0%, #060a12 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
 }
 
-@media (max-width: 640px) {
-  .tactical-modal {
-    width: 100% !important;
-    height: 80vh !important;
-    top: auto !important;
-    bottom: 0 !important;
-    border-left: none !important;
-    border-top: 2px solid var(--border-tactical) !important;
-    border-radius: 16px 16px 0 0 !important;
-    animation: slideInUp 0.25s ease-out !important;
-  }
-  .operations-hud {
-    width: calc(100% - 24px) !important;
-    max-height: 120px !important;
-  }
-  .banner-box {
-    padding: 6px 12px !important;
-    max-width: 90vw !important;
-  }
-  .banner-box h2 {
-    font-size: 13px !important;
-  }
-  .banner-box p {
-    font-size: 11px !important;
-  }
-  #top-bar {
-    padding: 0 8px !important;
-    gap: 4px !important;
-  }
-  .game-title {
-    font-size: 15px !important;
-    letter-spacing: 1px !important;
-  }
-  .stats-panel {
-    gap: 8px !important;
-    padding: 2px 6px !important;
-  }
-  .stat-item .label {
-    display: none !important;
-  }
-  .time-controls {
-    gap: 4px !important;
-  }
-  #game-date-display {
-    font-size: 10px !important;
-    padding: 3px 6px !important;
-  }
-  .spd-btn {
-    padding: 4px 6px !important;
-    font-size: 10px !important;
-  }
+.picker-modal {
+  background: rgba(11, 20, 34, 0.98);
+  border: 2px solid var(--border-blue);
+  box-shadow: 0 0 40px rgba(0, 188, 212, 0.3);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 680px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 20px;
 }
 
-@keyframes rotatePhone {
-  0% { transform: rotate(0deg); }
-  35% { transform: rotate(-90deg); }
-  65% { transform: rotate(-90deg); }
-  100% { transform: rotate(0deg); }
+.picker-header {
+  text-align: center;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #1a2f4c;
+  margin-bottom: 14px;
 }
 
-@keyframes pulseBlocker {
-  0%, 100% { box-shadow: 0 0 25px rgba(255, 51, 68, 0.3); }
-  50% { box-shadow: 0 0 50px rgba(255, 51, 68, 0.6); }
+.war-icon {
+  font-size: 38px;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.picker-header h2 {
+  font-family: var(--font-title);
+  font-size: 20px;
+  color: #fff;
+  letter-spacing: 2px;
+}
+
+.picker-header p {
+  color: #90caf9;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.pick-hint {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 12px;
+  background: rgba(0, 229, 255, 0.12);
+  border: 1px solid #00e5ff;
+  color: #00e5ff;
+  padding: 2px 10px;
+  border-radius: 20px;
+}
+
+/* ÜLKE KARTLARI LİSTESİ */
+.country-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
+  gap: 10px;
+  overflow-y: auto;
+  padding: 6px 2px;
+}
+
+.country-pick-card {
+  background: #091322;
+  border: 1px solid #1c3d64;
+  border-radius: 10px;
+  padding: 12px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.country-pick-card:hover {
+  background: #0d223d;
+  border-color: #00e5ff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 229, 255, 0.3);
+}
+
+.country-pick-card .flag {
+  font-size: 32px;
+  margin-bottom: 6px;
+}
+
+.country-pick-card .name {
+  font-weight: 700;
+  font-size: 14px;
+  color: #fff;
+}
+
+.country-pick-card .power {
+  font-size: 11px;
+  color: #78909c;
+  margin-top: 2px;
 }
 
 /* =========================================
-   MAIN APP LAYOUT (LANDSCAPE)
+   2. OYUN ANA EKRANI
    ========================================= */
-#app-container {
+#game-screen {
   width: 100vw;
   height: 100vh;
+  position: relative;
   display: flex;
   flex-direction: column;
-  position: relative;
 }
 
-/* TOP STATUS BAR */
-#top-bar {
-  height: 54px;
-  background: linear-gradient(180deg, #0d1b2a 0%, #08111a 100%);
-  border-bottom: 2px solid var(--border-tactical);
+/* ÜST KOMUTA BARI */
+#simple-top-bar {
+  height: 50px;
+  background: rgba(7, 14, 24, 0.96);
+  border-bottom: 2px solid #18314e;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 16px;
+  padding: 0 14px;
   z-index: 1000;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
 }
 
-.brand {
+.top-left {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.logo-radar {
-  font-size: 20px;
-  animation: spinRadar 6s linear infinite;
-}
-
-.game-title {
-  font-family: var(--font-display);
-  font-size: 19px;
+#player-flag-pill {
+  font-family: var(--font-title);
+  font-size: 14px;
   font-weight: 900;
-  letter-spacing: 3px;
-  color: #ffffff;
-  text-shadow: 0 0 12px var(--player-blue-glow);
+  color: #fff;
 }
 
-.sub-badge {
+.side-badge {
   font-size: 11px;
   font-weight: 700;
   padding: 2px 8px;
   border-radius: 4px;
-  background: rgba(0, 229, 255, 0.15);
-  border: 1px solid var(--player-blue-glow);
-  color: var(--player-blue-glow);
-  letter-spacing: 1px;
 }
 
-/* PLAYER STATS */
-.stats-panel {
+.side-badge.blue-side {
+  background: rgba(0, 119, 255, 0.2);
+  border: 1px solid var(--blue-glow);
+  color: var(--blue-glow);
+}
+
+.top-stats {
   display: flex;
   align-items: center;
-  gap: 16px;
-  background: rgba(4, 10, 16, 0.7);
-  padding: 4px 14px;
-  border-radius: 8px;
-  border: 1px solid #14283b;
+  gap: 12px;
 }
 
-.stat-item {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 14px;
-}
-
-.stat-item .icon {
-  font-size: 16px;
-}
-
-.stat-item .label {
-  color: #78909c;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-}
-
-.stat-item .val {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 14px;
-}
-
-.text-gold { color: var(--gold); }
-.text-cyan { color: var(--player-blue-glow); }
-.text-green { color: var(--green); }
-.text-blue { color: #64b5f6; }
-
-/* TIME & SPEED CONTROLS */
-.time-controls {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-#game-date-display {
-  font-family: var(--font-display);
-  font-size: 12px;
-  color: #b0bec5;
-  background: #04090f;
-  padding: 4px 10px;
-  border-radius: 4px;
-  border: 1px solid #1e3a53;
-  letter-spacing: 1px;
-}
-
-.speed-buttons {
-  display: flex;
-  background: #09131d;
+.stat-pill {
+  font-size: 13px;
+  color: #cfd8dc;
+  background: rgba(0,0,0,0.4);
+  padding: 3px 8px;
   border-radius: 6px;
-  border: 1px solid #193147;
+  border: 1px solid #1b3856;
+}
+
+.stat-pill strong {
+  font-family: var(--font-title);
+  color: #00e5ff;
+}
+
+.speed-box {
+  display: flex;
+  background: #091524;
+  border: 1px solid #1c3e66;
+  border-radius: 6px;
   overflow: hidden;
 }
 
@@ -238,261 +225,41 @@ body, html {
   background: transparent;
   border: none;
   color: #78909c;
-  font-family: var(--font-display);
-  font-size: 12px;
-  padding: 5px 9px;
+  font-family: var(--font-title);
+  font-size: 11px;
+  padding: 4px 8px;
   cursor: pointer;
-  transition: all 0.2s;
-}
-
-.spd-btn:hover {
-  color: #ffffff;
-  background: rgba(0, 229, 255, 0.1);
 }
 
 .spd-btn.active {
-  background: var(--player-blue);
-  color: #ffffff;
-  font-weight: 700;
-  box-shadow: 0 0 8px rgba(0, 136, 255, 0.6);
-}
-
-.icon-btn {
-  background: #0d1e30;
-  border: 1px solid #1d3c5c;
+  background: var(--blue-vatan);
   color: #fff;
-  border-radius: 6px;
-  padding: 5px 8px;
-  cursor: pointer;
-  font-size: 14px;
 }
 
 /* =========================================
-   MAP CONTAINER & HUD OVERLAYS
+   HARİTA
    ========================================= */
-#map-frame {
-  flex: 1;
-  width: 100%;
-  position: relative;
-  overflow: hidden;
-  background: #02060b;
-}
-
 #map {
-  width: 100%;
-  height: 100%;
-  background: #060e17;
-}
-
-/* LEAFLET CUSTOM MAP STYLES */
-.leaflet-container {
-  background: #04080e !important;
-  font-family: var(--font-body) !important;
-}
-
-/* Custom Tooltip */
-.tactical-tooltip {
-  background: rgba(6, 14, 22, 0.95) !important;
-  border: 1px solid var(--border-glow) !important;
-  color: #fff !important;
-  font-family: var(--font-body) !important;
-  font-size: 14px !important;
-  font-weight: 700 !important;
-  box-shadow: 0 0 15px rgba(0, 210, 255, 0.3) !important;
-  border-radius: 6px !important;
-  padding: 4px 8px !important;
-}
-
-.tactical-tooltip::before {
-  border-top-color: var(--border-glow) !important;
-}
-
-/* SELECTION SCREEN BANNER */
-.tactical-banner {
-  position: absolute;
-  top: 16px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1000;
-  pointer-events: none;
-}
-
-.banner-box {
-  background: rgba(7, 16, 26, 0.92);
-  border: 1px solid var(--border-glow);
-  box-shadow: 0 0 25px rgba(0, 210, 255, 0.3);
-  padding: 10px 24px;
-  border-radius: 8px;
-  text-align: center;
-  backdrop-filter: blur(6px);
-  position: relative;
-}
-
-.banner-box h2 {
-  font-family: var(--font-display);
-  font-size: 15px;
-  letter-spacing: 2px;
-  color: #fff;
-  margin-bottom: 3px;
-}
-
-.banner-box p {
-  font-size: 13px;
-  color: #b0bec5;
-}
-
-.badge-blue {
-  color: var(--player-blue-glow);
-  font-weight: 700;
-  text-shadow: 0 0 8px var(--player-blue);
-}
-
-/* ATTACK HELPER BANNER */
-.attack-mode-banner {
-  position: absolute;
-  top: 16px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1000;
-  background: rgba(183, 28, 28, 0.92);
-  border: 2px solid #ff1744;
-  box-shadow: 0 0 30px rgba(255, 23, 68, 0.5);
-  padding: 8px 18px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  color: #fff;
-  font-weight: 700;
-  letter-spacing: 1px;
-  animation: pulseAttackBanner 1.5s infinite alternate;
-}
-
-.cancel-btn {
-  background: #212121;
-  color: #fff;
-  border: 1px solid #757575;
-  border-radius: 4px;
-  padding: 4px 10px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.cancel-btn:hover {
-  background: #424242;
-}
-
-@keyframes pulseAttackBanner {
-  0% { transform: translateX(-50%) scale(1); }
-  100% { transform: translateX(-50%) scale(1.03); }
-}
-
-/* OPERATIONS TICKER PANEL (Yoldaki birlikler) */
-.operations-hud {
-  position: absolute;
-  bottom: 12px;
-  left: 12px;
-  width: 320px;
-  max-height: 180px;
-  background: rgba(8, 17, 28, 0.92);
-  border: 1px solid #1a3854;
-  border-radius: 8px;
-  z-index: 1000;
-  backdrop-filter: blur(4px);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.6);
-}
-
-.op-header {
-  padding: 6px 12px;
-  background: #0e2235;
-  border-bottom: 1px solid #1a3854;
-  font-size: 12px;
-  font-weight: 700;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  letter-spacing: 1px;
-  color: #90caf9;
-}
-
-.op-header .badge {
-  background: var(--player-blue);
-  color: #fff;
-  padding: 1px 6px;
-  border-radius: 10px;
-  font-size: 11px;
-}
-
-.op-body {
-  padding: 8px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
   flex: 1;
-}
-
-.empty-op-msg {
-  color: #546e7a;
-  font-size: 12px;
-  text-align: center;
-  padding: 10px 0;
-}
-
-/* Operation Item */
-.op-card {
-  background: #050b12;
-  border: 1px solid #1c3d5a;
-  border-radius: 6px;
-  padding: 6px 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.op-card.attack-red {
-  border-left: 4px solid #ff1744;
-}
-
-.op-title-row {
-  display: flex;
-  justify-content: space-between;
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.op-progress-bar {
   width: 100%;
-  height: 6px;
-  background: #112233;
-  border-radius: 3px;
-  overflow: hidden;
+  background: #050b12;
 }
 
-.op-progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #00e5ff, #ff1744);
-  width: 0%;
-  transition: width 0.3s linear;
+.leaflet-container {
+  background: #050b12 !important;
 }
 
-/* =========================================
-   CITY MAP MARKERS (HARİTA İKONLARI)
-   ========================================= */
-.city-marker-div {
+/* HARİTADAKİ ŞEHİR İKONLARI */
+.simple-city-pin {
   display: flex;
   flex-direction: column;
   align-items: center;
   cursor: pointer;
-  pointer-events: auto !important;
 }
 
-.city-pin {
-  width: 26px;
-  height: 26px;
+.pin-circle {
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -504,447 +271,362 @@ body, html {
   transition: transform 0.2s;
 }
 
-.city-marker-div:hover .city-pin {
-  transform: scale(1.25);
-}
-
-.city-pin.friendly {
-  background: radial-gradient(circle, #29b6f6, #0288d1);
-  border-color: #e1f5fe;
+.pin-circle.blue {
+  background: #0077ff;
+  border-color: #00e5ff;
   box-shadow: 0 0 14px #00e5ff;
 }
 
-.city-pin.enemy {
-  background: radial-gradient(circle, #ff5252, #c62828);
-  border-color: #ffebee;
+.pin-circle.red {
+  background: #d50000;
+  border-color: #ff5252;
   box-shadow: 0 0 14px #ff1744;
-  animation: enemyPulse 1.8s infinite;
+  animation: redPulse 1.5s infinite;
 }
 
-.city-pin.neutral {
-  background: #455a64;
-  border-color: #90a4ae;
+.pin-circle.gray {
+  background: #37474f;
+  border-color: #78909c;
 }
 
-.city-marker-name {
-  font-family: var(--font-display);
+.pin-name {
+  font-family: var(--font-title);
   font-size: 10px;
-  font-weight: 700;
-  color: #fff;
-  background: rgba(3, 8, 14, 0.85);
-  border: 1px solid #1d3c5c;
-  padding: 1px 5px;
+  background: rgba(3, 8, 14, 0.9);
+  padding: 1px 6px;
   border-radius: 3px;
+  border: 1px solid #204165;
+  color: #fff;
   margin-top: 2px;
   white-space: nowrap;
-  letter-spacing: 0.5px;
 }
 
-.city-units-tag {
-  display: flex;
-  gap: 3px;
-  margin-top: 1px;
-}
-
-.unit-mini-pill {
-  font-size: 9px;
-  padding: 0 3px;
-  border-radius: 2px;
-  background: rgba(0, 229, 255, 0.2);
-  border: 1px solid #00e5ff;
-  color: #fff;
-}
-
-@keyframes enemyPulse {
-  0%, 100% { box-shadow: 0 0 10px #ff1744; }
-  50% { box-shadow: 0 0 20px #ff1744, 0 0 5px #fff; }
+@keyframes redPulse {
+  0%, 100% { box-shadow: 0 0 8px #ff1744; }
+  50% { box-shadow: 0 0 20px #ff1744; }
 }
 
 /* =========================================
-   TACTICAL MODALS (DRAWER & POPUP)
+   SALDIRI MODU BİLGİ BANDI
    ========================================= */
-.tactical-modal {
+#attack-instruction-bar {
   position: absolute;
-  top: 0;
-  right: 0;
-  width: 420px;
-  height: 100%;
-  background: var(--bg-panel);
-  border-left: 2px solid var(--border-tactical);
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 2000;
-  box-shadow: -10px 0 30px rgba(0,0,0,0.8);
-  backdrop-filter: blur(10px);
-  display: flex;
-  flex-direction: column;
-  animation: slideInRight 0.25s ease-out;
-}
-
-@keyframes slideInRight {
-  from { transform: translateX(100%); }
-  to { transform: translateX(0); }
-}
-
-.modal-card {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding: 20px;
-  overflow-y: auto;
-  position: relative;
-}
-
-.modal-close {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid #37474f;
-  color: #fff;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  font-size: 16px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.modal-close:hover {
-  background: #ff1744;
-  border-color: #ff1744;
-}
-
-.modal-header {
+  background: rgba(183, 28, 28, 0.95);
+  border: 2px solid #ff1744;
+  border-radius: 8px;
+  padding: 8px 16px;
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding-bottom: 14px;
-  border-bottom: 1px solid #1a3854;
-  margin-bottom: 16px;
-}
-
-.flag-icon, .city-icon {
-  font-size: 40px;
-  line-height: 1;
-}
-
-.modal-header h3 {
-  font-family: var(--font-display);
-  font-size: 20px;
-  font-weight: 900;
+  gap: 10px;
   color: #fff;
-  letter-spacing: 1px;
+  font-weight: 700;
+  box-shadow: 0 0 25px rgba(255, 23, 68, 0.6);
+  max-width: 90vw;
+  text-align: center;
 }
 
-.status-pill {
-  font-size: 11px;
-  font-weight: 700;
-  padding: 2px 8px;
+#btn-cancel-attack {
+  background: #212121;
+  color: #fff;
+  border: 1px solid #757575;
+  padding: 3px 8px;
   border-radius: 4px;
-  background: rgba(96, 125, 139, 0.2);
-  border: 1px solid #78909c;
-  color: #b0bec5;
-  display: inline-block;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+/* AKTİF İNTİKAL BARI */
+#active-marches-bar {
+  position: absolute;
+  bottom: 14px;
+  left: 14px;
+  z-index: 1000;
+  background: rgba(10, 19, 32, 0.92);
+  border: 1px solid #1a3d66;
+  border-radius: 8px;
+  padding: 8px 12px;
+  max-width: 320px;
+  width: calc(100vw - 28px);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.march-item {
+  background: #060e17;
+  border: 1px solid #ff1744;
+  border-radius: 6px;
+  padding: 6px 8px;
+}
+
+.march-title {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.march-progress {
+  width: 100%;
+  height: 6px;
+  background: #112233;
+  border-radius: 3px;
+  overflow: hidden;
   margin-top: 4px;
 }
 
-.status-pill.blue {
-  background: rgba(0, 136, 255, 0.2);
-  border-color: var(--player-blue-glow);
-  color: var(--player-blue-glow);
-}
-
-.status-pill.red {
-  background: rgba(255, 23, 68, 0.2);
-  border-color: #ff1744;
-  color: #ff5252;
-}
-
-/* INTEL GRID */
-.intel-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 16px;
-}
-
-.intel-item {
-  background: #060e17;
-  border: 1px solid #193147;
-  border-radius: 6px;
-  padding: 8px 10px;
-  display: flex;
-  flex-direction: column;
-}
-
-.intel-lbl {
-  font-size: 11px;
-  color: #78909c;
-}
-
-.intel-item strong {
-  font-family: var(--font-display);
-  font-size: 14px;
-  color: #fff;
-  margin-top: 2px;
-}
-
-.modal-desc {
-  font-size: 14px;
-  color: #cfd8dc;
-  line-height: 1.5;
-  margin-bottom: 20px;
-}
-
-/* MODAL ACTIONS */
-.modal-actions {
-  margin-top: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.btn-primary-action {
-  background: linear-gradient(135deg, #0088ff 0%, #0055b3 100%);
-  border: 1px solid #00e5ff;
-  color: #fff;
-  font-family: var(--font-display);
-  font-size: 15px;
-  font-weight: 700;
-  padding: 14px;
-  border-radius: 8px;
-  cursor: pointer;
-  letter-spacing: 1.5px;
-  box-shadow: 0 0 20px rgba(0, 136, 255, 0.4);
-  transition: all 0.2s;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-}
-
-.btn-primary-action:hover {
-  background: linear-gradient(135deg, #00a0ff 0%, #0070e0 100%);
-  box-shadow: 0 0 30px rgba(0, 229, 255, 0.6);
-  transform: translateY(-2px);
-}
-
-.btn-war-action {
-  background: linear-gradient(135deg, #d50000 0%, #8b0000 100%);
-  border: 1px solid #ff5252;
-  color: #fff;
-  font-family: var(--font-display);
-  font-size: 15px;
-  font-weight: 700;
-  padding: 14px;
-  border-radius: 8px;
-  cursor: pointer;
-  letter-spacing: 1.5px;
-  box-shadow: 0 0 20px rgba(255, 23, 68, 0.5);
-  transition: all 0.2s;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-}
-
-.btn-war-action:hover {
-  background: linear-gradient(135deg, #ff1744 0%, #b71c1c 100%);
-  box-shadow: 0 0 35px rgba(255, 23, 68, 0.8);
-  transform: translateY(-2px);
+.march-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #00e5ff, #ff1744);
+  width: 0%;
 }
 
 /* =========================================
-   CITY DETAILS & HEALTH
+   ALT ŞEHİR YÖNETİM MENÜSÜ (BOTTOM SHEET)
    ========================================= */
-.health-container {
-  background: #04090f;
-  border: 1px solid #193147;
-  border-radius: 8px;
-  padding: 10px 12px;
-  margin-bottom: 16px;
+.bottom-sheet {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 3000;
+  background: var(--panel-bg);
+  border-top: 2px solid var(--border-blue);
+  box-shadow: 0 -10px 30px rgba(0,0,0,0.8);
+  border-radius: 16px 16px 0 0;
+  animation: slideUp 0.25s ease-out;
+  max-height: 85vh;
+  overflow-y: auto;
 }
 
-.health-label {
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.sheet-content {
+  padding: 16px;
+  position: relative;
+}
+
+.sheet-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid #455a64;
+  color: #fff;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.sheet-header {
   display: flex;
   justify-content: space-between;
-  font-size: 12px;
-  font-weight: 700;
-  margin-bottom: 6px;
+  align-items: center;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #1a3556;
 }
 
-.health-bar-bg {
-  width: 100%;
-  height: 10px;
-  background: #102030;
-  border-radius: 5px;
-  overflow: hidden;
-}
-
-.health-bar-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #00e676, #00b0ff);
-  transition: width 0.4s ease;
-}
-
-.city-tier-note {
-  font-size: 11px;
-  color: #ffb74d;
-  margin-top: 6px;
-  font-weight: 600;
-}
-
-/* STATIONED UNITS */
-.stationed-units-section h4, .build-section h4 {
-  font-family: var(--font-display);
-  font-size: 13px;
-  letter-spacing: 1px;
-  color: #90caf9;
-  margin-bottom: 10px;
-  border-bottom: 1px solid #14283b;
-  padding-bottom: 4px;
-}
-
-.units-display-row {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 18px;
-}
-
-.unit-badge {
-  background: #08131e;
-  border: 1px solid #1a3854;
-  border-radius: 8px;
-  padding: 10px 12px;
+.city-title-group {
   display: flex;
   align-items: center;
+  gap: 10px;
+}
+
+.sheet-city-icon {
+  font-size: 32px;
+}
+
+.city-title-group h3 {
+  font-family: var(--font-title);
+  font-size: 18px;
+}
+
+.sheet-status-pill {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+.sheet-status-pill.blue {
+  background: rgba(0, 119, 255, 0.2);
+  color: var(--blue-glow);
+  border: 1px solid var(--blue-glow);
+}
+
+.sheet-status-pill.red {
+  background: rgba(255, 34, 51, 0.2);
+  color: var(--red-glow);
+  border: 1px solid var(--red-glow);
+}
+
+.city-hp-pill {
+  font-family: var(--font-title);
+  font-size: 12px;
+  color: #00e676;
+  background: rgba(0, 230, 118, 0.1);
+  border: 1px solid #00e676;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.city-note-text {
+  font-size: 12px;
+  color: #ffb74d;
+  margin: 8px 0 12px;
+}
+
+/* ŞEHİR İÇİ AKSİYONLAR */
+.action-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 12px;
 }
 
-.unit-badge .u-icon {
-  font-size: 26px;
+@media (max-width: 600px) {
+  .action-columns {
+    grid-template-columns: 1fr;
+  }
 }
 
-.unit-badge .u-info {
-  flex: 1;
-}
-
-.unit-badge .u-name {
-  font-weight: 700;
-  font-size: 14px;
-}
-
-.unit-badge .u-count {
-  font-size: 12px;
-  color: #00e5ff;
-}
-
-.unit-action-btn {
-  background: #0088ff;
-  border: 1px solid #00e5ff;
-  color: #fff;
-  font-family: var(--font-display);
-  font-size: 12px;
-  font-weight: 700;
-  padding: 7px 14px;
-  border-radius: 6px;
-  cursor: pointer;
-  letter-spacing: 1px;
-  transition: all 0.2s;
-}
-
-.unit-action-btn:hover {
-  background: #00b0ff;
-  box-shadow: 0 0 12px rgba(0, 229, 255, 0.6);
-}
-
-.unit-action-btn:disabled {
-  background: #263238;
-  border-color: #37474f;
-  color: #546e7a;
-  cursor: not-allowed;
-  box-shadow: none;
-}
-
-/* BUILD & RECRUIT SECTION */
-.build-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-.build-card {
-  background: #060e17;
-  border: 1px solid #193147;
+.action-box {
+  background: #08111e;
+  border: 1px solid #193454;
   border-radius: 8px;
   padding: 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
 }
 
-.build-card .b-head {
+.action-box h4 {
+  font-family: var(--font-title);
+  font-size: 12px;
+  color: #90caf9;
+  margin-bottom: 8px;
+  border-bottom: 1px solid #14283f;
+  padding-bottom: 4px;
+}
+
+.unit-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-weight: 700;
-  font-size: 13px;
-  margin-bottom: 4px;
+  background: #0e2038;
+  padding: 8px 10px;
+  border-radius: 6px;
+  margin-bottom: 6px;
 }
 
-.build-card p {
-  font-size: 11px;
-  color: #78909c;
-  line-height: 1.3;
-  margin-bottom: 8px;
-}
-
-.build-btn {
-  background: #0e2235;
-  border: 1px solid #1d456b;
-  color: #90caf9;
-  font-family: var(--font-display);
+.btn-attack {
+  background: #d50000;
+  border: 1px solid #ff5252;
+  color: #fff;
+  font-family: var(--font-title);
   font-size: 11px;
   font-weight: 700;
-  padding: 6px;
+  padding: 6px 12px;
   border-radius: 4px;
+  cursor: pointer;
+}
+
+.prod-buttons-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.btn-produce {
+  background: #0f2b1d;
+  border: 1px solid #1b5e20;
+  color: #a5d6a7;
+  font-family: var(--font-title);
+  font-size: 12px;
+  padding: 8px 10px;
+  border-radius: 6px;
   cursor: pointer;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  transition: all 0.2s;
 }
 
-.build-btn .cost {
-  color: var(--gold);
-  font-size: 10px;
+.btn-produce .cost {
+  color: #ffb300;
+  font-size: 11px;
 }
 
-.build-btn:hover {
-  background: #143554;
-  border-color: var(--player-blue-glow);
+.btn-declare-war {
+  width: 100%;
+  background: linear-gradient(135deg, #d50000 0%, #8b0000 100%);
+  border: 1px solid #ff5252;
   color: #fff;
+  font-family: var(--font-title);
+  font-size: 14px;
+  font-weight: 700;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
 }
 
-.build-btn.action-recruit {
-  background: #102d1e;
-  border-color: #1b5e20;
-  color: #a5d6a7;
+/* ÜLKE SAVAŞ AÇ POPUP'I */
+.country-war-popup {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 4000;
+  background: rgba(10, 18, 30, 0.98);
+  border: 2px solid #ff1744;
+  border-radius: 14px;
+  padding: 24px;
+  text-align: center;
+  box-shadow: 0 0 40px rgba(255, 23, 68, 0.6);
+  width: 90%;
+  max-width: 380px;
 }
 
-.build-btn.action-recruit:hover {
-  background: #1b4d2e;
-  border-color: #00e676;
+.war-popup-flag {
+  font-size: 48px;
 }
 
-/* =========================================
-   TOAST NOTIFICATIONS
-   ========================================= */
+.war-popup-inner h3 {
+  font-family: var(--font-title);
+  font-size: 20px;
+  margin: 6px 0;
+}
+
+.war-popup-inner p {
+  color: #b0bec5;
+  font-size: 13px;
+  margin-bottom: 14px;
+}
+
+.btn-big-war {
+  width: 100%;
+  background: #d50000;
+  border: 1px solid #ff1744;
+  color: #fff;
+  font-family: var(--font-title);
+  font-size: 14px;
+  font-weight: 700;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* TOASTS */
 #toast-container {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
-  z-index: 9999;
+  bottom: 16px;
+  right: 16px;
+  z-index: 99999;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -953,35 +635,21 @@ body, html {
 
 .toast {
   background: rgba(6, 14, 24, 0.96);
-  border-left: 4px solid var(--player-blue-glow);
-  box-shadow: 0 4px 15px rgba(0,0,0,0.7);
-  padding: 10px 16px;
+  border-left: 4px solid var(--blue-glow);
+  padding: 10px 14px;
   border-radius: 6px;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   color: #fff;
-  min-width: 260px;
-  animation: toastIn 0.3s ease-out;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.6);
 }
 
 .toast.toast-war {
   border-left-color: #ff1744;
-  color: #ffcdd2;
-  background: rgba(40, 10, 14, 0.96);
+  background: rgba(35, 8, 12, 0.96);
 }
 
 .toast.toast-victory {
   border-left-color: #00e676;
-  color: #e8f5e9;
-  background: rgba(8, 35, 18, 0.96);
-}
-
-@keyframes toastIn {
-  from { opacity: 0; transform: translateY(15px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes spinRadar {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  background: rgba(8, 32, 16, 0.96);
 }

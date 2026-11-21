@@ -3,253 +3,183 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>FRONTARIS: DÜNYA SAVAŞI | Taktiksel Harita Stratejisi</title>
-  <meta name="description" content="Frontaris: Gerçek dünya haritasında ülkeni seç, birliklerini kur, savaş ilan et ve dünyayı fethet!">
+  <title>FRONTARIS: DÜNYA SAVAŞI</title>
   
-  <!-- Leaflet CSS for real interactive world map -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-  <!-- Google Fonts: Orbitron & Rajdhani for tactical sci-fi/military aesthetic -->
+  <!-- Leaflet Harita Motoru -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="style.css?v=3">
+  <link rel="stylesheet" href="style.css?v=5">
 </head>
 <body>
 
-  <!-- MAIN HUD WRAPPER (HER CİHAZDA ÇALIŞIR: DİKEY & YATAY) -->
-  <div id="app-container">
+  <!-- =========================================
+       1. EN BAŞTAKİ ÜLKE SEÇİM EKRANI (AÇILIŞTA ÇIKAR)
+       ========================================= -->
+  <div id="country-select-screen" class="country-picker-overlay">
+    <div class="picker-modal">
+      <div class="picker-header">
+        <span class="war-icon">🌍</span>
+        <h2>FRONTARIS: DÜNYA SAVAŞI</h2>
+        <p>Yönetmek istediğin ülkeyi seçerek savaşı başlat!</p>
+        <span class="pick-hint">Seçtiğin ülke haritada <strong>MAVİ</strong> olacaktır.</span>
+      </div>
+
+      <!-- Ülke Seçim Kartları Listesi -->
+      <div class="country-cards-grid" id="country-selection-list">
+        <!-- JS ile doldurulacak -->
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================
+       2. OYUN ANA EKRANI
+       ========================================= -->
+  <div id="game-screen" style="display: none;">
     
-    <!-- TOP WAR ROOM STATUS BAR -->
-    <header id="top-bar">
-      <div class="brand">
-        <span class="logo-radar">📡</span>
-        <h1 class="game-title">FRONTARIS</h1>
-        <span class="sub-badge" id="game-status-badge">ÜLKE SEÇİM MODU</span>
+    <!-- Üst Basit Komuta Çubuğu -->
+    <header id="simple-top-bar">
+      <div class="top-left">
+        <span id="player-flag-pill">🇹🇷 TÜRKİYE</span>
+        <span class="side-badge blue-side">MAVİ (VATAN)</span>
       </div>
 
-      <div class="stats-panel" id="player-stats" style="display: none;">
-        <div class="stat-item" title="Hazine (Üretim ve İnşa için)">
-          <span class="icon">💰</span>
-          <span class="label">HAZİNE:</span>
-          <span class="val text-gold" id="stat-money">1500M $</span>
-        </div>
-        <div class="stat-item" title="İnsan Gücü (Asker Üretimi)">
-          <span class="icon">🪖</span>
-          <span class="label">PİYADE:</span>
-          <span class="val text-cyan" id="stat-infantry">0</span>
-        </div>
-        <div class="stat-item" title="Zırhlı Tank Birlikleri">
-          <span class="icon">🚜</span>
-          <span class="label">TANK:</span>
-          <span class="val text-green" id="stat-tanks">0</span>
-        </div>
-        <div class="stat-item" title="Kontrol Edilen Şehirler">
-          <span class="icon">🏛️</span>
-          <span class="label">ŞEHİRLER:</span>
-          <span class="val text-blue" id="stat-cities">0</span>
-        </div>
+      <div class="top-stats">
+        <span class="stat-pill">💰 <strong id="val-money">1500M</strong></span>
+        <span class="stat-pill">🪖 <strong id="val-soldiers">0</strong></span>
+        <span class="stat-pill">🚜 <strong id="val-tanks">0</strong></span>
       </div>
 
-      <!-- SPEED & TIME CONTROLS -->
-      <div class="time-controls">
-        <span id="game-date-display">1 EYLÜL 1939</span>
-        <div class="speed-buttons">
-          <button class="spd-btn active" data-spd="1" title="Normal Hız (1x)">1x</button>
-          <button class="spd-btn" data-spd="2" title="Hızlı (2x)">2x</button>
-          <button class="spd-btn" data-spd="5" title="Süper Hızlı (5x)">5x</button>
-          <button class="spd-btn" data-spd="20" title="Taarruz Hızı (20x)">20x</button>
+      <div class="top-actions">
+        <div class="speed-box">
+          <button class="spd-btn active" data-spd="1">1x</button>
+          <button class="spd-btn" data-spd="5">5x</button>
+          <button class="spd-btn" data-spd="20">20x</button>
         </div>
-        <button id="sound-toggle-btn" class="icon-btn" title="Ses Aç/Kapat">🔊</button>
       </div>
     </header>
 
-    <!-- MAP CONTAINER -->
-    <div id="map-frame">
-      <div id="map"></div>
+    <!-- HARİTA -->
+    <div id="map"></div>
 
-      <!-- SELECTION SCREEN BANNER OVERLAY -->
-      <div id="selection-banner" class="tactical-banner">
-        <div class="banner-box">
-          <span class="radar-ping"></span>
-          <h2>DÜNYA SAVAŞI: BAŞLANGIÇ DÖNEMİ</h2>
-          <p>Haritadan yönetmek istediğin <strong>ÜLKEYİ SEÇ</strong>. Seçilen ülke <span class="badge-blue">MAVİ</span> olacaktır.</p>
-        </div>
-      </div>
-
-      <!-- TARGET SELECTION HELPER BANNER (Saldırı Modunda Çıkar) -->
-      <div id="attack-banner" class="attack-mode-banner" style="display: none;">
-        <span class="crosshair-icon">🎯</span>
-        <span id="attack-banner-text">SALDIRI MODU AKTİF: Hedef Düşman (Kırmızı) Şehrine Dokun!</span>
-        <button id="cancel-attack-btn" class="cancel-btn">İPTAL</button>
-      </div>
-
-      <!-- ACTIVE MARCH / OPERATIONS TICKER (Yoldaki birlikler) -->
-      <div id="operations-panel" class="operations-hud">
-        <div class="op-header">
-          <span>⚡ HAREKÂT & İNTİKAL LİSTESİ</span>
-          <span id="op-count-badge" class="badge">0</span>
-        </div>
-        <div id="operations-list" class="op-body">
-          <div class="empty-op-msg">Şu anda intikal eden birlik yok.</div>
-        </div>
-      </div>
+    <!-- SALDIRI MODUNDA ÇIKAN BİLGİ KUTUSU -->
+    <div id="attack-instruction-bar" style="display: none;">
+      <span class="crosshair-ping">🎯</span>
+      <span id="attack-prompt-text">Saldırılacak <strong>KIRMIZI Düşman Şehrine</strong> dokunun!</span>
+      <button id="btn-cancel-attack">İPTAL</button>
     </div>
 
-    <!-- MODAL / DRAWER: ÜLKE SEÇİM VE DETAY KARTI -->
-    <div id="country-modal" class="tactical-modal" style="display: none;">
-      <div class="modal-card">
-        <button class="modal-close" onclick="closeModals()">✕</button>
-        <div class="modal-header">
-          <span class="flag-icon" id="country-flag">🌍</span>
-          <div>
-            <h3 id="country-title">TÜRKİYE</h3>
-            <span class="status-pill" id="country-status-pill">TARAFSIZ DEVLET</span>
-          </div>
-        </div>
-        <div class="modal-body">
-          <div class="intel-grid">
-            <div class="intel-item">
-              <span class="intel-lbl">Başkent</span>
-              <strong id="country-capital">Ankara</strong>
-            </div>
-            <div class="intel-item">
-              <span class="intel-lbl">Nüfus / Güç</span>
-              <strong id="country-power">Orta Seviye</strong>
-            </div>
-            <div class="intel-item">
-              <span class="intel-lbl">Şehir Sayısı</span>
-              <strong id="country-city-count">4 Şehir</strong>
-            </div>
-            <div class="intel-item">
-              <span class="intel-lbl">Sanayi Kapasitesi</span>
-              <strong id="country-industry">★★★☆☆</strong>
-            </div>
-          </div>
-          <p id="country-desc" class="modal-desc">Jeopolitik olarak stratejik bir konumda yer almaktadır.</p>
-        </div>
-        <div class="modal-actions" id="country-actions">
-          <!-- Dinamik butonlar (Ülkeyi Seç veya Savaş İlan Et) -->
-        </div>
-      </div>
+    <!-- AKTİF İNTİKAL (HAREKÂT) SAYAÇLARI -->
+    <div id="active-marches-bar" style="display: none;">
+      <!-- Yoldaki birlikler burada listelenir -->
     </div>
 
-    <!-- MODAL / DRAWER: ŞEHİR YÖNETİMİ & ÜS İNŞASI -->
-    <div id="city-modal" class="tactical-modal" style="display: none;">
-      <div class="modal-card city-card">
-        <button class="modal-close" onclick="closeModals()">✕</button>
-        <div class="modal-header">
-          <span class="city-icon" id="city-type-icon">🏛️</span>
-          <div>
-            <h3 id="city-title">ANKARA</h3>
-            <span class="status-pill" id="city-owner-pill">TÜRKİYE - DOST TOPRAK (MAVİ)</span>
-          </div>
-        </div>
+    <!-- =========================================
+         ŞEHİR & ÜS YÖNETİM MENÜSÜ (ALT KART)
+         ========================================= -->
+    <div id="city-bottom-sheet" class="bottom-sheet" style="display: none;">
+      <div class="sheet-content">
+        <button class="sheet-close" onclick="closeSheet()">✕</button>
         
-        <div class="modal-body">
-          <!-- Can barı (Büyük şehirler 2 can, küçük şehirler 1 can) -->
-          <div class="health-container">
-            <div class="health-label">
-              <span>ŞEHİR GARNİZON & SAVUNMA DAYANIKLILIĞI:</span>
-              <span id="city-health-text">2 / 2 (TAM GÜÇ)</span>
-            </div>
-            <div class="health-bar-bg">
-              <div id="city-health-fill" class="health-bar-fill" style="width: 100%;"></div>
-            </div>
-            <div class="city-tier-note" id="city-tier-note">
-              ★ BÜYÜK ŞEHİR: Ele geçirmek için 2 BİRLİK taarruzu gerekir!
+        <div class="sheet-header">
+          <div class="city-title-group">
+            <span class="sheet-city-icon" id="sh-icon">🏛️</span>
+            <div>
+              <h3 id="sh-city-name">ANKARA</h3>
+              <span id="sh-city-status" class="sheet-status-pill blue">DOST TOPRAK (MAVİ)</span>
             </div>
           </div>
-
-          <!-- Mevcut Birlikler -->
-          <div class="stationed-units-section">
-            <h4>ŞEHİRDE KONUŞLU BİRLİKLERİMİZ</h4>
-            <div class="units-display-row">
-              <div class="unit-badge">
-                <span class="u-icon">🪖</span>
-                <div class="u-info">
-                  <div class="u-name">Piyade Tümenleri</div>
-                  <div class="u-count" id="city-infantry-count">2 Birlik</div>
-                </div>
-                <button class="unit-action-btn" id="btn-attack-infantry" onclick="startAttackFromCity('infantry')">SALDIR ➔</button>
-              </div>
-
-              <div class="unit-badge">
-                <span class="u-icon">🚜</span>
-                <div class="u-info">
-                  <div class="u-name">Zırhlı Tank Birlikleri</div>
-                  <div class="u-count" id="city-tank-count">1 Birlik</div>
-                </div>
-                <button class="unit-action-btn" id="btn-attack-tank" onclick="startAttackFromCity('tank')">SALDIR ➔</button>
-              </div>
-            </div>
+          <div class="city-hp-pill" id="sh-city-hp">
+            CAN: 2/2 (TAM GÜÇ)
           </div>
-
-          <!-- İnşa & Üretim Menüsü (Yalnızca dost şehirde aktif) -->
-          <div id="city-build-section" class="build-section">
-            <h4>ÜS İNŞASI & BİRLİK EĞİTİMİ</h4>
-            <div class="build-grid">
-              
-              <div class="build-card">
-                <div class="b-head">
-                  <span>🏢 Askeri Üs</span>
-                  <span class="badge" id="badge-military-base">Lvl 1</span>
-                </div>
-                <p>Şehir savunmasını ve piyade eğitim hızını artırır.</p>
-                <button class="build-btn" onclick="upgradeBase()">
-                  GELİŞTİR <span class="cost">100M $</span>
-                </button>
-              </div>
-
-              <div class="build-card">
-                <div class="b-head">
-                  <span>🏭 Tank Fabrikası</span>
-                  <span class="badge" id="badge-tank-factory">Lvl 1</span>
-                </div>
-                <p>Ağır zırhlı tank üretim hatlarını genişletir.</p>
-                <button class="build-btn" onclick="upgradeTankFactory()">
-                  GELİŞTİR <span class="cost">200M $</span>
-                </button>
-              </div>
-
-              <div class="build-card">
-                <div class="b-head">
-                  <span>🪖 Yeni Piyade Eğit</span>
-                  <span class="badge-mini">+1 Birlik</span>
-                </div>
-                <p>Piyade birliğini orduya katar.</p>
-                <button class="build-btn action-recruit" onclick="recruitInfantry()">
-                  ÜRET <span class="cost">50M $</span>
-                </button>
-              </div>
-
-              <div class="build-card">
-                <div class="b-head">
-                  <span>🚜 Yeni Tank Üret</span>
-                  <span class="badge-mini">+1 Tank</span>
-                </div>
-                <p>Ağır taarruz tankı üretir.</p>
-                <button class="build-btn action-recruit" onclick="produceTank()">
-                  ÜRET <span class="cost">150M $</span>
-                </button>
-              </div>
-
-            </div>
-          </div>
-
         </div>
+
+        <div id="sh-city-desc" class="city-note-text">
+          ★ Büyük Şehir: Ele geçirmek için 2 birlik gerekir.
+        </div>
+
+        <!-- 1. BİZİM ŞEHRİMİZ İSE (BİRLİKLER & SALDIRI + ÜRETİM) -->
+        <div id="sh-player-actions" style="display: none;">
+          <div class="action-columns">
+            
+            <!-- Sol: Şehirdeki Birlikler ve Saldır Butonu -->
+            <div class="action-box">
+              <h4>ŞEHİRDEKİ BİRLİKLER</h4>
+              <div class="unit-row">
+                <span>🪖 Piyade: <strong id="sh-count-soldiers">2</strong></span>
+                <button class="btn-attack" onclick="orderAttack('infantry')">⚔️ SALDIR</button>
+              </div>
+              <div class="unit-row">
+                <span>🚜 Tank: <strong id="sh-count-tanks">1</strong></span>
+                <button class="btn-attack" onclick="orderAttack('tank')">⚔️ SALDIR</button>
+              </div>
+            </div>
+
+            <!-- Sağ: Üs Kurulumu ve Yeni Asker/Tank Üretimi -->
+            <div class="action-box">
+              <h4>ÜS VE ÜRETİM</h4>
+              <div class="prod-buttons-grid">
+                <button class="btn-produce" onclick="buildMilitaryBase()">
+                  🏢 Askeri Üs Kur <span class="cost">(100M $)</span>
+                </button>
+                <button class="btn-produce" onclick="recruitUnit('infantry')">
+                  🪖 Asker Eğit <span class="cost">(50M $)</span>
+                </button>
+                <button class="btn-produce" onclick="recruitUnit('tank')">
+                  🚜 Tank Üret <span class="cost">(150M $)</span>
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 2. DÜŞMAN ŞEHRİ İSE (BİLGİ) -->
+        <div id="sh-enemy-actions" style="display: none;">
+          <div class="enemy-target-info">
+            <p>Bu şehir <strong>DÜŞMAN</strong> kontrolündedir (KIRMIZI).</p>
+            <p>Birliklerinize saldır emri vermek için önce <strong>kendi mavi şehrinize</strong> dokunup ordunuzu seçin!</p>
+          </div>
+        </div>
+
+        <!-- 3. TARAFSIZ ÜLKE ŞEHRİ İSE (SAVAŞ AÇ BUTONU) -->
+        <div id="sh-neutral-actions" style="display: none;">
+          <div class="neutral-box">
+            <p>Bu ülke henüz tarafsızdır.</p>
+            <button id="btn-declare-war-sheet" class="btn-declare-war">
+              ⚔️ BU ÜLKEYE SAVAŞ AÇ (KIRMIZI YAP)!
+            </button>
+          </div>
+        </div>
+
       </div>
     </div>
 
-    <!-- BİLDİRİM TOAST ALANI -->
-    <div id="toast-container"></div>
+    <!-- ÜLKEYE DOKUNUNCA AÇILAN SAVAŞ BUTONU KARTI -->
+    <div id="country-war-card" class="country-war-popup" style="display: none;">
+      <button class="sheet-close" onclick="closeCountryWarCard()">✕</button>
+      <div class="war-popup-inner">
+        <span class="war-popup-flag" id="war-card-flag">🇩🇪</span>
+        <h3 id="war-card-name">ALMANYA</h3>
+        <p id="war-card-status">Bu ülke şu anda tarafsız.</p>
+        <button id="war-card-btn" class="btn-big-war">
+          ⚔️ SAVAŞ İLAN ET (KIRMIZI YAP)
+        </button>
+      </div>
+    </div>
 
   </div>
 
+  <!-- BİLDİRİM TOASTLARI -->
+  <div id="toast-container"></div>
+
   <!-- Leaflet JS -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  <!-- World GeoData & Frontaris Game Logic -->
-  <script src="world-data.js?v=3"></script>
-  <script src="game.js?v=3"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <!-- Veriler ve Basit Oyun Motoru -->
+  <script src="world-data.js?v=5"></script>
+  <script src="game.js?v=5"></script>
 </body>
 </html>
