@@ -326,11 +326,18 @@ function initMap(playerNation) {
     ? [playerNation.cities[0].lat, playerNation.cities[0].lng] 
     : [42.0, 25.0];
 
+  const southWest = L.latLng(-85, -180);
+  const northEast = L.latLng(85, 180);
+  const worldBounds = L.latLngBounds(southWest, northEast);
+
   map = L.map('map', {
     center: initialCenter,
     zoom: 5,
-    minZoom: 2,
+    minZoom: 2.5,
     maxZoom: 9,
+    maxBounds: worldBounds,
+    maxBoundsViscosity: 1.0,
+    worldCopyJump: false,
     zoomControl: false,
     attributionControl: false
   });
@@ -340,7 +347,9 @@ function initMap(playerNation) {
   // Esri World Dark Gray - Filigransız ve API Keysiz Tertemiz Askeri Harita
   L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
     maxZoom: 16,
-    attribution: ''
+    attribution: '',
+    bounds: worldBounds,
+    noWrap: true
   }).addTo(map);
 
   renderCountryPolygons();
