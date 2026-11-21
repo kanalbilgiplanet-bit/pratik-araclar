@@ -107,6 +107,21 @@ class SimpleAudio {
     osc.connect(g); g.connect(this.ctx.destination);
     osc.start(t); osc.stop(t + 0.4);
   }
+  defeat() {
+    this.init(); if (!this.ctx) return;
+    const notes = [440, 370, 311, 220, 164];
+    const t = this.ctx.currentTime;
+    notes.forEach((freq, i) => {
+      const osc = this.ctx.createOscillator();
+      const g = this.ctx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(freq, t + i * 0.22);
+      g.gain.setValueAtTime(0.25, t + i * 0.22);
+      g.gain.exponentialRampToValueAtTime(0.01, t + i * 0.22 + 0.45);
+      osc.connect(g); g.connect(this.ctx.destination);
+      osc.start(t + i * 0.22); osc.stop(t + i * 0.22 + 0.45);
+    });
+  }
 }
 const sfx = new SimpleAudio();
 
@@ -1012,37 +1027,41 @@ function executeAttackWithAllies(targetCity) {
   }
 }
 
-function startMarch(fromId, toId, unitType, isAlly = false) {
+function startMarch(fromId, toId, unitType, isAlly = false, isEnemy = false) {
   const fromCity = findCity(fromId);
   const toCity = findCity(toId);
   if (!fromCity || !toCity) return;
 
-  if (!isAlly) {
+  if (!isAlly && !isEnemy) {
     if (unitType === "infantry") fromCity.infantry = Math.max(0, (fromCity.infantry || 0) - 1);
     else fromCity.tanks = Math.max(0, (fromCity.tanks || 0) - 1);
     updateCityMarker(fromCity);
     updateTopBar();
     saveGameState();
+    sfx.click();
+  } else if (isEnemy) {
+    if (unitType === "infantry") fromCity.infantry = Math.max(0, (fromCity.infantry || 0) - 1);
+    else fromCity.tanks = Math.max(0, (fromCity.tanks || 0) - 1);
+    updateCityMarker(fromCity);
+    sfx.siren();
   }
 
-  sfx.click();
-
-  // 2 DAKİKA (120 saniye) intikal süresi
-  const durationMs = 120 * 1000;
+  // İntikal süresi: Düşman 80 sn, Oyuncu/Müttefik 120 sn
+  const durationMs = isEnemy ? (80 * 1000) : (120 * 1000);
   const marchId = gameState.marchCounter++;
-  const lineColor = isAlly ? "#00e676" : "#ff1744";
+  const lineColor = isAlly ? "#00e676" : (isEnemy ? "#ff1744" : "#00e5ff");
 
-  // Haritada çizgi
+  // Haritada intikal çizgisi
   const line = L.polyline([[fromCity.lat, fromCity.lng], [toCity.lat, toCity.lng]], {
     color: lineColor,
-    weight: 3,
-    dashArray: isAlly ? '8, 6' : '5, 8'
+    weight: isEnemy ? 4 : 3,
+    dashArray: isAlly ? '8, 6' : (isEnemy ? '4, 6' : '5, 8')
   }).addTo(map);
 
-  const tankCol = isAlly ? "#00e676" : "#ff1744";
+  const tankCol = isAlly ? "#00e676" : (isEnemy ? "#ff1744" : "#00e5ff");
   const iconHtml = (unitType === "tank")
-    ? `<div style="transform:translate(-50%,-50%); filter:drop-shadow(0 0 8px ${tankCol});">${getTankSvg(tankCol, 28)}</div>`
-    : `<div style="font-size:24px; filter:drop-shadow(0 0 8px ${tankCol}); transform:translate(-50%,-50%);">${isAlly ? '🎖️' : '🪖'}</div>`;
+    ? `<div style="transform:translate(-50%,-50%); filter:drop-shadow(0 0 10px ${tankCol});">${getTankSvg(tankCol, 28)}</div>`
+    : `<div style="font-size:24px; filter:drop-shadow(0 0 10px ${tankCol}); transform:translate(-50%,-50%);">${isAlly ? '🎖️' : (isEnemy ? '⚔️' : '🪖')}</div>`;
 
   const mIcon = L.divIcon({
     html: iconHtml,
@@ -1060,12 +1079,19 @@ function startMarch(fromId, toId, unitType, isAlly = false) {
     progress: 0,
     line: line,
     marker: marker,
-    isAlly: isAlly
+    isAlly: isAlly,
+    isEnemy: isEnemy
   };
 
   gameState.marches.push(marchObj);
   renderMarchesBar();
-  showToast(`⚡ ${fromCity.name} ➔ ${toCity.name} hedefine ${isAlly ? "Müttefik Tankı" : (unitType === "tank" ? "Zırhlı Tank" : "Piyade")} yola çıktı (2 dk)!`);
+
+  if (isEnemy) {
+    showToast(`🚨 <strong>DÜŞMAN KARŞI TAARRUZU!</strong> [${fromCity.name}] noktasından [${toCity.name}] şehrimize ${unitType === "tank" ? "Zırhlı Tank" : "Piyade"} yola çıktı! Savunmayı hazırlayın!`, "war");
+    addRadioMessage(`🚨 İSTİHBARAT: Düşman [${fromCity.name}] üssünden [${toCity.name}] hedefiyle taarruza geçti!`, "enemy");
+  } else {
+    showToast(`⚡ ${fromCity.name} ➔ ${toCity.name} hedefine ${isAlly ? "Müttefik Tankı" : (unitType === "tank" ? "Zırhlı Tank" : "Piyade")} yola çıktı!`);
+  }
 }
 
 function updateMarches(deltaMs) {
@@ -1098,45 +1124,117 @@ function resolveCityAttack(march) {
   const city = march.toCity;
   sfx.cannon();
 
-  // KÜÇÜK ŞEHİR Mİ BÜYÜK ŞEHİR Mİ?
-  if (city.tier === "small") {
-    // 1 BİRLİKLE ŞEHİR DÜŞER!
+  const isEnemyAttacking = !!march.isEnemy;
+  const attackerUnit = march.unitType;
+
+  if (isEnemyAttacking) {
+    // ==========================================
+    // 1. DÜŞMAN BİZE (veya Müttefikimize) SALDIRIYOR!
+    // ==========================================
+    if (city.tanks > 0) {
+      if (attackerUnit === "tank") {
+        city.tanks--;
+        showToast(`💥 <strong>ZIRHLI ÇARPIŞMASI!</strong> [${city.name}] savunmasında tankçılarımız 1 düşman tankını imha etti! (Kayıp: -1 Tank)`, "war");
+      } else {
+        sfx.victory();
+        showToast(`🛡️ <strong>SAVUNMA BAŞARILI!</strong> [${city.name}] üssümüzdeki tanklar düşman piyadesini ezdi ve püskürttü!`, "victory");
+      }
+    } else if (city.infantry > 0) {
+      if (attackerUnit === "tank") {
+        city.infantry = Math.max(0, city.infantry - 2);
+        showToast(`⚠️ <strong>SAVUNMA YARALANDI!</strong> [${city.name}] Düşman tankı siperlerimize girdi (-2 Piyade)!`, "war");
+      } else {
+        city.infantry--;
+        showToast(`⚔️ <strong>SİPER SAVAŞI!</strong> [${city.name}] Garnizonumuz düşman saldırısını püskürttü (-1 Piyade).`, "war");
+      }
+    } else {
+      // Şehirde hiç savunmacı asker kalmadı! Şehir canı düşer
+      city.health--;
+      if (city.health <= 0) {
+        // ŞEHİR DÜŞMANIN ELİNE GEÇER (DÜŞER)!
+        city.controller = march.fromCity.originalCountry || "ENEMY";
+        city.health = city.maxHealth;
+        city.infantry = 2;
+        city.tanks = 1;
+
+        sfx.siren();
+        showToast(`💀 <strong>ŞEHİR DÜŞTÜ! [${city.name}] DÜŞMAN İŞGALİNE UĞRADI VE KIRMIZI OLDU!</strong>`, "war");
+        addRadioMessage(`🚨 ACI HABER: [${city.name}] şehri düşman ordusu tarafından işgal edildi ve kaybedildi!`, "enemy");
+
+        updateCityMarker(city);
+        renderCityTerritory(city);
+        updateTopBar();
+        saveGameState();
+
+        // Başkent düştü mü veya tüm şehirlerimiz kaybedildi mi?
+        checkPlayerDefeat();
+        return;
+      } else {
+        showToast(`⚠️ <strong>ŞEHİR SURU ÇATLADI!</strong> [${city.name}] savunmasız! 1 düşman taarruzu daha gelirse şehir düşecek!`, "war");
+      }
+    }
+
+    updateCityMarker(city);
+    updateTopBar();
+    saveGameState();
+    return;
+  }
+
+  // ==========================================
+  // 2. OYUNCU (veya Müttefik) DÜŞMANA SALDIRIYOR!
+  // ==========================================
+  if (city.tanks > 0) {
+    if (attackerUnit === "infantry") {
+      showToast(`🛡️ <strong>TAARRUZ PÜSKÜRTÜLDÜ!</strong> [${city.name}] Düşman panzerleri piyademizi biçti! Şehre zırhlı TANK ile taarruz etmelisiniz!`, "war");
+      return;
+    } else {
+      city.tanks--;
+      showToast(`💥 <strong>DÜŞMAN TANKI İMHA EDİLDİ!</strong> [${city.name}] savunmasındaki 1 düşman tankı vuruldu! Kendi tankımız da feda oldu.`, "war");
+      updateCityMarker(city);
+      saveGameState();
+      return;
+    }
+  } else if (city.infantry > 0) {
+    if (attackerUnit === "tank") {
+      city.infantry = Math.max(0, city.infantry - 2);
+      showToast(`🚜 <strong>HATT-I MÜDAFAA YARILDI!</strong> [${city.name}] Tankımız düşman piyadesini ezdi (-2 Düşman)!`, "victory");
+      if (city.infantry > 0) {
+        updateCityMarker(city);
+        saveGameState();
+        return;
+      }
+    } else {
+      city.infantry--;
+      showToast(`⚔️ <strong>ŞİDDETLİ ÇATIŞMA!</strong> [${city.name}] Düşmandan 1 piyade etkisiz hale getirildi.`, "war");
+      if (city.infantry > 0) {
+        updateCityMarker(city);
+        saveGameState();
+        return;
+      }
+    }
+  }
+
+  // Düşman şehrinde asker kalmadı -> ŞEHİR CANI DÜŞER VEYA FETHEDİLİR!
+  city.health--;
+
+  if (city.health <= 0) {
     city.controller = gameState.playerCountryId;
     city.health = city.maxHealth;
-
-    // YENDİĞİMİZ ŞEHİRDEKİ DÜŞMAN BİRLİKLERİ BİZE KATILIR!
-    const capturedInf = Math.max(1, city.infantry || 1);
-    const capturedTanks = Math.max(1, city.tanks || 1);
-    city.infantry = capturedInf + (march.unitType === "infantry" ? 1 : 0);
-    city.tanks = capturedTanks + (march.unitType === "tank" ? 1 : 0);
+    city.infantry = attackerUnit === "infantry" ? 2 : 1;
+    city.tanks = attackerUnit === "tank" ? 1 : 0;
 
     sfx.victory();
-    const heroText = march.isAlly ? "Müttefikimiz ile Ortak Taarruzda" : "Taarruzumuzla";
-    showToast(`🏆 <strong>ZAFER!</strong> [${city.name}] ${heroText} fethedildi ve MAVİ oldu! Şehirdeki <strong>+${capturedInf} Piyade</strong> ve <strong>+${capturedTanks} Tank</strong> teslim olup MAVİ ordumuza katıldı!`, "victory");
+    const heroText = march.isAlly ? "Müttefikimiz ile Ortak Taarruzda" : "Kahraman ordumuzla";
+    showToast(`🏆 <strong>ZAFER!</strong> [${city.name}] ${heroText} fethedildi ve MAVİ oldu!`, "victory");
+    addRadioMessage(`🏆 ZAFER: ${gameState.commanderName}, [${city.name}] şehrini teslim aldı!`, "system");
 
+    checkCountryDefeat(city.originalCountry);
   } else {
-    // BÜYÜK METROPOL: 1 BİRLİK DAHA GEREKİR (Ortak taarruzda her gelen birlik can düşürür!)
-    city.health--;
-
-    if (city.health <= 0) {
-      city.controller = gameState.playerCountryId;
-      city.health = city.maxHealth;
-
-      const capturedInf = Math.max(2, city.infantry || 2);
-      const capturedTanks = Math.max(2, city.tanks || 2);
-      city.infantry = capturedInf + (march.unitType === "infantry" ? 1 : 0);
-      city.tanks = capturedTanks + (march.unitType === "tank" ? 1 : 0);
-
-      sfx.victory();
-      showToast(`🏆 <strong>BÜYÜK METROPOL FETHEDİLDİ!</strong> [${city.name}] çifte taarruz ile tamamen düştü! Düşmanın <strong>+${capturedInf} Piyade</strong> ve <strong>+${capturedTanks} Zırhlı Tankı</strong> MAVİ ordumuza katıldı!`, "victory");
-    } else {
-      showToast(`⚔️ <strong>ŞİDDETLİ ÇARPIŞMA!</strong> [${city.name}] savunması yaralandı! Ele geçirmek için <strong>1 BİRLİK DAHA GEREKİYOR!</strong>`, "war");
-    }
+    showToast(`⚔️ <strong>ŞEHİR SAVUNMASI KIRILDI!</strong> [${city.name}] garnizonu temizlendi! Şehri düşürmek için <strong>1 BİRLİK DAHA</strong> gönderin!`, "war");
   }
 
   updateCityMarker(city);
   updateCountryStyles();
-  checkCountryDefeat(city.originalCountry);
   updateTopBar();
   saveGameState();
 }
@@ -1176,6 +1274,171 @@ function checkCountryDefeat(countryId) {
   }
 }
 
+// ==========================================
+// 8. DÜŞMAN YAPAY ZEKASI (KARŞI SALDIRI & ÜRETİM)
+// ==========================================
+function updateEnemyAI(deltaMs) {
+  if (!gameState.playerCountryId) return;
+  const scaledDelta = deltaMs * gameState.gameSpeed;
+
+  // 1. DÜŞMAN ÜRETİMİ (Her 28 saniyede bir düşman şehirleri güçlenir)
+  if (!gameState.aiProduceTimer) gameState.aiProduceTimer = 0;
+  gameState.aiProduceTimer += scaledDelta;
+
+  if (gameState.aiProduceTimer >= 28000) {
+    gameState.aiProduceTimer = 0;
+    gameState.enemyCountryIds.forEach(iso => {
+      const nation = WORLD_NATIONS[iso];
+      if (nation) {
+        nation.cities.forEach(c => {
+          if (c.controller === iso) {
+            if (Math.random() > 0.35) c.infantry = Math.min(8, (c.infantry || 0) + 1);
+            if (Math.random() > 0.60) c.tanks = Math.min(4, (c.tanks || 0) + 1);
+            updateCityMarker(c);
+          }
+        });
+      }
+    });
+  }
+
+  // 2. DÜŞMAN KARŞI TAARRUZ DÖNGÜSÜ (Her 22-25 saniyede bir saldırır)
+  if (!gameState.aiAttackTimer) gameState.aiAttackTimer = 0;
+  gameState.aiAttackTimer += scaledDelta;
+
+  if (gameState.aiAttackTimer >= 22000) {
+    gameState.aiAttackTimer = 0;
+
+    if (gameState.enemyCountryIds.size > 0) {
+      launchEnemyAIAttack();
+    } else {
+      // Barış döneminde rakip ülkeler sınır ihlali yapabilir
+      checkRivalAggression();
+    }
+  }
+}
+
+function launchEnemyAIAttack() {
+  const activeEnemies = Array.from(gameState.enemyCountryIds);
+  if (activeEnemies.length === 0) return;
+
+  // Rastgele bir düşman ülke seç
+  const enemyIso = activeEnemies[Math.floor(Math.random() * activeEnemies.length)];
+  const enemyNation = WORLD_NATIONS[enemyIso];
+  if (!enemyNation) return;
+
+  // Bu ülkenin askeri olan şehirlerini bul
+  const capableCities = enemyNation.cities.filter(c => (c.controller === enemyIso) && (c.infantry > 0 || c.tanks > 0));
+  if (capableCities.length === 0) return;
+
+  const fromCity = capableCities[Math.floor(Math.random() * capableCities.length)];
+
+  // Hedef olarak en yakın oyuncu şehrini bul
+  let bestTarget = null;
+  let bestDist = Infinity;
+
+  Object.values(WORLD_NATIONS).forEach(nation => {
+    nation.cities.forEach(c => {
+      const isPlayerCity = (c.controller === gameState.playerCountryId || (!c.controller && c.originalCountry === gameState.playerCountryId));
+      if (isPlayerCity) {
+        const d = Math.hypot(c.lat - fromCity.lat, c.lng - fromCity.lng);
+        if (d < bestDist) {
+          bestDist = d;
+          bestTarget = c;
+        }
+      }
+    });
+  });
+
+  if (!bestTarget) return;
+
+  // Düşman tank mı piyade mi gönderecek?
+  const unitType = (fromCity.tanks > 0 && Math.random() > 0.45) ? "tank" : "infantry";
+
+  // Düşman taarruzu yola çıkar!
+  startMarch(fromCity.id, bestTarget.id, unitType, false /* isAlly */, true /* isEnemy */);
+}
+
+function checkRivalAggression() {
+  const availableRivals = ["BGR", "SYR", "IRQ", "IRN", "RUS", "ROU", "DEU"].filter(iso => {
+    return WORLD_NATIONS[iso] && 
+           iso !== gameState.playerCountryId && 
+           !gameState.conqueredCountryIds.has(iso) && 
+           !gameState.alliedCountryIds.has(iso) && 
+           !gameState.enemyCountryIds.has(iso);
+  });
+
+  if (availableRivals.length === 0) return;
+
+  const rivalIso = availableRivals[Math.floor(Math.random() * availableRivals.length)];
+  const rivalNation = WORLD_NATIONS[rivalIso];
+  if (!rivalNation) return;
+
+  declareWar(rivalIso, rivalNation.name);
+  showToast(`🚨 <strong>TEHDİT ARTTI!</strong> ${rivalNation.name} (${rivalNation.flag}) sınırlarımıza askeri yığınak yaparak bize SAVAŞ AÇTI!`, "war");
+  addRadioMessage(`🚨 ACİL BİLDİRİ: ${rivalNation.name} Genelkurmayı ülkemize savaş ilan etti!`, "enemy");
+}
+
+function checkPlayerDefeat() {
+  const playerNation = WORLD_NATIONS[gameState.playerCountryId];
+  if (!playerNation) return;
+
+  const capital = playerNation.cities.find(c => c.tier === "big") || playerNation.cities[0];
+  const capitalLost = capital && capital.controller && (capital.controller !== gameState.playerCountryId);
+
+  let playerCitiesRemaining = 0;
+  Object.values(WORLD_NATIONS).forEach(n => {
+    n.cities.forEach(c => {
+      if (c.controller === gameState.playerCountryId) {
+        playerCitiesRemaining++;
+      }
+    });
+  });
+
+  if (capitalLost || playerCitiesRemaining === 0) {
+    sfx.defeat();
+    const defeatModal = document.getElementById("defeat-modal");
+    if (defeatModal) {
+      const reasonEl = document.getElementById("defeat-reason-text");
+      if (reasonEl) {
+        if (capitalLost) {
+          reasonEl.innerHTML = `🚨 Başkentimiz <strong>[${capital.name}]</strong> düşman kuvvetleri tarafından ele geçirildi ve kaybedildi! Komuta kademesi dağıtıldı.`;
+        } else {
+          reasonEl.innerHTML = `🚨 Bütün şehirlerimiz düşman işgali altına girdi! Elimizde savunacak hiçbir üs kalmadı.`;
+        }
+      }
+      defeatModal.style.display = "flex";
+    }
+  }
+}
+
+function emergencyMobilization() {
+  sfx.victory();
+  const playerNation = WORLD_NATIONS[gameState.playerCountryId];
+  const capital = playerNation.cities.find(c => c.tier === "big") || playerNation.cities[0];
+
+  if (capital) {
+    capital.controller = gameState.playerCountryId;
+    capital.health = capital.maxHealth;
+    capital.infantry = 4;
+    capital.tanks = 2;
+    updateCityMarker(capital);
+  }
+
+  gameState.money += 600;
+  document.getElementById("defeat-modal").style.display = "none";
+  updateCountryStyles();
+  updateTopBar();
+  saveGameState();
+
+  showToast(`🛡️ <strong>ACİL SEFERBERLİK İLAN EDİLDİ!</strong> Başkent [${capital ? capital.name : 'Vatan'}] kurtarıldı! Ordumuza +4 Piyade, +2 Zırhlı Tank ve +600M $ acil yardım ulaştı! Karşı taarruza geçin!`, "victory");
+  addRadioMessage(`🛡️ SEFERBERLİK: Komutan ${gameState.commanderName} başkenti geri aldı ve karşı taarruz emri verdi!`, "system");
+}
+
+function restartNewCampaign() {
+  localStorage.removeItem("frontaris_save_v2");
+  window.location.reload();
+}
+
 function renderMarchesBar() {
   const bar = document.getElementById("active-marches-bar");
   if (gameState.marches.length === 0) {
@@ -1192,15 +1455,18 @@ function renderMarchesBar() {
     const sec = remSec % 60;
     const timeStr = `${min}:${sec < 10 ? '0' : ''}${sec}`;
 
-    const iconCol = m.isAlly ? "#00e676" : "#ff5252";
-    const iconHtml = (m.unitType === "tank") ? getTankSvg(iconCol, 15) : (m.isAlly ? "🎖️" : "🪖");
-    const namePrefix = m.isAlly ? "🤝 Müttefik Tankı" : (m.unitType === "tank" ? "🚜 Tank" : "🪖 Asker");
+    const isEnemy = !!m.isEnemy;
+    const iconCol = m.isAlly ? "#00e676" : (isEnemy ? "#ff1744" : "#00e5ff");
+    const namePrefix = m.isAlly 
+      ? "🤝 Müttefik Tankı" 
+      : (isEnemy ? `🚨 DÜŞMAN TAARRUZU (${m.unitType === 'tank' ? 'Zırhlı Tank' : 'Piyade'})` : (m.unitType === "tank" ? "🚜 Tank" : "🪖 Asker"));
+    const iconHtml = (m.unitType === "tank") ? getTankSvg(iconCol, 15) : (m.isAlly ? "🎖️" : (isEnemy ? "⚔️" : "🪖"));
 
     html += `
-      <div class="march-item" style="border-color:${iconCol};">
+      <div class="march-item ${isEnemy ? 'march-enemy' : ''}" style="border-color:${iconCol}; ${isEnemy ? 'background:rgba(50, 4, 10, 0.95); animation: pulseRedBorder 1s infinite;' : ''}">
         <div class="march-title">
-          <span>${iconHtml} ${namePrefix}: ${m.fromCity.name} ➔ ${m.toCity.name}</span>
-          <span style="color:${iconCol};">${timeStr}</span>
+          <span>${iconHtml} ${namePrefix}: <strong>${m.fromCity.name}</strong> ➔ <strong>${m.toCity.name}</strong></span>
+          <span style="color:${iconCol}; font-weight:bold;">${timeStr}</span>
         </div>
         <div class="march-progress">
           <div class="march-fill" style="width:${Math.round(m.progress * 100)}%; background:${iconCol};"></div>
@@ -1382,6 +1648,7 @@ function gameLoop(now) {
 
   if (gameState.playerCountryId) {
     updateMarches(delta);
+    updateEnemyAI(delta);
     // Düzenli para geliri (her şehir + müttefik ticareti)
     const allyBonus = gameState.alliedCountryIds.size * 3;
     gameState.money += (delta / 1000) * (5 + allyBonus) * gameState.gameSpeed;

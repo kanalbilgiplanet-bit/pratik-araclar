@@ -1186,3 +1186,20 @@ body, html {
   border-left-color: #00e676;
   background: rgba(8, 32, 16, 0.96);
 }
+
+/* YENİLGİ EKRANI & DÜŞMAN TAARRUZU STİLLERİ */
+.defeat-overlay {
+  background: rgba(18, 0, 4, 0.94) !important;
+  backdrop-filter: blur(10px);
+}
+
+.defeat-box {
+  border: 2px solid #ff1744 !important;
+  box-shadow: 0 0 35px rgba(255, 23, 68, 0.6) !important;
+}
+
+@keyframes pulseRedBorder {
+  0% { box-shadow: 0 0 4px #ff1744; }
+  50% { box-shadow: 0 0 16px #ff1744; }
+  100% { box-shadow: 0 0 4px #ff1744; }
+}

@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="style.css?v=16">
+  <link rel="stylesheet" href="style.css?v=17">
 </head>
 <body>
 
@@ -265,6 +265,33 @@
     </div>
 
     <!-- =========================================
+         YENİLGİ / GAME OVER EKRANI (DÜŞMAN KAZANDIĞINDA)
+         ========================================= -->
+    <div id="defeat-modal" class="country-picker-overlay defeat-overlay" style="display: none; z-index: 9999;">
+      <div class="picker-modal defeat-box">
+        <div class="picker-header">
+          <span class="war-icon" style="filter:drop-shadow(0 0 16px #ff1744); font-size:42px;">💀</span>
+          <h2 style="color:#ff1744; text-shadow:0 0 16px #ff1744;">SEFER BAŞARISIZ OLDU!</h2>
+          <p style="color:#cfd8dc;">VATAN TOPRAKLARI DÜŞMAN İŞGALİ ALTINA GİRDİ</p>
+        </div>
+        <div class="defeat-details" style="background:rgba(20,0,5,0.7); border:1px solid #ff1744; border-radius:8px; padding:15px; margin:15px 0; font-size:14px; line-height:1.6;">
+          <p id="defeat-reason-text">🚨 Düşman orduları başkenti ele geçirerek savunma hatlarımızı çökertti. Bütün ordular dağıtıldı.</p>
+          <div style="margin-top:10px; font-weight:700; color:#ff8a80;">
+            Düşman Mareşalleri bu savaşı kazandı!
+          </div>
+        </div>
+        <div class="defeat-actions" style="display:flex; flex-direction:column; gap:10px;">
+          <button class="btn-defeat-retry" onclick="emergencyMobilization()" style="background:#0077ff; border:1px solid #00e5ff; color:#fff; padding:12px; font-family:var(--font-title); font-size:13px; font-weight:900; border-radius:6px; cursor:pointer;">
+            🛡️ ACİL SEFERBERLİK İLAN ET (Kurtarma Desteği ile Devam)
+          </button>
+          <button class="btn-defeat-new" onclick="restartNewCampaign()" style="background:#263238; border:1px solid #546e7a; color:#cfd8dc; padding:10px; font-family:var(--font-title); font-size:12px; border-radius:6px; cursor:pointer;">
+            🔄 Sıfırdan Yeni Sefer Başlat
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- =========================================
          CANLI ASKERİ TELSİZ & KOMUTANLAR ODASI (DRAWER)
          ========================================= -->
     <div id="radio-drawer" class="radio-panel" style="display: none;">
@@ -319,8 +346,8 @@
   <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <!-- Gerçek Dünya Sınırları & Online İttifak Motoru -->
-  <script src="world-geojson.js?v=16"></script>
-  <script src="world-data.js?v=16"></script>
-  <script src="game.js?v=16"></script>
+  <script src="world-geojson.js?v=17"></script>
+  <script src="world-data.js?v=17"></script>
+  <script src="game.js?v=17"></script>
 </body>
 </html>
