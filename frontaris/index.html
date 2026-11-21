@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="style.css?v=20">
+  <link rel="stylesheet" href="style.css?v=21">
 </head>
 <body>
 
@@ -96,6 +96,11 @@
       </div>
 
       <div class="top-actions">
+        <!-- ONLİNE BUTONU (Canlı Yeşil Rozetli) -->
+        <button id="btn-toggle-online" class="btn-online" onclick="toggleRadioPanel()" title="Online Lobi & Komutanlar Karargâhı">
+          <span class="online-dot"></span> ONLİNE
+        </button>
+
         <!-- Zorluk Seçici (KOLAY / DENGELİ / ZOR) -->
         <button id="btn-difficulty" class="diff-btn diff-normal" onclick="cycleDifficulty()" title="Zorluk Seviyesi (Kolay / Dengeli / Zor)">
           ⚔️ DENGELİ
@@ -107,11 +112,6 @@
           <button class="spd-btn" data-spd="5">5x</button>
           <button class="spd-btn" data-spd="20">20x</button>
         </div>
-
-        <!-- Telsiz & Sohbet Butonu -->
-        <button id="btn-toggle-radio" class="btn-radio-toggle" onclick="toggleRadioPanel()">
-          📻 TELSİZ
-        </button>
       </div>
     </header>
 
@@ -297,13 +297,13 @@
     </div>
 
     <!-- =========================================
-         CANLI ASKERİ TELSİZ & KOMUTANLAR ODASI (DRAWER)
+         CANLI ONLINE KARARGÂH, ODA & SOHBET (DRAWER)
          ========================================= -->
     <div id="radio-drawer" class="radio-panel" style="display: none;">
       <div class="radio-header">
         <div class="radio-title">
-          <span>📻 GENEL KARARGÂH TELSİZİ</span>
-          <span class="live-pulse">CANLI LOBİ</span>
+          <span>🌐 ONLİNE KARARGÂH</span>
+          <span class="live-pulse">🟢 CANLI ODA</span>
         </div>
         <button class="sheet-close" onclick="toggleRadioPanel()">✕</button>
       </div>
@@ -314,7 +314,14 @@
           <span class="lbl">ONLINE ODA KODU:</span>
           <div class="code-row">
             <strong id="room-code-display">FRNT-1944</strong>
-            <button class="btn-copy-link" onclick="copyGameInvite()">🔗 Linki Kopyala</button>
+            <button class="btn-copy-link" onclick="copyGameInvite()">🔗 Davet Linkini Kopyala</button>
+          </div>
+          <div class="join-room-row" style="margin-top: 10px; display: flex; gap: 6px;">
+            <input type="text" id="input-join-room" placeholder="Oda Kodu Gir (Örn: FRNT-1234)" style="flex:1; background:#07121e; border:1px solid #1c4370; color:#fff; border-radius:4px; padding:6px 8px; font-size:12px; outline:none;" />
+            <button onclick="joinRoomByCode()" style="background:#0077ff; border:none; color:#fff; border-radius:4px; padding:6px 12px; font-size:12px; font-weight:bold; cursor:pointer;">Katıl</button>
+          </div>
+          <div class="online-hint-box" style="margin-top: 10px; font-size: 11px; color: #90caf9; background: rgba(0, 119, 255, 0.1); border-left: 3px solid #00e5ff; padding: 6px 10px; border-radius: 4px;">
+            💡 <strong>Nasıl Oynanır?</strong> Davet linkini arkadaşına gönder. Arkadaşın aynı odaya girip başka bir ülke seçtiğinde haritada canlı müttefik paktı kurabilir ve aynı düşmanlara ortak taarruz başlatabilirsiniz!
           </div>
         </div>
 
@@ -351,8 +358,8 @@
   <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <!-- Gerçek Dünya Sınırları & Online İttifak Motoru -->
-  <script src="world-geojson.js?v=20"></script>
-  <script src="world-data.js?v=20"></script>
-  <script src="game.js?v=20"></script>
+  <script src="world-geojson.js?v=21"></script>
+  <script src="world-data.js?v=21"></script>
+  <script src="game.js?v=21"></script>
 </body>
 </html>

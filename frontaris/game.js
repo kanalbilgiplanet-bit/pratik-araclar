@@ -302,6 +302,7 @@ function resumeSavedGame() {
   updateCostLabels();
   updateTopBar();
   renderOnlineCommanders();
+  initRoomBroadcast();
   showToast(`🎖️ Tekrar hoş geldiniz, Komutan ${gameState.commanderName}! Sefer kaldığı yerden devam ediyor.`, "victory");
 }
 
@@ -365,6 +366,7 @@ function selectCountryAndStart(countryId) {
   updateCostLabels();
   updateTopBar();
   renderOnlineCommanders();
+  initRoomBroadcast();
   saveGameState();
 
   showToast(`🎖️ Komutan ${gameState.commanderName}! ${nation.name} (${nation.flag}) yönetiminize geçti. Vatan toprakları MAVİ olarak parlıyor!`, "victory");
@@ -1581,6 +1583,54 @@ function addRadioMessage(text, type = "normal", author = null) {
   box.scrollTop = box.scrollHeight;
 }
 
+let roomBroadcast = null;
+function initRoomBroadcast() {
+  try {
+    if (window.BroadcastChannel) {
+      if (roomBroadcast) roomBroadcast.close();
+      roomBroadcast = new BroadcastChannel(`frontaris_room_${gameState.roomCode}`);
+      roomBroadcast.onmessage = (event) => {
+        const data = event.data;
+        if (!data) return;
+        if (data.type === "chat") {
+          addRadioMessage(data.text, data.role || "normal", `🎖️ ${data.author}:`);
+          sfx.radioBeep();
+        } else if (data.type === "presence") {
+          showToast(`👋 Komutan <strong>${data.commanderName}</strong> (${data.nation}) odaya bağlandı!`, "victory");
+          renderOnlineCommanders();
+        }
+      };
+      roomBroadcast.postMessage({
+        type: "presence",
+        commanderName: gameState.commanderName,
+        nation: gameState.playerCountryId || "TR"
+      });
+    }
+  } catch (e) {
+    console.warn("BroadcastChannel error:", e);
+  }
+}
+
+function joinRoomByCode() {
+  const input = document.getElementById("input-join-room");
+  if (!input) return;
+  let code = input.value.trim().toUpperCase();
+  if (!code) return;
+  if (!code.startsWith("FRNT-")) code = "FRNT-" + code;
+
+  sfx.victory();
+  gameState.roomCode = code;
+  document.getElementById("room-code-display").innerText = gameState.roomCode;
+  
+  const newUrl = window.location.origin + window.location.pathname + `?room=${gameState.roomCode}`;
+  window.history.replaceState({ path: newUrl }, '', newUrl);
+
+  initRoomBroadcast();
+  showToast(`🌐 <strong>[${gameState.roomCode}] ODASINA BAĞLANILDI!</strong> Davet linkini arkadaşına gönderebilirsin!`, "victory");
+  addRadioMessage(`🌐 ODA DEĞİŞTİRİLDİ: Komutan ${gameState.commanderName}, [${gameState.roomCode}] odasına geçiş yaptı.`, "system");
+  saveGameState();
+}
+
 function sendRadioMessage() {
   const input = document.getElementById("radio-chat-input");
   const txt = input.value.trim();
@@ -1589,6 +1639,17 @@ function sendRadioMessage() {
   sfx.radioBeep();
   addRadioMessage(txt, "normal", `🎖️ ${gameState.commanderName}:`);
   input.value = "";
+
+  if (roomBroadcast) {
+    try {
+      roomBroadcast.postMessage({
+        type: "chat",
+        author: gameState.commanderName,
+        text: txt,
+        role: "normal"
+      });
+    } catch (e) {}
+  }
 
   // Otomatik Müttefik / Telsiz Cevabı
   setTimeout(() => {
