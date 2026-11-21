@@ -7,6 +7,7 @@ let cityMarkers = {};
 const gameState = {
   playerCountryId: null,
   enemyCountryIds: new Set(),
+  conqueredCountryIds: new Set(), // Fethedilmiş ve kalıcı MAVİ olan ülkeler
   money: 1500,
   gameSpeed: 1,
   
@@ -183,8 +184,8 @@ function initMap(playerNation) {
 }
 
 function getPolygonStyle(cId) {
-  // Seçilen Vatan Ülkesi -> TAM MAVİ
-  if (cId === gameState.playerCountryId) {
+  // Seçilen Vatan Ülkesi veya FETHEDİLMİŞ ÜLKE -> TAM MAVİ
+  if (cId === gameState.playerCountryId || gameState.conqueredCountryIds.has(cId)) {
     return {
       fillColor: "#0077ff",
       fillOpacity: 0.55,
@@ -201,6 +202,8 @@ function getPolygonStyle(cId) {
 
     // Bütün şehirleri ele geçirildiyse -> TAM MAVİ
     if (capturedCities === totalCities) {
+      gameState.conqueredCountryIds.add(cId);
+      gameState.enemyCountryIds.delete(cId);
       return {
         fillColor: "#0077ff",
         fillOpacity: 0.55,
@@ -439,9 +442,9 @@ function handleCountryClick(countryId, fallbackName) {
   sfx.click();
   const nation = ensureNationData(countryId, fallbackName);
 
-  // Kendi ülkemize tıklayınca
-  if (countryId === gameState.playerCountryId) {
-    showToast(`🔵 ${nation.name} vatan toprağınızdır. Birlikleriniz için mavi şehirlere dokunun.`);
+  // Kendi ülkemize veya FETHEDİLMİŞ toprağa dokununca (ASLA KIRMIZI OLMAZ!)
+  if (countryId === gameState.playerCountryId || gameState.conqueredCountryIds.has(countryId)) {
+    showToast(`🔵 ${nation.name} fethedilmiş vatan toprağınızdır (MAVİ). Şehirlerinizi yönetmek için mavi şehirlere dokunun.`);
     return;
   }
   // Zaten savaşta mıyız?
@@ -455,6 +458,9 @@ function handleCountryClick(countryId, fallbackName) {
 }
 
 function openCountryWarCard(countryId, fallbackName) {
+  if (countryId === gameState.playerCountryId || gameState.conqueredCountryIds.has(countryId)) {
+    return; // Fethedilen ülkeye asla savaş açma kartı çıkmaz!
+  }
   const nation = ensureNationData(countryId, fallbackName);
   gameState.pendingTargetCountryId = countryId;
 
