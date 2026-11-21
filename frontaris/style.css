@@ -91,18 +91,70 @@ body, html {
 }
 
 .blocker-content .sub-alert {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 700;
   color: #00e5ff;
   background: rgba(0, 229, 255, 0.1);
   padding: 10px 14px;
   border-radius: 8px;
   border: 1px dashed #00e5ff;
+  margin-bottom: 16px;
+}
+
+.blocker-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.btn-rotate-action {
+  background: linear-gradient(135deg, #0088ff 0%, #0055b3 100%);
+  border: 1px solid #00e5ff;
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  letter-spacing: 1px;
+  box-shadow: 0 0 15px rgba(0, 136, 255, 0.4);
+  transition: all 0.2s;
+}
+
+.btn-rotate-action:hover {
+  background: linear-gradient(135deg, #00b0ff 0%, #0070e0 100%);
+  transform: translateY(-2px);
+}
+
+.btn-continue-portrait {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid #455a64;
+  color: #cfd8dc;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-continue-portrait:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  border-color: #90a4ae;
+}
+
+/* Engeli kaldır sınıfı */
+.portrait-overlay.dismissed {
+  display: none !important;
 }
 
 /* Dikey ekran algılama (CSS media query) */
 @media screen and (orientation: portrait), (max-aspect-ratio: 1/1) {
-  .portrait-overlay {
+  .portrait-overlay:not(.dismissed) {
     display: flex !important;
   }
 }
