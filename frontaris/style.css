@@ -233,9 +233,47 @@ body, html {
 .top-actions {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   flex-shrink: 0;
   margin-right: 8px;
+}
+
+/* ZORLUK SEÇİCİ BUTONU */
+.diff-btn {
+  font-family: var(--font-title);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  border: 1.5px solid #00e5ff;
+  background: rgba(0, 229, 255, 0.15);
+  color: #00e5ff;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.25);
+}
+.diff-btn:hover {
+  transform: scale(1.04);
+}
+.diff-btn.diff-easy {
+  border-color: #00e676;
+  background: rgba(0, 230, 118, 0.18);
+  color: #00e676;
+  box-shadow: 0 0 10px rgba(0, 230, 118, 0.3);
+}
+.diff-btn.diff-normal {
+  border-color: #00e5ff;
+  background: rgba(0, 229, 255, 0.18);
+  color: #00e5ff;
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+}
+.diff-btn.diff-hard {
+  border-color: #ff1744;
+  background: rgba(255, 23, 68, 0.18);
+  color: #ff1744;
+  box-shadow: 0 0 10px rgba(255, 23, 68, 0.3);
 }
 
 /* HIZ KUTUSU (HER ZAMAN GÖRÜNÜR, PARLAK VE SABİT) */
