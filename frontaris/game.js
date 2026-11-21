@@ -305,13 +305,33 @@ function renderCities() {
   });
 }
 
+// TANK LOGOSU VE SVG ÇİZİCİ
+function getTankSvg(color = "#00e5ff", size = 20) {
+  return `<svg class="tank-svg" viewBox="0 0 32 32" width="${size}" height="${size}" style="vertical-align:middle; display:inline-block;">
+    <rect x="18" y="7" width="13" height="3" rx="1" fill="${color}" />
+    <path d="M10 6 H19 L21 12 H8 Z" fill="${color}" />
+    <path d="M4 12 H27 L25 18 H2 Z" fill="${color}" opacity="0.85" />
+    <rect x="1" y="17" width="27" height="8" rx="4" fill="#0d1b2a" stroke="${color}" stroke-width="1.2" />
+    <circle cx="5" cy="21" r="2" fill="${color}" />
+    <circle cx="10" cy="21" r="2" fill="${color}" />
+    <circle cx="15" cy="21" r="2" fill="${color}" />
+    <circle cx="20" cy="21" r="2" fill="${color}" />
+  </svg>`;
+}
+
 function createCityMarker(city) {
   const isMine = (getCityOwner(city) === gameState.playerCountryId);
   const isEnemy = gameState.enemyCountryIds.has(getCityOwner(city));
 
   let colorClass = "gray";
-  if (isMine) colorClass = "blue";
-  else if (isEnemy) colorClass = "red";
+  let tankColor = "#90a4ae";
+  if (isMine) {
+    colorClass = "blue";
+    tankColor = "#00e5ff";
+  } else if (isEnemy) {
+    colorClass = "red";
+    tankColor = "#ff5252";
+  }
 
   const symbol = city.tier === "big" ? "🏛️" : "📍";
 
@@ -319,14 +339,17 @@ function createCityMarker(city) {
     <div class="simple-city-pin">
       <div class="pin-circle ${colorClass}">${symbol}</div>
       <div class="pin-name">${city.name}</div>
+      <div style="font-size:9px; background:rgba(0,0,0,0.7); padding:0 3px; border-radius:3px; margin-top:1px; white-space:nowrap;">
+        🪖${city.infantry} ${getTankSvg(tankColor, 12)}${city.tanks}
+      </div>
     </div>
   `;
 
   const icon = L.divIcon({
     html: html,
     className: 'leaflet-city-div',
-    iconSize: [50, 44],
-    iconAnchor: [25, 22]
+    iconSize: [54, 52],
+    iconAnchor: [27, 26]
   });
 
   const marker = L.marker([city.lat, city.lng], { icon: icon });
@@ -559,9 +582,12 @@ function startMarch(fromId, toId, unitType) {
     dashArray: '5, 8'
   }).addTo(map);
 
-  const iconSym = unitType === "tank" ? "🚜" : "🪖";
+  const iconHtml = (unitType === "tank")
+    ? `<div style="transform:translate(-50%,-50%); filter:drop-shadow(0 0 8px #ff1744);">${getTankSvg('#ff1744', 28)}</div>`
+    : `<div style="font-size:24px; filter:drop-shadow(0 0 8px #ff1744); transform:translate(-50%,-50%);">🪖</div>`;
+
   const mIcon = L.divIcon({
-    html: `<div style="font-size:22px; filter:drop-shadow(0 0 6px #ff1744); transform:translate(-50%,-50%);">${iconSym}</div>`,
+    html: iconHtml,
     className: 'moving-unit'
   });
   const marker = L.marker([fromCity.lat, fromCity.lng], { icon: mIcon }).addTo(map);
@@ -580,7 +606,7 @@ function startMarch(fromId, toId, unitType) {
 
   gameState.marches.push(marchObj);
   renderMarchesBar();
-  showToast(`⚡ ${fromCity.name} ➔ ${toCity.name} hedefine ${unitType === "tank" ? "Tank" : "Piyade"} yola çıktı (2 dk)!`);
+  showToast(`⚡ ${fromCity.name} ➔ ${toCity.name} hedefine ${unitType === "tank" ? "Zırhlı Tank" : "Piyade"} yola çıktı (2 dk)!`);
 }
 
 function updateMarches(deltaMs) {
@@ -619,11 +645,15 @@ function resolveCityAttack(march) {
     // 1 BİRLİKLE ŞEHİR DOĞRUDAN DÜŞER!
     city.controller = gameState.playerCountryId;
     city.health = city.maxHealth;
-    if (march.unitType === "infantry") city.infantry++;
-    else city.tanks++;
+
+    // YENDİĞİMİZ ŞEHİRDEKİ DÜŞMAN BİRLİKLERİ BİZE KATILIR!
+    const capturedInf = Math.max(1, city.infantry || 1);
+    const capturedTanks = Math.max(1, city.tanks || 1);
+    city.infantry = capturedInf + (march.unitType === "infantry" ? 1 : 0);
+    city.tanks = capturedTanks + (march.unitType === "tank" ? 1 : 0);
 
     sfx.victory();
-    showToast(`🏆 <strong>ZAFER!</strong> [${city.name}] küçük şehri ele geçirildi ve MAVİ oldu!`, "victory");
+    showToast(`🏆 <strong>ZAFER!</strong> [${city.name}] fethedildi! Şehirdeki <strong>+${capturedInf} Piyade</strong> ve <strong>+${capturedTanks} Tank</strong> teslim olup MAVİ ordumuza katıldı!`, "victory");
 
   } else {
     // BÜYÜK ŞEHİR: 1 BİRLİK DAHA GEREKİR!
@@ -633,11 +663,15 @@ function resolveCityAttack(march) {
       // 2. birlik de vurdu ve şehir düştü!
       city.controller = gameState.playerCountryId;
       city.health = city.maxHealth;
-      if (march.unitType === "infantry") city.infantry++;
-      else city.tanks++;
+
+      // YENDİĞİMİZ METROPOLDEKİ DÜŞMAN BİRLİKLERİ BİZE KATILIR!
+      const capturedInf = Math.max(2, city.infantry || 2);
+      const capturedTanks = Math.max(2, city.tanks || 2);
+      city.infantry = capturedInf + (march.unitType === "infantry" ? 1 : 0);
+      city.tanks = capturedTanks + (march.unitType === "tank" ? 1 : 0);
 
       sfx.victory();
-      showToast(`🏆 <strong>BÜYÜK FETİH!</strong> [${city.name}] metropolü 2. birliğin taarruzuyla tamamen düştü ve MAVİ oldu!`, "victory");
+      showToast(`🏆 <strong>BÜYÜK METROPOL FETHEDİLDİ!</strong> [${city.name}] teslim oldu! Düşmanın <strong>+${capturedInf} Piyade</strong> ve <strong>+${capturedTanks} Zırhlı Tankı</strong> MAVİ ordumuza katıldı!`, "victory");
 
     } else {
       // 1 birlik daha gerekiyor uyarısı!
@@ -657,7 +691,19 @@ function checkCountryDefeat(countryId) {
   const allCaptured = nation.cities.every(c => c.controller === gameState.playerCountryId);
   if (allCaptured) {
     sfx.victory();
-    showToast(`👑 <strong>TARİHİ ZAFER!</strong> ${nation.name} tamamen teslim oldu! Toprakları MAVİ vatanımıza katıldı!`, "victory");
+
+    // ÜLKENİN TÜM MERKEZİ ORDU CEPHANESİ VE BİRLİKLERİ BİZE KATILIR!
+    const bonusInf = 4;
+    const bonusTanks = 3;
+    const capital = nation.cities[0] || null;
+    if (capital) {
+      capital.infantry += bonusInf;
+      capital.tanks += bonusTanks;
+      updateCityMarker(capital);
+    }
+
+    showToast(`👑 <strong>TARİHİ ZAFER!</strong> ${nation.name} tamamen teslim oldu! Düşman ordusunun tüm cephaneliği (<strong>+${bonusInf} Piyade</strong>, <strong>+${bonusTanks} Zırhlı Tank</strong>) MAVİ ordumuza katıldı!`, "victory");
+
     if (countryLayers[countryId]) {
       countryLayers[countryId].setStyle({
         fillColor: "#0077ff",
@@ -686,10 +732,12 @@ function renderMarchesBar() {
     const sec = remSec % 60;
     const timeStr = `${min}:${sec < 10 ? '0' : ''}${sec}`;
 
+    const iconHtml = (m.unitType === "tank") ? getTankSvg("#ff5252", 15) : "🪖";
+
     html += `
       <div class="march-item">
         <div class="march-title">
-          <span>${m.unitType === "tank" ? "🚜 Tank" : "🪖 Asker"}: ${m.fromCity.name} ➔ ${m.toCity.name}</span>
+          <span>${iconHtml} ${m.unitType === "tank" ? "Tank" : "Asker"}: ${m.fromCity.name} ➔ ${m.toCity.name}</span>
           <span style="color:#ff5252;">${timeStr}</span>
         </div>
         <div class="march-progress">
