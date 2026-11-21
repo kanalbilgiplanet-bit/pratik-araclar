@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="style.css?v=15">
+  <link rel="stylesheet" href="style.css?v=16">
 </head>
 <body>
 
@@ -96,17 +96,17 @@
       </div>
 
       <div class="top-actions">
-        <!-- Telsiz & Sohbet Butonu -->
-        <button id="btn-toggle-radio" class="btn-radio-toggle" onclick="toggleRadioPanel()">
-          📻 TELSİZ & ODA
-        </button>
-
-        <!-- Hız Kontrolleri -->
-        <div class="speed-box">
+        <!-- Hız Kontrolleri (Öncelikli & Daima Görünür) -->
+        <div class="speed-box" id="hud-speed-box">
           <button class="spd-btn active" data-spd="1">1x</button>
           <button class="spd-btn" data-spd="5">5x</button>
           <button class="spd-btn" data-spd="20">20x</button>
         </div>
+
+        <!-- Telsiz & Sohbet Butonu -->
+        <button id="btn-toggle-radio" class="btn-radio-toggle" onclick="toggleRadioPanel()">
+          📻 TELSİZ
+        </button>
       </div>
     </header>
 
@@ -319,8 +319,8 @@
   <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <!-- Gerçek Dünya Sınırları & Online İttifak Motoru -->
-  <script src="world-geojson.js?v=15"></script>
-  <script src="world-data.js?v=15"></script>
-  <script src="game.js?v=15"></script>
+  <script src="world-geojson.js?v=16"></script>
+  <script src="world-data.js?v=16"></script>
+  <script src="game.js?v=16"></script>
 </body>
 </html>

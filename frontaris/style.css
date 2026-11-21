@@ -158,33 +158,40 @@ body, html {
 /* ÜST KOMUTA BARI */
 #simple-top-bar {
   height: 52px;
-  background: rgba(7, 14, 24, 0.96);
+  background: rgba(7, 14, 24, 0.98);
   border-bottom: 2px solid #18314e;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 48px 0 24px;
+  padding: 0 16px;
+  gap: 12px;
   z-index: 1000;
-}
-
-.top-actions {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-right: 36px;
+  width: 100%;
 }
 
 .top-left {
   display: flex;
   align-items: center;
   gap: 8px;
+  flex-shrink: 0;
 }
 
 #player-flag-pill {
   font-family: var(--font-title);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 900;
   color: #fff;
+  white-space: nowrap;
+}
+
+.commander-tag {
+  font-size: 11px;
+  color: #90caf9;
+  background: rgba(0, 119, 255, 0.15);
+  border: 1px solid #1e3a5f;
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
 }
 
 .side-badge {
@@ -203,16 +210,19 @@ body, html {
 .top-stats {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
+  flex-shrink: 1;
+  overflow: hidden;
 }
 
 .stat-pill {
-  font-size: 13px;
+  font-size: 12px;
   color: #cfd8dc;
-  background: rgba(0,0,0,0.4);
+  background: rgba(0,0,0,0.5);
   padding: 3px 8px;
   border-radius: 6px;
   border: 1px solid #1b3856;
+  white-space: nowrap;
 }
 
 .stat-pill strong {
@@ -220,27 +230,47 @@ body, html {
   color: #00e5ff;
 }
 
-.speed-box {
+.top-actions {
   display: flex;
-  background: #091524;
-  border: 1px solid #1c3e66;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  margin-right: 8px;
+}
+
+/* HIZ KUTUSU (HER ZAMAN GÖRÜNÜR, PARLAK VE SABİT) */
+.speed-box {
+  display: flex !important;
+  flex-shrink: 0 !important;
+  background: #081321;
+  border: 1.5px solid #00bcd4;
   border-radius: 6px;
   overflow: hidden;
+  box-shadow: 0 0 12px rgba(0, 188, 212, 0.35);
 }
 
 .spd-btn {
   background: transparent;
   border: none;
-  color: #78909c;
+  color: #90caf9;
   font-family: var(--font-title);
   font-size: 11px;
-  padding: 4px 8px;
+  font-weight: 700;
+  padding: 5px 12px;
   cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.spd-btn:hover {
+  background: rgba(0, 229, 255, 0.2);
+  color: #fff;
 }
 
 .spd-btn.active {
-  background: var(--blue-vatan);
-  color: #fff;
+  background: #0077ff !important;
+  color: #fff !important;
+  font-weight: 900;
+  box-shadow: 0 0 10px #00e5ff;
 }
 
 /* =========================================
@@ -1103,6 +1133,30 @@ body, html {
   padding: 0 12px;
   border-radius: 6px;
   cursor: pointer;
+}
+
+@media (max-width: 900px) {
+  #simple-top-bar {
+    padding: 0 8px;
+    gap: 6px;
+  }
+  .stat-pill {
+    font-size: 11px;
+    padding: 2px 5px;
+  }
+  .stat-pill.text-green {
+    display: none;
+  }
+}
+
+@media (max-width: 650px) {
+  .commander-tag {
+    display: none;
+  }
+  .btn-radio-toggle {
+    padding: 4px 6px;
+    font-size: 10px;
+  }
 }
 
 @media (max-width: 600px) {
