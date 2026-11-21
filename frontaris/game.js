@@ -183,7 +183,7 @@ function initMap(playerNation) {
 }
 
 function getPolygonStyle(cId) {
-  // Seçilen Ülke -> MAVİ
+  // Seçilen Vatan Ülkesi -> TAM MAVİ
   if (cId === gameState.playerCountryId) {
     return {
       fillColor: "#0077ff",
@@ -192,7 +192,36 @@ function getPolygonStyle(cId) {
       weight: 3
     };
   }
-  // Savaş Açılmış Düşman -> KIRMIZI
+
+  // Ülkenin şehirlerinin ele geçirilme durumunu kontrol et
+  const nation = WORLD_NATIONS[cId];
+  if (nation && nation.cities && nation.cities.length > 0) {
+    const totalCities = nation.cities.length;
+    const capturedCities = nation.cities.filter(c => c.controller === gameState.playerCountryId).length;
+
+    // Bütün şehirleri ele geçirildiyse -> TAM MAVİ
+    if (capturedCities === totalCities) {
+      return {
+        fillColor: "#0077ff",
+        fillOpacity: 0.55,
+        color: "#00e5ff",
+        weight: 3
+      };
+    }
+
+    // Şehirlerinden en az biri (örn. Selanik) ele geçirildiyse -> HÂKİMİYET MAVİSİ
+    if (capturedCities > 0) {
+      return {
+        fillColor: "#0055cc",
+        fillOpacity: 0.45,
+        color: "#00e5ff",
+        weight: 2.5,
+        dashArray: "5, 5"
+      };
+    }
+  }
+
+  // Savaş Açılmış Düşman (Henüz hiçbir şehri alınmadıysa) -> KIRMIZI
   if (gameState.enemyCountryIds.has(cId)) {
     return {
       fillColor: "#d50000",
@@ -201,6 +230,7 @@ function getPolygonStyle(cId) {
       weight: 3
     };
   }
+
   // Tarafsız -> Koyu Gri
   return {
     fillColor: "#1e293b",
@@ -289,15 +319,45 @@ function getCityOwner(city) {
   return city.controller || city.originalCountry;
 }
 
+let cityTerritoryCircles = {};
+
+function renderCityTerritory(city) {
+  if (cityTerritoryCircles[city.id]) {
+    map.removeLayer(cityTerritoryCircles[city.id]);
+  }
+
+  const isMine = (getCityOwner(city) === gameState.playerCountryId);
+  const isEnemy = gameState.enemyCountryIds.has(getCityOwner(city));
+
+  const fillColor = isMine ? "#0077ff" : isEnemy ? "#d50000" : "#334155";
+  const strokeColor = isMine ? "#00e5ff" : isEnemy ? "#ff1744" : "#64748b";
+  const opacity = isMine ? 0.40 : isEnemy ? 0.30 : 0.15;
+
+  const circle = L.circle([city.lat, city.lng], {
+    radius: city.tier === "big" ? 75000 : 55000,
+    fillColor: fillColor,
+    fillOpacity: opacity,
+    color: strokeColor,
+    weight: isMine ? 2.5 : 1.5,
+    dashArray: isMine ? "" : "4, 4",
+    interactive: false
+  }).addTo(map);
+
+  cityTerritoryCircles[city.id] = circle;
+}
+
 function renderCities() {
   Object.values(cityMarkers).forEach(m => map.removeLayer(m));
+  Object.values(cityTerritoryCircles).forEach(c => map.removeLayer(c));
   cityMarkers = {};
+  cityTerritoryCircles = {};
 
   Object.values(WORLD_NATIONS).forEach(nation => {
     nation.cities.forEach(city => {
       if (!city.originalCountry) city.originalCountry = nation.id;
       if (!city.controller) city.controller = nation.id;
 
+      renderCityTerritory(city);
       const marker = createCityMarker(city);
       marker.addTo(map);
       cityMarkers[city.id] = marker;
@@ -334,12 +394,13 @@ function createCityMarker(city) {
   }
 
   const symbol = city.tier === "big" ? "🏛️" : "📍";
+  const labelText = isMine ? `★ ${city.name} (MAVİ)` : city.name;
 
   const html = `
     <div class="simple-city-pin">
       <div class="pin-circle ${colorClass}">${symbol}</div>
-      <div class="pin-name">${city.name}</div>
-      <div style="font-size:9px; background:rgba(0,0,0,0.7); padding:0 3px; border-radius:3px; margin-top:1px; white-space:nowrap;">
+      <div class="pin-name ${colorClass}">${labelText}</div>
+      <div style="font-size:9px; background:rgba(0,0,0,0.85); padding:1px 4px; border-radius:3px; margin-top:1px; white-space:nowrap; border: 1px solid ${isMine ? '#00e5ff' : isEnemy ? '#ff5252' : '#475569'};">
         🪖${city.infantry} ${getTankSvg(tankColor, 12)}${city.tanks}
       </div>
     </div>
@@ -348,8 +409,8 @@ function createCityMarker(city) {
   const icon = L.divIcon({
     html: html,
     className: 'leaflet-city-div',
-    iconSize: [54, 52],
-    iconAnchor: [27, 26]
+    iconSize: [60, 56],
+    iconAnchor: [30, 28]
   });
 
   const marker = L.marker([city.lat, city.lng], { icon: icon });
@@ -366,6 +427,9 @@ function updateCityMarker(city) {
   const newMarker = createCityMarker(city);
   newMarker.addTo(map);
   cityMarkers[city.id] = newMarker;
+
+  // Bölge hâkimiyet çemberini de MAVİ yap
+  renderCityTerritory(city);
 }
 
 // ==========================================
@@ -680,6 +744,7 @@ function resolveCityAttack(march) {
   }
 
   updateCityMarker(city);
+  updateCountryStyles();
   checkCountryDefeat(city.originalCountry);
   updateTopBar();
 }
@@ -689,30 +754,30 @@ function checkCountryDefeat(countryId) {
   if (!nation) return;
 
   const allCaptured = nation.cities.every(c => c.controller === gameState.playerCountryId);
-  if (allCaptured) {
+  const capital = nation.cities.find(c => c.tier === "big") || nation.cities[0];
+  const capitalCaptured = capital && (capital.controller === gameState.playerCountryId);
+
+  if (allCaptured || capitalCaptured) {
     sfx.victory();
 
-    // ÜLKENİN TÜM MERKEZİ ORDU CEPHANESİ VE BİRLİKLERİ BİZE KATILIR!
+    // Ülkenin kalan tüm şehirleri de teslim olur ve MAVİ olur!
+    nation.cities.forEach(c => {
+      c.controller = gameState.playerCountryId;
+      updateCityMarker(c);
+    });
+
     const bonusInf = 4;
     const bonusTanks = 3;
-    const capital = nation.cities[0] || null;
     if (capital) {
       capital.infantry += bonusInf;
       capital.tanks += bonusTanks;
       updateCityMarker(capital);
     }
 
-    showToast(`👑 <strong>TARİHİ ZAFER!</strong> ${nation.name} tamamen teslim oldu! Düşman ordusunun tüm cephaneliği (<strong>+${bonusInf} Piyade</strong>, <strong>+${bonusTanks} Zırhlı Tank</strong>) MAVİ ordumuza katıldı!`, "victory");
+    showToast(`👑 <strong>TARİHİ ZAFER!</strong> ${nation.name} tamamen teslim oldu! Tüm toprakları MAVİ vatanımıza katıldı! (+${bonusInf} Piyade, +${bonusTanks} Tank)`, "victory");
 
-    if (countryLayers[countryId]) {
-      countryLayers[countryId].setStyle({
-        fillColor: "#0077ff",
-        fillOpacity: 0.55,
-        color: "#00e5ff",
-        weight: 3
-      });
-    }
     gameState.enemyCountryIds.delete(countryId);
+    updateCountryStyles();
   }
 }
 
