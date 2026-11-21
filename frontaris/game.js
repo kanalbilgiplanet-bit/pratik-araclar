@@ -1516,40 +1516,10 @@ function restartNewCampaign() {
 
 function renderMarchesBar() {
   const bar = document.getElementById("active-marches-bar");
-  if (gameState.marches.length === 0) {
+  if (bar) {
     bar.style.display = "none";
     bar.innerHTML = "";
-    return;
   }
-
-  bar.style.display = "flex";
-  let html = "";
-  gameState.marches.forEach(m => {
-    const remSec = Math.max(0, Math.ceil((m.durationMs - m.elapsedMs) / (1000 * gameState.gameSpeed)));
-    const min = Math.floor(remSec / 60);
-    const sec = remSec % 60;
-    const timeStr = `${min}:${sec < 10 ? '0' : ''}${sec}`;
-
-    const isEnemy = !!m.isEnemy;
-    const iconCol = m.isAlly ? "#00e676" : (isEnemy ? "#ff1744" : "#00e5ff");
-    const namePrefix = m.isAlly 
-      ? "🤝 Müttefik Tankı" 
-      : (isEnemy ? `🚨 DÜŞMAN TAARRUZU (${m.unitType === 'tank' ? 'Zırhlı Tank' : 'Piyade'})` : (m.unitType === "tank" ? "🚜 Tank" : "🪖 Asker"));
-    const iconHtml = (m.unitType === "tank") ? getTankSvg(iconCol, 15) : (m.isAlly ? "🎖️" : (isEnemy ? "⚔️" : "🪖"));
-
-    html += `
-      <div class="march-item ${isEnemy ? 'march-enemy' : ''}" style="border-color:${iconCol}; ${isEnemy ? 'background:rgba(50, 4, 10, 0.95); animation: pulseRedBorder 1s infinite;' : ''}">
-        <div class="march-title">
-          <span>${iconHtml} ${namePrefix}: <strong>${m.fromCity.name}</strong> ➔ <strong>${m.toCity.name}</strong></span>
-          <span style="color:${iconCol}; font-weight:bold;">${timeStr}</span>
-        </div>
-        <div class="march-progress">
-          <div class="march-fill" style="width:${Math.round(m.progress * 100)}%; background:${iconCol};"></div>
-        </div>
-      </div>
-    `;
-  });
-  bar.innerHTML = html;
 }
 
 // ==========================================

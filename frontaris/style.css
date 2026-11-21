@@ -438,21 +438,9 @@ body, html {
   font-weight: 700;
 }
 
-/* AKTİF İNTİKAL BARI */
+/* AKTİF İNTİKAL BARI (Kullanıcı talebiyle kaldırıldı) */
 #active-marches-bar {
-  position: absolute;
-  bottom: 14px;
-  left: 14px;
-  z-index: 1000;
-  background: rgba(10, 19, 32, 0.92);
-  border: 1px solid #1a3d66;
-  border-radius: 8px;
-  padding: 8px 12px;
-  max-width: 320px;
-  width: calc(100vw - 28px);
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+  display: none !important;
 }
 
 .march-item {
