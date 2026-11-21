@@ -162,10 +162,10 @@ function initMap(playerNation) {
 
   L.control.zoom({ position: 'bottomright' }).addTo(map);
 
-  // Sade Karanlık Harita
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}{r}.png', {
-    subdomains: 'abcd',
-    maxZoom: 19
+  // Askeri Taktik Harita Katmanı (Tamamen Ücretsiz, Filigransız & API Key İstemez)
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+    maxZoom: 16,
+    attribution: ''
   }).addTo(map);
 
   renderCountryPolygons();
