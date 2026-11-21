@@ -157,14 +157,21 @@ body, html {
 
 /* ÜST KOMUTA BARI */
 #simple-top-bar {
-  height: 50px;
+  height: 52px;
   background: rgba(7, 14, 24, 0.96);
   border-bottom: 2px solid #18314e;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 14px;
+  padding: 0 48px 0 24px;
   z-index: 1000;
+}
+
+.top-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-right: 36px;
 }
 
 .top-left {
@@ -249,7 +256,7 @@ body, html {
   background: #050b12 !important;
 }
 
-/* HARİTADAKİ ŞEHİR İKONLARI */
+/* HARİTADAKİ ŞEHİR İKONLARI (SEMBOL EMOJİSİZ, SADE ASKERİ NOKTA) */
 .simple-city-pin {
   display: flex;
   flex-direction: column;
@@ -257,36 +264,42 @@ body, html {
   cursor: pointer;
 }
 
-.pin-circle {
-  width: 28px;
-  height: 28px;
+.pin-dot {
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  color: #fff;
-  border: 2px solid #fff;
-  box-shadow: 0 0 10px rgba(0,0,0,0.8);
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 10px rgba(0,0,0,0.9);
   transition: transform 0.2s;
+  margin-bottom: 2px;
 }
 
-.pin-circle.blue {
-  background: #0077ff;
-  border-color: #00e5ff;
-  box-shadow: 0 0 14px #00e5ff;
+.simple-city-pin:hover .pin-dot {
+  transform: scale(1.35);
 }
 
-.pin-circle.red {
-  background: #d50000;
-  border-color: #ff5252;
-  box-shadow: 0 0 14px #ff1744;
+.pin-dot.blue {
+  background: #00e5ff;
+  border-color: #ffffff;
+  box-shadow: 0 0 12px #00e5ff;
+}
+
+.pin-dot.green {
+  background: #00e676;
+  border-color: #ffffff;
+  box-shadow: 0 0 12px #00e676;
+}
+
+.pin-dot.red {
+  background: #ff1744;
+  border-color: #ffffff;
+  box-shadow: 0 0 12px #ff1744;
   animation: redPulse 1.5s infinite;
 }
 
-.pin-circle.gray {
-  background: #37474f;
-  border-color: #78909c;
+.pin-dot.gray {
+  background: #78909c;
+  border-color: #cfd8dc;
 }
 
 .pin-name {

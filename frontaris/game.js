@@ -582,23 +582,22 @@ function createCityMarker(city) {
   if (isMine) {
     colorClass = "blue";
     tankColor = "#00e5ff";
-    labelText = `★ ${city.name} (MAVİ)`;
+    labelText = `${city.name} (MAVİ)`;
   } else if (isAlly) {
     colorClass = "green";
     tankColor = "#69f0ae";
-    labelText = `🤝 ${city.name} (MÜTTEFİK)`;
+    labelText = `${city.name} (MÜTTEFİK)`;
   } else if (isEnemy) {
     colorClass = "red";
     tankColor = "#ff5252";
   }
 
-  const symbol = city.tier === "big" ? "🏛️" : "📍";
-
+  // Kullanıcı talebi doğrultusunda şehirlerin üstündeki semboller/emojiler (🏛️, 📍) tamamen kaldırıldı, sade askeri nokta eklendi
   const html = `
     <div class="simple-city-pin">
-      <div class="pin-circle ${colorClass}">${symbol}</div>
+      <div class="pin-dot ${colorClass}"></div>
       <div class="pin-name ${colorClass}">${labelText}</div>
-      <div style="font-size:9px; background:rgba(0,0,0,0.85); padding:1px 4px; border-radius:3px; margin-top:1px; white-space:nowrap; border: 1px solid ${isMine ? '#00e5ff' : isAlly ? '#00e676' : isEnemy ? '#ff5252' : '#475569'};">
+      <div style="font-size:9px; background:rgba(0,0,0,0.85); padding:1px 5px; border-radius:3px; margin-top:2px; white-space:nowrap; border: 1px solid ${isMine ? '#00e5ff' : isAlly ? '#00e676' : isEnemy ? '#ff5252' : '#475569'};">
         🪖${city.infantry} ${getTankSvg(tankColor, 12)}${city.tanks}
       </div>
     </div>
@@ -607,8 +606,8 @@ function createCityMarker(city) {
   const icon = L.divIcon({
     html: html,
     className: 'leaflet-city-div',
-    iconSize: [60, 56],
-    iconAnchor: [30, 28]
+    iconSize: [60, 48],
+    iconAnchor: [30, 24]
   });
 
   const marker = L.marker([city.lat, city.lng], { icon: icon });
