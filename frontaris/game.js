@@ -170,8 +170,14 @@ function initMap(playerNation) {
   renderCountryPolygons();
   renderCities();
 
-  // Odaklan
-  if (playerNation.bounds) {
+  // Gerçek Sınırlara Odaklan
+  if (countryLayers[playerNation.id]) {
+    try {
+      map.fitBounds(countryLayers[playerNation.id].getBounds(), { padding: [30, 30] });
+    } catch (e) {
+      if (playerNation.bounds) map.fitBounds(playerNation.bounds, { padding: [30, 30] });
+    }
+  } else if (playerNation.bounds) {
     map.fitBounds(playerNation.bounds, { padding: [30, 30] });
   }
 }
@@ -204,18 +210,70 @@ function getPolygonStyle(cId) {
   };
 }
 
-function renderCountryPolygons() {
-  Object.values(WORLD_NATIONS).forEach(nation => {
-    const poly = L.polygon(nation.polygon, getPolygonStyle(nation.id)).addTo(map);
-    
-    poly.on('click', (e) => {
-      L.DomEvent.stopPropagation(e);
-      if (gameState.attackMode) return;
-      handleCountryClick(nation.id);
-    });
+function ensureNationData(iso, fallbackName) {
+  if (!WORLD_NATIONS[iso]) {
+    let lat = 40, lng = 20;
+    if (countryLayers[iso] && countryLayers[iso].getBounds) {
+      const c = countryLayers[iso].getBounds().getCenter();
+      lat = c.lat;
+      lng = c.lng;
+    }
+    WORLD_NATIONS[iso] = {
+      id: iso,
+      name: fallbackName || iso,
+      flag: "🌍",
+      capital: fallbackName,
+      power: "Egemen Devlet",
+      cities: [
+        { id: `c_${iso}_1`, name: fallbackName, lat: lat, lng: lng, tier: "big", health: 2, maxHealth: 2, infantry: 3, tanks: 1, baseLvl: 1 }
+      ]
+    };
+  }
+  return WORLD_NATIONS[iso];
+}
 
-    countryLayers[nation.id] = poly;
-  });
+function renderCountryPolygons() {
+  if (!window.REAL_WORLD_GEOJSON) return;
+
+  L.geoJSON(window.REAL_WORLD_GEOJSON, {
+    style: function(feature) {
+      const iso = feature.properties.iso;
+      return getPolygonStyle(iso);
+    },
+    onEachFeature: function(feature, layer) {
+      const iso = feature.properties.iso;
+      const countryName = feature.properties.name || feature.properties.name_en;
+      countryLayers[iso] = layer;
+
+      // Gerçek Ülke İsmi Tooltip
+      layer.bindTooltip(`<strong>${countryName}</strong>`, {
+        sticky: true,
+        className: 'tactical-tooltip'
+      });
+
+      // Hover
+      layer.on('mouseover', function() {
+        if (gameState.attackMode) return;
+        this.setStyle({
+          weight: 3,
+          color: '#ffffff',
+          fillOpacity: 0.65
+        });
+      });
+
+      layer.on('mouseout', function() {
+        if (gameState.attackMode) return;
+        this.setStyle(getPolygonStyle(iso));
+      });
+
+      // Dokunma / Tıklama
+      layer.on('click', function(e) {
+        L.DomEvent.stopPropagation(e);
+        if (gameState.attackMode) return;
+        handleCountryClick(iso, countryName);
+      });
+    }
+  }).addTo(map);
 }
 
 function updateCountryStyles() {
@@ -290,36 +348,36 @@ function updateCityMarker(city) {
 // ==========================================
 // 4. ETKİLEŞİMLER: ÜLKEYE VEYA ŞEHRE DOKUNUNCA
 // ==========================================
-function handleCountryClick(countryId) {
+function handleCountryClick(countryId, fallbackName) {
   sfx.click();
-  // Kendi ülkemize tıklayınca savaş kartı açılmaz
+  const nation = ensureNationData(countryId, fallbackName);
+
+  // Kendi ülkemize tıklayınca
   if (countryId === gameState.playerCountryId) {
-    showToast("🔵 Burası kendi vatanınız. Birlik ve inşaat için mavi şehirlerinize dokunun.");
+    showToast(`🔵 ${nation.name} vatan toprağınızdır. Birlikleriniz için mavi şehirlere dokunun.`);
     return;
   }
   // Zaten savaşta mıyız?
   if (gameState.enemyCountryIds.has(countryId)) {
-    const nation = WORLD_NATIONS[countryId];
-    showToast(`🔴 ${nation.name} ile zaten savaştasınız! Şehirlerine saldırın.`);
+    showToast(`🔴 ${nation.name} ile savaştasınız! Şehirlerine dokunup taarruz edin.`);
     return;
   }
 
   // SAVAŞ AÇMA POPUP'I
-  openCountryWarCard(countryId);
+  openCountryWarCard(countryId, fallbackName);
 }
 
-function openCountryWarCard(countryId) {
-  const nation = WORLD_NATIONS[countryId];
-  if (!nation) return;
+function openCountryWarCard(countryId, fallbackName) {
+  const nation = ensureNationData(countryId, fallbackName);
   gameState.pendingTargetCountryId = countryId;
 
-  document.getElementById("war-card-flag").innerText = nation.flag;
+  document.getElementById("war-card-flag").innerText = nation.flag || "🌍";
   document.getElementById("war-card-name").innerText = nation.name.toUpperCase();
   document.getElementById("war-card-status").innerText = "Bu ülke şu anda tarafsızdır.";
   
   const warBtn = document.getElementById("war-card-btn");
-  warBtn.innerText = `⚔️ ${nation.name.toUpperCase()} DEVLETİNE SAVAŞ AÇ!`;
-  warBtn.onclick = () => declareWar(countryId);
+  warBtn.innerText = `⚔️ ${nation.name.toUpperCase()} DEVLETİNE SAVAŞ AÇ (KIRMIZI YAP)!`;
+  warBtn.onclick = () => declareWar(countryId, fallbackName);
 
   document.getElementById("country-war-card").style.display = "block";
 }
@@ -328,10 +386,10 @@ function closeCountryWarCard() {
   document.getElementById("country-war-card").style.display = "none";
 }
 
-function declareWar(countryId) {
+function declareWar(countryId, fallbackName) {
   sfx.siren();
+  const nation = ensureNationData(countryId, fallbackName);
   gameState.enemyCountryIds.add(countryId);
-  const nation = WORLD_NATIONS[countryId];
 
   closeCountryWarCard();
   closeSheet();
@@ -339,7 +397,7 @@ function declareWar(countryId) {
   updateCountryStyles();
   renderCities();
 
-  showToast(`🚨 DİKKAT! ${nation.name} (${nation.flag}) devletine SAVAŞ İLAN EDİLDİ! Toprakları KIRMIZI oldu!`, "war");
+  showToast(`🚨 DİKKAT! ${nation.name} (${nation.flag || '🌍'}) devletine SAVAŞ İLAN EDİLDİ! Gerçek sınırları KIRMIZI alarmda!`, "war");
 }
 
 function handleCityClick(city) {
