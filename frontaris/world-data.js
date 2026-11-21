@@ -230,5 +230,105 @@ const WORLD_NATIONS = {
       [45.0, 142.0], [43.0, 145.5], [40.0, 140.0], [35.0, 140.0], [33.0, 131.0],
       [31.0, 130.5], [34.0, 133.0], [37.0, 137.0], [41.0, 140.0], [45.0, 142.0]
     ]
+  },
+  BGR: {
+    id: "BGR",
+    name: "Bulgaristan",
+    flag: "🇧🇬",
+    capital: "Sofya",
+    power: "Balkan Gücü",
+    industry: "★★☆☆☆",
+    desc: "Balkanların kalbinde stratejik geçiş koridoru.",
+    bounds: [[41.2, 22.3], [44.2, 28.6]],
+    cities: [
+      { id: "sofya", name: "Sofya", lat: 42.6977, lng: 23.3219, tier: "big", health: 2, maxHealth: 2, infantry: 3, tanks: 1, baseLvl: 2, factoryLvl: 1 },
+      { id: "varna", name: "Varna", lat: 43.2141, lng: 27.9147, tier: "small", health: 1, maxHealth: 1, infantry: 2, tanks: 1, baseLvl: 1, factoryLvl: 1 },
+      { id: "filibe", name: "Filibe", lat: 42.1354, lng: 24.7453, tier: "small", health: 1, maxHealth: 1, infantry: 2, tanks: 0, baseLvl: 1, factoryLvl: 0 }
+    ]
+  },
+  SYR: {
+    id: "SYR",
+    name: "Suriye",
+    flag: "🇸🇾",
+    capital: "Şam",
+    power: "Levant Gücü",
+    industry: "★★☆☆☆",
+    desc: "Orta Doğu ticaret ve çatışma kavşağı.",
+    bounds: [[32.3, 35.6], [37.3, 42.4]],
+    cities: [
+      { id: "sam", name: "Şam", lat: 33.5138, lng: 36.2765, tier: "big", health: 2, maxHealth: 2, infantry: 3, tanks: 1, baseLvl: 2, factoryLvl: 1 },
+      { id: "halep", name: "Halep", lat: 36.2021, lng: 37.1343, tier: "small", health: 1, maxHealth: 1, infantry: 2, tanks: 1, baseLvl: 1, factoryLvl: 1 }
+    ]
+  },
+  IRQ: {
+    id: "IRQ",
+    name: "Irak",
+    flag: "🇮🇶",
+    capital: "Bağdat",
+    power: "Mezopotamya Gücü",
+    industry: "★★★☆☆",
+    desc: "Dicle ve Fırat nehirlerinin zengin enerji coğrafyası.",
+    bounds: [[29.0, 38.8], [37.4, 48.6]],
+    cities: [
+      { id: "bagdat", name: "Bağdat", lat: 33.3152, lng: 44.3661, tier: "big", health: 2, maxHealth: 2, infantry: 4, tanks: 2, baseLvl: 2, factoryLvl: 1 },
+      { id: "musul", name: "Musul", lat: 36.3400, lng: 43.1300, tier: "small", health: 1, maxHealth: 1, infantry: 2, tanks: 1, baseLvl: 1, factoryLvl: 1 },
+      { id: "basra", name: "Basra", lat: 30.5081, lng: 47.7835, tier: "small", health: 1, maxHealth: 1, infantry: 2, tanks: 1, baseLvl: 1, factoryLvl: 1 }
+    ]
+  },
+  ROU: {
+    id: "ROU",
+    name: "Romanya",
+    flag: "🇷🇴",
+    capital: "Bükreş",
+    power: "Doğu Avrupa Savunması",
+    industry: "★★★☆☆",
+    desc: "Karpatlar ve Tuna nehri havzası.",
+    bounds: [[43.6, 20.2], [48.3, 29.7]],
+    cities: [
+      { id: "bukres", name: "Bükreş", lat: 44.4268, lng: 26.1025, tier: "big", health: 2, maxHealth: 2, infantry: 3, tanks: 2, baseLvl: 2, factoryLvl: 1 },
+      { id: "kostence", name: "Köstence", lat: 44.1792, lng: 28.6498, tier: "small", health: 1, maxHealth: 1, infantry: 2, tanks: 1, baseLvl: 1, factoryLvl: 1 }
+    ]
+  },
+  UKR: {
+    id: "UKR",
+    name: "Ukrayna",
+    flag: "🇺🇦",
+    capital: "Kiev",
+    power: "Karadeniz Gücü",
+    industry: "★★★☆☆",
+    desc: "Geniş tahıl ambarı ve stratejik Karadeniz limanları.",
+    bounds: [[44.3, 22.1], [52.4, 40.2]],
+    cities: [
+      { id: "kiev", name: "Kiev", lat: 50.4501, lng: 30.5234, tier: "big", health: 2, maxHealth: 2, infantry: 3, tanks: 2, baseLvl: 2, factoryLvl: 1 },
+      { id: "odesa", name: "Odesa", lat: 46.4825, lng: 30.7233, tier: "small", health: 1, maxHealth: 1, infantry: 2, tanks: 1, baseLvl: 1, factoryLvl: 1 }
+    ]
+  },
+  AZE: {
+    id: "AZE",
+    name: "Azerbaycan",
+    flag: "🇦🇿",
+    capital: "Bakü",
+    power: "Kafkasya Gücü",
+    industry: "★★★☆☆",
+    desc: "Hazar Denizi kıyısında stratejik petrol ve doğal gaz merkezi.",
+    bounds: [[38.3, 44.7], [41.9, 50.9]],
+    cities: [
+      { id: "baku", name: "Bakü", lat: 40.4093, lng: 49.8671, tier: "big", health: 2, maxHealth: 2, infantry: 3, tanks: 2, baseLvl: 2, factoryLvl: 2 },
+      { id: "gence", name: "Gence", lat: 40.6828, lng: 46.3606, tier: "small", health: 1, maxHealth: 1, infantry: 2, tanks: 1, baseLvl: 1, factoryLvl: 1 }
+    ]
+  },
+  GEO: {
+    id: "GEO",
+    name: "Gürcistan",
+    flag: "🇬🇪",
+    capital: "Tiflis",
+    power: "Kafkasya Geçidi",
+    industry: "★★☆☆☆",
+    desc: "Kafkas dağları ve Karadeniz kıyısı.",
+    bounds: [[41.0, 40.0], [43.6, 46.7]],
+    cities: [
+      { id: "tiflis", name: "Tiflis", lat: 41.7151, lng: 44.8271, tier: "big", health: 2, maxHealth: 2, infantry: 2, tanks: 1, baseLvl: 1, factoryLvl: 1 },
+      { id: "batum", name: "Batum", lat: 41.6168, lng: 41.6367, tier: "small", health: 1, maxHealth: 1, infantry: 1, tanks: 1, baseLvl: 1, factoryLvl: 0 }
+    ]
   }
 };

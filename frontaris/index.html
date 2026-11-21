@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="style.css?v=14">
+  <link rel="stylesheet" href="style.css?v=15">
 </head>
 <body>
 
@@ -202,24 +202,42 @@
           </div>
         </div>
 
-        <!-- 3. DÜŞMAN ŞEHRİ İSE (BİLGİ) -->
+        <!-- 3. DÜŞMAN ŞEHRİ İSE (DOĞRUDAN TAARRUZ EMRİ) -->
         <div id="sh-enemy-actions" style="display: none;">
           <div class="enemy-target-info">
-            <p>Bu şehir <strong>DÜŞMAN</strong> kontrolündedir (KIRMIZI).</p>
-            <p>Birliklerinize taarruz emri vermek için <strong>kendi mavi şehrinize</strong> dokunun!</p>
+            <h4 style="color:#ff5252; margin-bottom:4px;">🎯 TAARRUZ HEDEFİ (KIRMIZI)</h4>
+            <div id="sh-target-nearest-info" class="nearest-base-info" style="font-size:12px; color:#cfd8dc; margin-bottom:10px; background:rgba(0,0,0,0.5); padding:6px 10px; border-radius:6px; border:1px solid #ff5252;">
+              En Yakın Mavi Üs: <strong>Hesaplanıyor...</strong>
+            </div>
+            <div class="target-attack-buttons" style="display:flex; gap:10px;">
+              <button class="btn-attack" style="flex:1; padding:8px 10px;" onclick="launchDirectAttackToSelected('infantry')">
+                🪖 Piyade Taarruzu
+              </button>
+              <button class="btn-attack" style="flex:1; padding:8px 10px;" onclick="launchDirectAttackToSelected('tank')">
+                <svg class="tank-svg-top" viewBox="0 0 32 32" width="16" height="16" fill="none" style="vertical-align:middle;"><rect x="18" y="7" width="13" height="3" rx="1" fill="#ff5252"/><path d="M10 6 H19 L21 12 H8 Z" fill="#ff5252"/><path d="M4 12 H27 L25 18 H2 Z" fill="#b71c1c"/><rect x="1" y="17" width="27" height="8" rx="4" fill="#102030" stroke="#ff5252" stroke-width="1.2"/><circle cx="5" cy="21" r="2" fill="#ff5252"/><circle cx="10" cy="21" r="2" fill="#ff5252"/><circle cx="15" cy="21" r="2" fill="#ff5252"/><circle cx="20" cy="21" r="2" fill="#ff5252"/></svg> Tank Taarruzu
+              </button>
+            </div>
           </div>
         </div>
 
-        <!-- 4. TARAFSIZ ÜLKE ŞEHRİ İSE (SAVAŞ AÇ VEYA İTTİFAK KUR) -->
+        <!-- 4. TARAFSIZ ÜLKE ŞEHRİ İSE (SAVAŞ AÇ VEYA İTTİFAK KUR VEYA DİREKT TAARRUZ) -->
         <div id="sh-neutral-actions" style="display: none;">
           <div class="neutral-box">
-            <p>Bu ülke henüz tarafsızdır.</p>
-            <div class="diplomacy-btn-row">
-              <button id="btn-declare-war-sheet" class="btn-declare-war">
+            <p>Bu ülke henüz tarafsızdır. Sefer açabilir veya diplomasi başlatabilirsiniz:</p>
+            <div class="diplomacy-btn-row" style="margin-bottom:8px; display:flex; gap:8px;">
+              <button id="btn-declare-war-sheet" class="btn-declare-war" style="flex:1;">
                 ⚔️ SAVAŞ AÇ (KIRMIZI YAP)!
               </button>
-              <button id="btn-propose-ally-sheet" class="btn-propose-ally">
+              <button id="btn-propose-ally-sheet" class="btn-propose-ally" style="flex:1;">
                 🤝 İTTİFAK KUR (YEŞİL YAP)!
+              </button>
+            </div>
+            <div class="target-attack-buttons" style="display:flex; gap:8px;">
+              <button class="btn-attack" style="flex:1; background:#c62828; border-color:#ff5252; padding:8px 10px;" onclick="launchDirectAttackToSelected('infantry')">
+                ⚔️ Savaş Aç & Piyade Gönder
+              </button>
+              <button class="btn-attack" style="flex:1; background:#b71c1c; border-color:#ff1744; padding:8px 10px;" onclick="launchDirectAttackToSelected('tank')">
+                ⚔️ Savaş Aç & Tank Gönder
               </button>
             </div>
           </div>
@@ -301,8 +319,8 @@
   <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <!-- Gerçek Dünya Sınırları & Online İttifak Motoru -->
-  <script src="world-geojson.js?v=14"></script>
-  <script src="world-data.js?v=14"></script>
-  <script src="game.js?v=14"></script>
+  <script src="world-geojson.js?v=15"></script>
+  <script src="world-data.js?v=15"></script>
+  <script src="game.js?v=15"></script>
 </body>
 </html>
