@@ -171,6 +171,25 @@ class SimpleAudio {
 }
 const sfx = new SimpleAudio();
 
+// Safari Audio & WebKit Optimizasyonu: ilk kullanıcı dokunuşunda ses motorunu etkinleştir
+function unlockSafariAudio() {
+  sfx.init();
+  if (sfx.ctx && sfx.ctx.state === 'suspended') {
+    sfx.ctx.resume();
+  }
+}
+window.addEventListener('touchstart', unlockSafariAudio, { once: true, passive: true });
+window.addEventListener('pointerdown', unlockSafariAudio, { once: true, passive: true });
+window.addEventListener('click', unlockSafariAudio, { once: true, passive: true });
+
+// Safari & Mobil yeniden boyutlandırma / oryantasyon değişimi
+window.addEventListener('resize', () => {
+  if (map) map.invalidateSize();
+});
+window.addEventListener('orientationchange', () => {
+  setTimeout(() => { if (map) map.invalidateSize(); }, 250);
+});
+
 function showToast(msg, type = "normal") {
   const container = document.getElementById("toast-container");
   if (!container) return;
@@ -419,6 +438,11 @@ function initMap(playerNation) {
   } else if (playerNation.bounds) {
     map.fitBounds(playerNation.bounds, { padding: [30, 30] });
   }
+
+  // Safari & Mobil tam ekran harita boyut hesaplaması
+  setTimeout(() => {
+    if (map) map.invalidateSize();
+  }, 200);
 }
 
 function getPolygonStyle(cId) {
@@ -1660,14 +1684,36 @@ function sendRadioMessage() {
   }, 1200);
 }
 
+function fallbackCopyText(text) {
+  try {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.top = "-9999px";
+    ta.style.left = "-9999px";
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    document.execCommand("copy");
+    document.body.removeChild(ta);
+    showToast(`🔗 <strong>DAVET LİNKİ KOPYALANDI!</strong> Arkadaşına gönder, aynı odada ittifak kurup birlikte savaşın!`, "victory");
+  } catch (e) {
+    showToast(`Oda Kodu: ${gameState.roomCode}`);
+  }
+}
+
 function copyGameInvite() {
   sfx.click();
   const url = window.location.origin + window.location.pathname + `?room=${gameState.roomCode}`;
-  navigator.clipboard.writeText(url).then(() => {
-    showToast(`🔗 <strong>DAVET LİNKİ KOPYALANDI!</strong> Arkadaşına gönder, aynı odada ittifak kurup birlikte savaşın!`, "victory");
-  }).catch(() => {
-    showToast(`Oda Kodu: ${gameState.roomCode}`);
-  });
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(url).then(() => {
+      showToast(`🔗 <strong>DAVET LİNKİ KOPYALANDI!</strong> Arkadaşına gönder, aynı odada ittifak kurup birlikte savaşın!`, "victory");
+    }).catch(() => {
+      fallbackCopyText(url);
+    });
+  } else {
+    fallbackCopyText(url);
+  }
 }
 
 // Enter ile mesaj gönderme

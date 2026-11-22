@@ -2,7 +2,9 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>FRONTARIS: DÜNYA SAVAŞI | Online Komutanlık & İttifak</title>
   
   <!-- Leaflet Harita Motoru -->
@@ -12,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="style.css?v=21">
+  <link rel="stylesheet" href="style.css?v=22">
 </head>
 <body>
 
@@ -317,7 +319,7 @@
             <button class="btn-copy-link" onclick="copyGameInvite()">🔗 Davet Linkini Kopyala</button>
           </div>
           <div class="join-room-row" style="margin-top: 10px; display: flex; gap: 6px;">
-            <input type="text" id="input-join-room" placeholder="Oda Kodu Gir (Örn: FRNT-1234)" style="flex:1; background:#07121e; border:1px solid #1c4370; color:#fff; border-radius:4px; padding:6px 8px; font-size:12px; outline:none;" />
+            <input type="text" id="input-join-room" placeholder="Oda Kodu Gir (Örn: FRNT-1234)" style="flex:1; background:#07121e; border:1px solid #1c4370; color:#fff; border-radius:4px; padding:6px 8px; font-size:16px; outline:none;" />
             <button onclick="joinRoomByCode()" style="background:#0077ff; border:none; color:#fff; border-radius:4px; padding:6px 12px; font-size:12px; font-weight:bold; cursor:pointer;">Katıl</button>
           </div>
           <div class="online-hint-box" style="margin-top: 10px; font-size: 11px; color: #90caf9; background: rgba(0, 119, 255, 0.1); border-left: 3px solid #00e5ff; padding: 6px 10px; border-radius: 4px;">
@@ -358,8 +360,8 @@
   <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <!-- Gerçek Dünya Sınırları & Online İttifak Motoru -->
-  <script src="world-geojson.js?v=21"></script>
-  <script src="world-data.js?v=21"></script>
-  <script src="game.js?v=21"></script>
+  <script src="world-geojson.js?v=22"></script>
+  <script src="world-data.js?v=22"></script>
+  <script src="game.js?v=22"></script>
 </body>
 </html>
