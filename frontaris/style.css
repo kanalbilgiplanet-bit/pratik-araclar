@@ -367,80 +367,61 @@ body, html {
   background: #050b12 !important;
 }
 
-/* HARİTADAKİ ŞEHİR İKONLARI (SEMBOL EMOJİSİZ, SADE ASKERİ NOKTA) */
+/* HARİTADAKİ ŞEHİR İKONLARI (NOKTA VE İSİM KALDIRILDI, SADECE BİRLİK ROZETİ) */
 .simple-city-pin {
   display: flex;
-  flex-direction: column;
   align-items: center;
+  justify-content: center;
   cursor: pointer;
+  transition: transform 0.2s ease;
 }
 
-.pin-dot {
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  border: 2px solid #ffffff;
-  box-shadow: 0 0 10px rgba(0,0,0,0.9);
-  transition: transform 0.2s;
-  margin-bottom: 2px;
+.simple-city-pin:hover {
+  transform: scale(1.2);
+  z-index: 1000 !important;
 }
 
-.simple-city-pin:hover .pin-dot {
-  transform: scale(1.35);
-}
-
-.pin-dot.blue {
-  background: #00e5ff;
-  border-color: #ffffff;
-  box-shadow: 0 0 12px #00e5ff;
-}
-
-.pin-dot.green {
-  background: #00e676;
-  border-color: #ffffff;
-  box-shadow: 0 0 12px #00e676;
-}
-
-.pin-dot.red {
-  background: #ff1744;
-  border-color: #ffffff;
-  box-shadow: 0 0 12px #ff1744;
-  animation: redPulse 1.5s infinite;
-}
-
-.pin-dot.gray {
-  background: #78909c;
-  border-color: #cfd8dc;
-}
-
-.pin-name {
+.city-unit-badge {
   font-family: var(--font-title);
-  font-size: 10px;
-  background: rgba(3, 8, 14, 0.9);
-  padding: 2px 7px;
+  font-size: 9px;
+  font-weight: 700;
+  background: rgba(3, 8, 14, 0.92);
+  padding: 2px 5px;
   border-radius: 4px;
-  border: 1px solid #204165;
-  color: #fff;
-  margin-top: 2px;
   white-space: nowrap;
-  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  border: 1.5px solid #475569;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
+  user-select: none;
+  transition: all 0.2s ease;
 }
 
-.pin-name.blue {
-  background: #0077ff !important;
-  border: 1.5px solid #00e5ff !important;
-  color: #ffffff !important;
-  font-weight: 900 !important;
-  box-shadow: 0 0 12px rgba(0, 229, 255, 0.7) !important;
-  letter-spacing: 0.5px;
+.city-unit-badge.blue {
+  background: rgba(3, 14, 30, 0.95);
+  border: 1.5px solid #00e5ff;
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.6);
+  color: #ffffff;
 }
 
-.pin-name.red {
-  background: #d50000 !important;
-  border: 1.5px solid #ff5252 !important;
-  color: #ffffff !important;
-  font-weight: 700 !important;
-  box-shadow: 0 0 10px rgba(255, 23, 68, 0.6) !important;
+.city-unit-badge.green {
+  background: rgba(4, 25, 14, 0.95);
+  border: 1.5px solid #00e676;
+  box-shadow: 0 0 10px rgba(0, 230, 118, 0.6);
+  color: #ffffff;
+}
+
+.city-unit-badge.red {
+  background: rgba(30, 5, 5, 0.95);
+  border: 1.5px solid #ff1744;
+  box-shadow: 0 0 10px rgba(255, 23, 68, 0.6);
+  color: #ffffff;
+}
+
+.city-unit-badge.gray {
+  border: 1.5px solid #64748b;
+  color: #cfd8dc;
 }
 
 @keyframes redPulse {
