@@ -2078,6 +2078,11 @@
       document.getElementById('hudBankBalance').textContent = `€${player.wealth.toLocaleString('tr-TR')}`;
       document.getElementById('txtStoreBalance').textContent = `Banka Bakiyesi: €${player.wealth.toLocaleString('tr-TR')}`;
       
+      const lblShoot = document.getElementById('lblQuickShoot');
+      if (lblShoot) lblShoot.textContent = currentLang === 'TR' ? 'ŞUT ÇEK' : 'SHOOT';
+      const lblPass = document.getElementById('lblQuickPass');
+      if (lblPass) lblPass.textContent = currentLang === 'TR' ? 'PAS' : 'PASS';
+      
       // Discipline & Injury Status
       const statusIcon = document.getElementById('hudStatusIcon');
       const statusDesc = document.getElementById('hudStatusDesc');
@@ -2361,9 +2366,9 @@
       overlay.classList.remove('hidden');
 
       if (matchMode === 'SHOOT') {
-        promptTxt.textContent = '⚽ Topun üzerinden kaleye veya arkadaşına doğru kavisli çizgi çek!';
+        promptTxt.textContent = currentLang === 'TR' ? '⚽ Topun üzerinden kaleye kavis çiz veya ŞUT butonuna bas!' : '⚽ Swipe curve towards goal or press SHOOT!';
       } else {
-        promptTxt.textContent = '🧤 Rakip şut çekiyor! Eldivenleri sürükleyerek kurtarışı yap!';
+        promptTxt.textContent = currentLang === 'TR' ? '🧤 Rakip şut çekiyor! Eldivenleri sürükleyerek kurtarışı yap!' : '🧤 Opponent shoots! Drag gloves to save!';
         setTimeout(() => {
           if (!ball.inFlight && matchMode === 'SAVE') {
             shootBallAtGoalKeeper();
@@ -2371,6 +2376,7 @@
         }, 1200);
       }
 
+      updateMatchActionButtons();
       setupCanvasEvents();
       requestAnimationFrame(renderCanvasLoop);
     }
@@ -2558,12 +2564,194 @@
             }
 
             Sound.kick();
+            updateMatchActionButtons();
           }
         }
         if (matchMode === 'SAVE') {
           gloves.dragging = false;
         }
       };
+
+      bindMatchActionButtons();
+    }
+
+    function updateMatchActionButtons() {
+      const container = document.getElementById('matchActionControls');
+      const btnShoot = document.getElementById('btnQuickShoot');
+      const btnPass = document.getElementById('btnQuickPass');
+      if (!container || !btnShoot) return;
+
+      const simOverlay = document.getElementById('tvSimulationOverlay');
+      const isSimulating = simOverlay && !simOverlay.classList.contains('hidden');
+      const endSplash = document.getElementById('matchEndSplash');
+      const isMatchEnded = endSplash && !endSplash.classList.contains('hidden');
+      const feedSplash = document.getElementById('matchFeedbackSplash');
+      const isFeedbackSplash = feedSplash && !feedSplash.classList.contains('hidden');
+
+      if (matchMode === 'SHOOT' && !ball.inFlight && !isSimulating && !isMatchEnded && !isFeedbackSplash) {
+        container.classList.remove('hidden');
+        const hasActiveTeammates = teammates && teammates.some(t => t.active);
+        if (btnPass) {
+          if (hasActiveTeammates) {
+            btnPass.classList.remove('hidden');
+          } else {
+            btnPass.classList.add('hidden');
+          }
+        }
+      } else {
+        container.classList.add('hidden');
+      }
+    }
+
+    function executeSmartShot() {
+      if (matchMode !== 'SHOOT' || ball.inFlight) return;
+
+      const overlay = document.getElementById('canvasInstructionOverlay');
+      if (overlay) overlay.classList.add('hidden');
+
+      ball.kickOrigin = { x: ball.x, y: ball.y };
+      ball.kickTime = performance.now();
+      ball.inFlight = true;
+      ball.trail = [];
+      ball.isDeflected = false;
+      ball.deflectedFrames = 0;
+      ball.isPassing = false;
+      ball.targetTeammate = null;
+      ball.isGroundShot = false;
+
+      updateMatchActionButtons();
+
+      // Smart target selection: Aim away from the goalkeeper towards corners/90
+      let targetX;
+      let spin = 0;
+
+      if (goalkeeper.x >= 300) {
+        targetX = 185 + (Math.random() * 35);
+        spin = -0.06 - (Math.random() * 0.05);
+      } else {
+        targetX = 415 - (Math.random() * 35);
+        spin = 0.06 + (Math.random() * 0.05);
+      }
+
+      if (currentScenario === 'FREE_KICK') {
+        spin *= 1.35;
+      }
+
+      const targetY = 135;
+      const dx = targetX - ball.x;
+      const dy = targetY - ball.y;
+
+      let baseSpeed = 13.5;
+      if (player && player.ovr) {
+        baseSpeed = Math.min(16.5, 12.5 + (player.ovr - 50) * 0.08);
+      }
+
+      const angle = Math.atan2(dy, dx);
+      ball.vx = Math.cos(angle) * baseSpeed;
+      ball.vy = Math.sin(angle) * baseSpeed;
+      ball.z = 0;
+      ball.spin = spin;
+
+      const estFrames = Math.max(1, Math.abs((ball.y - 148) / (ball.vy || -10)));
+      const endX = ball.x + ball.vx * estFrames + 0.5 * (ball.spin * 0.35) * estFrames * estFrames;
+      const ctrlX = (ball.x + endX) / 2 - (ball.spin * 150);
+      const ctrlY = (ball.y + 135) / 2;
+      ball.savedRibbon = {
+        x0: ball.x,
+        y0: ball.y,
+        cx: ctrlX,
+        cy: ctrlY,
+        x1: Math.max(80, Math.min(520, endX)),
+        y1: 122
+      };
+
+      Sound.kick();
+    }
+
+    function executeSmartPass() {
+      if (matchMode !== 'SHOOT' || ball.inFlight || !teammates || teammates.length === 0) return;
+
+      const target = teammates.find(t => t.active);
+      if (!target) {
+        executeSmartShot();
+        return;
+      }
+
+      const overlay = document.getElementById('canvasInstructionOverlay');
+      if (overlay) overlay.classList.add('hidden');
+
+      ball.kickOrigin = { x: ball.x, y: ball.y };
+      ball.kickTime = performance.now();
+      ball.inFlight = true;
+      ball.trail = [];
+      ball.isDeflected = false;
+      ball.deflectedFrames = 0;
+
+      ball.isPassing = true;
+      ball.targetTeammate = target;
+      ball.isGroundShot = true;
+
+      updateMatchActionButtons();
+
+      const pDx = target.x - ball.x;
+      const pDy = (target.y + 15) - ball.y;
+      const pDist = Math.hypot(pDx, pDy);
+      const pSpeed = Math.min(14, Math.max(9.5, pDist * 0.085));
+      ball.vx = (pDx / (pDist || 1)) * pSpeed;
+      ball.vy = (pDy / (pDist || 1)) * pSpeed;
+      ball.z = 0;
+      ball.spin = 0;
+      ball.savedRibbon = null;
+
+      Sound.kick();
+    }
+
+    function bindMatchActionButtons() {
+      const btnQuickShoot = document.getElementById('btnQuickShoot');
+      if (btnQuickShoot && !btnQuickShoot._hasNssHandler) {
+        btnQuickShoot._hasNssHandler = true;
+        const handleShoot = (e) => {
+          if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+          executeSmartShot();
+        };
+        btnQuickShoot.addEventListener('click', handleShoot);
+        btnQuickShoot.addEventListener('touchstart', handleShoot, { passive: false });
+      }
+
+      const btnQuickPass = document.getElementById('btnQuickPass');
+      if (btnQuickPass && !btnQuickPass._hasNssHandler) {
+        btnQuickPass._hasNssHandler = true;
+        const handlePass = (e) => {
+          if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+          executeSmartPass();
+        };
+        btnQuickPass.addEventListener('click', handlePass);
+        btnQuickPass.addEventListener('touchstart', handlePass, { passive: false });
+      }
+
+      if (!window._hasNssKeyHandler) {
+        window._hasNssKeyHandler = true;
+        window.addEventListener('keydown', (e) => {
+          if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
+          if (e.code === 'Space' || e.key === 's' || e.key === 'S') {
+            if (matchMode === 'SHOOT' && !ball.inFlight) {
+              e.preventDefault();
+              executeSmartShot();
+            }
+          } else if (e.key === 'p' || e.key === 'P') {
+            if (matchMode === 'SHOOT' && !ball.inFlight && teammates && teammates.some(t => t.active)) {
+              e.preventDefault();
+              executeSmartPass();
+            }
+          }
+        });
+      }
     }
 
     /* =====================================================================
@@ -3785,8 +3973,9 @@
 
                   const overlay = document.getElementById('canvasInstructionOverlay');
                   const promptTxt = document.getElementById('txtCanvasPrompt');
-                  if (promptTxt) promptTxt.textContent = '⚽ Harika pas aldın! Şimdi kaleye kavisli çizgini çek ve 90\'a bitir!';
+                  if (promptTxt) promptTxt.textContent = currentLang === 'TR' ? '⚽ Harika pas aldın! Kaleye kavis çiz veya ŞUT butonuna bas!' : '⚽ Great pass received! Swipe curve or press SHOOT!';
                   if (overlay) overlay.classList.remove('hidden');
+                  updateMatchActionButtons();
 
                   break;
                 }
@@ -4023,6 +4212,7 @@
       const descEl = document.getElementById('splashDesc');
 
       splash.classList.remove('hidden');
+      updateMatchActionButtons();
       iconEl.textContent = success ? (player.position === 'GK' ? '🧤' : '⚽') : '❌';
       titleEl.textContent = title;
       descEl.textContent = desc;
@@ -4451,6 +4641,7 @@
 
       function advanceSimulationClock() {
         if (!tvMatchEngine.isActive || tvMatchEngine.isConcluded) return;
+        updateMatchActionButtons();
         if (tvMatchEngine.timer) {
           clearInterval(tvMatchEngine.timer);
           tvMatchEngine.timer = null;
@@ -4573,6 +4764,7 @@
       function concludeMatchFullTime() {
         if (!tvMatchEngine.isActive || tvMatchEngine.isConcluded) return;
         tvMatchEngine.isConcluded = true;
+        updateMatchActionButtons();
         if (tvMatchEngine.timer) {
           clearInterval(tvMatchEngine.timer);
           tvMatchEngine.timer = null;
