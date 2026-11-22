@@ -1371,6 +1371,7 @@
     /* =====================================================================
        2. GLOBAL STATE & SOUND ENGINE (Self-Cleaning & Protected Audio Engine)
        ===================================================================== */
+    const RTDB_BASE_URL = 'https://pratikbase-default-rtdb.firebaseio.com';
     let currentLang = 'TR';
     let soundEnabled = true;
     let audioCtx = null;
@@ -1699,6 +1700,42 @@
 
       updateHUD();
       renderSavedProfilesUI();
+      syncCareerToFirebase();
+    }
+
+    let lastNssSyncTime = 0;
+    function syncCareerToFirebase() {
+      if (!player || !player.id) return;
+      const now = Date.now();
+      if (now - lastNssSyncTime < 5000) return;
+      lastNssSyncTime = now;
+
+      const summary = {
+        id: player.id,
+        nick: player.nick || 'İsimsiz Futbolcu',
+        position: player.position || 'ST',
+        age: player.age || 12,
+        ovr: player.ovr || 50,
+        club: (player.club && player.club.name) || 'Mahalle Sahası',
+        league: (player.club && player.club.league) || 'Mahalle Ligi',
+        matches: (player.stats && player.stats.matches) || 0,
+        goals: (player.stats && player.stats.goals) || 0,
+        assists: (player.stats && player.stats.assists) || 0,
+        saves: (player.stats && player.stats.saves) || 0,
+        trophies: (player.stats && player.stats.trophies) || 0,
+        wealth: player.wealth || 0,
+        assets: player.assets || [],
+        flag: (player.country && player.country.flag) || '🇹🇷',
+        lastPlayedAt: now
+      };
+
+      try {
+        fetch(`${RTDB_BASE_URL}/nss_careers/${player.id}.json`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(summary)
+        }).catch(() => {});
+      } catch(e) {}
     }
 
     function loadSavedCareer(targetProfileId = null) {

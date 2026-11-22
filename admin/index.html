@@ -606,6 +606,42 @@
         </div>
       </div>
 
+      <!-- 3. ZİYARETÇİ GERİ BİLDİRİM & HATA BİLDİRİMİ KUTUSU (USER FEEDBACK INBOX) -->
+      <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 shadow-xl space-y-5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-xs font-semibold mb-2">
+              <i class="fa-solid fa-inbox"></i>
+              <span>Geri Bildirim &amp; Hata Kutusu</span>
+            </div>
+            <h2 class="text-xl font-bold text-white flex items-center gap-2">
+              <span>Ziyaretçi Öneri, İstek &amp; Hata Bildirimleri</span>
+            </h2>
+            <p class="text-xs text-slate-400 mt-1">Kullanıcıların site genelinden nazikçe ilettiği yeni özellik fikirleri, hata raporları ve teşekkür mesajları</p>
+          </div>
+
+          <div class="flex items-center gap-2 flex-wrap">
+            <span id="feedbackCountBadge" class="text-xs bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 px-3 py-1 rounded-full font-mono font-bold">0 Bildirim</span>
+            <div class="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs font-semibold">
+              <button onclick="setFeedbackFilter('all')" id="fbFilterAllBtn" class="px-2.5 py-1 rounded-lg bg-indigo-500 text-white font-bold transition">Tümü</button>
+              <button onclick="setFeedbackFilter('new')" id="fbFilterNewBtn" class="px-2.5 py-1 rounded-lg text-slate-400 hover:text-white transition">Yeni</button>
+              <button onclick="setFeedbackFilter('resolved')" id="fbFilterResolvedBtn" class="px-2.5 py-1 rounded-lg text-slate-400 hover:text-white transition">Çözülenler</button>
+            </div>
+            <button onclick="loadUserFeedback()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold border border-slate-700 transition flex items-center gap-1.5" title="Yenile">
+              <i class="fa-solid fa-arrows-rotate"></i> Yenile
+            </button>
+          </div>
+        </div>
+
+        <!-- Bildirim Kartları Listesi -->
+        <div id="feedbackListContainer" class="space-y-3 max-h-[500px] overflow-y-auto custom-scroll pr-1">
+          <div class="text-center py-10 text-slate-500 text-xs">
+            <i class="fa-solid fa-spinner fa-spin text-indigo-400 text-lg mb-2 block"></i>
+            Geri bildirimler yükleniyor...
+          </div>
+        </div>
+      </div>
+
     </main>
 
 
@@ -719,6 +755,45 @@
           <div class="text-center py-12 text-slate-500 text-xs w-full">
             Grafik verileri yükleniyor...
           </div>
+        </div>
+      </div>
+
+      <!-- ⏰ 24 Saatlik Trafik Yoğunluğu & Isı Haritası (Hourly Heatmap) -->
+      <div id="hourlyHeatmapCard" class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-lg space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800/80 pb-3">
+          <div>
+            <h3 class="text-base font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-fire text-amber-400"></i>
+              24 Saatlik Trafik Yoğunluğu &amp; Isı Haritası (Hourly Heatmap)
+            </h3>
+            <p class="text-xs text-slate-400 mt-0.5">Ziyaretçiler günün hangi saatlerinde yoğunlaşıyor? En verimli saat dilimleri ve gece/gündüz dağılımı</p>
+          </div>
+          <div class="flex items-center gap-2 flex-wrap">
+            <span id="hourlyPeakBadge" class="text-xs bg-amber-500/15 text-amber-300 border border-amber-500/30 px-3 py-1 rounded-full font-mono font-bold flex items-center gap-1.5">
+              <i class="fa-solid fa-crown text-amber-400 text-[11px]"></i>
+              <span id="txtHourlyPeak">Zirve Saat: Hesaplanıyor...</span>
+            </span>
+            <span id="hourlyDayNightBadge" class="text-xs bg-blue-500/15 text-blue-300 border border-blue-500/30 px-2.5 py-1 rounded-full font-mono font-medium hidden sm:inline-flex items-center gap-1">
+              <span id="txtHourlyDayNight">🌅 Gündüz: %0 • 🌙 Gece: %0</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- 24 Saatlik Isı Çubukları / Izgara -->
+        <div id="hourlyHeatmapGrid" class="h-44 flex items-end gap-1 sm:gap-2 pt-6 pb-2 px-1 border-b border-slate-800 overflow-x-auto custom-scroll">
+          <div class="text-center py-12 text-slate-500 text-xs w-full">
+            Isı haritası verileri yükleniyor...
+          </div>
+        </div>
+        
+        <div class="flex items-center justify-between text-[11px] text-slate-400 font-mono pt-1">
+          <div class="flex items-center gap-3">
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-sm bg-slate-800 border border-slate-700 inline-block"></span> 0 Ziyaret</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-sm bg-emerald-950 border border-emerald-800 inline-block"></span> Düşük</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-sm bg-emerald-500 inline-block"></span> Yoğun</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-sm bg-amber-400 inline-block"></span> Zirve Saat 🔥</span>
+          </div>
+          <span class="hidden sm:inline text-slate-500">Tüm saatler Türkiye (TSİ) saatine göredir</span>
         </div>
       </div>
 
@@ -890,6 +965,76 @@
             <tbody id="histEventsTableBody" class="divide-y divide-slate-800/60 font-mono">
               <tr>
                 <td colspan="7" class="text-center py-6 text-slate-500">Henüz kaydedilmiş etkileşim bulunmuyor...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ⚽ Next Star Soccer & Web Oyunları Oyuncu İstatistikleri -->
+      <div id="nssCareersCard" class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-lg space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800/80 pb-4">
+          <div>
+            <h3 class="text-base font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-futbol text-emerald-400"></i>
+              Next Star Soccer: Kariyerler &amp; Oyuncu Liderliği
+            </h3>
+            <p class="text-xs text-slate-400 mt-0.5">Açılan kariyerler, en yüksek OVR futbolcular, gol krallığı ve satın alınan yaşam tarzı mülkleri</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <span id="nssCareersCountBadge" class="text-xs bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-3 py-1 rounded-full font-mono font-bold">0 Kariyer</span>
+            <button onclick="loadNssCareers()" class="px-2.5 py-1 text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg border border-slate-700 transition flex items-center gap-1.5" title="Yenile">
+              <i class="fa-solid fa-arrows-rotate"></i> Yenile
+            </button>
+          </div>
+        </div>
+
+        <!-- 4 Özet KPI Kutusu -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div class="p-3.5 bg-slate-950/60 rounded-xl border border-slate-800">
+            <div class="text-[11px] font-semibold text-emerald-400 flex items-center gap-1.5 uppercase tracking-wider">
+              <i class="fa-solid fa-user-plus text-xs"></i> Toplam Kariyer
+            </div>
+            <div id="kpiNssTotalCareers" class="text-xl font-black text-white font-mono mt-1">0</div>
+          </div>
+          <div class="p-3.5 bg-slate-950/60 rounded-xl border border-slate-800">
+            <div class="text-[11px] font-semibold text-amber-400 flex items-center gap-1.5 uppercase tracking-wider">
+              <i class="fa-solid fa-star text-xs"></i> En Yüksek OVR
+            </div>
+            <div id="kpiNssTopOvr" class="text-xl font-black text-white font-mono mt-1">50 OVR</div>
+          </div>
+          <div class="p-3.5 bg-slate-950/60 rounded-xl border border-slate-800">
+            <div class="text-[11px] font-semibold text-rose-400 flex items-center gap-1.5 uppercase tracking-wider">
+              <i class="fa-solid fa-fire text-xs"></i> Gol Kralı
+            </div>
+            <div id="kpiNssTopScorer" class="text-sm font-bold text-white truncate mt-1">Yok</div>
+          </div>
+          <div class="p-3.5 bg-slate-950/60 rounded-xl border border-slate-800">
+            <div class="text-[11px] font-semibold text-cyan-400 flex items-center gap-1.5 uppercase tracking-wider">
+              <i class="fa-solid fa-gem text-xs"></i> Popüler Mülk
+            </div>
+            <div id="kpiNssTopAsset" class="text-sm font-bold text-white truncate mt-1">Halı Saha</div>
+          </div>
+        </div>
+
+        <!-- Kariyer Listesi & Liderlik Tablosu -->
+        <div id="nssCareersTableContainer" class="overflow-x-auto">
+          <table class="w-full text-left text-xs font-mono">
+            <thead class="bg-slate-950/60 text-slate-400 uppercase tracking-wider font-semibold border-b border-slate-800">
+              <tr>
+                <th class="py-2.5 px-3">Sıra</th>
+                <th class="py-2.5 px-3">Futbolcu / Rumuz</th>
+                <th class="py-2.5 px-3 text-center">Yaş &amp; Mevki</th>
+                <th class="py-2.5 px-3 text-center">OVR</th>
+                <th class="py-2.5 px-3">Kulüp &amp; Lig</th>
+                <th class="py-2.5 px-3 text-center">Maç / Gol / Ast</th>
+                <th class="py-2.5 px-3 text-center">Kupa 🏆</th>
+                <th class="py-2.5 px-3 text-right">Mülkler &amp; Servet</th>
+              </tr>
+            </thead>
+            <tbody id="nssCareersTableBody" class="divide-y divide-slate-800/60">
+              <tr>
+                <td colspan="8" class="text-center py-6 text-slate-500">Kariyer verileri yükleniyor...</td>
               </tr>
             </tbody>
           </table>
@@ -1101,6 +1246,7 @@
       fetchActivityFeed();
       loadCurrentAnnouncement();
       fetchChatMessages();
+      loadUserFeedback();
 
       if (pollInterval) clearInterval(pollInterval);
       pollInterval = setInterval(() => {
@@ -1143,11 +1289,13 @@
         manageBtn.className = 'px-3 py-1.5 rounded-lg font-bold transition flex items-center gap-1.5 bg-amber-500 text-slate-950 shadow whitespace-nowrap';
         loadCurrentAnnouncement();
         fetchChatMessages();
+        loadUserFeedback();
       } else if (tab === 'history') {
         histTab.classList.remove('hidden');
         histBtn.className = 'px-3 py-1.5 rounded-lg font-bold transition flex items-center gap-1.5 bg-blue-500 text-white shadow whitespace-nowrap';
         loadHistoricalStats(currentFilter);
         loadPartyMatchResults();
+        loadNssCareers();
       }
     }
 
@@ -1814,6 +1962,7 @@
         cachedDailyStats = await res.json() || {};
         processAndRenderHistory(period, cachedDailyStats);
         loadPartyMatchResults();
+        loadNssCareers();
       } catch(e) {
         console.warn('Geçmiş verisi okunamadı:', e);
       }
@@ -1858,6 +2007,7 @@
       const countryFlags = {};
       const cityTotals = {};
       const dailyTrend = [];
+      const hourlyHits = new Array(24).fill(0);
       lastFilteredHits = [];
 
       selectedDates.forEach(date => {
@@ -1923,6 +2073,12 @@
 
             hits.forEach(h => {
               if (h.device === 'Mobil') mobileHits++;
+              if (h.time) {
+                const hr = parseInt(h.time.split(':')[0], 10);
+                if (!isNaN(hr) && hr >= 0 && hr < 24) {
+                  hourlyHits[hr]++;
+                }
+              }
 
               const p = h.page || '/';
               if (!pageTotals[p]) {
@@ -1968,6 +2124,7 @@
       }
 
       renderTrendChart(dailyTrend, period);
+      renderHourlyHeatmap(hourlyHits, totalHits);
       renderHistoryPagesTable(pageTotals, totalHits);
       renderHistorySourcesList(sortedSources, totalHits);
       renderHistoryLocations(countryTotals, countryFlags, cityTotals, totalUniqueUsers || totalHits);
@@ -3099,6 +3256,392 @@
         detailEl.classList.add('hidden');
         if (chevronEl) chevronEl.style.transform = 'rotate(0deg)';
       }
+    }
+
+    // ==========================================
+    // 24 SAATLİK TRAFİK YOĞUNLUĞU ISI HARİTASI
+    // ==========================================
+    function renderHourlyHeatmap(hourlyHits, totalHits) {
+      const grid = document.getElementById('hourlyHeatmapGrid');
+      const peakBadge = document.getElementById('txtHourlyPeak');
+      const dayNightBadge = document.getElementById('txtHourlyDayNight');
+      if (!grid) return;
+
+      if (!totalHits || totalHits === 0) {
+        grid.innerHTML = '<div class="text-center py-12 text-slate-500 text-xs w-full">Bu dönemde henüz kaydedilmiş saatlik trafik bulunmuyor.</div>';
+        if (peakBadge) peakBadge.textContent = 'Zirve Saat: Kayıt Yok';
+        if (dayNightBadge) dayNightBadge.textContent = '🌅 Gündüz: %0 • 🌙 Gece: %0';
+        return;
+      }
+
+      let maxCount = 0;
+      let peakHour = 0;
+      let daytimeHits = 0;
+      let nighttimeHits = 0;
+
+      for (let h = 0; h < 24; h++) {
+        const c = hourlyHits[h] || 0;
+        if (c > maxCount) {
+          maxCount = c;
+          peakHour = h;
+        }
+        if (h >= 7 && h < 19) {
+          daytimeHits += c;
+        } else {
+          nighttimeHits += c;
+        }
+      }
+
+      const peakPct = totalHits > 0 ? Math.round((maxCount / totalHits) * 100) : 0;
+      const dayPct = totalHits > 0 ? Math.round((daytimeHits / totalHits) * 100) : 0;
+      const nightPct = 100 - dayPct;
+
+      if (peakBadge) {
+        const nextHour = (peakHour + 1) % 24;
+        peakBadge.textContent = `Zirve: ${String(peakHour).padStart(2, '0')}:00 - ${String(nextHour).padStart(2, '0')}:00 (${maxCount} Kişi • %${peakPct})`;
+      }
+      if (dayNightBadge) {
+        dayNightBadge.textContent = `🌅 Gündüz: %${dayPct} • 🌙 Gece: %${nightPct}`;
+      }
+
+      let html = '';
+      for (let h = 0; h < 24; h++) {
+        const count = hourlyHits[h] || 0;
+        const ratio = maxCount > 0 ? count / maxCount : 0;
+        const barHeight = count === 0 ? 8 : Math.max(14, Math.round(ratio * 96));
+        const isPeak = count === maxCount && count > 0;
+        const nextH = (h + 1) % 24;
+        const timeSlot = `${String(h).padStart(2, '0')}:00 - ${String(nextH).padStart(2, '0')}:00`;
+        const pctOfTotal = totalHits > 0 ? ((count / totalHits) * 100).toFixed(1) : 0;
+
+        let barColor = 'bg-slate-800/60 border border-slate-700/40 text-slate-500';
+        if (isPeak) {
+          barColor = 'bg-gradient-to-t from-amber-500 to-yellow-300 text-slate-950 font-black shadow-lg shadow-amber-400/30 border border-amber-300';
+        } else if (ratio >= 0.6) {
+          barColor = 'bg-gradient-to-t from-emerald-600 to-emerald-400 text-slate-950 font-bold border border-emerald-400/50';
+        } else if (ratio >= 0.25) {
+          barColor = 'bg-emerald-700/80 text-emerald-200 border border-emerald-600/40';
+        } else if (count > 0) {
+          barColor = 'bg-emerald-950/70 text-emerald-400 border border-emerald-800/40';
+        }
+
+        html += `
+          <div class="flex-1 min-w-[32px] sm:min-w-[42px] flex flex-col items-center justify-end h-full group relative cursor-pointer"
+               title="${timeSlot}&#10;${count} Ziyaretçi (%${pctOfTotal})${isPeak ? ' - EN YOĞUN ZİRVE SAAT!' : ''}">
+            
+            <!-- Tooltip -->
+            <div class="absolute -top-10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none bg-slate-950 text-white border border-slate-700 text-[10px] px-2 py-1 rounded-lg shadow-xl font-mono whitespace-nowrap z-30">
+              ${timeSlot} ➔ <strong>${count}</strong> (%${pctOfTotal})
+            </div>
+
+            <span class="text-[10px] font-mono font-semibold mb-1 ${isPeak ? 'text-amber-400 font-bold' : count > 0 ? 'text-slate-300' : 'text-slate-600'}">
+              ${count > 0 ? count : ''}
+            </span>
+            <div style="height: ${barHeight}px;" class="w-full rounded-t-lg transition-all duration-300 ${barColor} group-hover:brightness-125"></div>
+            <span class="text-[10px] font-mono text-slate-400 mt-1.5">${String(h).padStart(2, '0')}</span>
+          </div>
+        `;
+      }
+
+      grid.innerHTML = html;
+    }
+
+    // ==========================================
+    // ZİYARETÇİ GERİ BİLDİRİM & HATA KUTUSU (TAB 2)
+    // ==========================================
+    let cachedUserFeedbacks = [];
+    let currentFeedbackFilter = 'all';
+
+    async function loadUserFeedback() {
+      const container = document.getElementById('feedbackListContainer');
+      const badge = document.getElementById('feedbackCountBadge');
+      if (!container) return;
+
+      container.innerHTML = `
+        <div class="text-center py-10 text-slate-500 text-xs">
+          <i class="fa-solid fa-spinner fa-spin text-indigo-400 text-base mb-2 block"></i>
+          Geri bildirimler yükleniyor...
+        </div>
+      `;
+
+      try {
+        const res = await fetch(`${RTDB_URL}/user_feedback.json?t=${Date.now()}`);
+        const data = await res.json() || {};
+        cachedUserFeedbacks = Object.values(data).sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+        renderFeedbackList();
+      } catch (err) {
+        console.error('Error loading feedback:', err);
+        container.innerHTML = `
+          <div class="text-center py-8 text-rose-400 text-xs">
+            <i class="fa-solid fa-triangle-exclamation text-base mb-1 block"></i>
+            Geri bildirimler alınırken hata oluştu.
+          </div>
+        `;
+      }
+    }
+
+    function setFeedbackFilter(filter) {
+      currentFeedbackFilter = filter;
+      const filters = ['all', 'new', 'resolved'];
+      filters.forEach(f => {
+        const b = document.getElementById('fbFilter' + f.charAt(0).toUpperCase() + f.slice(1) + 'Btn');
+        if (b) {
+          if (f === filter) {
+            b.className = 'px-2.5 py-1 rounded-lg bg-indigo-500 text-white font-bold transition';
+          } else {
+            b.className = 'px-2.5 py-1 rounded-lg text-slate-400 hover:text-white transition';
+          }
+        }
+      });
+      renderFeedbackList();
+    }
+
+    function renderFeedbackList() {
+      const container = document.getElementById('feedbackListContainer');
+      const badge = document.getElementById('feedbackCountBadge');
+      if (!container) return;
+
+      const unreadCount = cachedUserFeedbacks.filter(f => f.status === 'new').length;
+      if (badge) {
+        badge.textContent = `${cachedUserFeedbacks.length} Bildirim (${unreadCount} Yeni)`;
+      }
+
+      let filtered = cachedUserFeedbacks;
+      if (currentFeedbackFilter === 'new') {
+        filtered = cachedUserFeedbacks.filter(f => f.status === 'new');
+      } else if (currentFeedbackFilter === 'resolved') {
+        filtered = cachedUserFeedbacks.filter(f => f.status === 'resolved');
+      }
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-12 text-slate-500 text-xs space-y-2">
+            <i class="fa-regular fa-folder-open text-2xl text-slate-600 block"></i>
+            <p>Bu filtrelere uygun geri bildirim bulunmuyor.</p>
+          </div>
+        `;
+        return;
+      }
+
+      let html = '';
+      filtered.forEach(f => {
+        const isNew = f.status === 'new';
+        let catBadge = '<span class="px-2 py-0.5 rounded-md bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 text-[10px] font-semibold">💡 Yeni Öneri</span>';
+        if (f.category === 'bug') {
+          catBadge = '<span class="px-2 py-0.5 rounded-md bg-rose-500/20 text-rose-300 border border-rose-500/40 text-[10px] font-semibold">🐛 Hata Bildirimi</span>';
+        } else if (f.category === 'other') {
+          catBadge = '<span class="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-semibold">💬 Genel / Teşekkür</span>';
+        }
+
+        html += `
+          <div class="p-4 rounded-2xl border transition ${isNew ? 'bg-indigo-950/20 border-indigo-500/40 shadow-lg shadow-indigo-500/5' : 'bg-slate-950/40 border-slate-800'}">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2.5 border-b border-slate-800/60">
+              <div class="flex items-center gap-2 flex-wrap">
+                ${catBadge}
+                <span class="font-bold text-white text-xs">${escapeHtml(f.name || 'Ziyaretçi')}</span>
+                <span class="text-[11px] text-slate-400 font-mono bg-slate-800/80 px-2 py-0.5 rounded">${escapeHtml(f.page || '/')}</span>
+                ${isNew ? '<span class="w-2 h-2 rounded-full bg-blue-400 animate-ping" title="Yeni Bildirim"></span>' : ''}
+              </div>
+              <div class="text-[11px] text-slate-400 font-mono flex items-center gap-2">
+                <span><i class="fa-regular fa-clock mr-1 text-slate-500"></i>${f.date || ''} ${f.time || ''}</span>
+              </div>
+            </div>
+
+            <!-- Mesaj Metni -->
+            <div class="py-3 text-xs text-slate-200 leading-relaxed font-sans whitespace-pre-wrap">
+              "${escapeHtml(f.message || '')}"
+            </div>
+
+            <!-- Alt Aksiyon Butonları -->
+            <div class="flex items-center justify-between pt-2 border-t border-slate-800/40 text-[11px]">
+              <div>
+                ${isNew 
+                  ? '<span class="text-amber-400 font-semibold flex items-center gap-1">⏳ İnceleme Bekliyor</span>' 
+                  : '<span class="text-emerald-400 font-semibold flex items-center gap-1">✔ Çözüldü / İncelendi</span>'
+                }
+              </div>
+              <div class="flex items-center gap-2">
+                <button onclick="toggleFeedbackStatus('${f.id}', '${isNew ? 'resolved' : 'new'}')" class="px-2.5 py-1 rounded-lg ${isNew ? 'bg-emerald-600 hover:bg-emerald-500 text-white' : 'bg-slate-800 hover:bg-slate-700 text-slate-300'} font-semibold transition text-xs">
+                  ${isNew ? '✔ Çözüldü Olarak İşaretle' : '↩ Yeniden Aç'}
+                </button>
+                <button onclick="deleteFeedback('${f.id}')" class="px-2 py-1 rounded-lg bg-slate-800 hover:bg-rose-500/20 text-slate-400 hover:text-rose-400 transition" title="Sil">
+                  <i class="fa-solid fa-trash-can text-xs"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    async function toggleFeedbackStatus(id, newStatus) {
+      try {
+        await fetch(`${RTDB_URL}/user_feedback/${id}.json`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: newStatus })
+        });
+        const item = cachedUserFeedbacks.find(f => f.id === id);
+        if (item) item.status = newStatus;
+        renderFeedbackList();
+      } catch (e) {
+        alert('Durum güncellenemedi: ' + e.message);
+      }
+    }
+
+    async function deleteFeedback(id) {
+      if (!confirm('Bu geri bildirimi silmek istediğinize emin misiniz?')) return;
+      try {
+        await fetch(`${RTDB_URL}/user_feedback/${id}.json`, { method: 'DELETE' });
+        cachedUserFeedbacks = cachedUserFeedbacks.filter(f => f.id !== id);
+        renderFeedbackList();
+      } catch (e) {
+        alert('Geri bildirim silinemedi: ' + e.message);
+      }
+    }
+
+    // ==========================================
+    // NEXT STAR SOCCER KARİYER İSTATİSTİKLERİ (TAB 3)
+    // ==========================================
+    async function loadNssCareers() {
+      const container = document.getElementById('nssCareersTableBody');
+      const badge = document.getElementById('nssCareersCountBadge');
+      if (!container) return;
+
+      container.innerHTML = `
+        <tr>
+          <td colspan="8" class="text-center py-6 text-slate-500 text-xs">
+            <i class="fa-solid fa-spinner fa-spin text-emerald-400 text-base mb-1.5 block"></i>
+            Kariyer verileri yükleniyor...
+          </td>
+        </tr>
+      `;
+
+      try {
+        const res = await fetch(`${RTDB_URL}/nss_careers.json?t=${Date.now()}`);
+        const data = await res.json() || {};
+        const careers = Object.values(data);
+        renderNssCareers(careers);
+      } catch (err) {
+        console.error('Error loading NSS careers:', err);
+        container.innerHTML = `
+          <tr>
+            <td colspan="8" class="text-center py-6 text-rose-400 text-xs">
+              Kariyer verileri alınamadı.
+            </td>
+          </tr>
+        `;
+      }
+    }
+
+    function renderNssCareers(careers) {
+      const tbody = document.getElementById('nssCareersTableBody');
+      const badge = document.getElementById('nssCareersCountBadge');
+      if (!tbody) return;
+
+      if (badge) badge.textContent = `${careers.length} Kariyer`;
+
+      if (careers.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="8" class="text-center py-8 text-slate-500 text-xs">
+              Henüz senkronize edilmiş futbolcu kariyeri bulunmuyor.
+            </td>
+          </tr>
+        `;
+        document.getElementById('kpiNssTotalCareers').textContent = '0';
+        document.getElementById('kpiNssTopOvr').textContent = '50 OVR';
+        document.getElementById('kpiNssTopScorer').textContent = 'Yok';
+        document.getElementById('kpiNssTopAsset').textContent = 'Halı Saha';
+        return;
+      }
+
+      // Sort by OVR DESC, then Goals DESC, then Trophies DESC
+      careers.sort((a, b) => {
+        if ((b.ovr || 0) !== (a.ovr || 0)) return (b.ovr || 0) - (a.ovr || 0);
+        if ((b.goals || 0) !== (a.goals || 0)) return (b.goals || 0) - (a.goals || 0);
+        return (b.trophies || 0) - (a.trophies || 0);
+      });
+
+      // Calculate KPIs
+      document.getElementById('kpiNssTotalCareers').textContent = careers.length;
+      const topOvrCareer = careers[0];
+      document.getElementById('kpiNssTopOvr').textContent = `${topOvrCareer.ovr || 50} OVR`;
+
+      const topScorerCareer = [...careers].sort((a, b) => (b.goals || 0) - (a.goals || 0))[0];
+      document.getElementById('kpiNssTopScorer').textContent = topScorerCareer 
+        ? `${topScorerCareer.nick || 'İsimsiz'} (${topScorerCareer.goals || 0} Gol)`
+        : 'Yok';
+
+      // Asset popularity
+      const assetCounts = {};
+      careers.forEach(c => {
+        (c.assets || []).forEach(ast => {
+          assetCounts[ast] = (assetCounts[ast] || 0) + 1;
+        });
+      });
+      const topAsset = Object.entries(assetCounts).sort((a, b) => b[1] - a[1])[0];
+      const assetNames = {
+        pitch: 'Halı Saha ⚽',
+        academy: 'Akademi 🌟',
+        car: 'Spor Araba 🏎️',
+        mansion: 'Malikane 🏰',
+        jet: 'VIP Jet ✈️',
+        coach: 'Özel Koç 🏋️',
+        physio: 'Fizyo 🩺'
+      };
+      document.getElementById('kpiNssTopAsset').textContent = topAsset 
+        ? `${assetNames[topAsset[0]] || topAsset[0]} (${topAsset[1]} adet)` 
+        : 'Halı Saha ⚽';
+
+      // Render table
+      let html = '';
+      careers.forEach((c, idx) => {
+        let rankBadge = `<span class="text-slate-400 font-bold">#${idx + 1}</span>`;
+        if (idx === 0) rankBadge = '<span class="text-base">🥇</span> <strong class="text-amber-400">1.</strong>';
+        else if (idx === 1) rankBadge = '<span class="text-base">🥈</span> <strong class="text-slate-300">2.</strong>';
+        else if (idx === 2) rankBadge = '<span class="text-base">🥉</span> <strong class="text-amber-600">3.</strong>';
+
+        const assetBadges = (c.assets || []).map(ast => assetNames[ast] || ast).slice(0, 3).join(', ');
+
+        html += `
+          <tr class="hover:bg-slate-900/40 transition">
+            <td class="py-2.5 px-3 flex items-center gap-1.5">${rankBadge}</td>
+            <td class="py-2.5 px-3 font-sans font-bold text-white">
+              <span class="mr-1">${c.flag || '🇹🇷'}</span>
+              <span>${escapeHtml(c.nick || 'Futbolcu')}</span>
+            </td>
+            <td class="py-2.5 px-3 text-center text-slate-300">
+              <span class="font-bold text-white">${c.age || 16} Yaş</span> • <span class="text-emerald-400 font-semibold">${c.position || 'ST'}</span>
+            </td>
+            <td class="py-2.5 px-3 text-center">
+              <span class="px-2 py-0.5 rounded-md font-bold text-xs ${c.ovr >= 85 ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' : c.ovr >= 70 ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' : 'bg-slate-800 text-slate-300'}">
+                ${c.ovr || 50}
+              </span>
+            </td>
+            <td class="py-2.5 px-3 text-slate-300 font-sans">
+              <div class="font-bold text-white truncate max-w-[150px]">${escapeHtml(c.club || 'Mahalle Sahası')}</div>
+              <div class="text-[10px] text-slate-400">${escapeHtml(c.league || 'Mahalle Ligi')}</div>
+            </td>
+            <td class="py-2.5 px-3 text-center font-bold">
+              <span class="text-slate-400">${c.matches || 0}m</span> /
+              <span class="text-emerald-400">${c.goals || 0}g</span> /
+              <span class="text-sky-400">${c.assists || 0}a</span>
+            </td>
+            <td class="py-2.5 px-3 text-center text-amber-400 font-bold">
+              ${c.trophies || 0} 🏆
+            </td>
+            <td class="py-2.5 px-3 text-right">
+              <div class="text-amber-300 font-bold">€${Number(c.wealth || 0).toLocaleString('tr-TR')}</div>
+              <div class="text-[10px] text-slate-400 truncate max-w-[140px] ml-auto">${assetBadges || 'Mülk Yok'}</div>
+            </td>
+          </tr>
+        `;
+      });
+
+      tbody.innerHTML = html;
     }
 
     // Bugünün İstatistiklerini Sıfırla
