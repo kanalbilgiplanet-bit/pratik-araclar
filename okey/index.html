@@ -278,6 +278,16 @@
             </div>
           </div>
 
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">Başlangıç Koltuğunuz</label>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5" id="startingSeatSelector">
+              <button type="button" onclick="selectStartingSeat(0)" id="startSeatBtn0" class="py-2 px-1 rounded-xl text-[11px] font-black border border-emerald-400 bg-emerald-500/20 text-emerald-300 transition text-center">1. Koltuk (Güney)</button>
+              <button type="button" onclick="selectStartingSeat(1)" id="startSeatBtn1" class="py-2 px-1 rounded-xl text-[11px] font-bold border border-slate-700 bg-slate-900 text-slate-400 hover:border-emerald-500 transition text-center">2. Koltuk (Sağ)</button>
+              <button type="button" onclick="selectStartingSeat(2)" id="startSeatBtn2" class="py-2 px-1 rounded-xl text-[11px] font-bold border border-slate-700 bg-slate-900 text-slate-400 hover:border-emerald-500 transition text-center">3. Koltuk (Karşı)</button>
+              <button type="button" onclick="selectStartingSeat(3)" id="startSeatBtn3" class="py-2 px-1 rounded-xl text-[11px] font-bold border border-slate-700 bg-slate-900 text-slate-400 hover:border-emerald-500 transition text-center">4. Koltuk (Sol)</button>
+            </div>
+          </div>
+
           <div class="pt-2 space-y-2.5">
             <button onclick="createTable(false)" class="w-full py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-sm shadow-lg shadow-emerald-500/20 transition flex items-center justify-center gap-2 active:scale-[0.98]">
               <i class="fa-solid fa-door-open"></i>
@@ -1349,6 +1359,20 @@
     /* =====================================================================
        LOBBY & ROOM MANAGEMENT (FIREBASE RTDB)
        ===================================================================== */
+    let selectedStartingSeat = 0;
+    function selectStartingSeat(seatIdx) {
+      selectedStartingSeat = seatIdx;
+      [0, 1, 2, 3].forEach(idx => {
+        const btn = document.getElementById('startSeatBtn' + idx);
+        if (!btn) return;
+        if (idx === seatIdx) {
+          btn.className = 'py-2 px-1 rounded-xl text-[11px] font-black border border-emerald-400 bg-emerald-500/20 text-emerald-300 transition text-center';
+        } else {
+          btn.className = 'py-2 px-1 rounded-xl text-[11px] font-bold border border-slate-700 bg-slate-900 text-slate-400 hover:border-emerald-500 transition text-center';
+        }
+      });
+    }
+
     function selectTargetRounds(n) {
       selectedTargetRounds = n;
       [3, 5, 11].forEach(val => {
@@ -1382,8 +1406,8 @@
         if (data) {
           Object.values(data).forEach(t => {
             if (!t || !t.id) return;
-            // Clean up stale tables (> 25 min inactive)
-            if (now - (t.updatedAt || t.createdAt || 0) > 25 * 60 * 1000) {
+            // Clean up stale tables (> 35 min inactive)
+            if (now - (t.updatedAt || t.createdAt || 0) > 35 * 60 * 1000) {
               fetch(`${RTDB_URL}/okey/tables/${t.id}.json`, { method: 'DELETE' }).catch(() => {});
               return;
             }
@@ -1417,21 +1441,79 @@
         return;
       }
 
-      list.innerHTML = tables.map(t => {
+      // Check if user is currently seated in ANY table (to show Reconnect Banner!)
+      const myActiveTable = profile ? tables.find(t => {
+        const sList = normalizeSeats(t.seats);
+        return sList.some(s => s && (s.id === profile.id || (s.name && profile.name && s.name.trim().toLowerCase() === profile.name.trim().toLowerCase())));
+      }) : null;
+
+      let bannerHtml = '';
+      if (myActiveTable) {
+        const isGame = myActiveTable.status === 'playing';
+        bannerHtml = `
+          <div class="p-3.5 mb-3 rounded-2xl bg-gradient-to-r from-amber-500/25 via-yellow-500/20 to-amber-500/25 border-2 border-amber-400 shadow-xl shadow-amber-500/20 flex flex-col sm:flex-row items-center justify-between gap-3 animate-pulse">
+            <div class="flex items-center gap-3 min-w-0">
+              <div class="w-10 h-10 rounded-xl bg-amber-400 text-slate-950 font-black text-xl flex items-center justify-center shrink-0">
+                ⚡
+              </div>
+              <div class="min-w-0">
+                <div class="text-[11px] font-black text-amber-300 uppercase tracking-wider">Aktif Masanız Sizi Bekliyor!</div>
+                <div class="text-sm font-extrabold text-white truncate">${escapeHtml(myActiveTable.name)} · <span class="text-amber-400 font-mono">${isGame ? `Oyunda (El ${myActiveTable.currentRound || 1}/${myActiveTable.targetRounds || 5})` : 'Bekleme Odasında'}</span></div>
+              </div>
+            </div>
+            <button onclick="rejoinTable('${myActiveTable.id}')" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 hover:from-amber-300 hover:to-yellow-400 text-slate-950 font-black text-xs shadow-lg shadow-amber-400/40 hover:scale-105 active:scale-95 transition shrink-0 flex items-center justify-center gap-2">
+              <i class="fa-solid fa-arrow-right-to-bracket"></i>
+              <span>Masana Geri Dön</span>
+            </button>
+          </div>
+        `;
+      }
+
+      const tablesHtml = tables.map(t => {
         const seats = normalizeSeats(t.seats);
         const filledCount = seats.filter(Boolean).length;
         const botCount = seats.filter(s => s && s.isBot).length;
         const humanCount = filledCount - botCount;
         const isWaiting = t.status === 'waiting';
+        const mySeatIdx = profile ? seats.findIndex(s => s && (s.id === profile.id || (s.name && profile.name && s.name.trim().toLowerCase() === profile.name.trim().toLowerCase()))) : -1;
+        const isMySeat = mySeatIdx !== -1;
         const canJoin = isWaiting && filledCount < 4;
 
-        const seatPills = seats.map(s => {
-          if (!s) return `<span class="px-1.5 py-0.5 rounded bg-slate-800/80 text-slate-500 text-[10px]">Boş</span>`;
-          return `<span class="px-1.5 py-0.5 rounded ${s.isBot ? 'bg-amber-500/15 text-amber-300' : 'bg-emerald-500/15 text-emerald-300'} text-[10px] font-semibold">${escapeHtml(s.avatar)} ${escapeHtml(s.name)}</span>`;
+        const seatPills = seats.map((s, sIdx) => {
+          if (!s) {
+            if (canJoin) {
+              return `<button onclick="joinExistingTable('${t.id}', ${sIdx})" class="px-2 py-0.5 rounded bg-emerald-500/20 hover:bg-emerald-500/40 border border-emerald-500/50 text-emerald-300 text-[10px] font-bold transition flex items-center gap-1" title="Doğrudan bu koltuğa otur">🪑 ${sIdx + 1}. Koltuk (Boş)</button>`;
+            }
+            return `<span class="px-1.5 py-0.5 rounded bg-slate-800/80 text-slate-500 text-[10px]">Boş</span>`;
+          }
+          const isMe = profile && (s.id === profile.id || (s.name && profile.name && s.name.trim().toLowerCase() === profile.name.trim().toLowerCase()));
+          return `<span class="px-1.5 py-0.5 rounded ${s.isBot ? 'bg-amber-500/15 text-amber-300' : isMe ? 'bg-amber-400 text-slate-950 font-black ring-1 ring-amber-300' : 'bg-emerald-500/15 text-emerald-300'} text-[10px] font-semibold">${escapeHtml(s.avatar)} ${escapeHtml(s.name)}${isMe ? ' (Sen)' : ''}</span>`;
         }).join('');
 
+        let actionBtnHtml = '';
+        if (isMySeat) {
+          actionBtnHtml = `
+            <button onclick="rejoinTable('${t.id}')" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-300 hover:to-yellow-400 text-slate-950 font-black text-xs transition shadow-lg shadow-amber-500/30 animate-pulse flex items-center justify-center gap-1.5">
+              <i class="fa-solid fa-arrow-right-to-bracket"></i>
+              <span>Masana Geri Dön</span>
+            </button>
+          `;
+        } else if (canJoin) {
+          actionBtnHtml = `
+            <button onclick="joinExistingTable('${t.id}')" class="w-full sm:w-auto px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs transition shadow-md">
+              Masaya Katıl
+            </button>
+          `;
+        } else {
+          actionBtnHtml = `
+            <button disabled class="w-full sm:w-auto px-4 py-2 rounded-xl bg-slate-800 text-slate-500 font-bold text-xs cursor-not-allowed">
+              ${filledCount >= 4 ? 'Masa Dolu' : 'Oyunda'}
+            </button>
+          `;
+        }
+
         return `
-          <div class="p-3.5 rounded-2xl bg-slate-900/85 border ${canJoin ? 'border-emerald-500/40 hover:border-emerald-400' : 'border-slate-800 opacity-80'} transition flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="p-3.5 rounded-2xl bg-slate-900/85 border ${isMySeat ? 'border-amber-400/90 shadow-md shadow-amber-500/10' : canJoin ? 'border-emerald-500/40 hover:border-emerald-400' : 'border-slate-800 opacity-80'} transition flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div class="space-y-1.5 min-w-0">
               <div class="flex flex-wrap items-center gap-2">
                 <span class="font-extrabold text-sm text-white truncate">${escapeHtml(t.name)}</span>
@@ -1444,14 +1526,13 @@
             </div>
 
             <div class="shrink-0">
-              ${canJoin
-                ? `<button onclick="joinExistingTable('${t.id}')" class="w-full sm:w-auto px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs transition shadow-md">Masaya Katıl</button>`
-                : `<button disabled class="w-full sm:w-auto px-4 py-2 rounded-xl bg-slate-800 text-slate-500 font-bold text-xs cursor-not-allowed">${filledCount >= 4 ? 'Masa Dolu' : 'Oyunda'}</button>`
-              }
+              ${actionBtnHtml}
             </div>
           </div>
         `;
       }).join('');
+
+      list.innerHTML = bannerHtml + tablesHtml;
     }
 
     function normalizeSeats(seats) {
@@ -1471,24 +1552,31 @@
       const tableName = (rawName && !filterRes.hasBadWord) ? rawName.slice(0, 28) : `${profile.name}'in Masası`;
 
       const tableId = 'tbl_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
-      const seats = [
-        { id: profile.id, name: profile.name, avatar: profile.avatar, isBot: false, score: 0, connectedAt: Date.now() },
-        null,
-        null,
-        null
-      ];
+      const sSeat = (typeof selectedStartingSeat === 'number' && selectedStartingSeat >= 0 && selectedStartingSeat <= 3) ? selectedStartingSeat : 0;
+      const seats = [null, null, null, null];
+      seats[sSeat] = {
+        id: profile.id,
+        name: profile.name,
+        avatar: profile.avatar,
+        isBot: false,
+        score: 0,
+        connectedAt: Date.now()
+      };
 
       if (instantWith3Bots) {
         const shuffledBots = [...BOT_NAMES].sort(() => Math.random() - 0.5);
-        for (let i = 1; i <= 3; i++) {
-          seats[i] = {
-            id: `bot_${i}_${Date.now()}`,
-            name: shuffledBots[i - 1],
-            avatar: '🤖',
-            isBot: true,
-            score: 0,
-            connectedAt: Date.now()
-          };
+        let bIdx = 0;
+        for (let i = 0; i < 4; i++) {
+          if (i !== sSeat) {
+            seats[i] = {
+              id: `bot_${i}_${Date.now()}`,
+              name: shuffledBots[bIdx++] || `Bot ${i + 1}`,
+              avatar: '🤖',
+              isBot: true,
+              score: 0,
+              connectedAt: Date.now()
+            };
+          }
         }
       }
 
@@ -1508,7 +1596,7 @@
 
       currentTableId = tableId;
       currentTable = tableObj;
-      mySeatIndex = 0;
+      mySeatIndex = sSeat;
       isLocalFallbackMode = false;
       lastChatIds.clear();
       document.getElementById('roomChatMessages').innerHTML = '';
@@ -1535,36 +1623,52 @@
       }
     }
 
-    async function joinExistingTable(tableId) {
+    async function joinExistingTable(tableId, targetSeatIdx = -1) {
       if (!profile) { openProfileModal(true); return; }
       try {
         const res = await fetch(`${RTDB_URL}/okey/tables/${tableId}.json`);
         if (!res.ok) throw new Error('Masa alınamadı');
         const table = await res.json();
-        if (!table || table.status !== 'waiting') {
-          showToast('⚠️ Bu masa artık katılıma açık değil.');
+        if (!table) {
+          showToast('⚠️ Bu masa artık mevcut değil.');
           fetchLobbyTables();
           return;
         }
+
         const seats = normalizeSeats(table.seats);
-        // Check if already seated
-        let idx = seats.findIndex(s => s && s.id === profile.id);
-        if (idx === -1) {
-          idx = seats.findIndex(s => !s);
-          if (idx === -1) {
-            showToast('⚠️ Masa dolmuş!');
-            fetchLobbyTables();
-            return;
-          }
-          seats[idx] = { id: profile.id, name: profile.name, avatar: profile.avatar, isBot: false, score: 0, connectedAt: Date.now() };
-          table.seats = seats;
-          table.updatedAt = Date.now();
-          await fetch(`${RTDB_URL}/okey/tables/${tableId}.json`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(table)
-          });
+        // Check if user is already seated in this table
+        const existingIdx = seats.findIndex(s => s && (s.id === profile.id || (s.name && profile.name && s.name.trim().toLowerCase() === profile.name.trim().toLowerCase())));
+        if (existingIdx !== -1) {
+          return rejoinTable(tableId);
         }
+
+        if (table.status !== 'waiting') {
+          showToast('⚠️ Bu masa oyuna başlamış, yeni oyuncu katılamaz.');
+          fetchLobbyTables();
+          return;
+        }
+
+        let idx = -1;
+        if (targetSeatIdx >= 0 && targetSeatIdx < 4 && !seats[targetSeatIdx]) {
+          idx = targetSeatIdx;
+        } else {
+          idx = seats.findIndex(s => !s);
+        }
+
+        if (idx === -1) {
+          showToast('⚠️ Masa dolmuş!');
+          fetchLobbyTables();
+          return;
+        }
+
+        seats[idx] = { id: profile.id, name: profile.name, avatar: profile.avatar, isBot: false, score: 0, connectedAt: Date.now() };
+        table.seats = seats;
+        table.updatedAt = Date.now();
+        await fetch(`${RTDB_URL}/okey/tables/${tableId}.json`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(table)
+        });
 
         currentTableId = tableId;
         currentTable = table;
@@ -1578,10 +1682,81 @@
         showScreen('screenRoom');
         renderWaitingRoom();
         startRoomPolling();
-        showToast(`✅ ${table.name} masasına katıldın!`);
+        showToast(`✅ ${table.name} masasında ${idx + 1}. Koltuğa oturdun!`);
       } catch (e) {
         showToast('⚠️ Masaya katılırken bağlantı hatası oluştu.');
       }
+    }
+
+    async function rejoinTable(tableId) {
+      if (!profile) { openProfileModal(true); return; }
+      try {
+        const res = await fetch(`${RTDB_URL}/okey/tables/${tableId}.json`);
+        if (!res.ok) throw new Error('Masa alınamadı');
+        const table = await res.json();
+        if (!table) {
+          showToast('⚠️ Bu masa artık mevcut değil.');
+          fetchLobbyTables();
+          return;
+        }
+
+        const seats = normalizeSeats(table.seats);
+        let mySeatIdx = seats.findIndex(s => s && (s.id === profile.id || (s.name && profile.name && s.name.trim().toLowerCase() === profile.name.trim().toLowerCase())));
+        if (mySeatIdx === -1) {
+          showToast('⚠️ Bu masada koltuğunuz bulunamadı.');
+          fetchLobbyTables();
+          return;
+        }
+
+        // Reconnect user credentials to this seat
+        seats[mySeatIdx].id = profile.id;
+        seats[mySeatIdx].name = profile.name;
+        seats[mySeatIdx].avatar = profile.avatar;
+        seats[mySeatIdx].connectedAt = Date.now();
+        table.seats = seats;
+
+        currentTableId = tableId;
+        currentTable = table;
+        mySeatIndex = mySeatIdx;
+        isLocalFallbackMode = false;
+        lastChatIds.clear();
+
+        stopLobbyPolling();
+        startRoomPolling();
+
+        if (table.status === 'playing' && table.gameState) {
+          enterLiveGameScreen();
+          showToast(`✅ ${table.name} masasına başarıyla geri döndün!`);
+        } else {
+          showScreen('screenRoom');
+          renderWaitingRoom();
+          showToast(`✅ ${table.name} odasına geri döndün!`);
+        }
+      } catch (err) {
+        showToast('⚠️ Masaya bağlanırken hata: ' + (err.message || err));
+      }
+    }
+
+    async function switchMySeatTo(newSeatIdx) {
+      if (!currentTable || currentTable.status !== 'waiting') return;
+      const seats = normalizeSeats(currentTable.seats);
+      if (seats[newSeatIdx]) {
+        showToast('⚠️ Bu koltuk dolu!');
+        return;
+      }
+      const oldIdx = mySeatIndex;
+      const myData = (oldIdx >= 0 && seats[oldIdx])
+        ? seats[oldIdx]
+        : { id: profile.id, name: profile.name, avatar: profile.avatar, isBot: false, score: 0, connectedAt: Date.now() };
+
+      if (oldIdx >= 0) seats[oldIdx] = null;
+      seats[newSeatIdx] = myData;
+      mySeatIndex = newSeatIdx;
+      currentTable.seats = seats;
+      Sound.tileClack();
+      renderWaitingRoom();
+      await syncTableToRTDB();
+      showToast(`🪑 ${newSeatIdx + 1}. Koltuğa geçtiniz!`);
     }
 
     function checkUrlTableJoin() {
@@ -1601,21 +1776,35 @@
       document.getElementById('roomTitle').textContent = currentTable.name;
       document.getElementById('roomRoundsBadge').textContent = `${currentTable.targetRounds || 5} El`;
 
-      const seatLabels = ['1. Koltuk (Kurucu)', '2. Koltuk (Sağ)', '3. Koltuk (Karşı)', '4. Koltuk (Sol)'];
+      const seatLabels = [
+        '1. Koltuk (Güney / Başlangıç)',
+        '2. Koltuk (Sağ)',
+        '3. Koltuk (Kuzey / Karşı)',
+        '4. Koltuk (Sol)'
+      ];
       const grid = document.getElementById('roomSeatsGrid');
 
       grid.innerHTML = seats.map((s, idx) => {
         if (s) {
+          const isMe = profile && (s.id === profile.id || (s.name && profile.name && s.name.trim().toLowerCase() === profile.name.trim().toLowerCase()));
           return `
-            <div class="p-4 rounded-2xl bg-slate-900 border ${s.id === profile.id ? 'border-emerald-400' : 'border-slate-700'} flex items-center justify-between gap-3">
+            <div class="p-4 rounded-2xl ${isMe ? 'bg-emerald-950/40 border-2 border-emerald-400 shadow-lg shadow-emerald-500/20' : 'bg-slate-900 border border-slate-700'} flex items-center justify-between gap-3 transition">
               <div class="flex items-center gap-3 min-w-0">
-                <div class="w-11 h-11 rounded-2xl ${s.isBot ? 'bg-amber-500/20 text-amber-300' : 'bg-emerald-500/20 text-emerald-300'} flex items-center justify-center text-2xl shrink-0">
+                <div class="w-11 h-11 rounded-2xl ${isMe ? 'bg-emerald-500/30 text-emerald-300 border border-emerald-400/50' : s.isBot ? 'bg-amber-500/20 text-amber-300' : 'bg-emerald-500/20 text-emerald-300'} flex items-center justify-center text-2xl shrink-0">
                   ${escapeHtml(s.avatar)}
                 </div>
                 <div class="min-w-0">
-                  <div class="text-[10px] text-slate-400 font-mono">${seatLabels[idx]}</div>
-                  <div class="font-extrabold text-sm text-white truncate">${escapeHtml(s.name)} ${s.id === profile.id ? '(Sen)' : ''}</div>
-                  <span class="text-[10px] font-bold ${s.isBot ? 'text-amber-400' : 'text-emerald-400'}">${s.isBot ? '🤖 Yapay Zeka Bot' : '🟢 Gerçek Oyuncu'}</span>
+                  <div class="text-[10px] ${isMe ? 'text-emerald-400 font-bold' : 'text-slate-400'} font-mono flex items-center gap-1">
+                    <i class="fa-solid fa-chair"></i>
+                    <span>${seatLabels[idx]}</span>
+                  </div>
+                  <div class="font-extrabold text-sm text-white truncate flex items-center gap-1.5">
+                    <span>${escapeHtml(s.name)}</span>
+                    ${isMe ? '<span class="px-1.5 py-0.2 rounded bg-emerald-500 text-slate-950 text-[10px] font-black">SEN</span>' : ''}
+                  </div>
+                  <span class="text-[10px] font-bold ${isMe ? 'text-emerald-300' : s.isBot ? 'text-amber-400' : 'text-emerald-400'}">
+                    ${isMe ? '🟢 Oturuyorsun' : s.isBot ? '🤖 Yapay Zeka Bot' : '🟢 Gerçek Oyuncu'}
+                  </span>
                 </div>
               </div>
               ${isHost && s.isBot ? `<button onclick="removeBotFromSeat(${idx})" class="px-2.5 py-1.5 rounded-xl bg-rose-950/70 hover:bg-rose-900 text-rose-300 border border-rose-500/30 text-xs font-bold shrink-0">Çıkar</button>` : ''}
@@ -1623,13 +1812,22 @@
           `;
         } else {
           return `
-            <div class="p-4 rounded-2xl bg-slate-900/40 border-2 border-dashed border-slate-700/80 flex items-center justify-between gap-3">
+            <div class="p-4 rounded-2xl bg-slate-900/40 border-2 border-dashed border-emerald-500/30 hover:border-emerald-500/60 transition flex items-center justify-between gap-3">
               <div>
-                <div class="text-[10px] text-slate-500 font-mono">${seatLabels[idx]}</div>
-                <div class="text-sm font-bold text-slate-400">Boş Koltuk</div>
-                <div class="text-[10px] text-slate-500">Gerçek oyuncu bekleniyor...</div>
+                <div class="text-[10px] text-slate-400 font-mono flex items-center gap-1">
+                  <i class="fa-solid fa-chair text-slate-500"></i>
+                  <span>${seatLabels[idx]}</span>
+                </div>
+                <div class="text-sm font-extrabold text-slate-300">Boş Koltuk</div>
+                <div class="text-[10px] text-slate-400">Bu koltuğa geçebilir veya bot ekleyebilirsiniz</div>
               </div>
-              ${isHost ? `<button onclick="addBotToSeat(${idx})" class="px-3 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/50 text-amber-300 text-xs font-bold transition shrink-0">🤖 Bot Ekle</button>` : ''}
+              <div class="flex items-center gap-1.5 shrink-0">
+                <button onclick="switchMySeatTo(${idx})" class="px-3 py-2 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/35 border border-emerald-500/60 text-emerald-300 text-xs font-black transition flex items-center gap-1 active:scale-95 shadow">
+                  <i class="fa-solid fa-chair"></i>
+                  <span>Buraya Otur</span>
+                </button>
+                ${isHost ? `<button onclick="addBotToSeat(${idx})" class="px-2.5 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/50 text-amber-300 text-xs font-bold transition">🤖 Bot</button>` : ''}
+              </div>
             </div>
           `;
         }
@@ -1645,11 +1843,11 @@
         btnStart.disabled = filledCount < 4;
         hint.innerHTML = filledCount >= 4
           ? '<span class="text-emerald-400 font-bold">✅ Masa 4/4 hazır! Oyunu hemen başlatabilirsin.</span>'
-          : `<i class="fa-solid fa-circle-info text-amber-400 mr-1"></i> ${4 - filledCount} boş koltuk kaldı. Bot ekleyebilir veya gerçek oyuncu bekleyebilirsin.`;
+          : `<i class="fa-solid fa-circle-info text-amber-400 mr-1"></i> ${4 - filledCount} boş koltuk kaldı. İstediğin koltuğa geçebilir veya bot ekleyebilirsin.`;
       } else {
         btnFill.classList.add('hidden');
         btnStart.classList.add('hidden');
-        hint.innerHTML = `<i class="fa-solid fa-hourglass-half text-amber-400 mr-1"></i> Masa kurucusu (${escapeHtml(currentTable.hostName)}) oyunu başlattığında maç otomatik açılacak...`;
+        hint.innerHTML = `<i class="fa-solid fa-hourglass-half text-amber-400 mr-1"></i> Boş koltuklara tıklayarak yerini değiştirebilirsin. Masa kurucusu (${escapeHtml(currentTable.hostName)}) oyunu başlattığında maç otomatik açılacak...`;
       }
     }
 
@@ -1804,12 +2002,17 @@
       updateAutoPlayUI();
       document.getElementById('modalScoreboard').classList.add('hidden');
       if (!skipRemote && currentTableId && currentTable && !isLocalFallbackMode) {
-        if (currentTable.hostId === profile.id) {
-          fetch(`${RTDB_URL}/okey/tables/${currentTableId}.json`, { method: 'DELETE' }).catch(() => {});
-        } else if (mySeatIndex >= 0 && currentTable.seats[mySeatIndex]) {
-          currentTable.seats[mySeatIndex] = null;
-          await syncTableToRTDB();
+        // Bekleme odasındayken ayrılırsa koltuğu veya odayı sil
+        if (currentTable.status === 'waiting') {
+          if (currentTable.hostId === profile.id) {
+            fetch(`${RTDB_URL}/okey/tables/${currentTableId}.json`, { method: 'DELETE' }).catch(() => {});
+          } else if (mySeatIndex >= 0 && currentTable.seats[mySeatIndex]) {
+            currentTable.seats[mySeatIndex] = null;
+            await syncTableToRTDB();
+          }
         }
+        // Oyun devam ediyorsa (status === 'playing') oyuncunun koltuğu ve eli korunur;
+        // böylece lobiden "Masana Geri Dön" butonuyla kaldığı yerden maça devam edebilir!
       }
       currentTableId = null;
       currentTable = null;
@@ -1826,7 +2029,11 @@
 
     function returnToLobbyConfirm() {
       if (!currentTableId) return;
-      if (confirm('Mevcut masadan ayrılıp lobiye dönmek istiyor musun?')) {
+      const isGame = currentTable && currentTable.status === 'playing';
+      const msg = isGame
+        ? 'Mevcut oyundan geçici olarak ayrılıp lobiye dönmek istiyor musun?\n\n(Dilediğin zaman lobideki "Masana Geri Dön" butonuyla masana anında geri bağlanabilirsin.)'
+        : 'Mevcut masadan ayrılıp lobiye dönmek istiyor musun?';
+      if (confirm(msg)) {
         leaveCurrentTable();
       }
     }
