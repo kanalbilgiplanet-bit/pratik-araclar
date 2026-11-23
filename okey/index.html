@@ -242,24 +242,28 @@
       border-color: #c2ae89;
     }
 
-    /* Inverted Okey Tile on Rack (Geleneksel Okey Ters Çevirme) */
-    .okey-tile.is-okey-inverted {
-      transform: rotate(180deg);
-      border: 2px solid #f59e0b !important;
+    /* Arkası Çevrilmiş Okey Taşı (Geleneksel Kapalı Sırt Görünümü) */
+    .okey-tile.is-okey-back {
+      background: linear-gradient(180deg, #faf4e8 0%, #eeddbb 100%) !important;
+      border: 2px solid #d97706 !important;
       box-shadow:
-        0 -3px 0 #b45309,
-        0 4px 12px rgba(245, 158, 11, 0.55),
-        inset 0 -1px 0 rgba(255, 255, 255, 0.9) !important;
-      background: linear-gradient(0deg, #ffffff 0%, #faf5ea 75%, #fef3c7 100%) !important;
+        0 4px 14px rgba(217, 119, 6, 0.45),
+        0 3px 0 #b45309,
+        inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+      color: #92400e;
     }
-    .okey-tile.is-okey-inverted:hover {
-      transform: rotate(180deg) translateY(3px) !important;
+    .okey-tile.is-okey-back:hover {
+      transform: translateY(-4px) !important;
+      box-shadow:
+        0 8px 20px rgba(217, 119, 6, 0.6),
+        0 3px 0 #b45309 !important;
     }
-    .okey-tile.is-okey-inverted.selected {
-      transform: rotate(180deg) translateY(8px) scale(1.05) !important;
+    .okey-tile.is-okey-back.selected {
+      transform: translateY(-8px) scale(1.05) !important;
+      border-color: #fbbf24 !important;
       box-shadow:
         0 0 0 2.5px #fbbf24,
-        0 -8px 16px rgba(251, 191, 36, 0.5) !important;
+        0 10px 25px rgba(251, 191, 36, 0.6) !important;
     }
 
     /* Istaka Glow when it is My Turn (Sıra Bana Gelince Belirgin Efekt) */
@@ -3024,11 +3028,26 @@
       if (!tile) return '';
       const isOkey = isOkeyTile(tile, okey);
       const isRack = size === 'rack';
-      const shouldInvert = isOkey && isRack; // Okey olunca ıstakada geleneksel olarak ters çevrilsin!
+      const showBack = isOkey && isRack; // Okey taşı ıstakada geleneksel olarak arkası çevrilmiş (kapalı sırtı dönük) dursun
       const colorCls = tile.isFake ? 'tile-fake' : `tile-${tile.color}`;
       const sizeCls = size === 'rack'
         ? 'w-full h-14 sm:h-16 rounded-lg'
         : 'w-11 h-14 sm:w-12 sm:h-16 rounded-xl';
+
+      if (showBack) {
+        // Arkası çevrilmiş Okey taşı: Ön yüzdeki sayı gizlenir, kemik sırtı, ortada altın ⭐ OKEY amblemi ve oyuncu için minik taş rozeti görünür
+        const dotColor = tile.color === 'black' ? 'bg-slate-900' : tile.color === 'red' ? 'bg-red-600' : tile.color === 'blue' ? 'bg-blue-700' : 'bg-amber-500';
+        return `
+          <div title="Okey Taşı (Arkası Çevrilmiş: ${tile.color} ${tile.num})" class="okey-tile ${sizeCls} is-okey-back ${isSelected ? 'selected' : ''} flex flex-col items-center justify-center cursor-pointer select-none relative overflow-hidden">
+            <span class="text-xl sm:text-2xl drop-shadow leading-none">⭐</span>
+            <span class="text-[9px] font-black tracking-widest text-amber-800 font-mono uppercase mt-0.5">OKEY</span>
+            <div class="flex items-center gap-1 mt-0.5 px-1.5 py-0.2 rounded-full bg-amber-900/10 text-[9px] font-mono font-bold text-slate-800">
+              <span class="w-1.5 h-1.5 rounded-full ${dotColor}"></span>
+              <span>${tile.num}</span>
+            </div>
+          </div>
+        `;
+      }
 
       const centerContent = tile.isFake
         ? `<span class="text-lg sm:text-xl leading-none">🎭</span><span class="text-[8px] font-bold uppercase tracking-tighter text-purple-700 mt-0.5">SAHTE</span>`
@@ -3036,14 +3055,11 @@
            <span class="w-2 h-2 rounded-full mt-1 ${tile.color === 'black' ? 'bg-slate-900' : tile.color === 'red' ? 'bg-red-600' : tile.color === 'blue' ? 'bg-blue-700' : 'bg-amber-500'}"></span>`;
 
       const okeyBadge = isOkey
-        ? `<span class="absolute -top-1.5 -right-1 w-4 h-4 rounded-full bg-amber-500 text-slate-950 text-[9px] flex items-center justify-center font-black shadow ${shouldInvert ? 'rotate-180' : ''}">★</span>`
+        ? `<span class="absolute -top-1.5 -right-1 w-4 h-4 rounded-full bg-amber-500 text-slate-950 text-[9px] flex items-center justify-center font-black shadow">★</span>`
         : '';
 
-      const invertedCls = shouldInvert ? 'is-okey-inverted' : '';
-      const titleAttr = isOkey ? 'title="Okey Taşı (Ters Çevrildi)"' : '';
-
       return `
-        <div ${titleAttr} class="okey-tile ${sizeCls} ${colorCls} ${isSelected ? 'selected' : ''} ${isOkey ? 'is-okey-glow' : ''} ${invertedCls} flex flex-col items-center justify-center cursor-pointer">
+        <div class="okey-tile ${sizeCls} ${colorCls} ${isSelected ? 'selected' : ''} ${isOkey ? 'is-okey-glow' : ''} flex flex-col items-center justify-center cursor-pointer relative">
           ${okeyBadge}
           ${centerContent}
         </div>
