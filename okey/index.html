@@ -1526,6 +1526,7 @@
     let isAutoPlayActive = false;
     let playerAutoTurnTimeout = null;
     let isExecutingAutoTurn = false;
+    let isExecutingTimeoutTurn = false;
     let lastWaitingFilledCount = 0;
 
     /* =====================================================================
@@ -2602,6 +2603,21 @@
       await syncTableToRTDB();
     }
 
+    async function kickPlayerFromSeat(seatIdx) {
+      if (!currentTable || currentTable.hostId !== profile.id || currentTable.status !== 'waiting') return;
+      const seats = normalizeSeats(currentTable.seats);
+      if (!seats[seatIdx]) return;
+      const kickedName = seats[seatIdx].name;
+      seats[seatIdx] = null;
+      currentTable.seats = seats;
+      currentTable.updatedAt = Date.now();
+      Sound.tileClack();
+      renderGameTable();
+      renderWaitingRoom();
+      await syncTableToRTDB();
+      showToast(`👋 ${kickedName} masadan çıkarıldı.`);
+    }
+
     async function fillAllEmptyWithBots() {
       if (!currentTable || currentTable.hostId !== profile.id) return;
       const seats = normalizeSeats(currentTable.seats);
@@ -2845,7 +2861,8 @@
       currentTable.roundHistory = [];
       seats.forEach(s => { if (s) s.score = 0; });
       currentTable.seats = seats;
-      currentTable.gameState = createNewRoundState(0);
+      const starter = (typeof mySeatIndex === 'number' && mySeatIndex >= 0 && mySeatIndex < 4) ? mySeatIndex : 0;
+      currentTable.gameState = createNewRoundState(starter);
       await syncTableToRTDB();
       enterLiveGameScreen();
       if (!roomPollTimer) startRoomPolling();
@@ -3319,6 +3336,7 @@
                 <div class="text-[11px] font-bold text-white truncate max-w-[85px] sm:max-w-[105px]">${escapeHtml(seat.name)}</div>
                 <div class="text-[9px] font-bold text-emerald-400">${isMe ? '🟢 Sen' : '🟢 Hazır'}</div>
               </div>
+              ${isHost && !isMe ? `<button onclick="kickPlayerFromSeat(${sIdx})" class="ml-1 px-1.5 py-0.5 rounded-md bg-rose-950/80 hover:bg-rose-900 border border-rose-500/40 text-rose-300 text-[10px] font-black transition" title="Oyuncuyu çıkar">✕</button>` : ''}
             `;
           }
         } else {
@@ -4316,6 +4334,7 @@
 
       const bot = currentTable.seats[botSeatIdx];
       const okey = gs.okey;
+      const hand15 = gs.hands[botSeatIdx] || [];
 
       // Step 1: Draw if in draw phase
       if (gs.phase === 'draw') {
@@ -4325,10 +4344,10 @@
 
         if (leftPile.length > 0) {
           const candidate = leftPile[leftPile.length - 1];
-          const curScore = evaluateMinUnmeldedSum(gs.hands[botSeatIdx], okey).minUnmelded;
-          const withCand = evaluateMinUnmeldedSum([...gs.hands[botSeatIdx], candidate], okey).minUnmelded;
+          const curScore = evaluateMinUnmeldedSum(hand15, okey).minUnmelded;
+          const withCand = evaluateMinUnmeldedSum([...hand15, candidate], okey).minUnmelded;
           if (isOkeyTile(candidate, okey) || withCand < curScore - 3) {
-            gs.hands[botSeatIdx].push(leftPile.pop());
+            hand15.push(leftPile.pop());
             tookFromLeft = true;
           }
         }
@@ -4338,13 +4357,17 @@
             await handleDeckExhaustedDraw();
             return;
           }
-          gs.hands[botSeatIdx].push(gs.deck.pop());
+          hand15.push(gs.deck.pop());
         }
         gs.phase = 'discard';
       }
 
-      // Step 2: Check if Bot can WIN with any of its 15 tiles!
-      const hand15 = gs.hands[botSeatIdx];
+      // Safety: in discard phase, player must have at least 15 tiles to discard 1
+      if (gs.phase === 'discard' && hand15.length < 15 && gs.deck && gs.deck.length > 0) {
+        hand15.push(gs.deck.pop());
+      }
+
+      // Step 2: Check if Bot/Player can WIN with any of its 15 tiles!
       for (let i = 0; i < hand15.length; i++) {
         const candDiscard = hand15[i];
         const rem14 = hand15.filter((_, idx) => idx !== i);
@@ -4371,14 +4394,19 @@
         }
       }
 
-      const discarded = hand15.splice(bestDiscardIdx, 1)[0];
+      const discarded = hand15.splice(bestDiscardIdx, 1)[0] || hand15.pop();
       if (!gs.discards[botSeatIdx]) gs.discards[botSeatIdx] = [];
-      gs.discards[botSeatIdx].push(discarded);
+      if (discarded) gs.discards[botSeatIdx].push(discarded);
 
       gs.turn = (botSeatIdx + 1) % 4;
       gs.phase = 'draw';
       gs.turnStartedAt = Date.now();
-      gs.lastAction = `${bot.name} taşını attı.`;
+      const actorName = (bot && bot.name) ? bot.name : 'Oyuncu';
+      gs.lastAction = `${actorName} taşını attı.`;
+
+      if (botSeatIdx === mySeatIndex) {
+        syncMyRackWithHand();
+      }
 
       Sound.tileClack();
       renderGameTable();
@@ -4409,13 +4437,36 @@
           }
         }
 
-        // Auto-move if player timed out
-        if (left === 0 && gs.turn === mySeatIndex) {
-          if (!isAutoPlayActive) {
-            myConsecutiveTimeouts++;
-            showToast(`⏱️ Süre doldu, taş otomatik atıldı! (Sıradaki tur süresi: ${getTurnTimeLimit(mySeatIndex)}s)`);
+        // Auto-move if active player timed out
+        if (left === 0 && !isExecutingTimeoutTurn) {
+          if (gs.turn === mySeatIndex) {
+            isExecutingTimeoutTurn = true;
+            try {
+              if (!isAutoPlayActive) {
+                myConsecutiveTimeouts++;
+                showToast(`⏱️ Süre doldu, taş otomatik atıldı! (Sıradaki tur süresi: ${getTurnTimeLimit(mySeatIndex)}s)`);
+              }
+              await executePlayerAutoTurn();
+            } finally {
+              isExecutingTimeoutTurn = false;
+            }
+          } else {
+            // Another seat (AFK human or stalled bot) timed out!
+            const isHost = profile && currentTable.hostId === profile.id;
+            if (isHost || elapsed >= limit + 2) {
+              isExecutingTimeoutTurn = true;
+              try {
+                const activeSeat = currentTable.seats && currentTable.seats[gs.turn];
+                const seatName = (activeSeat && activeSeat.name) ? activeSeat.name : 'Oyuncu';
+                showToast(`⏱️ ${seatName} süresi dolduğu için sistem otomatik oynattı.`);
+                await executeBotTurn(gs.turn);
+              } catch (e) {
+                console.error('AFK auto turn error:', e);
+              } finally {
+                isExecutingTimeoutTurn = false;
+              }
+            }
           }
-          await executePlayerAutoTurn();
         }
       }, 1000);
     }
