@@ -1268,13 +1268,19 @@
         <!-- Player rows -->
       </div>
 
+      <!-- Auto Advance Countdown Banner -->
+      <div id="nextRoundCountdownBanner" class="py-2.5 px-4 rounded-2xl bg-emerald-500/15 border border-emerald-400/40 text-emerald-300 text-xs font-black text-center flex items-center justify-center gap-2">
+        <i class="fa-solid fa-hourglass-half text-amber-400 animate-spin"></i>
+        <span id="nextRoundCountdownText">2. El 5 saniye içinde otomatik başlıyor... (5)</span>
+      </div>
+
       <div class="pt-2 flex flex-col sm:flex-row gap-2">
         <button onclick="openYazbozModal()" class="px-4 py-3 rounded-2xl bg-slate-900 hover:bg-slate-800 border border-amber-500/40 text-amber-300 font-bold text-xs transition flex items-center justify-center gap-1.5">
           <i class="fa-solid fa-clipboard-list"></i>
           <span>Detaylı Yazboz</span>
         </button>
-        <button id="btnNextRound" onclick="startNextRound()" class="flex-1 py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-lime-500 hover:from-emerald-400 hover:to-lime-400 text-slate-950 font-black text-sm shadow-lg transition">
-          Sonraki Ele Geç →
+        <button id="btnNextRound" onclick="startNextRound()" class="flex-1 py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-lime-500 hover:from-emerald-400 hover:to-lime-400 text-slate-950 font-black text-sm shadow-lg transition flex items-center justify-center gap-1.5 active:scale-95">
+          <span id="btnNextRoundText">⚡ Hemen Başla (5s) →</span>
         </button>
         <button onclick="leaveCurrentTable()" class="px-5 py-3 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs transition">
           Lobiye Dön
@@ -2721,6 +2727,11 @@
             if (prevStatus !== 'playing') {
               enterLiveGameScreen();
             } else {
+              // Yeni el başladıysa sonuç modalını kapat ve zamanlayıcıyı sıfırla
+              if (remote.gameState && !remote.gameState.roundResult) {
+                document.getElementById('modalScoreboard').classList.add('hidden');
+                if (nextRoundTimer) { clearInterval(nextRoundTimer); nextRoundTimer = null; }
+              }
               syncMyRackWithHand();
               renderGameTable();
               checkAndTriggerBotOrTimer();
@@ -2732,6 +2743,7 @@
 
     async function leaveCurrentTable(skipRemote = false) {
       stopRoomPolling();
+      if (nextRoundTimer) { clearInterval(nextRoundTimer); nextRoundTimer = null; }
       isAutoPlayActive = false;
       myConsecutiveTimeouts = 0;
       prevTurnSeat = -1;
@@ -2868,29 +2880,45 @@
       if (!roomPollTimer) startRoomPolling();
     }
 
+    let nextRoundTimer = null;
+    let isStartingNextRound = false;
+
     async function startNextRound() {
       if (!currentTable) return;
-      if (currentTable.hostId !== profile.id) {
-        showToast('Masa kurucusunun sonraki eli başlatması bekleniyor...');
-        return;
+      if (nextRoundTimer) { clearInterval(nextRoundTimer); nextRoundTimer = null; }
+      if (isStartingNextRound) return;
+      isStartingNextRound = true;
+
+      try {
+        document.getElementById('modalScoreboard').classList.add('hidden');
+        const curRound = currentTable.currentRound || 1;
+        const targetRounds = currentTable.targetRounds || 5;
+        const isMatchOver = curRound >= targetRounds;
+
+        if (isMatchOver) {
+          // Maç bitti, skorları sıfırlayıp baştan başlat
+          currentTable.currentRound = 1;
+          currentTable.roundHistory = [];
+          currentTable.seats.forEach(s => { if (s) s.score = 0; });
+        } else {
+          currentTable.currentRound = curRound + 1;
+        }
+
+        const starter = (currentTable.currentRound - 1) % 4;
+        currentTable.gameState = createNewRoundState(starter);
+        await syncTableToRTDB();
+        rackSlots = new Array(28).fill(null);
+        selectedSlotIdx = -1;
+        syncMyRackWithHand();
+        renderGameTable();
+        startTurnCountdown();
+        checkAndTriggerBotOrTimer();
+        showToast(`🎲 ${currentTable.currentRound}. El başladı!`);
+      } catch (err) {
+        console.error('startNextRound error:', err);
+      } finally {
+        isStartingNextRound = false;
       }
-      document.getElementById('modalScoreboard').classList.add('hidden');
-      if (currentTable.currentRound >= (currentTable.targetRounds || 5)) {
-        // Restart fresh match
-        currentTable.currentRound = 1;
-        currentTable.roundHistory = [];
-        currentTable.seats.forEach(s => { if (s) s.score = 0; });
-      } else {
-        currentTable.currentRound++;
-      }
-      const starter = (currentTable.currentRound - 1) % 4;
-      currentTable.gameState = createNewRoundState(starter);
-      await syncTableToRTDB();
-      rackSlots = new Array(28).fill(null);
-      selectedSlotIdx = -1;
-      syncMyRackWithHand();
-      renderGameTable();
-      checkAndTriggerBotOrTimer();
     }
 
     function enterLiveGameScreen() {
@@ -3513,9 +3541,12 @@
       // Render Rack
       renderRack();
 
-      // If round finished, show Scoreboard Modal!
+      // If round finished, show Scoreboard Modal (yalnızca henüz açık değilse tetikle)!
       if (gs.roundResult) {
-        showScoreboardModal(gs.roundResult);
+        const modal = document.getElementById('modalScoreboard');
+        if (modal && modal.classList.contains('hidden')) {
+          showScoreboardModal(gs.roundResult);
+        }
       }
     }
 
@@ -3988,13 +4019,45 @@
         `;
       }).join('');
 
-      const isHost = profile && currentTable.hostId === profile.id;
-      if (isHost) {
-        btnNext.classList.remove('hidden');
-        btnNext.textContent = isMatchOver ? '🔄 Yeni Maç Başlat' : `Sonraki Ele Geç (${currentTable.currentRound + 1}/${currentTable.targetRounds}) →`;
-      } else {
-        btnNext.classList.add('hidden');
+      if (nextRoundTimer) {
+        clearInterval(nextRoundTimer);
+        nextRoundTimer = null;
       }
+
+      const curRound = currentTable.currentRound || 1;
+      const targetRounds = currentTable.targetRounds || 5;
+      const nextRoundNum = curRound + 1;
+      let countdownSec = isMatchOver ? 7 : 5;
+
+      const countdownText = document.getElementById('nextRoundCountdownText');
+      const btnNextText = document.getElementById('btnNextRoundText');
+
+      const updateCountdownUI = () => {
+        if (countdownText) {
+          countdownText.textContent = isMatchOver
+            ? `🏁 Maç tamamlandı! ${countdownSec} saniye içinde yeni maç başlıyor... (${countdownSec})`
+            : `⏳ ${nextRoundNum}. El ${countdownSec} saniye içinde otomatik başlıyor... (${countdownSec})`;
+        }
+        if (btnNextText) {
+          btnNextText.textContent = isMatchOver
+            ? `🔄 Yeni Maç Başlat (${countdownSec}s)`
+            : `⚡ Hemen ${nextRoundNum}. Ele Başla (${countdownSec}s) →`;
+        }
+      };
+
+      updateCountdownUI();
+      btnNext.classList.remove('hidden');
+
+      nextRoundTimer = setInterval(async () => {
+        countdownSec--;
+        if (countdownSec > 0) {
+          updateCountdownUI();
+        } else {
+          clearInterval(nextRoundTimer);
+          nextRoundTimer = null;
+          await startNextRound();
+        }
+      }, 1000);
 
       modal.classList.remove('hidden');
     }
