@@ -94,15 +94,20 @@
           <span>${isEn ? 'Thank you! Your feedback has been sent successfully.' : 'Geri bildiriminiz için teşekkür ederiz! Mesajınız yöneticilerimize iletildi.'}</span>
         </div>
 
-        <!-- Submit Button -->
-        <div class="flex items-center justify-end gap-2.5 pt-2">
-          <button id="pbFbCancelBtn" type="button" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs transition">
-            ${isEn ? 'Cancel' : 'Vazgeç'}
-          </button>
-          <button id="pbFbSubmitBtn" type="submit" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-400 hover:to-purple-500 text-white font-bold text-xs uppercase shadow-lg shadow-indigo-500/25 transition flex items-center gap-1.5 cursor-pointer">
-            <span>${isEn ? 'Send Feedback' : 'Görüşümü İlet'}</span>
-            <span>➔</span>
-          </button>
+        <!-- Submit Button & Privacy Note -->
+        <div class="flex items-center justify-between gap-2.5 pt-2 flex-wrap">
+          <p class="text-[10px] text-slate-500 leading-tight">
+            ${isEn ? 'No personal info requested. Protected by our <a href="/privacy" target="_blank" class="text-indigo-400 hover:underline">Privacy Policy</a>.' : 'T.C. kimlik veya özel veri girmeyiniz. Bildiriminiz <a href="/gizlilik-politikasi/" target="_blank" class="text-indigo-400 hover:underline">Gizlilik & KVKK</a> kapsamındadır.'}
+          </p>
+          <div class="flex items-center gap-2 ml-auto">
+            <button id="pbFbCancelBtn" type="button" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs transition">
+              ${isEn ? 'Cancel' : 'Vazgeç'}
+            </button>
+            <button id="pbFbSubmitBtn" type="submit" class="px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-400 hover:to-purple-500 text-white font-bold text-xs uppercase shadow-lg shadow-indigo-500/25 transition flex items-center gap-1.5 cursor-pointer">
+              <span>${isEn ? 'Send' : 'Gönder'}</span>
+              <span>➔</span>
+            </button>
+          </div>
         </div>
 
       </form>
