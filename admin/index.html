@@ -642,6 +642,71 @@
         </div>
       </div>
 
+      <!-- 🎲 OKEY X: CANLI MASALAR, GİRİŞLER, MAÇLAR & KÜFÜR MODERASYONU -->
+      <div class="bg-slate-900/90 border border-emerald-800/60 rounded-3xl p-6 shadow-xl space-y-5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-semibold mb-2">
+              <i class="fa-solid fa-dice"></i>
+              <span>Okey X Online Salon Yönetimi</span>
+            </div>
+            <h2 class="text-xl font-bold text-white flex items-center gap-2">
+              <span>Okey Masaları, Oyuncu Girişleri &amp; Küfür Filtresi Logları</span>
+            </h2>
+            <p class="text-xs text-slate-400 mt-1">Açılan canlı masaları, yeni oyuncu girişlerini, tamamlanan renk katlamalı elleri ve küfür filtresine takılan mesajları yönetin</p>
+          </div>
+          <div class="flex items-center gap-2 flex-wrap">
+            <span id="okeyActiveTablesBadge" class="text-xs bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-3 py-1 rounded-full font-mono font-bold">0 Aktif Masa</span>
+            <span id="okeyModAlertsBadge" class="text-xs bg-rose-500/20 text-rose-300 border border-rose-500/40 px-3 py-1 rounded-full font-mono font-bold">0 Küfür Logu</span>
+            <button onclick="loadOkeyAdminData()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold border border-slate-700 transition flex items-center gap-1.5">
+              <i class="fa-solid fa-arrows-rotate"></i> Yenile
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <!-- Aktif Masalar -->
+          <div class="bg-slate-950/70 border border-slate-800 rounded-2xl p-4 space-y-2.5">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-emerald-300 flex items-center gap-1.5">
+              <i class="fa-solid fa-table-cells-large"></i> Canlı Açık Masalar
+            </h3>
+            <div id="okeyAdminTablesList" class="space-y-2 max-h-60 overflow-y-auto custom-scroll pr-1 text-xs">
+              <p class="text-slate-500 text-center py-6">Yükleniyor...</p>
+            </div>
+          </div>
+
+          <!-- Küfür & Moderasyon Raporları -->
+          <div class="bg-slate-950/70 border border-rose-900/40 rounded-2xl p-4 space-y-2.5">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-rose-300 flex items-center gap-1.5">
+              <i class="fa-solid fa-shield-halved"></i> Küfür Filtresi &amp; Moderasyon Logları
+            </h3>
+            <div id="okeyAdminModList" class="space-y-2 max-h-60 overflow-y-auto custom-scroll pr-1 text-xs">
+              <p class="text-slate-500 text-center py-6">Yükleniyor...</p>
+            </div>
+          </div>
+
+          <!-- Son Oyuncu Girişleri -->
+          <div class="bg-slate-950/70 border border-slate-800 rounded-2xl p-4 space-y-2.5">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-cyan-300 flex items-center gap-1.5">
+              <i class="fa-solid fa-user-check"></i> Son Oyuncu Girişleri (Nick &amp; İkon)
+            </h3>
+            <div id="okeyAdminLoginsList" class="space-y-1.5 max-h-60 overflow-y-auto custom-scroll pr-1 text-xs">
+              <p class="text-slate-500 text-center py-6">Yükleniyor...</p>
+            </div>
+          </div>
+
+          <!-- Tamamlanan Eller & Çarpan Rekorları -->
+          <div class="bg-slate-950/70 border border-amber-900/40 rounded-2xl p-4 space-y-2.5">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-amber-300 flex items-center gap-1.5">
+              <i class="fa-solid fa-trophy"></i> Son Biten Eller &amp; Renk Katlamaları
+            </h3>
+            <div id="okeyAdminMatchesList" class="space-y-2 max-h-60 overflow-y-auto custom-scroll pr-1 text-xs">
+              <p class="text-slate-500 text-center py-6">Yükleniyor...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </main>
 
 
@@ -1247,6 +1312,7 @@
       loadCurrentAnnouncement();
       fetchChatMessages();
       loadUserFeedback();
+      loadOkeyAdminData();
 
       if (pollInterval) clearInterval(pollInterval);
       pollInterval = setInterval(() => {
@@ -1290,6 +1356,7 @@
         loadCurrentAnnouncement();
         fetchChatMessages();
         loadUserFeedback();
+        loadOkeyAdminData();
       } else if (tab === 'history') {
         histTab.classList.remove('hidden');
         histBtn.className = 'px-3 py-1.5 rounded-lg font-bold transition flex items-center gap-1.5 bg-blue-500 text-white shadow whitespace-nowrap';
@@ -3750,6 +3817,143 @@
       fetchLiveData(true);
       fetchActivityFeed();
       loadHistoricalStats(currentFilter);
+    }
+
+    // ==========================================
+    // OKEY X SALON, GİRİŞLER & MODERASYON YÖNETİMİ
+    // ==========================================
+    async function loadOkeyAdminData() {
+      const tablesEl = document.getElementById('okeyAdminTablesList');
+      const modEl = document.getElementById('okeyAdminModList');
+      const loginsEl = document.getElementById('okeyAdminLoginsList');
+      const matchesEl = document.getElementById('okeyAdminMatchesList');
+      const tablesBadge = document.getElementById('okeyActiveTablesBadge');
+      const modBadge = document.getElementById('okeyModAlertsBadge');
+
+      try {
+        const res = await fetch(`${RTDB_URL}/okey.json`);
+        const okeyData = res.ok ? (await res.json()) : null;
+
+        // 1. Active Tables
+        const tablesObj = (okeyData && okeyData.tables) ? okeyData.tables : {};
+        const tables = Object.values(tablesObj).filter(t => t && t.id).sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+        if (tablesBadge) tablesBadge.textContent = `${tables.length} Aktif Masa`;
+
+        if (tablesEl) {
+          if (tables.length === 0) {
+            tablesEl.innerHTML = '<p class="text-slate-500 text-center py-5">Şu an aktif Okey masası yok.</p>';
+          } else {
+            tablesEl.innerHTML = tables.map(t => {
+              const seats = Array.isArray(t.seats) ? t.seats : [t.seats?.[0], t.seats?.[1], t.seats?.[2], t.seats?.[3]];
+              const filled = seats.filter(Boolean);
+              const bots = filled.filter(s => s.isBot).length;
+              const humans = filled.length - bots;
+              return `
+                <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between gap-2">
+                  <div class="min-w-0">
+                    <div class="font-bold text-white truncate">${t.name || 'Masa'} <span class="text-[10px] font-mono text-emerald-400">(${t.status === 'playing' ? 'Oyunda' : 'Bekliyor'})</span></div>
+                    <div class="text-[10px] text-slate-400">${filled.length}/4 Koltuk • ${humans} Gerçek, ${bots} Bot • Kurucu: ${t.hostName || '-'}</div>
+                  </div>
+                  <button onclick="deleteOkeyTable('${t.id}')" class="px-2 py-1 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 text-[10px] font-bold shrink-0">Kapat</button>
+                </div>
+              `;
+            }).join('');
+          }
+        }
+
+        // 2. Moderation / Profanity Logs
+        const modObj = (okeyData && okeyData.logs && okeyData.logs.moderation) ? okeyData.logs.moderation : {};
+        const mods = Object.values(modObj).filter(m => m && m.id).sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0)).slice(0, 30);
+        if (modBadge) modBadge.textContent = `${mods.length} Küfür Logu`;
+
+        if (modEl) {
+          if (mods.length === 0) {
+            modEl.innerHTML = '<p class="text-emerald-400/80 text-center py-5">✅ Temiz! Filtreye takılan mesaj yok.</p>';
+          } else {
+            modEl.innerHTML = mods.map(m => {
+              const dt = new Date(m.timestamp || Date.now()).toLocaleString('tr-TR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+              return `
+                <div class="p-2.5 rounded-xl bg-rose-950/30 border border-rose-500/30 flex items-start justify-between gap-2">
+                  <div class="min-w-0">
+                    <div class="font-bold text-rose-300">${m.senderName || 'Anonim'} <span class="text-[10px] text-slate-400 font-mono">(${dt} • ${m.tableName || 'Masa'})</span></div>
+                    <div class="text-slate-200 mt-0.5 break-words">"${m.originalText || ''}"</div>
+                    <span class="inline-block mt-1 px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 text-[10px] font-mono">Yakalanan: ${m.matchedWord || '-'}</span>
+                  </div>
+                  <button onclick="deleteOkeyModLog('${m.id}')" class="text-slate-400 hover:text-rose-400 px-1.5 py-1 text-xs" title="Sil"><i class="fa-solid fa-trash"></i></button>
+                </div>
+              `;
+            }).join('');
+          }
+        }
+
+        // 3. Recent Logins
+        const loginsObj = (okeyData && okeyData.logs && okeyData.logs.logins) ? okeyData.logs.logins : {};
+        const logins = Object.values(loginsObj).filter(l => l && l.name).sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0)).slice(0, 30);
+        if (loginsEl) {
+          if (logins.length === 0) {
+            loginsEl.innerHTML = '<p class="text-slate-500 text-center py-5">Henüz Okey girişi kaydedilmedi.</p>';
+          } else {
+            loginsEl.innerHTML = logins.map(l => {
+              const dt = new Date(l.timestamp || Date.now()).toLocaleString('tr-TR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+              return `
+                <div class="px-2.5 py-1.5 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between gap-2">
+                  <div class="flex items-center gap-2 min-w-0">
+                    <span class="text-base">${l.avatar || '🎲'}</span>
+                    <span class="font-bold text-white truncate">${l.name}</span>
+                    <span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-300">${l.device || 'Web'}</span>
+                  </div>
+                  <span class="text-[10px] font-mono text-slate-400 shrink-0">${dt}</span>
+                </div>
+              `;
+            }).join('');
+          }
+        }
+
+        // 4. Finished Rounds & High-Stakes Records
+        const matchesObj = (okeyData && okeyData.logs && okeyData.logs.matches) ? okeyData.logs.matches : {};
+        const matches = Object.values(matchesObj).filter(m => m && m.id).sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0)).slice(0, 25);
+        if (matchesEl) {
+          if (matches.length === 0) {
+            matchesEl.innerHTML = '<p class="text-slate-500 text-center py-5">Henüz biten el kaydı yok.</p>';
+          } else {
+            const colorMap = { black: '⚫ Siyah', red: '🔴 Kırmızı', blue: '🔵 Mavi', yellow: '🟡 Sarı' };
+            const finishMap = { normal: 'Normal', okey: '⭐ Okey Attı (10x)', pair: '👥 Çift Bitti (10x)' };
+            matchesEl.innerHTML = matches.map(m => {
+              const dt = new Date(m.timestamp || Date.now()).toLocaleString('tr-TR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+              return `
+                <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
+                  <div class="flex items-center justify-between gap-2">
+                    <span class="font-bold text-amber-300">🏆 ${m.winnerName || 'Oyuncu'} (${m.winDelta || 0} P)</span>
+                    <span class="text-[10px] font-mono text-slate-400">${dt}</span>
+                  </div>
+                  <div class="flex flex-wrap gap-1.5 text-[10px] font-mono">
+                    <span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-200">${colorMap[m.okeyColor] || m.okeyColor}</span>
+                    <span class="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300">${finishMap[m.finishType] || m.finishType}</span>
+                    <span class="px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300">Max Ceza: +${m.maxPenalty || 0}</span>
+                  </div>
+                </div>
+              `;
+            }).join('');
+          }
+        }
+      } catch (err) {
+        console.error('Okey Admin data load error:', err);
+      }
+    }
+
+    async function deleteOkeyTable(tableId) {
+      if (!confirm('Bu Okey masasını zorla kapatmak istiyor musunuz?')) return;
+      try {
+        await fetch(`${RTDB_URL}/okey/tables/${tableId}.json`, { method: 'DELETE' });
+        loadOkeyAdminData();
+      } catch (e) {}
+    }
+
+    async function deleteOkeyModLog(modId) {
+      try {
+        await fetch(`${RTDB_URL}/okey/logs/moderation/${modId}.json`, { method: 'DELETE' });
+        loadOkeyAdminData();
+      } catch (e) {}
     }
 
     checkAuth();

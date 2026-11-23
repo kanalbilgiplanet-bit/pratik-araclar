@@ -1,0 +1,2748 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Okey X — Renk Katlamalı Online Okey | PratikBase</title>
+  <meta name="description" content="Düz okey kurallarıyla yüksek heyecanlı renk katlamalı online okey oyunu. Siyah 2x, Kırmızı 4x, Mavi ve Sarı 10x! Botlarla veya arkadaşlarınla ücretsiz oyna." />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=JetBrains+Mono:wght@600;700;800&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Outfit', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body {
+      background: radial-gradient(circle at 50% 25%, #0f3d2a 0%, #071f16 65%, #04110c 100%);
+      color: #f1f5f9;
+      min-height: 100vh;
+      min-height: 100dvh;
+      overflow-x: hidden;
+    }
+
+    /* Felt table texture */
+    .felt-table {
+      background:
+        radial-gradient(ellipse at center, rgba(22, 101, 68, 0.55) 0%, rgba(10, 46, 31, 0.85) 70%, rgba(5, 24, 16, 0.95) 100%);
+      box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.65), 0 18px 45px rgba(0, 0, 0, 0.55);
+      border: 4px solid #4a2e19;
+    }
+
+    /* Walnut Wood Istaka (Rack) */
+    .wood-rack {
+      background: linear-gradient(180deg, #7c4d2b 0%, #5a351c 12%, #4a2a14 49%, #3b200e 51%, #56321a 88%, #3c210f 100%);
+      border: 2px solid #8f5c36;
+      box-shadow:
+        inset 0 2px 4px rgba(255, 215, 170, 0.25),
+        inset 0 -4px 8px rgba(0, 0, 0, 0.6),
+        0 10px 25px rgba(0, 0, 0, 0.7);
+    }
+    .rack-row {
+      background: rgba(20, 10, 4, 0.38);
+      box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.55), 0 1px 0 rgba(255, 200, 140, 0.2);
+    }
+
+    /* Realistic Okey Tile */
+    .okey-tile {
+      background: linear-gradient(180deg, #ffffff 0%, #faf6ed 78%, #e9dec9 100%);
+      border: 1px solid #d6c8ad;
+      box-shadow:
+        0 3px 0 #bfb093,
+        0 4px 6px rgba(0, 0, 0, 0.42),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+      user-select: none;
+      transition: transform 0.14s ease, box-shadow 0.14s ease, ring 0.14s ease;
+      position: relative;
+    }
+    .okey-tile:hover {
+      transform: translateY(-2px);
+    }
+    .okey-tile.selected {
+      transform: translateY(-8px) scale(1.04);
+      box-shadow:
+        0 0 0 2.5px #fbbf24,
+        0 8px 16px rgba(251, 191, 36, 0.45);
+      z-index: 20;
+    }
+    .okey-tile.is-okey-glow {
+      box-shadow:
+        0 0 0 2px #f59e0b,
+        0 3px 0 #b45309,
+        0 0 14px rgba(245, 158, 11, 0.55);
+    }
+    .okey-tile.tile-back {
+      background: linear-gradient(180deg, #f3e8d2 0%, #e1d0b0 100%);
+      border-color: #c2ae89;
+    }
+
+    /* Tile Colors */
+    .tile-black { color: #111827; }
+    .tile-red { color: #dc2626; }
+    .tile-blue { color: #1d4ed8; }
+    .tile-yellow { color: #d97706; }
+    .tile-fake { color: #7c3aed; }
+
+    /* Color Multiplier Neon Rings */
+    .ring-okey-black { box-shadow: 0 0 20px rgba(148, 163, 184, 0.45); border-color: #94a3b8 !important; }
+    .ring-okey-red { box-shadow: 0 0 24px rgba(239, 68, 68, 0.55); border-color: #ef4444 !important; }
+    .ring-okey-blue { box-shadow: 0 0 28px rgba(59, 130, 246, 0.65); border-color: #3b82f6 !important; }
+    .ring-okey-yellow { box-shadow: 0 0 28px rgba(250, 204, 21, 0.65); border-color: #facc15 !important; }
+
+    /* Custom Scrollbar */
+    .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+    .custom-scroll::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); border-radius: 6px; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 6px; }
+    .custom-scroll::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.35); }
+
+    @keyframes floatUp {
+      0% { transform: translate(-50%, 0) scale(0.7); opacity: 0; }
+      20% { transform: translate(-50%, -18px) scale(1.25); opacity: 1; }
+      100% { transform: translate(-50%, -85px) scale(1); opacity: 0; }
+    }
+    .emote-float {
+      animation: floatUp 1.6s ease-out forwards;
+      pointer-events: none;
+    }
+
+    @keyframes pulseBorder {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.65); }
+      50% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+    }
+    .draw-highlight {
+      animation: pulseBorder 1.4s infinite;
+    }
+  </style>
+</head>
+<body class="flex flex-col select-none">
+
+  <!-- =========================================================
+       TOP NAVIGATION BAR
+       ========================================================= -->
+  <header class="w-full bg-slate-950/80 backdrop-blur-md border-b border-emerald-900/50 sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-3 sm:px-5 h-14 flex items-center justify-between gap-2">
+      <!-- Brand -->
+      <div class="flex items-center gap-2.5">
+        <a href="/" class="w-8 h-8 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 hover:bg-emerald-500/25 transition" title="PratikBase Ana Sayfa">
+          <i class="fa-solid fa-house text-xs"></i>
+        </a>
+        <div class="flex items-center gap-2 cursor-pointer" onclick="returnToLobbyConfirm()">
+          <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-400 to-orange-600 text-slate-950 font-black flex items-center justify-center text-sm shadow-lg shadow-amber-500/20">
+            13
+          </div>
+          <div class="leading-tight">
+            <h1 class="font-extrabold text-sm sm:text-base tracking-tight text-white flex items-center gap-1.5">
+              OKEY <span class="text-amber-400">X</span>
+              <span class="hidden sm:inline-block px-1.5 py-0.5 text-[10px] font-mono rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">CANLI</span>
+            </h1>
+            <p class="text-[10px] text-emerald-300/70 hidden xs:block">Renk Katlamalı Online Okey</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Controls -->
+      <div class="flex items-center gap-2">
+        <button onclick="openRulesModal()" class="px-2.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-xs font-bold text-amber-300 flex items-center gap-1.5 transition">
+          <i class="fa-solid fa-scale-balanced"></i>
+          <span class="hidden sm:inline">Çarpan Kuralları</span>
+        </button>
+
+        <button id="btnSoundToggle" onclick="toggleSound()" class="w-8 h-8 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-emerald-400 flex items-center justify-center text-xs transition" title="Ses Aç/Kapat">
+          <i class="fa-solid fa-volume-high" id="soundIcon"></i>
+        </button>
+
+        <!-- Player Profile Pill -->
+        <button onclick="openProfileModal()" class="flex items-center gap-2 pl-1.5 pr-2.5 py-1 rounded-xl bg-slate-900 hover:bg-slate-800 border border-emerald-500/30 transition">
+          <span id="navAvatar" class="w-6 h-6 rounded-lg bg-emerald-500/20 flex items-center justify-center text-sm">🦁</span>
+          <span id="navUsername" class="text-xs font-bold text-white max-w-[90px] sm:max-w-[130px] truncate">Oyuncu</span>
+          <i class="fa-solid fa-pen text-[9px] text-slate-400"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- =========================================================
+       SCREEN 1: LOBBY (OPEN TABLES + CREATE TABLE)
+       ========================================================= -->
+  <main id="screenLobby" class="flex-1 max-w-6xl w-full mx-auto px-3 sm:px-5 py-5 space-y-5">
+
+    <!-- Hero Multiplier Strip -->
+    <section class="rounded-3xl bg-slate-950/65 border border-emerald-800/60 p-4 sm:p-6 shadow-2xl relative overflow-hidden">
+      <div class="absolute -right-12 -top-12 w-48 h-48 rounded-full bg-amber-500/10 blur-3xl pointer-events-none"></div>
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 relative z-10">
+        <div class="space-y-1.5">
+          <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-[11px] font-bold">
+            <span>🔥</span> DÜZ OKEY + RENK KATLAMALI YÜKSEK HEYECAN
+          </div>
+          <h2 class="text-xl sm:text-2xl font-black text-white">Açılan Okey Rengi Masanın Kaderini Belirler!</h2>
+          <p class="text-xs sm:text-sm text-slate-300 max-w-2xl">
+            Masa kurup 3 botla anında oyna, ya da 1-2 koltuk boş bırakıp gerçek oyuncuların masana katılmasını bekle!
+          </p>
+        </div>
+
+        <!-- Color Multiplier Quick Badges -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 shrink-0">
+          <div class="px-3 py-2 rounded-2xl bg-slate-900/90 border border-slate-600/70 text-center">
+            <div class="text-[11px] font-bold text-slate-300">⚫ SİYAH OKEY</div>
+            <div class="text-sm font-black text-white font-mono">2x / -20</div>
+          </div>
+          <div class="px-3 py-2 rounded-2xl bg-red-950/60 border border-red-500/50 text-center">
+            <div class="text-[11px] font-bold text-red-300">🔴 KIRMIZI OKEY</div>
+            <div class="text-sm font-black text-red-200 font-mono">4x / -40</div>
+          </div>
+          <div class="px-3 py-2 rounded-2xl bg-blue-950/60 border border-blue-500/50 text-center">
+            <div class="text-[11px] font-bold text-blue-300">🔵🟡 MAVİ &amp; SARI</div>
+            <div class="text-sm font-black text-amber-300 font-mono">10x / -100</div>
+          </div>
+          <div class="px-3 py-2 rounded-2xl bg-amber-950/60 border border-amber-400/60 text-center">
+            <div class="text-[11px] font-bold text-amber-300">★ OKEY / ÇİFT</div>
+            <div class="text-sm font-black text-yellow-300 font-mono">10 KAT!</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+      <!-- Create Table Card -->
+      <section class="lg:col-span-5 rounded-3xl bg-slate-950/70 border border-emerald-800/60 p-5 space-y-4 shadow-xl h-fit">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-base">
+              <i class="fa-solid fa-plus"></i>
+            </div>
+            <div>
+              <h3 class="font-extrabold text-base text-white">Yeni Masa Aç</h3>
+              <p class="text-[11px] text-slate-400">Bot ekle veya gerçek oyuncu bekle</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">Masa Adı</label>
+            <input id="inputTableName" type="text" maxlength="28" placeholder="Örn: Yıldızlar Masası" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white focus:outline-none focus:border-emerald-400" />
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">El Sayısı (Tur)</label>
+            <div class="grid grid-cols-3 gap-2">
+              <button type="button" onclick="selectTargetRounds(3)" id="roundBtn3" class="py-2 rounded-xl text-xs font-bold border border-slate-700 bg-slate-900 text-slate-300 hover:border-emerald-500 transition">3 El</button>
+              <button type="button" onclick="selectTargetRounds(5)" id="roundBtn5" class="py-2 rounded-xl text-xs font-bold border border-emerald-400 bg-emerald-500/20 text-emerald-300 transition">5 El</button>
+              <button type="button" onclick="selectTargetRounds(11)" id="roundBtn11" class="py-2 rounded-xl text-xs font-bold border border-slate-700 bg-slate-900 text-slate-300 hover:border-emerald-500 transition">11 El</button>
+            </div>
+          </div>
+
+          <div class="pt-2 space-y-2.5">
+            <button onclick="createTable(false)" class="w-full py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-sm shadow-lg shadow-emerald-500/20 transition flex items-center justify-center gap-2 active:scale-[0.98]">
+              <i class="fa-solid fa-door-open"></i>
+              <span>Masa Aç (Lobiye Koy &amp; Bot Seç)</span>
+            </button>
+
+            <button onclick="createTable(true)" class="w-full py-3 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-sm shadow-lg shadow-amber-500/20 transition flex items-center justify-center gap-2 active:scale-[0.98]">
+              <i class="fa-solid fa-bolt"></i>
+              <span>Hızlı Başla (3 Akıllı Botla Hemen Oyna)</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Live Open Tables List -->
+      <section class="lg:col-span-7 rounded-3xl bg-slate-950/70 border border-emerald-800/60 p-5 flex flex-col space-y-4 shadow-xl">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-base">
+              <i class="fa-solid fa-table-cells-large"></i>
+            </div>
+            <div>
+              <h3 class="font-extrabold text-base text-white flex items-center gap-2">
+                Açık Masalar
+                <span id="lobbyTableCount" class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[11px] font-mono">0</span>
+              </h3>
+              <p class="text-[11px] text-slate-400">Gerçek oyuncuların açtığı masalara anında katıl</p>
+            </div>
+          </div>
+
+          <button onclick="fetchLobbyTables(true)" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-bold text-slate-300 flex items-center gap-1.5 transition">
+            <i class="fa-solid fa-rotate" id="lobbyRefreshIcon"></i>
+            <span>Yenile</span>
+          </button>
+        </div>
+
+        <div id="lobbyTableList" class="space-y-2.5 max-h-[420px] overflow-y-auto custom-scroll pr-1">
+          <div class="text-center py-10 text-slate-400 text-sm">
+            <i class="fa-solid fa-spinner fa-spin text-emerald-400 text-xl mb-2"></i>
+            <p>Açık masalar yükleniyor...</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- =========================================================
+       SCREEN 2: WAITING ROOM (HOST ADDS BOTS / REAL PLAYERS JOIN)
+       ========================================================= -->
+  <main id="screenRoom" class="hidden flex-1 max-w-5xl w-full mx-auto px-3 sm:px-5 py-5">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+      <!-- Room Seats Panel -->
+      <section class="lg:col-span-8 rounded-3xl bg-slate-950/75 border border-emerald-800/60 p-5 space-y-5 shadow-2xl">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-mono font-bold">BEKLEME ODASI</span>
+              <span id="roomRoundsBadge" class="px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 text-[10px] font-mono">5 El</span>
+            </div>
+            <h2 id="roomTitle" class="text-xl font-black text-white mt-1">Masa Adı</h2>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button onclick="copyRoomLink()" class="px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-bold text-emerald-300 flex items-center gap-1.5 transition">
+              <i class="fa-solid fa-link"></i>
+              <span id="btnCopyLinkText">Davet Linki Kopyala</span>
+            </button>
+            <button onclick="leaveCurrentTable()" class="px-3 py-2 rounded-xl bg-rose-950/60 hover:bg-rose-900/70 border border-rose-500/40 text-xs font-bold text-rose-300 transition">
+              Ayrıl
+            </button>
+          </div>
+        </div>
+
+        <!-- 4 Seats Grid -->
+        <div id="roomSeatsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <!-- Dynamically populated -->
+        </div>
+
+        <!-- Host Controls -->
+        <div class="pt-2 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div id="roomStatusHint" class="text-xs text-slate-300">
+            <i class="fa-solid fa-circle-info text-amber-400 mr-1"></i>
+            4 koltuk dolduğunda masa kurucusu oyunu başlatabilir.
+          </div>
+
+          <div class="flex items-center gap-2 w-full sm:w-auto">
+            <button id="btnFillBots" onclick="fillAllEmptyWithBots()" class="hidden flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-xs font-bold text-amber-300 transition">
+              🤖 Boşları Botla Doldur
+            </button>
+            <button id="btnStartMatch" onclick="startMatchFromRoom()" disabled class="hidden flex-1 sm:flex-none px-6 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-lime-500 disabled:from-slate-800 disabled:to-slate-800 disabled:text-slate-500 text-slate-950 font-black text-sm shadow-lg shadow-emerald-500/20 transition">
+              🚀 Oyunu Başlat
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Room Chat Box -->
+      <section class="lg:col-span-4 rounded-3xl bg-slate-950/75 border border-emerald-800/60 p-4 flex flex-col h-[420px] shadow-2xl">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-2.5 mb-2">
+          <h3 class="text-xs font-extrabold uppercase tracking-wider text-emerald-300 flex items-center gap-1.5">
+            <i class="fa-solid fa-comments"></i> Masa Sohbeti
+          </h3>
+          <span class="text-[10px] text-slate-400 font-mono">🛡️ Küfür Korumalı</span>
+        </div>
+        <div id="roomChatMessages" class="flex-1 overflow-y-auto custom-scroll space-y-2 pr-1 text-xs"></div>
+        <form onsubmit="sendChatMessage(event, 'roomChatInput')" class="mt-2.5 flex gap-1.5">
+          <input id="roomChatInput" type="text" maxlength="160" placeholder="Mesaj yaz..." class="flex-1 px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-emerald-400" />
+          <button type="submit" class="px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition">
+            <i class="fa-solid fa-paper-plane"></i>
+          </button>
+        </form>
+      </section>
+    </div>
+  </main>
+
+  <!-- =========================================================
+       SCREEN 3: LIVE OKEY GAME TABLE
+       ========================================================= -->
+  <main id="screenGame" class="hidden flex-1 w-full max-w-[1440px] mx-auto px-2 sm:px-4 py-2 sm:py-3 flex flex-col lg:flex-row gap-3">
+
+    <!-- Left/Center: Main Felt Table & Istaka -->
+    <div class="flex-1 flex flex-col gap-2.5 min-w-0">
+
+      <!-- Match Info & Active Okey Color Multiplier Bar -->
+      <div class="flex flex-wrap items-center justify-between gap-2 px-3 py-2 rounded-2xl bg-slate-950/80 border border-emerald-800/60">
+        <div class="flex items-center gap-2 sm:gap-3">
+          <span id="gameRoundLabel" class="px-2.5 py-1 rounded-xl bg-slate-900 border border-slate-700 text-xs font-mono font-bold text-white">El 1/5</span>
+          <div id="gameMultiplierBadge" class="px-3 py-1 rounded-xl border text-xs font-extrabold flex items-center gap-1.5">
+            <span>🔵 MAVİ OKEY</span>
+            <span class="font-mono">10x / -100</span>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <!-- Turn Timer -->
+          <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-900 border border-slate-700 text-xs font-mono">
+            <i class="fa-regular fa-clock text-amber-400"></i>
+            <span id="turnTimerText" class="font-bold text-white">25s</span>
+          </div>
+
+          <!-- Mobile Chat Toggle -->
+          <button onclick="toggleMobileChat()" class="lg:hidden relative px-2.5 py-1.5 rounded-xl bg-slate-900 border border-emerald-500/40 text-emerald-300 text-xs font-bold flex items-center gap-1">
+            <i class="fa-solid fa-comments"></i>
+            <span>Sohbet</span>
+            <span id="mobileChatUnread" class="hidden absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-rose-500 text-white text-[10px] flex items-center justify-center font-bold">1</span>
+          </button>
+
+          <button onclick="leaveCurrentTable()" class="px-2.5 py-1.5 rounded-xl bg-rose-950/60 hover:bg-rose-900/70 border border-rose-500/40 text-rose-300 text-xs font-bold transition" title="Masadan Çık">
+            <i class="fa-solid fa-right-from-bracket"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- FELT TABLE SURFACE -->
+      <div class="felt-table rounded-3xl p-2.5 sm:p-4 relative flex flex-col justify-between min-h-[300px] sm:min-h-[340px]">
+
+        <!-- Floating Emote Layer -->
+        <div id="emoteLayer" class="absolute inset-0 pointer-events-none overflow-hidden z-30"></div>
+
+        <!-- TOP PLAYER (Seat +2) -->
+        <div class="flex justify-center">
+          <div id="seatBoxTop" class="flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-slate-950/75 border border-slate-700/80 transition">
+            <span id="seatAvatarTop" class="text-lg">🤖</span>
+            <div class="leading-tight">
+              <div id="seatNameTop" class="text-xs font-bold text-white">Oyuncu 3</div>
+              <div id="seatScoreTop" class="text-[10px] font-mono text-amber-300">0 Puan</div>
+            </div>
+            <div id="seatDiscardTop" class="ml-1"></div>
+          </div>
+        </div>
+
+        <!-- MIDDLE ROW: LEFT PLAYER | CENTER DECK & INDICATOR | RIGHT PLAYER -->
+        <div class="grid grid-cols-12 items-center gap-2 my-3">
+
+          <!-- LEFT PLAYER (Seat +3) — THEIR DISCARD CAN BE DRAWN BY YOU! -->
+          <div class="col-span-3 flex flex-col items-start gap-1.5">
+            <div id="seatBoxLeft" class="flex flex-col sm:flex-row items-center gap-1.5 px-2.5 py-1.5 rounded-2xl bg-slate-950/75 border border-slate-700/80 transition max-w-full">
+              <span id="seatAvatarLeft" class="text-lg">🤖</span>
+              <div class="leading-tight text-center sm:text-left min-w-0">
+                <div id="seatNameLeft" class="text-[11px] font-bold text-white truncate max-w-[75px] sm:max-w-[95px]">Sol</div>
+                <div id="seatScoreLeft" class="text-[10px] font-mono text-amber-300">0 P</div>
+              </div>
+            </div>
+            <!-- Left Discard Slot (Clickable on your draw phase!) -->
+            <div class="flex flex-col items-center">
+              <div id="leftDiscardContainer" onclick="drawFromLeftDiscard()" class="cursor-pointer rounded-xl p-1 transition" title="Soldan Taş Çek">
+                <div class="w-11 h-14 sm:w-12 sm:h-16 rounded-lg border-2 border-dashed border-emerald-500/30 flex items-center justify-center text-[10px] text-emerald-300/40 font-bold">
+                  BOŞ
+                </div>
+              </div>
+              <span id="leftDiscardHint" class="hidden text-[10px] font-bold text-emerald-300 bg-emerald-950/90 px-1.5 py-0.5 rounded mt-0.5">Yerden Çek</span>
+            </div>
+          </div>
+
+          <!-- CENTER TABLE: DECK + INDICATOR + FINISH ZONE -->
+          <div class="col-span-6 flex flex-col items-center justify-center gap-2.5">
+            <div class="flex items-center justify-center gap-3 sm:gap-5">
+              <!-- Center Draw Deck -->
+              <div class="flex flex-col items-center gap-1">
+                <button id="btnDrawDeck" onclick="drawFromDeck()" class="okey-tile tile-back w-12 h-16 sm:w-14 sm:h-[74px] rounded-xl flex flex-col items-center justify-center relative cursor-pointer active:scale-95 transition">
+                  <span class="text-[10px] font-mono font-black text-amber-900 uppercase">DESTE</span>
+                  <span id="deckCountBadge" class="mt-0.5 px-1.5 py-0.5 rounded-md bg-slate-900 text-amber-300 text-xs font-mono font-extrabold">50</span>
+                </button>
+                <span class="text-[10px] font-bold text-emerald-200/80">Ortadan Çek</span>
+              </div>
+
+              <!-- Indicator Tile (Gösterge) & Finish Zone -->
+              <div class="flex flex-col items-center gap-1">
+                <div id="indicatorHalo" onclick="attemptFinishWithSelected()" ondragover="event.preventDefault()" ondrop="handleDropOnFinish(event)" class="p-1.5 rounded-2xl border-2 transition cursor-pointer relative group" title="Bitirmek için 15. taşı buraya bırak veya seçip tıkla">
+                  <div id="indicatorTileBox"></div>
+                  <div class="absolute -top-2.5 -right-2.5 px-1.5 py-0.5 rounded-full bg-amber-500 text-slate-950 text-[9px] font-black shadow">
+                    GÖSTERGE
+                  </div>
+                </div>
+                <span id="okeyTargetText" class="text-[10px] font-mono font-bold text-amber-300">OKEY: —</span>
+              </div>
+            </div>
+
+            <!-- Live Turn Action Banner -->
+            <div id="tableActionBanner" class="px-3 py-1 rounded-full bg-slate-950/80 border border-emerald-500/30 text-[11px] sm:text-xs font-bold text-emerald-200 text-center max-w-full truncate">
+              Masa hazırlanıyor...
+            </div>
+          </div>
+
+          <!-- RIGHT PLAYER (Seat +1) — YOUR DISCARDS GO HERE -->
+          <div class="col-span-3 flex flex-col items-end gap-1.5">
+            <div id="seatBoxRight" class="flex flex-col sm:flex-row items-center gap-1.5 px-2.5 py-1.5 rounded-2xl bg-slate-950/75 border border-slate-700/80 transition max-w-full">
+              <span id="seatAvatarRight" class="text-lg">🤖</span>
+              <div class="leading-tight text-center sm:text-left min-w-0">
+                <div id="seatNameRight" class="text-[11px] font-bold text-white truncate max-w-[75px] sm:max-w-[95px]">Sağ</div>
+                <div id="seatScoreRight" class="text-[10px] font-mono text-amber-300">0 P</div>
+              </div>
+            </div>
+            <!-- My Discard Drop Zone -->
+            <div class="flex flex-col items-center">
+              <div id="myDiscardContainer" onclick="discardSelectedTile()" ondragover="event.preventDefault()" ondrop="handleDropOnDiscard(event)" class="cursor-pointer rounded-xl p-1 transition" title="Seçili taşı buraya at">
+                <div class="w-11 h-14 sm:w-12 sm:h-16 rounded-lg border-2 border-dashed border-amber-400/40 flex items-center justify-center text-[10px] text-amber-200/50 font-bold text-center leading-tight">
+                  TAŞ<br/>AT
+                </div>
+              </div>
+              <span id="myDiscardHint" class="hidden text-[10px] font-bold text-amber-300 bg-amber-950/90 px-1.5 py-0.5 rounded mt-0.5">Buraya At</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- BOTTOM PLAYER INFO + EMOTES -->
+        <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
+          <div id="seatBoxBottom" class="flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-slate-950/80 border border-emerald-500/40 transition">
+            <span id="seatAvatarBottom" class="text-lg">🦁</span>
+            <div class="leading-tight">
+              <div id="seatNameBottom" class="text-xs font-extrabold text-white">Sen</div>
+              <div id="seatScoreBottom" class="text-[10px] font-mono text-amber-300">0 Puan</div>
+            </div>
+          </div>
+
+          <!-- Quick Floating Emotes -->
+          <div class="flex items-center gap-1 bg-slate-950/70 px-2 py-1 rounded-xl border border-slate-800">
+            <button onclick="sendEmote('😂')" class="hover:scale-125 transition text-sm px-1">😂</button>
+            <button onclick="sendEmote('🔥')" class="hover:scale-125 transition text-sm px-1">🔥</button>
+            <button onclick="sendEmote('😡')" class="hover:scale-125 transition text-sm px-1">😡</button>
+            <button onclick="sendEmote('👏')" class="hover:scale-125 transition text-sm px-1">👏</button>
+            <button onclick="sendEmote('👑')" class="hover:scale-125 transition text-sm px-1">👑</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACTION CONTROLS ABOVE RACK -->
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-1.5 sm:gap-2">
+          <button onclick="autoSortRack('runs')" class="px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-bold text-emerald-300 flex items-center gap-1.5 active:scale-95 transition">
+            <i class="fa-solid fa-arrow-up-1-9"></i>
+            <span>Seri Diz</span>
+          </button>
+          <button onclick="autoSortRack('pairs')" class="px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-bold text-cyan-300 flex items-center gap-1.5 active:scale-95 transition">
+            <i class="fa-solid fa-clone"></i>
+            <span>Çift Diz</span>
+          </button>
+        </div>
+
+        <div class="flex items-center gap-1.5 sm:gap-2">
+          <button id="btnDiscardSelected" onclick="discardSelectedTile()" class="px-3.5 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/50 text-amber-300 text-xs font-extrabold flex items-center gap-1.5 active:scale-95 transition">
+            <i class="fa-solid fa-share"></i>
+            <span>Seçili Taşı At</span>
+          </button>
+          <button id="btnAttemptFinish" onclick="attemptFinishWithSelected()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-300 hover:to-yellow-400 text-slate-950 text-xs font-black flex items-center gap-1.5 shadow-lg shadow-amber-500/25 active:scale-95 transition">
+            <i class="fa-solid fa-trophy"></i>
+            <span>BİTİR!</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- WALNUT WOOD ISTAKA (2 ROWS x 14 SLOTS) -->
+      <div class="wood-rack rounded-2xl p-2 sm:p-3 space-y-1.5 sm:space-y-2 overflow-x-auto custom-scroll">
+        <div id="rackRow0" class="rack-row rounded-xl p-1 sm:p-1.5 grid grid-cols-14 gap-1 min-w-[540px]" style="grid-template-columns: repeat(14, minmax(0, 1fr));">
+          <!-- 14 slots -->
+        </div>
+        <div id="rackRow1" class="rack-row rounded-xl p-1 sm:p-1.5 grid grid-cols-14 gap-1 min-w-[540px]" style="grid-template-columns: repeat(14, minmax(0, 1fr));">
+          <!-- 14 slots -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Sidebar: In-Game Chat (Desktop Fixed / Mobile Drawer) -->
+    <aside id="gameChatDrawer" class="hidden lg:flex fixed lg:static inset-y-0 right-0 z-50 w-80 lg:w-72 xl:w-80 bg-slate-950/95 lg:bg-slate-950/75 border-l lg:border border-emerald-800/60 lg:rounded-3xl p-4 flex-col shadow-2xl">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-2.5 mb-2.5">
+        <div>
+          <h3 class="text-xs font-extrabold uppercase tracking-wider text-emerald-300 flex items-center gap-1.5">
+            <i class="fa-solid fa-comments"></i> Masa Sohbeti
+          </h3>
+          <p class="text-[10px] text-slate-400">🛡️ Küfür &amp; argo filtresi aktif</p>
+        </div>
+        <button onclick="toggleMobileChat()" class="lg:hidden w-7 h-7 rounded-lg bg-slate-800 text-slate-300 flex items-center justify-center">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Chat Feed -->
+      <div id="gameChatMessages" class="flex-1 overflow-y-auto custom-scroll space-y-2 pr-1 text-xs min-h-[200px] lg:max-h-[430px]"></div>
+
+      <!-- Quick Chat Phrases -->
+      <div class="flex flex-wrap gap-1 my-2 pt-2 border-t border-slate-800/80">
+        <button onclick="sendQuickChat('Hadi sıra sende! ⏱️')" class="px-2 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-[10px] text-slate-300 transition">Hadi sıra sende!</button>
+        <button onclick="sendQuickChat('İyi eldi 👏')" class="px-2 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-[10px] text-slate-300 transition">İyi eldi 👏</button>
+        <button onclick="sendQuickChat('Okey bende galiba 😉')" class="px-2 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-[10px] text-slate-300 transition">Okey bende 😉</button>
+        <button onclick="sendQuickChat('Çifte gidiyorum dikkat! 🔥')" class="px-2 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-[10px] text-slate-300 transition">Çifte gidiyorum!</button>
+      </div>
+
+      <!-- Chat Input -->
+      <form onsubmit="sendChatMessage(event, 'gameChatInput')" class="flex gap-1.5">
+        <input id="gameChatInput" type="text" maxlength="160" placeholder="Mesaj yaz..." class="flex-1 px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-emerald-400" />
+        <button type="submit" class="px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition">
+          <i class="fa-solid fa-paper-plane"></i>
+        </button>
+      </form>
+    </aside>
+  </main>
+
+  <!-- =========================================================
+       MODAL 1: PROFILE / USERNAME & RANDOM AVATAR
+       ========================================================= -->
+  <div id="modalProfile" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-md rounded-3xl bg-slate-950 border-2 border-emerald-500/50 p-6 space-y-5 shadow-2xl">
+      <div class="text-center space-y-1">
+        <div class="w-16 h-16 mx-auto rounded-2xl bg-emerald-500/20 border-2 border-emerald-400/50 flex items-center justify-center text-4xl shadow-lg" id="profilePreviewAvatar">🦁</div>
+        <h2 class="text-xl font-black text-white pt-1">Okey X'e Hoş Geldin!</h2>
+        <p class="text-xs text-slate-400">Kullanıcı adını belirle ve masalara katıl</p>
+      </div>
+
+      <div class="space-y-3">
+        <div>
+          <label class="block text-xs font-bold text-slate-300 mb-1">Kullanıcı Adın</label>
+          <div class="flex gap-2">
+            <input id="inputProfileName" type="text" maxlength="20" placeholder="Takma adın..." class="flex-1 px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white focus:outline-none focus:border-emerald-400" />
+            <button type="button" onclick="randomizeProfileInputs()" class="px-3 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-amber-300 text-xs font-bold transition" title="Rastgele İsim ve İkon">
+              🎲 Rastgele
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-300 mb-1.5">Profil İkonun</label>
+          <div id="avatarPickerGrid" class="grid grid-cols-8 gap-1.5"></div>
+        </div>
+      </div>
+
+      <button onclick="saveProfile()" class="w-full py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-lime-500 hover:from-emerald-400 hover:to-lime-400 text-slate-950 font-black text-sm shadow-lg shadow-emerald-500/25 transition">
+        Kaydet &amp; Lobiye Gir
+      </button>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       MODAL 2: COLOR MULTIPLIER RULES
+       ========================================================= -->
+  <div id="modalRules" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-lg rounded-3xl bg-slate-950 border-2 border-amber-500/50 p-5 sm:p-6 space-y-4 shadow-2xl max-h-[88vh] overflow-y-auto custom-scroll">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="text-lg font-black text-white flex items-center gap-2">
+          <span>⚖️</span> Renk Katlamalı Okey Kuralları
+        </h3>
+        <button onclick="closeRulesModal()" class="w-8 h-8 rounded-xl bg-slate-800 text-slate-300 hover:text-white flex items-center justify-center">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="space-y-2.5 text-xs sm:text-sm text-slate-300">
+        <p>Oyun standart <b>106 taşlı Düz Okey</b> mantığıyla oynanır. En düşük puana sahip olan (eksi puan toplayan) oyuncu kazanır!</p>
+
+        <div class="overflow-hidden rounded-2xl border border-slate-800">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-900 text-slate-300 font-bold">
+              <tr>
+                <th class="p-2.5">Okey Rengi</th>
+                <th class="p-2.5">Normal Bitiş</th>
+                <th class="p-2.5">Rakiplerin Cezası</th>
+                <th class="p-2.5 text-amber-300">Okey Atma / Çift</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800 bg-slate-950/80 font-mono">
+              <tr>
+                <td class="p-2.5 font-sans font-bold text-slate-200">⚫ Siyah</td>
+                <td class="p-2.5 text-emerald-400">-20 Puan</td>
+                <td class="p-2.5 text-rose-300">El × 2</td>
+                <td class="p-2.5 text-amber-300 font-bold">-200 / El × 20</td>
+              </tr>
+              <tr>
+                <td class="p-2.5 font-sans font-bold text-red-400">🔴 Kırmızı</td>
+                <td class="p-2.5 text-emerald-400">-40 Puan</td>
+                <td class="p-2.5 text-rose-300">El × 4</td>
+                <td class="p-2.5 text-amber-300 font-bold">-400 / El × 40</td>
+              </tr>
+              <tr>
+                <td class="p-2.5 font-sans font-bold text-blue-400">🔵 Mavi</td>
+                <td class="p-2.5 text-emerald-400">-100 Puan</td>
+                <td class="p-2.5 text-rose-300">El × 10</td>
+                <td class="p-2.5 text-amber-300 font-bold">-1000 / El × 100</td>
+              </tr>
+              <tr>
+                <td class="p-2.5 font-sans font-bold text-yellow-400">🟡 Sarı</td>
+                <td class="p-2.5 text-emerald-400">-100 Puan</td>
+                <td class="p-2.5 text-rose-300">El × 10</td>
+                <td class="p-2.5 text-amber-300 font-bold">-1000 / El × 100</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <ul class="space-y-1.5 text-xs text-slate-300 list-disc pl-4">
+          <li><b>Okey Atarak Bitiş:</b> 15. taşı okey atarak bitersen eksi puanın <b>10 ile çarpılır</b> (örn: -20 yerine -200, -100 yerine -1000!).</li>
+          <li><b>Çiftten Bitiş (7 Çift):</b> Tıpkı <b>okey atmış gibi</b> 10 katı puan siler ve rakiplere 10 kat ceza yazılır!</li>
+          <li><b>Rakiplerin El Hesabı:</b> Bitemeyen oyuncuların elindeki per olmayan (işleksiz) taşların sayı toplamı, o elin renk çarpanı ile çarpılıp puanlarına eklenir.</li>
+          <li><b>Nasıl Oynanır:</b> Sıran geldiğinde ortadaki desteden veya solundaki oyuncunun attığı taştan 1 taş çek, ardından elinden 1 taşı sağdaki alana at. 14 taşın tam per veya 7 çift olduğunda 15. taşı seçip <b>BİTİR!</b> butonuna bas.</li>
+        </ul>
+      </div>
+
+      <button onclick="closeRulesModal()" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs transition">
+        Anladım, Kapat
+      </button>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       MODAL 3: ROUND OVER / MATCH OVER SCOREBOARD
+       ========================================================= -->
+  <div id="modalScoreboard" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="w-full max-w-lg rounded-3xl bg-slate-950 border-2 border-amber-400/70 p-5 sm:p-6 space-y-4 shadow-2xl">
+      <div class="text-center space-y-1.5">
+        <div id="scoreFinishBadge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-400/50 text-amber-300 text-xs font-black">
+          🏆 EL BİTTİ!
+        </div>
+        <h2 id="scoreWinnerTitle" class="text-2xl font-black text-white">Kazanan: Oyuncu</h2>
+        <p id="scoreSubtitle" class="text-xs text-slate-300">Mavi Okey • 10x Çarpan</p>
+      </div>
+
+      <div id="scoreTableContainer" class="space-y-2">
+        <!-- Player rows -->
+      </div>
+
+      <div class="pt-2 flex flex-col sm:flex-row gap-2">
+        <button id="btnNextRound" onclick="startNextRound()" class="flex-1 py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-lime-500 hover:from-emerald-400 hover:to-lime-400 text-slate-950 font-black text-sm shadow-lg transition">
+          Sonraki Ele Geç →
+        </button>
+        <button onclick="leaveCurrentTable()" class="px-5 py-3 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs transition">
+          Lobiye Dön
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toastBox" class="fixed bottom-4 left-1/2 -translate-x-1/2 z-[60] hidden px-4 py-2.5 rounded-2xl bg-slate-900 border border-amber-500/50 text-white text-xs font-bold shadow-2xl"></div>
+
+  <!-- =========================================================
+       JAVASCRIPT ENGINE: PROFILE, FIREBASE RTDB, LOBBY, CHAT, OKEY AI & VALIDATOR
+       ========================================================= -->
+  <script>
+    const RTDB_URL = 'https://pratikbase-default-rtdb.firebaseio.com';
+    const AVATARS = ['🦁', '🦅', '🐺', '🦊', '🐻', '🐼', '🐯', '👑', '🎯', '🎲', '🃏', '🔥', '⚡', '🧿', '☕', '🎩'];
+    const RANDOM_ADJECTIVES = ['Usta', 'Hızlı', 'Şanslı', 'Kurnaz', 'Efsane', 'Sakin', 'Kral', 'Çifteci', 'Büyük', 'Ateşli'];
+    const RANDOM_NOUNS = ['Okeyci', 'Taşçı', 'Oyuncu', 'Kartal', 'Aslan', 'Kaptan', 'Baron', 'Şampiyon', 'Paşa', 'Reis'];
+    const BOT_NAMES = ['Bot Mert', 'Bot Zeynep', 'Bot Kerem', 'Bot Selin', 'Bot Emre', 'Bot Defne', 'Bot Hakan', 'Bot Ece'];
+
+    // Color scoring rules EXACTLY per spec:
+    // Black: 2x penalty, -20 win
+    // Red: 4x penalty, -40 win
+    // Blue & Yellow: 10x penalty, -100 win
+    // Okey discard OR Pair (Çift) win: multiply by 10!
+    const COLOR_RULES = {
+      black:  { nameTr: 'Siyah',   emoji: '⚫', mult: 2,  winDelta: -20,  badgeCls: 'bg-slate-900 border-slate-500 text-slate-200', ringCls: 'ring-okey-black' },
+      red:    { nameTr: 'Kırmızı', emoji: '🔴', mult: 4,  winDelta: -40,  badgeCls: 'bg-red-950/80 border-red-500 text-red-200',    ringCls: 'ring-okey-red' },
+      blue:   { nameTr: 'Mavi',    emoji: '🔵', mult: 10, winDelta: -100, badgeCls: 'bg-blue-950/80 border-blue-500 text-blue-200', ringCls: 'ring-okey-blue' },
+      yellow: { nameTr: 'Sarı',    emoji: '🟡', mult: 10, winDelta: -100, badgeCls: 'bg-amber-950/80 border-yellow-400 text-yellow-200', ringCls: 'ring-okey-yellow' }
+    };
+
+    // Turkish & English Profanity Blacklist (normalized)
+    const BAD_WORDS = [
+      'amk', 'aq', 'amq', 'orospu', 'orspu', 'oc', 'oç', 'piç', 'pic', 'siktir', 'sikik', 'sikerim', 'sikeyim',
+      'yarrak', 'yarak', 'göt', 'gotveren', 'ibne', 'puşt', 'pust', 'pezevenk', 'kahpe', 'sürtük', 'surtuk',
+      'amına', 'amina', 'ananı', 'anani', 'bacını', 'bacini', 'mal', 'salak', 'gerizekalı', 'gerizekali',
+      'aptal', 'dangalak', 'şerefsiz', 'serefsiz', 'haysiyetsiz', 'bok', 'fuck', 'shit', 'bitch', 'asshole', 'dick'
+    ];
+
+    /* =====================================================================
+       STATE
+       ===================================================================== */
+    let profile = null;
+    let soundEnabled = localStorage.getItem('okey_sound') !== 'false';
+    let selectedTargetRounds = 5;
+    let currentTableId = null;
+    let currentTable = null;
+    let mySeatIndex = -1;
+    let isLocalFallbackMode = false;
+
+    // Rack state (28 slots: 0..13 top row, 14..27 bottom row)
+    let rackSlots = new Array(28).fill(null);
+    let selectedSlotIdx = -1;
+    let dragSourceSlotIdx = -1;
+
+    // Timers & Polling
+    let lobbyPollTimer = null;
+    let roomPollTimer = null;
+    let chatPollTimer = null;
+    let botTurnTimeout = null;
+    let turnCountdownInterval = null;
+    let lastChatIds = new Set();
+    let unreadChatCount = 0;
+    let profanityStrikes = 0;
+    let mutedUntil = 0;
+
+    /* =====================================================================
+       WEB AUDIO SYNTHESIZER (WOODEN TILE CLACK & EFFECTS)
+       ===================================================================== */
+    let audioCtx = null;
+    function getAudioCtx() {
+      if (!audioCtx) {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (AC) audioCtx = new AC();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+      return audioCtx;
+    }
+
+    const Sound = {
+      tileClack() {
+        if (!soundEnabled) return;
+        try {
+          const ctx = getAudioCtx();
+          if (!ctx) return;
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(520, ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(160, ctx.currentTime + 0.045);
+          gain.gain.setValueAtTime(0.28, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.055);
+        } catch (e) {}
+      },
+      draw() {
+        if (!soundEnabled) return;
+        try {
+          const ctx = getAudioCtx();
+          if (!ctx) return;
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(340, ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(620, ctx.currentTime + 0.07);
+          gain.gain.setValueAtTime(0.18, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.085);
+        } catch (e) {}
+      },
+      win() {
+        if (!soundEnabled) return;
+        try {
+          const ctx = getAudioCtx();
+          if (!ctx) return;
+          const notes = [523.25, 659.25, 783.99, 1046.5];
+          notes.forEach((freq, i) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.09);
+            gain.gain.setValueAtTime(0.22, ctx.currentTime + i * 0.09);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.09 + 0.35);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(ctx.currentTime + i * 0.09);
+            osc.stop(ctx.currentTime + i * 0.09 + 0.36);
+          });
+        } catch (e) {}
+      },
+      chatPop() {
+        if (!soundEnabled) return;
+        try {
+          const ctx = getAudioCtx();
+          if (!ctx) return;
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(700, ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(920, ctx.currentTime + 0.06);
+          gain.gain.setValueAtTime(0.1, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.07);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.075);
+        } catch (e) {}
+      }
+    };
+
+    function toggleSound() {
+      soundEnabled = !soundEnabled;
+      localStorage.setItem('okey_sound', String(soundEnabled));
+      updateSoundUI();
+      if (soundEnabled) Sound.tileClack();
+    }
+    function updateSoundUI() {
+      const icon = document.getElementById('soundIcon');
+      if (icon) {
+        icon.className = soundEnabled ? 'fa-solid fa-volume-high text-emerald-400' : 'fa-solid fa-volume-xmark text-slate-500';
+      }
+    }
+
+    function showToast(msg, duration = 2600) {
+      const box = document.getElementById('toastBox');
+      if (!box) return;
+      box.textContent = msg;
+      box.classList.remove('hidden');
+      clearTimeout(box._t);
+      box._t = setTimeout(() => box.classList.add('hidden'), duration);
+    }
+
+    /* =====================================================================
+       PROFILE & RANDOM AVATAR SYSTEM
+       ===================================================================== */
+    function generateRandomName() {
+      const adj = RANDOM_ADJECTIVES[Math.floor(Math.random() * RANDOM_ADJECTIVES.length)];
+      const noun = RANDOM_NOUNS[Math.floor(Math.random() * RANDOM_NOUNS.length)];
+      const num = Math.floor(10 + Math.random() * 89);
+      return `${adj}${noun}${num}`;
+    }
+
+    function generateRandomAvatar() {
+      return AVATARS[Math.floor(Math.random() * AVATARS.length)];
+    }
+
+    function initProfile() {
+      let saved = null;
+      try {
+        saved = JSON.parse(localStorage.getItem('okey_profile') || 'null');
+      } catch (e) {}
+
+      if (saved && saved.id && saved.name && saved.avatar) {
+        profile = saved;
+        updateProfileNavUI();
+        logPlayerLogin(profile);
+        checkUrlTableJoin();
+      } else {
+        profile = {
+          id: 'plr_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
+          name: generateRandomName(),
+          avatar: generateRandomAvatar()
+        };
+        openProfileModal(true);
+      }
+    }
+
+    let tempAvatarSelection = '🦁';
+    function openProfileModal(isFirstTime = false) {
+      const modal = document.getElementById('modalProfile');
+      const input = document.getElementById('inputProfileName');
+      const preview = document.getElementById('profilePreviewAvatar');
+      const grid = document.getElementById('avatarPickerGrid');
+
+      tempAvatarSelection = profile ? profile.avatar : generateRandomAvatar();
+      input.value = profile ? profile.name : generateRandomName();
+      preview.textContent = tempAvatarSelection;
+
+      grid.innerHTML = AVATARS.map(av => `
+        <button type="button" onclick="selectAvatar('${av}')" class="w-9 h-9 rounded-xl flex items-center justify-center text-lg border transition ${av === tempAvatarSelection ? 'bg-emerald-500/30 border-emerald-400 scale-110' : 'bg-slate-900 border-slate-800 hover:border-slate-600'}">
+          ${av}
+        </button>
+      `).join('');
+
+      modal.classList.remove('hidden');
+      if (!isFirstTime) input.focus();
+    }
+
+    function selectAvatar(av) {
+      tempAvatarSelection = av;
+      document.getElementById('profilePreviewAvatar').textContent = av;
+      const grid = document.getElementById('avatarPickerGrid');
+      grid.innerHTML = AVATARS.map(a => `
+        <button type="button" onclick="selectAvatar('${a}')" class="w-9 h-9 rounded-xl flex items-center justify-center text-lg border transition ${a === tempAvatarSelection ? 'bg-emerald-500/30 border-emerald-400 scale-110' : 'bg-slate-900 border-slate-800 hover:border-slate-600'}">
+          ${a}
+        </button>
+      `).join('');
+    }
+
+    function randomizeProfileInputs() {
+      document.getElementById('inputProfileName').value = generateRandomName();
+      selectAvatar(generateRandomAvatar());
+      Sound.tileClack();
+    }
+
+    function saveProfile() {
+      const rawName = (document.getElementById('inputProfileName').value || '').trim();
+      const filterRes = filterProfanity(rawName);
+      if (filterRes.hasBadWord) {
+        showToast('⚠️ Kullanıcı adında uygunsuz kelime kullanılamaz!');
+        return;
+      }
+      const cleanName = rawName.length >= 2 ? rawName.slice(0, 20) : generateRandomName();
+      profile = {
+        id: (profile && profile.id) ? profile.id : ('plr_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7)),
+        name: cleanName,
+        avatar: tempAvatarSelection || generateRandomAvatar()
+      };
+      try {
+        localStorage.setItem('okey_profile', JSON.stringify(profile));
+      } catch (e) {}
+
+      updateProfileNavUI();
+      document.getElementById('modalProfile').classList.add('hidden');
+      logPlayerLogin(profile);
+      showToast(`Hoş geldin ${profile.avatar} ${profile.name}!`);
+      checkUrlTableJoin();
+    }
+
+    function updateProfileNavUI() {
+      if (!profile) return;
+      document.getElementById('navAvatar').textContent = profile.avatar;
+      document.getElementById('navUsername').textContent = profile.name;
+      const tblInput = document.getElementById('inputTableName');
+      if (tblInput && !tblInput.value) {
+        tblInput.placeholder = `${profile.name}'in Masası`;
+      }
+    }
+
+    /* =====================================================================
+       ADMIN LOGGING (FIREBASE RTDB)
+       ===================================================================== */
+    function logPlayerLogin(p) {
+      if (!p) return;
+      const logId = 'log_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
+      const isMobile = /Android|iPhone|iPad|Mobile/i.test(navigator.userAgent);
+      fetch(`${RTDB_URL}/okey/logs/logins/${logId}.json`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: logId,
+          playerId: p.id,
+          name: p.name,
+          avatar: p.avatar,
+          device: isMobile ? 'Mobil' : 'Masaüstü',
+          timestamp: Date.now()
+        })
+      }).catch(() => {});
+    }
+
+    function logModerationEvent(tableId, tableName, senderName, originalText, matchedWord) {
+      const modId = 'mod_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
+      fetch(`${RTDB_URL}/okey/logs/moderation/${modId}.json`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: modId,
+          tableId: tableId || 'lobby',
+          tableName: tableName || 'Bilinmeyen Masa',
+          senderName: senderName || 'Anonim',
+          originalText: originalText.slice(0, 160),
+          matchedWord,
+          timestamp: Date.now()
+        })
+      }).catch(() => {});
+    }
+
+    function logMatchResult(table, roundResult) {
+      if (!table || !roundResult) return;
+      const matchId = 'm_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
+      const winner = table.seats[roundResult.winnerSeat];
+      const maxPenalty = Math.max(...roundResult.penalties.filter(x => x > 0), 0);
+      fetch(`${RTDB_URL}/okey/logs/matches/${matchId}.json`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: matchId,
+          tableName: table.name,
+          round: table.currentRound,
+          winnerName: winner ? winner.name : 'Bilinmiyor',
+          winnerIsBot: winner ? !!winner.isBot : false,
+          finishType: roundResult.finishType,
+          okeyColor: roundResult.color,
+          winDelta: roundResult.winDelta,
+          maxPenalty,
+          players: table.seats.map(s => s ? `${s.avatar} ${s.name}${s.isBot ? ' (Bot)' : ''}` : 'Boş'),
+          timestamp: Date.now()
+        })
+      }).catch(() => {});
+    }
+
+    /* =====================================================================
+       PROFANITY FILTER & REAL-TIME CHAT
+       ===================================================================== */
+    function normalizeTextForFilter(str) {
+      return (str || '')
+        .toLowerCase()
+        .replace(/ı/g, 'i').replace(/İ/g, 'i')
+        .replace(/ş/g, 's').replace(/ğ/g, 'g')
+        .replace(/ü/g, 'u').replace(/ö/g, 'o')
+        .replace(/ç/g, 'c')
+        .replace(/0/g, 'o').replace(/1/g, 'i').replace(/3/g, 'e').replace(/4/g, 'a').replace(/5/g, 's')
+        .replace(/[^a-z0-9\s]/g, ' ');
+    }
+
+    function filterProfanity(text) {
+      const normalized = normalizeTextForFilter(text);
+      const words = normalized.split(/\s+/).filter(Boolean);
+      let matched = null;
+      let maskedText = text;
+
+      for (const bad of BAD_WORDS) {
+        const normBad = normalizeTextForFilter(bad).trim();
+        if (!normBad) continue;
+        // Exact word match for short words (<=3 chars), substring match for longer curse words
+        const hit = normBad.length <= 3
+          ? words.includes(normBad)
+          : normalized.includes(normBad);
+        if (hit) {
+          matched = bad;
+          const regex = new RegExp(bad.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+          maskedText = maskedText.replace(regex, '***');
+        }
+      }
+      if (matched && maskedText === text) {
+        maskedText = '*** (Filtrelendi)';
+      }
+      return { hasBadWord: !!matched, matchedWord: matched, cleaned: maskedText };
+    }
+
+    async function sendChatMessage(e, inputId) {
+      if (e) e.preventDefault();
+      if (!currentTableId || !profile) return;
+
+      if (Date.now() < mutedUntil) {
+        const left = Math.ceil((mutedUntil - Date.now()) / 1000);
+        showToast(`🔇 Küfür filtresi nedeniyle ${left} sn susturuldunuz.`);
+        return;
+      }
+
+      const input = document.getElementById(inputId);
+      const raw = (input ? input.value : '').trim();
+      if (!raw) return;
+      if (input) input.value = '';
+
+      const check = filterProfanity(raw);
+      let finalMsg = raw;
+      if (check.hasBadWord) {
+        profanityStrikes++;
+        logModerationEvent(currentTableId, currentTable ? currentTable.name : '', profile.name, raw, check.matchedWord);
+        if (profanityStrikes >= 3) {
+          mutedUntil = Date.now() + 60000;
+          showToast('🚫 Üst üste uygunsuz dil kullandığınız için 60 saniye susturuldunuz!');
+          return;
+        }
+        showToast('🛡️ Uygunsuz kelime filtrelendi ve yönetime bildirildi.');
+        finalMsg = check.cleaned;
+      }
+
+      const msgObj = {
+        id: 'msg_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+        senderId: profile.id,
+        senderName: profile.name,
+        senderAvatar: profile.avatar,
+        text: finalMsg,
+        filtered: check.hasBadWord,
+        timestamp: Date.now()
+      };
+
+      appendChatMessageToUI(msgObj);
+      if (!isLocalFallbackMode) {
+        fetch(`${RTDB_URL}/okey/chats/${currentTableId}/${msgObj.id}.json`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(msgObj)
+        }).catch(() => {});
+      }
+    }
+
+    function sendQuickChat(phrase) {
+      const input = document.getElementById('gameChatInput');
+      if (input) {
+        input.value = phrase;
+        sendChatMessage(null, 'gameChatInput');
+      }
+    }
+
+    async function pollChatMessages() {
+      if (!currentTableId || isLocalFallbackMode) return;
+      try {
+        const res = await fetch(`${RTDB_URL}/okey/chats/${currentTableId}.json`);
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!data) return;
+        const msgs = Object.values(data).sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0)).slice(-40);
+        msgs.forEach(m => {
+          if (!lastChatIds.has(m.id)) {
+            appendChatMessageToUI(m);
+            if (m.senderId !== profile.id) {
+              Sound.chatPop();
+              const drawer = document.getElementById('gameChatDrawer');
+              if (drawer && drawer.classList.contains('hidden')) {
+                unreadChatCount++;
+                const badge = document.getElementById('mobileChatUnread');
+                if (badge) {
+                  badge.textContent = unreadChatCount;
+                  badge.classList.remove('hidden');
+                }
+              }
+            }
+          }
+        });
+      } catch (e) {}
+    }
+
+    function appendChatMessageToUI(m) {
+      if (lastChatIds.has(m.id)) return;
+      lastChatIds.add(m.id);
+      const isMe = profile && m.senderId === profile.id;
+      const timeStr = new Date(m.timestamp || Date.now()).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+      const html = `
+        <div class="p-2 rounded-xl ${isMe ? 'bg-emerald-500/15 border border-emerald-500/30 ml-4' : 'bg-slate-900 border border-slate-800 mr-4'}">
+          <div class="flex items-center justify-between gap-1 mb-0.5">
+            <span class="font-bold text-[11px] ${isMe ? 'text-emerald-300' : 'text-amber-300'}">${escapeHtml(m.senderAvatar || '🎲')} ${escapeHtml(m.senderName || 'Oyuncu')}</span>
+            <span class="text-[9px] text-slate-500 font-mono">${timeStr}</span>
+          </div>
+          <p class="text-slate-200 break-words leading-snug">${escapeHtml(m.text)}</p>
+        </div>
+      `;
+      ['roomChatMessages', 'gameChatMessages'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.insertAdjacentHTML('beforeend', html);
+          el.scrollTop = el.scrollHeight;
+        }
+      });
+    }
+
+    function toggleMobileChat() {
+      const drawer = document.getElementById('gameChatDrawer');
+      if (!drawer) return;
+      const isHidden = drawer.classList.contains('hidden');
+      if (isHidden) {
+        drawer.classList.remove('hidden');
+        drawer.classList.add('flex');
+        unreadChatCount = 0;
+        const badge = document.getElementById('mobileChatUnread');
+        if (badge) badge.classList.add('hidden');
+      } else {
+        drawer.classList.add('hidden');
+        drawer.classList.remove('flex');
+      }
+    }
+
+    function sendEmote(emoji) {
+      spawnFloatingEmote(emoji, profile ? profile.name : 'Sen');
+      Sound.chatPop();
+      if (currentTableId && !isLocalFallbackMode) {
+        const msgObj = {
+          id: 'msg_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+          senderId: profile.id,
+          senderName: profile.name,
+          senderAvatar: profile.avatar,
+          text: `${emoji} ${emoji}`,
+          timestamp: Date.now()
+        };
+        appendChatMessageToUI(msgObj);
+        fetch(`${RTDB_URL}/okey/chats/${currentTableId}/${msgObj.id}.json`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(msgObj)
+        }).catch(() => {});
+      }
+    }
+
+    function spawnFloatingEmote(emoji, senderName) {
+      const layer = document.getElementById('emoteLayer');
+      if (!layer) return;
+      const el = document.createElement('div');
+      el.className = 'emote-float absolute bottom-12 left-1/2 flex flex-col items-center';
+      el.style.left = (35 + Math.random() * 30) + '%';
+      el.innerHTML = `<span class="text-3xl drop-shadow-lg">${emoji}</span><span class="text-[10px] font-bold bg-slate-950/80 px-1.5 rounded text-amber-300">${escapeHtml(senderName)}</span>`;
+      layer.appendChild(el);
+      setTimeout(() => el.remove(), 1700);
+    }
+
+    function escapeHtml(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    /* =====================================================================
+       LOBBY & ROOM MANAGEMENT (FIREBASE RTDB)
+       ===================================================================== */
+    function selectTargetRounds(n) {
+      selectedTargetRounds = n;
+      [3, 5, 11].forEach(val => {
+        const btn = document.getElementById('roundBtn' + val);
+        if (!btn) return;
+        if (val === n) {
+          btn.className = 'py-2 rounded-xl text-xs font-bold border border-emerald-400 bg-emerald-500/20 text-emerald-300 transition';
+        } else {
+          btn.className = 'py-2 rounded-xl text-xs font-bold border border-slate-700 bg-slate-900 text-slate-300 hover:border-emerald-500 transition';
+        }
+      });
+    }
+
+    function showScreen(screenId) {
+      ['screenLobby', 'screenRoom', 'screenGame'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.toggle('hidden', id !== screenId);
+      });
+    }
+
+    async function fetchLobbyTables(spinIcon = false) {
+      const icon = document.getElementById('lobbyRefreshIcon');
+      if (spinIcon && icon) icon.classList.add('fa-spin');
+      try {
+        const res = await fetch(`${RTDB_URL}/okey/tables.json`);
+        if (!res.ok) throw new Error('RTDB error');
+        const data = await res.json();
+        const now = Date.now();
+        const tables = [];
+
+        if (data) {
+          Object.values(data).forEach(t => {
+            if (!t || !t.id) return;
+            // Clean up stale tables (> 25 min inactive)
+            if (now - (t.updatedAt || t.createdAt || 0) > 25 * 60 * 1000) {
+              fetch(`${RTDB_URL}/okey/tables/${t.id}.json`, { method: 'DELETE' }).catch(() => {});
+              return;
+            }
+            tables.push(t);
+          });
+        }
+
+        tables.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+        renderLobbyTables(tables);
+      } catch (e) {
+        renderLobbyTables([]);
+      } finally {
+        if (spinIcon && icon) setTimeout(() => icon.classList.remove('fa-spin'), 400);
+      }
+    }
+
+    function renderLobbyTables(tables) {
+      const list = document.getElementById('lobbyTableList');
+      const countEl = document.getElementById('lobbyTableCount');
+      if (countEl) countEl.textContent = tables.length;
+      if (!list) return;
+
+      if (tables.length === 0) {
+        list.innerHTML = `
+          <div class="text-center py-10 px-4 rounded-2xl bg-slate-900/60 border border-dashed border-slate-800 space-y-2">
+            <div class="text-3xl">🎲</div>
+            <p class="text-sm font-bold text-slate-300">Şu an açık masa bulunmuyor</p>
+            <p class="text-xs text-slate-400">Sol taraftan hemen yeni bir masa açıp botlarla veya arkadaşlarınla oynayabilirsin!</p>
+          </div>
+        `;
+        return;
+      }
+
+      list.innerHTML = tables.map(t => {
+        const seats = normalizeSeats(t.seats);
+        const filledCount = seats.filter(Boolean).length;
+        const botCount = seats.filter(s => s && s.isBot).length;
+        const humanCount = filledCount - botCount;
+        const isWaiting = t.status === 'waiting';
+        const canJoin = isWaiting && filledCount < 4;
+
+        const seatPills = seats.map(s => {
+          if (!s) return `<span class="px-1.5 py-0.5 rounded bg-slate-800/80 text-slate-500 text-[10px]">Boş</span>`;
+          return `<span class="px-1.5 py-0.5 rounded ${s.isBot ? 'bg-amber-500/15 text-amber-300' : 'bg-emerald-500/15 text-emerald-300'} text-[10px] font-semibold">${escapeHtml(s.avatar)} ${escapeHtml(s.name)}</span>`;
+        }).join('');
+
+        return `
+          <div class="p-3.5 rounded-2xl bg-slate-900/85 border ${canJoin ? 'border-emerald-500/40 hover:border-emerald-400' : 'border-slate-800 opacity-80'} transition flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="space-y-1.5 min-w-0">
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="font-extrabold text-sm text-white truncate">${escapeHtml(t.name)}</span>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold ${isWaiting ? 'bg-emerald-500/20 text-emerald-300' : 'bg-amber-500/20 text-amber-300'}">
+                  ${isWaiting ? 'BEKLİYOR' : `OYUNDA (El ${t.currentRound || 1}/${t.targetRounds || 5})`}
+                </span>
+                <span class="text-[10px] font-mono text-slate-400">${filledCount}/4 (${humanCount} Gerçek, ${botCount} Bot)</span>
+              </div>
+              <div class="flex flex-wrap gap-1">${seatPills}</div>
+            </div>
+
+            <div class="shrink-0">
+              ${canJoin
+                ? `<button onclick="joinExistingTable('${t.id}')" class="w-full sm:w-auto px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs transition shadow-md">Masaya Katıl</button>`
+                : `<button disabled class="w-full sm:w-auto px-4 py-2 rounded-xl bg-slate-800 text-slate-500 font-bold text-xs cursor-not-allowed">${filledCount >= 4 ? 'Masa Dolu' : 'Oyunda'}</button>`
+              }
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function normalizeSeats(seats) {
+      const arr = [null, null, null, null];
+      if (!seats) return arr;
+      for (let i = 0; i < 4; i++) {
+        if (seats[i]) arr[i] = seats[i];
+      }
+      return arr;
+    }
+
+    async function createTable(instantWith3Bots = false) {
+      if (!profile) { openProfileModal(true); return; }
+
+      const rawName = (document.getElementById('inputTableName').value || '').trim();
+      const filterRes = filterProfanity(rawName);
+      const tableName = (rawName && !filterRes.hasBadWord) ? rawName.slice(0, 28) : `${profile.name}'in Masası`;
+
+      const tableId = 'tbl_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
+      const seats = [
+        { id: profile.id, name: profile.name, avatar: profile.avatar, isBot: false, score: 0, connectedAt: Date.now() },
+        null,
+        null,
+        null
+      ];
+
+      if (instantWith3Bots) {
+        const shuffledBots = [...BOT_NAMES].sort(() => Math.random() - 0.5);
+        for (let i = 1; i <= 3; i++) {
+          seats[i] = {
+            id: `bot_${i}_${Date.now()}`,
+            name: shuffledBots[i - 1],
+            avatar: '🤖',
+            isBot: true,
+            score: 0,
+            connectedAt: Date.now()
+          };
+        }
+      }
+
+      const tableObj = {
+        id: tableId,
+        name: tableName,
+        hostId: profile.id,
+        hostName: profile.name,
+        status: 'waiting',
+        targetRounds: selectedTargetRounds,
+        currentRound: 1,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        seats,
+        gameState: null
+      };
+
+      currentTableId = tableId;
+      currentTable = tableObj;
+      mySeatIndex = 0;
+      isLocalFallbackMode = false;
+      lastChatIds.clear();
+      document.getElementById('roomChatMessages').innerHTML = '';
+      document.getElementById('gameChatMessages').innerHTML = '';
+
+      try {
+        const res = await fetch(`${RTDB_URL}/okey/tables/${tableId}.json`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(tableObj)
+        });
+        if (!res.ok) isLocalFallbackMode = true;
+      } catch (e) {
+        isLocalFallbackMode = true;
+      }
+
+      stopLobbyPolling();
+      if (instantWith3Bots) {
+        await startMatchFromRoom();
+      } else {
+        showScreen('screenRoom');
+        renderWaitingRoom();
+        startRoomPolling();
+      }
+    }
+
+    async function joinExistingTable(tableId) {
+      if (!profile) { openProfileModal(true); return; }
+      try {
+        const res = await fetch(`${RTDB_URL}/okey/tables/${tableId}.json`);
+        if (!res.ok) throw new Error('Masa alınamadı');
+        const table = await res.json();
+        if (!table || table.status !== 'waiting') {
+          showToast('⚠️ Bu masa artık katılıma açık değil.');
+          fetchLobbyTables();
+          return;
+        }
+        const seats = normalizeSeats(table.seats);
+        // Check if already seated
+        let idx = seats.findIndex(s => s && s.id === profile.id);
+        if (idx === -1) {
+          idx = seats.findIndex(s => !s);
+          if (idx === -1) {
+            showToast('⚠️ Masa dolmuş!');
+            fetchLobbyTables();
+            return;
+          }
+          seats[idx] = { id: profile.id, name: profile.name, avatar: profile.avatar, isBot: false, score: 0, connectedAt: Date.now() };
+          table.seats = seats;
+          table.updatedAt = Date.now();
+          await fetch(`${RTDB_URL}/okey/tables/${tableId}.json`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(table)
+          });
+        }
+
+        currentTableId = tableId;
+        currentTable = table;
+        mySeatIndex = idx;
+        isLocalFallbackMode = false;
+        lastChatIds.clear();
+        document.getElementById('roomChatMessages').innerHTML = '';
+        document.getElementById('gameChatMessages').innerHTML = '';
+
+        stopLobbyPolling();
+        showScreen('screenRoom');
+        renderWaitingRoom();
+        startRoomPolling();
+        showToast(`✅ ${table.name} masasına katıldın!`);
+      } catch (e) {
+        showToast('⚠️ Masaya katılırken bağlantı hatası oluştu.');
+      }
+    }
+
+    function checkUrlTableJoin() {
+      const params = new URLSearchParams(window.location.search);
+      const joinId = params.get('table');
+      if (joinId && !currentTableId) {
+        joinExistingTable(joinId);
+      }
+    }
+
+    function renderWaitingRoom() {
+      if (!currentTable) return;
+      const seats = normalizeSeats(currentTable.seats);
+      const isHost = profile && currentTable.hostId === profile.id;
+      const filledCount = seats.filter(Boolean).length;
+
+      document.getElementById('roomTitle').textContent = currentTable.name;
+      document.getElementById('roomRoundsBadge').textContent = `${currentTable.targetRounds || 5} El`;
+
+      const seatLabels = ['1. Koltuk (Kurucu)', '2. Koltuk (Sağ)', '3. Koltuk (Karşı)', '4. Koltuk (Sol)'];
+      const grid = document.getElementById('roomSeatsGrid');
+
+      grid.innerHTML = seats.map((s, idx) => {
+        if (s) {
+          return `
+            <div class="p-4 rounded-2xl bg-slate-900 border ${s.id === profile.id ? 'border-emerald-400' : 'border-slate-700'} flex items-center justify-between gap-3">
+              <div class="flex items-center gap-3 min-w-0">
+                <div class="w-11 h-11 rounded-2xl ${s.isBot ? 'bg-amber-500/20 text-amber-300' : 'bg-emerald-500/20 text-emerald-300'} flex items-center justify-center text-2xl shrink-0">
+                  ${escapeHtml(s.avatar)}
+                </div>
+                <div class="min-w-0">
+                  <div class="text-[10px] text-slate-400 font-mono">${seatLabels[idx]}</div>
+                  <div class="font-extrabold text-sm text-white truncate">${escapeHtml(s.name)} ${s.id === profile.id ? '(Sen)' : ''}</div>
+                  <span class="text-[10px] font-bold ${s.isBot ? 'text-amber-400' : 'text-emerald-400'}">${s.isBot ? '🤖 Yapay Zeka Bot' : '🟢 Gerçek Oyuncu'}</span>
+                </div>
+              </div>
+              ${isHost && s.isBot ? `<button onclick="removeBotFromSeat(${idx})" class="px-2.5 py-1.5 rounded-xl bg-rose-950/70 hover:bg-rose-900 text-rose-300 border border-rose-500/30 text-xs font-bold shrink-0">Çıkar</button>` : ''}
+            </div>
+          `;
+        } else {
+          return `
+            <div class="p-4 rounded-2xl bg-slate-900/40 border-2 border-dashed border-slate-700/80 flex items-center justify-between gap-3">
+              <div>
+                <div class="text-[10px] text-slate-500 font-mono">${seatLabels[idx]}</div>
+                <div class="text-sm font-bold text-slate-400">Boş Koltuk</div>
+                <div class="text-[10px] text-slate-500">Gerçek oyuncu bekleniyor...</div>
+              </div>
+              ${isHost ? `<button onclick="addBotToSeat(${idx})" class="px-3 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/50 text-amber-300 text-xs font-bold transition shrink-0">🤖 Bot Ekle</button>` : ''}
+            </div>
+          `;
+        }
+      }).join('');
+
+      const btnFill = document.getElementById('btnFillBots');
+      const btnStart = document.getElementById('btnStartMatch');
+      const hint = document.getElementById('roomStatusHint');
+
+      if (isHost) {
+        btnFill.classList.toggle('hidden', filledCount >= 4);
+        btnStart.classList.remove('hidden');
+        btnStart.disabled = filledCount < 4;
+        hint.innerHTML = filledCount >= 4
+          ? '<span class="text-emerald-400 font-bold">✅ Masa 4/4 hazır! Oyunu hemen başlatabilirsin.</span>'
+          : `<i class="fa-solid fa-circle-info text-amber-400 mr-1"></i> ${4 - filledCount} boş koltuk kaldı. Bot ekleyebilir veya gerçek oyuncu bekleyebilirsin.`;
+      } else {
+        btnFill.classList.add('hidden');
+        btnStart.classList.add('hidden');
+        hint.innerHTML = `<i class="fa-solid fa-hourglass-half text-amber-400 mr-1"></i> Masa kurucusu (${escapeHtml(currentTable.hostName)}) oyunu başlattığında maç otomatik açılacak...`;
+      }
+    }
+
+    async function addBotToSeat(seatIdx) {
+      if (!currentTable || currentTable.hostId !== profile.id) return;
+      const seats = normalizeSeats(currentTable.seats);
+      if (seats[seatIdx]) return;
+      const usedNames = seats.filter(Boolean).map(s => s.name);
+      const available = BOT_NAMES.filter(n => !usedNames.includes(n));
+      const botName = available[Math.floor(Math.random() * available.length)] || `Bot ${seatIdx + 1}`;
+
+      seats[seatIdx] = {
+        id: `bot_${seatIdx}_${Date.now()}`,
+        name: botName,
+        avatar: '🤖',
+        isBot: true,
+        score: 0,
+        connectedAt: Date.now()
+      };
+      currentTable.seats = seats;
+      currentTable.updatedAt = Date.now();
+      Sound.tileClack();
+      renderWaitingRoom();
+      await syncTableToRTDB();
+    }
+
+    async function removeBotFromSeat(seatIdx) {
+      if (!currentTable || currentTable.hostId !== profile.id) return;
+      const seats = normalizeSeats(currentTable.seats);
+      if (!seats[seatIdx] || !seats[seatIdx].isBot) return;
+      seats[seatIdx] = null;
+      currentTable.seats = seats;
+      currentTable.updatedAt = Date.now();
+      renderWaitingRoom();
+      await syncTableToRTDB();
+    }
+
+    async function fillAllEmptyWithBots() {
+      if (!currentTable || currentTable.hostId !== profile.id) return;
+      const seats = normalizeSeats(currentTable.seats);
+      const usedNames = seats.filter(Boolean).map(s => s.name);
+      const available = BOT_NAMES.filter(n => !usedNames.includes(n)).sort(() => Math.random() - 0.5);
+      let bIdx = 0;
+      for (let i = 0; i < 4; i++) {
+        if (!seats[i]) {
+          seats[i] = {
+            id: `bot_${i}_${Date.now()}`,
+            name: available[bIdx++] || `Bot ${i + 1}`,
+            avatar: '🤖',
+            isBot: true,
+            score: 0,
+            connectedAt: Date.now()
+          };
+        }
+      }
+      currentTable.seats = seats;
+      currentTable.updatedAt = Date.now();
+      Sound.tileClack();
+      renderWaitingRoom();
+      await syncTableToRTDB();
+    }
+
+    function copyRoomLink() {
+      if (!currentTableId) return;
+      const url = `${window.location.origin}${window.location.pathname}?table=${currentTableId}`;
+      navigator.clipboard.writeText(url).then(() => {
+        const btn = document.getElementById('btnCopyLinkText');
+        if (btn) {
+          btn.textContent = 'Kopyalandı ✓';
+          setTimeout(() => btn.textContent = 'Davet Linki Kopyala', 2000);
+        }
+      }).catch(() => {
+        showToast('Link: ' + url);
+      });
+    }
+
+    async function syncTableToRTDB() {
+      if (!currentTableId || !currentTable || isLocalFallbackMode) return;
+      currentTable.updatedAt = Date.now();
+      try {
+        await fetch(`${RTDB_URL}/okey/tables/${currentTableId}.json`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(currentTable)
+        });
+      } catch (e) {}
+    }
+
+    function startLobbyPolling() {
+      stopLobbyPolling();
+      fetchLobbyTables();
+      lobbyPollTimer = setInterval(() => fetchLobbyTables(false), 3500);
+    }
+    function stopLobbyPolling() {
+      if (lobbyPollTimer) { clearInterval(lobbyPollTimer); lobbyPollTimer = null; }
+    }
+
+    function startRoomPolling() {
+      stopRoomPolling();
+      roomPollTimer = setInterval(pollActiveTable, 1400);
+      chatPollTimer = setInterval(pollChatMessages, 2000);
+      pollChatMessages();
+    }
+    function stopRoomPolling() {
+      if (roomPollTimer) { clearInterval(roomPollTimer); roomPollTimer = null; }
+      if (chatPollTimer) { clearInterval(chatPollTimer); chatPollTimer = null; }
+      if (botTurnTimeout) { clearTimeout(botTurnTimeout); botTurnTimeout = null; }
+      if (turnCountdownInterval) { clearInterval(turnCountdownInterval); turnCountdownInterval = null; }
+    }
+
+    async function pollActiveTable() {
+      if (!currentTableId || isLocalFallbackMode) return;
+      try {
+        const res = await fetch(`${RTDB_URL}/okey/tables/${currentTableId}.json`);
+        if (!res.ok) return;
+        const remote = await res.json();
+        if (!remote) {
+          showToast('Masa kurucusu odayı kapattı.');
+          leaveCurrentTable(true);
+          return;
+        }
+
+        const prevStatus = currentTable ? currentTable.status : null;
+        const prevUpdated = currentTable ? currentTable.updatedAt : 0;
+
+        if ((remote.updatedAt || 0) > prevUpdated || remote.status !== prevStatus) {
+          currentTable = remote;
+          currentTable.seats = normalizeSeats(remote.seats);
+
+          if (currentTable.status === 'waiting') {
+            renderWaitingRoom();
+          } else if (currentTable.status === 'playing') {
+            if (prevStatus !== 'playing') {
+              enterLiveGameScreen();
+            } else {
+              syncMyRackWithHand();
+              renderGameTable();
+              checkAndTriggerBotOrTimer();
+            }
+          }
+        }
+      } catch (e) {}
+    }
+
+    async function leaveCurrentTable(skipRemote = false) {
+      stopRoomPolling();
+      document.getElementById('modalScoreboard').classList.add('hidden');
+      if (!skipRemote && currentTableId && currentTable && !isLocalFallbackMode) {
+        if (currentTable.hostId === profile.id) {
+          fetch(`${RTDB_URL}/okey/tables/${currentTableId}.json`, { method: 'DELETE' }).catch(() => {});
+        } else if (mySeatIndex >= 0 && currentTable.seats[mySeatIndex]) {
+          currentTable.seats[mySeatIndex] = null;
+          await syncTableToRTDB();
+        }
+      }
+      currentTableId = null;
+      currentTable = null;
+      mySeatIndex = -1;
+      rackSlots = new Array(28).fill(null);
+      selectedSlotIdx = -1;
+      // Clear query param
+      if (window.location.search.includes('table=')) {
+        window.history.replaceState({}, '', window.location.pathname);
+      }
+      showScreen('screenLobby');
+      startLobbyPolling();
+    }
+
+    function returnToLobbyConfirm() {
+      if (!currentTableId) return;
+      if (confirm('Mevcut masadan ayrılıp lobiye dönmek istiyor musun?')) {
+        leaveCurrentTable();
+      }
+    }
+
+    /* =====================================================================
+       OKEY 106-TILE ENGINE & DECK DEALING
+       ===================================================================== */
+    function buildFullDeck() {
+      const colors = ['black', 'red', 'blue', 'yellow'];
+      const deck = [];
+      let uid = 1;
+      for (let copy = 0; copy < 2; copy++) {
+        for (const color of colors) {
+          for (let num = 1; num <= 13; num++) {
+            deck.push({ id: `t_${uid++}`, color, num, isFake: false });
+          }
+        }
+      }
+      // 2 Fake Okeys
+      deck.push({ id: `t_${uid++}`, color: 'fake', num: 0, isFake: true });
+      deck.push({ id: `t_${uid++}`, color: 'fake', num: 0, isFake: true });
+
+      // Fisher-Yates Shuffle
+      for (let i = deck.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [deck[i], deck[j]] = [deck[j], deck[i]];
+      }
+      return deck;
+    }
+
+    function createNewRoundState(starterSeat = 0) {
+      const deck = buildFullDeck();
+      // Pick non-fake indicator
+      let indIdx = deck.findIndex(t => !t.isFake);
+      const indicator = deck.splice(indIdx, 1)[0];
+      const okeyColor = indicator.color;
+      const okeyNum = indicator.num === 13 ? 1 : indicator.num + 1;
+      const rule = COLOR_RULES[okeyColor];
+
+      const hands = { 0: [], 1: [], 2: [], 3: [] };
+      for (let s = 0; s < 4; s++) {
+        const count = s === starterSeat ? 15 : 14;
+        hands[s] = deck.splice(0, count);
+      }
+
+      return {
+        indicator,
+        okey: { color: okeyColor, num: okeyNum },
+        multiplier: rule.mult,
+        winDelta: rule.winDelta,
+        deck,
+        hands,
+        discards: { 0: [], 1: [], 2: [], 3: [] },
+        turn: starterSeat,
+        phase: 'discard', // Starter has 15 tiles, discards first!
+        turnStartedAt: Date.now(),
+        lastAction: `${rule.emoji} ${rule.nameTr} Okey açıldı! (${rule.mult}x / ${rule.winDelta} Puan)`,
+        roundResult: null
+      };
+    }
+
+    function isOkeyTile(tile, okey) {
+      if (!tile || !okey || tile.isFake) return false;
+      return tile.color === okey.color && tile.num === okey.num;
+    }
+
+    function getEffectiveTile(tile, okey) {
+      if (tile.isFake) {
+        return { color: okey.color, num: okey.num, isWild: false, id: tile.id };
+      }
+      if (isOkeyTile(tile, okey)) {
+        return { color: tile.color, num: tile.num, isWild: true, id: tile.id };
+      }
+      return { color: tile.color, num: tile.num, isWild: false, id: tile.id };
+    }
+
+    async function startMatchFromRoom() {
+      if (!currentTable) return;
+      const seats = normalizeSeats(currentTable.seats);
+      if (seats.filter(Boolean).length < 4) {
+        showToast('⚠️ Başlamak için 4 koltuk dolu olmalı!');
+        return;
+      }
+      currentTable.status = 'playing';
+      currentTable.currentRound = 1;
+      seats.forEach(s => { if (s) s.score = 0; });
+      currentTable.seats = seats;
+      currentTable.gameState = createNewRoundState(0);
+      await syncTableToRTDB();
+      enterLiveGameScreen();
+      if (!roomPollTimer) startRoomPolling();
+    }
+
+    async function startNextRound() {
+      if (!currentTable) return;
+      if (currentTable.hostId !== profile.id) {
+        showToast('Masa kurucusunun sonraki eli başlatması bekleniyor...');
+        return;
+      }
+      document.getElementById('modalScoreboard').classList.add('hidden');
+      if (currentTable.currentRound >= (currentTable.targetRounds || 5)) {
+        // Restart fresh match
+        currentTable.currentRound = 1;
+        currentTable.seats.forEach(s => { if (s) s.score = 0; });
+      } else {
+        currentTable.currentRound++;
+      }
+      const starter = (currentTable.currentRound - 1) % 4;
+      currentTable.gameState = createNewRoundState(starter);
+      await syncTableToRTDB();
+      rackSlots = new Array(28).fill(null);
+      selectedSlotIdx = -1;
+      syncMyRackWithHand();
+      renderGameTable();
+      checkAndTriggerBotOrTimer();
+    }
+
+    function enterLiveGameScreen() {
+      showScreen('screenGame');
+      rackSlots = new Array(28).fill(null);
+      selectedSlotIdx = -1;
+      syncMyRackWithHand();
+      autoSortRack('runs', true);
+      renderGameTable();
+      startTurnCountdown();
+      checkAndTriggerBotOrTimer();
+    }
+
+    /* =====================================================================
+       RACK (ISTAKA) MANAGEMENT & DRAG-AND-DROP
+       ===================================================================== */
+    function getMyHandArray() {
+      if (!currentTable || !currentTable.gameState || mySeatIndex < 0) return [];
+      return currentTable.gameState.hands[mySeatIndex] || [];
+    }
+
+    function syncMyRackWithHand() {
+      const hand = getMyHandArray();
+      const handMap = new Map(hand.map(t => [t.id, t]));
+
+      // Remove tiles no longer in hand
+      for (let i = 0; i < 28; i++) {
+        if (rackSlots[i] && !handMap.has(rackSlots[i].id)) {
+          rackSlots[i] = null;
+        }
+      }
+      // Place any new tiles in first available empty slot
+      const presentIds = new Set(rackSlots.filter(Boolean).map(t => t.id));
+      hand.forEach(t => {
+        if (!presentIds.has(t.id)) {
+          const emptyIdx = rackSlots.findIndex(slot => slot === null);
+          if (emptyIdx !== -1) rackSlots[emptyIdx] = t;
+        }
+      });
+    }
+
+    function renderTileHtml(tile, okey, size = 'rack', isSelected = false) {
+      if (!tile) return '';
+      const isOkey = isOkeyTile(tile, okey);
+      const colorCls = tile.isFake ? 'tile-fake' : `tile-${tile.color}`;
+      const sizeCls = size === 'rack'
+        ? 'w-full h-14 sm:h-16 rounded-lg'
+        : 'w-11 h-14 sm:w-12 sm:h-16 rounded-xl';
+
+      const centerContent = tile.isFake
+        ? `<span class="text-lg sm:text-xl leading-none">🎭</span><span class="text-[8px] font-bold uppercase tracking-tighter text-purple-700 mt-0.5">SAHTE</span>`
+        : `<span class="text-lg sm:text-2xl font-black leading-none font-mono">${tile.num}</span>
+           <span class="w-2 h-2 rounded-full mt-1 ${tile.color === 'black' ? 'bg-slate-900' : tile.color === 'red' ? 'bg-red-600' : tile.color === 'blue' ? 'bg-blue-700' : 'bg-amber-500'}"></span>`;
+
+      const okeyBadge = isOkey
+        ? `<span class="absolute -top-1.5 -right-1 w-4 h-4 rounded-full bg-amber-500 text-slate-950 text-[9px] flex items-center justify-center font-black shadow">★</span>`
+        : '';
+
+      return `
+        <div class="okey-tile ${sizeCls} ${colorCls} ${isSelected ? 'selected' : ''} ${isOkey ? 'is-okey-glow' : ''} flex flex-col items-center justify-center cursor-pointer">
+          ${okeyBadge}
+          ${centerContent}
+        </div>
+      `;
+    }
+
+    function renderRack() {
+      const gs = currentTable ? currentTable.gameState : null;
+      const okey = gs ? gs.okey : null;
+      const row0 = document.getElementById('rackRow0');
+      const row1 = document.getElementById('rackRow1');
+      if (!row0 || !row1) return;
+
+      const buildRow = (startIdx) => {
+        let html = '';
+        for (let i = startIdx; i < startIdx + 14; i++) {
+          const tile = rackSlots[i];
+          const isSel = selectedSlotIdx === i;
+          html += `
+            <div
+              class="h-14 sm:h-16 rounded-lg flex items-center justify-center ${tile ? '' : 'hover:bg-white/5 cursor-pointer'}"
+              onclick="handleRackSlotClick(${i})"
+              ondblclick="handleRackDoubleClick(${i})"
+              draggable="${tile ? 'true' : 'false'}"
+              ondragstart="handleDragStart(event, ${i})"
+              ondragover="event.preventDefault()"
+              ondrop="handleDropOnSlot(event, ${i})"
+            >
+              ${tile ? renderTileHtml(tile, okey, 'rack', isSel) : ''}
+            </div>
+          `;
+        }
+        return html;
+      };
+
+      row0.innerHTML = buildRow(0);
+      row1.innerHTML = buildRow(14);
+    }
+
+    function handleRackSlotClick(slotIdx) {
+      if (selectedSlotIdx === -1) {
+        if (rackSlots[slotIdx]) {
+          selectedSlotIdx = slotIdx;
+          Sound.tileClack();
+          renderRack();
+        }
+      } else if (selectedSlotIdx === slotIdx) {
+        selectedSlotIdx = -1;
+        renderRack();
+      } else {
+        // Move or swap
+        const temp = rackSlots[slotIdx];
+        rackSlots[slotIdx] = rackSlots[selectedSlotIdx];
+        rackSlots[selectedSlotIdx] = temp;
+        selectedSlotIdx = -1;
+        Sound.tileClack();
+        renderRack();
+      }
+    }
+
+    function handleRackDoubleClick(slotIdx) {
+      if (!rackSlots[slotIdx]) return;
+      selectedSlotIdx = slotIdx;
+      const gs = currentTable ? currentTable.gameState : null;
+      if (gs && gs.turn === mySeatIndex && gs.phase === 'discard') {
+        discardSelectedTile();
+      }
+    }
+
+    function handleDragStart(e, slotIdx) {
+      dragSourceSlotIdx = slotIdx;
+      selectedSlotIdx = slotIdx;
+      e.dataTransfer.setData('text/plain', String(slotIdx));
+    }
+
+    function handleDropOnSlot(e, targetIdx) {
+      e.preventDefault();
+      if (dragSourceSlotIdx === -1 || dragSourceSlotIdx === targetIdx) return;
+      const temp = rackSlots[targetIdx];
+      rackSlots[targetIdx] = rackSlots[dragSourceSlotIdx];
+      rackSlots[dragSourceSlotIdx] = temp;
+      dragSourceSlotIdx = -1;
+      selectedSlotIdx = -1;
+      Sound.tileClack();
+      renderRack();
+    }
+
+    function handleDropOnDiscard(e) {
+      e.preventDefault();
+      if (dragSourceSlotIdx !== -1) {
+        selectedSlotIdx = dragSourceSlotIdx;
+        dragSourceSlotIdx = -1;
+        discardSelectedTile();
+      }
+    }
+
+    function handleDropOnFinish(e) {
+      e.preventDefault();
+      if (dragSourceSlotIdx !== -1) {
+        selectedSlotIdx = dragSourceSlotIdx;
+        dragSourceSlotIdx = -1;
+        attemptFinishWithSelected();
+      }
+    }
+
+    function autoSortRack(mode = 'runs', silent = false) {
+      const gs = currentTable ? currentTable.gameState : null;
+      if (!gs) return;
+      const okey = gs.okey;
+      const tiles = rackSlots.filter(Boolean);
+      const newSlots = new Array(28).fill(null);
+
+      if (mode === 'pairs') {
+        // Group identical color+num pairs together
+        const groups = {};
+        const okeys = [];
+        tiles.forEach(t => {
+          if (isOkeyTile(t, okey)) { okeys.push(t); return; }
+          const eff = getEffectiveTile(t, okey);
+          const key = `${eff.color}_${eff.num}`;
+          if (!groups[key]) groups[key] = [];
+          groups[key].push(t);
+        });
+        const pairs = [];
+        const singles = [];
+        Object.values(groups).forEach(arr => {
+          if (arr.length === 2) pairs.push(...arr);
+          else singles.push(...arr);
+        });
+        const ordered = [...okeys, ...pairs, ...singles];
+        ordered.forEach((t, idx) => {
+          if (idx < 14) newSlots[idx] = t;
+          else newSlots[idx] = t;
+        });
+      } else {
+        // Sort by color & number (Runs friendly)
+        const colorOrder = { black: 0, red: 1, blue: 2, yellow: 3 };
+        const okeys = tiles.filter(t => isOkeyTile(t, okey));
+        const normals = tiles.filter(t => !isOkeyTile(t, okey)).sort((a, b) => {
+          const ea = getEffectiveTile(a, okey);
+          const eb = getEffectiveTile(b, okey);
+          if (colorOrder[ea.color] !== colorOrder[eb.color]) return colorOrder[ea.color] - colorOrder[eb.color];
+          return ea.num - eb.num;
+        });
+        const ordered = [...normals, ...okeys];
+        // Spread nicely across top row first (max 12), rest bottom row
+        ordered.forEach((t, idx) => {
+          if (idx < 12) newSlots[idx] = t;
+          else newSlots[14 + (idx - 12)] = t;
+        });
+      }
+
+      rackSlots = newSlots;
+      selectedSlotIdx = -1;
+      if (!silent) Sound.tileClack();
+      renderRack();
+    }
+
+    /* =====================================================================
+       RENDER LIVE GAME TABLE
+       ===================================================================== */
+    function renderGameTable() {
+      if (!currentTable || !currentTable.gameState) return;
+      const gs = currentTable.gameState;
+      const seats = normalizeSeats(currentTable.seats);
+      const okey = gs.okey;
+      const rule = COLOR_RULES[okey.color];
+
+      // Round & Color Multiplier Header
+      document.getElementById('gameRoundLabel').textContent = `El ${currentTable.currentRound || 1}/${currentTable.targetRounds || 5}`;
+      const multBadge = document.getElementById('gameMultiplierBadge');
+      multBadge.className = `px-3 py-1 rounded-xl border text-xs font-extrabold flex items-center gap-1.5 ${rule.badgeCls}`;
+      multBadge.innerHTML = `<span>${rule.emoji} ${rule.nameTr.toUpperCase()} OKEY</span><span class="font-mono">${rule.mult}x / ${rule.winDelta}</span>`;
+
+      // Indicator Tile & Okey label
+      const halo = document.getElementById('indicatorHalo');
+      halo.className = `p-1.5 rounded-2xl border-2 transition cursor-pointer relative group ${rule.ringCls}`;
+      document.getElementById('indicatorTileBox').innerHTML = renderTileHtml(gs.indicator, okey, 'table', false);
+      document.getElementById('okeyTargetText').textContent = `OKEY: ${rule.emoji} ${okey.num}`;
+      document.getElementById('deckCountBadge').textContent = (gs.deck || []).length;
+
+      // Relative seat mapping (Bottom = mySeat, Right = +1, Top = +2, Left = +3)
+      const rel = {
+        Bottom: mySeatIndex,
+        Right: (mySeatIndex + 1) % 4,
+        Top: (mySeatIndex + 2) % 4,
+        Left: (mySeatIndex + 3) % 4
+      };
+
+      Object.entries(rel).forEach(([pos, sIdx]) => {
+        const seat = seats[sIdx];
+        const isTurn = gs.turn === sIdx && !gs.roundResult;
+        const box = document.getElementById('seatBox' + pos);
+        if (box) {
+          box.className = box.className.replace(/border-emerald-400|border-amber-400|ring-2|ring-amber-400\/60/g, '').trim();
+          if (isTurn) {
+            box.classList.add('border-amber-400', 'ring-2', 'ring-amber-400/60');
+          }
+        }
+        if (seat) {
+          document.getElementById('seatAvatar' + pos).textContent = seat.avatar;
+          document.getElementById('seatName' + pos).textContent = seat.name + (sIdx === mySeatIndex ? ' (Sen)' : '');
+          document.getElementById('seatScore' + pos).textContent = `${seat.score || 0} Puan`;
+        }
+      });
+
+      // Left player's top discard (draw option for me!)
+      const leftDiscards = (gs.discards && gs.discards[rel.Left]) ? gs.discards[rel.Left] : [];
+      const topLeftTile = leftDiscards.length ? leftDiscards[leftDiscards.length - 1] : null;
+      const leftContainer = document.getElementById('leftDiscardContainer');
+      const leftHint = document.getElementById('leftDiscardHint');
+      const isMyDraw = gs.turn === mySeatIndex && gs.phase === 'draw' && !gs.roundResult;
+      const isMyDiscard = gs.turn === mySeatIndex && gs.phase === 'discard' && !gs.roundResult;
+
+      if (topLeftTile) {
+        leftContainer.innerHTML = renderTileHtml(topLeftTile, okey, 'table', false);
+        leftContainer.classList.toggle('draw-highlight', isMyDraw);
+        leftHint.classList.toggle('hidden', !isMyDraw);
+      } else {
+        leftContainer.innerHTML = `<div class="w-11 h-14 sm:w-12 sm:h-16 rounded-lg border-2 border-dashed border-emerald-500/30 flex items-center justify-center text-[10px] text-emerald-300/40 font-bold">BOŞ</div>`;
+        leftContainer.classList.remove('draw-highlight');
+        leftHint.classList.add('hidden');
+      }
+
+      // Deck highlight on draw phase
+      const btnDeck = document.getElementById('btnDrawDeck');
+      if (btnDeck) btnDeck.classList.toggle('draw-highlight', isMyDraw);
+
+      // My discard stack (Right side)
+      const myDiscards = (gs.discards && gs.discards[mySeatIndex]) ? gs.discards[mySeatIndex] : [];
+      const topMyTile = myDiscards.length ? myDiscards[myDiscards.length - 1] : null;
+      const myDiscardContainer = document.getElementById('myDiscardContainer');
+      const myDiscardHint = document.getElementById('myDiscardHint');
+      if (topMyTile) {
+        myDiscardContainer.innerHTML = renderTileHtml(topMyTile, okey, 'table', false);
+      } else {
+        myDiscardContainer.innerHTML = `<div class="w-11 h-14 sm:w-12 sm:h-16 rounded-lg border-2 border-dashed border-amber-400/40 flex items-center justify-center text-[10px] text-amber-200/50 font-bold text-center leading-tight">TAŞ<br/>AT</div>`;
+      }
+      myDiscardContainer.classList.toggle('draw-highlight', isMyDiscard);
+      myDiscardHint.classList.toggle('hidden', !isMyDiscard);
+
+      // Action Banner
+      const banner = document.getElementById('tableActionBanner');
+      if (isMyDraw) {
+        banner.textContent = '👉 SIRA SENDE! Ortadan deste çek veya soldaki taşı al.';
+        banner.className = 'px-3 py-1 rounded-full bg-emerald-500/25 border border-emerald-400 text-xs font-black text-emerald-200 text-center';
+      } else if (isMyDiscard) {
+        banner.textContent = '👉 SIRA SENDE! Bir taş seçip at veya elin hazırsa BİTİR!';
+        banner.className = 'px-3 py-1 rounded-full bg-amber-500/25 border border-amber-400 text-xs font-black text-amber-200 text-center';
+      } else {
+        banner.textContent = gs.lastAction || 'Oyun devam ediyor...';
+        banner.className = 'px-3 py-1 rounded-full bg-slate-950/80 border border-slate-700 text-xs font-bold text-slate-300 text-center';
+      }
+
+      // Render Rack
+      renderRack();
+
+      // If round finished, show Scoreboard Modal!
+      if (gs.roundResult) {
+        showScoreboardModal(gs.roundResult);
+      }
+    }
+
+    /* =====================================================================
+       PLAYER ACTIONS: DRAW, DISCARD, FINISH
+       ===================================================================== */
+    async function drawFromDeck() {
+      if (!currentTable || !currentTable.gameState) return;
+      const gs = currentTable.gameState;
+      if (gs.roundResult || gs.turn !== mySeatIndex || gs.phase !== 'draw') {
+        showToast('Şu an deste çekemezsin.');
+        return;
+      }
+      if (!gs.deck || gs.deck.length === 0) {
+        await handleDeckExhaustedDraw();
+        return;
+      }
+      const tile = gs.deck.pop();
+      gs.hands[mySeatIndex].push(tile);
+      gs.phase = 'discard';
+      gs.lastAction = `${profile.name} ortadan taş çekti.`;
+      Sound.draw();
+      syncMyRackWithHand();
+      renderGameTable();
+      await syncTableToRTDB();
+    }
+
+    async function drawFromLeftDiscard() {
+      if (!currentTable || !currentTable.gameState) return;
+      const gs = currentTable.gameState;
+      if (gs.roundResult || gs.turn !== mySeatIndex || gs.phase !== 'draw') return;
+      const leftSeat = (mySeatIndex + 3) % 4;
+      const leftPile = gs.discards[leftSeat] || [];
+      if (leftPile.length === 0) return;
+
+      const tile = leftPile.pop();
+      gs.hands[mySeatIndex].push(tile);
+      gs.phase = 'discard';
+      gs.lastAction = `${profile.name} yerden taş çekti.`;
+      Sound.draw();
+      syncMyRackWithHand();
+      renderGameTable();
+      await syncTableToRTDB();
+    }
+
+    async function discardSelectedTile() {
+      if (!currentTable || !currentTable.gameState) return;
+      const gs = currentTable.gameState;
+      if (gs.roundResult || gs.turn !== mySeatIndex || gs.phase !== 'discard') {
+        showToast('Taş atmak için sıranın sende olması ve 15 taşın olması gerekir.');
+        return;
+      }
+      if (selectedSlotIdx === -1 || !rackSlots[selectedSlotIdx]) {
+        showToast('Önce ıstakadan atmak istediğin bir taşa tıkla!');
+        return;
+      }
+
+      const tile = rackSlots[selectedSlotIdx];
+      rackSlots[selectedSlotIdx] = null;
+      selectedSlotIdx = -1;
+
+      gs.hands[mySeatIndex] = gs.hands[mySeatIndex].filter(t => t.id !== tile.id);
+      if (!gs.discards[mySeatIndex]) gs.discards[mySeatIndex] = [];
+      gs.discards[mySeatIndex].push(tile);
+
+      gs.turn = (mySeatIndex + 1) % 4;
+      gs.phase = 'draw';
+      gs.turnStartedAt = Date.now();
+      gs.lastAction = `${profile.name} taş attı.`;
+
+      Sound.tileClack();
+      renderGameTable();
+      await syncTableToRTDB();
+      checkAndTriggerBotOrTimer();
+    }
+
+    async function attemptFinishWithSelected() {
+      if (!currentTable || !currentTable.gameState) return;
+      const gs = currentTable.gameState;
+      if (gs.roundResult || gs.turn !== mySeatIndex || gs.phase !== 'discard') {
+        showToast('Bitirmek için sıran sendeyken 15. taşı seçmelisin!');
+        return;
+      }
+      if (selectedSlotIdx === -1 || !rackSlots[selectedSlotIdx]) {
+        showToast('Önce bitiş taşı olarak ortaya atacağın 15. taşı seç!');
+        return;
+      }
+
+      const finishTile = rackSlots[selectedSlotIdx];
+      const remaining14 = gs.hands[mySeatIndex].filter(t => t.id !== finishTile.id);
+      if (remaining14.length !== 14) {
+        showToast('Bitirmek için elinde tam 14 taş kalmalı.');
+        return;
+      }
+
+      const validation = validateWinningHand14(remaining14, gs.okey);
+      if (!validation.valid) {
+        showToast('❌ Elin henüz bitiş için geçerli per veya 7 çift oluşturmuyor!');
+        return;
+      }
+
+      let finishType = 'normal';
+      if (validation.isPairs) {
+        finishType = 'pair'; // Çiftten bitiş = Okey atmış gibi 10x!
+      } else if (isOkeyTile(finishTile, gs.okey)) {
+        finishType = 'okey'; // Okey atarak bitiş = 10x!
+      }
+
+      await finalizeRoundWin(mySeatIndex, finishTile, finishType);
+    }
+
+    async function handleDeckExhaustedDraw() {
+      const gs = currentTable.gameState;
+      gs.roundResult = {
+        winnerSeat: -1,
+        finishType: 'draw',
+        color: gs.okey.color,
+        winDelta: 0,
+        penalties: [0, 0, 0, 0],
+        unmeldedSums: [0, 0, 0, 0],
+        scores: currentTable.seats.map(s => s ? (s.score || 0) : 0)
+      };
+      gs.lastAction = 'Ortada taş bitti! El berabere sonuçlandı.';
+      renderGameTable();
+      await syncTableToRTDB();
+    }
+
+    /* =====================================================================
+       EXACT DÜZ OKEY HAND VALIDATOR (14 TILES: 7 PAIRS OR SETS & RUNS)
+       ===================================================================== */
+    function validateWinningHand14(tiles14, okey) {
+      if (!tiles14 || tiles14.length !== 14) return { valid: false, isPairs: false };
+
+      // 1. Check 7 Pairs (Çift)
+      if (canForm7Pairs(tiles14, okey)) {
+        return { valid: true, isPairs: true };
+      }
+
+      // 2. Check Standard Sets & Runs (Per & Seri)
+      const evalRes = evaluateMinUnmeldedSum(tiles14, okey);
+      if (evalRes.minUnmelded === 0) {
+        return { valid: true, isPairs: false };
+      }
+      return { valid: false, isPairs: false };
+    }
+
+    function canForm7Pairs(tiles14, okey) {
+      let wilds = 0;
+      const counts = {};
+      tiles14.forEach(t => {
+        if (isOkeyTile(t, okey)) {
+          wilds++;
+        } else {
+          const eff = getEffectiveTile(t, okey);
+          const k = `${eff.color}_${eff.num}`;
+          counts[k] = (counts[k] || 0) + 1;
+        }
+      });
+      let singles = 0;
+      Object.values(counts).forEach(c => {
+        if (c % 2 === 1) singles++;
+      });
+      return singles <= wilds && ((wilds - singles) % 2 === 0);
+    }
+
+    // Fast recursive solver to find minimum unmelded sum (0 means valid winning hand!)
+    function evaluateMinUnmeldedSum(tiles, okey) {
+      let wilds = 0;
+      const normals = [];
+      tiles.forEach(t => {
+        if (isOkeyTile(t, okey)) wilds++;
+        else normals.push(getEffectiveTile(t, okey));
+      });
+
+      const colors = ['black', 'red', 'blue', 'yellow'];
+      const cIdx = { black: 0, red: 1, blue: 2, yellow: 3 };
+      // Frequency table: 4 colors x 14 (1..13)
+      const grid = [
+        new Uint8Array(14),
+        new Uint8Array(14),
+        new Uint8Array(14),
+        new Uint8Array(14)
+      ];
+      let totalFaceValue = 0;
+      normals.forEach(n => {
+        grid[cIdx[n.color]][n.num]++;
+        totalFaceValue += n.num;
+      });
+
+      let bestRemaining = totalFaceValue;
+      let steps = 0;
+      const MAX_STEPS = 8000;
+
+      function dfs(remVal, wLeft) {
+        if (remVal < bestRemaining) bestRemaining = remVal;
+        if (bestRemaining === 0 || ++steps > MAX_STEPS) return;
+
+        // Find first available tile
+        let fc = -1, fn = -1;
+        outer: for (let c = 0; c < 4; c++) {
+          for (let n = 1; n <= 13; n++) {
+            if (grid[c][n] > 0) { fc = c; fn = n; break outer; }
+          }
+        }
+        if (fc === -1) return;
+
+        // Option A: Try Sets (same number fn, different colors, size 3 or 4)
+        const availCols = [];
+        for (let c = 0; c < 4; c++) {
+          if (grid[c][fn] > 0) availCols.push(c);
+        }
+        // 4-color set (0 wilds)
+        if (availCols.length === 4) {
+          availCols.forEach(c => grid[c][fn]--);
+          dfs(remVal - fn * 4, wLeft);
+          availCols.forEach(c => grid[c][fn]++);
+          if (bestRemaining === 0) return;
+        }
+        // 3-color sets (0 wilds)
+        if (availCols.length >= 3) {
+          for (let i = 0; i < availCols.length; i++) {
+            for (let j = i + 1; j < availCols.length; j++) {
+              for (let k = j + 1; k < availCols.length; k++) {
+                const trio = [availCols[i], availCols[j], availCols[k]];
+                if (!trio.includes(fc)) continue;
+                trio.forEach(c => grid[c][fn]--);
+                dfs(remVal - fn * 3, wLeft);
+                trio.forEach(c => grid[c][fn]++);
+                if (bestRemaining === 0) return;
+              }
+            }
+          }
+        }
+        // 2-color + 1 wild set
+        if (availCols.length >= 2 && wLeft >= 1) {
+          for (let i = 0; i < availCols.length; i++) {
+            if (availCols[i] === fc) continue;
+            const c2 = availCols[i];
+            grid[fc][fn]--; grid[c2][fn]--;
+            dfs(remVal - fn * 2, wLeft - 1);
+            grid[fc][fn]++; grid[c2][fn]++;
+            if (bestRemaining === 0) return;
+          }
+        }
+
+        // Option B: Try Runs (same color fc starting at fn, length 3..6, supports 12-13-1 wrap!)
+        for (let len = 3; len <= 6; len++) {
+          const seq = [];
+          let validWrap = true;
+          for (let k = 0; k < len; k++) {
+            const val = fn + k;
+            if (val <= 13) seq.push(val);
+            else if (val === 14) seq.push(1); // 13 -> 1 wrap allowed!
+            else { validWrap = false; break; }
+          }
+          if (!validWrap) break;
+
+          let missing = 0;
+          let removedSum = 0;
+          const used = [];
+          for (const v of seq) {
+            if (grid[fc][v] > 0) {
+              used.push(v);
+              removedSum += v;
+            } else {
+              missing++;
+            }
+          }
+          if (missing <= wLeft) {
+            used.forEach(v => grid[fc][v]--);
+            dfs(remVal - removedSum, wLeft - missing);
+            used.forEach(v => grid[fc][v]++);
+            if (bestRemaining === 0) return;
+          }
+        }
+
+        // Option B2: When fn === 1, also check wrap-around runs ending in 1 (e.g. 12-13-1, 11-12-13-1)
+        if (fn === 1) {
+          for (let len = 3; len <= 6; len++) {
+            const seq = [1];
+            for (let k = 1; k < len; k++) seq.push(14 - k);
+            let missing = 0;
+            let removedSum = 0;
+            const used = [];
+            for (const v of seq) {
+              if (grid[fc][v] > 0) {
+                used.push(v);
+                removedSum += v;
+              } else {
+                missing++;
+              }
+            }
+            if (missing <= wLeft) {
+              used.forEach(v => grid[fc][v]--);
+              dfs(remVal - removedSum, wLeft - missing);
+              used.forEach(v => grid[fc][v]++);
+              if (bestRemaining === 0) return;
+            }
+          }
+        }
+
+        // Option C: Leave (fc, fn) unmelded and continue (allows calculating min penalty for losers!)
+        if (bestRemaining > 0) {
+          grid[fc][fn]--;
+          dfs(remVal, wLeft);
+          grid[fc][fn]++;
+        }
+      }
+
+      dfs(totalFaceValue, wilds);
+      return { minUnmelded: bestRemaining };
+    }
+
+    /* =====================================================================
+       SCORING ENGINE (EXACT USER SPEC!)
+       ===================================================================== */
+    async function finalizeRoundWin(winnerSeat, finishTile, finishType) {
+      const gs = currentTable.gameState;
+      const okey = gs.okey;
+      const rule = COLOR_RULES[okey.color];
+
+      // Remove finish tile from winner's hand
+      gs.hands[winnerSeat] = gs.hands[winnerSeat].filter(t => t.id !== finishTile.id);
+
+      // Special 10x multiplier if Okey discard OR Pair (Çift) win!
+      const isSpecial10x = (finishType === 'okey' || finishType === 'pair');
+      const finalWinDelta = isSpecial10x ? rule.winDelta * 10 : rule.winDelta;
+      const finalPenaltyMult = isSpecial10x ? rule.mult * 10 : rule.mult;
+
+      const penalties = [0, 0, 0, 0];
+      const unmeldedSums = [0, 0, 0, 0];
+
+      for (let s = 0; s < 4; s++) {
+        if (s === winnerSeat) {
+          penalties[s] = finalWinDelta;
+          unmeldedSums[s] = 0;
+        } else {
+          const evalRes = evaluateMinUnmeldedSum(gs.hands[s] || [], okey);
+          unmeldedSums[s] = evalRes.minUnmelded;
+          penalties[s] = evalRes.minUnmelded * finalPenaltyMult;
+        }
+        if (currentTable.seats[s]) {
+          currentTable.seats[s].score = (currentTable.seats[s].score || 0) + penalties[s];
+        }
+      }
+
+      gs.roundResult = {
+        winnerSeat,
+        finishType,
+        color: okey.color,
+        baseMult: rule.mult,
+        finalPenaltyMult,
+        winDelta: finalWinDelta,
+        penalties,
+        unmeldedSums,
+        scores: currentTable.seats.map(s => s ? (s.score || 0) : 0)
+      };
+
+      const winnerName = currentTable.seats[winnerSeat] ? currentTable.seats[winnerSeat].name : 'Oyuncu';
+      gs.lastAction = finishType === 'okey'
+        ? `🏆 ${winnerName} OKEY ATARAK BİTTİ! (${finalWinDelta} Puan!)`
+        : finishType === 'pair'
+        ? `🏆 ${winnerName} ÇİFTTEN BİTTİ! (${finalWinDelta} Puan!)`
+        : `🏆 ${winnerName} eli kazandı! (${finalWinDelta} Puan)`;
+
+      Sound.win();
+      renderGameTable();
+      await syncTableToRTDB();
+      logMatchResult(currentTable, gs.roundResult);
+    }
+
+    function showScoreboardModal(res) {
+      const modal = document.getElementById('modalScoreboard');
+      const badge = document.getElementById('scoreFinishBadge');
+      const title = document.getElementById('scoreWinnerTitle');
+      const sub = document.getElementById('scoreSubtitle');
+      const container = document.getElementById('scoreTableContainer');
+      const btnNext = document.getElementById('btnNextRound');
+
+      const rule = COLOR_RULES[res.color] || COLOR_RULES.black;
+      const isMatchOver = (currentTable.currentRound || 1) >= (currentTable.targetRounds || 5);
+
+      if (res.winnerSeat === -1) {
+        badge.textContent = '🤝 BERABERE';
+        title.textContent = 'Ortada Taş Kalmadı!';
+        sub.textContent = `${rule.emoji} ${rule.nameTr} Okey • Puan değişikliği yok`;
+      } else {
+        const w = currentTable.seats[res.winnerSeat];
+        badge.textContent = res.finishType === 'okey'
+          ? '⭐ OKEY ATARAK BİTİŞ (10x KATLANDI!)'
+          : res.finishType === 'pair'
+          ? '👥 ÇİFTTEN BİTİŞ (OKEY GİBİ 10x!)'
+          : '🏆 NORMAL BİTİŞ';
+        title.textContent = `Kazanan: ${w ? w.avatar + ' ' + w.name : 'Oyuncu'}`;
+        sub.textContent = `${rule.emoji} ${rule.nameTr} Okey • Biten: ${res.winDelta} Puan • Ceza Çarpanı: ${res.finalPenaltyMult}x`;
+      }
+
+      // Sort display by lowest total score (leader on top)
+      const rows = currentTable.seats.map((s, idx) => ({
+        idx,
+        seat: s,
+        delta: res.penalties[idx] || 0,
+        unmelded: res.unmeldedSums ? (res.unmeldedSums[idx] || 0) : 0,
+        total: s ? (s.score || 0) : 0
+      })).sort((a, b) => a.total - b.total);
+
+      container.innerHTML = rows.map((r, rank) => {
+        const isWin = r.idx === res.winnerSeat;
+        const deltaStr = r.delta < 0 ? `${r.delta}` : `+${r.delta}`;
+        const detail = isWin
+          ? 'Kazandı!'
+          : `İşleksiz El: ${r.unmelded} × ${res.finalPenaltyMult || rule.mult}`;
+        return `
+          <div class="p-3 rounded-2xl border ${isWin ? 'bg-emerald-950/50 border-emerald-500/50' : 'bg-slate-900 border-slate-800'} flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2.5">
+              <span class="w-6 h-6 rounded-lg bg-slate-950 text-xs font-mono font-bold text-amber-300 flex items-center justify-center">#${rank + 1}</span>
+              <span class="text-xl">${r.seat ? escapeHtml(r.seat.avatar) : '🎲'}</span>
+              <div>
+                <div class="text-xs font-extrabold text-white">${r.seat ? escapeHtml(r.seat.name) : 'Oyuncu'}</div>
+                <div class="text-[10px] text-slate-400 font-mono">${detail}</div>
+              </div>
+            </div>
+            <div class="text-right font-mono">
+              <div class="text-xs font-black ${r.delta < 0 ? 'text-emerald-400' : 'text-rose-400'}">${deltaStr}</div>
+              <div class="text-[11px] font-bold text-amber-300">Toplam: ${r.total}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      const isHost = profile && currentTable.hostId === profile.id;
+      if (isHost) {
+        btnNext.classList.remove('hidden');
+        btnNext.textContent = isMatchOver ? '🔄 Yeni Maç Başlat' : `Sonraki Ele Geç (${currentTable.currentRound + 1}/${currentTable.targetRounds}) →`;
+      } else {
+        btnNext.classList.add('hidden');
+      }
+
+      modal.classList.remove('hidden');
+    }
+
+    /* =====================================================================
+       SMART BOT AI & TURN TIMER
+       ===================================================================== */
+    function checkAndTriggerBotOrTimer() {
+      if (!currentTable || !currentTable.gameState) return;
+      const gs = currentTable.gameState;
+      if (gs.roundResult) return;
+
+      const activeSeat = currentTable.seats[gs.turn];
+      const isHost = profile && currentTable.hostId === profile.id;
+
+      // Only host drives bot turns to prevent duplicate moves
+      if (activeSeat && activeSeat.isBot && isHost) {
+        clearTimeout(botTurnTimeout);
+        botTurnTimeout = setTimeout(() => executeBotTurn(gs.turn), 1150);
+      }
+    }
+
+    async function executeBotTurn(botSeatIdx) {
+      if (!currentTable || !currentTable.gameState) return;
+      const gs = currentTable.gameState;
+      if (gs.roundResult || gs.turn !== botSeatIdx) return;
+
+      const bot = currentTable.seats[botSeatIdx];
+      const okey = gs.okey;
+
+      // Step 1: Draw if in draw phase
+      if (gs.phase === 'draw') {
+        const leftSeat = (botSeatIdx + 3) % 4;
+        const leftPile = gs.discards[leftSeat] || [];
+        let tookFromLeft = false;
+
+        if (leftPile.length > 0) {
+          const candidate = leftPile[leftPile.length - 1];
+          const curScore = evaluateMinUnmeldedSum(gs.hands[botSeatIdx], okey).minUnmelded;
+          const withCand = evaluateMinUnmeldedSum([...gs.hands[botSeatIdx], candidate], okey).minUnmelded;
+          if (isOkeyTile(candidate, okey) || withCand < curScore - 3) {
+            gs.hands[botSeatIdx].push(leftPile.pop());
+            tookFromLeft = true;
+          }
+        }
+
+        if (!tookFromLeft) {
+          if (!gs.deck || gs.deck.length === 0) {
+            await handleDeckExhaustedDraw();
+            return;
+          }
+          gs.hands[botSeatIdx].push(gs.deck.pop());
+        }
+        gs.phase = 'discard';
+      }
+
+      // Step 2: Check if Bot can WIN with any of its 15 tiles!
+      const hand15 = gs.hands[botSeatIdx];
+      for (let i = 0; i < hand15.length; i++) {
+        const candDiscard = hand15[i];
+        const rem14 = hand15.filter((_, idx) => idx !== i);
+        const val = validateWinningHand14(rem14, okey);
+        if (val.valid) {
+          const fType = val.isPairs ? 'pair' : (isOkeyTile(candDiscard, okey) ? 'okey' : 'normal');
+          await finalizeRoundWin(botSeatIdx, candDiscard, fType);
+          return;
+        }
+      }
+
+      // Step 3: Pick least useful tile to discard (never discard Okey!)
+      let bestDiscardIdx = 0;
+      let lowestUnmelded = Infinity;
+      for (let i = 0; i < hand15.length; i++) {
+        if (isOkeyTile(hand15[i], okey)) continue;
+        const rem14 = hand15.filter((_, idx) => idx !== i);
+        const score = evaluateMinUnmeldedSum(rem14, okey).minUnmelded;
+        // Prefer discarding higher-value unmelded tiles when tied
+        const tieBreaker = score - (hand15[i].num * 0.01);
+        if (tieBreaker < lowestUnmelded) {
+          lowestUnmelded = tieBreaker;
+          bestDiscardIdx = i;
+        }
+      }
+
+      const discarded = hand15.splice(bestDiscardIdx, 1)[0];
+      if (!gs.discards[botSeatIdx]) gs.discards[botSeatIdx] = [];
+      gs.discards[botSeatIdx].push(discarded);
+
+      gs.turn = (botSeatIdx + 1) % 4;
+      gs.phase = 'draw';
+      gs.turnStartedAt = Date.now();
+      gs.lastAction = `${bot.name} taşını attı.`;
+
+      Sound.tileClack();
+      renderGameTable();
+      await syncTableToRTDB();
+      checkAndTriggerBotOrTimer();
+    }
+
+    function startTurnCountdown() {
+      if (turnCountdownInterval) clearInterval(turnCountdownInterval);
+      turnCountdownInterval = setInterval(async () => {
+        if (!currentTable || !currentTable.gameState || currentTable.gameState.roundResult) return;
+        const gs = currentTable.gameState;
+        const elapsed = Math.floor((Date.now() - (gs.turnStartedAt || Date.now())) / 1000);
+        const left = Math.max(0, 25 - elapsed);
+        const timerEl = document.getElementById('turnTimerText');
+        if (timerEl) {
+          timerEl.textContent = `${left}s`;
+          timerEl.className = left <= 6 ? 'font-bold text-rose-400' : 'font-bold text-white';
+        }
+        // Auto-move if my turn timed out so table never freezes!
+        if (left === 0 && gs.turn === mySeatIndex) {
+          if (gs.phase === 'draw') {
+            await drawFromDeck();
+          }
+          if (currentTable && currentTable.gameState && currentTable.gameState.phase === 'discard' && currentTable.gameState.turn === mySeatIndex) {
+            const firstOccupied = rackSlots.findIndex(t => t && !isOkeyTile(t, gs.okey));
+            selectedSlotIdx = firstOccupied !== -1 ? firstOccupied : rackSlots.findIndex(Boolean);
+            if (selectedSlotIdx !== -1) {
+              showToast('⏱️ Süre doldu, otomatik taş atıldı!');
+              await discardSelectedTile();
+            }
+          }
+        }
+      }, 1000);
+    }
+
+    /* =====================================================================
+       MODALS & BOOTSTRAP
+       ===================================================================== */
+    function openRulesModal() {
+      document.getElementById('modalRules').classList.remove('hidden');
+    }
+    function closeRulesModal() {
+      document.getElementById('modalRules').classList.add('hidden');
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      updateSoundUI();
+      initProfile();
+      startLobbyPolling();
+    });
+  </script>
+</body>
+</html>
