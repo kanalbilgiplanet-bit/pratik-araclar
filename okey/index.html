@@ -188,6 +188,11 @@
 
       <!-- Right Controls -->
       <div class="flex items-center gap-2">
+        <button onclick="openYazbozModal()" class="px-2.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-amber-500/60 text-xs font-bold text-amber-300 flex items-center gap-1.5 transition shadow-sm" title="Yazboz / Skor ve Ceza Tablosu">
+          <i class="fa-solid fa-clipboard-list text-amber-400"></i>
+          <span>Yazboz</span>
+        </button>
+
         <button onclick="openRulesModal()" class="px-2.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-xs font-bold text-amber-300 flex items-center gap-1.5 transition">
           <i class="fa-solid fa-scale-balanced"></i>
           <span class="hidden sm:inline">Çarpan Kuralları</span>
@@ -414,7 +419,11 @@
       <!-- Match Info & Active Okey Color Multiplier Bar -->
       <div class="flex flex-wrap items-center justify-between gap-2 px-3 py-2 rounded-2xl bg-slate-950/80 border border-emerald-800/60">
         <div class="flex items-center gap-2 sm:gap-3">
-          <span id="gameRoundLabel" class="px-2.5 py-1 rounded-xl bg-slate-900 border border-slate-700 text-xs font-mono font-bold text-white">El 1/5</span>
+          <button onclick="openYazbozModal()" class="px-2.5 py-1 rounded-xl bg-slate-900 hover:bg-slate-800 border border-amber-500/50 hover:border-amber-400 text-xs font-mono font-bold text-amber-300 flex items-center gap-1.5 active:scale-95 transition shadow-sm group" title="Yazboz (Skor Tablosunu Aç)">
+            <i class="fa-solid fa-clipboard-list text-amber-400 group-hover:scale-110 transition"></i>
+            <span id="gameRoundLabel">El 1/5</span>
+            <span class="text-[9px] px-1.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-sans font-bold border border-amber-500/30">Yazboz</span>
+          </button>
           <div id="gameMultiplierBadge" class="px-3 py-1 rounded-xl border text-xs font-extrabold flex items-center gap-1.5">
             <span>🔵 MAVİ OKEY</span>
             <span class="font-mono">10x / -100</span>
@@ -578,6 +587,10 @@
         </div>
 
         <div class="flex items-center gap-1.5 sm:gap-2">
+          <button onclick="openYazbozModal()" class="px-3 py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-400/50 text-xs font-black text-amber-300 flex items-center gap-1.5 active:scale-95 transition" title="Yazboz ve Puan Tablosunu Aç">
+            <i class="fa-solid fa-clipboard-list text-amber-400"></i>
+            <span>Yazboz</span>
+          </button>
           <button id="btnDiscardSelected" onclick="discardSelectedTile()" class="px-3.5 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/50 text-amber-300 text-xs font-extrabold flex items-center gap-1.5 active:scale-95 transition">
             <i class="fa-solid fa-share"></i>
             <span>Seçili Taşı At</span>
@@ -740,6 +753,47 @@
   </div>
 
   <!-- =========================================================
+       MODAL: YAZBOZ (CANLI PUAN VE EL GEÇMİŞİ TABLOSU)
+       ========================================================= -->
+  <div id="modalYazboz" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-4">
+    <div class="w-full max-w-2xl rounded-3xl bg-slate-950 border-2 border-amber-400/80 p-4 sm:p-6 space-y-4 shadow-2xl flex flex-col max-h-[90vh]">
+      <!-- Header -->
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-amber-500/20 text-amber-400 border border-amber-400/40 flex items-center justify-center text-xl shrink-0">
+            <i class="fa-solid fa-clipboard-list"></i>
+          </div>
+          <div>
+            <h2 class="text-base sm:text-lg font-black text-white flex items-center gap-2">
+              <span>OKEY YAZBOZ</span>
+              <span id="yazbozRoundBadge" class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-mono">El 2/5</span>
+            </h2>
+            <p id="yazbozTableName" class="text-xs text-slate-400">Masa Puan Durumu ve El Geçmişi</p>
+          </div>
+        </div>
+        <button onclick="closeYazbozModal()" class="w-8 h-8 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Yazboz Content (Scrollable Grid) -->
+      <div id="yazbozTableContainer" class="flex-1 overflow-auto custom-scroll">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- Footer Rules Hint & Close -->
+      <div class="pt-2 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+        <div class="text-[11px] text-slate-400 leading-tight">
+          💡 <span class="text-amber-300 font-bold">Okey Kuralı:</span> En az ceza puanına sahip oyuncu liderdir. Biten oyuncunun puanı silinir (-100 vb.), diğer oyuncular elindeki işleksiz taş × okey çarpanı kadar ceza puanı yer.
+        </div>
+        <button onclick="closeYazbozModal()" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs transition shrink-0">
+          Kapat
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================
        MODAL 3: ROUND OVER / MATCH OVER SCOREBOARD
        ========================================================= -->
   <div id="modalScoreboard" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
@@ -757,6 +811,10 @@
       </div>
 
       <div class="pt-2 flex flex-col sm:flex-row gap-2">
+        <button onclick="openYazbozModal()" class="px-4 py-3 rounded-2xl bg-slate-900 hover:bg-slate-800 border border-amber-500/40 text-amber-300 font-bold text-xs transition flex items-center justify-center gap-1.5">
+          <i class="fa-solid fa-clipboard-list"></i>
+          <span>Detaylı Yazboz</span>
+        </button>
         <button id="btnNextRound" onclick="startNextRound()" class="flex-1 py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-lime-500 hover:from-emerald-400 hover:to-lime-400 text-slate-950 font-black text-sm shadow-lg transition">
           Sonraki Ele Geç →
         </button>
@@ -2119,6 +2177,7 @@
       }
       currentTable.status = 'playing';
       currentTable.currentRound = 1;
+      currentTable.roundHistory = [];
       seats.forEach(s => { if (s) s.score = 0; });
       currentTable.seats = seats;
       currentTable.gameState = createNewRoundState(0);
@@ -2137,6 +2196,7 @@
       if (currentTable.currentRound >= (currentTable.targetRounds || 5)) {
         // Restart fresh match
         currentTable.currentRound = 1;
+        currentTable.roundHistory = [];
         currentTable.seats.forEach(s => { if (s) s.score = 0; });
       } else {
         currentTable.currentRound++;
@@ -2642,6 +2702,20 @@
         unmeldedSums: [0, 0, 0, 0],
         scores: currentTable.seats.map(s => s ? (s.score || 0) : 0)
       };
+      if (!currentTable.roundHistory) currentTable.roundHistory = [];
+      currentTable.roundHistory.push({
+        round: currentTable.currentRound || 1,
+        winnerSeat: -1,
+        winnerName: 'Berabere',
+        finishType: 'draw',
+        color: gs.okey.color,
+        multiplier: 0,
+        winDelta: 0,
+        penalties: [0, 0, 0, 0],
+        unmeldedSums: [0, 0, 0, 0],
+        cumulativeScores: currentTable.seats.map(s => s ? (s.score || 0) : 0),
+        finishedAt: Date.now()
+      });
       gs.lastAction = 'Ortada taş bitti! El berabere sonuçlandı.';
       renderGameTable();
       await syncTableToRTDB();
@@ -2879,6 +2953,21 @@
       };
 
       const winnerName = currentTable.seats[winnerSeat] ? currentTable.seats[winnerSeat].name : 'Oyuncu';
+      if (!currentTable.roundHistory) currentTable.roundHistory = [];
+      currentTable.roundHistory.push({
+        round: currentTable.currentRound || 1,
+        winnerSeat,
+        winnerName,
+        finishType,
+        color: okey.color,
+        multiplier: finalPenaltyMult,
+        winDelta: finalWinDelta,
+        penalties: [...penalties],
+        unmeldedSums: [...unmeldedSums],
+        cumulativeScores: currentTable.seats.map(s => s ? (s.score || 0) : 0),
+        finishedAt: Date.now()
+      });
+
       gs.lastAction = finishType === 'okey'
         ? `🏆 ${winnerName} OKEY ATARAK BİTTİ! (${finalWinDelta} Puan!)`
         : finishType === 'pair'
@@ -2959,6 +3048,189 @@
       }
 
       modal.classList.remove('hidden');
+    }
+
+    /* =====================================================================
+       YAZBOZ / SCORECARD SYSTEM (CANLI PUAN VE EL GEÇMİŞİ DÖKÜMÜ)
+       ===================================================================== */
+    function openYazbozModal() {
+      if (!currentTable) {
+        showToast('Masa bilgisi bulunamadı.');
+        return;
+      }
+      renderYazbozTable();
+      document.getElementById('modalYazboz').classList.remove('hidden');
+    }
+
+    function closeYazbozModal() {
+      document.getElementById('modalYazboz').classList.add('hidden');
+    }
+
+    function renderYazbozTable() {
+      if (!currentTable) return;
+      const seats = normalizeSeats(currentTable.seats);
+      const curRound = currentTable.currentRound || 1;
+      const targetRounds = currentTable.targetRounds || 5;
+      const history = currentTable.roundHistory || [];
+
+      const badge = document.getElementById('yazbozRoundBadge');
+      if (badge) badge.textContent = `El ${curRound}/${targetRounds}`;
+      const title = document.getElementById('yazbozTableName');
+      if (title) title.textContent = `${escapeHtml(currentTable.name)} · Skor ve Ceza Dökümü`;
+
+      const container = document.getElementById('yazbozTableContainer');
+      if (!container) return;
+
+      // Find lowest total score (leader)
+      const scores = seats.map(s => s ? (s.score || 0) : 0);
+      const minScore = Math.min(...scores);
+
+      // Build Table HTML
+      let html = `
+        <div class="overflow-x-auto rounded-2xl border border-slate-800">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr class="border-b border-slate-700 bg-slate-900/90 text-slate-300">
+                <th class="p-3 font-bold uppercase tracking-wider text-[11px] min-w-[80px]">El</th>
+      `;
+
+      seats.forEach((s, idx) => {
+        const isMe = profile && s && (s.id === profile.id || s.name === profile.name);
+        const isLeader = s && (s.score || 0) === minScore;
+        html += `
+          <th class="p-3 font-extrabold ${isMe ? 'text-amber-300 bg-amber-500/10 border-x border-amber-500/30' : 'text-slate-200'} min-w-[120px]">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">${s ? escapeHtml(s.avatar) : '🪑'}</span>
+              <div class="truncate leading-tight">
+                <div class="truncate font-black">${s ? escapeHtml(s.name) : 'Boş'} ${isMe ? '<span class="text-[9px] text-amber-400 font-bold">(Sen)</span>' : ''}</div>
+                <div class="text-[10px] font-mono ${isLeader ? 'text-emerald-400 font-bold' : 'text-slate-400'}">${s ? `${s.score || 0} Puan` : '—'} ${isLeader ? '👑' : ''}</div>
+              </div>
+            </div>
+          </th>
+        `;
+      });
+
+      html += `
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800 font-mono">
+      `;
+
+      // Render each round row 1..targetRounds
+      for (let r = 1; r <= targetRounds; r++) {
+        const roundData = history.find(h => h.round === r);
+        const isCurrent = r === curRound && (!currentTable.gameState || !currentTable.gameState.roundResult);
+
+        let elBadge = `<span class="font-bold text-white">${r}. El</span>`;
+        if (roundData) {
+          const rule = COLOR_RULES[roundData.color] || COLOR_RULES.black;
+          elBadge = `
+            <div class="leading-tight">
+              <div class="font-bold text-white">${r}. El</div>
+              <div class="text-[9px] text-amber-300 flex items-center gap-1 font-bold">
+                <span>${rule.emoji}</span><span>${rule.nameTr}</span>
+              </div>
+            </div>
+          `;
+        } else if (isCurrent) {
+          const gs = currentTable.gameState;
+          const okeyColor = gs && gs.okey ? gs.okey.color : 'black';
+          const rule = COLOR_RULES[okeyColor] || COLOR_RULES.black;
+          elBadge = `
+            <div class="leading-tight">
+              <div class="font-bold text-amber-300 flex items-center gap-1.5">
+                <span>${r}. El</span>
+                <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+              </div>
+              <div class="text-[9px] text-emerald-400 flex items-center gap-1 font-bold">
+                <span>${rule.emoji}</span><span>${rule.nameTr}</span>
+              </div>
+            </div>
+          `;
+        }
+
+        html += `<tr class="${isCurrent ? 'bg-amber-500/10' : r % 2 === 0 ? 'bg-slate-900/40' : 'bg-transparent'} hover:bg-slate-800/40 transition">`;
+        html += `<td class="p-3 text-slate-400">${elBadge}</td>`;
+
+        for (let s = 0; s < 4; s++) {
+          const isMe = profile && seats[s] && (seats[s].id === profile.id || seats[s].name === profile.name);
+          const cellBorder = isMe ? 'border-x border-amber-500/20 bg-amber-500/5' : '';
+
+          if (roundData) {
+            const isWinner = s === roundData.winnerSeat;
+            const delta = roundData.penalties ? (roundData.penalties[s] || 0) : 0;
+            const unmelded = roundData.unmeldedSums ? (roundData.unmeldedSums[s] || 0) : 0;
+            if (isWinner) {
+              const finLabel = roundData.finishType === 'okey' ? 'Okey Attı' : roundData.finishType === 'pair' ? 'Çiftten Bitti' : 'Bitti';
+              html += `
+                <td class="p-3 ${cellBorder}">
+                  <span class="px-2 py-0.5 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-black text-xs flex items-center gap-1 w-fit">
+                    <span>🏆</span><span>${delta}</span>
+                  </span>
+                  <div class="text-[10px] text-emerald-400/90 font-sans font-bold mt-1">${finLabel}</div>
+                </td>
+              `;
+            } else {
+              html += `
+                <td class="p-3 ${cellBorder}">
+                  <div class="text-rose-400 font-bold text-xs">+${delta}</div>
+                  <div class="text-[10px] text-slate-500 font-sans">${unmelded > 0 ? `(${unmelded} sayı)` : 'Ceza'}</div>
+                </td>
+              `;
+            }
+          } else if (isCurrent) {
+            html += `
+              <td class="p-3 ${cellBorder}">
+                <span class="text-[11px] text-amber-300 font-sans font-bold flex items-center gap-1.5 animate-pulse">
+                  <i class="fa-solid fa-hourglass-half text-[10px]"></i>
+                  <span>Oynanıyor...</span>
+                </span>
+              </td>
+            `;
+          } else {
+            html += `
+              <td class="p-3 text-slate-600 ${cellBorder}">—</td>
+            `;
+          }
+        }
+        html += `</tr>`;
+      }
+
+      // Summary Footer Row (TOTAL SCORES)
+      html += `
+            </tbody>
+            <tfoot>
+              <tr class="border-t-2 border-amber-400/60 bg-slate-900 font-black">
+                <td class="p-3 text-amber-400 uppercase tracking-wider text-xs">TOPLAM</td>
+      `;
+
+      seats.forEach((s, idx) => {
+        const isMe = profile && s && (s.id === profile.id || s.name === profile.name);
+        const total = s ? (s.score || 0) : 0;
+        const isLeader = s && total === minScore;
+        const cellBorder = isMe ? 'border-x border-amber-500/40 bg-amber-500/15' : '';
+
+        html += `
+          <td class="p-3 ${cellBorder} ${isLeader ? 'text-emerald-300' : 'text-slate-200'}">
+            <div class="text-sm font-black font-mono flex items-center gap-1.5">
+              <span>${total}</span>
+              ${isLeader ? '<span class="text-sm" title="1. Sırada">👑</span>' : ''}
+            </div>
+            <div class="text-[10px] font-sans ${isLeader ? 'text-emerald-400 font-bold' : 'text-slate-400'}">
+              ${isLeader ? 'Lider (En az ceza)' : ''}
+            </div>
+          </td>
+        `;
+      });
+
+      html += `
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      `;
+
+      container.innerHTML = html;
     }
 
     /* =====================================================================
