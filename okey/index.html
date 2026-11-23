@@ -2957,6 +2957,13 @@
         const curRound = currentTable.currentRound || 1;
         const targetRounds = currentTable.targetRounds || 5;
         const isMatchOver = curRound >= targetRounds;
+        const isHost = profile && currentTable.hostId === profile.id;
+
+        if (isMatchOver && !isHost) {
+          showToast('⚠️ Yeni maçı yalnızca masa yöneticisi başlatabilir.');
+          isStartingNextRound = false;
+          return;
+        }
 
         if (isMatchOver) {
           // Maç bitti, skorları sıfırlayıp baştan başlat
@@ -4323,37 +4330,70 @@
       const curRound = currentTable.currentRound || 1;
       const targetRounds = currentTable.targetRounds || 5;
       const nextRoundNum = curRound + 1;
-      let countdownSec = isMatchOver ? 7 : 5;
+      const isHost = profile && currentTable.hostId === profile.id;
 
+      const countdownBanner = document.getElementById('nextRoundCountdownBanner');
       const countdownText = document.getElementById('nextRoundCountdownText');
       const btnNextText = document.getElementById('btnNextRoundText');
+      const bannerIcon = countdownBanner ? countdownBanner.querySelector('i') : null;
 
-      const updateCountdownUI = () => {
+      if (isMatchOver) {
+        // MAÇ BİTTİ (örn: 5/5):
+        // Asla otomatik başlamaz! Yalnızca masa yöneticisi (host) "Yeni Maç Başlat" diyebilir.
+        if (countdownBanner) {
+          countdownBanner.className = 'py-2.5 px-4 rounded-2xl bg-amber-500/15 border border-amber-400/40 text-amber-300 text-xs font-black text-center flex items-center justify-center gap-2';
+        }
+        if (bannerIcon) {
+          bannerIcon.className = 'fa-solid fa-trophy text-amber-400';
+        }
         if (countdownText) {
-          countdownText.textContent = isMatchOver
-            ? `🏁 Maç tamamlandı! ${countdownSec} saniye içinde yeni maç başlıyor... (${countdownSec})`
-            : `⏳ ${nextRoundNum}. El ${countdownSec} saniye içinde otomatik başlıyor... (${countdownSec})`;
+          countdownText.innerHTML = isHost
+            ? `🏁 <strong>${targetRounds} El Tamamlandı!</strong> Maç bitti. Yeni maç başlatmak için butona tıklayın.`
+            : `🏁 <strong>${targetRounds} El Tamamlandı!</strong> Maç bitti. Masa yöneticisinin yeni maçı başlatması bekleniyor...`;
         }
-        if (btnNextText) {
-          btnNextText.textContent = isMatchOver
-            ? `🔄 Yeni Maç Başlat (${countdownSec}s)`
-            : `⚡ Hemen ${nextRoundNum}. Ele Başla (${countdownSec}s) →`;
-        }
-      };
 
-      updateCountdownUI();
-      btnNext.classList.remove('hidden');
-
-      nextRoundTimer = setInterval(async () => {
-        countdownSec--;
-        if (countdownSec > 0) {
-          updateCountdownUI();
+        if (isHost) {
+          btnNext.classList.remove('hidden');
+          btnNext.disabled = false;
+          if (btnNextText) btnNextText.textContent = `🔄 Yeni Maç Başlat (${targetRounds} El)`;
         } else {
-          clearInterval(nextRoundTimer);
-          nextRoundTimer = null;
-          await startNextRound();
+          btnNext.classList.add('hidden');
         }
-      }, 1000);
+      } else {
+        // EL ARASI GEÇİŞ (örn: 1/5 -> 2/5, 2/5 -> 3/5):
+        // 5 saniye otomatik geri sayım ile sıradaki ele geçer
+        let countdownSec = 5;
+        if (countdownBanner) {
+          countdownBanner.className = 'py-2.5 px-4 rounded-2xl bg-emerald-500/15 border border-emerald-400/40 text-emerald-300 text-xs font-black text-center flex items-center justify-center gap-2';
+        }
+        if (bannerIcon) {
+          bannerIcon.className = 'fa-solid fa-hourglass-half text-amber-400 animate-spin';
+        }
+
+        const updateCountdownUI = () => {
+          if (countdownText) {
+            countdownText.textContent = `⏳ ${nextRoundNum}. El ${countdownSec} saniye içinde otomatik başlıyor... (${countdownSec})`;
+          }
+          if (btnNextText) {
+            btnNextText.textContent = `⚡ Hemen ${nextRoundNum}. Ele Başla (${countdownSec}s) →`;
+          }
+        };
+
+        updateCountdownUI();
+        btnNext.classList.remove('hidden');
+        btnNext.disabled = false;
+
+        nextRoundTimer = setInterval(async () => {
+          countdownSec--;
+          if (countdownSec > 0) {
+            updateCountdownUI();
+          } else {
+            clearInterval(nextRoundTimer);
+            nextRoundTimer = null;
+            await startNextRound();
+          }
+        }, 1000);
+      }
 
       modal.classList.remove('hidden');
     }
