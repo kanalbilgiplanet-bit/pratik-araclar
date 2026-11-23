@@ -2,7 +2,11 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="mobile-web-app-capable" content="yes" />
   <title>Online Antalya Okey Oyna — Canlı, Renk Katlamalı Düz Okey | PratikBase</title>
   <meta name="description" content="Online Antalya okey oyna! Klasik düz okey kuralları ve yüksek heyecanlı renk çarpanları (Siyah 2x, Kırmızı 4x, Mavi ve Sarı 10x, Okey/Çiftten bitiş 10 katı!). İndirmeden, üye olmadan akıllı yapay zeka botlarıyla veya arkadaşlarınla ücretsiz canlı okey oyna." />
   <meta name="keywords" content="antalya okey, antalya okey oyna, online antalya okey, antalya usulü okey, antalya okeyi, düz okey oyna, canlı okey oyna, renkli okey, renk katlamalı okey, cezalı okey, bedava okey oyna, ücretsiz okey oyna, internetsiz okey oyna, botlu okey, arkadaşınla okey oyna, web okey, pratikbase okey, okey x" />
@@ -163,13 +167,24 @@
     };
   </script>
   <style>
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(245, 158, 11, 0.4) rgba(15, 23, 42, 0.6);
+    }
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
     body {
       background: radial-gradient(circle at 50% 25%, #0f3d2a 0%, #071f16 65%, #04110c 100%);
       color: #f1f5f9;
       min-height: 100vh;
       min-height: 100dvh;
       overflow-x: hidden;
+      touch-action: manipulation;
+      padding-bottom: env(safe-area-inset-bottom, 0px);
     }
 
     /* Felt table texture */
@@ -276,11 +291,25 @@
     .ring-okey-blue { box-shadow: 0 0 28px rgba(59, 130, 246, 0.65); border-color: #3b82f6 !important; }
     .ring-okey-yellow { box-shadow: 0 0 28px rgba(250, 204, 21, 0.65); border-color: #facc15 !important; }
 
-    /* Custom Scrollbar */
-    .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
-    .custom-scroll::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); border-radius: 6px; }
-    .custom-scroll::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 6px; }
-    .custom-scroll::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.35); }
+    /* Global Universal Custom Scrollbar (Chrome, Safari, Edge, Firefox, Opera) */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.6); border-radius: 6px; }
+    ::-webkit-scrollbar-thumb { background: rgba(245, 158, 11, 0.35); border-radius: 6px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(245, 158, 11, 0.65); }
+    ::-webkit-scrollbar-corner { background: transparent; }
+
+    /* iOS & Android momentum scrolling & touch control */
+    .custom-scroll {
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+    }
+
+    button, .okey-tile, [onclick] {
+      touch-action: manipulation;
+      -webkit-touch-callout: none;
+      user-select: none;
+      -webkit-user-select: none;
+    }
 
     @keyframes floatUp {
       0% { transform: translate(-50%, 0) scale(0.7); opacity: 0; }
@@ -957,33 +986,33 @@
       </div>
 
       <!-- ACTION CONTROLS ABOVE RACK -->
-      <div class="flex flex-wrap items-center justify-between gap-2">
-        <div class="flex items-center gap-1.5 sm:gap-2">
-          <button onclick="autoSortRack('runs')" class="px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-bold text-emerald-300 flex items-center gap-1.5 active:scale-95 transition">
+      <div class="flex flex-wrap items-center justify-between gap-1.5 sm:gap-2">
+        <div class="flex items-center gap-1 sm:gap-2">
+          <button onclick="autoSortRack('runs')" class="px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-[11px] sm:text-xs font-bold text-emerald-300 flex items-center gap-1 active:scale-95 transition">
             <i class="fa-solid fa-arrow-up-1-9"></i>
             <span>Seri Diz</span>
           </button>
-          <button onclick="autoSortRack('pairs')" class="px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-bold text-cyan-300 flex items-center gap-1.5 active:scale-95 transition">
+          <button onclick="autoSortRack('pairs')" class="px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-[11px] sm:text-xs font-bold text-cyan-300 flex items-center gap-1 active:scale-95 transition">
             <i class="fa-solid fa-clone"></i>
             <span>Çift Diz</span>
           </button>
           <!-- Auto-Play Mode Button -->
-          <button id="btnToggleAutoPlay" onclick="toggleAutoPlay()" class="px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-bold text-slate-300 flex items-center gap-1.5 active:scale-95 transition" title="Yapay zekanın otomatik oynamasını aç/kapat">
+          <button id="btnToggleAutoPlay" onclick="toggleAutoPlay()" class="px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-[11px] sm:text-xs font-bold text-slate-300 flex items-center gap-1 active:scale-95 transition" title="Yapay zekanın otomatik oynamasını aç/kapat">
             <i id="btnAutoPlayIcon" class="fa-solid fa-robot"></i>
             <span id="btnAutoPlayLabel">Oto: Kapalı</span>
           </button>
         </div>
 
-        <div class="flex items-center gap-1.5 sm:gap-2">
-          <button onclick="openYazbozModal()" class="px-3 py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-400/50 text-xs font-black text-amber-300 flex items-center gap-1.5 active:scale-95 transition" title="Yazboz ve Puan Tablosunu Aç">
+        <div class="flex items-center gap-1 sm:gap-2">
+          <button onclick="openYazbozModal()" class="px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-400/50 text-[11px] sm:text-xs font-black text-amber-300 flex items-center gap-1 active:scale-95 transition" title="Yazboz ve Puan Tablosunu Aç">
             <i class="fa-solid fa-clipboard-list text-amber-400"></i>
             <span>Yazboz</span>
           </button>
-          <button id="btnDiscardSelected" onclick="discardSelectedTile()" class="px-3.5 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/50 text-amber-300 text-xs font-extrabold flex items-center gap-1.5 active:scale-95 transition">
+          <button id="btnDiscardSelected" onclick="discardSelectedTile()" class="px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/50 text-amber-300 text-[11px] sm:text-xs font-extrabold flex items-center gap-1 active:scale-95 transition">
             <i class="fa-solid fa-share"></i>
-            <span>Seçili Taşı At</span>
+            <span>Taş At</span>
           </button>
-          <button id="btnAttemptFinish" onclick="attemptFinishWithSelected()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-300 hover:to-yellow-400 text-slate-950 text-xs font-black flex items-center gap-1.5 shadow-lg shadow-amber-500/25 active:scale-95 transition">
+          <button id="btnAttemptFinish" onclick="attemptFinishWithSelected()" class="px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-300 hover:to-yellow-400 text-slate-950 text-[11px] sm:text-xs font-black flex items-center gap-1 shadow-lg shadow-amber-500/25 active:scale-95 transition">
             <i class="fa-solid fa-trophy"></i>
             <span>BİTİR!</span>
           </button>
@@ -991,11 +1020,11 @@
       </div>
 
       <!-- WALNUT WOOD ISTAKA (2 ROWS x 14 SLOTS) -->
-      <div id="playerRackWrapper" class="wood-rack rounded-2xl p-2 sm:p-3 space-y-1.5 sm:space-y-2 overflow-x-auto custom-scroll transition-all duration-300">
-        <div id="rackRow0" class="rack-row rounded-xl p-1 sm:p-1.5 grid grid-cols-14 gap-1 min-w-[540px]" style="grid-template-columns: repeat(14, minmax(0, 1fr));">
+      <div id="playerRackWrapper" class="wood-rack rounded-2xl p-1.5 sm:p-3 space-y-1 sm:space-y-2 overflow-x-auto custom-scroll transition-all duration-300">
+        <div id="rackRow0" class="rack-row rounded-xl p-1 sm:p-1.5 grid grid-cols-14 gap-0.5 sm:gap-1 min-w-[480px] sm:min-w-[540px]" style="grid-template-columns: repeat(14, minmax(0, 1fr));">
           <!-- 14 slots -->
         </div>
-        <div id="rackRow1" class="rack-row rounded-xl p-1 sm:p-1.5 grid grid-cols-14 gap-1 min-w-[540px]" style="grid-template-columns: repeat(14, minmax(0, 1fr));">
+        <div id="rackRow1" class="rack-row rounded-xl p-1 sm:p-1.5 grid grid-cols-14 gap-0.5 sm:gap-1 min-w-[480px] sm:min-w-[540px]" style="grid-template-columns: repeat(14, minmax(0, 1fr));">
           <!-- 14 slots -->
         </div>
       </div>
@@ -1147,20 +1176,20 @@
   <!-- =========================================================
        MODAL: YAZBOZ (CANLI PUAN VE EL GEÇMİŞİ TABLOSU)
        ========================================================= -->
-  <div id="modalYazboz" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-4">
-    <div class="w-full max-w-2xl rounded-3xl bg-slate-950 border-2 border-amber-400/80 p-4 sm:p-6 space-y-4 shadow-2xl flex flex-col max-h-[90vh]">
+  <div id="modalYazboz" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-2.5 sm:p-4">
+    <div class="w-full max-w-3xl lg:max-w-4xl rounded-3xl bg-slate-950 border-2 border-amber-400/80 p-3 sm:p-5 space-y-3.5 shadow-2xl flex flex-col max-h-[90vh]">
       <!-- Header -->
       <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-2xl bg-amber-500/20 text-amber-400 border border-amber-400/40 flex items-center justify-center text-xl shrink-0">
+        <div class="flex items-center gap-2.5 sm:gap-3">
+          <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-amber-500/20 text-amber-400 border border-amber-400/40 flex items-center justify-center text-lg sm:text-xl shrink-0">
             <i class="fa-solid fa-clipboard-list"></i>
           </div>
           <div>
-            <h2 class="text-base sm:text-lg font-black text-white flex items-center gap-2">
+            <h2 class="text-sm sm:text-lg font-black text-white flex items-center gap-2">
               <span>OKEY YAZBOZ</span>
               <span id="yazbozRoundBadge" class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-mono">El 2/5</span>
             </h2>
-            <p id="yazbozTableName" class="text-xs text-slate-400">Masa Puan Durumu ve El Geçmişi</p>
+            <p id="yazbozTableName" class="text-[11px] sm:text-xs text-slate-400">Masa Puan Durumu ve El Geçmişi</p>
           </div>
         </div>
         <button onclick="closeYazbozModal()" class="w-8 h-8 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition">
@@ -1169,7 +1198,7 @@
       </div>
 
       <!-- Yazboz Content (Scrollable Grid) -->
-      <div id="yazbozTableContainer" class="flex-1 overflow-auto custom-scroll">
+      <div id="yazbozTableContainer" class="flex-1 overflow-y-auto overflow-x-hidden custom-scroll">
         <!-- Rendered dynamically -->
       </div>
 
@@ -3655,23 +3684,23 @@
 
       // Build Table HTML
       let html = `
-        <div class="overflow-x-auto rounded-2xl border border-slate-800">
-          <table class="w-full text-left text-xs border-collapse">
+        <div class="w-full overflow-x-auto custom-scroll rounded-2xl border border-slate-800">
+          <table class="w-full text-left text-xs border-collapse table-fixed min-w-[460px] sm:min-w-0">
             <thead>
               <tr class="border-b border-slate-700 bg-slate-900/90 text-slate-300">
-                <th class="p-3 font-bold uppercase tracking-wider text-[11px] min-w-[80px]">El</th>
+                <th class="p-2 sm:p-2.5 font-bold uppercase tracking-wider text-[10px] sm:text-[11px] w-[64px] sm:w-[84px] text-slate-400">El</th>
       `;
 
       seats.forEach((s, idx) => {
         const isMe = profile && s && (s.id === profile.id || s.name === profile.name);
         const isLeader = s && (s.score || 0) === minScore;
         html += `
-          <th class="p-3 font-extrabold ${isMe ? 'text-amber-300 bg-amber-500/10 border-x border-amber-500/30' : 'text-slate-200'} min-w-[120px]">
-            <div class="flex items-center gap-2">
-              <span class="text-xl">${s ? escapeHtml(s.avatar) : '🪑'}</span>
-              <div class="truncate leading-tight">
-                <div class="truncate font-black">${s ? escapeHtml(s.name) : 'Boş'} ${isMe ? '<span class="text-[9px] text-amber-400 font-bold">(Sen)</span>' : ''}</div>
-                <div class="text-[10px] font-mono ${isLeader ? 'text-emerald-400 font-bold' : 'text-slate-400'}">${s ? `${s.score || 0} Puan` : '—'} ${isLeader ? '👑' : ''}</div>
+          <th class="p-2 sm:p-2.5 font-extrabold ${isMe ? 'text-amber-300 bg-amber-500/10 border-x border-amber-500/30' : 'text-slate-200'}">
+            <div class="flex items-center gap-1.5 min-w-0">
+              <span class="text-base sm:text-xl shrink-0">${s ? escapeHtml(s.avatar) : '🪑'}</span>
+              <div class="truncate leading-tight min-w-0 flex-1">
+                <div class="truncate font-black text-xs text-white">${s ? escapeHtml(s.name) : 'Boş'} ${isMe ? '<span class="text-[9px] text-amber-400 font-bold">(Sen)</span>' : ''}</div>
+                <div class="text-[10px] font-mono truncate ${isLeader ? 'text-emerald-400 font-bold' : 'text-slate-400'}">${s ? `${s.score || 0} P` : '—'} ${isLeader ? '👑' : ''}</div>
               </div>
             </div>
           </th>
@@ -3689,14 +3718,14 @@
         const roundData = history.find(h => h.round === r);
         const isCurrent = r === curRound && (!currentTable.gameState || !currentTable.gameState.roundResult);
 
-        let elBadge = `<span class="font-bold text-white">${r}. El</span>`;
+        let elBadge = `<span class="font-bold text-white text-[11px] sm:text-xs">${r}. El</span>`;
         if (roundData) {
           const rule = COLOR_RULES[roundData.color] || COLOR_RULES.black;
           elBadge = `
             <div class="leading-tight">
-              <div class="font-bold text-white">${r}. El</div>
-              <div class="text-[9px] text-amber-300 flex items-center gap-1 font-bold">
-                <span>${rule.emoji}</span><span>${rule.nameTr}</span>
+              <div class="font-bold text-white text-[11px] sm:text-xs">${r}. El</div>
+              <div class="text-[9px] text-amber-300 flex items-center gap-0.5 font-bold">
+                <span>${rule.emoji}</span><span class="truncate">${rule.nameTr}</span>
               </div>
             </div>
           `;
@@ -3706,19 +3735,19 @@
           const rule = COLOR_RULES[okeyColor] || COLOR_RULES.black;
           elBadge = `
             <div class="leading-tight">
-              <div class="font-bold text-amber-300 flex items-center gap-1.5">
+              <div class="font-bold text-amber-300 flex items-center gap-1 text-[11px] sm:text-xs">
                 <span>${r}. El</span>
-                <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span>
               </div>
-              <div class="text-[9px] text-emerald-400 flex items-center gap-1 font-bold">
-                <span>${rule.emoji}</span><span>${rule.nameTr}</span>
+              <div class="text-[9px] text-emerald-400 flex items-center gap-0.5 font-bold">
+                <span>${rule.emoji}</span><span class="truncate">${rule.nameTr}</span>
               </div>
             </div>
           `;
         }
 
         html += `<tr class="${isCurrent ? 'bg-amber-500/10' : r % 2 === 0 ? 'bg-slate-900/40' : 'bg-transparent'} hover:bg-slate-800/40 transition">`;
-        html += `<td class="p-3 text-slate-400">${elBadge}</td>`;
+        html += `<td class="p-2 sm:p-2.5 text-slate-400">${elBadge}</td>`;
 
         for (let s = 0; s < 4; s++) {
           const isMe = profile && seats[s] && (seats[s].id === profile.id || seats[s].name === profile.name);
@@ -3731,33 +3760,33 @@
             if (isWinner) {
               const finLabel = roundData.finishType === 'okey' ? 'Okey Attı' : roundData.finishType === 'pair' ? 'Çiftten Bitti' : 'Bitti';
               html += `
-                <td class="p-3 ${cellBorder}">
-                  <span class="px-2 py-0.5 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-black text-xs flex items-center gap-1 w-fit">
+                <td class="p-2 sm:p-2.5 ${cellBorder}">
+                  <span class="px-1.5 py-0.5 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-black text-[11px] sm:text-xs flex items-center gap-0.5 w-fit">
                     <span>🏆</span><span>${delta}</span>
                   </span>
-                  <div class="text-[10px] text-emerald-400/90 font-sans font-bold mt-1">${finLabel}</div>
+                  <div class="text-[9px] sm:text-[10px] text-emerald-400 font-sans font-bold mt-0.5 truncate">${finLabel}</div>
                 </td>
               `;
             } else {
               html += `
-                <td class="p-3 ${cellBorder}">
-                  <div class="text-rose-400 font-bold text-xs">+${delta}</div>
-                  <div class="text-[10px] text-slate-500 font-sans">${unmelded > 0 ? `(${unmelded} sayı)` : 'Ceza'}</div>
+                <td class="p-2 sm:p-2.5 ${cellBorder}">
+                  <div class="text-rose-400 font-bold text-[11px] sm:text-xs">+${delta}</div>
+                  <div class="text-[9px] text-slate-500 font-sans truncate">${unmelded > 0 ? `(${unmelded} sayı)` : 'Ceza'}</div>
                 </td>
               `;
             }
           } else if (isCurrent) {
             html += `
-              <td class="p-3 ${cellBorder}">
-                <span class="text-[11px] text-amber-300 font-sans font-bold flex items-center gap-1.5 animate-pulse">
-                  <i class="fa-solid fa-hourglass-half text-[10px]"></i>
-                  <span>Oynanıyor...</span>
+              <td class="p-2 sm:p-2.5 ${cellBorder}">
+                <span class="text-[10px] sm:text-[11px] text-amber-300 font-sans font-bold flex items-center gap-1 animate-pulse">
+                  <i class="fa-solid fa-hourglass-half text-[9px]"></i>
+                  <span class="truncate">Oynanıyor...</span>
                 </span>
               </td>
             `;
           } else {
             html += `
-              <td class="p-3 text-slate-600 ${cellBorder}">—</td>
+              <td class="p-2 sm:p-2.5 text-slate-600 ${cellBorder}">—</td>
             `;
           }
         }
@@ -3769,7 +3798,7 @@
             </tbody>
             <tfoot>
               <tr class="border-t-2 border-amber-400/60 bg-slate-900 font-black">
-                <td class="p-3 text-amber-400 uppercase tracking-wider text-xs">TOPLAM</td>
+                <td class="p-2 sm:p-2.5 text-amber-400 uppercase tracking-wider text-[10px] sm:text-xs font-black">TOPLAM</td>
       `;
 
       seats.forEach((s, idx) => {
@@ -3779,13 +3808,13 @@
         const cellBorder = isMe ? 'border-x border-amber-500/40 bg-amber-500/15' : '';
 
         html += `
-          <td class="p-3 ${cellBorder} ${isLeader ? 'text-emerald-300' : 'text-slate-200'}">
-            <div class="text-sm font-black font-mono flex items-center gap-1.5">
+          <td class="p-2 sm:p-2.5 ${cellBorder} ${isLeader ? 'text-emerald-300' : 'text-slate-200'}">
+            <div class="text-xs sm:text-sm font-black font-mono flex items-center gap-1">
               <span>${total}</span>
-              ${isLeader ? '<span class="text-sm" title="1. Sırada">👑</span>' : ''}
+              ${isLeader ? '<span class="text-xs" title="1. Sırada">👑</span>' : ''}
             </div>
-            <div class="text-[10px] font-sans ${isLeader ? 'text-emerald-400 font-bold' : 'text-slate-400'}">
-              ${isLeader ? 'Lider (En az ceza)' : ''}
+            <div class="text-[9px] sm:text-[10px] font-sans truncate ${isLeader ? 'text-emerald-400 font-bold' : 'text-slate-400'}">
+              ${isLeader ? '👑 Lider' : ''}
             </div>
           </td>
         `;
