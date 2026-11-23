@@ -343,6 +343,10 @@
           <i class="fa-solid fa-volume-high" id="soundIcon"></i>
         </button>
 
+        <button onclick="openPrivacyModal()" class="w-8 h-8 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-slate-300 hover:text-emerald-300 flex items-center justify-center text-xs transition" title="Gizlilik &amp; Güvenlik Politikası">
+          <i class="fa-solid fa-shield-halved"></i>
+        </button>
+
         <!-- Player Profile Pill -->
         <button onclick="openProfileModal()" class="flex items-center gap-2 pl-1.5 pr-2.5 py-1 rounded-xl bg-slate-900 hover:bg-slate-800 border border-emerald-500/30 transition">
           <span id="navAvatar" class="w-6 h-6 rounded-lg bg-emerald-500/20 flex items-center justify-center text-sm">🦁</span>
@@ -671,6 +675,56 @@
       </div>
 
     </section>
+
+    <!-- Legal Disclaimer & Anti-Gambling Notice -->
+    <div class="rounded-3xl bg-slate-950/60 border border-slate-800/80 p-4 sm:p-5 flex flex-col sm:flex-row items-center gap-3.5 text-xs text-slate-400 shadow-xl">
+      <div class="w-10 h-10 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center shrink-0 text-lg">
+        <i class="fa-solid fa-shield-halved"></i>
+      </div>
+      <div class="space-y-1 text-center sm:text-left flex-1">
+        <div class="font-bold text-slate-200 flex items-center justify-center sm:justify-start gap-1.5">
+          <span>Yasal Sorumluluk Reddi &amp; Kumar / Bahis Karşıtı Bildirim</span>
+        </div>
+        <p class="leading-relaxed text-[11px] text-slate-400">
+          Okey X, Türkiye'nin geleneksel kahvehane kültürünü yaşatmak amacıyla tasarlanmış <b>tamamen ücretsiz, sanal puanlı ve eğlence odaklı</b> bir zeka/strateji masa oyunudur. Oyunumuzda kesinlikle gerçek para, nakit ödül, sanal bakiye satışı, kumar, bahis veya maddi karşılığı olan herhangi bir işlem yer almamaktadır ve teşvik edilmez.
+        </p>
+      </div>
+    </div>
+
+    <!-- Dedicated Lobby Footer with Privacy & Terms Links -->
+    <footer class="pt-4 pb-8 border-t border-slate-800/80 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 inline-block animate-pulse"></span>
+        <span class="font-extrabold text-white">Pratik<span class="text-amber-400">Base</span></span>
+        <span class="text-slate-600">•</span>
+        <span>Okey X — Antalya Okeyi</span>
+        <span class="text-slate-600">•</span>
+        <span>© 2026</span>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-center gap-3 sm:gap-5 text-xs">
+        <button onclick="openPrivacyModal()" class="hover:text-emerald-300 transition flex items-center gap-1.5">
+          <i class="fa-solid fa-lock text-[10px] text-emerald-400"></i>
+          <span>Gizlilik Politikası &amp; KVKK</span>
+        </button>
+        <button onclick="openTermsModal()" class="hover:text-emerald-300 transition flex items-center gap-1.5">
+          <i class="fa-solid fa-scale-balanced text-[10px] text-amber-400"></i>
+          <span>Kullanım Koşulları</span>
+        </button>
+        <button onclick="openCookieModal()" class="hover:text-emerald-300 transition flex items-center gap-1.5">
+          <i class="fa-solid fa-cookie-bite text-[10px] text-amber-400"></i>
+          <span>Çerez Tercihleri</span>
+        </button>
+        <a href="mailto:iletisim@pratikbase.com" class="hover:text-emerald-300 transition flex items-center gap-1.5">
+          <i class="fa-regular fa-envelope text-[10px] text-slate-400"></i>
+          <span>İletişim &amp; Destek</span>
+        </a>
+        <a href="/" class="hover:text-white transition flex items-center gap-1.5 text-slate-400">
+          <i class="fa-solid fa-house text-[10px]"></i>
+          <span>Ana Sayfa</span>
+        </a>
+      </div>
+    </footer>
   </main>
 
   <!-- =========================================================
@@ -1013,6 +1067,10 @@
       <button onclick="saveProfile()" class="w-full py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-lime-500 hover:from-emerald-400 hover:to-lime-400 text-slate-950 font-black text-sm shadow-lg shadow-emerald-500/25 transition">
         Kaydet &amp; Lobiye Gir
       </button>
+
+      <div class="text-[11px] text-center text-slate-400 pt-1 leading-normal">
+        🔒 Giriş yaparak <button type="button" onclick="openTermsModal()" class="text-emerald-400 hover:underline font-bold">Kullanım Koşulları</button> ve <button type="button" onclick="openPrivacyModal()" class="text-emerald-400 hover:underline font-bold">Gizlilik Politikası</button>'nı kabul etmiş sayılırsınız. Oyunumuz tamamen ücretsiz olup sanal puanlıdır; kumar veya bahis içermez.
+      </div>
     </div>
   </div>
 
@@ -1158,6 +1216,182 @@
       </div>
     </div>
   </div>
+
+  <!-- =========================================================
+       MODAL 4: PRIVACY POLICY & KVKK NOTICE
+       ========================================================= -->
+  <div id="modalPrivacy" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-lg rounded-3xl bg-slate-950 border-2 border-emerald-500/50 p-5 sm:p-6 space-y-4 shadow-2xl max-h-[88vh] overflow-y-auto custom-scroll">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="text-lg font-black text-white flex items-center gap-2">
+          <i class="fa-solid fa-shield-halved text-emerald-400"></i>
+          <span>Gizlilik Politikası &amp; KVKK Metni</span>
+        </h3>
+        <button onclick="closePrivacyModal()" class="w-8 h-8 rounded-xl bg-slate-800 text-slate-300 hover:text-white flex items-center justify-center">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs sm:text-sm text-slate-300 leading-relaxed">
+        <p>
+          PratikBase olarak kullanıcılarımızın gizliliğine ve kişisel verilerinin korunmasına en üst düzeyde önem veriyoruz. <b>Okey X</b> platformumuz, üye olmadan doğrudan web tarayıcınızdan oynanabilecek şekilde en az veri işleme prensibiyle (Privacy by Design) tasarlanmıştır.
+        </p>
+
+        <div class="rounded-2xl bg-slate-900/80 border border-slate-800 p-3.5 space-y-1.5">
+          <h4 class="font-bold text-white text-xs flex items-center gap-1.5">
+            <i class="fa-solid fa-database text-amber-400"></i> Hangi Verileri İşliyoruz?
+          </h4>
+          <ul class="list-disc pl-4 space-y-1 text-xs text-slate-300">
+            <li><b>Rumuz ve Avatar:</b> Sadece oyun masasında diğer oyuncuların sizi tanıyabilmesi için belirlediğiniz takma ad ve ikon.</li>
+            <li><b>Yerel Tercihler:</b> Ses açık/kapalı durumu, otomatik oynama tercihi ve son bulunduğunuz masa bilgisi tarayıcınızın kendi yerel belleğinde (LocalStorage) tutulur.</li>
+            <li><b>Toplanmayan Veriler:</b> T.C. kimlik numarası, ad-soyad, e-posta, telefon, konum, parola veya ödeme bilgisi <u>kesinlikle toplanmaz ve talep edilmez</u>.</li>
+          </ul>
+        </div>
+
+        <div class="rounded-2xl bg-slate-900/80 border border-slate-800 p-3.5 space-y-1.5">
+          <h4 class="font-bold text-white text-xs flex items-center gap-1.5">
+            <i class="fa-solid fa-comments text-emerald-400"></i> Sohbet ve İletişim Güvenliği
+          </h4>
+          <p class="text-xs text-slate-300">
+            Masa içi canlı sohbet mesajları yalnızca o odadaki oyuncuların görebilmesi için gerçek zamanlı olarak iletilir. Masalar kapandığında sohbet verileri silinir; sunucularımızda kalıcı olarak arşivlenmez veya üçüncü kişilerle paylaşılmaz. Otomatik küfür ve argo filtresiyle toplum huzuru korunur.
+          </p>
+        </div>
+
+        <div class="rounded-2xl bg-slate-900/80 border border-slate-800 p-3.5 space-y-1.5">
+          <h4 class="font-bold text-white text-xs flex items-center gap-1.5">
+            <i class="fa-solid fa-ban text-rose-400"></i> Kumar ve Bahis Karşıtı İlke
+          </h4>
+          <p class="text-xs text-slate-300">
+            Oyunumuzda gerçek para, kumar, sanal para satışı, çekiliş veya bahis kesinlikle yoktur. Tüm puanlar eğlence amaçlı sanal skorlardır.
+          </p>
+        </div>
+
+        <div class="rounded-2xl bg-slate-900/80 border border-slate-800 p-3.5 space-y-1.5">
+          <h4 class="font-bold text-white text-xs flex items-center gap-1.5">
+            <i class="fa-solid fa-user-shield text-blue-400"></i> KVKK Haklarınız ve Veri Silme
+          </h4>
+          <p class="text-xs text-slate-300">
+            Dilediğiniz an tarayıcınızdaki yerel verilerinizi Çerez &amp; Veri Tercihleri panelinden tek tıkla silebilir veya tarayıcı geçmişinizi temizleyebilirsiniz.
+          </p>
+        </div>
+      </div>
+
+      <div class="pt-2 border-t border-slate-800 flex items-center justify-between gap-3">
+        <button onclick="openCookieModal()" class="text-xs text-amber-300 hover:underline font-bold flex items-center gap-1">
+          <i class="fa-solid fa-gear"></i>
+          <span>Çerez &amp; Veri Tercihleri</span>
+        </button>
+        <button onclick="closePrivacyModal()" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs transition">
+          Kapat
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       MODAL 5: TERMS OF SERVICE & FAIR PLAY
+       ========================================================= -->
+  <div id="modalTerms" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-lg rounded-3xl bg-slate-950 border-2 border-amber-500/50 p-5 sm:p-6 space-y-4 shadow-2xl max-h-[88vh] overflow-y-auto custom-scroll">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="text-lg font-black text-white flex items-center gap-2">
+          <i class="fa-solid fa-scale-balanced text-amber-400"></i>
+          <span>Kullanım Koşulları &amp; Adil Oyun</span>
+        </h3>
+        <button onclick="closeTermsModal()" class="w-8 h-8 rounded-xl bg-slate-800 text-slate-300 hover:text-white flex items-center justify-center">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs sm:text-sm text-slate-300 leading-relaxed">
+        <div class="rounded-2xl bg-slate-900/80 border border-slate-800 p-3.5 space-y-1">
+          <h4 class="font-bold text-white text-xs">1. Hizmetin Niteliği</h4>
+          <p class="text-xs text-slate-300">Okey X, kullanıcılara tarayıcı üzerinden ücretsiz zeka ve strateji oyunu sunan bir eğlence platformudur. Kayıt olmadan anında oynanabilir.</p>
+        </div>
+        <div class="rounded-2xl bg-slate-900/80 border border-slate-800 p-3.5 space-y-1">
+          <h4 class="font-bold text-white text-xs">2. Topluluk Ahlakı ve Sohbet Kuralları</h4>
+          <p class="text-xs text-slate-300">Masa sohbetlerinde küfür, hakaret, argo, nefret söylemi, ırkçılık ve diğer oyuncuları taciz edici ifadeler kesinlikle yasaktır. Sistem bu tür mesajları otomatik olarak filtreler.</p>
+        </div>
+        <div class="rounded-2xl bg-slate-900/80 border border-slate-800 p-3.5 space-y-1">
+          <h4 class="font-bold text-white text-xs">3. Hile ve Manipülasyon Yasağı</h4>
+          <p class="text-xs text-slate-300">Oyun mantığını bozacak yapay betikler, tersine mühendislik veya bot manipülasyonları adil oyun ilkelerine aykırıdır.</p>
+        </div>
+        <div class="rounded-2xl bg-slate-900/80 border border-slate-800 p-3.5 space-y-1">
+          <h4 class="font-bold text-white text-xs">4. Sorumluluk Sınırı</h4>
+          <p class="text-xs text-slate-300">Oyun "olduğu gibi" sunulur. Bağlantı kopmaları veya internet kesintilerinden kaynaklanan masa düşmelerinden PratikBase sorumlu tutulamaz.</p>
+        </div>
+      </div>
+
+      <div class="pt-2 border-t border-slate-800 flex justify-end">
+        <button onclick="closeTermsModal()" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs transition">
+          Kapat
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       MODAL 6: COOKIE & LOCALSTORAGE PREFERENCES
+       ========================================================= -->
+  <div id="modalCookie" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-md rounded-3xl bg-slate-950 border-2 border-emerald-500/50 p-5 sm:p-6 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="text-lg font-black text-white flex items-center gap-2">
+          <i class="fa-solid fa-cookie-bite text-amber-400"></i>
+          <span>Çerez &amp; Yerel Bellek Tercihleri</span>
+        </h3>
+        <button onclick="closeCookieModal()" class="w-8 h-8 rounded-xl bg-slate-800 text-slate-300 hover:text-white flex items-center justify-center">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs text-slate-300 leading-relaxed">
+        <p>
+          Okey X, harici takip çerezleri kullanmak yerine yalnızca oyununuzun çalışması için gerekli tarayıcı <b>LocalStorage</b> (yerel bellek) anahtarlarını kullanır:
+        </p>
+
+        <div class="space-y-2 font-mono text-[11px] bg-slate-900 p-3 rounded-2xl border border-slate-800">
+          <div class="flex justify-between items-center"><span class="text-amber-300 font-bold">okey_user_name:</span> <span class="text-slate-400 truncate max-w-[160px]" id="cookieValName">-</span></div>
+          <div class="flex justify-between items-center"><span class="text-amber-300 font-bold">okey_user_avatar:</span> <span class="text-slate-400" id="cookieValAvatar">-</span></div>
+          <div class="flex justify-between items-center"><span class="text-amber-300 font-bold">okey_sound_enabled:</span> <span class="text-slate-400" id="cookieValSound">-</span></div>
+          <div class="flex justify-between items-center"><span class="text-amber-300 font-bold">okey_privacy_consent:</span> <span class="text-emerald-400 font-bold" id="cookieValConsent">Onaylandı</span></div>
+        </div>
+
+        <p class="text-[11px] text-slate-400">
+          Tüm yerel verilerinizi dilediğiniz an sıfırlayabilirsiniz. Sıfırladığınızda rumuzunuz ve ses ayarlarınız varsayılana döner.
+        </p>
+
+        <button onclick="clearAllOkeyStorage()" class="w-full py-2.5 rounded-xl bg-rose-950/70 hover:bg-rose-900/80 border border-rose-500/50 text-rose-300 font-bold text-xs transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-trash-can"></i>
+          <span>Tüm Oyun Verilerimi &amp; Çerezleri Temizle</span>
+        </button>
+      </div>
+
+      <div class="pt-2 border-t border-slate-800 flex justify-end">
+        <button onclick="closeCookieModal()" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs transition">
+          Tamam
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Privacy & Cookie Consent Banner -->
+  <aside id="privacyCookieBanner" class="hidden fixed bottom-4 inset-x-3 sm:inset-x-auto sm:right-5 sm:max-w-md z-50 p-4 rounded-3xl bg-slate-950/95 border border-emerald-500/50 shadow-2xl backdrop-blur-md text-xs text-slate-200 space-y-2.5">
+    <div class="flex items-start gap-2.5">
+      <span class="text-xl">🛡️</span>
+      <div class="leading-relaxed text-[11px] text-slate-300">
+        <span class="font-black text-white">Gizlilik &amp; Çerez Bildirimi:</span> Okey X, oyun ayarlarınızı ve rumuzunuzu hatırlamak için tarayıcınızın yerel depolama (LocalStorage) teknolojisini kullanır. Oyunumuz tamamen ücretsiz olup <u>kumar veya bahis içermez</u>.
+      </div>
+    </div>
+    <div class="flex items-center justify-end gap-2 pt-1 border-t border-slate-800">
+      <button onclick="openPrivacyModal()" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-[11px] font-bold text-slate-300 transition">
+        Detaylar
+      </button>
+      <button onclick="acceptPrivacyConsent()" class="px-4 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-[11px] shadow-md transition">
+        Anladım &amp; Kabul Et
+      </button>
+    </div>
+  </aside>
 
   <!-- Toast Notification -->
   <div id="toastBox" class="fixed bottom-4 left-1/2 -translate-x-1/2 z-[60] hidden px-4 py-2.5 rounded-2xl bg-slate-900 border border-amber-500/50 text-white text-xs font-bold shadow-2xl"></div>
@@ -3833,11 +4067,73 @@
       document.getElementById('modalRules').classList.add('hidden');
     }
 
+    /* =====================================================================
+       PRIVACY, TERMS & COOKIE CONSENT SYSTEM
+       ===================================================================== */
+    function openPrivacyModal() {
+      document.getElementById('modalPrivacy')?.classList.remove('hidden');
+    }
+    function closePrivacyModal() {
+      document.getElementById('modalPrivacy')?.classList.add('hidden');
+    }
+
+    function openTermsModal() {
+      document.getElementById('modalTerms')?.classList.remove('hidden');
+    }
+    function closeTermsModal() {
+      document.getElementById('modalTerms')?.classList.add('hidden');
+    }
+
+    function openCookieModal() {
+      const nameEl = document.getElementById('cookieValName');
+      const avatarEl = document.getElementById('cookieValAvatar');
+      const soundEl = document.getElementById('cookieValSound');
+      if (nameEl) nameEl.textContent = localStorage.getItem('okey_user_name') || '(Belirlenmedi)';
+      if (avatarEl) avatarEl.textContent = localStorage.getItem('okey_user_avatar') || '🦁';
+      if (soundEl) soundEl.textContent = soundEnabled ? 'Açık (true)' : 'Kapalı (false)';
+      document.getElementById('modalCookie')?.classList.remove('hidden');
+    }
+    function closeCookieModal() {
+      document.getElementById('modalCookie')?.classList.add('hidden');
+    }
+
+    function acceptPrivacyConsent() {
+      localStorage.setItem('okey_privacy_consent', 'true');
+      const banner = document.getElementById('privacyCookieBanner');
+      if (banner) {
+        banner.classList.add('transition-all', 'duration-300', 'opacity-0', 'translate-y-4');
+        setTimeout(() => banner.classList.add('hidden'), 300);
+      }
+    }
+
+    function checkPrivacyConsent() {
+      if (!localStorage.getItem('okey_privacy_consent')) {
+        setTimeout(() => {
+          document.getElementById('privacyCookieBanner')?.classList.remove('hidden');
+        }, 800);
+      }
+    }
+
+    function clearAllOkeyStorage() {
+      if (confirm('Tüm yerel profil ve oyun ayarlarınız sıfırlanacaktır. Emin misiniz?')) {
+        localStorage.removeItem('okey_user_name');
+        localStorage.removeItem('okey_user_avatar');
+        localStorage.removeItem('okey_sound_enabled');
+        localStorage.removeItem('okey_auto_play');
+        localStorage.removeItem('okey_privacy_consent');
+        showToast('Tüm yerel verileriniz temizlendi!');
+        setTimeout(() => window.location.reload(), 600);
+      }
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
       updateSoundUI();
       initProfile();
       startLobbyPolling();
+      checkPrivacyConsent();
     });
   </script>
+  <!-- Realtime Analytics Tracker -->
+  <script src="/assets/tracker.js" defer></script>
 </body>
 </html>
