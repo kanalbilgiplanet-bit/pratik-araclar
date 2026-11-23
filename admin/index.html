@@ -1116,8 +1116,11 @@
             </h3>
             <p class="text-xs text-slate-400 mt-0.5">Arkadaşlarla Canlı Oda ve karşılıklı düello modunda oynanan maçlar, skorlar ve podyum sıralamaları</p>
           </div>
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-2 flex-wrap">
             <span id="partyMatchCountBadge" class="text-xs bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-3 py-1 rounded-full font-mono font-bold">0 Maç</span>
+            <button onclick="cleanupAbandonedPartyRooms()" class="px-2.5 py-1 text-xs bg-rose-500/15 hover:bg-rose-500/30 text-rose-300 border border-rose-500/40 rounded-lg transition flex items-center gap-1.5" title="Yarıda bırakılmış veya terk edilmiş odaları sil">
+              <i class="fa-solid fa-broom"></i> Terk Edilenleri Temizle
+            </button>
             <button onclick="loadPartyMatchResults()" class="px-2.5 py-1 text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg border border-slate-700 transition flex items-center gap-1.5" title="Yenile">
               <i class="fa-solid fa-arrows-rotate"></i> Yenile
             </button>
@@ -3107,14 +3110,18 @@
             const qCount = room.questionCount || (room.questions ? room.questions.length : 20);
             const winner = sortedPlayers[0];
             const finishedCount = sortedPlayers.filter(p => p.hasFinished).length;
+            const isAllFinished = sortedPlayers.length > 0 && finishedCount >= sortedPlayers.length;
+            const ageMs = Date.now() - (room.createdAt || 0);
+            const isAbandoned = !isAllFinished && (ageMs > 20 * 60 * 1000);
 
             allMatchesMap[roomId] = {
               roomId: roomId,
               timestamp: room.createdAt || Date.now(),
               questionCount: qCount,
               playerCount: sortedPlayers.length,
-              status: finishedCount >= sortedPlayers.length ? 'finished' : (room.status || 'in_progress'),
-              winner: winner ? {
+              status: isAllFinished ? 'finished' : (isAbandoned ? 'abandoned' : (room.status || 'in_progress')),
+              isAbandoned: isAbandoned,
+              winner: (isAllFinished && winner) ? {
                 nick: winner.nick || 'İsimsiz',
                 score: winner.score || 0,
                 time: Number(winner.time || 0).toFixed(2)
@@ -3208,6 +3215,7 @@
         group.matches.forEach(m => {
           const matchTime = new Date(m.timestamp).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
           const isFinished = m.status === 'finished' || (m.players && m.players.length > 0 && m.players.every(p => p.hasFinished));
+          const isAbandoned = m.status === 'abandoned' || (!isFinished && (Date.now() - (m.timestamp || 0) > 20 * 60 * 1000));
           const winner = m.winner;
 
           html += `
@@ -3228,7 +3236,10 @@
                   </span>
                   ${isFinished ? 
                     '<span class="text-[11px] bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-md font-semibold">Tamamlandı ✔</span>' :
-                    '<span class="text-[11px] bg-amber-500/15 text-amber-400 border border-amber-500/30 px-2 py-0.5 rounded-md font-semibold">Devam Ediyor ⏳</span>'
+                    (isAbandoned ?
+                      '<span class="text-[11px] bg-rose-500/15 text-rose-400 border border-rose-500/30 px-2 py-0.5 rounded-md font-semibold" title="Oda terk edilmiş veya yarıda bırakılmış">Yarıda Bırakıldı ⚠️</span>' :
+                      '<span class="text-[11px] bg-amber-500/15 text-amber-400 border border-amber-500/30 px-2 py-0.5 rounded-md font-semibold">Devam Ediyor ⏳</span>'
+                    )
                   }
                 </div>
 
@@ -3244,6 +3255,10 @@
                   <button onclick="togglePartyMatchAccordion('${escapeHtml(m.roomId)}')" class="text-xs bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 hover:text-white px-2.5 py-1 rounded-lg transition flex items-center gap-1.5 shrink-0">
                     <span>Podyum</span>
                     <i id="matchChevron_${escapeHtml(m.roomId)}" class="fa-solid fa-chevron-down text-[10px] transition-transform"></i>
+                  </button>
+
+                  <button onclick="deletePartyMatch('${escapeHtml(m.roomId)}')" class="text-xs bg-rose-500/15 hover:bg-rose-500/30 border border-rose-500/30 text-rose-300 hover:text-white px-2 py-1 rounded-lg transition flex items-center gap-1 shrink-0" title="Bu odayı/maçı sil">
+                    <i class="fa-solid fa-trash-can text-[10px]"></i>
                   </button>
                 </div>
               </div>
@@ -3287,7 +3302,10 @@
                             <td class="py-2 px-2.5 text-right">
                               ${p.hasFinished ? 
                                 '<span class="text-emerald-400 font-semibold">Bitirdi ✔</span>' :
-                                '<span class="text-slate-500">Devam Ediyor</span>'
+                                (isAbandoned ?
+                                  '<span class="text-rose-400/80 font-medium">Yarıda Bıraktı</span>' :
+                                  '<span class="text-slate-500">Devam Ediyor</span>'
+                                )
                               }
                             </td>
                           </tr>
@@ -3322,6 +3340,55 @@
       } else {
         detailEl.classList.add('hidden');
         if (chevronEl) chevronEl.style.transform = 'rotate(0deg)';
+      }
+    }
+
+    async function deletePartyMatch(roomId) {
+      if (!roomId) return;
+      if (!confirm(`"${roomId}" kodlu odayı/maçı kalıcı olarak silmek istiyor musunuz?`)) return;
+      try {
+        await Promise.all([
+          fetch(`${RTDB_URL}/flag_quiz_rooms/${roomId}.json`, { method: 'DELETE' }).catch(() => {}),
+          fetch(`${RTDB_URL}/flag_quiz_matches/${roomId}.json`, { method: 'DELETE' }).catch(() => {})
+        ]);
+        alert('Oda/maç başarıyla silindi.');
+        loadPartyMatchResults();
+      } catch (e) {
+        alert('Silme işlemi başarısız: ' + (e.message || e));
+      }
+    }
+
+    async function cleanupAbandonedPartyRooms() {
+      if (!confirm('20 dakikadan daha eski olan ve tamamlanmamış (terk edilmiş / yarıda kalmış) tüm odaları temizlemek istiyor musunuz?')) return;
+      try {
+        const roomsRes = await fetch(`${RTDB_URL}/flag_quiz_rooms.json`).then(r => r.json()).catch(() => null);
+        if (!roomsRes || typeof roomsRes !== 'object') {
+          alert('Temizlenecek oda bulunamadı.');
+          return;
+        }
+        const now = Date.now();
+        let deletedCount = 0;
+        const deletePromises = [];
+        for (const [roomId, room] of Object.entries(roomsRes)) {
+          if (!room) continue;
+          const players = Object.values(room.players || {});
+          const isFinished = room.status === 'finished' || (players.length > 0 && players.every(p => p.hasFinished));
+          const age = now - (room.createdAt || 0);
+          if (!isFinished && age > 20 * 60 * 1000) {
+            deletedCount++;
+            deletePromises.push(
+              fetch(`${RTDB_URL}/flag_quiz_rooms/${roomId}.json`, { method: 'DELETE' }).catch(() => {})
+            );
+            deletePromises.push(
+              fetch(`${RTDB_URL}/flag_quiz_matches/${roomId}.json`, { method: 'DELETE' }).catch(() => {})
+            );
+          }
+        }
+        await Promise.all(deletePromises);
+        alert(`Temizlik tamamlandı! ${deletedCount} adet terk edilmiş oda silindi.`);
+        loadPartyMatchResults();
+      } catch (e) {
+        alert('Temizleme hatası: ' + (e.message || e));
       }
     }
 

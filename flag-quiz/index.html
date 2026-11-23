@@ -1799,6 +1799,20 @@
         });
 
         openLobbyView(code, true);
+
+        // Arka planda 2 saatten eski olan ve tamamlanmamış terk edilmiş odaları temizle
+        fetch(`${RTDB_BASE_URL}/flag_quiz_rooms.json`).then(r => r.json()).then(rooms => {
+          if (!rooms || typeof rooms !== 'object') return;
+          const now = Date.now();
+          Object.entries(rooms).forEach(([rid, r]) => {
+            if (!r) return;
+            const players = Object.values(r.players || {});
+            const isFinished = r.status === 'finished' || (players.length > 0 && players.every(p => p.hasFinished));
+            if (!isFinished && (now - (r.createdAt || 0) > 2 * 60 * 60 * 1000)) {
+              fetch(`${RTDB_BASE_URL}/flag_quiz_rooms/${rid}.json`, { method: 'DELETE' }).catch(() => {});
+            }
+          });
+        }).catch(() => {});
       } catch(e) {
         showToast('Oda oluşturulurken hata oluştu!');
       }
