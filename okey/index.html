@@ -3153,8 +3153,6 @@
       }
     }
 
-    let lastSortRunsMode = 0; // 0: Akıllı Per & Seri Dizilimi, 1: Temiz Renk Gruplu Sıralama
-
     function autoSortRack(mode = 'runs', silent = false) {
       myConsecutiveTimeouts = 0;
       const gs = currentTable ? currentTable.gameState : null;
@@ -3231,11 +3229,8 @@
         if (!silent) showToast('👥 Taşlar çiftlerine göre ayrıldı.');
       } else {
         // ==========================================
-        // SERİ / PER DİZİLİMİ (Akıllı Okey Sıralama)
+        // STANDART OKEY SERİ DİZİLİMİ
         // ==========================================
-        const toggleMode = silent ? 0 : (lastSortRunsMode % 2);
-        if (!silent) lastSortRunsMode++;
-
         const okeyTiles = [];
         const normalTiles = [];
 
@@ -3244,222 +3239,186 @@
           else normalTiles.push(t);
         });
 
-        if (toggleMode === 1) {
-          // Mod 2: Temiz Renk Gruplu Sıralama (Renkler arası 1 boşluk; Üst satır: Siyah & Kırmızı, Alt satır: Mavi & Sarı)
+        // 1. Aday Perleri Bul (Aynı renk ardışık 3+ veya Aynı sayı farklı renk 3+)
+        const candidatePers = [];
+
+        // 1a. Aynı renk ardışık seriler (uzunluk 3..5)
+        const byColor = { black: [], red: [], blue: [], yellow: [] };
+        normalTiles.forEach(t => { if (byColor[t.color]) byColor[t.color].push(t); });
+
+        Object.values(byColor).forEach(list => {
+          list.sort((a, b) => a.num - b.num);
+          for (let i = 0; i < list.length; i++) {
+            const run = [list[i]];
+            for (let j = i + 1; j < list.length; j++) {
+              if (list[j].num === run[run.length - 1].num + 1) {
+                run.push(list[j]);
+              }
+            }
+            // 11, 12, 13, 1 döngüsü
+            if (run[run.length - 1].num === 13) {
+              const one = list.find(t => t.num === 1 && !run.includes(t));
+              if (one) run.push(one);
+            }
+            if (run.length >= 3) {
+              candidatePers.push(run);
+              if (run.length >= 4) {
+                candidatePers.push(run.slice(0, 3));
+                candidatePers.push(run.slice(run.length - 3));
+              }
+            }
+          }
+        });
+
+        // 1b. Aynı sayı farklı renkler (uzunluk 3..4)
+        const byNum = {};
+        normalTiles.forEach(t => {
+          if (!byNum[t.num]) byNum[t.num] = [];
+          byNum[t.num].push(t);
+        });
+        Object.values(byNum).forEach(list => {
+          const uniq = [];
+          const used = new Set();
+          list.forEach(t => {
+            if (!used.has(t.color)) {
+              used.add(t.color);
+              uniq.push(t);
+            }
+          });
+          if (uniq.length >= 3) {
+            candidatePers.push(uniq);
+            if (uniq.length === 4) {
+              for (let i = 0; i < 4; i++) {
+                candidatePers.push(uniq.filter((_, idx) => idx !== i));
+              }
+            }
+          }
+        });
+
+        // En çok taşı içine alan çakışmasız per kombinasyonunu seç
+        let bestPers = [];
+        let bestCount = 0;
+
+        function canAdd(cur, cand) {
+          const usedIds = new Set();
+          cur.forEach(p => p.forEach(t => usedIds.add(t.id)));
+          return cand.every(t => !usedIds.has(t.id));
+        }
+
+        function dfs(idx, cur) {
+          const count = cur.reduce((sum, p) => sum + p.length, 0);
+          if (count > bestCount) {
+            bestCount = count;
+            bestPers = cur.map(p => [...p]);
+          }
+          for (let i = idx; i < candidatePers.length; i++) {
+            if (canAdd(cur, candidatePers[i])) {
+              cur.push(candidatePers[i]);
+              dfs(i + 1, cur);
+              cur.pop();
+            }
+          }
+        }
+
+        dfs(0, []);
+
+        const usedTileIds = new Set();
+        bestPers.forEach(p => p.forEach(t => usedTileIds.add(t.id)));
+        const remaining = normalTiles.filter(t => !usedTileIds.has(t.id));
+
+        // Renklerin standart sıralama önceliği: Kırmızı -> Sarı -> Mavi -> Siyah
+        const colorOrder = { red: 0, yellow: 1, blue: 2, black: 3 };
+
+        if (bestPers.length > 0) {
+          // ==========================================
+          // PER VARSA: Perleri boşlukla ayır, kalanları sıralı yerleştir
+          // ==========================================
           let r0 = 0, r1 = 14;
-          ['black', 'red'].forEach(col => {
-            const colTiles = normalTiles.filter(t => t.color === col).sort((a, b) => a.num - b.num);
-            if (colTiles.length > 0) {
-              if (r0 > 0 && r0 < 13) r0++;
-              colTiles.forEach(t => {
-                if (r0 < 14) newSlots[r0++] = t;
-                else if (r1 < 28) newSlots[r1++] = t;
-              });
+
+          bestPers.forEach(per => {
+            const len = per.length;
+            const need0 = (r0 === 0 ? len : len + 1);
+            if (r0 + need0 <= 14) {
+              if (r0 > 0) r0++; // perler arası 1 boşluk
+              per.forEach(t => newSlots[r0++] = t);
+            } else {
+              const need1 = (r1 === 14 ? len : len + 1);
+              if (r1 + need1 <= 28) {
+                if (r1 > 14) r1++; // perler arası 1 boşluk
+                per.forEach(t => newSlots[r1++] = t);
+              }
             }
           });
-          ['blue', 'yellow'].forEach(col => {
-            const colTiles = normalTiles.filter(t => t.color === col).sort((a, b) => a.num - b.num);
-            if (colTiles.length > 0) {
-              if (r1 > 14 && r1 < 27) r1++;
-              colTiles.forEach(t => {
-                if (r1 < 28) newSlots[r1++] = t;
-                else if (r0 < 14) newSlots[r0++] = t;
-              });
+
+          // Arta kalan taşları renge ve sayıya göre sırala
+          remaining.sort((a, b) => {
+            if (colorOrder[a.color] !== colorOrder[b.color]) {
+              return colorOrder[a.color] - colorOrder[b.color];
+            }
+            return a.num - b.num;
+          });
+
+          // Kalan taşları alt satır boşsa alt satıra, dolarsa üst satırdaki boşluklara diz
+          remaining.forEach(t => {
+            if (r1 < 28) {
+              // Alt satırda per varsa ve hemen yanına başlıyorsak 1 boşluk bırak
+              if (r1 > 14 && newSlots[r1 - 1] && !newSlots[r1]) {
+                r1++;
+              }
+              if (r1 < 28) {
+                newSlots[r1++] = t;
+                return;
+              }
+            }
+            for (let i = 0; i < 14; i++) {
+              if (!newSlots[i]) {
+                newSlots[i] = t;
+                break;
+              }
             }
           });
+
+          // Okey taşlarını en sona veya üst satırın sonuna yerleştir
           okeyTiles.forEach(ok => {
-            const empty = newSlots.lastIndexOf(null);
-            if (empty !== -1) newSlots[empty] = ok;
+            if (!newSlots[13]) newSlots[13] = ok;
+            else if (!newSlots[27]) newSlots[27] = ok;
+            else {
+              const empty = newSlots.lastIndexOf(null);
+              if (empty !== -1) newSlots[empty] = ok;
+            }
           });
-          if (!silent) showToast('🎨 Taşlar renk gruplarına göre dizildi.');
+
+          if (!silent) showToast(`✨ ${bestPers.length} per ayrıldı ve dizildi.`);
         } else {
-          // Mod 1: Akıllı Per Dizilimi (Tamamlanmış seriler + ikili ihtimaller + tekler)
-          const candidatePers = [];
-
-          // 1. Aynı renk ardışık seriler (uzunluk 3..5)
-          const byColor = { black: [], red: [], blue: [], yellow: [] };
-          normalTiles.forEach(t => { if (byColor[t.color]) byColor[t.color].push(t); });
-
-          Object.values(byColor).forEach(list => {
-            list.sort((a, b) => a.num - b.num);
-            for (let i = 0; i < list.length; i++) {
-              const run = [list[i]];
-              for (let j = i + 1; j < list.length; j++) {
-                if (list[j].num === run[run.length - 1].num + 1) {
-                  run.push(list[j]);
-                }
-              }
-              if (run[run.length - 1].num === 13) {
-                const one = list.find(t => t.num === 1 && !run.includes(t));
-                if (one) run.push(one);
-              }
-              if (run.length >= 3) {
-                candidatePers.push(run);
-                if (run.length >= 4) {
-                  candidatePers.push(run.slice(0, 3));
-                  candidatePers.push(run.slice(run.length - 3));
-                }
-              }
+          // ==========================================
+          // PER YOKSA: Tüm taşları standart renge ve sayıya göre
+          // kesintisiz, yan yana diz (Asla yapay boşluk ve üst-alt renk ayrımı yok!)
+          // ==========================================
+          normalTiles.sort((a, b) => {
+            if (colorOrder[a.color] !== colorOrder[b.color]) {
+              return colorOrder[a.color] - colorOrder[b.color];
             }
+            return a.num - b.num;
           });
 
-          // 2. Aynı sayı farklı renkler (uzunluk 3..4)
-          const byNum = {};
+          // Üst satırdan başlayarak (0..13) kesintisiz diz, sığmayan alt satıra (14..27) geçer
+          let idx = 0;
           normalTiles.forEach(t => {
-            if (!byNum[t.num]) byNum[t.num] = [];
-            byNum[t.num].push(t);
-          });
-          Object.values(byNum).forEach(list => {
-            const uniq = [];
-            const used = new Set();
-            list.forEach(t => {
-              if (!used.has(t.color)) {
-                used.add(t.color);
-                uniq.push(t);
-              }
-            });
-            if (uniq.length >= 3) {
-              candidatePers.push(uniq);
-              if (uniq.length === 4) {
-                for (let i = 0; i < 4; i++) {
-                  candidatePers.push(uniq.filter((_, idx) => idx !== i));
-                }
-              }
-            }
+            if (idx < 14) newSlots[idx++] = t;
+            else if (idx < 28) newSlots[idx++] = t;
           });
 
-          // En çok taşı içine alan çakışmasız per kombinasyonunu seç
-          let bestPers = [];
-          let bestCount = 0;
-
-          function canAdd(cur, cand) {
-            const usedIds = new Set();
-            cur.forEach(p => p.forEach(t => usedIds.add(t.id)));
-            return cand.every(t => !usedIds.has(t.id));
-          }
-
-          function dfs(idx, cur) {
-            const count = cur.reduce((sum, p) => sum + p.length, 0);
-            if (count > bestCount) {
-              bestCount = count;
-              bestPers = cur.map(p => [...p]);
-            }
-            for (let i = idx; i < candidatePers.length; i++) {
-              if (canAdd(cur, candidatePers[i])) {
-                cur.push(candidatePers[i]);
-                dfs(i + 1, cur);
-                cur.pop();
-              }
-            }
-          }
-
-          dfs(0, []);
-
-          const usedTileIds = new Set();
-          bestPers.forEach(p => p.forEach(t => usedTileIds.add(t.id)));
-
-          const remaining = normalTiles.filter(t => !usedTileIds.has(t.id));
-          const pairs2 = [];
-          const usedRemIds = new Set();
-
-          // Kalanlarda 2'li seriler (aynı renk ardışık)
-          for (let i = 0; i < remaining.length; i++) {
-            if (usedRemIds.has(remaining[i].id)) continue;
-            for (let j = i + 1; j < remaining.length; j++) {
-              if (usedRemIds.has(remaining[j].id)) continue;
-              const a = remaining[i], b = remaining[j];
-              if ((a.color === b.color && Math.abs(a.num - b.num) === 1) || (a.color === b.color && ((a.num === 13 && b.num === 1) || (a.num === 1 && b.num === 13)))) {
-                pairs2.push([a, b].sort((x, y) => x.num - y.num));
-                usedRemIds.add(a.id);
-                usedRemIds.add(b.id);
-                break;
-              }
-            }
-          }
-
-          // Kalanlarda 2'li gruplar (aynı sayı farklı renk)
-          for (let i = 0; i < remaining.length; i++) {
-            if (usedRemIds.has(remaining[i].id)) continue;
-            for (let j = i + 1; j < remaining.length; j++) {
-              if (usedRemIds.has(remaining[j].id)) continue;
-              const a = remaining[i], b = remaining[j];
-              if (a.num === b.num && a.color !== b.color) {
-                pairs2.push([a, b]);
-                usedRemIds.add(a.id);
-                usedRemIds.add(b.id);
-                break;
-              }
-            }
-          }
-
-          const singles = remaining.filter(t => !usedRemIds.has(t.id));
-          const colOrd = { black: 0, red: 1, blue: 2, yellow: 3 };
-          singles.sort((a, b) => colOrd[a.color] !== colOrd[b.color] ? colOrd[a.color] - colOrd[b.color] : a.num - b.num);
-
-          if (bestPers.length === 0) {
-            // Per yoksa: Renk sıralı yerleşim
-            let r0 = 0, r1 = 14;
-            ['black', 'red'].forEach(col => {
-              const colTiles = normalTiles.filter(t => t.color === col).sort((a, b) => a.num - b.num);
-              if (colTiles.length > 0) {
-                if (r0 > 0 && r0 < 13) r0++;
-                colTiles.forEach(t => { if (r0 < 14) newSlots[r0++] = t; else if (r1 < 28) newSlots[r1++] = t; });
-              }
-            });
-            ['blue', 'yellow'].forEach(col => {
-              const colTiles = normalTiles.filter(t => t.color === col).sort((a, b) => a.num - b.num);
-              if (colTiles.length > 0) {
-                if (r1 > 14 && r1 < 27) r1++;
-                colTiles.forEach(t => { if (r1 < 28) newSlots[r1++] = t; else if (r0 < 14) newSlots[r0++] = t; });
-              }
-            });
-          } else {
-            // Perler, ikililer ve tekler yerleşimi
-            let r0 = 0, r1 = 14;
-            bestPers.forEach(per => {
-              const len = per.length;
-              const need0 = (r0 === 0 ? len : len + 1);
-              if (r0 + need0 <= 14) {
-                if (r0 > 0) r0++;
-                per.forEach(t => newSlots[r0++] = t);
-              } else {
-                const need1 = (r1 === 14 ? len : len + 1);
-                if (r1 + need1 <= 28) {
-                  if (r1 > 14) r1++;
-                  per.forEach(t => newSlots[r1++] = t);
-                }
-              }
-            });
-
-            pairs2.forEach(p => {
-              if (r1 + 3 <= 28) {
-                if (r1 > 14) r1++;
-                newSlots[r1++] = p[0];
-                newSlots[r1++] = p[1];
-              } else if (r0 + 3 <= 14) {
-                if (r0 > 0) r0++;
-                newSlots[r0++] = p[0];
-                newSlots[r0++] = p[1];
-              }
-            });
-
-            if (r1 > 14 && r1 < 27 && singles.length > 0) r1++;
-            singles.forEach(t => {
-              if (r1 < 28) newSlots[r1++] = t;
-              else if (r0 < 14) newSlots[r0++] = t;
-            });
-          }
-
-          // Okeyleri yerleştir (varsa boş olan ilk yere)
+          // Okey taşlarını en sona yerleştir
           okeyTiles.forEach(ok => {
-            const empty = newSlots.lastIndexOf(null);
-            if (empty !== -1) newSlots[empty] = ok;
+            if (idx < 14) newSlots[idx++] = ok;
+            else if (idx < 28) newSlots[idx++] = ok;
+            else {
+              const empty = newSlots.lastIndexOf(null);
+              if (empty !== -1) newSlots[empty] = ok;
+            }
           });
 
-          if (!silent) {
-            if (bestPers.length > 0) showToast(`✨ ${bestPers.length} per ayrıldı ve dizildi.`);
-            else showToast('✨ Taşlar sıralandı.');
-          }
+          if (!silent) showToast('✨ Taşlar renge ve sayıya göre dizildi.');
         }
       }
 
