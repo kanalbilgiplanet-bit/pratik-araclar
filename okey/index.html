@@ -848,7 +848,7 @@
             <span id="mobileChatUnread" class="hidden absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-rose-500 text-white text-[10px] flex items-center justify-center font-bold">1</span>
           </button>
 
-          <button onclick="leaveCurrentTable()" class="px-2.5 py-1.5 rounded-xl bg-rose-950/60 hover:bg-rose-900/70 border border-rose-500/40 text-rose-300 text-xs font-bold transition" title="Masadan Çık">
+          <button onclick="returnToLobbyConfirm()" class="px-2.5 py-1.5 rounded-xl bg-rose-950/60 hover:bg-rose-900/70 border border-rose-500/40 text-rose-300 text-xs font-bold transition" title="Masadan Çık / Lobiye Dön">
             <i class="fa-solid fa-right-from-bracket"></i>
           </button>
         </div>
@@ -2127,8 +2127,9 @@
         if (data) {
           Object.values(data).forEach(t => {
             if (!t || !t.id) return;
-            // Clean up stale tables (> 35 min inactive)
-            if (now - (t.updatedAt || t.createdAt || 0) > 35 * 60 * 1000) {
+            // Terk edilmiş masaları temizle: Oyunda 3 dk, beklemede 4 dk boyunca hiç güncellenmediyse sil
+            const maxInactiveMs = (t.status === 'playing' ? 3 : 4) * 60 * 1000;
+            if (now - (t.updatedAt || t.createdAt || 0) > maxInactiveMs) {
               fetch(`${RTDB_URL}/okey/tables/${t.id}.json`, { method: 'DELETE' }).catch(() => {});
               return;
             }
@@ -2182,10 +2183,16 @@
                 <div class="text-sm font-extrabold text-white truncate">${escapeHtml(myActiveTable.name)} · <span class="text-amber-400 font-mono">${isGame ? `Oyunda (El ${myActiveTable.currentRound || 1}/${myActiveTable.targetRounds || 5})` : 'Bekleme Odasında'}</span></div>
               </div>
             </div>
-            <button onclick="rejoinTable('${myActiveTable.id}')" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 hover:from-amber-300 hover:to-yellow-400 text-slate-950 font-black text-xs shadow-lg shadow-amber-400/40 hover:scale-105 active:scale-95 transition shrink-0 flex items-center justify-center gap-2">
-              <i class="fa-solid fa-arrow-right-to-bracket"></i>
-              <span>Masana Geri Dön</span>
-            </button>
+            <div class="flex items-center gap-2 w-full sm:w-auto shrink-0">
+              <button onclick="rejoinTable('${myActiveTable.id}')" class="flex-1 sm:flex-initial px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 hover:from-amber-300 hover:to-yellow-400 text-slate-950 font-black text-xs shadow-lg shadow-amber-400/40 hover:scale-105 active:scale-95 transition flex items-center justify-center gap-2">
+                <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                <span>Masana Geri Dön</span>
+              </button>
+              <button onclick="abandonAndCloseTable('${myActiveTable.id}')" class="px-3.5 py-2.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/40 border border-rose-500/40 text-rose-300 hover:text-white font-bold text-xs transition flex items-center justify-center gap-1.5" title="Masayı kalıcı olarak kapat ve lobiden kaldır">
+                <i class="fa-solid fa-trash-can"></i>
+                <span>Masayı Kapat</span>
+              </button>
+            </div>
           </div>
         `;
       }
@@ -2214,10 +2221,15 @@
         let actionBtnHtml = '';
         if (isMySeat) {
           actionBtnHtml = `
-            <button onclick="rejoinTable('${t.id}')" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-300 hover:to-yellow-400 text-slate-950 font-black text-xs transition shadow-lg shadow-amber-500/30 animate-pulse flex items-center justify-center gap-1.5">
-              <i class="fa-solid fa-arrow-right-to-bracket"></i>
-              <span>Masana Geri Dön</span>
-            </button>
+            <div class="flex items-center gap-2">
+              <button onclick="rejoinTable('${t.id}')" class="px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-300 hover:to-yellow-400 text-slate-950 font-black text-xs transition shadow-lg shadow-amber-500/30 animate-pulse flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                <span>Masana Geri Dön</span>
+              </button>
+              <button onclick="abandonAndCloseTable('${t.id}')" class="p-2.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/40 border border-rose-500/40 text-rose-300 hover:text-white transition flex items-center justify-center" title="Masayı Sil / Kapat">
+                <i class="fa-solid fa-trash-can text-xs"></i>
+              </button>
+            </div>
           `;
         } else if (canJoin) {
           actionBtnHtml = `
@@ -2455,6 +2467,22 @@
         }
       } catch (err) {
         showToast('⚠️ Masaya bağlanırken hata: ' + (err.message || err));
+      }
+    }
+
+    async function abandonAndCloseTable(tableId) {
+      if (!tableId) return;
+      if (!confirm('Bu masayı kalıcı olarak kapatmak ve lobiden silmek istediğinize emin misiniz?')) return;
+      try {
+        await fetch(`${RTDB_URL}/okey/tables/${tableId}.json`, { method: 'DELETE' });
+        showToast('🗑️ Masa başarıyla kapatıldı.');
+      } catch (err) {
+        showToast('⚠️ Masa kapatılırken hata oluştu: ' + (err.message || err));
+      }
+      if (currentTableId === tableId) {
+        leaveCurrentTable(true);
+      } else {
+        fetchLobbyTables(true);
       }
     }
 
@@ -2738,6 +2766,18 @@
             }
           }
         }
+
+        // Canlı oyun esnasında her 25 saniyede bir heartbeat göndererek masanın aktif olduğunu bildir
+        if (currentTable && currentTable.status === 'playing' && currentTable.hostId === profile?.id) {
+          const nowMs = Date.now();
+          if (nowMs - (currentTable.updatedAt || 0) > 25000) {
+            currentTable.updatedAt = nowMs;
+            fetch(`${RTDB_URL}/okey/tables/${currentTableId}/updatedAt.json`, {
+              method: 'PUT',
+              body: JSON.stringify(nowMs)
+            }).catch(() => {});
+          }
+        }
       } catch (e) {}
     }
 
@@ -2781,13 +2821,32 @@
     function returnToLobbyConfirm() {
       if (!currentTableId) return;
       const isGame = currentTable && currentTable.status === 'playing';
-      const msg = isGame
-        ? 'Mevcut oyundan geçici olarak ayrılıp lobiye dönmek istiyor musun?\n\n(Dilediğin zaman lobideki "Masana Geri Dön" butonuyla masana anında geri bağlanabilirsin.)'
-        : 'Mevcut masadan ayrılıp lobiye dönmek istiyor musun?';
-      if (confirm(msg)) {
-        leaveCurrentTable();
+      const isHost = currentTable && currentTable.hostId === profile?.id;
+      if (isHost && isGame) {
+        const choice = confirm('Lobiye dönmek istiyor musunuz?\n\n- Masayı tamamen kapatmak isterseniz lobideki "Masayı Kapat" butonunu kullanabilirsiniz.\n- Oyuna daha sonra "Masana Geri Dön" ile devam edebilirsiniz.');
+        if (choice) leaveCurrentTable();
+      } else {
+        const msg = isGame
+          ? 'Mevcut oyundan geçici olarak ayrılıp lobiye dönmek istiyor musun?\n\n(Dilediğin zaman lobideki "Masana Geri Dön" butonuyla masana anında geri bağlanabilirsin.)'
+          : 'Mevcut masadan ayrılıp lobiye dönmek istiyor musun?';
+        if (confirm(msg)) {
+          leaveCurrentTable();
+        }
       }
     }
+
+    // Sekme veya tarayıcı kapatıldığında bekleme odasındaki masayı / koltuğu temizle
+    window.addEventListener('beforeunload', () => {
+      if (currentTableId && currentTable && !isLocalFallbackMode) {
+        if (currentTable.status === 'waiting') {
+          if (currentTable.hostId === profile?.id) {
+            fetch(`${RTDB_URL}/okey/tables/${currentTableId}.json`, { method: 'DELETE', keepalive: true }).catch(() => {});
+          } else if (mySeatIndex >= 0) {
+            fetch(`${RTDB_URL}/okey/tables/${currentTableId}/seats/${mySeatIndex}.json`, { method: 'DELETE', keepalive: true }).catch(() => {});
+          }
+        }
+      }
+    });
 
     /* =====================================================================
        OKEY 106-TILE ENGINE & DECK DEALING
