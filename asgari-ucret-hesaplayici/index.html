@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="tr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2027 Asgari Ücret Hesaplama & Masadaki 5 Zam Senaryosu Simülatörü | PratikBase</title>
+  <meta name="description" content="2027 asgari ücret ne kadar olacak? Masadaki 5 zam formülü (%28.4 OVP, %29.5 TCMB, %30 Kulis, %35 Refah Payı, %40 İşçi Talebi) ile net maaş, işveren maliyeti, işsizlik maaşı ve kıdem tazminatı simülatörü.">
+  <meta name="keywords" content="2027 asgari ücret ne kadar olacak, asgari ücret hesaplama 2027, asgari ücret masadaki formüller, asgari ücret zam oranları, yüzde 30 zam olursa asgari ücret, asgari ücret net brüt 2027, asgari ücret işverene maliyeti, asgari ücret tespit komisyonu 2027">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <link rel="canonical" href="https://pratikbase.com/asgari-ucret-hesaplayici/">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2310b981'/%3E%3Cstop offset='100%25' stop-color='%23059669'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23bg)'/%3E%3Cpath d='M32 10 L44 32 L20 32 Z M20 38 L44 38 M24 46 L40 46' stroke='%23ffffff' stroke-width='4' stroke-linecap='round' fill='none'/%3E%3C/svg%3E">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://pratikbase.com/asgari-ucret-hesaplayici/">
+  <meta property="og:title" content="2027 Asgari Ücret Ne Kadar Olacak? Masadaki 5 Formül Simülatörü">
+  <meta property="og:description" content="OVP, TCMB ve piyasa kulislerindeki zam oranlarını test edin. Net maaş, işveren maliyeti ve işsizlik maaşını canlı hesaplayın.">
+  <meta property="og:image" content="https://pratikbase.com/assets/og-banner.png">
+  <meta property="og:locale" content="tr_TR">
+  <meta property="og:site_name" content="PratikBase">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="2027 Asgari Ücret Masadaki 5 Zam Formülü Simülatörü">
+  <meta name="twitter:description" content="Yüzde kaç zam olursa net ele ne geçer? İşverene maliyeti ne olur? Canlı simülatörle hemen hesapla.">
+  <meta name="twitter:image" content="https://pratikbase.com/assets/og-banner.png">
+
+  <!-- Tailwind CSS & FontAwesome -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: { 500: '#10b981', 600: '#059669' }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    html, body {
+      overflow-x: hidden;
+      max-width: 100vw;
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+      -webkit-tap-highlight-color: transparent;
+    }
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type=number] { -moz-appearance: textfield; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+    .slider-thumb::-webkit-slider-thumb {
+      appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #10b981;
+      cursor: pointer;
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.6);
+      border: 3px solid #0f172a;
+    }
+    .slider-thumb::-moz-range-thumb {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #10b981;
+      cursor: pointer;
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.6);
+      border: 3px solid #0f172a;
+    }
+  </style>
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "name": "2027 Asgari Ücret Hesaplama & Masadaki Formüller Simülatörü",
+        "url": "https://pratikbase.com/asgari-ucret-hesaplayici/",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "All",
+        "description": "2027 yılı Asgari Ücret Tespit Komisyonu öncesinde masadaki zam formüllerini (%28.4 OVP, %29.5 TCMB, %30 Kulis, %35 Refah Payı) net ve brüt olarak simüle eden canlı hesaplayıcı.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "TRY"
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "2027 asgari ücret ne zaman belli olacak?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Asgari Ücret Tespit Komisyonu ilk toplantısını Aralık ayının ilk haftasında gerçekleştirecektir. İşçi, işveren ve hükümet temsilcilerinden oluşan 15 kişilik komisyonun Aralık ayının son haftasında nihai 2027 net ve brüt asgari ücreti açıklaması beklenmektedir."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Asgari ücrete yüzde 30 zam gelirse net maaş ne kadar olur?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "2026 yılında net 28.075,50 TL olan asgari ücrete %30 zam yapılması halinde aylık net asgari ücret yaklaşık 36.498,15 TL (yuvarlama ile 36.500 TL), brüt asgari ücret ise 42.939,00 TL seviyesine yükselecektir."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "OVP (Orta Vadeli Program) hedefine göre asgari ücret kaç TL olacak?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "OVP'deki 2026 yıl sonu enflasyon tahmini olan %28,40 oranında bir artış yapılması durumunda net asgari ücret yaklaşık 36.048,94 TL, brüt asgari ücret ise 42.410,52 TL olacaktır."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "2027 yılında asgari ücretin işverene toplam maliyeti ne kadar olur?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "%30 zam senaryosunda 42.939 TL brüt maaş üzerinden %15,5 SGK işveren payı (hazine teşvikiyle) ve %2 işsizlik primi eklendiğinde işverene toplam maliyet yaklaşık 50.453 TL seviyesine ulaşacaktır."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Asgari ücretten gelir vergisi ve damga vergisi kesilir mi?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Hayır. 7349 sayılı Kanun gereğince asgari ücrete kadar olan tüm çalışan maaşları gelir vergisi ve damga vergisinden tamamen istisnadır (muaftır)."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Asgari ücret artışı işsizlik maaşını ve kıdem tazminatını nasıl etkiler?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "İşsizlik maaşının alt sınırı brüt asgari ücretin %40'ı, üst sınırı ise %80'idir. %30 zam durumunda en düşük işsizlik maaşı yaklaşık 17.045 TL'ye, en yüksek işsizlik maaşı ise 34.090 TL'ye yükselecektir. Kıdem tazminatının taban tutarı da doğrudan yeni brüt asgari ücrete eşitlenecektir."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body class="bg-[#0b0f19] text-slate-100 min-h-screen flex flex-col font-sans selection:bg-emerald-500 selection:text-white">
+
+  <!-- Header -->
+  <header class="border-b border-slate-800/80 bg-slate-900/60 backdrop-blur-md sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="../" class="flex items-center gap-3 group" title="PratikBase Vitrinine Dön">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/20 group-hover:scale-105 transition-transform text-white font-black">
+          <i class="fa-solid fa-calculator text-base"></i>
+        </div>
+        <div>
+          <span class="text-xl font-extrabold tracking-tight text-white group-hover:text-emerald-400 transition-colors">
+            Pratik<span class="text-emerald-400">Base</span>
+          </span>
+          <span class="text-[10px] text-slate-400 block -mt-1 font-semibold uppercase tracking-wider">2027 ASGARİ ÜCRET SİMÜLATÖRÜ</span>
+        </div>
+      </a>
+
+      <div class="flex items-center gap-2">
+        <a href="../" class="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold transition border border-slate-700 flex items-center gap-1.5">
+          <i class="fa-solid fa-arrow-left text-xs"></i>
+          <span class="hidden sm:inline">Tüm Araçlar</span>
+        </a>
+        <a href="../maas-hesaplayici/" class="px-3.5 py-1.5 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/30 text-xs font-bold transition flex items-center gap-1.5">
+          <i class="fa-solid fa-coins text-xs"></i>
+          <span>Maaş Hesaplayıcı</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="flex-1 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full space-y-8">
+
+    <!-- Hero / Headline -->
+    <div class="text-center max-w-3xl mx-auto space-y-3">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-300 text-xs font-bold shadow-sm">
+        <i class="fa-solid fa-scale-balanced"></i>
+        <span>Asgari Ücret Tespit Komisyonu Masadaki Formüller</span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight">
+        2027 Asgari Ücret Ne Kadar Olacak?
+      </h1>
+      <p class="text-slate-400 text-xs sm:text-sm leading-relaxed max-w-2xl mx-auto">
+        2026'da uygulanan <strong class="text-emerald-300">Net 28.075,50 TL</strong> asgari ücret için kulislerde konuşulan resmi senaryoları seçin veya kendi zam oranınızı belirleyerek net maaşı, işveren maliyetini ve yan etkilerini canlı görün.
+      </p>
+    </div>
+
+    <!-- Quick Scenario Presets (Masadaki 5 Formül) -->
+    <section class="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-7 shadow-xl space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
+        <span class="text-xs font-extrabold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+          <i class="fa-solid fa-list-check text-emerald-400"></i>
+          <span>Masadaki 5 Kritik Zam Formülü (Tek Tıkla Seçin):</span>
+        </span>
+        <span class="text-[11px] text-slate-500">2026 Net Baz: 28.075,50 ₺</span>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5" id="presetFormulasGrid">
+        
+        <button type="button" class="preset-formula-btn p-3 rounded-2xl bg-slate-950/70 border border-slate-800 hover:border-emerald-500/50 flex flex-col text-left transition group" data-pct="28.4">
+          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider group-hover:text-emerald-400 transition">OVP Hedefi</span>
+          <span class="text-base font-black text-white mt-0.5">%28,40</span>
+          <span class="text-xs font-semibold text-emerald-400 mt-1">~36.049 ₺</span>
+        </button>
+
+        <button type="button" class="preset-formula-btn p-3 rounded-2xl bg-slate-950/70 border border-slate-800 hover:border-emerald-500/50 flex flex-col text-left transition group" data-pct="29.5">
+          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider group-hover:text-emerald-400 transition">TCMB Raporu</span>
+          <span class="text-base font-black text-white mt-0.5">%29,50</span>
+          <span class="text-xs font-semibold text-emerald-400 mt-1">~36.358 ₺</span>
+        </button>
+
+        <button type="button" class="preset-formula-btn active p-3 rounded-2xl bg-emerald-500/20 border-2 border-emerald-500 shadow-lg shadow-emerald-500/20 flex flex-col text-left transition group" data-pct="30.0">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-extrabold text-emerald-300 uppercase tracking-wider">Kulis / Piyasa</span>
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+          </div>
+          <span class="text-base font-black text-white mt-0.5">%30,00</span>
+          <span class="text-xs font-extrabold text-emerald-300 mt-1">~36.500 ₺</span>
+        </button>
+
+        <button type="button" class="preset-formula-btn p-3 rounded-2xl bg-slate-950/70 border border-slate-800 hover:border-emerald-500/50 flex flex-col text-left transition group" data-pct="35.0">
+          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider group-hover:text-emerald-400 transition">Refah Payı</span>
+          <span class="text-base font-black text-white mt-0.5">%35,00</span>
+          <span class="text-xs font-semibold text-emerald-400 mt-1">~37.902 ₺</span>
+        </button>
+
+        <button type="button" class="preset-formula-btn p-3 rounded-2xl bg-slate-950/70 border border-slate-800 hover:border-emerald-500/50 flex flex-col text-left transition group col-span-2 sm:col-span-1" data-pct="40.0">
+          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider group-hover:text-emerald-400 transition">İşçi Talebi</span>
+          <span class="text-base font-black text-white mt-0.5">%40,00</span>
+          <span class="text-xs font-semibold text-emerald-400 mt-1">~39.306 ₺</span>
+        </button>
+
+      </div>
+    </section>
+
+    <!-- Interactive Controls Card (Slider & Direct Net Input) -->
+    <section class="bg-gradient-to-br from-slate-900 via-slate-900 to-[#0d1f19] border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
+      
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+        
+        <!-- Percentage Slider (8 cols) -->
+        <div class="md:col-span-7 space-y-3">
+          <div class="flex items-center justify-between">
+            <label for="pctSlider" class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+              <i class="fa-solid fa-sliders text-emerald-400"></i>
+              <span>Olası Zam Oranı:</span>
+            </label>
+            <div class="flex items-center gap-1.5">
+              <span id="displayPctBadge" class="text-2xl font-black text-emerald-400 font-mono">%30.00</span>
+            </div>
+          </div>
+
+          <input 
+            type="range" 
+            id="pctSlider" 
+            min="10" 
+            max="60" 
+            step="0.1" 
+            value="30.0" 
+            class="w-full h-3 bg-slate-950 rounded-lg appearance-none cursor-pointer slider-thumb accent-emerald-500 border border-slate-800"
+          >
+
+          <div class="flex justify-between text-[11px] font-semibold text-slate-500">
+            <span>%10</span>
+            <span>%20</span>
+            <span>%30 (Kulis)</span>
+            <span>%40</span>
+            <span>%50</span>
+            <span>%60</span>
+          </div>
+        </div>
+
+        <!-- Or Direct Net Input (5 cols) -->
+        <div class="md:col-span-5 bg-slate-950/70 border border-slate-800 rounded-2xl p-4 space-y-2">
+          <label for="directNetInput" class="block text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center justify-between">
+            <span>Veya Hedef Net Maaşı Yazın:</span>
+            <span class="text-[10px] text-slate-500 font-normal">Otomatik oran bulur</span>
+          </label>
+          <div class="relative">
+            <input 
+              type="text" 
+              id="directNetInput" 
+              inputmode="numeric" 
+              value="36.500" 
+              class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 focus:border-emerald-500 text-white font-black text-lg outline-none transition pr-10"
+              placeholder="Örn: 36.500"
+            >
+            <span class="absolute right-3.5 top-3 text-slate-400 font-bold">₺</span>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- MAIN RESULT DASHBOARD: Net Maaş & İşveren Maliyeti -->
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      
+      <!-- Card 1: NET ELE GEÇEN MAAŞ -->
+      <div class="bg-gradient-to-br from-emerald-950/40 via-slate-900 to-slate-900 border-2 border-emerald-500/50 rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden flex flex-col justify-between">
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+              <i class="fa-solid fa-wallet text-xs"></i> 2027 Net Asgari Ücret
+            </span>
+            <span id="netDifferenceBadge" class="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-emerald-500/20">
+              +8.423 ₺ Artış
+            </span>
+          </div>
+
+          <div>
+            <span class="text-xs text-slate-400 block font-medium">Çalışanın Cebine Girecek Net Tutar:</span>
+            <h2 id="resultNetMaaş" class="text-3xl sm:text-5xl font-black text-white tracking-tight mt-1 text-emerald-400">
+              36.498,15 ₺
+            </h2>
+          </div>
+
+          <!-- Comparison Bar (2026 vs 2027) -->
+          <div class="space-y-1.5 pt-2">
+            <div class="flex justify-between text-xs font-semibold text-slate-400">
+              <span>2026 Mevcut: 28.075,50 ₺</span>
+              <span id="resultGrowthRatio" class="text-emerald-400">%30,00 Büyüme</span>
+            </div>
+            <div class="w-full bg-slate-950 rounded-full h-3 overflow-hidden border border-slate-800 flex">
+              <div class="bg-slate-700 h-full" style="width: 77%;"></div>
+              <div id="growthBarFill" class="bg-emerald-500 h-full animate-pulse" style="width: 23%;"></div>
+            </div>
+          </div>
+
+          <!-- Employee Breakdown -->
+          <div class="space-y-2 pt-3 border-t border-slate-800 text-xs">
+            <div class="flex justify-between text-slate-300">
+              <span>Brüt Asgari Ücret:</span>
+              <strong id="resultBrütMaaş" class="text-white font-mono text-sm">42.939,00 ₺</strong>
+            </div>
+            <div class="flex justify-between text-slate-400">
+              <span>SGK İşçi Primi (%14):</span>
+              <span id="resultSgkIsci" class="font-mono text-rose-300">-6.011,46 ₺</span>
+            </div>
+            <div class="flex justify-between text-slate-400">
+              <span>İşsizlik Sigortası Primi (%1):</span>
+              <span id="resultIssizlikIsci" class="font-mono text-rose-300">-429,39 ₺</span>
+            </div>
+            <div class="flex justify-between text-emerald-400/90 font-medium text-[11px] bg-emerald-950/30 p-2 rounded-xl border border-emerald-900/40">
+              <span><i class="fa-solid fa-shield-halved mr-1"></i>Gelir ve Damga Vergisi:</span>
+              <span>0,00 ₺ (Yasal İstisna)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2: İŞVERENE TOPLAM MALİYET -->
+      <div class="bg-gradient-to-br from-indigo-950/40 via-slate-900 to-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl flex flex-col justify-between">
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/40">
+              <i class="fa-solid fa-briefcase text-xs"></i> İşverene Toplam Maliyet
+            </span>
+            <span class="text-xs text-slate-400">1 Çalışan İçin</span>
+          </div>
+
+          <div>
+            <span class="text-xs text-slate-400 block font-medium">Şirketin/İşverenin Kasasından Çıkacak:</span>
+            <h3 id="resultIsverenMaliyeti" class="text-3xl sm:text-4xl font-black text-white tracking-tight mt-1 text-indigo-300">
+              50.453,33 ₺
+            </h3>
+          </div>
+
+          <div class="space-y-2 pt-3 border-t border-slate-800 text-xs">
+            <div class="flex justify-between text-slate-300">
+              <span>Brüt Ücret:</span>
+              <span id="costBrut" class="font-mono">42.939,00 ₺</span>
+            </div>
+            <div class="flex justify-between text-slate-400">
+              <span>SGK İşveren Payı (%15,5 Teşvikli):</span>
+              <span id="costSgkIsveren" class="font-mono text-indigo-300">+6.655,55 ₺</span>
+            </div>
+            <div class="flex justify-between text-slate-400">
+              <span>İşsizlik Sigortası İşveren Payı (%2):</span>
+              <span id="costIssizlikIsveren" class="font-mono text-indigo-300">+858,78 ₺</span>
+            </div>
+            <div class="flex justify-between text-slate-400 text-[11px] pt-1 border-t border-slate-800/60">
+              <span>2026 Mevcut Maliyet:</span>
+              <span class="font-mono">38.810,25 ₺</span>
+            </div>
+          </div>
+
+          <!-- Share & Copy Buttons -->
+          <div class="pt-2 grid grid-cols-2 gap-2">
+            <button type="button" id="btnShareWhatsApp" class="py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition flex items-center justify-center gap-1.5">
+              <i class="fa-brands fa-whatsapp text-sm"></i>
+              <span>WhatsApp Paylaş</span>
+            </button>
+            <button type="button" id="btnShareX" class="py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs transition flex items-center justify-center gap-1.5 border border-slate-700">
+              <i class="fa-brands fa-x-twitter text-sm"></i>
+              <span>X'te Paylaş</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- 7 CRITICAL IMPACTED ECONOMIC INDICATORS -->
+    <section class="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl space-y-5">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
+        <div>
+          <h2 class="text-base font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-arrows-split-up-and-left text-amber-400"></i>
+            <span>Asgari Ücretle Beraber Değişecek 7 Kritik Kalem</span>
+          </h2>
+          <p class="text-xs text-slate-400">Seçtiğiniz zam oranına göre yasal taban ve tavanlar otomatik hesaplandı:</p>
+        </div>
+        <span class="text-xs font-semibold text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20 w-fit">
+          Otomatik Güncellenir
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 text-xs">
+        
+        <!-- Indicator 1: En Düşük İşsizlik Maaşı -->
+        <div class="p-4 rounded-2xl bg-slate-950/70 border border-slate-800/80 space-y-1">
+          <span class="text-slate-400 text-[11px] block">En Düşük İşsizlik Maaşı (%40)</span>
+          <strong id="indIssizlikMin" class="text-base font-black text-white block text-amber-300">17.045 ₺</strong>
+          <span class="text-[10px] text-slate-500">Damga vergisi kesintisi sonrası net</span>
+        </div>
+
+        <!-- Indicator 2: En Yüksek İşsizlik Maaşı -->
+        <div class="p-4 rounded-2xl bg-slate-950/70 border border-slate-800/80 space-y-1">
+          <span class="text-slate-400 text-[11px] block">En Yüksek İşsizlik Maaşı (%80)</span>
+          <strong id="indIssizlikMax" class="text-base font-black text-white block text-amber-300">34.090 ₺</strong>
+          <span class="text-[10px] text-slate-500">Son 4 aylık prime göre azami tavan</span>
+        </div>
+
+        <!-- Indicator 3: Kıdem Tazminatı Tabanı -->
+        <div class="p-4 rounded-2xl bg-slate-950/70 border border-slate-800/80 space-y-1">
+          <span class="text-slate-400 text-[11px] block">Kıdem Tazminatı Yıllık Tabanı</span>
+          <strong id="indKidemTaban" class="text-base font-black text-white block text-emerald-400">42.939 ₺</strong>
+          <span class="text-[10px] text-slate-500">1 yıllık çalışma karşılığı en az</span>
+        </div>
+
+        <!-- Indicator 4: GSS Primi -->
+        <div class="p-4 rounded-2xl bg-slate-950/70 border border-slate-800/80 space-y-1">
+          <span class="text-slate-400 text-[11px] block">Genel Sağlık Sigortası (GSS)</span>
+          <strong id="indGss" class="text-base font-black text-white block text-sky-300">1.288 ₺</strong>
+          <span class="text-[10px] text-slate-500">Brüt ücretin %3'ü (Aylık)</span>
+        </div>
+
+        <!-- Indicator 5: Askerlik / Doğum Borçlanması -->
+        <div class="p-4 rounded-2xl bg-slate-950/70 border border-slate-800/80 space-y-1">
+          <span class="text-slate-400 text-[11px] block">Doğum & Askerlik Borçlanması (Günlük)</span>
+          <strong id="indBorclanma" class="text-base font-black text-white block text-sky-300">458 ₺</strong>
+          <span class="text-[10px] text-slate-500">Günlük brütün %32'si</span>
+        </div>
+
+        <!-- Indicator 6: BES %3 Otomatik Kesinti -->
+        <div class="p-4 rounded-2xl bg-slate-950/70 border border-slate-800/80 space-y-1">
+          <span class="text-slate-400 text-[11px] block">Bireysel Emeklilik (BES %3)</span>
+          <strong id="indBes" class="text-base font-black text-white block text-slate-300">1.288 ₺</strong>
+          <span class="text-[10px] text-slate-500">Otomatik katılım çalışan kesintisi</span>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- GOOGLE FEATURED SNIPPET COMPARISON TABLE (Position 0 Target) -->
+    <section class="bg-gradient-to-r from-emerald-950/40 via-slate-900 to-slate-900 border border-emerald-500/30 rounded-3xl p-6 sm:p-7 shadow-xl space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
+        <div>
+          <h2 class="text-base sm:text-lg font-black text-white flex items-center gap-2">
+            <i class="fa-solid fa-table text-emerald-400"></i>
+            <span>2027 Asgari Ücret Masadaki Tüm Formüller Karşılaştırma Tablosu</span>
+          </h2>
+          <p class="text-xs text-slate-400">Google Arama Özeti & Komisyon Beklentileri</p>
+        </div>
+        <span class="text-[11px] font-bold text-emerald-300 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20 w-fit">
+          Resmi Verilerle Uyumlu
+        </span>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs text-slate-300">
+          <thead class="bg-slate-950/60 text-slate-400 font-bold uppercase text-[10px] tracking-wider border-b border-slate-800">
+            <tr>
+              <th class="py-3 px-3.5">Senaryo / Formül Adı</th>
+              <th class="py-3 px-3.5">Zam Oranı</th>
+              <th class="py-3 px-3.5 text-emerald-400 font-bold">Net Ele Geçen</th>
+              <th class="py-3 px-3.5">Brüt Asgari Ücret</th>
+              <th class="py-3 px-3.5">İşverene Maliyeti</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-800/60 font-medium">
+            <tr class="hover:bg-slate-800/30 transition">
+              <td class="py-3 px-3.5 font-bold text-white">2026 Mevcut (Baz)</td>
+              <td class="py-3 px-3.5 text-slate-500">-</td>
+              <td class="py-3 px-3.5 text-slate-300 font-bold">28.075,50 ₺</td>
+              <td class="py-3 px-3.5 text-slate-400">33.030,00 ₺</td>
+              <td class="py-3 px-3.5 text-slate-400">38.810,25 ₺</td>
+            </tr>
+            <tr class="hover:bg-slate-800/30 transition">
+              <td class="py-3 px-3.5 font-bold text-white">1. OVP Enflasyon Hedefi</td>
+              <td class="py-3 px-3.5 text-amber-300 font-bold">%28,40</td>
+              <td class="py-3 px-3.5 text-emerald-400 font-black">36.048,94 ₺</td>
+              <td class="py-3 px-3.5">42.410,52 ₺</td>
+              <td class="py-3 px-3.5">49.832,36 ₺</td>
+            </tr>
+            <tr class="hover:bg-slate-800/30 transition">
+              <td class="py-3 px-3.5 font-bold text-white">2. TCMB Yıl Sonu Raporu</td>
+              <td class="py-3 px-3.5 text-amber-300 font-bold">%29,50</td>
+              <td class="py-3 px-3.5 text-emerald-400 font-black">36.357,77 ₺</td>
+              <td class="py-3 px-3.5">42.773,85 ₺</td>
+              <td class="py-3 px-3.5">50.259,27 ₺</td>
+            </tr>
+            <tr class="hover:bg-slate-800/30 transition bg-emerald-500/10 border-l-4 border-emerald-500">
+              <td class="py-3 px-3.5 font-black text-white flex items-center gap-1.5">
+                <span>3. Piyasa & Kulis Güçlü İhtimal</span>
+                <span class="text-[9px] bg-emerald-500 text-slate-950 font-black px-1.5 py-0.2 rounded">POPÜLER</span>
+              </td>
+              <td class="py-3 px-3.5 text-emerald-300 font-black">%30,00</td>
+              <td class="py-3 px-3.5 text-emerald-300 font-black text-sm">36.498,15 ₺ (~36.500 ₺)</td>
+              <td class="py-3 px-3.5 font-bold text-white">42.939,00 ₺</td>
+              <td class="py-3 px-3.5 font-bold text-indigo-300">50.453,33 ₺</td>
+            </tr>
+            <tr class="hover:bg-slate-800/30 transition">
+              <td class="py-3 px-3.5 font-bold text-white">4. Refah Payı Dahil Üst Formül</td>
+              <td class="py-3 px-3.5 text-amber-300 font-bold">%35,00</td>
+              <td class="py-3 px-3.5 text-emerald-400 font-black">37.901,93 ₺</td>
+              <td class="py-3 px-3.5">44.590,50 ₺</td>
+              <td class="py-3 px-3.5">52.393,84 ₺</td>
+            </tr>
+            <tr class="hover:bg-slate-800/30 transition">
+              <td class="py-3 px-3.5 font-bold text-white">5. TÜRK-İŞ / İşçi Talebi</td>
+              <td class="py-3 px-3.5 text-amber-300 font-bold">%40,00</td>
+              <td class="py-3 px-3.5 text-emerald-400 font-black">39.305,70 ₺</td>
+              <td class="py-3 px-3.5">46.242,00 ₺</td>
+              <td class="py-3 px-3.5">54.334,35 ₺</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- FAQ SECTION (ACCORDION & SCHEMA BACKED) -->
+    <section class="max-w-4xl mx-auto space-y-4">
+      <div class="text-center mb-6">
+        <h2 class="text-xl sm:text-2xl font-black text-white tracking-tight">
+          2027 Asgari Ücret Hakkında Merak Edilenler
+        </h2>
+        <p class="text-slate-400 text-xs sm:text-sm">
+          Komisyon süreci, vergi istisnaları ve çalışan hakları
+        </p>
+      </div>
+
+      <div class="space-y-3 text-xs sm:text-sm">
+        
+        <details class="group bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-5 open:bg-slate-900 transition">
+          <summary class="flex justify-between items-center font-bold text-white cursor-pointer list-none">
+            <span class="flex items-center gap-2">
+              <i class="fa-solid fa-circle-question text-emerald-400"></i>
+              <span>2027 asgari ücret ne zaman açıklanacak?</span>
+            </span>
+            <i class="fa-solid fa-chevron-down text-xs text-slate-500 group-open:rotate-180 transition-transform"></i>
+          </summary>
+          <div class="pt-3 text-slate-400 leading-relaxed border-t border-slate-800/80 mt-2 space-y-2">
+            <p>
+              Çalışma ve Sosyal Güvenlik Bakanlığı ev sahipliğinde Asgari Ücret Tespit Komisyonu ilk toplantısını <strong>Aralık ayının ilk haftasında</strong> yapacaktır. 15 kişilik komisyon en az 3-4 oturum gerçekleştirir ve genellikle <strong>Aralık ayının son haftasında (yılbaşından önce)</strong> Cumhurbaşkanı tarafından yeni net ve brüt asgari ücret kamuoyuna duyurulur.
+            </p>
+          </div>
+        </details>
+
+        <details class="group bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-5 open:bg-slate-900 transition">
+          <summary class="flex justify-between items-center font-bold text-white cursor-pointer list-none">
+            <span class="flex items-center gap-2">
+              <i class="fa-solid fa-circle-question text-emerald-400"></i>
+              <span>Yüzde 30 zam olursa net maaş kaç TL olacak?</span>
+            </span>
+            <i class="fa-solid fa-chevron-down text-xs text-slate-500 group-open:rotate-180 transition-transform"></i>
+          </summary>
+          <div class="pt-3 text-slate-400 leading-relaxed border-t border-slate-800/80 mt-2 space-y-2">
+            <p>
+              2026 yılı net asgari ücreti 28.075,50 TL'dir. Yüzde 30 zam yapıldığında net maaş tam olarak <strong>36.498,15 TL</strong>'ye ulaşmakta, kulislerde bu tutarın düz olarak <strong>36.500 TL</strong> olarak yuvarlanması beklenmektedir. Brüt maaş ise <strong>42.939 TL</strong> olacaktır.
+            </p>
+          </div>
+        </details>
+
+        <details class="group bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-5 open:bg-slate-900 transition">
+          <summary class="flex justify-between items-center font-bold text-white cursor-pointer list-none">
+            <span class="flex items-center gap-2">
+              <i class="fa-solid fa-circle-question text-emerald-400"></i>
+              <span>Asgari ücretten vergi kesintisi yapılacak mı?</span>
+            </span>
+            <i class="fa-solid fa-chevron-down text-xs text-slate-500 group-open:rotate-180 transition-transform"></i>
+          </summary>
+          <div class="pt-3 text-slate-400 leading-relaxed border-t border-slate-800/80 mt-2 space-y-2">
+            <p>
+              <strong>Hayır.</strong> 2022 yılından beri yürürlükte olan 7349 sayılı Kanun uyarınca asgari ücretten <strong>Gelir Vergisi</strong> ve <strong>Damga Vergisi</strong> tamamen kaldırılmıştır. Brüt ücretten yalnızca %14 SGK işçi payı ve %1 İşsizlik sigortası payı (toplam %15) kesilir.
+            </p>
+          </div>
+        </details>
+
+        <details class="group bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-5 open:bg-slate-900 transition">
+          <summary class="flex justify-between items-center font-bold text-white cursor-pointer list-none">
+            <span class="flex items-center gap-2">
+              <i class="fa-solid fa-circle-question text-emerald-400"></i>
+              <span>Asgari ücret zammı diğer çalışanların maaşını nasıl etkiler?</span>
+            </span>
+            <i class="fa-solid fa-chevron-down text-xs text-slate-500 group-open:rotate-180 transition-transform"></i>
+          </summary>
+          <div class="pt-3 text-slate-400 leading-relaxed border-t border-slate-800/80 mt-2 space-y-2">
+            <p>
+              Tüm çalışanların maaşlarının asgari ücrete denk gelen kısmı gelir vergisi ve damga vergisinden muaf olduğu için, asgari ücret arttıkça diğer maaşlı çalışanların cebine giren vergi istisna tutarı da otomatik olarak artmaktadır.
+            </p>
+          </div>
+        </details>
+
+      </div>
+    </section>
+
+    <!-- INTERNAL LINKING HUB -->
+    <div class="max-w-4xl mx-auto pt-6 border-t border-slate-800">
+      <div class="bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 rounded-3xl p-6 space-y-3 text-xs">
+        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+          <i class="fa-solid fa-toolbox text-emerald-400"></i> İlgili Diğer Popüler Finans & Hukuk Araçlarımız:
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 pt-1">
+          <a href="../maas-hesaplayici/" class="p-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-emerald-500/50 flex flex-col gap-0.5 text-slate-200 hover:text-white transition group">
+            <span class="font-bold text-emerald-400 flex items-center gap-1.5"><i class="fa-solid fa-coins text-xs"></i> Brütten Nete Maaş</span>
+            <span class="text-[11px] text-slate-400">Gelir vergisi dilimli maaş bordrosu</span>
+          </a>
+          <a href="../tazminat-hesaplayici/" class="p-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-emerald-500/50 flex flex-col gap-0.5 text-slate-200 hover:text-white transition group">
+            <span class="font-bold text-emerald-400 flex items-center gap-1.5"><i class="fa-solid fa-briefcase text-xs"></i> Kıdem Tazminatı</span>
+            <span class="text-[11px] text-slate-400">İhbar & kıdem net hesaplama</span>
+          </a>
+          <a href="../sayac-sorgulama/" class="p-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-amber-500/50 flex flex-col gap-0.5 text-slate-200 hover:text-white transition group">
+            <span class="font-bold text-amber-300 flex items-center gap-1.5"><i class="fa-solid fa-bolt text-xs"></i> Sayaç 10 Yıl Muayene</span>
+            <span class="text-[11px] text-slate-400">Elektrik & gaz değişim sorgulama</span>
+          </a>
+          <a href="../miras-paylasimi-hesaplayici/" class="p-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-indigo-500/50 flex flex-col gap-0.5 text-slate-200 hover:text-white transition group">
+            <span class="font-bold text-indigo-300 flex items-center gap-1.5"><i class="fa-solid fa-sitemap text-xs"></i> Miras Kime Kalır?</span>
+            <span class="text-[11px] text-slate-400">TMK Zümre soyağacı hesaplayıcı</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800/80 bg-slate-900/60 py-8 text-xs text-slate-400 mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-2">
+          <span class="font-bold text-white">Pratik<span class="text-emerald-400">Base</span></span>
+          <span>•</span>
+          <span>2027 Asgari Ücret ve Zam Simülatörü</span>
+        </div>
+        <div class="flex items-center gap-6">
+          <span class="text-slate-500">© 2026 PratikBase</span>
+          <a href="../" class="hover:text-emerald-300 transition text-slate-300">Ana Sayfa</a>
+          <a href="../okey/" class="hover:text-emerald-300 transition text-slate-300">Online Okey</a>
+          <a href="../football-lottery/" class="hover:text-emerald-300 transition text-slate-300">Football Lottery</a>
+        </div>
+      </div>
+      <div class="pt-4 border-t border-slate-800/60 text-[11px] text-slate-500 leading-relaxed text-center sm:text-left">
+        <strong>Yasal Bilgilendirme:</strong> Bu sayfadaki hesaplama ve senaryolar, OVP hedefleri, TCMB enflasyon raporları ve basına yansıyan kulis verilerine dayalı simülasyonlardır. Resmi rakamlar Asgari Ücret Tespit Komisyonu kararı sonrasında Resmi Gazete'de yayımlanarak kesinleşir.
+      </div>
+    </div>
+  </footer>
+
+  <!-- Interactive JavaScript Engine -->
+  <script>
+    // Constants (2026 Base)
+    const BASE_2026_GROSS = 33030.00;
+    const BASE_2026_NET = 28075.50;
+    const BASE_2026_EMPLOYER_COST = 38810.25;
+
+    // Elements
+    const pctSlider = document.getElementById('pctSlider');
+    const displayPctBadge = document.getElementById('displayPctBadge');
+    const directNetInput = document.getElementById('directNetInput');
+    const presetBtns = document.querySelectorAll('.preset-formula-btn');
+
+    const resultNetMaaş = document.getElementById('resultNetMaaş');
+    const resultBrütMaaş = document.getElementById('resultBrütMaaş');
+    const resultSgkIsci = document.getElementById('resultSgkIsci');
+    const resultIssizlikIsci = document.getElementById('resultIssizlikIsci');
+    const netDifferenceBadge = document.getElementById('netDifferenceBadge');
+    const resultGrowthRatio = document.getElementById('resultGrowthRatio');
+    const growthBarFill = document.getElementById('growthBarFill');
+
+    const resultIsverenMaliyeti = document.getElementById('resultIsverenMaliyeti');
+    const costBrut = document.getElementById('costBrut');
+    const costSgkIsveren = document.getElementById('costSgkIsveren');
+    const costIssizlikIsveren = document.getElementById('costIssizlikIsveren');
+
+    // Indicators
+    const indIssizlikMin = document.getElementById('indIssizlikMin');
+    const indIssizlikMax = document.getElementById('indIssizlikMax');
+    const indKidemTaban = document.getElementById('indKidemTaban');
+    const indGss = document.getElementById('indGss');
+    const indBorclanma = document.getElementById('indBorclanma');
+    const indBes = document.getElementById('indBes');
+
+    const btnShareWhatsApp = document.getElementById('btnShareWhatsApp');
+    const btnShareX = document.getElementById('btnShareX');
+
+    // Number Formatter
+    function formatMoney(val) {
+      return val.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ₺';
+    }
+
+    function formatNumberSimple(val) {
+      return Math.round(val).toLocaleString('tr-TR') + ' ₺';
+    }
+
+    // Calculation Engine
+    function calculateFromPercentage(pct) {
+      pct = Math.max(0, Math.min(100, pct));
+      const ratio = 1 + (pct / 100);
+
+      const brut = BASE_2026_GROSS * ratio;
+      const sgkIsci = brut * 0.14;
+      const issizlikIsci = brut * 0.01;
+      const net = brut - sgkIsci - issizlikIsci; // 0.85 * brut
+
+      const diff = net - BASE_2026_NET;
+
+      // Employer Cost: Brut + SGK (%15.5 with regular incentive) + Unemployment (%2) = Brut * 1.175
+      const sgkIsveren = brut * 0.155;
+      const issizlikIsveren = brut * 0.02;
+      const isverenMaliyeti = brut + sgkIsveren + issizlikIsveren;
+
+      // Indicators
+      const issizlikMin = (brut * 0.40) * (1 - 0.00759); // net after stamp tax
+      const issizlikMax = (brut * 0.80) * (1 - 0.00759);
+      const kidemTaban = brut;
+      const gss = brut * 0.03;
+      const borclanmaGunluk = (brut / 30) * 0.32;
+      const bes = brut * 0.03;
+
+      // Update UI
+      displayPctBadge.textContent = '%' + pct.toFixed(2);
+      resultNetMaaş.textContent = formatMoney(net);
+      resultBrütMaaş.textContent = formatMoney(brut);
+      resultSgkIsci.textContent = '-' + formatMoney(sgkIsci);
+      resultIssizlikIsci.textContent = '-' + formatMoney(issizlikIsci);
+
+      netDifferenceBadge.textContent = '+' + formatNumberSimple(diff) + ' Artış';
+      resultGrowthRatio.textContent = '%' + pct.toFixed(2) + ' Büyüme';
+
+      // Bar fill (relative to 2026)
+      const fillPct = Math.min(45, (pct / 60) * 45);
+      growthBarFill.style.width = fillPct + '%';
+
+      resultIsverenMaliyeti.textContent = formatMoney(isverenMaliyeti);
+      costBrut.textContent = formatMoney(brut);
+      costSgkIsveren.textContent = '+' + formatMoney(sgkIsveren);
+      costIssizlikIsveren.textContent = '+' + formatMoney(issizlikIsveren);
+
+      indIssizlikMin.textContent = formatNumberSimple(issizlikMin);
+      indIssizlikMax.textContent = formatNumberSimple(issizlikMax);
+      indKidemTaban.textContent = formatNumberSimple(kidemTaban);
+      indGss.textContent = formatNumberSimple(gss);
+      indBorclanma.textContent = formatNumberSimple(borclanmaGunluk);
+      indBes.textContent = formatNumberSimple(bes);
+
+      // Sync slider if not active
+      if (document.activeElement !== pctSlider) {
+        pctSlider.value = pct.toFixed(1);
+      }
+
+      // Sync direct input if not active
+      if (document.activeElement !== directNetInput) {
+        directNetInput.value = Math.round(net).toLocaleString('tr-TR');
+      }
+
+      // Update Share Links
+      const shareText = `2027 Asgari Ücret Tahmin Simülasyonum: %${pct.toFixed(2)} zam ile Net ${formatNumberSimple(net)} (İşveren Maliyeti: ${formatNumberSimple(isverenMaliyeti)}). Seninki kaç? -> https://pratikbase.com/asgari-ucret-hesaplayici/`;
+      btnShareWhatsApp.onclick = () => {
+        window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(shareText), '_blank');
+      };
+      btnShareX.onclick = () => {
+        window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(shareText), '_blank');
+      };
+    }
+
+    // Slider Event
+    pctSlider.addEventListener('input', (e) => {
+      const val = parseFloat(e.target.value);
+      highlightActivePreset(val);
+      calculateFromPercentage(val);
+    });
+
+    // Direct Net Input Event
+    directNetInput.addEventListener('input', (e) => {
+      let raw = e.target.value.replace(/\D/g, '');
+      if (!raw) return;
+      const targetNet = parseFloat(raw);
+      if (targetNet > 0) {
+        // Calculate needed percentage: targetNet = BASE_2026_NET * (1 + pct / 100)
+        const pct = ((targetNet / BASE_2026_NET) - 1) * 100;
+        highlightActivePreset(pct);
+        calculateFromPercentage(pct);
+      }
+    });
+
+    // Preset Buttons
+    function highlightActivePreset(pct) {
+      presetBtns.forEach(btn => {
+        const p = parseFloat(btn.dataset.pct);
+        if (Math.abs(p - pct) < 0.2) {
+          btn.classList.add('bg-emerald-500/20', 'border-2', 'border-emerald-500', 'shadow-lg', 'shadow-emerald-500/20');
+          btn.classList.remove('bg-slate-950/70', 'border-slate-800');
+        } else {
+          btn.classList.remove('bg-emerald-500/20', 'border-2', 'border-emerald-500', 'shadow-lg', 'shadow-emerald-500/20');
+          btn.classList.add('bg-slate-950/70', 'border-slate-800');
+        }
+      });
+    }
+
+    presetBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const p = parseFloat(btn.dataset.pct);
+        highlightActivePreset(p);
+        calculateFromPercentage(p);
+      });
+    });
+
+    // Initial calculation (default 30%)
+    calculateFromPercentage(30.0);
+  </script>
+</body>
+</html>
