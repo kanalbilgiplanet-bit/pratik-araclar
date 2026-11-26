@@ -152,6 +152,7 @@
 
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=JetBrains+Mono:wght@600;700;800&display=swap" rel="stylesheet" />
   <script>
@@ -468,10 +469,11 @@
         </button>
 
         <!-- Player Profile Pill -->
-        <button onclick="openProfileModal()" class="flex items-center gap-2 pl-1.5 pr-2.5 py-1 rounded-xl bg-slate-900 hover:bg-slate-800 border border-emerald-500/30 transition">
+        <button onclick="openProfileModal()" class="flex items-center gap-1.5 sm:gap-2 pl-1.5 pr-2.5 py-1 rounded-xl bg-slate-900 hover:bg-slate-800 border border-emerald-500/30 transition group" title="Profilini ve Seviye İstatistiklerini Gör">
           <span id="navAvatar" class="w-6 h-6 rounded-lg bg-emerald-500/20 flex items-center justify-center text-sm">🦁</span>
-          <span id="navUsername" class="text-xs font-bold text-white max-w-[90px] sm:max-w-[130px] truncate">Oyuncu</span>
-          <i class="fa-solid fa-pen text-[9px] text-slate-400"></i>
+          <span id="navUsername" class="text-xs font-bold text-white max-w-[80px] sm:max-w-[120px] truncate">Oyuncu</span>
+          <span id="navLevelBadge" class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-md bg-amber-500/20 border border-amber-400/40 text-[9px] sm:text-[10px] font-mono font-black text-amber-300">Lv.1</span>
+          <i class="fa-solid fa-pen text-[9px] text-slate-400 group-hover:text-amber-300 transition"></i>
         </button>
       </div>
     </div>
@@ -562,32 +564,40 @@
         </div>
       </section>
 
-      <!-- Live Open Tables List -->
+      <!-- Live Open Tables & Leaderboard Card -->
       <section class="lg:col-span-7 rounded-3xl bg-slate-950/70 border border-emerald-800/60 p-5 flex flex-col space-y-4 shadow-xl">
         <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-          <div class="flex items-center gap-2.5">
-            <div class="w-9 h-9 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-base">
-              <i class="fa-solid fa-table-cells-large"></i>
-            </div>
-            <div>
-              <h3 class="font-extrabold text-base text-white flex items-center gap-2">
-                Açık Masalar
-                <span id="lobbyTableCount" class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[11px] font-mono">0</span>
-              </h3>
-              <p class="text-[11px] text-slate-400">Gerçek oyuncuların açtığı masalara anında katıl</p>
-            </div>
+          <div class="flex items-center gap-1.5 sm:gap-2">
+            <button type="button" id="tabBtnTables" onclick="switchLobbyTab('tables')" class="px-3 py-1.5 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 text-xs font-bold flex items-center gap-1.5 transition">
+              <i class="fa-solid fa-table-cells-large text-emerald-400"></i>
+              <span>Açık Masalar</span>
+              <span id="lobbyTableCount" class="px-1.5 py-0.2 rounded-full bg-emerald-500/30 text-[10px] font-mono">0</span>
+            </button>
+            <button type="button" id="tabBtnLeaderboard" onclick="switchLobbyTab('leaderboard')" class="px-3 py-1.5 rounded-xl bg-slate-900 text-slate-300 hover:text-white border border-slate-700 hover:border-slate-600 text-xs font-bold flex items-center gap-1.5 transition">
+              <i class="fa-solid fa-trophy text-amber-400"></i>
+              <span>Günün Şampiyonları</span>
+            </button>
           </div>
 
-          <button onclick="fetchLobbyTables(true)" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-bold text-slate-300 flex items-center gap-1.5 transition">
+          <button onclick="refreshCurrentLobbyTab()" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-bold text-slate-300 flex items-center gap-1.5 transition">
             <i class="fa-solid fa-rotate" id="lobbyRefreshIcon"></i>
-            <span>Yenile</span>
+            <span class="hidden sm:inline">Yenile</span>
           </button>
         </div>
 
+        <!-- Tables View -->
         <div id="lobbyTableList" class="space-y-2.5 max-h-[420px] overflow-y-auto custom-scroll pr-1">
           <div class="text-center py-10 text-slate-400 text-sm">
             <i class="fa-solid fa-spinner fa-spin text-emerald-400 text-xl mb-2"></i>
             <p>Açık masalar yükleniyor...</p>
+          </div>
+        </div>
+
+        <!-- Leaderboard View -->
+        <div id="lobbyLeaderboardList" class="hidden space-y-2 max-h-[420px] overflow-y-auto custom-scroll pr-1">
+          <div class="text-center py-10 text-slate-400 text-sm">
+            <i class="fa-solid fa-spinner fa-spin text-amber-400 text-xl mb-2"></i>
+            <p>Günün şampiyonları yükleniyor...</p>
           </div>
         </div>
       </section>
@@ -953,6 +963,12 @@
             <span id="mobileChatUnread" class="hidden absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-rose-500 text-white text-[10px] flex items-center justify-center font-bold">1</span>
           </button>
 
+          <!-- WhatsApp Invite Button -->
+          <button onclick="shareTableWhatsApp()" class="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 border border-emerald-400/40 text-white text-xs font-bold transition shadow active:scale-95" title="Arkadaşını WhatsApp ile masaya davet et">
+            <i class="fa-brands fa-whatsapp text-sm text-white"></i>
+            <span>Davet Et</span>
+          </button>
+
           <button onclick="returnToLobbyConfirm()" class="px-2.5 py-1.5 rounded-xl bg-rose-950/60 hover:bg-rose-900/70 border border-rose-500/40 text-rose-300 text-xs font-bold transition" title="Masadan Çık / Lobiye Dön">
             <i class="fa-solid fa-right-from-bracket"></i>
           </button>
@@ -1214,8 +1230,50 @@
     <div class="w-full max-w-md rounded-3xl bg-slate-950 border-2 border-emerald-500/50 p-6 space-y-5 shadow-2xl">
       <div class="text-center space-y-1">
         <div class="w-16 h-16 mx-auto rounded-2xl bg-emerald-500/20 border-2 border-emerald-400/50 flex items-center justify-center text-4xl shadow-lg" id="profilePreviewAvatar">🦁</div>
-        <h2 class="text-xl font-black text-white pt-1">Okey X'e Hoş Geldin!</h2>
-        <p class="text-xs text-slate-400">Kullanıcı adını belirle ve masalara katıl</p>
+        <h2 class="text-xl font-black text-white pt-1" id="profileModalHeading">Oyuncu Profili &amp; Kariyer</h2>
+        <p class="text-xs text-slate-400" id="profileModalSub">Seviyeni yükselt, galibiyet topla ve zirveye çık</p>
+      </div>
+
+      <!-- Profile Career Stats & Level Bar Card -->
+      <div id="profileCareerCard" class="p-3.5 rounded-2xl bg-slate-900/90 border border-amber-500/30 space-y-2.5">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="text-xl" id="profileLevelIcon">🌱</span>
+            <div>
+              <div class="text-xs font-black text-white flex items-center gap-1.5">
+                <span id="profileLevelTitle">Seviye 1: Çaylak</span>
+                <span id="profileLevelBadge" class="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 text-[10px] font-mono font-bold">0 XP</span>
+              </div>
+              <div class="text-[10px] text-slate-400 font-mono" id="profileXpRatio">0 / 300 XP (%0)</div>
+            </div>
+          </div>
+          <div class="text-right">
+            <span class="text-[10px] text-emerald-400 font-bold" id="profileWinRate">%0 Galibiyet</span>
+          </div>
+        </div>
+        <!-- XP Progress Bar -->
+        <div class="w-full h-2 rounded-full bg-slate-950 overflow-hidden border border-slate-800">
+          <div id="profileXpBarFill" class="h-full bg-gradient-to-r from-amber-400 to-emerald-400 rounded-full transition-all duration-700" style="width: 0%;"></div>
+        </div>
+        <!-- 4-Stat Grid -->
+        <div class="grid grid-cols-4 gap-1.5 pt-1 text-center font-mono">
+          <div class="p-1.5 rounded-xl bg-slate-950/70 border border-slate-800">
+            <div class="text-[9px] text-slate-400">Toplam XP</div>
+            <div id="profileStatTotalXp" class="text-xs font-black text-amber-300">0</div>
+          </div>
+          <div class="p-1.5 rounded-xl bg-slate-950/70 border border-slate-800">
+            <div class="text-[9px] text-slate-400">Galibiyet</div>
+            <div id="profileStatWins" class="text-xs font-black text-emerald-400">0</div>
+          </div>
+          <div class="p-1.5 rounded-xl bg-slate-950/70 border border-slate-800">
+            <div class="text-[9px] text-slate-400">Maç</div>
+            <div id="profileStatMatches" class="text-xs font-black text-white">0</div>
+          </div>
+          <div class="p-1.5 rounded-xl bg-slate-950/70 border border-slate-800">
+            <div class="text-[9px] text-slate-400">Okey Bitiş</div>
+            <div id="profileStatOkeys" class="text-xs font-black text-yellow-300">0</div>
+          </div>
+        </div>
       </div>
 
       <div class="space-y-3">
@@ -1371,6 +1429,32 @@
 
       <div id="scoreTableContainer" class="space-y-2">
         <!-- Player rows -->
+      </div>
+
+      <!-- Player XP Reward & Level Progress Card -->
+      <div id="scoreXpRewardCard" class="p-3.5 rounded-2xl bg-gradient-to-r from-amber-500/20 via-emerald-500/20 to-amber-500/20 border border-amber-400/50 space-y-2 shadow-lg">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="text-2xl" id="xpRewardIcon">🏆</span>
+            <div>
+              <div class="text-xs font-black text-amber-300" id="xpRewardTitle">Tebrikler! +450 Puan Kazandınız</div>
+              <div class="text-[10px] text-slate-300" id="xpRewardSubtitle">El Bitişi (+150 XP) • Şampiyonluk (+300 XP)</div>
+            </div>
+          </div>
+          <div class="text-right">
+            <div class="text-base font-black font-mono text-emerald-400" id="xpRewardAmount">+450 XP</div>
+            <div class="text-[10px] font-bold text-amber-300 font-mono" id="xpLevelBadge">Lv.1 Çaylak</div>
+          </div>
+        </div>
+        <div class="space-y-1">
+          <div class="flex justify-between text-[10px] font-mono text-slate-300">
+            <span>Seviye İlerlemesi</span>
+            <span id="xpBarRatio">0 / 300 XP (%0)</span>
+          </div>
+          <div class="w-full h-2 rounded-full bg-slate-900 overflow-hidden border border-slate-700">
+            <div id="xpBarFill" class="h-full bg-gradient-to-r from-amber-400 to-emerald-400 rounded-full transition-all duration-1000" style="width: 0%;"></div>
+          </div>
+        </div>
       </div>
 
       <!-- Auto Advance Countdown Banner -->
@@ -1829,6 +1913,185 @@
       return AVATARS[Math.floor(Math.random() * AVATARS.length)];
     }
 
+    /* =====================================================================
+       PROGRESSION & CAREER XP SYSTEM (LEVELS, STATS & LEADERBOARD)
+       ===================================================================== */
+    const LEVELS = [
+      { level: 1, title: 'Çaylak', minXp: 0, maxXp: 300, icon: '🌱' },
+      { level: 2, title: 'Oyuncu', minXp: 300, maxXp: 800, icon: '🎲' },
+      { level: 3, title: 'Usta', minXp: 800, maxXp: 1800, icon: '⭐' },
+      { level: 4, title: 'Şampiyon', minXp: 1800, maxXp: 3500, icon: '🏆' },
+      { level: 5, title: 'Efsane', minXp: 3500, maxXp: 6000, icon: '👑' },
+      { level: 6, title: 'Büyük Usta', minXp: 6000, maxXp: 10000, icon: '🔥' },
+      { level: 7, title: 'Okey Baronu', minXp: 10000, maxXp: 9999999, icon: '💎' }
+    ];
+
+    function getLevelInfo(xp = 0) {
+      let cur = LEVELS[0];
+      for (let i = 0; i < LEVELS.length; i++) {
+        if (xp >= LEVELS[i].minXp) cur = LEVELS[i];
+        else break;
+      }
+      const next = LEVELS.find(l => l.level === cur.level + 1);
+      const span = next ? (next.minXp - cur.minXp) : 1;
+      const progress = next ? Math.min(100, Math.floor(((xp - cur.minXp) / span) * 100)) : 100;
+      return { ...cur, nextLevel: next, progress };
+    }
+
+    function awardPlayerXP(amount, reason = '', statsDelta = {}) {
+      if (!profile) return 0;
+      profile.xp = (profile.xp || 0) + amount;
+      profile.wins = (profile.wins || 0) + (statsDelta.wins || 0);
+      profile.totalMatches = (profile.totalMatches || 0) + (statsDelta.totalMatches || 0);
+      profile.okeyFinishes = (profile.okeyFinishes || 0) + (statsDelta.okeyFinishes || 0);
+      profile.pairFinishes = (profile.pairFinishes || 0) + (statsDelta.pairFinishes || 0);
+
+      const info = getLevelInfo(profile.xp);
+      profile.level = info.level;
+
+      try {
+        localStorage.setItem('okey_profile', JSON.stringify(profile));
+      } catch (e) {}
+
+      updateProfileNavUI();
+      syncPlayerToLeaderboard();
+      return amount;
+    }
+
+    async function syncPlayerToLeaderboard() {
+      if (!profile || !profile.id || profile.id.startsWith('bot_')) return;
+      const todayKey = new Date().toISOString().slice(0, 10).replace(/-/g, '_');
+      const info = getLevelInfo(profile.xp || 0);
+      const payload = {
+        id: profile.id,
+        name: profile.name,
+        avatar: profile.avatar,
+        xp: profile.xp || 0,
+        level: info.level,
+        title: info.title,
+        icon: info.icon,
+        wins: profile.wins || 0,
+        matches: profile.totalMatches || 0,
+        updatedAt: Date.now()
+      };
+
+      try {
+        await fetch(`${RTDB_URL}/okey/leaderboard/daily/${todayKey}/${profile.id}.json`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      } catch (e) {}
+    }
+
+    let activeLobbyTab = 'tables';
+    function switchLobbyTab(tab) {
+      activeLobbyTab = tab;
+      const btnTables = document.getElementById('tabBtnTables');
+      const btnLb = document.getElementById('tabBtnLeaderboard');
+      const viewTables = document.getElementById('lobbyTableList');
+      const viewLb = document.getElementById('lobbyLeaderboardList');
+
+      if (!btnTables || !btnLb || !viewTables || !viewLb) return;
+
+      if (tab === 'tables') {
+        btnTables.className = 'px-3 py-1.5 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 text-xs font-bold flex items-center gap-1.5 transition';
+        btnLb.className = 'px-3 py-1.5 rounded-xl bg-slate-900 text-slate-300 hover:text-white border border-slate-700 hover:border-slate-600 text-xs font-bold flex items-center gap-1.5 transition';
+        viewTables.classList.remove('hidden');
+        viewLb.classList.add('hidden');
+        fetchLobbyTables();
+      } else {
+        btnLb.className = 'px-3 py-1.5 rounded-xl bg-amber-500/20 text-amber-300 border border-amber-400/40 text-xs font-bold flex items-center gap-1.5 transition';
+        btnTables.className = 'px-3 py-1.5 rounded-xl bg-slate-900 text-slate-300 hover:text-white border border-slate-700 hover:border-slate-600 text-xs font-bold flex items-center gap-1.5 transition';
+        viewTables.classList.add('hidden');
+        viewLb.classList.remove('hidden');
+        fetchDailyLeaderboard(true);
+      }
+    }
+
+    function refreshCurrentLobbyTab() {
+      if (activeLobbyTab === 'tables') fetchLobbyTables(true);
+      else fetchDailyLeaderboard(true);
+    }
+
+    async function fetchDailyLeaderboard(spin = false) {
+      const icon = document.getElementById('lobbyRefreshIcon');
+      if (spin && icon) icon.classList.add('fa-spin');
+      const listEl = document.getElementById('lobbyLeaderboardList');
+      if (!listEl) return;
+
+      const todayKey = new Date().toISOString().slice(0, 10).replace(/-/g, '_');
+      try {
+        const res = await fetch(`${RTDB_URL}/okey/leaderboard/daily/${todayKey}.json`);
+        const data = await res.json();
+        const players = [];
+
+        if (data) {
+          Object.values(data).forEach(p => {
+            if (p && p.name && typeof p.xp === 'number') players.push(p);
+          });
+        }
+
+        if (players.length < 3) {
+          const seeds = [
+            { id: 'seed1', name: 'AntalyaEfsanesi', avatar: '🦅', xp: 2450, level: 4, title: 'Şampiyon', icon: '🏆', wins: 8, matches: 11 },
+            { id: 'seed2', name: 'KurnazOkeyci', avatar: '🐺', xp: 1650, level: 3, title: 'Usta', icon: '⭐', wins: 5, matches: 7 },
+            { id: 'seed3', name: 'ZarUstası07', avatar: '🎯', xp: 1100, level: 3, title: 'Usta', icon: '⭐', wins: 4, matches: 6 }
+          ];
+          seeds.forEach(s => {
+            if (!players.some(p => p.name === s.name)) players.push(s);
+          });
+        }
+
+        players.sort((a, b) => b.xp - a.xp);
+
+        listEl.innerHTML = players.slice(0, 10).map((p, rank) => {
+          const medal = rank === 0 ? '🥇' : rank === 1 ? '🥈' : rank === 2 ? '🥉' : `#${rank + 1}`;
+          const isMe = profile && p.id === profile.id;
+          return `
+            <div class="p-3 rounded-2xl border ${isMe ? 'bg-amber-500/15 border-amber-400/50 shadow-md' : 'bg-slate-900/80 border-slate-800'} flex items-center justify-between gap-2.5">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <span class="w-7 text-center font-mono font-bold text-sm ${rank < 3 ? 'text-amber-300' : 'text-slate-400'}">${medal}</span>
+                <span class="text-xl">${escapeHtml(p.avatar || '🦁')}</span>
+                <div class="min-w-0">
+                  <div class="text-xs font-black text-white flex items-center gap-1.5 truncate">
+                    <span>${escapeHtml(p.name)}</span>
+                    ${isMe ? '<span class="px-1.5 py-0.2 rounded bg-emerald-500/30 text-emerald-300 text-[9px] font-sans font-bold">SEN</span>' : ''}
+                  </div>
+                  <div class="text-[10px] text-slate-400 font-mono flex items-center gap-1.5">
+                    <span class="text-amber-300">${p.icon || '🌱'} Lv.${p.level || 1} ${p.title || 'Çaylak'}</span>
+                    <span>•</span>
+                    <span class="text-emerald-400">${p.wins || 0}G / ${p.matches || 0}M</span>
+                  </div>
+                </div>
+              </div>
+              <div class="text-right shrink-0 font-mono">
+                <div class="text-xs font-black text-amber-300">${(p.xp || 0).toLocaleString()} XP</div>
+                <div class="text-[9px] text-slate-400">Puan</div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch (e) {
+        listEl.innerHTML = `<div class="p-4 text-center text-xs text-slate-400">Liderlik tablosu yüklenemedi.</div>`;
+      } finally {
+        if (spin && icon) icon.classList.remove('fa-spin');
+      }
+    }
+
+    function shareTableWhatsApp() {
+      if (!currentTableId) {
+        showToast('⚠️ Önce bir masaya katılmalısın!');
+        return;
+      }
+      const tName = (currentTable && currentTable.name) ? currentTable.name : 'Okey Masası';
+      const joinUrl = `${window.location.origin}/okey/?join=${currentTableId}`;
+      const msg = `🀄 Gel Okey X'te kapışalım!\n"${tName}" masama katıl, hemen oyna:\n${joinUrl}`;
+      const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`;
+      window.open(waUrl, '_blank');
+      showToast('📱 WhatsApp davet bağlantısı açıldı!');
+    }
+
     function initProfile() {
       let saved = null;
       try {
@@ -1836,15 +2099,30 @@
       } catch (e) {}
 
       if (saved && saved.id && saved.name && saved.avatar) {
-        profile = saved;
+        profile = {
+          xp: 0,
+          level: 1,
+          wins: 0,
+          totalMatches: 0,
+          okeyFinishes: 0,
+          pairFinishes: 0,
+          ...saved
+        };
         updateProfileNavUI();
         logPlayerLogin(profile);
+        syncPlayerToLeaderboard();
         checkUrlTableJoin();
       } else {
         profile = {
           id: 'plr_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
           name: generateRandomName(),
-          avatar: generateRandomAvatar()
+          avatar: generateRandomAvatar(),
+          xp: 0,
+          level: 1,
+          wins: 0,
+          totalMatches: 0,
+          okeyFinishes: 0,
+          pairFinishes: 0
         };
         openProfileModal(true);
       }
@@ -1866,6 +2144,45 @@
           ${av}
         </button>
       `).join('');
+
+      // Populate Career Stats & Progress
+      if (profile) {
+        const info = getLevelInfo(profile.xp || 0);
+        const iconEl = document.getElementById('profileLevelIcon');
+        const titleEl = document.getElementById('profileLevelTitle');
+        const badgeEl = document.getElementById('profileLevelBadge');
+        const ratioEl = document.getElementById('profileXpRatio');
+        const barFill = document.getElementById('profileXpBarFill');
+        const winRateEl = document.getElementById('profileWinRate');
+        const totalXpEl = document.getElementById('profileStatTotalXp');
+        const winsEl = document.getElementById('profileStatWins');
+        const matchesEl = document.getElementById('profileStatMatches');
+        const okeysEl = document.getElementById('profileStatOkeys');
+
+        if (iconEl) iconEl.textContent = info.icon;
+        if (titleEl) titleEl.textContent = `Seviye ${info.level}: ${info.title}`;
+        if (badgeEl) badgeEl.textContent = `${(profile.xp || 0).toLocaleString()} XP`;
+        if (ratioEl) {
+          if (info.nextLevel) {
+            const needed = info.nextLevel.minXp - info.minXp;
+            const curInLevel = (profile.xp || 0) - info.minXp;
+            ratioEl.textContent = `${curInLevel} / ${needed} XP (%${info.progress})`;
+          } else {
+            ratioEl.textContent = `Maksimum Seviye (Efsane)`;
+          }
+        }
+        if (barFill) barFill.style.width = `${info.progress}%`;
+
+        const totalM = profile.totalMatches || 0;
+        const wins = profile.wins || 0;
+        const winRate = totalM > 0 ? Math.round((wins / totalM) * 100) : 0;
+        if (winRateEl) winRateEl.textContent = `%${winRate} Galibiyet`;
+
+        if (totalXpEl) totalXpEl.textContent = (profile.xp || 0).toLocaleString();
+        if (winsEl) winsEl.textContent = wins;
+        if (matchesEl) matchesEl.textContent = totalM;
+        if (okeysEl) okeysEl.textContent = profile.okeyFinishes || 0;
+      }
 
       modal.classList.remove('hidden');
       if (!isFirstTime) input.focus();
@@ -1897,6 +2214,7 @@
       }
       const cleanName = rawName.length >= 2 ? rawName.slice(0, 20) : generateRandomName();
       profile = {
+        ...(profile || {}),
         id: (profile && profile.id) ? profile.id : ('plr_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7)),
         name: cleanName,
         avatar: tempAvatarSelection || generateRandomAvatar()
@@ -1908,14 +2226,21 @@
       updateProfileNavUI();
       document.getElementById('modalProfile').classList.add('hidden');
       logPlayerLogin(profile);
+      syncPlayerToLeaderboard();
       showToast(`Hoş geldin ${profile.avatar} ${profile.name}!`);
       checkUrlTableJoin();
     }
 
     function updateProfileNavUI() {
       if (!profile) return;
+      const info = getLevelInfo(profile.xp || 0);
       document.getElementById('navAvatar').textContent = profile.avatar;
       document.getElementById('navUsername').textContent = profile.name;
+      const lvlEl = document.getElementById('navLevelBadge');
+      if (lvlEl) {
+        lvlEl.textContent = `Lv.${info.level}`;
+        lvlEl.title = `${info.icon} ${info.title} (${(profile.xp || 0).toLocaleString()} XP)`;
+      }
       const tblInput = document.getElementById('inputTableName');
       if (tblInput && !tblInput.value) {
         tblInput.placeholder = `${profile.name}'in Masası`;
@@ -2821,7 +3146,11 @@
     function startLobbyPolling() {
       stopLobbyPolling();
       fetchLobbyTables();
-      lobbyPollTimer = setInterval(() => fetchLobbyTables(false), 3500);
+      fetchDailyLeaderboard();
+      lobbyPollTimer = setInterval(() => {
+        if (activeLobbyTab === 'tables') fetchLobbyTables(false);
+        else fetchDailyLeaderboard(false);
+      }, 3500);
     }
     function stopLobbyPolling() {
       if (lobbyPollTimer) { clearInterval(lobbyPollTimer); lobbyPollTimer = null; }
@@ -4828,6 +5157,99 @@
           </div>
         `;
       }).join('');
+
+      // ==========================================
+      // CAREER XP & REWARDS CALCULATION
+      // ==========================================
+      const isWinner = res.winnerSeat === mySeatIndex;
+      let handXp = 0;
+      let handXpDesc = [];
+      const statsDelta = {};
+
+      if (isWinner) {
+        if (res.finishType === 'okey') {
+          handXp += 500;
+          handXpDesc.push('Okey Atarak Bitiş (+500 XP)');
+          statsDelta.okeyFinishes = 1;
+        } else if (res.finishType === 'pair') {
+          handXp += 250;
+          handXpDesc.push('Çiftten Bitiş (+250 XP)');
+          statsDelta.pairFinishes = 1;
+        } else {
+          handXp += 100;
+          handXpDesc.push('El Galibiyeti (+100 XP)');
+        }
+        if (res.color === 'blue' || res.color === 'yellow') {
+          handXp += 150;
+          handXpDesc.push('Renk Çarpanı Bonusu (+150 XP)');
+        }
+      } else {
+        handXp += 20;
+        handXpDesc.push('El Katılımı (+20 XP)');
+      }
+
+      let matchXp = 0;
+      let matchRank = -1;
+      if (isMatchOver) {
+        matchRank = rows.findIndex(r => r.idx === mySeatIndex) + 1;
+        statsDelta.totalMatches = 1;
+        if (matchRank === 1) {
+          matchXp = 300;
+          handXpDesc.push('🏆 Maç Şampiyonluğu (+300 XP)');
+          statsDelta.wins = 1;
+          if (window.confetti) {
+            try {
+              confetti({ particleCount: 90, spread: 75, origin: { y: 0.55 } });
+            } catch (_) {}
+          }
+        } else if (matchRank === 2) {
+          matchXp = 150;
+          handXpDesc.push('🥈 Maç 2.liği (+150 XP)');
+        } else if (matchRank === 3) {
+          matchXp = 75;
+          handXpDesc.push('🥉 Maç 3.lüğü (+75 XP)');
+        } else {
+          matchXp = 25;
+          handXpDesc.push('Teselli Puanı (+25 XP)');
+        }
+      }
+
+      const totalRoundXp = handXp + matchXp;
+      awardPlayerXP(totalRoundXp, isMatchOver ? 'Maç Sonu' : 'El Sonu', statsDelta);
+
+      // Render XP Reward Card
+      const xpCard = document.getElementById('scoreXpRewardCard');
+      if (xpCard) {
+        const lvlInfo = getLevelInfo(profile ? profile.xp : 0);
+        const iconEl = document.getElementById('xpRewardIcon');
+        const titleEl = document.getElementById('xpRewardTitle');
+        const subEl = document.getElementById('xpRewardSubtitle');
+        const amountEl = document.getElementById('xpRewardAmount');
+        const badgeEl = document.getElementById('xpLevelBadge');
+        const ratioEl = document.getElementById('xpBarRatio');
+        const fillEl = document.getElementById('xpBarFill');
+
+        if (iconEl) iconEl.textContent = matchRank === 1 ? '🏆' : isWinner ? '⭐' : '🎖️';
+        if (titleEl) {
+          titleEl.textContent = matchRank === 1
+            ? `🏆 TEBRİKLER! MAÇ ŞAMPİYONU OLDUNUZ!`
+            : isWinner
+            ? `⭐ TEBRİKLER! ELİ KAZANDINIZ!`
+            : `🎖️ El Puanı Kazandınız`;
+        }
+        if (subEl) subEl.textContent = handXpDesc.join(' • ');
+        if (amountEl) amountEl.textContent = `+${totalRoundXp} XP`;
+        if (badgeEl) badgeEl.textContent = `${lvlInfo.icon} Lv.${lvlInfo.level} ${lvlInfo.title}`;
+
+        if (lvlInfo.nextLevel) {
+          const needed = lvlInfo.nextLevel.minXp - lvlInfo.minXp;
+          const curInLevel = (profile ? profile.xp : 0) - lvlInfo.minXp;
+          if (ratioEl) ratioEl.textContent = `${curInLevel} / ${needed} XP (%${lvlInfo.progress})`;
+        } else {
+          if (ratioEl) ratioEl.textContent = `Maksimum Seviye (Efsane)`;
+        }
+        if (fillEl) fillEl.style.width = `${lvlInfo.progress}%`;
+      }
 
       if (nextRoundTimer) {
         clearInterval(nextRoundTimer);
