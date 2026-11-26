@@ -332,6 +332,96 @@
     .draw-highlight {
       animation: pulseBorder 1.4s infinite;
     }
+
+    /* Touch Drag Ghost Tile */
+    #touchDragGhost {
+      position: fixed;
+      pointer-events: none;
+      z-index: 99999;
+      width: 46px;
+      height: 60px;
+      transform: translate(-50%, -60%) scale(1.15) rotate(2deg);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.75), 0 0 0 2.5px #fbbf24;
+      border-radius: 8px;
+      opacity: 0.96;
+      display: none;
+    }
+
+    /* Slot Drop Hover */
+    .slot-drop-hover {
+      background-color: rgba(251, 191, 36, 0.3) !important;
+      box-shadow: 0 0 0 2px #fbbf24 !important;
+      transform: scale(1.06);
+    }
+
+    /* Discard Drop Zone Active Glow */
+    .discard-drop-active {
+      background-color: rgba(245, 158, 11, 0.3) !important;
+      border-color: #fbbf24 !important;
+      box-shadow: 0 0 25px rgba(245, 158, 11, 0.8) !important;
+      transform: scale(1.12) !important;
+      transition: all 0.15s ease;
+    }
+
+    /* Finish Drop Zone Active Glow */
+    .finish-drop-active {
+      background-color: rgba(16, 185, 129, 0.35) !important;
+      border-color: #10b981 !important;
+      box-shadow: 0 0 30px rgba(16, 185, 129, 0.9) !important;
+      transform: scale(1.12) !important;
+      transition: all 0.15s ease;
+    }
+
+    /* Mobile Responsive Istaka Sizing (Portrait) */
+    @media (max-width: 640px) {
+      .wood-rack {
+        padding: 3px !important;
+        border-radius: 12px !important;
+      }
+      .rack-row {
+        min-width: 0 !important;
+        gap: 1.5px !important;
+        padding: 2px !important;
+      }
+      .rack-slot {
+        height: 48px !important;
+        min-width: 0 !important;
+      }
+      .rack-slot .okey-tile {
+        height: 48px !important;
+        border-radius: 6px !important;
+        padding: 1px !important;
+      }
+      .rack-slot .okey-tile span.font-mono {
+        font-size: 14px !important;
+      }
+      .rack-slot .okey-tile span.text-xl,
+      .rack-slot .okey-tile span.text-2xl {
+        font-size: 16px !important;
+      }
+      .felt-table {
+        min-height: 250px !important;
+        padding: 8px 6px !important;
+      }
+    }
+
+    /* Landscape Mode Mobile Optimization (Hides top sticky header during live gameplay to give max space) */
+    @media (max-height: 500px) and (orientation: landscape) {
+      header.sticky {
+        display: none !important;
+      }
+      #screenGame {
+        padding-top: 4px !important;
+        padding-bottom: 4px !important;
+      }
+      .felt-table {
+        min-height: 195px !important;
+        padding: 6px 10px !important;
+      }
+      .rack-slot {
+        height: 50px !important;
+      }
+    }
   </style>
 </head>
 <body class="flex flex-col select-none">
@@ -824,6 +914,17 @@
     <!-- Left/Center: Main Felt Table & Istaka -->
     <div class="flex-1 flex flex-col gap-2.5 min-w-0">
 
+      <!-- Mobile Landscape Orientation Recommendation Banner -->
+      <div id="mobileOrientationHint" class="hidden items-center justify-between px-3 py-1.5 rounded-xl bg-amber-500/20 border border-amber-400/40 text-amber-300 text-[11px] font-bold shadow-md transition-all">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-mobile-screen-button text-sm rotate-90 animate-pulse text-amber-400"></i>
+          <span>Daha geniş masa ve büyük taşlar için telefonunuzu yatay çevirebilirsiniz!</span>
+        </div>
+        <button onclick="dismissOrientationHint()" class="text-amber-400/80 hover:text-white p-1 rounded text-xs active:scale-95" title="Kapat">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
       <!-- Match Info & Active Okey Color Multiplier Bar -->
       <div class="flex flex-wrap items-center justify-between gap-2 px-3 py-2 rounded-2xl bg-slate-950/80 border border-emerald-800/60">
         <div class="flex items-center gap-2 sm:gap-3">
@@ -955,7 +1056,7 @@
 
                 <!-- Indicator Tile (Gösterge) & Finish Zone -->
                 <div class="flex flex-col items-center gap-1">
-                  <div id="indicatorHalo" onclick="attemptFinishWithSelected()" ondragover="event.preventDefault()" ondrop="handleDropOnFinish(event)" class="p-1.5 rounded-2xl border-2 transition cursor-pointer relative group" title="Bitirmek için 15. taşı buraya bırak veya seçip tıkla">
+                  <div id="indicatorHalo" onclick="attemptFinishWithSelected()" ondragover="event.preventDefault()" ondragenter="this.classList.add('finish-drop-active')" ondragleave="this.classList.remove('finish-drop-active')" ondrop="handleDropOnFinish(event)" class="p-1.5 rounded-2xl border-2 transition cursor-pointer relative group finish-dropzone" title="Bitirmek için 15. taşı buraya bırak veya seçip tıkla">
                     <div id="indicatorTileBox"></div>
                     <div class="absolute -top-2.5 -right-2.5 px-1.5 py-0.5 rounded-full bg-amber-500 text-slate-950 text-[9px] font-black shadow">
                       GÖSTERGE
@@ -974,7 +1075,7 @@
           </div>
 
           <!-- RIGHT PLAYER (Seat +1) — YOUR DISCARDS GO HERE -->
-          <div class="col-span-3 flex flex-col items-end gap-1.5">
+          <div class="col-span-3 flex flex-col items-end gap-1.5 my-discard-dropzone" ondragover="event.preventDefault()" ondrop="handleDropOnDiscard(event)">
             <div id="seatBoxRight" class="flex flex-col sm:flex-row items-center gap-1.5 px-2.5 py-1.5 rounded-2xl bg-slate-950/75 border border-slate-700/80 transition max-w-full">
               <span id="seatAvatarRight" class="text-lg">🤖</span>
               <div class="leading-tight text-center sm:text-left min-w-0">
@@ -984,7 +1085,7 @@
             </div>
             <!-- My Discard Drop Zone -->
             <div class="flex flex-col items-center">
-              <div id="myDiscardContainer" onclick="discardSelectedTile()" ondragover="event.preventDefault()" ondrop="handleDropOnDiscard(event)" class="cursor-pointer rounded-xl p-1 transition" title="Seçili taşı buraya at">
+              <div id="myDiscardContainer" onclick="discardSelectedTile()" ondragover="event.preventDefault()" ondragenter="this.classList.add('discard-drop-active')" ondragleave="this.classList.remove('discard-drop-active')" ondrop="handleDropOnDiscard(event)" class="cursor-pointer rounded-xl p-1 transition" title="Seçili taşı buraya at veya sürükle">
                 <div class="w-11 h-14 sm:w-12 sm:h-16 rounded-lg border-2 border-dashed border-amber-400/40 flex items-center justify-center text-[10px] text-amber-200/50 font-bold text-center leading-tight">
                   TAŞ<br/>AT
                 </div>
@@ -1061,11 +1162,11 @@
       </div>
 
       <!-- WALNUT WOOD ISTAKA (2 ROWS x 14 SLOTS) -->
-      <div id="playerRackWrapper" class="wood-rack rounded-2xl p-1.5 sm:p-3 space-y-1 sm:space-y-2 overflow-x-auto custom-scroll transition-all duration-300">
-        <div id="rackRow0" class="rack-row rounded-xl p-1 sm:p-1.5 grid grid-cols-14 gap-0.5 sm:gap-1 min-w-[480px] sm:min-w-[540px]" style="grid-template-columns: repeat(14, minmax(0, 1fr));">
+      <div id="playerRackWrapper" class="wood-rack rounded-2xl p-1 sm:p-3 space-y-1 sm:space-y-2 overflow-x-auto custom-scroll transition-all duration-300">
+        <div id="rackRow0" class="rack-row rounded-xl p-0.5 sm:p-1.5 grid grid-cols-14 gap-0.5 sm:gap-1" style="grid-template-columns: repeat(14, minmax(0, 1fr));">
           <!-- 14 slots -->
         </div>
-        <div id="rackRow1" class="rack-row rounded-xl p-1 sm:p-1.5 grid grid-cols-14 gap-0.5 sm:gap-1 min-w-[480px] sm:min-w-[540px]" style="grid-template-columns: repeat(14, minmax(0, 1fr));">
+        <div id="rackRow1" class="rack-row rounded-xl p-0.5 sm:p-1.5 grid grid-cols-14 gap-0.5 sm:gap-1" style="grid-template-columns: repeat(14, minmax(0, 1fr));">
           <!-- 14 slots -->
         </div>
       </div>
@@ -1468,6 +1569,9 @@
       </button>
     </div>
   </aside>
+
+  <!-- Touch Drag Ghost Element -->
+  <div id="touchDragGhost"></div>
 
   <!-- Toast Notification -->
   <div id="toastBox" class="fixed bottom-4 left-1/2 -translate-x-1/2 z-[60] hidden px-4 py-2.5 rounded-2xl bg-slate-900 border border-amber-500/50 text-white text-xs font-bold shadow-2xl"></div>
@@ -2116,6 +2220,9 @@
         const el = document.getElementById(id);
         if (el) el.classList.toggle('hidden', id !== screenId);
       });
+      if (screenId === 'screenGame') {
+        checkMobileOrientation();
+      }
     }
 
     async function fetchLobbyTables(spinIcon = false) {
@@ -3073,6 +3180,37 @@
       `;
     }
 
+    function clearDropZoneHighlights() {
+      document.querySelectorAll('.slot-drop-hover').forEach(el => el.classList.remove('slot-drop-hover'));
+      document.querySelectorAll('.discard-drop-active').forEach(el => el.classList.remove('discard-drop-active'));
+      document.querySelectorAll('.finish-drop-active').forEach(el => el.classList.remove('finish-drop-active'));
+    }
+
+    function checkMobileOrientation() {
+      const banner = document.getElementById('mobileOrientationHint');
+      if (!banner) return;
+      const gameScreen = document.getElementById('screenGame');
+      const isGameVisible = gameScreen && !gameScreen.classList.contains('hidden');
+      const isMobilePortrait = window.innerWidth <= 640 && window.innerHeight > window.innerWidth;
+      const isDismissed = sessionStorage.getItem('okey_dismiss_orient_hint') === '1';
+      if (isGameVisible && isMobilePortrait && !isDismissed) {
+        banner.classList.remove('hidden');
+        banner.classList.add('flex');
+      } else {
+        banner.classList.remove('flex');
+        banner.classList.add('hidden');
+      }
+    }
+
+    function dismissOrientationHint() {
+      sessionStorage.setItem('okey_dismiss_orient_hint', '1');
+      const banner = document.getElementById('mobileOrientationHint');
+      if (banner) {
+        banner.classList.remove('flex');
+        banner.classList.add('hidden');
+      }
+    }
+
     function renderRack() {
       const gs = currentTable ? currentTable.gameState : null;
       const okey = gs ? gs.okey : null;
@@ -3087,13 +3225,15 @@
           const isSel = selectedSlotIdx === i;
           html += `
             <div
-              class="h-14 sm:h-16 rounded-lg flex items-center justify-center ${tile ? '' : 'hover:bg-white/5 cursor-pointer'}"
+              data-slot-idx="${i}"
+              class="rack-slot h-14 sm:h-16 rounded-lg flex items-center justify-center relative ${tile ? 'cursor-grab active:cursor-grabbing touch-none' : 'hover:bg-white/5 cursor-pointer'}"
               onclick="handleRackSlotClick(${i})"
               ondblclick="handleRackDoubleClick(${i})"
               draggable="${tile ? 'true' : 'false'}"
               ondragstart="handleDragStart(event, ${i})"
               ondragover="event.preventDefault()"
               ondrop="handleDropOnSlot(event, ${i})"
+              ontouchstart="handleRackTouchStart(event, ${i})"
             >
               ${tile ? renderTileHtml(tile, okey, 'rack', isSel) : ''}
             </div>
@@ -3142,16 +3282,28 @@
       myConsecutiveTimeouts = 0;
       dragSourceSlotIdx = slotIdx;
       selectedSlotIdx = slotIdx;
-      e.dataTransfer.setData('text/plain', String(slotIdx));
+      if (e.dataTransfer) {
+        e.dataTransfer.setData('text/plain', String(slotIdx));
+        e.dataTransfer.effectAllowed = 'move';
+      }
     }
 
     function handleDropOnSlot(e, targetIdx) {
       e.preventDefault();
+      clearDropZoneHighlights();
       myConsecutiveTimeouts = 0;
-      if (dragSourceSlotIdx === -1 || dragSourceSlotIdx === targetIdx) return;
+      let source = dragSourceSlotIdx;
+      if (source === -1 && e.dataTransfer) {
+        const raw = e.dataTransfer.getData('text/plain');
+        if (raw !== '') source = parseInt(raw, 10);
+      }
+      if (source === -1 || isNaN(source) || source === targetIdx) {
+        dragSourceSlotIdx = -1;
+        return;
+      }
       const temp = rackSlots[targetIdx];
-      rackSlots[targetIdx] = rackSlots[dragSourceSlotIdx];
-      rackSlots[dragSourceSlotIdx] = temp;
+      rackSlots[targetIdx] = rackSlots[source];
+      rackSlots[source] = temp;
       dragSourceSlotIdx = -1;
       selectedSlotIdx = -1;
       Sound.tileClack();
@@ -3160,8 +3312,14 @@
 
     function handleDropOnDiscard(e) {
       e.preventDefault();
-      if (dragSourceSlotIdx !== -1) {
-        selectedSlotIdx = dragSourceSlotIdx;
+      clearDropZoneHighlights();
+      let source = dragSourceSlotIdx;
+      if (source === -1 && e.dataTransfer) {
+        const raw = e.dataTransfer.getData('text/plain');
+        if (raw !== '') source = parseInt(raw, 10);
+      }
+      if (source !== -1 && !isNaN(source)) {
+        selectedSlotIdx = source;
         dragSourceSlotIdx = -1;
         discardSelectedTile();
       }
@@ -3169,11 +3327,169 @@
 
     function handleDropOnFinish(e) {
       e.preventDefault();
-      if (dragSourceSlotIdx !== -1) {
-        selectedSlotIdx = dragSourceSlotIdx;
+      clearDropZoneHighlights();
+      let source = dragSourceSlotIdx;
+      if (source === -1 && e.dataTransfer) {
+        const raw = e.dataTransfer.getData('text/plain');
+        if (raw !== '') source = parseInt(raw, 10);
+      }
+      if (source !== -1 && !isNaN(source)) {
+        selectedSlotIdx = source;
         dragSourceSlotIdx = -1;
         attemptFinishWithSelected();
       }
+    }
+
+    /* =====================================================================
+       TOUCH DRAG & DROP FOR MOBILE (IOS & ANDROID)
+       ===================================================================== */
+    let touchDragState = {
+      pending: false,
+      active: false,
+      sourceIdx: -1,
+      startX: 0,
+      startY: 0,
+      currentHover: null,
+      hoverType: null // 'slot' | 'discard' | 'finish'
+    };
+
+    function handleRackTouchStart(e, slotIdx) {
+      if (!rackSlots[slotIdx]) return;
+      myConsecutiveTimeouts = 0;
+      const touch = e.touches[0];
+      touchDragState = {
+        pending: true,
+        active: false,
+        sourceIdx: slotIdx,
+        startX: touch.clientX,
+        startY: touch.clientY,
+        currentHover: null,
+        hoverType: null
+      };
+    }
+
+    function handleTouchMoveGlobal(e) {
+      if (!touchDragState.pending && !touchDragState.active) return;
+      const touch = e.touches[0];
+      const dx = touch.clientX - touchDragState.startX;
+      const dy = touch.clientY - touchDragState.startY;
+
+      // Start drag only if movement exceeds 6px (distinguish tap from drag)
+      if (!touchDragState.active) {
+        if (Math.hypot(dx, dy) > 6) {
+          touchDragState.active = true;
+          selectedSlotIdx = touchDragState.sourceIdx;
+          const ghost = document.getElementById('touchDragGhost');
+          if (ghost) {
+            const gs = currentTable ? currentTable.gameState : null;
+            const okey = gs ? gs.okey : null;
+            const tile = rackSlots[touchDragState.sourceIdx];
+            ghost.innerHTML = tile ? renderTileHtml(tile, okey, 'rack', false) : '';
+            ghost.style.display = 'block';
+            ghost.style.left = `${touch.clientX}px`;
+            ghost.style.top = `${touch.clientY}px`;
+          }
+          if (navigator.vibrate) {
+            try { navigator.vibrate(20); } catch (_) {}
+          }
+        } else {
+          return;
+        }
+      }
+
+      // Drag is active -> prevent screen scroll
+      e.preventDefault();
+      const ghost = document.getElementById('touchDragGhost');
+      if (ghost) {
+        ghost.style.left = `${touch.clientX}px`;
+        ghost.style.top = `${touch.clientY}px`;
+      }
+
+      // Element under touch point
+      clearDropZoneHighlights();
+      const elem = document.elementFromPoint(touch.clientX, touch.clientY);
+      if (!elem) {
+        touchDragState.currentHover = null;
+        touchDragState.hoverType = null;
+        return;
+      }
+
+      const discardZone = elem.closest('.my-discard-dropzone, #myDiscardContainer');
+      const finishZone = elem.closest('.finish-dropzone, #indicatorHalo');
+      const slotElem = elem.closest('[data-slot-idx]');
+
+      if (discardZone) {
+        discardZone.classList.add('discard-drop-active');
+        touchDragState.currentHover = discardZone;
+        touchDragState.hoverType = 'discard';
+      } else if (finishZone) {
+        finishZone.classList.add('finish-drop-active');
+        touchDragState.currentHover = finishZone;
+        touchDragState.hoverType = 'finish';
+      } else if (slotElem) {
+        const slotIdx = parseInt(slotElem.getAttribute('data-slot-idx'), 10);
+        if (!isNaN(slotIdx) && slotIdx !== touchDragState.sourceIdx) {
+          slotElem.classList.add('slot-drop-hover');
+          touchDragState.currentHover = slotElem;
+          touchDragState.hoverType = 'slot';
+        } else {
+          touchDragState.currentHover = null;
+          touchDragState.hoverType = null;
+        }
+      } else {
+        touchDragState.currentHover = null;
+        touchDragState.hoverType = null;
+      }
+    }
+
+    function handleTouchEndGlobal(e) {
+      if (!touchDragState.pending && !touchDragState.active) return;
+      const ghost = document.getElementById('touchDragGhost');
+      if (ghost) {
+        ghost.style.display = 'none';
+        ghost.innerHTML = '';
+      }
+      clearDropZoneHighlights();
+
+      if (touchDragState.active) {
+        const sourceIdx = touchDragState.sourceIdx;
+        const hoverType = touchDragState.hoverType;
+        const currentHover = touchDragState.currentHover;
+
+        if (hoverType === 'slot' && currentHover) {
+          const targetIdx = parseInt(currentHover.getAttribute('data-slot-idx'), 10);
+          if (!isNaN(targetIdx) && targetIdx !== sourceIdx) {
+            const temp = rackSlots[targetIdx];
+            rackSlots[targetIdx] = rackSlots[sourceIdx];
+            rackSlots[sourceIdx] = temp;
+            selectedSlotIdx = -1;
+            Sound.tileClack();
+            renderRack();
+          }
+        } else if (hoverType === 'discard') {
+          selectedSlotIdx = sourceIdx;
+          const gs = currentTable ? currentTable.gameState : null;
+          if (gs && gs.turn === mySeatIndex && gs.phase === 'discard') {
+            discardSelectedTile();
+          } else {
+            showToast('Sıra sizde değilken veya taş çekmeden taş atamazsınız!', 'warning');
+            renderRack();
+          }
+        } else if (hoverType === 'finish') {
+          selectedSlotIdx = sourceIdx;
+          attemptFinishWithSelected();
+        }
+      }
+
+      touchDragState = {
+        pending: false,
+        active: false,
+        sourceIdx: -1,
+        startX: 0,
+        startY: 0,
+        currentHover: null,
+        hoverType: null
+      };
     }
 
     function autoSortRack(mode = 'runs', silent = false) {
@@ -4944,6 +5260,13 @@
       initProfile();
       startLobbyPolling();
       checkPrivacyConsent();
+
+      // Mobile Touch Drag & Orientation Listeners
+      window.addEventListener('touchmove', handleTouchMoveGlobal, { passive: false });
+      window.addEventListener('touchend', handleTouchEndGlobal);
+      window.addEventListener('touchcancel', handleTouchEndGlobal);
+      window.addEventListener('resize', checkMobileOrientation);
+      window.addEventListener('orientationchange', checkMobileOrientation);
     });
   </script>
   <!-- Realtime Analytics Tracker -->
