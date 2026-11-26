@@ -3246,6 +3246,76 @@
       row1.innerHTML = buildRow(14);
     }
 
+    function moveOrInsertTile(sourceIdx, targetIdx) {
+      myConsecutiveTimeouts = 0;
+      if (sourceIdx === -1 || isNaN(sourceIdx) || sourceIdx === targetIdx) return;
+      if (!rackSlots[sourceIdx]) return;
+
+      const movingTile = rackSlots[sourceIdx];
+
+      // Hedef yuva boşsa doğrudan yerleştir
+      if (!rackSlots[targetIdx]) {
+        rackSlots[targetIdx] = movingTile;
+        rackSlots[sourceIdx] = null;
+        Sound.tileClack();
+        renderRack();
+        return;
+      }
+
+      // Hedef yuva dolu: Araya alma & Sağa ittirme (Insert & Shift Right)
+      rackSlots[sourceIdx] = null;
+
+      const targetRow = targetIdx < 14 ? 0 : 1;
+      const rowStart = targetRow === 0 ? 0 : 14;
+      const rowEnd = targetRow === 0 ? 13 : 27;
+
+      // 1. Hedef satırda sağa doğru en yakın boş yuvayı ara
+      let emptyRight = -1;
+      for (let i = targetIdx; i <= rowEnd; i++) {
+        if (!rackSlots[i]) {
+          emptyRight = i;
+          break;
+        }
+      }
+
+      if (emptyRight !== -1) {
+        // Hedef ile boş yuva arasındaki taşları 1 birim sağa kaydırıp araya al
+        for (let i = emptyRight; i > targetIdx; i--) {
+          rackSlots[i] = rackSlots[i - 1];
+        }
+        rackSlots[targetIdx] = movingTile;
+        Sound.tileClack();
+        renderRack();
+        return;
+      }
+
+      // 2. Sağ taraf tamamen doluysa, sola doğru en yakın boş yuvayı ara
+      let emptyLeft = -1;
+      for (let i = targetIdx; i >= rowStart; i--) {
+        if (!rackSlots[i]) {
+          emptyLeft = i;
+          break;
+        }
+      }
+
+      if (emptyLeft !== -1) {
+        // Hedef ile sol boş yuva arasındaki taşları 1 birim sola kaydırıp araya al
+        for (let i = emptyLeft; i < targetIdx; i++) {
+          rackSlots[i] = rackSlots[i + 1];
+        }
+        rackSlots[targetIdx] = movingTile;
+        Sound.tileClack();
+        renderRack();
+        return;
+      }
+
+      // 3. İki taraf da tamamen doluysa doğrudan yer değiştir (Swap)
+      rackSlots[sourceIdx] = rackSlots[targetIdx];
+      rackSlots[targetIdx] = movingTile;
+      Sound.tileClack();
+      renderRack();
+    }
+
     function handleRackSlotClick(slotIdx) {
       myConsecutiveTimeouts = 0;
       if (selectedSlotIdx === -1) {
@@ -3258,13 +3328,9 @@
         selectedSlotIdx = -1;
         renderRack();
       } else {
-        // Move or swap
-        const temp = rackSlots[slotIdx];
-        rackSlots[slotIdx] = rackSlots[selectedSlotIdx];
-        rackSlots[selectedSlotIdx] = temp;
+        // Move or insert (push right)
+        moveOrInsertTile(selectedSlotIdx, slotIdx);
         selectedSlotIdx = -1;
-        Sound.tileClack();
-        renderRack();
       }
     }
 
@@ -3301,13 +3367,9 @@
         dragSourceSlotIdx = -1;
         return;
       }
-      const temp = rackSlots[targetIdx];
-      rackSlots[targetIdx] = rackSlots[source];
-      rackSlots[source] = temp;
+      moveOrInsertTile(source, targetIdx);
       dragSourceSlotIdx = -1;
       selectedSlotIdx = -1;
-      Sound.tileClack();
-      renderRack();
     }
 
     function handleDropOnDiscard(e) {
@@ -3459,12 +3521,8 @@
         if (hoverType === 'slot' && currentHover) {
           const targetIdx = parseInt(currentHover.getAttribute('data-slot-idx'), 10);
           if (!isNaN(targetIdx) && targetIdx !== sourceIdx) {
-            const temp = rackSlots[targetIdx];
-            rackSlots[targetIdx] = rackSlots[sourceIdx];
-            rackSlots[sourceIdx] = temp;
+            moveOrInsertTile(sourceIdx, targetIdx);
             selectedSlotIdx = -1;
-            Sound.tileClack();
-            renderRack();
           }
         } else if (hoverType === 'discard') {
           selectedSlotIdx = sourceIdx;
