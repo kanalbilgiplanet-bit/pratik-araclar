@@ -4027,9 +4027,22 @@
         const normalTiles = [];
 
         tiles.forEach(t => {
-          if (isOkeyTile(t, okey)) okeyTiles.push(t);
-          else normalTiles.push(t);
+          if (isOkeyTile(t, okey)) {
+            okeyTiles.push(t);
+          } else {
+            const eff = getEffectiveTile(t, okey);
+            // Sahte Okey'e Okey'in gerçek rengini ve sayısını ata (örn: Okey 10 ise Sahte 10'dur)
+            normalTiles.push({
+              raw: t,
+              id: t.id,
+              color: eff.color,
+              num: eff.num,
+              isFake: !!t.isFake
+            });
+          }
         });
+
+        const getRaw = item => (item && item.raw ? item.raw : item);
 
         // 1. Aday Perleri Bul (Aynı renk ardışık 3+ veya Aynı sayı farklı renk 3+)
         const candidatePers = [];
@@ -4053,7 +4066,7 @@
               if (one) run.push(one);
             }
             if (run.length >= 3) {
-              // Uzunluğu 3 veya daha fazla olan TÜM alt serileri aday olarak ekle (Örn: 5-6-7-8 serisi 5-6-7'ye bölünmeden korunsun)
+              // Uzunluğu 3 veya daha fazla olan TÜM alt serileri aday olarak ekle
               for (let len = 3; len <= run.length; len++) {
                 for (let s = 0; s + len <= run.length; s++) {
                   candidatePers.push(run.slice(s, s + len));
@@ -4087,6 +4100,43 @@
             }
           }
         });
+
+        // 1c. Okey Taşı ile Tamamlanan Perler (Joker)
+        if (okeyTiles.length > 0) {
+          const ok1 = okeyTiles[0];
+          // Aynı sayı farklı 2 renk + Okey -> 3'lü per
+          Object.values(byNum).forEach(list => {
+            const uniq = [];
+            const used = new Set();
+            list.forEach(t => {
+              if (!used.has(t.color)) {
+                used.add(t.color);
+                uniq.push(t);
+              }
+            });
+            if (uniq.length === 2) {
+              candidatePers.push([uniq[0], uniq[1], { raw: ok1, id: ok1.id, color: uniq[0].color, num: uniq[0].num, isOkey: true }]);
+            }
+          });
+
+          // Aynı renk ardışık 2 taş + Okey
+          Object.values(byColor).forEach(list => {
+            for (let i = 0; i < list.length - 1; i++) {
+              const t1 = list[i];
+              const t2 = list[i + 1];
+              if (t2.num === t1.num + 1) {
+                if (t2.num < 13) {
+                  candidatePers.push([t1, t2, { raw: ok1, id: ok1.id, color: t1.color, num: t2.num + 1, isOkey: true }]);
+                }
+                if (t1.num > 1) {
+                  candidatePers.push([{ raw: ok1, id: ok1.id, color: t1.color, num: t1.num - 1, isOkey: true }, t1, t2]);
+                }
+              } else if (t2.num === t1.num + 2) {
+                candidatePers.push([t1, { raw: ok1, id: ok1.id, color: t1.color, num: t1.num + 1, isOkey: true }, t2]);
+              }
+            }
+          });
+        }
 
         // Tekrar eden aday perleri filtrele
         const uniqueCandidates = [];
@@ -4138,7 +4188,7 @@
           const pool = [...leftoverList];
           const matchedPairs = [];
 
-          // 1. Aynı sayıdaki taşlar (Örn: Kırmızı 4 & Sarı 4) -> Kullanıcının istediği gibi yan yana!
+          // 1. Aynı sayıdaki taşlar (Örn: Kırmızı 4 & Sarı 4) -> Yan yana!
           const byNum = {};
           pool.forEach(t => {
             if (!byNum[t.num]) byNum[t.num] = [];
@@ -4208,12 +4258,12 @@
             const need0 = (r0 === 0 ? len : len + 1);
             if (r0 + need0 <= 14) {
               if (r0 > 0) r0++; // perler arası 1 boşluk
-              per.forEach(t => newSlots[r0++] = t);
+              per.forEach(t => newSlots[r0++] = getRaw(t));
             } else {
               const need1 = (r1 === 14 ? len : len + 1);
               if (r1 + need1 <= 28) {
                 if (r1 > 14) r1++; // perler arası 1 boşluk
-                per.forEach(t => newSlots[r1++] = t);
+                per.forEach(t => newSlots[r1++] = getRaw(t));
               }
             }
           });
@@ -4227,23 +4277,23 @@
             const need1 = (r1 === 14 ? len : len + 1);
             if (r1 + need1 <= 28) {
               if (r1 > 14) r1++; // önceki gruptan sonra 1 boşluk
-              group.forEach(t => newSlots[r1++] = t);
+              group.forEach(t => newSlots[r1++] = getRaw(t));
               return;
             }
             // Alt satıra sığmazsa üst satırdaki boş yere bak
             const need0 = (r0 === 0 ? len : len + 1);
             if (r0 + need0 <= 14) {
               if (r0 > 0) r0++;
-              group.forEach(t => newSlots[r0++] = t);
+              group.forEach(t => newSlots[r0++] = getRaw(t));
               return;
             }
             // İkisine de blok sığmıyorsa boş kalan ilk yuvalara koy
             group.forEach(t => {
               for (let i = 14; i < 28; i++) {
-                if (!newSlots[i]) { newSlots[i] = t; return; }
+                if (!newSlots[i]) { newSlots[i] = getRaw(t); return; }
               }
               for (let i = 0; i < 14; i++) {
-                if (!newSlots[i]) { newSlots[i] = t; return; }
+                if (!newSlots[i]) { newSlots[i] = getRaw(t); return; }
               }
             });
           }
@@ -4258,17 +4308,17 @@
             }
             singles.forEach(t => {
               if (r1 < 28) {
-                newSlots[r1++] = t;
+                newSlots[r1++] = getRaw(t);
               } else {
                 for (let i = 0; i < 14; i++) {
-                  if (!newSlots[i]) { newSlots[i] = t; break; }
+                  if (!newSlots[i]) { newSlots[i] = getRaw(t); break; }
                 }
               }
             });
           }
 
-          // Okey taşlarını en sona veya üst satırın sonuna yerleştir
-          okeyTiles.forEach(ok => {
+          // Perde kullanılmayan Okey taşlarını en sona veya üst satırın sonuna yerleştir
+          okeyTiles.filter(ok => !usedTileIds.has(ok.id)).forEach(ok => {
             if (!newSlots[13]) newSlots[13] = ok;
             else if (!newSlots[27]) newSlots[27] = ok;
             else {
@@ -4291,18 +4341,18 @@
             const need0 = (r0 === 0 ? len : len + 1);
             if (r0 + need0 <= 14) {
               if (r0 > 0) r0++;
-              group.forEach(t => newSlots[r0++] = t);
+              group.forEach(t => newSlots[r0++] = getRaw(t));
               return;
             }
             const need1 = (r1 === 14 ? len : len + 1);
             if (r1 + need1 <= 28) {
               if (r1 > 14) r1++;
-              group.forEach(t => newSlots[r1++] = t);
+              group.forEach(t => newSlots[r1++] = getRaw(t));
               return;
             }
             group.forEach(t => {
               for (let i = 0; i < 28; i++) {
-                if (!newSlots[i]) { newSlots[i] = t; return; }
+                if (!newSlots[i]) { newSlots[i] = getRaw(t); return; }
               }
             });
           }
@@ -4312,20 +4362,21 @@
           if (singles.length > 0) {
             if (r0 > 0 && r0 + singles.length + 1 <= 14) {
               r0++;
-              singles.forEach(t => newSlots[r0++] = t);
+              singles.forEach(t => newSlots[r0++] = getRaw(t));
             } else {
+              if (r1 > 14 && r1 < 27) r1++; // Tek kalan taşlar çiftlerin bitişiğine yapışmasın
               singles.forEach(t => {
-                if (r1 < 28) newSlots[r1++] = t;
+                if (r1 < 28) newSlots[r1++] = getRaw(t);
                 else {
                   const empty = newSlots.indexOf(null);
-                  if (empty !== -1) newSlots[empty] = t;
+                  if (empty !== -1) newSlots[empty] = getRaw(t);
                 }
               });
             }
           }
 
-          // Okey taşlarını en sona yerleştir
-          okeyTiles.forEach(ok => {
+          // Perde kullanılmayan Okey taşlarını en sona yerleştir
+          okeyTiles.filter(ok => !usedTileIds.has(ok.id)).forEach(ok => {
             if (!newSlots[13]) newSlots[13] = ok;
             else if (!newSlots[27]) newSlots[27] = ok;
             else {
