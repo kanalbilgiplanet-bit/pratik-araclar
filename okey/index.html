@@ -373,6 +373,11 @@
       transition: all 0.15s ease;
     }
 
+    /* Discard & Deck Draggable tile pointer-events fix so dragstart fires cleanly */
+    #leftDiscardContainer > *, #btnDrawDeck > * {
+      pointer-events: none;
+    }
+
     /* Mobile Responsive Istaka Sizing (Portrait) */
     @media (max-width: 640px) {
       .wood-rack {
@@ -1005,9 +1010,9 @@
                 <div id="seatScoreLeft" class="text-[10px] font-mono text-amber-300">0 P</div>
               </div>
             </div>
-            <!-- Left Discard Slot (Clickable on your draw phase!) -->
+            <!-- Left Discard Slot (Clickable or Draggable on your draw phase!) -->
             <div class="flex flex-col items-center">
-              <div id="leftDiscardContainer" onclick="drawFromLeftDiscard()" class="cursor-pointer rounded-xl p-1 transition" title="Soldan Taş Çek">
+              <div id="leftDiscardContainer" onclick="drawFromLeftDiscard()" draggable="true" ondragstart="handleDragStartFromDraw(event, 'left')" ondragend="handleDragEnd(event)" ontouchstart="handleTouchStartFromDraw(event, 'left')" class="cursor-pointer rounded-xl p-1 transition select-none" title="Soldan Taş Çek veya Istakana Sürükle">
                 <div class="w-11 h-14 sm:w-12 sm:h-16 rounded-lg border-2 border-dashed border-emerald-500/30 flex items-center justify-center text-[10px] text-emerald-300/40 font-bold">
                   BOŞ
                 </div>
@@ -1075,7 +1080,7 @@
 
                 <!-- Center Draw Deck (STANDART: SAĞDA - EL ALIŞKANLIĞINA UYGUN) -->
                 <div class="flex flex-col items-center gap-1">
-                  <button id="btnDrawDeck" onclick="drawFromDeck()" class="okey-tile tile-back w-12 h-16 sm:w-14 sm:h-[74px] rounded-xl flex flex-col items-center justify-center relative cursor-pointer active:scale-95 transition">
+                  <button id="btnDrawDeck" onclick="drawFromDeck()" draggable="true" ondragstart="handleDragStartFromDraw(event, 'deck')" ondragend="handleDragEnd(event)" ontouchstart="handleTouchStartFromDraw(event, 'deck')" class="okey-tile tile-back w-12 h-16 sm:w-14 sm:h-[74px] rounded-xl flex flex-col items-center justify-center relative cursor-pointer active:scale-95 transition select-none" title="Ortadan Deste Çek veya Istakana Sürükle">
                     <span class="text-[10px] font-mono font-black text-amber-900 uppercase">DESTE</span>
                     <span id="deckCountBadge" class="mt-0.5 px-1.5 py-0.5 rounded-md bg-slate-900 text-amber-300 text-xs font-mono font-extrabold">50</span>
                   </button>
@@ -1179,7 +1184,7 @@
       </div>
 
       <!-- WALNUT WOOD ISTAKA (2 ROWS x 14 SLOTS) -->
-      <div id="playerRackWrapper" class="wood-rack rounded-2xl p-1 sm:p-3 space-y-1 sm:space-y-2 overflow-x-auto custom-scroll transition-all duration-300">
+      <div id="playerRackWrapper" ondragover="event.preventDefault()" ondrop="handleDropOnRackWrapper(event)" class="wood-rack rounded-2xl p-1 sm:p-3 space-y-1 sm:space-y-2 overflow-x-auto custom-scroll transition-all duration-300">
         <div id="rackRow0" class="rack-row rounded-xl p-0.5 sm:p-1.5 grid grid-cols-14 gap-0.5 sm:gap-1" style="grid-template-columns: repeat(14, minmax(0, 1fr));">
           <!-- 14 slots -->
         </div>
@@ -3664,6 +3669,7 @@
               ondblclick="handleRackDoubleClick(${i})"
               draggable="${tile ? 'true' : 'false'}"
               ondragstart="handleDragStart(event, ${i})"
+              ondragend="handleDragEnd(event)"
               ondragover="event.preventDefault()"
               ondrop="handleDropOnSlot(event, ${i})"
               ontouchstart="handleRackTouchStart(event, ${i})"
@@ -3777,8 +3783,69 @@
       }
     }
 
+    let drawDragSource = null; // 'left' | 'deck' | null
+
+    function handleDragStartFromDraw(e, source) {
+      myConsecutiveTimeouts = 0;
+      const gs = currentTable ? currentTable.gameState : null;
+      if (!gs || gs.turn !== mySeatIndex || gs.phase !== 'draw' || gs.roundResult) {
+        if (e && e.preventDefault) e.preventDefault();
+        return;
+      }
+      if (source === 'left') {
+        const leftSeat = (mySeatIndex + 3) % 4;
+        const leftPile = gs.discards[leftSeat] || [];
+        if (leftPile.length === 0) {
+          if (e && e.preventDefault) e.preventDefault();
+          return;
+        }
+      } else if (source === 'deck') {
+        if (!gs.deck || gs.deck.length === 0) {
+          if (e && e.preventDefault) e.preventDefault();
+          return;
+        }
+      }
+      drawDragSource = source;
+      dragSourceSlotIdx = -1;
+      selectedSlotIdx = -1;
+      if (e.dataTransfer) {
+        e.dataTransfer.setData('text/plain', 'draw:' + source);
+        e.dataTransfer.effectAllowed = 'copyMove';
+      }
+    }
+
+    function handleDragEnd(e) {
+      drawDragSource = null;
+      dragSourceSlotIdx = -1;
+      clearDropZoneHighlights();
+    }
+
+    function handleDropOnRackWrapper(e) {
+      e.preventDefault();
+      clearDropZoneHighlights();
+      myConsecutiveTimeouts = 0;
+      let raw = '';
+      if (e.dataTransfer) {
+        raw = e.dataTransfer.getData('text/plain') || '';
+      }
+      const isFromDrawLeft = drawDragSource === 'left' || raw === 'draw:left';
+      const isFromDrawDeck = drawDragSource === 'deck' || raw === 'draw:deck';
+      drawDragSource = null;
+      dragSourceSlotIdx = -1;
+
+      if (isFromDrawLeft) {
+        drawFromLeftDiscard(false, -1);
+        return;
+      }
+      if (isFromDrawDeck) {
+        drawFromDeck(false, -1);
+        return;
+      }
+    }
+
     function handleDragStart(e, slotIdx) {
       myConsecutiveTimeouts = 0;
+      drawDragSource = null;
       dragSourceSlotIdx = slotIdx;
       selectedSlotIdx = slotIdx;
       if (e.dataTransfer) {
@@ -3792,10 +3859,32 @@
       clearDropZoneHighlights();
       myConsecutiveTimeouts = 0;
       let source = dragSourceSlotIdx;
-      if (source === -1 && e.dataTransfer) {
-        const raw = e.dataTransfer.getData('text/plain');
-        if (raw !== '') source = parseInt(raw, 10);
+      let raw = '';
+      if (e.dataTransfer) {
+        raw = e.dataTransfer.getData('text/plain') || '';
       }
+      if (source === -1 && raw !== '') {
+        if (!raw.startsWith('draw:')) {
+          source = parseInt(raw, 10);
+        }
+      }
+      const isFromDrawLeft = drawDragSource === 'left' || raw === 'draw:left';
+      const isFromDrawDeck = drawDragSource === 'deck' || raw === 'draw:deck';
+      drawDragSource = null;
+
+      if (isFromDrawLeft) {
+        dragSourceSlotIdx = -1;
+        selectedSlotIdx = -1;
+        drawFromLeftDiscard(false, targetIdx);
+        return;
+      }
+      if (isFromDrawDeck) {
+        dragSourceSlotIdx = -1;
+        selectedSlotIdx = -1;
+        drawFromDeck(false, targetIdx);
+        return;
+      }
+
       if (source === -1 || isNaN(source) || source === targetIdx) {
         dragSourceSlotIdx = -1;
         return;
@@ -3808,10 +3897,11 @@
     function handleDropOnDiscard(e) {
       e.preventDefault();
       clearDropZoneHighlights();
+      drawDragSource = null;
       let source = dragSourceSlotIdx;
       if (source === -1 && e.dataTransfer) {
         const raw = e.dataTransfer.getData('text/plain');
-        if (raw !== '') source = parseInt(raw, 10);
+        if (raw !== '' && !raw.startsWith('draw:')) source = parseInt(raw, 10);
       }
       if (source !== -1 && !isNaN(source)) {
         selectedSlotIdx = source;
@@ -3823,10 +3913,11 @@
     function handleDropOnFinish(e) {
       e.preventDefault();
       clearDropZoneHighlights();
+      drawDragSource = null;
       let source = dragSourceSlotIdx;
       if (source === -1 && e.dataTransfer) {
         const raw = e.dataTransfer.getData('text/plain');
-        if (raw !== '') source = parseInt(raw, 10);
+        if (raw !== '' && !raw.startsWith('draw:')) source = parseInt(raw, 10);
       }
       if (source !== -1 && !isNaN(source)) {
         selectedSlotIdx = source;
@@ -3842,10 +3933,11 @@
       pending: false,
       active: false,
       sourceIdx: -1,
+      drawSource: null, // 'left' | 'deck' | null
       startX: 0,
       startY: 0,
       currentHover: null,
-      hoverType: null // 'slot' | 'discard' | 'finish'
+      hoverType: null // 'slot' | 'discard' | 'finish' | 'rack'
     };
 
     function handleRackTouchStart(e, slotIdx) {
@@ -3856,6 +3948,31 @@
         pending: true,
         active: false,
         sourceIdx: slotIdx,
+        drawSource: null,
+        startX: touch.clientX,
+        startY: touch.clientY,
+        currentHover: null,
+        hoverType: null
+      };
+    }
+
+    function handleTouchStartFromDraw(e, source) {
+      const gs = currentTable ? currentTable.gameState : null;
+      if (!gs || gs.turn !== mySeatIndex || gs.phase !== 'draw' || gs.roundResult) return;
+      if (source === 'left') {
+        const leftSeat = (mySeatIndex + 3) % 4;
+        const leftPile = gs.discards[leftSeat] || [];
+        if (leftPile.length === 0) return;
+      } else if (source === 'deck') {
+        if (!gs.deck || gs.deck.length === 0) return;
+      }
+      myConsecutiveTimeouts = 0;
+      const touch = e.touches[0];
+      touchDragState = {
+        pending: true,
+        active: false,
+        sourceIdx: -1,
+        drawSource: source,
         startX: touch.clientX,
         startY: touch.clientY,
         currentHover: null,
@@ -3873,13 +3990,22 @@
       if (!touchDragState.active) {
         if (Math.hypot(dx, dy) > 6) {
           touchDragState.active = true;
-          selectedSlotIdx = touchDragState.sourceIdx;
           const ghost = document.getElementById('touchDragGhost');
           if (ghost) {
             const gs = currentTable ? currentTable.gameState : null;
             const okey = gs ? gs.okey : null;
-            const tile = rackSlots[touchDragState.sourceIdx];
-            ghost.innerHTML = tile ? renderTileHtml(tile, okey, 'rack', false) : '';
+            if (touchDragState.drawSource === 'left') {
+              const leftSeat = (mySeatIndex + 3) % 4;
+              const leftPile = (gs && gs.discards) ? (gs.discards[leftSeat] || []) : [];
+              const topLeft = leftPile.length ? leftPile[leftPile.length - 1] : null;
+              ghost.innerHTML = topLeft ? renderTileHtml(topLeft, okey, 'rack', false) : '';
+            } else if (touchDragState.drawSource === 'deck') {
+              ghost.innerHTML = `<div class="okey-tile tile-back w-11 h-14 sm:w-12 sm:h-16 rounded-lg flex items-center justify-center text-[10px] font-black text-amber-900 shadow-2xl border-2 border-amber-300">DESTE</div>`;
+            } else {
+              selectedSlotIdx = touchDragState.sourceIdx;
+              const tile = rackSlots[touchDragState.sourceIdx];
+              ghost.innerHTML = tile ? renderTileHtml(tile, okey, 'rack', false) : '';
+            }
             ghost.style.display = 'block';
             ghost.style.left = `${touch.clientX}px`;
             ghost.style.top = `${touch.clientY}px`;
@@ -3906,6 +4032,23 @@
       if (!elem) {
         touchDragState.currentHover = null;
         touchDragState.hoverType = null;
+        return;
+      }
+
+      if (touchDragState.drawSource) {
+        const slotElem = elem.closest('[data-slot-idx]');
+        const rackElem = elem.closest('#playerRackWrapper, .wood-rack');
+        if (slotElem) {
+          slotElem.classList.add('slot-drop-hover');
+          touchDragState.currentHover = slotElem;
+          touchDragState.hoverType = 'slot';
+        } else if (rackElem) {
+          touchDragState.currentHover = rackElem;
+          touchDragState.hoverType = 'rack';
+        } else {
+          touchDragState.currentHover = null;
+          touchDragState.hoverType = null;
+        }
         return;
       }
 
@@ -3947,28 +4090,44 @@
       clearDropZoneHighlights();
 
       if (touchDragState.active) {
-        const sourceIdx = touchDragState.sourceIdx;
-        const hoverType = touchDragState.hoverType;
-        const currentHover = touchDragState.currentHover;
+        if (touchDragState.drawSource) {
+          const drawSrc = touchDragState.drawSource;
+          const hoverType = touchDragState.hoverType;
+          const currentHover = touchDragState.currentHover;
+          if (hoverType === 'slot' && currentHover) {
+            const targetIdx = parseInt(currentHover.getAttribute('data-slot-idx'), 10);
+            if (!isNaN(targetIdx)) {
+              if (drawSrc === 'left') drawFromLeftDiscard(false, targetIdx);
+              else if (drawSrc === 'deck') drawFromDeck(false, targetIdx);
+            }
+          } else if (hoverType === 'rack' || hoverType === 'slot') {
+            if (drawSrc === 'left') drawFromLeftDiscard(false, -1);
+            else if (drawSrc === 'deck') drawFromDeck(false, -1);
+          }
+        } else {
+          const sourceIdx = touchDragState.sourceIdx;
+          const hoverType = touchDragState.hoverType;
+          const currentHover = touchDragState.currentHover;
 
-        if (hoverType === 'slot' && currentHover) {
-          const targetIdx = parseInt(currentHover.getAttribute('data-slot-idx'), 10);
-          if (!isNaN(targetIdx) && targetIdx !== sourceIdx) {
-            moveOrInsertTile(sourceIdx, targetIdx);
-            selectedSlotIdx = -1;
+          if (hoverType === 'slot' && currentHover) {
+            const targetIdx = parseInt(currentHover.getAttribute('data-slot-idx'), 10);
+            if (!isNaN(targetIdx) && targetIdx !== sourceIdx) {
+              moveOrInsertTile(sourceIdx, targetIdx);
+              selectedSlotIdx = -1;
+            }
+          } else if (hoverType === 'discard') {
+            selectedSlotIdx = sourceIdx;
+            const gs = currentTable ? currentTable.gameState : null;
+            if (gs && gs.turn === mySeatIndex && gs.phase === 'discard') {
+              discardSelectedTile();
+            } else {
+              showToast('Sıra sizde değilken veya taş çekmeden taş atamazsınız!', 'warning');
+              renderRack();
+            }
+          } else if (hoverType === 'finish') {
+            selectedSlotIdx = sourceIdx;
+            attemptFinishWithSelected();
           }
-        } else if (hoverType === 'discard') {
-          selectedSlotIdx = sourceIdx;
-          const gs = currentTable ? currentTable.gameState : null;
-          if (gs && gs.turn === mySeatIndex && gs.phase === 'discard') {
-            discardSelectedTile();
-          } else {
-            showToast('Sıra sizde değilken veya taş çekmeden taş atamazsınız!', 'warning');
-            renderRack();
-          }
-        } else if (hoverType === 'finish') {
-          selectedSlotIdx = sourceIdx;
-          attemptFinishWithSelected();
         }
       }
 
@@ -3976,6 +4135,7 @@
         pending: false,
         active: false,
         sourceIdx: -1,
+        drawSource: null,
         startX: 0,
         startY: 0,
         currentHover: null,
@@ -4506,9 +4666,9 @@
       }
       // Re-enable pointer events on discard zones
       const leftDiscard = document.getElementById('leftDiscardContainer');
-      if (leftDiscard) leftDiscard.className = 'cursor-pointer rounded-xl p-1 transition';
+      if (leftDiscard) leftDiscard.className = 'cursor-pointer rounded-xl p-1 transition select-none';
       const myDiscard = document.getElementById('myDiscardContainer');
-      if (myDiscard) myDiscard.className = 'cursor-pointer rounded-xl p-1 transition';
+      if (myDiscard) myDiscard.className = 'cursor-pointer rounded-xl p-1 transition select-none';
 
       // Controls above rack vs waiting notice
       const rackControls = document.getElementById('gameRackControls');
@@ -4802,15 +4962,23 @@
         leftContainer.innerHTML = renderTileHtml(topLeftTile, okey, 'table', false);
         leftContainer.classList.toggle('draw-highlight', isMyDraw);
         leftHint.classList.toggle('hidden', !isMyDraw);
+        leftContainer.draggable = isMyDraw;
+        leftContainer.style.cursor = isMyDraw ? 'grab' : 'default';
       } else {
         leftContainer.innerHTML = `<div class="w-11 h-14 sm:w-12 sm:h-16 rounded-lg border-2 border-dashed border-emerald-500/30 flex items-center justify-center text-[10px] text-emerald-300/40 font-bold">BOŞ</div>`;
         leftContainer.classList.remove('draw-highlight');
         leftHint.classList.add('hidden');
+        leftContainer.draggable = false;
+        leftContainer.style.cursor = 'default';
       }
 
       // Deck highlight on draw phase
       const btnDeck = document.getElementById('btnDrawDeck');
-      if (btnDeck) btnDeck.classList.toggle('draw-highlight', isMyDraw);
+      if (btnDeck) {
+        btnDeck.classList.toggle('draw-highlight', isMyDraw);
+        btnDeck.draggable = isMyDraw;
+        btnDeck.style.cursor = isMyDraw ? 'grab' : 'pointer';
+      }
 
       // My discard stack (Right side)
       const myDiscards = (gs.discards && gs.discards[mySeatIndex]) ? gs.discards[mySeatIndex] : [];
@@ -4905,7 +5073,62 @@
     /* =====================================================================
        PLAYER ACTIONS: DRAW, DISCARD, FINISH
        ===================================================================== */
-    async function drawFromDeck(isAuto = false) {
+    function placeDrawnTileIntoSlot(tile, targetSlot) {
+      if (!tile || typeof targetSlot !== 'number' || targetSlot < 0 || targetSlot >= 28) return;
+
+      // 1. Hedef yuva boşsa doğrudan yerleştir
+      if (!rackSlots[targetSlot]) {
+        rackSlots[targetSlot] = tile;
+        return;
+      }
+
+      // 2. Hedef yuva doluysa: Sağa ya da sola doğru kaydırarak araya aç
+      const targetRow = targetSlot < 14 ? 0 : 1;
+      const rowStart = targetRow === 0 ? 0 : 14;
+      const rowEnd = targetRow === 0 ? 13 : 27;
+
+      // Sağa doğru en yakın boş yuvayı ara
+      let emptyRight = -1;
+      for (let i = targetSlot; i <= rowEnd; i++) {
+        if (!rackSlots[i]) {
+          emptyRight = i;
+          break;
+        }
+      }
+
+      if (emptyRight !== -1) {
+        for (let i = emptyRight; i > targetSlot; i--) {
+          rackSlots[i] = rackSlots[i - 1];
+        }
+        rackSlots[targetSlot] = tile;
+        return;
+      }
+
+      // Sola doğru en yakın boş yuvayı ara
+      let emptyLeft = -1;
+      for (let i = targetSlot; i >= rowStart; i--) {
+        if (!rackSlots[i]) {
+          emptyLeft = i;
+          break;
+        }
+      }
+
+      if (emptyLeft !== -1) {
+        for (let i = emptyLeft; i < targetSlot; i++) {
+          rackSlots[i] = rackSlots[i + 1];
+        }
+        rackSlots[targetSlot] = tile;
+        return;
+      }
+
+      // Eğer bulunulan satır tamamen doluysa diğer satırdaki ilk boşluğa yerleştir
+      const anyEmpty = rackSlots.findIndex(s => s === null);
+      if (anyEmpty !== -1) {
+        rackSlots[anyEmpty] = tile;
+      }
+    }
+
+    async function drawFromDeck(isAuto = false, targetSlot = -1) {
       if (!currentTable || !currentTable.gameState) return;
       const gs = currentTable.gameState;
       if (gs.roundResult || gs.turn !== mySeatIndex || gs.phase !== 'draw') {
@@ -4922,6 +5145,9 @@
       gs.phase = 'discard';
       gs.lastAction = `${profile.name} ortadan taş çekti.`;
       Sound.draw();
+      if (typeof targetSlot === 'number' && targetSlot >= 0 && targetSlot < 28) {
+        placeDrawnTileIntoSlot(tile, targetSlot);
+      }
       syncMyRackWithHand();
       renderGameTable();
       await syncTableToRTDB();
@@ -4930,7 +5156,7 @@
       }
     }
 
-    async function drawFromLeftDiscard(isAuto = false) {
+    async function drawFromLeftDiscard(isAuto = false, targetSlot = -1) {
       if (!currentTable || !currentTable.gameState) return;
       const gs = currentTable.gameState;
       if (gs.roundResult || gs.turn !== mySeatIndex || gs.phase !== 'draw') return;
@@ -4944,6 +5170,9 @@
       gs.phase = 'discard';
       gs.lastAction = `${profile.name} yerden taş çekti.`;
       Sound.draw();
+      if (typeof targetSlot === 'number' && targetSlot >= 0 && targetSlot < 28) {
+        placeDrawnTileIntoSlot(tile, targetSlot);
+      }
       syncMyRackWithHand();
       renderGameTable();
       await syncTableToRTDB();
