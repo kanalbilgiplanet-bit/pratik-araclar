@@ -3663,10 +3663,11 @@
               if (one) run.push(one);
             }
             if (run.length >= 3) {
-              candidatePers.push(run);
-              if (run.length >= 4) {
-                candidatePers.push(run.slice(0, 3));
-                candidatePers.push(run.slice(run.length - 3));
+              // Uzunluğu 3 veya daha fazla olan TÜM alt serileri aday olarak ekle (Örn: 5-6-7-8 serisi 5-6-7'ye bölünmeden korunsun)
+              for (let len = 3; len <= run.length; len++) {
+                for (let s = 0; s + len <= run.length; s++) {
+                  candidatePers.push(run.slice(s, s + len));
+                }
               }
             }
           }
@@ -3697,6 +3698,17 @@
           }
         });
 
+        // Tekrar eden aday perleri filtrele
+        const uniqueCandidates = [];
+        const seenKeys = new Set();
+        candidatePers.forEach(cand => {
+          const key = cand.map(t => t.id).sort().join('_');
+          if (!seenKeys.has(key)) {
+            seenKeys.add(key);
+            uniqueCandidates.push(cand);
+          }
+        });
+
         // En çok taşı içine alan çakışmasız per kombinasyonunu seç
         let bestPers = [];
         let bestCount = 0;
@@ -3713,9 +3725,9 @@
             bestCount = count;
             bestPers = cur.map(p => [...p]);
           }
-          for (let i = idx; i < candidatePers.length; i++) {
-            if (canAdd(cur, candidatePers[i])) {
-              cur.push(candidatePers[i]);
+          for (let i = idx; i < uniqueCandidates.length; i++) {
+            if (canAdd(cur, uniqueCandidates[i])) {
+              cur.push(uniqueCandidates[i]);
               dfs(i + 1, cur);
               cur.pop();
             }
