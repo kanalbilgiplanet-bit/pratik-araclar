@@ -1073,12 +1073,13 @@
                 <!-- Indicator Tile (Gösterge) & Finish Zone -->
                 <div class="flex flex-col items-center gap-1">
                   <div id="indicatorHalo" onclick="attemptFinishWithSelected()" ondragover="event.preventDefault()" ondragenter="this.classList.add('finish-drop-active')" ondragleave="this.classList.remove('finish-drop-active')" ondrop="handleDropOnFinish(event)" class="p-1.5 rounded-2xl border-2 transition cursor-pointer relative group finish-dropzone" title="Bitirmek için 15. taşı buraya bırak veya seçip tıkla">
-                    <div id="indicatorTileBox"></div>
-                    <div class="absolute -top-2.5 -right-2.5 px-1.5 py-0.5 rounded-full bg-amber-500 text-slate-950 text-[9px] font-black shadow">
+                    <div id="indicatorTileBox" class="pointer-events-none"></div>
+                    <div id="indicatorBadge" class="pointer-events-none absolute -top-2.5 -right-2.5 px-1.5 py-0.5 rounded-full bg-amber-500 text-slate-950 text-[9px] font-black shadow flex items-center gap-0.5">
                       GÖSTERGE
                     </div>
                   </div>
                   <span id="okeyTargetText" class="text-[10px] font-mono font-bold text-amber-300">OKEY: —</span>
+                  <span id="finishTargetHint" class="text-[9px] font-bold text-amber-200/70">🏆 Bitiş Alanı</span>
                 </div>
               </div>
 
@@ -4570,8 +4571,6 @@
       multBadge.innerHTML = `<span>${rule.emoji} ${rule.nameTr.toUpperCase()} OKEY</span><span class="font-mono">${rule.mult}x / ${rule.winDelta}</span>`;
 
       // Indicator Tile & Okey label
-      const halo = document.getElementById('indicatorHalo');
-      halo.className = `p-1.5 rounded-2xl border-2 transition cursor-pointer relative group ${rule.ringCls}`;
       document.getElementById('indicatorTileBox').innerHTML = renderTileHtml(gs.indicator, okey, 'table', false);
       document.getElementById('okeyTargetText').textContent = `OKEY: ${rule.emoji} ${okey.num}`;
       document.getElementById('deckCountBadge').textContent = (gs.deck || []).length;
@@ -4664,9 +4663,61 @@
       myDiscardContainer.classList.toggle('draw-highlight', isMyDiscard);
       myDiscardHint.classList.toggle('hidden', !isMyDiscard);
 
+      // Check if user has a valid 14-tile winning hand ready in hand15
+      let canWinHand = false;
+      if (isMyDiscard) {
+        const myHand15 = gs.hands[mySeatIndex] || [];
+        if (myHand15.length === 15) {
+          for (let i = 0; i < myHand15.length; i++) {
+            const rem14 = myHand15.filter((_, idx) => idx !== i);
+            if (validateWinningHand14(rem14, okey).valid) {
+              canWinHand = true;
+              break;
+            }
+          }
+        }
+      }
+
+      // Finish zone & indicator highlighting (Sahte Okey / Gösterge üzerine bitiş taşı bırakma)
+      const halo = document.getElementById('indicatorHalo');
+      const indicatorBadge = document.getElementById('indicatorBadge');
+      const finishTargetHint = document.getElementById('finishTargetHint');
+      const btnFinish = document.getElementById('btnAttemptFinish');
+
+      if (canWinHand) {
+        if (halo) halo.className = `p-1.5 rounded-2xl border-2 transition cursor-pointer relative group finish-dropzone ${rule.ringCls} ring-4 ring-amber-300 shadow-[0_0_35px_rgba(251,191,36,0.95)] animate-pulse`;
+        if (indicatorBadge) {
+          indicatorBadge.className = 'pointer-events-none absolute -top-3 -right-3 px-2 py-0.5 rounded-full bg-gradient-to-r from-amber-400 to-yellow-500 text-slate-950 text-[10px] font-black shadow-lg animate-bounce flex items-center gap-1';
+          indicatorBadge.innerHTML = '🏆 BİTİŞ YERİ';
+        }
+        if (finishTargetHint) {
+          finishTargetHint.textContent = '✨ Taşı buraya bırak!';
+          finishTargetHint.className = 'text-[9px] font-black text-amber-300 animate-pulse bg-amber-950/90 px-2 py-0.5 rounded-full border border-amber-500/50';
+        }
+        if (btnFinish) {
+          btnFinish.className = 'px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-gradient-to-r from-amber-300 via-yellow-400 to-amber-500 hover:from-amber-200 hover:to-yellow-300 text-slate-950 text-[11px] sm:text-xs font-black flex items-center gap-1 shadow-2xl shadow-amber-400/60 ring-4 ring-amber-300 animate-bounce active:scale-95 transition';
+        }
+      } else {
+        if (halo) halo.className = `p-1.5 rounded-2xl border-2 transition cursor-pointer relative group finish-dropzone ${rule.ringCls}`;
+        if (indicatorBadge) {
+          indicatorBadge.className = 'pointer-events-none absolute -top-2.5 -right-2.5 px-1.5 py-0.5 rounded-full bg-amber-500 text-slate-950 text-[9px] font-black shadow flex items-center gap-0.5';
+          indicatorBadge.textContent = 'GÖSTERGE';
+        }
+        if (finishTargetHint) {
+          finishTargetHint.textContent = '🏆 Bitiş Alanı';
+          finishTargetHint.className = 'text-[9px] font-bold text-amber-200/70';
+        }
+        if (btnFinish) {
+          btnFinish.className = 'px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-300 hover:to-yellow-400 text-slate-950 text-[11px] sm:text-xs font-black flex items-center gap-1 shadow-lg shadow-amber-500/25 active:scale-95 transition';
+        }
+      }
+
       // Action Banner (Göz alıcı ve belirgin sıra gösterimi)
       const banner = document.getElementById('tableActionBanner');
-      if (isMyDraw) {
+      if (canWinHand) {
+        banner.innerHTML = `<span class="inline-block animate-bounce mr-1">🏆</span> <b class="tracking-wide">ELİNİZ BİTİYOR!</b> Bitmek için 15. taşı ortadaki Göstergeye bırak veya BİTİR'e bas. <em>(Okeye dönmek istersen sağa normal taş at)</em>`;
+        banner.className = 'px-4 py-1.5 rounded-full bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 text-slate-950 text-xs font-black shadow-xl shadow-amber-500/50 ring-2 ring-amber-300 animate-pulse text-center';
+      } else if (isMyDraw) {
         banner.innerHTML = `<span class="inline-block animate-bounce mr-1">👉</span> <b class="tracking-wide">SIRA SİZDE!</b> Ortadan deste çek veya soldaki taşı al.`;
         banner.className = 'px-4 py-1.5 rounded-full bg-emerald-500 text-slate-950 text-xs font-black shadow-lg shadow-emerald-500/40 ring-2 ring-emerald-300 animate-pulse text-center';
       } else if (isMyDiscard) {
@@ -4782,8 +4833,35 @@
         return;
       }
       myConsecutiveTimeouts = 0;
+
+      // If user clicked "BİTİR!" without selecting a slot, detect winning discard automatically
       if (selectedSlotIdx === -1 || !rackSlots[selectedSlotIdx]) {
-        showToast('Önce bitiş taşı olarak ortaya atacağın 15. taşı seç!');
+        const hand15 = gs.hands[mySeatIndex] || [];
+        if (hand15.length === 15) {
+          let foundCandidate = null;
+          for (let i = 0; i < hand15.length; i++) {
+            const cand = hand15[i];
+            const rem14 = hand15.filter((_, idx) => idx !== i);
+            const val = validateWinningHand14(rem14, gs.okey);
+            if (val.valid) {
+              const isOk = isOkeyTile(cand, gs.okey);
+              if (isOk || !foundCandidate) {
+                foundCandidate = cand;
+                if (isOk) break; // Okey ile bitiş en avantajlısı (10x!)
+              }
+            }
+          }
+          if (foundCandidate) {
+            const foundSlot = rackSlots.findIndex(t => t && t.id === foundCandidate.id);
+            if (foundSlot !== -1) {
+              selectedSlotIdx = foundSlot;
+            }
+          }
+        }
+      }
+
+      if (selectedSlotIdx === -1 || !rackSlots[selectedSlotIdx]) {
+        showToast('Önce bitiş taşı olarak ortaya atacağın 15. taşı seç veya ortadaki Göstergeye sürükle!');
         return;
       }
 
@@ -5612,20 +5690,13 @@
         const curGs = currentTable.gameState;
         if (curGs.roundResult || curGs.turn !== mySeatIndex || curGs.phase !== 'discard') return;
 
-        // Step 2: Check if player can WIN with 15 tiles
+        // NOTE: As requested by players turning for Okey ("Okeye Dönmek"), the system NEVER auto-finishes
+        // the round on timeout or auto-turn. Finishing strictly requires dropping the 15th tile onto the
+        // center Gösterge finish zone or clicking the BİTİR! button.
+        // Therefore, timeout / auto-turn ONLY discards the least useful non-Okey tile to the right neighbor.
         const hand15 = curGs.hands[mySeatIndex] || [];
-        for (let i = 0; i < hand15.length; i++) {
-          const candDiscard = hand15[i];
-          const rem14 = hand15.filter((_, idx) => idx !== i);
-          const val = validateWinningHand14(rem14, okey);
-          if (val.valid) {
-            const fType = val.isPairs ? 'pair' : (isOkeyTile(candDiscard, okey) ? 'okey' : 'normal');
-            await finalizeRoundWin(mySeatIndex, candDiscard, fType);
-            return;
-          }
-        }
 
-        // Step 3: Pick least useful non-okey tile to discard
+        // Pick least useful non-okey tile to discard (never discard Okey!)
         let bestTile = null;
         let lowestUnmelded = Infinity;
         for (let i = 0; i < hand15.length; i++) {
