@@ -3375,6 +3375,8 @@
       return deck;
     }
 
+    let consecutiveHandsWithoutOkey = 0;
+
     function createNewRoundState(starterSeat = 0) {
       const deck = buildFullDeck();
       // Pick non-fake indicator
@@ -3388,6 +3390,47 @@
       for (let s = 0; s < 4; s++) {
         const count = s === starterSeat ? 15 : 14;
         hands[s] = deck.splice(0, count);
+      }
+
+      // Şans Dengeleme (Pity System): Oyuncuya 2 el üst üste Okey gelmediyse,
+      // 3. elde Okey'lerden birini oyuncunun eline ver!
+      const mySeat = (typeof mySeatIndex === 'number' && mySeatIndex >= 0 && mySeatIndex < 4) ? mySeatIndex : 0;
+      const playerHand = hands[mySeat] || [];
+      const hasOkeyAlready = playerHand.some(t => t.color === okeyColor && t.num === okeyNum);
+
+      if (hasOkeyAlready) {
+        consecutiveHandsWithoutOkey = 0;
+      } else {
+        consecutiveHandsWithoutOkey++;
+        if (consecutiveHandsWithoutOkey >= 2) {
+          // Okey'lerden birini bulup oyuncunun eline aktar
+          let okeyCandidate = null;
+          let fromList = null;
+          for (let s = 0; s < 4; s++) {
+            if (s === mySeat) continue;
+            const idx = hands[s].findIndex(t => t.color === okeyColor && t.num === okeyNum);
+            if (idx !== -1) {
+              okeyCandidate = hands[s].splice(idx, 1)[0];
+              fromList = hands[s];
+              break;
+            }
+          }
+          if (!okeyCandidate) {
+            const dIdx = deck.findIndex(t => t.color === okeyColor && t.num === okeyNum);
+            if (dIdx !== -1) {
+              okeyCandidate = deck.splice(dIdx, 1)[0];
+              fromList = deck;
+            }
+          }
+          if (okeyCandidate && fromList && playerHand.length > 0) {
+            const swapIdx = playerHand.findIndex(t => !t.isFake && (t.color !== okeyColor || t.num !== okeyNum));
+            if (swapIdx !== -1) {
+              const swappedTile = playerHand.splice(swapIdx, 1, okeyCandidate)[0];
+              fromList.push(swappedTile);
+              consecutiveHandsWithoutOkey = 0;
+            }
+          }
+        }
       }
 
       return {
@@ -4183,12 +4226,48 @@
         // Renklerin standart sıralama önceliği: Kırmızı -> Sarı -> Mavi -> Siyah
         const colorOrder = { red: 0, yellow: 1, blue: 2, black: 3 };
 
-        // Kalan taşları akıllı grupla: Aynı sayılar (örn: iki tane 4) ve aynı renk ardışıklar yan yana
+        // Kalan taşları akıllı grupla: Aynı renk ardışıklar (Örn: Siyah 5 - Siyah 6) ve aynı sayılar yan yana
         function groupLeftoverTiles(leftoverList) {
           const pool = [...leftoverList];
           const matchedPairs = [];
 
-          // 1. Aynı sayıdaki taşlar (Örn: Kırmızı 4 & Sarı 4) -> Yan yana!
+          // 1. Aynı renk ardışık serileri bul (Örn: Siyah 5 - Siyah 6)
+          // Eğer serideki taştan kopya varsa (Örn: 2 tane Siyah 6), kopyayı da hemen serinin yanına al (5-6-6)!
+          const byColor = { red: [], yellow: [], blue: [], black: [] };
+          pool.forEach(t => { if (byColor[t.color]) byColor[t.color].push(t); });
+
+          Object.values(byColor).forEach(list => {
+            list.sort((a, b) => a.num - b.num);
+            let i = 0;
+            while (i < list.length) {
+              let j = i + 1;
+              const run = [list[i]];
+              while (j < list.length) {
+                const last = run[run.length - 1];
+                if (list[j].num === last.num + 1) {
+                  run.push(list[j]);
+                  j++;
+                } else if (list[j].num === last.num) {
+                  run.push(list[j]);
+                  j++;
+                } else {
+                  break;
+                }
+              }
+              if (run.length >= 2) {
+                matchedPairs.push([...run]);
+                run.forEach(r => {
+                  const idx = pool.findIndex(p => p.id === r.id);
+                  if (idx !== -1) pool.splice(idx, 1);
+                });
+                i = j;
+              } else {
+                i++;
+              }
+            }
+          });
+
+          // 2. Kalanlar içinde aynı sayıdaki taşlar (Örn: Kırmızı 8 & Mavi 8)
           const byNum = {};
           pool.forEach(t => {
             if (!byNum[t.num]) byNum[t.num] = [];
@@ -4209,34 +4288,6 @@
                 });
               }
             });
-
-          // 2. Kalanlar içinde aynı renk ardışık ikililer (Örn: Sarı 8 - Sarı 9)
-          const byColor = { red: [], yellow: [], blue: [], black: [] };
-          pool.forEach(t => { if (byColor[t.color]) byColor[t.color].push(t); });
-
-          Object.values(byColor).forEach(list => {
-            list.sort((a, b) => a.num - b.num);
-            let i = 0;
-            while (i < list.length) {
-              const t1 = list[i];
-              let j = i + 1;
-              const run = [t1];
-              while (j < list.length && (list[j].num === run[run.length - 1].num + 1 || (run[run.length - 1].num === 13 && list[j].num === 1))) {
-                run.push(list[j]);
-                j++;
-              }
-              if (run.length >= 2 && run.every(r => pool.some(p => p.id === r.id))) {
-                matchedPairs.push([...run]);
-                run.forEach(r => {
-                  const idx = pool.findIndex(p => p.id === r.id);
-                  if (idx !== -1) pool.splice(idx, 1);
-                });
-                i = j;
-              } else {
-                i++;
-              }
-            }
-          });
 
           // 3. Tek kalanlar (Singles): Sayıya ve renge göre sıralı
           pool.sort((a, b) => {
