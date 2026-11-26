@@ -3560,6 +3560,11 @@
         });
 
         if (r1 > 14 && r1 < 27 && singleList.length > 0) r1++;
+        // Çift diziliminde kalan tek taşları sayı ve renge göre sıralı yerleştir
+        singleList.sort((a, b) => {
+          if (a.num !== b.num) return a.num - b.num;
+          return colorOrder[a.color] - colorOrder[b.color];
+        });
         singleList.forEach(t => {
           if (r1 < 28) newSlots[r1++] = t;
           else if (r0 < 14) newSlots[r0++] = t;
@@ -3668,9 +3673,73 @@
         // Renklerin standart sıralama önceliği: Kırmızı -> Sarı -> Mavi -> Siyah
         const colorOrder = { red: 0, yellow: 1, blue: 2, black: 3 };
 
+        // Kalan taşları akıllı grupla: Aynı sayılar (örn: iki tane 4) ve aynı renk ardışıklar yan yana
+        function groupLeftoverTiles(leftoverList) {
+          const pool = [...leftoverList];
+          const matchedPairs = [];
+
+          // 1. Aynı sayıdaki taşlar (Örn: Kırmızı 4 & Sarı 4) -> Kullanıcının istediği gibi yan yana!
+          const byNum = {};
+          pool.forEach(t => {
+            if (!byNum[t.num]) byNum[t.num] = [];
+            byNum[t.num].push(t);
+          });
+
+          Object.keys(byNum)
+            .map(Number)
+            .sort((a, b) => a - b)
+            .forEach(num => {
+              const list = byNum[num];
+              if (list.length >= 2) {
+                list.sort((a, b) => colorOrder[a.color] - colorOrder[b.color]);
+                matchedPairs.push([...list]);
+                list.forEach(t => {
+                  const idx = pool.findIndex(p => p.id === t.id);
+                  if (idx !== -1) pool.splice(idx, 1);
+                });
+              }
+            });
+
+          // 2. Kalanlar içinde aynı renk ardışık ikililer (Örn: Sarı 8 - Sarı 9)
+          const byColor = { red: [], yellow: [], blue: [], black: [] };
+          pool.forEach(t => { if (byColor[t.color]) byColor[t.color].push(t); });
+
+          Object.values(byColor).forEach(list => {
+            list.sort((a, b) => a.num - b.num);
+            let i = 0;
+            while (i < list.length) {
+              const t1 = list[i];
+              let j = i + 1;
+              const run = [t1];
+              while (j < list.length && (list[j].num === run[run.length - 1].num + 1 || (run[run.length - 1].num === 13 && list[j].num === 1))) {
+                run.push(list[j]);
+                j++;
+              }
+              if (run.length >= 2 && run.every(r => pool.some(p => p.id === r.id))) {
+                matchedPairs.push([...run]);
+                run.forEach(r => {
+                  const idx = pool.findIndex(p => p.id === r.id);
+                  if (idx !== -1) pool.splice(idx, 1);
+                });
+                i = j;
+              } else {
+                i++;
+              }
+            }
+          });
+
+          // 3. Tek kalanlar (Singles): Sayıya ve renge göre sıralı
+          pool.sort((a, b) => {
+            if (a.num !== b.num) return a.num - b.num;
+            return colorOrder[a.color] - colorOrder[b.color];
+          });
+
+          return { matchedPairs, singles: pool };
+        }
+
         if (bestPers.length > 0) {
           // ==========================================
-          // PER VARSA: Perleri boşlukla ayır, kalanları sıralı yerleştir
+          // PER VARSA: Perleri boşlukla ayır, kalanları akıllı grupla
           // ==========================================
           let r0 = 0, r1 = 14;
 
@@ -3689,33 +3758,54 @@
             }
           });
 
-          // Arta kalan taşları renge ve sayıya göre sırala
-          remaining.sort((a, b) => {
-            if (colorOrder[a.color] !== colorOrder[b.color]) {
-              return colorOrder[a.color] - colorOrder[b.color];
-            }
-            return a.num - b.num;
-          });
+          // Arta kalan taşları grupla (ikili 4'ler, 7'ler vs. yan yana)
+          const { matchedPairs, singles } = groupLeftoverTiles(remaining);
 
-          // Kalan taşları alt satır boşsa alt satıra, dolarsa üst satırdaki boşluklara diz
-          remaining.forEach(t => {
-            if (r1 < 28) {
-              // Alt satırda per varsa ve hemen yanına başlıyorsak 1 boşluk bırak
-              if (r1 > 14 && newSlots[r1 - 1] && !newSlots[r1]) {
-                r1++;
+          function placeTileGroup(group) {
+            const len = group.length;
+            // Tercihen alt satıra yerleştir (perler üstte, kalanlar altta)
+            const need1 = (r1 === 14 ? len : len + 1);
+            if (r1 + need1 <= 28) {
+              if (r1 > 14) r1++; // önceki gruptan sonra 1 boşluk
+              group.forEach(t => newSlots[r1++] = t);
+              return;
+            }
+            // Alt satıra sığmazsa üst satırdaki boş yere bak
+            const need0 = (r0 === 0 ? len : len + 1);
+            if (r0 + need0 <= 14) {
+              if (r0 > 0) r0++;
+              group.forEach(t => newSlots[r0++] = t);
+              return;
+            }
+            // İkisine de blok sığmıyorsa boş kalan ilk yuvalara koy
+            group.forEach(t => {
+              for (let i = 14; i < 28; i++) {
+                if (!newSlots[i]) { newSlots[i] = t; return; }
               }
+              for (let i = 0; i < 14; i++) {
+                if (!newSlots[i]) { newSlots[i] = t; return; }
+              }
+            });
+          }
+
+          // İkili grupları (aynı sayılar / ardışıklar) yerleştir
+          matchedPairs.forEach(pair => placeTileGroup(pair));
+
+          // Tek kalan taşları yerleştir (aralarında gereksiz boşluk olmadan yan yana)
+          if (singles.length > 0) {
+            if (r1 > 14 && r1 + singles.length + 1 <= 28) {
+              r1++; // önceki gruptan sonra 1 boşluk
+            }
+            singles.forEach(t => {
               if (r1 < 28) {
                 newSlots[r1++] = t;
-                return;
+              } else {
+                for (let i = 0; i < 14; i++) {
+                  if (!newSlots[i]) { newSlots[i] = t; break; }
+                }
               }
-            }
-            for (let i = 0; i < 14; i++) {
-              if (!newSlots[i]) {
-                newSlots[i] = t;
-                break;
-              }
-            }
-          });
+            });
+          }
 
           // Okey taşlarını en sona veya üst satırın sonuna yerleştir
           okeyTiles.forEach(ok => {
@@ -3730,34 +3820,65 @@
           if (!silent) showToast(`✨ ${bestPers.length} per ayrıldı ve dizildi.`);
         } else {
           // ==========================================
-          // PER YOKSA: Tüm taşları standart renge ve sayıya göre
-          // kesintisiz, yan yana diz (Asla yapay boşluk ve üst-alt renk ayrımı yok!)
+          // PER YOKSA: İkili eşleşmeleri (aynı sayılar, 4'ler, 7'ler vs.)
+          // yan yana getir, kalan tekleri sayı sırasına göre diz
           // ==========================================
-          normalTiles.sort((a, b) => {
-            if (colorOrder[a.color] !== colorOrder[b.color]) {
-              return colorOrder[a.color] - colorOrder[b.color];
-            }
-            return a.num - b.num;
-          });
+          const { matchedPairs, singles } = groupLeftoverTiles(normalTiles);
+          let r0 = 0, r1 = 14;
 
-          // Üst satırdan başlayarak (0..13) kesintisiz diz, sığmayan alt satıra (14..27) geçer
-          let idx = 0;
-          normalTiles.forEach(t => {
-            if (idx < 14) newSlots[idx++] = t;
-            else if (idx < 28) newSlots[idx++] = t;
-          });
+          function placeNoPerGroup(group) {
+            const len = group.length;
+            const need0 = (r0 === 0 ? len : len + 1);
+            if (r0 + need0 <= 14) {
+              if (r0 > 0) r0++;
+              group.forEach(t => newSlots[r0++] = t);
+              return;
+            }
+            const need1 = (r1 === 14 ? len : len + 1);
+            if (r1 + need1 <= 28) {
+              if (r1 > 14) r1++;
+              group.forEach(t => newSlots[r1++] = t);
+              return;
+            }
+            group.forEach(t => {
+              for (let i = 0; i < 28; i++) {
+                if (!newSlots[i]) { newSlots[i] = t; return; }
+              }
+            });
+          }
+
+          matchedPairs.forEach(pair => placeNoPerGroup(pair));
+
+          if (singles.length > 0) {
+            if (r0 > 0 && r0 + singles.length + 1 <= 14) {
+              r0++;
+              singles.forEach(t => newSlots[r0++] = t);
+            } else {
+              singles.forEach(t => {
+                if (r1 < 28) newSlots[r1++] = t;
+                else {
+                  const empty = newSlots.indexOf(null);
+                  if (empty !== -1) newSlots[empty] = t;
+                }
+              });
+            }
+          }
 
           // Okey taşlarını en sona yerleştir
           okeyTiles.forEach(ok => {
-            if (idx < 14) newSlots[idx++] = ok;
-            else if (idx < 28) newSlots[idx++] = ok;
+            if (!newSlots[13]) newSlots[13] = ok;
+            else if (!newSlots[27]) newSlots[27] = ok;
             else {
               const empty = newSlots.lastIndexOf(null);
               if (empty !== -1) newSlots[empty] = ok;
             }
           });
 
-          if (!silent) showToast('✨ Taşlar renge ve sayıya göre dizildi.');
+          if (matchedPairs.length > 0) {
+            if (!silent) showToast(`✨ Per adayı ${matchedPairs.length} grup yan yana getirildi.`);
+          } else {
+            if (!silent) showToast('✨ Taşlar sayı ve renge göre dizildi.');
+          }
         }
       }
 
