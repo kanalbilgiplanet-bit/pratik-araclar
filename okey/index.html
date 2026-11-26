@@ -2564,7 +2564,25 @@
         if (data) {
           Object.values(data).forEach(t => {
             if (!t || !t.id) return;
-            // Terk edilmiş masaları temizle: Oyunda 3 dk, beklemede 4 dk boyunca hiç güncellenmediyse sil
+            const seats = normalizeSeats(t.seats);
+            const humanSeats = seats.filter(s => s && !s.isBot);
+            const curRound = t.currentRound || 1;
+            const targetRounds = t.targetRounds || 5;
+            const isMatchOver = curRound >= targetRounds && t.gameState && !!t.gameState.roundResult;
+
+            // 1) Masada hiç gerçek insan kalmamışsa (sadece botlar veya boşsa) masayı sil:
+            if (humanSeats.length === 0) {
+              fetch(`${RTDB_URL}/okey/tables/${t.id}.json`, { method: 'DELETE' }).catch(() => {});
+              return;
+            }
+
+            // 2) Maç bitmişse (isMatchOver) ve masada sadece botlar veya terk edilmiş durumdaysa:
+            if (isMatchOver && humanSeats.length <= 1) {
+              fetch(`${RTDB_URL}/okey/tables/${t.id}.json`, { method: 'DELETE' }).catch(() => {});
+              return;
+            }
+
+            // 3) Terk edilmiş masaları temizle: Oyunda 3 dk, beklemede 4 dk boyunca hiç güncellenmediyse sil
             const maxInactiveMs = (t.status === 'playing' ? 3 : 4) * 60 * 1000;
             if (now - (t.updatedAt || t.createdAt || 0) > maxInactiveMs) {
               fetch(`${RTDB_URL}/okey/tables/${t.id}.json`, { method: 'DELETE' }).catch(() => {});
@@ -2602,6 +2620,11 @@
 
       // Check if user is currently seated in ANY table (to show Reconnect Banner!)
       const myActiveTable = profile ? tables.find(t => {
+        const curRound = t.currentRound || 1;
+        const targetRounds = t.targetRounds || 5;
+        const isMatchOver = curRound >= targetRounds && t.gameState && !!t.gameState.roundResult;
+        if (isMatchOver) return false; // Maç bittiyse aktif masa olarak gösterme!
+
         const sList = normalizeSeats(t.seats);
         return sList.some(s => s && (s.id === profile.id || (s.name && profile.name && s.name.trim().toLowerCase() === profile.name.trim().toLowerCase())));
       }) : null;
@@ -3234,17 +3257,32 @@
       updateAutoPlayUI();
       document.getElementById('modalScoreboard').classList.add('hidden');
       if (!skipRemote && currentTableId && currentTable && !isLocalFallbackMode) {
+        const tableIdToDelete = currentTableId;
+        const curRound = currentTable.currentRound || 1;
+        const targetRounds = currentTable.targetRounds || 5;
+        const isMatchOver = curRound >= targetRounds && currentTable.gameState && !!currentTable.gameState.roundResult;
+        const seats = normalizeSeats(currentTable.seats);
+        const otherHumans = seats.filter(s => s && !s.isBot && s.id !== profile?.id);
+
         // Bekleme odasındayken ayrılırsa koltuğu veya odayı sil
         if (currentTable.status === 'waiting') {
-          if (currentTable.hostId === profile.id) {
-            fetch(`${RTDB_URL}/okey/tables/${currentTableId}.json`, { method: 'DELETE' }).catch(() => {});
+          if (currentTable.hostId === profile.id || otherHumans.length === 0) {
+            fetch(`${RTDB_URL}/okey/tables/${tableIdToDelete}.json`, { method: 'DELETE' }).catch(() => {});
+          } else if (mySeatIndex >= 0 && currentTable.seats[mySeatIndex]) {
+            currentTable.seats[mySeatIndex] = null;
+            await syncTableToRTDB();
+          }
+        } else if (currentTable.status === 'playing') {
+          // Oyun/maç bitmiş ise (isMatchOver) VEYA masada sadece botlar kalmışsa (başka insan yoksa) masayı tamamen sil:
+          if (isMatchOver || otherHumans.length === 0) {
+            fetch(`${RTDB_URL}/okey/tables/${tableIdToDelete}.json`, { method: 'DELETE' }).catch(() => {});
+          } else if (currentTable.hostId === profile.id) {
+            // Masada başka insanlar varken ve oyun henüz bitmemişse: lobiden "Masana Geri Dön" için durum korunur
           } else if (mySeatIndex >= 0 && currentTable.seats[mySeatIndex]) {
             currentTable.seats[mySeatIndex] = null;
             await syncTableToRTDB();
           }
         }
-        // Oyun devam ediyorsa (status === 'playing') oyuncunun koltuğu ve eli korunur;
-        // böylece lobiden "Masana Geri Dön" butonuyla kaldığı yerden maça devam edebilir!
       }
       currentTableId = null;
       currentTable = null;
@@ -3263,6 +3301,22 @@
       if (!currentTableId) return;
       const isGame = currentTable && currentTable.status === 'playing';
       const isHost = currentTable && currentTable.hostId === profile?.id;
+      const curRound = currentTable?.currentRound || 1;
+      const targetRounds = currentTable?.targetRounds || 5;
+      const isMatchOver = curRound >= targetRounds && currentTable?.gameState && !!currentTable?.gameState.roundResult;
+      const seats = normalizeSeats(currentTable?.seats);
+      const otherHumans = seats.filter(s => s && !s.isBot && s.id !== profile?.id);
+
+      if (isMatchOver || otherHumans.length === 0) {
+        const msg = isMatchOver
+          ? 'Maç tamamlandı. Lobiye dönüp masayı kapatmak istiyor musunuz?'
+          : 'Masada sadece botlar bulunuyor. Lobiye döndüğünüzde masa kapatılacaktır. Onaylıyor musunuz?';
+        if (confirm(msg)) {
+          leaveCurrentTable();
+        }
+        return;
+      }
+
       if (isHost && isGame) {
         const choice = confirm('Lobiye dönmek istiyor musunuz?\n\n- Masayı tamamen kapatmak isterseniz lobideki "Masayı Kapat" butonunu kullanabilirsiniz.\n- Oyuna daha sonra "Masana Geri Dön" ile devam edebilirsiniz.');
         if (choice) leaveCurrentTable();
@@ -3279,8 +3333,14 @@
     // Sekme veya tarayıcı kapatıldığında bekleme odasındaki masayı / koltuğu temizle
     window.addEventListener('beforeunload', () => {
       if (currentTableId && currentTable && !isLocalFallbackMode) {
-        if (currentTable.status === 'waiting') {
-          if (currentTable.hostId === profile?.id) {
+        const seats = normalizeSeats(currentTable.seats);
+        const otherHumans = seats.filter(s => s && !s.isBot && s.id !== profile?.id);
+        const curRound = currentTable.currentRound || 1;
+        const targetRounds = currentTable.targetRounds || 5;
+        const isMatchOver = curRound >= targetRounds && currentTable.gameState && !!currentTable.gameState.roundResult;
+
+        if (currentTable.status === 'waiting' || isMatchOver || otherHumans.length === 0) {
+          if (currentTable.hostId === profile?.id || otherHumans.length === 0) {
             fetch(`${RTDB_URL}/okey/tables/${currentTableId}.json`, { method: 'DELETE', keepalive: true }).catch(() => {});
           } else if (mySeatIndex >= 0) {
             fetch(`${RTDB_URL}/okey/tables/${currentTableId}/seats/${mySeatIndex}.json`, { method: 'DELETE', keepalive: true }).catch(() => {});
