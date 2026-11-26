@@ -1061,16 +1061,7 @@
             <!-- 2. PLAYING AREA: DECK + INDICATOR + FINISH ZONE (When Table Status is 'playing') -->
             <div id="tableCenterPlayingArea" class="flex flex-col items-center justify-center gap-2.5 w-full">
               <div class="flex items-center justify-center gap-3 sm:gap-5">
-                <!-- Center Draw Deck -->
-                <div class="flex flex-col items-center gap-1">
-                  <button id="btnDrawDeck" onclick="drawFromDeck()" class="okey-tile tile-back w-12 h-16 sm:w-14 sm:h-[74px] rounded-xl flex flex-col items-center justify-center relative cursor-pointer active:scale-95 transition">
-                    <span class="text-[10px] font-mono font-black text-amber-900 uppercase">DESTE</span>
-                    <span id="deckCountBadge" class="mt-0.5 px-1.5 py-0.5 rounded-md bg-slate-900 text-amber-300 text-xs font-mono font-extrabold">50</span>
-                  </button>
-                  <span class="text-[10px] font-bold text-emerald-200/80">Ortadan Çek</span>
-                </div>
-
-                <!-- Indicator Tile (Gösterge) & Finish Zone -->
+                <!-- Indicator Tile (Gösterge) & Finish Zone (STANDART: SOLDA) -->
                 <div class="flex flex-col items-center gap-1">
                   <div id="indicatorHalo" onclick="attemptFinishWithSelected()" ondragover="event.preventDefault()" ondragenter="this.classList.add('finish-drop-active')" ondragleave="this.classList.remove('finish-drop-active')" ondrop="handleDropOnFinish(event)" class="p-1.5 rounded-2xl border-2 transition cursor-pointer relative group finish-dropzone" title="Bitirmek için 15. taşı buraya bırak veya seçip tıkla">
                     <div id="indicatorTileBox" class="pointer-events-none"></div>
@@ -1080,6 +1071,15 @@
                   </div>
                   <span id="okeyTargetText" class="text-[10px] font-mono font-bold text-amber-300">OKEY: —</span>
                   <span id="finishTargetHint" class="text-[9px] font-bold text-amber-200/70">🏆 Bitiş Alanı</span>
+                </div>
+
+                <!-- Center Draw Deck (STANDART: SAĞDA - EL ALIŞKANLIĞINA UYGUN) -->
+                <div class="flex flex-col items-center gap-1">
+                  <button id="btnDrawDeck" onclick="drawFromDeck()" class="okey-tile tile-back w-12 h-16 sm:w-14 sm:h-[74px] rounded-xl flex flex-col items-center justify-center relative cursor-pointer active:scale-95 transition">
+                    <span class="text-[10px] font-mono font-black text-amber-900 uppercase">DESTE</span>
+                    <span id="deckCountBadge" class="mt-0.5 px-1.5 py-0.5 rounded-md bg-slate-900 text-amber-300 text-xs font-mono font-extrabold">50</span>
+                  </button>
+                  <span class="text-[10px] font-bold text-emerald-200/80">Ortadan Çek</span>
                 </div>
               </div>
 
