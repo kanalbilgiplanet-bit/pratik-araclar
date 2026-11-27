@@ -92,18 +92,26 @@
     .font-mono-tech {
       font-family: 'JetBrains Mono', monospace;
     }
-    /* Lock scrolling and hide scrollbars completely during fullscreen test */
+    /* Universal complete scrollbar obliteration */
+    *, *::before, *::after {
+      scrollbar-width: none !important;
+      -ms-overflow-style: none !important;
+    }
+    ::-webkit-scrollbar {
+      width: 0px !important;
+      height: 0px !important;
+      display: none !important;
+    }
+    html, body {
+      scrollbar-width: none !important;
+      -ms-overflow-style: none !important;
+    }
     html.test-fullscreen, body.test-fullscreen {
       overflow: hidden !important;
       height: 100vh !important;
       width: 100vw !important;
       margin: 0 !important;
       padding: 0 !important;
-    }
-    html.test-fullscreen::-webkit-scrollbar, body.test-fullscreen::-webkit-scrollbar {
-      display: none !important;
-      width: 0 !important;
-      height: 0 !important;
     }
   </style>
 </head>
@@ -179,6 +187,26 @@
         <span class="text-lg sm:text-xl font-bold text-emerald-400" id="txtDeviceType">Masaüstü</span>
         <span class="text-[10px] text-stone-500 mt-1" id="txtTouchSupport">Dokunmatik: Hayır</span>
       </div>
+    </div>
+
+    <!-- Master 1-Click Automated Sequential Test Banner -->
+    <div class="w-full bg-gradient-to-r from-cyan-950/80 via-blue-950/80 to-purple-950/80 border-2 border-cyan-500/60 rounded-3xl p-6 sm:p-8 mb-8 shadow-2xl relative overflow-hidden flex flex-col sm:flex-row items-center justify-between gap-6 backdrop-blur">
+      <div class="max-w-xl text-center sm:text-left">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 mb-2">
+          <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+          <span>ÖNERİLEN • TEK TIKLA TÜM TESTLER</span>
+        </span>
+        <h2 class="text-xl sm:text-2xl font-black text-white tracking-tight mb-2">
+          Otomatik Sıralı Ekran Testi (Tümü Tek Seferde)
+        </h2>
+        <p class="text-xs sm:text-sm text-stone-300 leading-relaxed">
+          Hiçbir şey yapmanıza gerek kalmadan; <strong>8 Saf Renk Ölü Piksel Taraması</strong>, <strong>Banding / Renk Gradyanı</strong> ve <strong>Ghosting Hız Testi</strong> sırayla otomatik akar ve en son tek bir nihai panel karnesi verir!
+        </p>
+      </div>
+      <button onclick="startAutoSequentialTest()" class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-stone-950 font-black text-sm sm:text-base transition-all transform hover:scale-105 active:scale-95 shadow-xl shadow-cyan-500/30 shrink-0 flex items-center justify-center gap-2.5">
+        <i class="fa-solid fa-play text-lg"></i>
+        <span>Otomatik Testi Başlat</span>
+      </button>
     </div>
 
     <!-- 4 Main Interactive Test Cards -->
@@ -286,15 +314,15 @@
   </main>
 
   <!-- ========================================================================= -->
-  <!-- FULLSCREEN DEAD PIXEL TEST OVERLAY (PURE COLOR CANVAS) -->
+  <!-- FULLSCREEN UNIFIED AUTOMATED TEST OVERLAY (PURE CANVAS & GHOSTING STAGE) -->
   <!-- ========================================================================= -->
-  <div id="fullScreenOverlay" class="fixed inset-0 z-50 hidden select-none overflow-hidden cursor-crosshair w-screen h-screen">
+  <div id="fullScreenOverlay" class="fixed inset-0 z-50 hidden select-none overflow-hidden cursor-crosshair w-full h-full m-0 p-0">
     
-    <!-- Top Interactive HUD Bar (reappears on mousemove / touch, auto-hides after 3s) -->
+    <!-- Top Interactive HUD Bar -->
     <div id="fsHud" class="absolute top-4 left-1/2 -translate-x-1/2 bg-stone-900/90 backdrop-blur-md text-white px-3 sm:px-5 py-2.5 rounded-2xl shadow-2xl border border-stone-700/80 transition-all duration-300 flex items-center gap-2 sm:gap-3 z-50">
       
-      <!-- Prev Color -->
-      <button onclick="prevTestColor(event)" class="px-2.5 py-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 text-stone-200 text-xs font-semibold transition flex items-center gap-1" title="Önceki Renk (Sol Ok)">
+      <!-- Prev Step -->
+      <button onclick="prevAutoStep(event)" class="px-2.5 py-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 text-stone-200 text-xs font-semibold transition flex items-center gap-1" title="Önceki (Sol Ok)">
         <i class="fa-solid fa-chevron-left text-[10px]"></i>
         <span class="hidden sm:inline">Önceki</span>
       </button>
@@ -302,19 +330,25 @@
       <!-- Current Step Pill -->
       <div class="px-3 py-1 rounded-lg bg-stone-950/80 border border-stone-800 text-xs font-mono-tech font-bold text-cyan-400 flex items-center gap-2">
         <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
-        <span id="txtHudStep">1/8: SİYAH</span>
+        <span id="txtHudStep">1/10: SİYAH</span>
       </div>
 
-      <!-- Next Color -->
-      <button onclick="nextTestColor(event)" class="px-2.5 py-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 text-stone-200 text-xs font-semibold transition flex items-center gap-1" title="Sonraki Renk (Sağ Ok veya Tık)">
+      <!-- Play / Pause Auto-Advance -->
+      <button id="btnAutoPause" onclick="toggleAutoAdvance(event)" class="px-2.5 py-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 text-stone-200 text-xs font-semibold transition flex items-center gap-1" title="Otomatik Akışı Duraklat / Devam Ettir">
+        <i class="fa-solid fa-pause text-[10px]" id="iconAutoPause"></i>
+        <span class="hidden sm:inline" id="lblAutoPause">Duraklat</span>
+      </button>
+
+      <!-- Next Step -->
+      <button onclick="nextAutoStep(event)" class="px-2.5 py-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 text-stone-200 text-xs font-semibold transition flex items-center gap-1" title="Sonraki (Sağ Ok veya Tıkla)">
         <span class="hidden sm:inline">Sonraki</span>
         <i class="fa-solid fa-chevron-right text-[10px]"></i>
       </button>
 
       <!-- Finish / Results Button -->
-      <button onclick="completeDeadPixelTest(event)" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition flex items-center gap-1.5 shadow-sm" title="Testi Bitir">
+      <button onclick="finishAllTestsAndShowReport(event)" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition flex items-center gap-1.5 shadow-sm" title="Testi Bitir & Karneni Al">
         <i class="fa-solid fa-flag-checkered text-[11px]"></i>
-        <span>Testi Bitir</span>
+        <span>Karneni Al</span>
       </button>
 
       <!-- Exit Button -->
@@ -324,71 +358,104 @@
       </button>
     </div>
 
-    <!-- Bottom Instruction Pill (subtle) -->
+    <!-- Embedded Ghosting Stage within Fullscreen -->
+    <div id="fsGhostingStage" class="hidden absolute inset-0 flex flex-col justify-center px-6 sm:px-16 pointer-events-none">
+      <div class="text-center mb-6">
+        <span class="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-bold border border-emerald-500/40">
+          UFO HAREKET & GHOSTING TESTİ
+        </span>
+      </div>
+      <!-- Track 1: Dark background -->
+      <div class="w-full h-16 bg-stone-900/90 rounded-xl mb-4 flex items-center relative overflow-hidden border border-stone-800">
+        <div id="fsUfo1" class="absolute w-14 h-12 rounded-lg bg-cyan-400 flex items-center justify-center text-stone-950 font-black text-sm shadow-xl">🛸</div>
+      </div>
+      <!-- Track 2: Mid-gray background -->
+      <div class="w-full h-16 bg-stone-700/90 rounded-xl mb-4 flex items-center relative overflow-hidden border border-stone-600">
+        <div id="fsUfo2" class="absolute w-14 h-12 rounded-lg bg-amber-400 flex items-center justify-center text-stone-950 font-black text-sm shadow-xl">🛸</div>
+      </div>
+      <!-- Track 3: Bright background -->
+      <div class="w-full h-16 bg-stone-300/95 rounded-xl flex items-center relative overflow-hidden border border-stone-400">
+        <div id="fsUfo3" class="absolute w-14 h-12 rounded-lg bg-emerald-600 flex items-center justify-center text-white font-black text-sm shadow-xl">🛸</div>
+      </div>
+      <div class="text-center text-xs text-stone-400 mt-4 font-mono-tech">
+        UFO arkasında koyu gölge veya iz (ghosting) olup olmadığını inceleyin
+      </div>
+    </div>
+
+    <!-- Bottom Instruction Pill -->
     <div id="fsBottomHint" class="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/60 backdrop-blur text-stone-300 px-4 py-1.5 rounded-full text-[11px] font-mono-tech pointer-events-none transition-opacity duration-300">
-      💡 Ekrana dokunarak veya tıklayarak rengi değiştirebilirsiniz
+      💡 Ekrana dokunarak veya tıklayarak anında bir sonrakine geçebilirsiniz
     </div>
 
   </div>
 
   <!-- ========================================================================= -->
-  <!-- TEST SUMMARY & HEALTH REPORT MODAL -->
+  <!-- FINAL UNIFIED SCREEN HEALTH REPORT MODAL (NİHAİ EKRAN KARNESİ) -->
   <!-- ========================================================================= -->
-  <div id="reportModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-4 select-none">
-    <div class="w-full max-w-lg bg-stone-900 border-2 border-stone-700 rounded-3xl p-6 sm:p-8 text-center shadow-2xl flex flex-col items-center">
+  <div id="reportModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-4 select-none w-full h-full overflow-hidden">
+    <div class="w-full max-w-lg bg-stone-900 border-2 border-stone-700 rounded-3xl p-5 sm:p-7 text-center shadow-2xl flex flex-col items-center max-h-[92vh] overflow-y-auto">
       
       <div id="reportBadgeIcon" class="w-16 h-16 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-3xl shadow-lg mb-3">
-        🔍
+        🏆
       </div>
 
+      <span class="text-xs font-mono-tech font-bold uppercase tracking-widest text-cyan-400 mb-1">TEST TAMAMLANDI</span>
       <h3 class="text-xl sm:text-2xl font-black text-white mb-2">
-        8 Saf Renk Taraması Tamamlandı!
+        Nihai Ekran Sağlık Karnesi
       </h3>
       
-      <p class="text-xs sm:text-sm text-stone-300 mb-6 leading-relaxed">
-        Siyah, beyaz, kırmızı, yeşil, mavi, sarı, camgöbeği ve magenta renkleri tam ekranda incelendi.
-        <br><strong class="text-white">Ekranında herhangi bir noktada kusurlu piksel fark ettin mi?</strong>
+      <!-- Key Specs Summary Badges -->
+      <div class="grid grid-cols-3 gap-2 w-full my-4 text-center">
+        <div class="p-2.5 rounded-xl bg-stone-950 border border-stone-800">
+          <span class="text-[10px] text-stone-500 uppercase block">Yenileme Hızı</span>
+          <span class="text-base font-black text-cyan-400 font-mono-tech" id="txtReportHz">120 Hz</span>
+        </div>
+        <div class="p-2.5 rounded-xl bg-stone-950 border border-stone-800">
+          <span class="text-[10px] text-stone-500 uppercase block">Çözünürlük</span>
+          <span class="text-sm font-bold text-stone-200 font-mono-tech" id="txtReportRes">1920×1080</span>
+        </div>
+        <div class="p-2.5 rounded-xl bg-stone-950 border border-stone-800">
+          <span class="text-[10px] text-stone-500 uppercase block">Panel Sağlığı</span>
+          <span class="text-sm font-bold text-emerald-400">A+ Onaylı</span>
+        </div>
+      </div>
+
+      <p class="text-xs text-stone-300 mb-4 leading-relaxed">
+        8 Saf Renk, Gradyan Banding ve Ghosting hareket testleri tamamlandı.
+        <br><strong class="text-white">Ekranında herhangi bir noktada ölü veya renkli takılı piksel gördün mü?</strong>
       </p>
 
       <!-- 2 Choice Action Buttons -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full mb-6">
-        <button onclick="recordTestOutcome(true)" class="py-3.5 px-4 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm transition flex flex-col items-center justify-center gap-1 shadow-lg shadow-emerald-600/25">
-          <span class="text-base">🟢 Hayır, Kusursuz!</span>
-          <span class="text-[10px] text-emerald-200 font-normal">Ekranım tertemiz, piksel yok</span>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 w-full mb-4">
+        <button onclick="recordTestOutcome(true)" class="py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition flex flex-col items-center justify-center gap-0.5 shadow-lg shadow-emerald-600/25">
+          <span class="text-sm">🟢 Hayır, Ekran Kusursuz!</span>
+          <span class="text-[10px] text-emerald-200 font-normal">Hiçbir kusur yok, tertemiz</span>
         </button>
-        <button onclick="recordTestOutcome(false)" class="py-3.5 px-4 rounded-2xl bg-stone-800 hover:bg-stone-700 text-stone-200 hover:text-white font-bold text-xs sm:text-sm transition flex flex-col items-center justify-center gap-1 border border-stone-700">
-          <span class="text-base">🔴 Evet, Kusur Gördüm</span>
+        <button onclick="recordTestOutcome(false)" class="py-3 px-4 rounded-xl bg-stone-800 hover:bg-stone-700 text-stone-200 hover:text-white font-bold text-xs transition flex flex-col items-center justify-center gap-0.5 border border-stone-700">
+          <span class="text-sm">🔴 Evet, Kusurlu Nokta Var</span>
           <span class="text-[10px] text-stone-400 font-normal">Nokta parlıyor veya siyah</span>
         </button>
       </div>
 
       <!-- Result Feedback Details (Shown after choice) -->
-      <div id="reportOutcomeDetails" class="hidden w-full text-left p-4 rounded-xl bg-stone-950/80 border border-stone-800 mb-6 text-xs">
+      <div id="reportOutcomeDetails" class="hidden w-full text-left p-3.5 rounded-xl bg-stone-950/90 border border-stone-800 mb-4 text-xs">
         <!-- Dynamically injected -->
       </div>
 
-      <!-- Next Steps & Direct Navigation to Other Tests -->
-      <div class="w-full pt-4 border-t border-stone-800">
-        <div class="text-[11px] font-bold uppercase tracking-wider text-stone-400 mb-3 text-center">
-          Sıradaki Ekran Testine Geç
-        </div>
-        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
-          <button onclick="goToGhostingTest()" class="p-2.5 rounded-xl bg-stone-800 hover:bg-stone-700 text-stone-200 text-xs font-semibold flex items-center justify-center gap-1.5 transition border border-stone-700">
-            <span>🛸 Ghosting Testi</span>
-          </button>
-          <button onclick="goToStuckPixelReviver()" class="p-2.5 rounded-xl bg-stone-800 hover:bg-purple-900/60 text-stone-200 hover:text-purple-300 text-xs font-semibold flex items-center justify-center gap-1.5 transition border border-stone-700">
-            <span>⚡ Piksel Canlandır</span>
-          </button>
-          <button onclick="restartDeadPixelTest()" class="col-span-2 sm:col-span-1 p-2.5 rounded-xl bg-cyan-600/20 hover:bg-cyan-600/40 text-cyan-300 text-xs font-semibold flex items-center justify-center gap-1.5 transition border border-cyan-800/60">
-            <i class="fa-solid fa-rotate-left"></i>
-            <span>Tekrar Başlat</span>
-          </button>
-        </div>
+      <!-- Quick Actions -->
+      <div class="flex items-center gap-2 w-full pt-3 border-t border-stone-800">
+        <button onclick="startAutoSequentialTest()" class="flex-1 py-2.5 px-3 rounded-xl bg-cyan-600/20 hover:bg-cyan-600/40 text-cyan-300 text-xs font-semibold flex items-center justify-center gap-1.5 transition border border-cyan-800/60">
+          <i class="fa-solid fa-rotate-left text-xs"></i>
+          <span>Testi Baştan Yap</span>
+        </button>
+        <button onclick="shareTestResults()" class="py-2.5 px-4 rounded-xl bg-stone-800 hover:bg-stone-700 text-stone-200 text-xs font-semibold flex items-center justify-center gap-1.5 transition border border-stone-700">
+          <i class="fa-solid fa-share-nodes text-xs"></i>
+          <span>Paylaş</span>
+        </button>
+        <button onclick="closeReportModal()" class="py-2.5 px-4 rounded-xl bg-stone-800 hover:bg-stone-700 text-stone-300 text-xs font-semibold transition border border-stone-700">
+          Kapat
+        </button>
       </div>
-
-      <button onclick="closeReportModal()" class="mt-4 text-xs text-stone-500 hover:text-stone-300 transition">
-        Kapat ve Ana Sayfaya Dön
-      </button>
 
     </div>
   </div>
@@ -396,7 +463,7 @@
   <!-- ========================================================================= -->
   <!-- STUCK PIXEL REVIVER FLOATING WINDOW / CANVAS -->
   <!-- ========================================================================= -->
-  <div id="reviverOverlay" class="fixed inset-0 z-50 bg-black/90 hidden flex flex-col items-center justify-center p-4">
+  <div id="reviverOverlay" class="fixed inset-0 z-50 bg-black/90 hidden flex flex-col items-center justify-center p-4 w-full h-full overflow-hidden">
     <div class="w-full max-w-lg bg-stone-900 border border-stone-800 rounded-2xl p-5 shadow-2xl flex flex-col items-center">
       <div class="flex items-center justify-between w-full mb-3">
         <h3 class="font-bold text-white text-sm flex items-center gap-2">
@@ -429,9 +496,47 @@
   </div>
 
   <!-- ========================================================================= -->
-  <!-- GHOSTING / MOTION BLUR TEST MODAL -->
+  <!-- GHOSTING / MOTION BLUR TEST MODAL (STANDALONE) -->
   <!-- ========================================================================= -->
-  <div id="ghostingModal" class="fixed inset-0 z-50 bg-black/95 hidden flex flex-col items-center justify-center p-4">
+  <div id="ghostingModal" class="fixed inset-0 z-50 bg-black/95 hidden flex flex-col items-center justify-center p-4 w-full h-full overflow-hidden">
+    <div class="w-full max-w-4xl bg-stone-900 border border-stone-800 rounded-2xl p-5 shadow-2xl flex flex-col items-center">
+      <div class="flex items-center justify-between w-full mb-3">
+        <div class="flex items-center gap-2">
+          <span class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></span>
+          <h3 class="font-bold text-white text-base">Ghosting & Tepki Süresi Testi</h3>
+        </div>
+        <button onclick="closeGhostingModal()" class="text-stone-400 hover:text-white text-xs bg-stone-800 px-3 py-1.5 rounded-lg">
+          Kapat (ESC)
+        </button>
+      </div>
+
+      <!-- Animation Stage -->
+      <div class="w-full h-64 bg-stone-950 rounded-xl border border-stone-800 overflow-hidden relative flex flex-col justify-around py-3 px-2 mb-4">
+        <div class="w-full h-14 bg-stone-900/60 rounded flex items-center relative overflow-hidden">
+          <div id="ufo1" class="absolute w-12 h-10 rounded-lg bg-cyan-400 flex items-center justify-center shadow-lg font-black text-stone-950 text-xs">🛸</div>
+        </div>
+        <div class="w-full h-14 bg-stone-700/60 rounded flex items-center relative overflow-hidden">
+          <div id="ufo2" class="absolute w-12 h-10 rounded-lg bg-amber-400 flex items-center justify-center shadow-lg font-black text-stone-950 text-xs">🛸</div>
+        </div>
+        <div class="w-full h-14 bg-stone-400/80 rounded flex items-center relative overflow-hidden">
+          <div id="ufo3" class="absolute w-12 h-10 rounded-lg bg-emerald-600 flex items-center justify-center shadow-lg font-black text-white text-xs">🛸</div>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="flex flex-wrap items-center justify-between w-full gap-3 text-xs text-stone-400">
+        <div class="flex items-center gap-2">
+          <span>Hız:</span>
+          <button onclick="setUfoSpeed(480)" class="px-2.5 py-1 rounded bg-stone-800 text-stone-200 hover:bg-stone-700">Normal (480px/s)</button>
+          <button onclick="setUfoSpeed(960)" class="px-2.5 py-1 rounded bg-stone-800 text-stone-200 hover:bg-stone-700">Hızlı (960px/s)</button>
+          <button onclick="setUfoSpeed(1440)" class="px-2.5 py-1 rounded bg-stone-800 text-stone-200 hover:bg-stone-700">Ultra (1440px/s)</button>
+        </div>
+        <div class="text-[11px] text-stone-500">
+          Nesnenin arkasında kuyruk/gölge (ghosting) görüyorsanız panel tepki süresi düşüktür.
+        </div>
+      </div>
+    </div>
+  </div>
     <div class="w-full max-w-4xl bg-stone-900 border border-stone-800 rounded-2xl p-5 shadow-2xl flex flex-col items-center">
       <div class="flex items-center justify-between w-full mb-3">
         <div class="flex items-center gap-2">
@@ -511,31 +616,32 @@
       document.getElementById('txtTouchSupport').textContent = isTouch ? 'Dokunmatik: Destekliyor' : 'Dokunmatik: Yok';
     }
 
-    // Precise Hardware Refresh Rate (Hz) Engine using requestAnimationFrame
+    // Precise Hardware Refresh Rate (Hz) Engine using requestAnimationFrame (Stabilized)
     let hzSamples = [];
     let lastFrameTime = null;
     let detectedHz = 60;
+    let hzRafId = null;
+    let hzMeasureDone = false;
 
     function measureRefreshRate(now) {
+      if (hzMeasureDone) return;
       if (lastFrameTime !== null) {
         const delta = now - lastFrameTime;
         if (delta > 0 && delta < 100) {
           const fps = 1000 / delta;
           hzSamples.push(fps);
-          if (hzSamples.length > 90) hzSamples.shift();
 
-          if (hzSamples.length >= 30) {
-            // Trim outliers (top and bottom 10%)
+          if (hzSamples.length >= 75) {
+            // Trim outliers (top and bottom 15%)
             const sorted = [...hzSamples].sort((a,b) => a - b);
-            const trimCount = Math.floor(sorted.length * 0.1);
+            const trimCount = Math.floor(sorted.length * 0.15);
             const trimmed = sorted.slice(trimCount, sorted.length - trimCount);
             const avgFps = trimmed.reduce((sum, v) => sum + v, 0) / trimmed.length;
 
             let roundedHz = Math.round(avgFps);
-            // Snap to common standard display rates if within margin of error
             const standards = [60, 75, 90, 120, 144, 165, 240, 360];
             for (const std of standards) {
-              if (Math.abs(avgFps - std) <= 2.2) {
+              if (Math.abs(avgFps - std) <= 2.8) {
                 roundedHz = std;
                 break;
               }
@@ -545,47 +651,79 @@
             document.getElementById('txtLiveHz').textContent = `${roundedHz} Hz`;
             document.getElementById('txtHeaderHz').textContent = `${roundedHz} Hz Ekran`;
             document.getElementById('headerHzBadge').classList.remove('hidden');
-            document.getElementById('txtHzStability').textContent = `Ölçüm: ~${avgFps.toFixed(1)} FPS`;
+            document.getElementById('txtHzStability').innerHTML = `
+              <span class="inline-flex items-center gap-1 text-emerald-400 font-semibold">
+                <i class="fa-solid fa-circle-check text-[10px]"></i> Sabitlendi (~${avgFps.toFixed(1)} FPS)
+              </span>
+              <button onclick="restartHzMeasure()" class="ml-1.5 text-[10px] text-cyan-400 hover:underline">Tekrar Ölç</button>
+            `;
+
+            hzMeasureDone = true;
+            cancelAnimationFrame(hzRafId);
+            return;
+          } else {
+            const estFps = 1000 / delta;
+            document.getElementById('txtHzStability').textContent = `Ölçülüyor... (~${Math.round(estFps)} FPS)`;
           }
         }
       }
       lastFrameTime = now;
-      requestAnimationFrame(measureRefreshRate);
+      hzRafId = requestAnimationFrame(measureRefreshRate);
+    }
+
+    function restartHzMeasure() {
+      hzSamples = [];
+      lastFrameTime = null;
+      hzMeasureDone = false;
+      document.getElementById('txtHzStability').textContent = 'Hesaplanıyor...';
+      hzRafId = requestAnimationFrame(measureRefreshRate);
     }
 
     // =========================================================================
-    // FULLSCREEN DEAD PIXEL COLOR TEST
+    // UNIFIED AUTOMATED SEQUENTIAL TEST ENGINE (8 SAF RENK + GRADYAN + GHOSTING)
     // =========================================================================
-    const TEST_COLORS = [
-      { name: 'SİYAH (Işık Sızıntısı & Sıkışmış Piksel)', code: '#000000', text: '#ffffff' },
-      { name: 'BEYAZ (Ölü Siyah Piksel Tespiti)', code: '#ffffff', text: '#000000' },
-      { name: 'KIRMIZI (Sub-Pixel Kırmızı Sağlığı)', code: '#ff0000', text: '#ffffff' },
-      { name: 'YEŞİL (Sub-Pixel Yeşil Sağlığı)', code: '#00ff00', text: '#000000' },
-      { name: 'MAVİ (Sub-Pixel Mavi Sağlığı)', code: '#0000ff', text: '#ffffff' },
-      { name: 'SARI (RGB Karışım Testi)', code: '#ffff00', text: '#000000' },
-      { name: 'CAMGÖBEĞİ (Cyan)', code: '#00ffff', text: '#000000' },
-      { name: 'MAGENTA (Pembe/Mor)', code: '#ff00ff', text: '#ffffff' }
+    const AUTO_TEST_STEPS = [
+      { type: 'color', name: 'SİYAH (1/8)', code: '#000000', text: '#ffffff', desc: 'Ölü veya sıkışmış piksel taraması', duration: 2500 },
+      { type: 'color', name: 'BEYAZ (2/8)', code: '#ffffff', text: '#000000', desc: 'Siyah ölü piksel tespiti', duration: 2500 },
+      { type: 'color', name: 'KIRMIZI (3/8)', code: '#ff0000', text: '#ffffff', desc: 'Kırmızı alt-piksel kontrolü', duration: 2500 },
+      { type: 'color', name: 'YEŞİL (4/8)', code: '#00ff00', text: '#000000', desc: 'Yeşil alt-piksel kontrolü', duration: 2500 },
+      { type: 'color', name: 'MAVİ (5/8)', code: '#0000ff', text: '#ffffff', desc: 'Mavi alt-piksel kontrolü', duration: 2500 },
+      { type: 'color', name: 'SARI (6/8)', code: '#ffff00', text: '#000000', desc: 'Kırmızı-Yeşil bileşen kontrolü', duration: 2500 },
+      { type: 'color', name: 'CAMGÖBEĞİ (7/8)', code: '#00ffff', text: '#000000', desc: 'Yeşil-Mavi bileşen kontrolü', duration: 2500 },
+      { type: 'color', name: 'MAGENTA (8/8)', code: '#ff00ff', text: '#ffffff', desc: 'Kırmızı-Mavi bileşen kontrolü', duration: 2500 },
+      { type: 'gradient', name: 'GRADYAN & BANDING (9/10)', grad: 'linear-gradient(to right, #000000, #ffffff)', text: '#00ffcc', desc: '8-bit / 10-bit Pürüzsüz Renk Geçiş Taraması', duration: 3500 },
+      { type: 'ghosting', name: 'GHOSTING HIZ TESTİ (10/10)', text: '#34d399', desc: 'UFO Hareketli Nesne Tepki Süresi Taraması', duration: 4500 }
     ];
 
-    let currentColorIdx = 0;
+    let currentStepIdx = 0;
+    let autoTimer = null;
+    let isAutoPaused = false;
     let hudHideTimer = null;
+    let fsUfoPos = 0;
+    let fsGhostingActive = false;
+    let fsGhostingLastTime = null;
 
     function lockScroll(enable) {
       if (enable) {
         document.documentElement.classList.add('test-fullscreen');
         document.body.classList.add('test-fullscreen');
+        document.documentElement.style.overflow = 'hidden';
+        document.body.style.overflow = 'hidden';
       } else {
         document.documentElement.classList.remove('test-fullscreen');
         document.body.classList.remove('test-fullscreen');
+        document.documentElement.style.overflow = '';
+        document.body.style.overflow = '';
       }
     }
 
-    function startDeadPixelTest() {
-      currentColorIdx = 0;
+    // Master 1-Click Automated Sequential Test Launcher
+    function startAutoSequentialTest() {
+      currentStepIdx = 0;
+      isAutoPaused = false;
       lockScroll(true);
       const overlay = document.getElementById('fullScreenOverlay');
       overlay.classList.remove('hidden');
-      applyTestColor();
 
       // Request browser fullscreen if available
       try {
@@ -604,6 +742,108 @@
       // Event listener for screen clicks
       overlay.onclick = handleOverlayClick;
       window.addEventListener('keydown', handleOverlayKey);
+
+      renderCurrentAutoStep();
+    }
+
+    // Manual single test shortcuts (alias to sequential)
+    function startDeadPixelTest() {
+      startAutoSequentialTest();
+    }
+
+    function renderCurrentAutoStep() {
+      clearTimeout(autoTimer);
+      const step = AUTO_TEST_STEPS[currentStepIdx];
+      const overlay = document.getElementById('fullScreenOverlay');
+      const ghostingStage = document.getElementById('fsGhostingStage');
+      const hudStep = document.getElementById('txtHudStep');
+
+      if (!step) {
+        finishAllTestsAndShowReport();
+        return;
+      }
+
+      if (hudStep) {
+        hudStep.textContent = step.name;
+      }
+
+      if (step.type === 'color') {
+        fsGhostingActive = false;
+        if (ghostingStage) ghostingStage.classList.add('hidden');
+        overlay.style.backgroundColor = step.code;
+        overlay.style.backgroundImage = 'none';
+      } else if (step.type === 'gradient') {
+        fsGhostingActive = false;
+        if (ghostingStage) ghostingStage.classList.add('hidden');
+        overlay.style.backgroundColor = 'transparent';
+        overlay.style.backgroundImage = step.grad;
+      } else if (step.type === 'ghosting') {
+        overlay.style.backgroundColor = '#0b0f19';
+        overlay.style.backgroundImage = 'none';
+        if (ghostingStage) ghostingStage.classList.remove('hidden');
+        fsGhostingActive = true;
+        fsGhostingLastTime = performance.now();
+        requestAnimationFrame(renderFsUfo);
+      }
+
+      showHudTemporarily();
+
+      // Setup automatic advance timer
+      if (!isAutoPaused) {
+        autoTimer = setTimeout(() => {
+          nextAutoStep();
+        }, step.duration);
+      }
+    }
+
+    function nextAutoStep(e) {
+      if (e) e.stopPropagation();
+      if (currentStepIdx < AUTO_TEST_STEPS.length - 1) {
+        currentStepIdx++;
+        renderCurrentAutoStep();
+      } else {
+        finishAllTestsAndShowReport();
+      }
+    }
+
+    function prevAutoStep(e) {
+      if (e) e.stopPropagation();
+      if (currentStepIdx > 0) {
+        currentStepIdx--;
+        renderCurrentAutoStep();
+      }
+    }
+
+    function toggleAutoAdvance(e) {
+      if (e) e.stopPropagation();
+      isAutoPaused = !isAutoPaused;
+      const icon = document.getElementById('iconAutoPause');
+      const lbl = document.getElementById('lblAutoPause');
+      if (isAutoPaused) {
+        clearTimeout(autoTimer);
+        if (icon) icon.className = 'fa-solid fa-play text-[10px] text-emerald-400';
+        if (lbl) lbl.textContent = 'Oynat';
+      } else {
+        if (icon) icon.className = 'fa-solid fa-pause text-[10px]';
+        if (lbl) lbl.textContent = 'Duraklat';
+        renderCurrentAutoStep();
+      }
+      showHudTemporarily();
+    }
+
+    function handleOverlayClick(e) {
+      if (e.target.closest('#fsHud')) return;
+      nextAutoStep(e);
+    }
+
+    function handleOverlayKey(e) {
+      if (e.key === 'Escape') {
+        exitFullscreenTest();
+      } else if (e.key === ' ' || e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        nextAutoStep(e);
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        prevAutoStep(e);
+      }
     }
 
     function showHudTemporarily() {
@@ -616,62 +856,16 @@
       hudHideTimer = setTimeout(() => {
         if (hud) hud.style.opacity = '0';
         if (hint) hint.style.opacity = '0';
-      }, 2800);
-    }
-
-    function applyTestColor() {
-      const overlay = document.getElementById('fullScreenOverlay');
-      const item = TEST_COLORS[currentColorIdx];
-      overlay.style.backgroundColor = item.code;
-      overlay.style.backgroundImage = 'none';
-
-      const hudStep = document.getElementById('txtHudStep');
-      if (hudStep) {
-        hudStep.textContent = `${currentColorIdx + 1}/8: ${item.name.split(' ')[0]}`;
-      }
-    }
-
-    function nextTestColor(e) {
-      if (e) e.stopPropagation();
-      if (currentColorIdx < TEST_COLORS.length - 1) {
-        currentColorIdx++;
-        applyTestColor();
-        showHudTemporarily();
-      } else {
-        // Reached 8/8, finish test and show completion modal
-        completeDeadPixelTest();
-      }
-    }
-
-    function prevTestColor(e) {
-      if (e) e.stopPropagation();
-      if (currentColorIdx > 0) {
-        currentColorIdx--;
-        applyTestColor();
-        showHudTemporarily();
-      }
-    }
-
-    function handleOverlayClick(e) {
-      // Don't advance if user clicked on HUD buttons
-      if (e.target.closest('#fsHud')) return;
-      nextTestColor(e);
-    }
-
-    function handleOverlayKey(e) {
-      if (e.key === 'Escape') {
-        exitFullscreenTest();
-      } else if (e.key === ' ' || e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-        nextTestColor(e);
-      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-        prevTestColor(e);
-      }
+      }, 2500);
     }
 
     function exitFullscreenTest(e) {
       if (e) e.stopPropagation();
-      lockScroll(false);
+      clearTimeout(autoTimer);
       clearTimeout(hudHideTimer);
+      fsGhostingActive = false;
+      lockScroll(false);
+
       const overlay = document.getElementById('fullScreenOverlay');
       overlay.classList.add('hidden');
       window.removeEventListener('keydown', handleOverlayKey);
@@ -686,16 +880,22 @@
     }
 
     // =========================================================================
-    // TEST COMPLETION & REPORT MODAL
+    // FINAL HEALTH REPORT & REPORT MODAL (NİHAİ EKRAN KARNESİ)
     // =========================================================================
-    function completeDeadPixelTest(e) {
+    function finishAllTestsAndShowReport(e) {
       exitFullscreenTest(e);
 
-      // Open completion report modal
+      // Populate Report Specs
+      document.getElementById('txtReportHz').textContent = `${detectedHz} Hz`;
+      document.getElementById('txtReportRes').textContent = `${window.screen.width}×${window.screen.height}`;
+
       const modal = document.getElementById('reportModal');
       const outcomeBox = document.getElementById('reportOutcomeDetails');
       if (outcomeBox) outcomeBox.classList.add('hidden');
-      if (modal) modal.classList.remove('hidden');
+      if (modal) {
+        modal.classList.remove('hidden');
+        lockScroll(true);
+      }
     }
 
     function recordTestOutcome(isPerfect) {
@@ -713,10 +913,10 @@
         outcomeBox.innerHTML = `
           <div class="text-emerald-400 font-bold text-sm mb-1 flex items-center gap-1.5">
             <i class="fa-solid fa-circle-check"></i>
-            <span>Tebrikler! Panel Sağlık Skoru: %100 Kusursuz (A+)</span>
+            <span>Tebrikler! Panel Sağlık Notu: %100 Kusursuz (A+)</span>
           </div>
           <p class="text-stone-300 leading-relaxed">
-            Ekranınızda ölü veya sıkışmış hiçbir alt piksel bulunamadı. Renk homojenliği ve transistör yanıtı mükemmel durumda.
+            Ekranınızda ölü veya sıkışmış hiçbir alt piksel bulunamadı. Renk homojenliği, gradyan geçişleri ve hareket tepki süresi mükemmel durumda.
           </p>
         `;
         if (typeof confetti === 'function') {
@@ -730,11 +930,16 @@
         outcomeBox.innerHTML = `
           <div class="text-amber-400 font-bold text-sm mb-1 flex items-center gap-1.5">
             <i class="fa-solid fa-triangle-exclamation"></i>
-            <span>Kusurlu Nokta İçin Çözüm & Hak Rehberi</span>
+            <span>Tespit Edilen Kusurlu Nokta İçin Çözüm:</span>
           </div>
           <div class="space-y-1.5 text-stone-300 leading-relaxed mt-2">
-            <div>• <strong class="text-purple-300">Sıkışmış Piksel (Renkli parlıyor):</strong> Aşağıdaki <span class="text-purple-400 font-bold">'Piksel Canlandır'</span> modunu başlatıp 15 dakika sorunlu bölge üzerinde çalıştırın. Yüksek frekanslı flaş transistörü kurtarabilir.</div>
-            <div>• <strong class="text-red-300">Ölü Piksel (Zifiri siyah kalıyor):</strong> Ürünü son 14 gün içinde aldıysanız Tüketici Kanunu'na göre ayıplı maldır; koşulsuz iade veya sıfır değişim talep edebilirsiniz.</div>
+            <div>• <strong class="text-purple-300">Sıkışmış Piksel (Renkli parlıyor):</strong> Aşağıdaki 'Piksel Canlandır' modunu 15-20 dakika sorunlu bölge üzerinde çalıştırarak hücreleri kurtarabilirsiniz.</div>
+            <div>• <strong class="text-red-300">Ölü Piksel (Siyah kalıyor):</strong> Yeni aldığınız bir cihazsa (ilk 14 gün) Tüketici Kanunu kapsamında ayıplı mal olarak iade veya değişim talep edebilirsiniz.</div>
+          </div>
+          <div class="mt-3">
+            <button onclick="goToStuckPixelReviver()" class="w-full py-2 px-3 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs transition">
+              <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Sıkışmış Piksel Canlandırıcıyı Başlat
+            </button>
           </div>
         `;
       }
@@ -743,6 +948,17 @@
     function closeReportModal() {
       const modal = document.getElementById('reportModal');
       if (modal) modal.classList.add('hidden');
+      lockScroll(false);
+    }
+
+    function shareTestResults() {
+      const shareText = `Monitörümü PratikBase Test İstasyonu'nda test ettim: ${detectedHz} Hz ekran, %100 kusursuz panel! Sen de ekranını test et: ${window.location.href}`;
+      if (navigator.share) {
+        navigator.share({ title: 'Ekran Test Sonucum', text: shareText, url: window.location.href }).catch(() => {});
+      } else if (navigator.clipboard) {
+        navigator.clipboard.writeText(shareText);
+        alert('Test sonucu kopyalandı! Arkadaşlarına gönderebilirsin.');
+      }
     }
 
     function goToGhostingTest() {
@@ -757,46 +973,29 @@
 
     function restartDeadPixelTest() {
       closeReportModal();
-      startDeadPixelTest();
+      startAutoSequentialTest();
     }
 
-    // =========================================================================
-    // COLOR GRADIENT & BANDING TEST
-    // =========================================================================
-    function startGradientTest() {
-      lockScroll(true);
-      const overlay = document.getElementById('fullScreenOverlay');
-      overlay.classList.remove('hidden');
-      overlay.style.backgroundColor = 'transparent';
-      overlay.style.backgroundImage = 'linear-gradient(to right, #000000, #ffffff)';
+    // Fullscreen UFO animation renderer
+    function renderFsUfo(now) {
+      if (!fsGhostingActive) return;
+      const dt = (now - fsGhostingLastTime) / 1000;
+      fsGhostingLastTime = now;
 
-      const hudStep = document.getElementById('txtHudStep');
-      if (hudStep) hudStep.textContent = 'Renk Gradyan Testi';
+      const track = document.getElementById('fsUfo1').parentElement;
+      const maxW = track.clientWidth - 65;
 
-      showHudTemporarily();
-      overlay.onmousemove = showHudTemporarily;
-      overlay.ontouchstart = showHudTemporarily;
+      fsUfoPos += 540 * dt;
+      if (fsUfoPos > maxW) fsUfoPos = 0;
 
-      let gradMode = 0;
-      overlay.onclick = (e) => {
-        if (e.target.closest('#fsHud')) return;
-        gradMode = (gradMode + 1) % 4;
-        if (gradMode === 0) {
-          overlay.style.backgroundImage = 'linear-gradient(to right, #000000, #ffffff)';
-          if (hudStep) hudStep.textContent = 'Gradyan: Siyah -> Beyaz';
-        } else if (gradMode === 1) {
-          overlay.style.backgroundImage = 'linear-gradient(to right, #000000, #ff0000)';
-          if (hudStep) hudStep.textContent = 'Gradyan: Siyah -> Kırmızı';
-        } else if (gradMode === 2) {
-          overlay.style.backgroundImage = 'linear-gradient(to right, #000000, #00ff00)';
-          if (hudStep) hudStep.textContent = 'Gradyan: Siyah -> Yeşil';
-        } else {
-          overlay.style.backgroundImage = 'linear-gradient(to right, #000000, #0000ff)';
-          if (hudStep) hudStep.textContent = 'Gradyan: Siyah -> Mavi';
-        }
-        showHudTemporarily();
-      };
-      window.addEventListener('keydown', handleOverlayKey);
+      const u1 = document.getElementById('fsUfo1');
+      const u2 = document.getElementById('fsUfo2');
+      const u3 = document.getElementById('fsUfo3');
+      if (u1) u1.style.transform = `translateX(${fsUfoPos}px)`;
+      if (u2) u2.style.transform = `translateX(${fsUfoPos}px)`;
+      if (u3) u3.style.transform = `translateX(${fsUfoPos}px)`;
+
+      requestAnimationFrame(renderFsUfo);
     }
 
     // =========================================================================

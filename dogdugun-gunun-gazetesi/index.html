@@ -103,6 +103,20 @@
     .paper-shadow {
       box-shadow: 0 10px 35px -5px rgba(62, 39, 35, 0.15), 0 2px 6px -1px rgba(62, 39, 35, 0.1);
     }
+    /* Universal scrollbar obliteration */
+    *, *::before, *::after {
+      scrollbar-width: none !important;
+      -ms-overflow-style: none !important;
+    }
+    ::-webkit-scrollbar {
+      display: none !important;
+      width: 0px !important;
+      height: 0px !important;
+    }
+    html, body {
+      scrollbar-width: none !important;
+      -ms-overflow-style: none !important;
+    }
   </style>
 </head>
 <body class="bg-stone-900 text-stone-800 min-h-screen flex flex-col antialiased selection:bg-amber-200 selection:text-stone-900">
@@ -153,38 +167,23 @@
 
     <!-- Interactive Control Card -->
     <div class="w-full max-w-2xl bg-stone-800/90 border border-stone-700/80 rounded-2xl p-4 sm:p-6 shadow-xl mb-8 backdrop-blur">
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
-        <!-- Day -->
-        <div>
-          <label class="block text-xs font-semibold text-stone-300 mb-1.5">Gün</label>
-          <select id="selDay" class="w-full bg-stone-900 border border-stone-700 rounded-xl px-3 py-2.5 text-sm text-stone-100 font-semibold focus:outline-none focus:border-amber-500 transition">
-            <!-- Populated via JS -->
-          </select>
-        </div>
-        <!-- Month -->
-        <div>
-          <label class="block text-xs font-semibold text-stone-300 mb-1.5">Ay</label>
-          <select id="selMonth" class="w-full bg-stone-900 border border-stone-700 rounded-xl px-3 py-2.5 text-sm text-stone-100 font-semibold focus:outline-none focus:border-amber-500 transition">
-            <option value="1">Ocak</option>
-            <option value="2">Şubat</option>
-            <option value="3">Mart</option>
-            <option value="4">Nisan</option>
-            <option value="5">Mayıs</option>
-            <option value="6">Haziran</option>
-            <option value="7">Temmuz</option>
-            <option value="8">Ağustos</option>
-            <option value="9">Eylül</option>
-            <option value="10">Ekim</option>
-            <option value="11">Kasım</option>
-            <option value="12">Aralık</option>
-          </select>
-        </div>
-        <!-- Year -->
-        <div>
-          <label class="block text-xs font-semibold text-stone-300 mb-1.5">Yıl</label>
-          <select id="selYear" class="w-full bg-stone-900 border border-stone-700 rounded-xl px-3 py-2.5 text-sm text-stone-100 font-semibold focus:outline-none focus:border-amber-500 transition">
-            <!-- Populated via JS (1940 - 2026) -->
-          </select>
+      
+      <!-- Date Selector: Native Mobile Wheel / Modern Picker (Zero Overflow) -->
+      <div class="mb-4">
+        <label class="block text-xs font-semibold text-stone-300 mb-1.5 flex items-center justify-between">
+          <span class="flex items-center gap-1.5">
+            <i class="fa-solid fa-calendar-day text-amber-400"></i>
+            <span>Doğum Tarihini Seç</span>
+          </span>
+          <span class="text-amber-400 font-bold text-xs" id="txtSelectedDatePreview">15 Mayıs 1998 • Cuma</span>
+        </label>
+        <div class="relative">
+          <input type="date" id="inputBirthDate" value="1998-05-15" min="1940-01-01" max="2026-12-31" 
+                 onchange="onDateInputChange()"
+                 class="w-full bg-stone-900 border border-stone-700 rounded-xl px-4 py-3 text-base sm:text-lg text-amber-400 font-bold focus:outline-none focus:border-amber-500 transition cursor-pointer">
+          <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-stone-400 text-base">
+            <i class="fa-solid fa-calendar-days text-amber-400"></i>
+          </div>
         </div>
       </div>
 
@@ -497,39 +496,28 @@
       2020: 'Tüm dünyada pandemi ve dijital dönüşüm çağı başladı.'
     };
 
-    // Populate Year and Day Dropdowns
-    function initDropdowns() {
-      const selDay = document.getElementById('selDay');
-      const selYear = document.getElementById('selYear');
-
-      for (let d = 1; d <= 31; d++) {
-        const opt = document.createElement('option');
-        opt.value = d;
-        opt.textContent = d;
-        selDay.appendChild(opt);
+    // Date input change handler and date preview
+    function onDateInputChange() {
+      const val = document.getElementById('inputBirthDate').value;
+      if (!val) return;
+      const [y, m, d] = val.split('-').map(Number);
+      const dateObj = new Date(y, m - 1, d);
+      const monthsTr = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
+      const weekdaysTr = ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'];
+      const preview = document.getElementById('txtSelectedDatePreview');
+      if (preview) {
+        preview.textContent = `${d} ${monthsTr[m - 1]} ${y} • ${weekdaysTr[dateObj.getDay()]}`;
       }
-
-      const currentYear = 2026;
-      for (let y = currentYear; y >= 1945; y--) {
-        const opt = document.createElement('option');
-        opt.value = y;
-        opt.textContent = y;
-        selYear.appendChild(opt);
-      }
-
-      // Default: 15 Mayıs 1998 (Iconic test date)
-      selDay.value = '15';
-      document.getElementById('selMonth').value = '5';
-      selYear.value = '1998';
+      generateNewspaper();
     }
 
     // Set Quick Age Preset
     function setQuickAge(age) {
       const targetYear = 2026 - age;
-      document.getElementById('selYear').value = targetYear;
-      document.getElementById('selDay').value = '15';
-      document.getElementById('selMonth').value = '5';
-      generateNewspaper();
+      const monthStr = '05';
+      const dayStr = '15';
+      document.getElementById('inputBirthDate').value = `${targetYear}-${monthStr}-${dayStr}`;
+      onDateInputChange();
     }
 
     // Astronomical Moon Phase Calculator
@@ -661,9 +649,8 @@
 
     // Main Newspaper Generator
     function generateNewspaper() {
-      const day = parseInt(document.getElementById('selDay').value, 10);
-      const month = parseInt(document.getElementById('selMonth').value, 10);
-      const year = parseInt(document.getElementById('selYear').value, 10);
+      const dateVal = document.getElementById('inputBirthDate').value || '1998-05-15';
+      const [year, month, day] = dateVal.split('-').map(Number);
       const nameInput = document.getElementById('inputName').value.trim();
 
       const dateObj = new Date(year, month - 1, day);
@@ -908,8 +895,10 @@
 
       // Download as PNG
       try {
+        const dateVal = document.getElementById('inputBirthDate').value || '1998-05-15';
+        const year = dateVal.split('-')[0];
         const link = document.createElement('a');
-        link.download = `Dogdugum-Gunun-Gazetesi-${document.getElementById('selYear').value}.png`;
+        link.download = `Dogdugum-Gunun-Gazetesi-${year}.png`;
         link.href = canvas.toDataURL('image/png');
         link.click();
         showToast('Gazete görseliniz başarıyla indirildi!');
@@ -921,7 +910,8 @@
 
     // Share via Web Share API
     function shareNewspaper() {
-      const year = document.getElementById('selYear').value;
+      const dateVal = document.getElementById('inputBirthDate').value || '1998-05-15';
+      const year = dateVal.split('-')[0];
       const shareTitle = `Doğduğum Günün Gazetesi (${year}) — PratikBase`;
       const shareText = `Doğduğum günün gazetesini çıkardım! O gün 1 Dolar kaç liraydı, Ay hangi evredeydi, popüler şarkı neydi baktım. Sen de kendi doğduğun günü keşfet:`;
       const shareUrl = window.location.href;
@@ -953,8 +943,7 @@
 
     // Init on load
     window.addEventListener('DOMContentLoaded', () => {
-      initDropdowns();
-      generateNewspaper();
+      onDateInputChange();
     });
   </script>
 </body>

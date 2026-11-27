@@ -84,6 +84,20 @@
     .font-fun {
       font-family: 'Fredoka', cursive;
     }
+    /* Universal scrollbar obliteration */
+    *, *::before, *::after {
+      scrollbar-width: none !important;
+      -ms-overflow-style: none !important;
+    }
+    ::-webkit-scrollbar {
+      display: none !important;
+      width: 0px !important;
+      height: 0px !important;
+    }
+    html, body {
+      scrollbar-width: none !important;
+      -ms-overflow-style: none !important;
+    }
   </style>
 </head>
 <body class="bg-[#0b0f19] text-stone-200 min-h-screen flex flex-col antialiased selection:bg-pink-500 selection:text-white">
@@ -161,25 +175,25 @@
       <div class="lg:col-span-7 flex flex-col items-center justify-center relative">
         
         <!-- Wheel Frame Container -->
-        <div class="relative w-[320px] h-[320px] sm:w-[440px] sm:h-[440px] flex items-center justify-center">
+        <div class="relative w-[300px] h-[300px] sm:w-[440px] sm:h-[440px] flex items-center justify-center">
           
           <!-- Outer Neon Halo Glow -->
           <div class="absolute inset-0 rounded-full bg-gradient-to-tr from-pink-500/20 via-purple-500/20 to-amber-500/20 blur-xl pointer-events-none"></div>
 
           <!-- Pointer / Flapper at Top -->
           <div class="absolute top-1 z-30 flex flex-col items-center pointer-events-none transition-transform duration-75" id="wheelPointer">
-            <div class="w-7 h-10 bg-amber-400 rounded-b-md shadow-2xl border-2 border-stone-900 flex items-center justify-center" style="clip-path: polygon(0% 0%, 100% 0%, 50% 100%);">
+            <div class="w-6 h-9 sm:w-7 sm:h-10 bg-amber-400 rounded-b-md shadow-2xl border-2 border-stone-900 flex items-center justify-center" style="clip-path: polygon(0% 0%, 100% 0%, 50% 100%);">
             </div>
-            <div class="w-3 h-3 rounded-full bg-red-600 border-2 border-white -mt-1 shadow-md"></div>
+            <div class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-red-600 border-2 border-white -mt-1 shadow-md"></div>
           </div>
 
           <!-- HTML5 Canvas for Wheel -->
           <canvas id="wheelCanvas" width="880" height="880" class="w-full h-full cursor-pointer select-none rounded-full shadow-2xl border-4 border-stone-800"></canvas>
 
-          <!-- Center Spin Hub Button -->
-          <button onclick="spinWheel()" id="btnCenterSpin" class="absolute z-20 w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-tr from-stone-900 to-stone-800 border-4 border-amber-400 text-white font-fun font-bold text-sm sm:text-base shadow-2xl flex flex-col items-center justify-center hover:scale-105 active:scale-95 transition transform group">
-            <span class="text-amber-400 group-hover:rotate-12 transition transform"><i class="fa-solid fa-play text-lg sm:text-xl"></i></span>
-            <span class="tracking-wide uppercase text-xs sm:text-sm mt-0.5">ÇEVİR</span>
+          <!-- Center Spin Hub Button (Sized cleanly so it doesn't overlap text) -->
+          <button onclick="spinWheel()" id="btnCenterSpin" class="absolute z-20 w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-tr from-stone-900 to-stone-800 border-3 sm:border-4 border-amber-400 text-white font-fun font-bold text-xs sm:text-sm shadow-2xl flex flex-col items-center justify-center hover:scale-105 active:scale-95 transition transform group">
+            <span class="text-amber-400 group-hover:rotate-12 transition transform"><i class="fa-solid fa-play text-sm sm:text-lg"></i></span>
+            <span class="tracking-wide uppercase text-[10px] sm:text-xs mt-0.5">ÇEVİR</span>
           </button>
 
         </div>
@@ -212,8 +226,8 @@
           </button>
         </div>
 
-        <!-- Options List Box -->
-        <div id="optionsList" class="flex-1 max-h-60 overflow-y-auto space-y-1.5 pr-1 mb-4 scrollbar-thin scrollbar-thumb-stone-700">
+        <!-- Options List Box (Clean scroll without Windows gray bars) -->
+        <div id="optionsList" class="flex-1 max-h-60 overflow-y-auto space-y-1.5 pr-1 mb-4">
           <!-- Populated by JS -->
         </div>
 
@@ -452,19 +466,40 @@
         ctx.lineWidth = 4;
         ctx.stroke();
 
-        // Text inside slice
+        // Text inside slice - Dynamically sized & positioned to prevent center-button collision
         ctx.save();
         ctx.translate(cx, cy);
         ctx.rotate(angle + arc / 2);
         ctx.textAlign = 'right';
         ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 32px "Plus Jakarta Sans", sans-serif';
-        ctx.shadowColor = 'rgba(0, 0, 0, 0.4)';
-        ctx.shadowBlur = 6;
-        
+
         let label = slices[i];
-        if (label.length > 16) label = label.slice(0, 15) + '...';
-        ctx.fillText(label, radius - 45, 12);
+        let fontSize = 28;
+        if (slices.length > 8) fontSize = 23;
+        if (slices.length > 12) fontSize = 19;
+        if (slices.length > 16) fontSize = 16;
+
+        ctx.font = `bold ${fontSize}px "Plus Jakarta Sans", sans-serif`;
+
+        // Canvas is 880x880, radius=420. Outer text edge is 385. Center button extends to ~90px.
+        // Safe readable width is 260px; ensures the start of words is NEVER covered by the center button!
+        const maxAllowedWidth = radius - 160;
+
+        while (ctx.measureText(label).width > maxAllowedWidth && fontSize > 14) {
+          fontSize -= 1.5;
+          ctx.font = `bold ${fontSize}px "Plus Jakarta Sans", sans-serif`;
+        }
+
+        if (ctx.measureText(label).width > maxAllowedWidth) {
+          while (ctx.measureText(label + '…').width > maxAllowedWidth && label.length > 3) {
+            label = label.slice(0, -1);
+          }
+          label = label + '…';
+        }
+
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.6)';
+        ctx.shadowBlur = 4;
+        ctx.fillText(label, radius - 35, fontSize * 0.35);
         ctx.restore();
       }
 
