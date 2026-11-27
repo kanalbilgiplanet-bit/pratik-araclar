@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>The Birth Lottery (1 in 8 Billion) — Global Life Simulator</title>
-  <meta name="description" content="Where will you be born? Draw your cosmic lottery ticket among 8 billion people. Experience a realistic life year-by-year based on real UN demographic data. Free instant browser game.">
-  <meta name="keywords" content="the birth lottery, birth lottery game, 1 in 8 billion, 1in8b life simulator, 8 milyarda 1, doğum piyangosu, 8 milyarda 1 simülasyonu, world life simulator, where were you born, global life game">
+  <title>The Birth Lottery (1 in 8 Billion) — Global Life & Destiny Simulator | PratikBase</title>
+  <meta name="description" content="Where will you be born? Draw your cosmic lottery ticket among 8 billion people. Experience a realistic life year-by-year based on real UN demographic data. Free instant browser game with real country comparison.">
+  <meta name="keywords" content="the birth lottery, birth lottery game, 1 in 8 billion, 1in8b life simulator, not on itch io, birth lottery browser game, doğum piyangosu, 8 milyarda 1, global life simulator, rawls veil of ignorance game">
   <link rel="canonical" href="https://pratikbase.com/birth-lottery/">
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#0b0f19">
@@ -244,10 +244,14 @@
   <main id="screenWelcome" class="flex-1 max-w-5xl w-full mx-auto px-4 py-6 sm:py-10 flex flex-col justify-center">
     
     <!-- Top badge -->
-    <div class="text-center mb-5">
+    <div class="text-center mb-5 flex flex-wrap items-center justify-center gap-2">
       <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-amber-100/80 text-amber-900 border border-amber-300/80 shadow-xs">
         <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
         <span id="txtBadgeLive">Based on 8,000,000,000 Humans & Real UN Demographic Data</span>
+      </span>
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100/80 text-emerald-900 border border-emerald-300/80 shadow-xs">
+        <i class="fa-solid fa-bolt text-amber-500 text-[11px]"></i>
+        <span>Instant Web Play • No Itch.io Lag</span>
       </span>
     </div>
 
@@ -291,19 +295,19 @@
           <div class="flex items-center justify-between text-stone-700 font-semibold">
             <span class="flex items-center gap-1.5">
               <i class="fa-solid fa-scale-balanced text-[#7F1D1D]"></i>
-              <span>Gerçekte Yaşadığın Ülke (Kıyaslama İçin):</span>
+              <span id="lblRealCountryTitle">Your Real Country (For Comparison):</span>
             </span>
             <select id="userRealCountry" class="bg-white border border-stone-300 rounded px-2 py-1 text-xs font-semibold text-stone-800">
               <option value="tr">🇹🇷 Türkiye</option>
-              <option value="us">🇺🇸 Amerika Birleşik Devletleri</option>
-              <option value="de">🇩🇪 Almanya</option>
-              <option value="gb">🇬🇧 Birleşik Krallık</option>
-              <option value="fr">🇫🇷 Fransa</option>
-              <option value="other">🌐 Diğer Ülkeler</option>
+              <option value="us">🇺🇸 United States</option>
+              <option value="de">🇩🇪 Germany</option>
+              <option value="gb">🇬🇧 United Kingdom</option>
+              <option value="fr">🇫🇷 France</option>
+              <option value="other">🌐 Other Countries</option>
             </select>
           </div>
-          <div class="text-[11px] text-stone-500">
-            Simülasyon bitince, doğduğun hayatın şartları kendi gerçek ülkenin fırsatlarıyla yan yana kıyaslanacak.
+          <div class="text-[11px] text-stone-500" id="lblRealCountrySub">
+            After your simulation ends, your drawn life will be compared side-by-side with your home country.
           </div>
         </div>
 
@@ -321,7 +325,7 @@
         <!-- Big Action Button -->
         <button onclick="startLottery()" class="w-full py-4 px-6 rounded-xl bg-[#7F1D1D] hover:bg-[#681318] text-white font-bold text-base sm:text-lg shadow-lg hover:shadow-xl transition transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-3">
           <i class="fa-solid fa-dice-d20 text-amber-400 text-xl"></i>
-          <span id="btnDrawTicket">Doğum Biletini Çek & Doğ</span>
+          <span id="btnDrawTicket">Draw Cosmic Birth Ticket & Spawn</span>
           <i class="fa-solid fa-arrow-right text-sm"></i>
         </button>
 
@@ -1577,6 +1581,8 @@
     txtMemorialBanner: 'Bir Hayatın Sonu · Anma Sayfası',
     btnShareLife: 'Bu Hayatı Paylaş',
     btnReborn: 'Yeniden Doğ (Kozmik Çekiliş)',
+    lblRealCountryTitle: 'Gerçekte Yaşadığın Ülke (Kıyaslama İçin):',
+    lblRealCountrySub: 'Simülasyon bitince, doğduğun hayatın şartları kendi gerçek ülkenin fırsatlarıyla yan yana kıyaslanacak.',
     genderMale: 'Erkek',
     genderFemale: 'Kadın'
   },
@@ -1635,6 +1641,8 @@
     txtMemorialBanner: 'End of a Journey · Memorial Record',
     btnShareLife: 'Share This Life',
     btnReborn: 'Reborn (Cosmic Lottery)',
+    lblRealCountryTitle: 'Your Real Country (For Comparison):',
+    lblRealCountrySub: 'After your simulation ends, your drawn life will be compared side-by-side with your home country.',
     genderMale: 'Male',
     genderFemale: 'Female'
   },
@@ -6586,17 +6594,25 @@
           navigator.clipboard.writeText(shareUrl);
         }
 
+        const isTr = currentLang === 'tr';
+        const shareTitle = isTr
+          ? `${currentSim.name} (${currentSim.currentAge} Yaşında) — The Birth Lottery`
+          : `${currentSim.name} (Age ${currentSim.currentAge}) — The Birth Lottery`;
+        const shareText = isTr
+          ? `The Birth Lottery'de ${cName}'da dünyaya geldim ve ${currentSim.currentAge} yıl yaşadım. Bak bu hayatta neler başardım:`
+          : `I drew a life in ${cName} on The Birth Lottery and lived for ${currentSim.currentAge} years. Check out my life journey:`;
+
         if (navigator.share) {
           navigator.share({
-            title: `${currentSim.name} (${currentSim.currentAge} Yaşında) — The Birth Lottery`,
-            text: `The Birth Lottery'de ${cName}'da dünyaya geldim ve ${currentSim.currentAge} yıl yaşadım. Bak bu hayatta neler başardım:`,
+            title: shareTitle,
+            text: shareText,
             url: shareUrl
           }).catch(() => {});
         }
 
         showShareToast(
-          'Özel Hayat Linki Kopyalandı!',
-          'Arkadaşına gönderdiğinde doğrudan bu ekranı ve kronolojik başarılarını inceleyecek.'
+          isTr ? 'Özel Hayat Linki Kopyalandı!' : 'Life Link Copied!',
+          isTr ? 'Arkadaşına gönderdiğinde doğrudan bu ekranı ve kronolojik başarılarını inceleyecek.' : 'Share it with friends to let them explore your lifetime timeline and achievements.'
         );
       } catch (e) {
         console.error('Sharing failed:', e);
@@ -6874,6 +6890,11 @@
       document.getElementById('btnShareLife').textContent = dict.btnShareLife;
       document.getElementById('btnReborn').textContent = dict.btnReborn;
       document.getElementById('txtNextDecision').textContent = dict.txtNextDecision;
+
+      const elRCTitle = document.getElementById('lblRealCountryTitle');
+      if (elRCTitle && dict.lblRealCountryTitle) elRCTitle.textContent = dict.lblRealCountryTitle;
+      const elRCSub = document.getElementById('lblRealCountrySub');
+      if (elRCSub && dict.lblRealCountrySub) elRCSub.textContent = dict.lblRealCountrySub;
 
       if (currentLang === 'ar' || currentLang === 'fa') {
         document.documentElement.setAttribute('dir', 'rtl');
