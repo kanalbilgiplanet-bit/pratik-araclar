@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="tr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Karar Çarkı & Ne Yesek Çarkıfeleği (Fizik Tabanlı Kura Çekici) | PratikBase</title>
+  <meta name="description" content="Kararsız kaldığınız anlar için eğlenceli ve ücretsiz online karar çarkı. Bugün ne yesek çarkıfeleği, isim kura çekimi ve evet-hayır çarkı. Gerçekçi ses efektleri, konfeti ve mobil uyumlu.">
+  <meta name="keywords" content="karar çarkı, çark çevir, ne yesek çarkı, kura çekme, çarkıfelek online, rastgele seçim aracı, karar verici, kura motoru">
+  <link rel="canonical" href="https://pratikbase.com/karar-carki/">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f172a">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://pratikbase.com/karar-carki/">
+  <meta property="og:title" content="Karar Çarkı & Ne Yesek Çarkıfeleği — PratikBase">
+  <meta property="og:description" content="Kararsız mı kaldın? Çarkı çevir, ses efektleri ve konfetilerle kaderin karar versin!">
+  <meta property="og:image" content="https://pratikbase.com/assets/og-banner.png">
+  <meta property="og:locale" content="tr_TR">
+  <meta property="og:site_name" content="PratikBase">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Karar Çarkı & Ne Yesek Çarkıfeleği">
+  <meta name="twitter:description" content="Gerçekçi fizik, ses efektleri ve hazır şablonlarla online kura çarkı.">
+  <meta name="twitter:image" content="https://pratikbase.com/assets/og-banner.png">
+
+  <!-- Tailwind & Icons -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Fredoka:wght@600;700&display=swap" rel="stylesheet">
+
+  <!-- Confetti Canvas -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Karar Çarkı & Kura Çekici",
+    "url": "https://pratikbase.com/karar-carki/",
+    "applicationCategory": "EntertainmentApplication",
+    "operatingSystem": "All",
+    "description": "Yemek kararsızlıkları, isim kura çekimi ve eğlenceli grup oyunları için gerçekçi fizik ve ses efektli online karar çarkı.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "TRY"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Karar çarkı rastgele ve adil mi çalışır?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Evet. Çarkın dönüş hızı, başlangıç kuvveti ve sürtünme katsayısı kriptografik standartta rastgelelik (Math.random) ve fiziksel açı hesaplamasıyla belirlenir. Her seçeneğin kazanma şansı dilim açısıyla orantılı ve tamamen eşittir."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Çarktan kazanan seçeneği eleyebilir miyim?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "'Kazananı Çarktan Çıkar' kutucuğunu işaretleyerek çekilişlerde veya sınıf kurasında çıkan kişiyi otomatik olarak eleyip kalanlarla devam edebilirsiniz."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .font-fun {
+      font-family: 'Fredoka', cursive;
+    }
+  </style>
+</head>
+<body class="bg-[#0b0f19] text-stone-200 min-h-screen flex flex-col antialiased selection:bg-pink-500 selection:text-white">
+
+  <!-- Header -->
+  <header class="border-b border-stone-800/80 bg-[#0b0f19]/90 backdrop-blur sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-2.5 text-stone-200 hover:text-white transition">
+        <span class="w-8 h-8 rounded-lg bg-gradient-to-tr from-pink-500 to-amber-400 text-stone-950 flex items-center justify-center font-bold text-base shadow-sm">
+          <i class="fa-solid fa-dharmachakra text-sm"></i>
+        </span>
+        <div class="flex flex-col">
+          <span class="font-extrabold text-sm tracking-tight text-white">PratikBase</span>
+          <span class="text-[10px] text-pink-400 font-medium -mt-1">Akıllı Karar Çarkı</span>
+        </div>
+      </a>
+      <div class="flex items-center gap-3">
+        <button id="btnSoundToggle" onclick="toggleMute()" class="w-8 h-8 rounded-lg bg-stone-800 hover:bg-stone-700 text-stone-300 flex items-center justify-center text-xs transition" title="Sesi Aç/Kapat">
+          <i class="fa-solid fa-volume-high text-xs" id="iconSound"></i>
+        </button>
+        <a href="/" class="text-xs text-stone-400 hover:text-stone-200 flex items-center gap-1.5 transition">
+          <i class="fa-solid fa-arrow-left text-[11px]"></i>
+          <span>Tüm Araçlar</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 max-w-6xl w-full mx-auto px-4 py-6 sm:py-10 flex flex-col items-center">
+    
+    <!-- Badges -->
+    <div class="flex flex-wrap items-center justify-center gap-2 mb-3 text-center">
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-pink-500/10 text-pink-400 border border-pink-500/20">
+        <i class="fa-solid fa-wand-magic-sparkles text-xs"></i>
+        <span>Fizik Tabanlı Gerçekçi Kura</span>
+      </span>
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
+        <i class="fa-solid fa-music text-xs"></i>
+        <span>Canlı Tık-Tık Ses Efektleri</span>
+      </span>
+    </div>
+
+    <!-- Main Title -->
+    <h1 class="text-3xl sm:text-5xl font-black text-center text-white tracking-tight mb-2 font-fun">
+      Karar Çarkı & Ne Yesek Çarkıfeleği
+    </h1>
+    <p class="text-stone-400 text-xs sm:text-sm text-center max-w-xl mb-6">
+      Yemek seçemiyor musun? Kararsız mı kaldın? Seçeneklerini ekle veya hazır şablonlardan birini seçip çarkı çevir!
+    </p>
+
+    <!-- Quick Preset Buttons -->
+    <div class="flex flex-wrap items-center justify-center gap-2 mb-8 max-w-2xl text-xs font-semibold">
+      <button onclick="applyPreset('food')" class="px-3.5 py-1.5 rounded-full bg-stone-800 hover:bg-stone-700 text-stone-200 hover:text-white transition flex items-center gap-1.5 border border-stone-700">
+        <span>🍕 Ne Yesek?</span>
+      </button>
+      <button onclick="applyPreset('movie')" class="px-3.5 py-1.5 rounded-full bg-stone-800 hover:bg-stone-700 text-stone-200 hover:text-white transition flex items-center gap-1.5 border border-stone-700">
+        <span>🎬 Ne İzlesek?</span>
+      </button>
+      <button onclick="applyPreset('yesno')" class="px-3.5 py-1.5 rounded-full bg-stone-800 hover:bg-stone-700 text-stone-200 hover:text-white transition flex items-center gap-1.5 border border-stone-700">
+        <span>⚖️ Evet / Hayır</span>
+      </button>
+      <button onclick="applyPreset('truth')" class="px-3.5 py-1.5 rounded-full bg-stone-800 hover:bg-stone-700 text-stone-200 hover:text-white transition flex items-center gap-1.5 border border-stone-700">
+        <span>⚡ Doğruluk mu Cesaret mi?</span>
+      </button>
+      <button onclick="applyPreset('activity')" class="px-3.5 py-1.5 rounded-full bg-stone-800 hover:bg-stone-700 text-stone-200 hover:text-white transition flex items-center gap-1.5 border border-stone-700">
+        <span>🎮 Bu Akşam Ne Yapsak?</span>
+      </button>
+    </div>
+
+    <!-- Dual Column Layout: Wheel Left, Controls Right -->
+    <div class="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-center justify-center">
+      
+      <!-- Left Column: The Wheel Stage (col-span-7) -->
+      <div class="lg:col-span-7 flex flex-col items-center justify-center relative">
+        
+        <!-- Wheel Frame Container -->
+        <div class="relative w-[320px] h-[320px] sm:w-[440px] sm:h-[440px] flex items-center justify-center">
+          
+          <!-- Outer Neon Halo Glow -->
+          <div class="absolute inset-0 rounded-full bg-gradient-to-tr from-pink-500/20 via-purple-500/20 to-amber-500/20 blur-xl pointer-events-none"></div>
+
+          <!-- Pointer / Flapper at Top -->
+          <div class="absolute top-1 z-30 flex flex-col items-center pointer-events-none transition-transform duration-75" id="wheelPointer">
+            <div class="w-7 h-10 bg-amber-400 rounded-b-md shadow-2xl border-2 border-stone-900 flex items-center justify-center" style="clip-path: polygon(0% 0%, 100% 0%, 50% 100%);">
+            </div>
+            <div class="w-3 h-3 rounded-full bg-red-600 border-2 border-white -mt-1 shadow-md"></div>
+          </div>
+
+          <!-- HTML5 Canvas for Wheel -->
+          <canvas id="wheelCanvas" width="880" height="880" class="w-full h-full cursor-pointer select-none rounded-full shadow-2xl border-4 border-stone-800"></canvas>
+
+          <!-- Center Spin Hub Button -->
+          <button onclick="spinWheel()" id="btnCenterSpin" class="absolute z-20 w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-tr from-stone-900 to-stone-800 border-4 border-amber-400 text-white font-fun font-bold text-sm sm:text-base shadow-2xl flex flex-col items-center justify-center hover:scale-105 active:scale-95 transition transform group">
+            <span class="text-amber-400 group-hover:rotate-12 transition transform"><i class="fa-solid fa-play text-lg sm:text-xl"></i></span>
+            <span class="tracking-wide uppercase text-xs sm:text-sm mt-0.5">ÇEVİR</span>
+          </button>
+
+        </div>
+
+        <!-- Big Spin Button Below for Easy Mobile Touch -->
+        <button onclick="spinWheel()" id="btnBigSpin" class="mt-6 w-full max-w-sm py-4 px-6 rounded-2xl bg-gradient-to-r from-pink-500 via-purple-600 to-amber-500 hover:from-pink-400 hover:to-amber-400 text-white font-fun text-lg sm:text-xl font-bold shadow-xl hover:shadow-pink-500/25 transition transform active:scale-95 flex items-center justify-center gap-3">
+          <i class="fa-solid fa-rotate text-xl animate-spin-slow"></i>
+          <span>Şansını Çevir!</span>
+        </button>
+
+      </div>
+
+      <!-- Right Column: Slices Editor & History (col-span-5) -->
+      <div class="lg:col-span-5 w-full bg-stone-900/80 border border-stone-800 rounded-2xl p-5 sm:p-6 backdrop-blur shadow-xl flex flex-col">
+        
+        <div class="flex items-center justify-between pb-3 border-b border-stone-800 mb-4">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-list-check text-pink-400"></i>
+            <h2 class="font-bold text-white text-base">Çark Seçenekleri</h2>
+          </div>
+          <span class="text-xs text-stone-500 font-mono" id="txtSliceCount">8 Seçenek</span>
+        </div>
+
+        <!-- Add Option Input -->
+        <div class="flex gap-2 mb-4">
+          <input type="text" id="inputNewOption" placeholder="Yeni seçenek yaz..." maxlength="30" class="flex-1 bg-stone-950 border border-stone-700 rounded-xl px-3.5 py-2.5 text-sm text-stone-100 placeholder:text-stone-600 focus:outline-none focus:border-pink-500 transition" onkeypress="handleInputKey(event)">
+          <button onclick="addNewOption()" class="px-4 py-2.5 rounded-xl bg-pink-600 hover:bg-pink-500 text-white font-bold text-sm transition shrink-0 flex items-center gap-1.5">
+            <i class="fa-solid fa-plus"></i>
+            <span>Ekle</span>
+          </button>
+        </div>
+
+        <!-- Options List Box -->
+        <div id="optionsList" class="flex-1 max-h-60 overflow-y-auto space-y-1.5 pr-1 mb-4 scrollbar-thin scrollbar-thumb-stone-700">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- Elimination Mode Toggle & Actions -->
+        <div class="pt-3 border-t border-stone-800/80 space-y-3">
+          <label class="flex items-center justify-between text-xs text-stone-300 cursor-pointer select-none">
+            <span class="flex items-center gap-2">
+              <i class="fa-solid fa-filter text-amber-400"></i>
+              <span>Kazananı Çarktan Otomatik Çıkar</span>
+            </span>
+            <input type="checkbox" id="chkEliminate" class="w-4 h-4 rounded text-pink-600 bg-stone-950 border-stone-700 focus:ring-0">
+          </label>
+
+          <div class="flex items-center gap-2">
+            <button onclick="shuffleOptions()" class="flex-1 py-2 px-3 rounded-lg bg-stone-800 hover:bg-stone-700 text-stone-300 text-xs font-semibold transition flex items-center justify-center gap-1.5">
+              <i class="fa-solid fa-shuffle"></i>
+              <span>Karıştır</span>
+            </button>
+            <button onclick="clearAllOptions()" class="py-2 px-3 rounded-lg bg-stone-800/60 hover:bg-red-950/60 text-stone-400 hover:text-red-400 text-xs font-semibold transition flex items-center justify-center gap-1.5">
+              <i class="fa-solid fa-trash-can"></i>
+              <span>Temizle</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Recent Winners History -->
+        <div class="mt-4 pt-3 border-t border-stone-800/80">
+          <span class="text-[11px] font-bold uppercase text-stone-500 tracking-wider block mb-2">Son Çıkanlar</span>
+          <div id="historyPills" class="flex flex-wrap gap-1.5 min-h-[26px]">
+            <span class="text-xs text-stone-600 italic">Henüz çark çevrilmedi.</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- SEO FAQ Section -->
+    <section class="w-full max-w-3xl mt-14 pt-8 border-t border-stone-800/80 text-stone-300">
+      <h2 class="text-xl sm:text-2xl font-bold text-white mb-4">
+        Karar Çarkı ve Kura Motoru Hakkında
+      </h2>
+      <div class="space-y-4 text-sm text-stone-400">
+        <div class="bg-stone-900/60 p-4 rounded-xl border border-stone-800">
+          <h3 class="font-semibold text-stone-200 mb-1">Karar çarkı nasıl çalışır ve adil midir?</h3>
+          <p>Çarkımız gerçek dünya açısal momentum ve sürtünme fiziği simülasyonuyla çalışır. Başlangıç dönüş hızı ve yavaşlama katsayısı rastgele belirlenir. Tüm dilimlerin yüzey alanı ve kazanma olasılıkları eşittir.</p>
+        </div>
+        <div class="bg-stone-900/60 p-4 rounded-xl border border-stone-800">
+          <h3 class="font-semibold text-stone-200 mb-1">Kendi seçeneklerimi nasıl ekleyebilirim?</h3>
+          <p>Sağdaki 'Yeni seçenek yaz' kutusuna istediğiniz yemek, isim, şehir veya kararı yazıp 'Ekle' butonuna basmanız yeterlidir. İstediğiniz kadar dilim ekleyebilir, istemediklerinizi silebilirsiniz.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- WINNER CELEBRATION MODAL -->
+  <!-- ========================================================================= -->
+  <div id="winnerModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="w-full max-w-md bg-stone-900 border-2 border-amber-400 rounded-3xl p-6 sm:p-8 text-center shadow-2xl flex flex-col items-center transform scale-95 transition-all duration-200" id="winnerModalBox">
+      
+      <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-amber-400 to-pink-500 text-stone-950 flex items-center justify-center text-3xl shadow-lg mb-4 animate-bounce">
+        🏆
+      </div>
+
+      <span class="text-xs font-bold uppercase tracking-widest text-amber-400 mb-1">KAZANAN SEÇENEK</span>
+      <h3 class="text-2xl sm:text-4xl font-black text-white font-fun mb-4 tracking-tight leading-tight" id="txtWinnerName">
+        Lahmacun & Ayran
+      </h3>
+
+      <p class="text-xs text-stone-400 mb-6" id="txtWinnerSub">
+        Kader kararını verdi! Şimdi harekete geçme zamanı.
+      </p>
+
+      <div class="flex items-center gap-2.5 w-full">
+        <button onclick="closeWinnerModal()" class="flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-pink-500 hover:from-amber-400 hover:to-pink-400 text-stone-950 font-bold text-sm transition shadow-lg">
+          Tamam, Harika!
+        </button>
+        <button onclick="shareWinner()" class="px-4 py-3 rounded-xl bg-stone-800 hover:bg-stone-700 text-white font-bold text-sm transition border border-stone-700" title="Sonucu Paylaş">
+          <i class="fa-solid fa-share-nodes"></i>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="border-t border-stone-800 bg-[#0b0f19] py-6 mt-12 text-center text-xs text-stone-500">
+    <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div>© 2026 PratikBase • Eğlenceli Karar Çarkı & Kura Motoru</div>
+      <div class="flex items-center gap-4">
+        <a href="/" class="hover:text-stone-300 transition">Ana Sayfa</a>
+        <a href="/dogdugun-gunun-gazetesi/" class="hover:text-stone-300 transition">Doğduğun Günün Gazetesi</a>
+        <a href="/olu-piksel-testi/" class="hover:text-stone-300 transition">Ölü Piksel Testi</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Main JavaScript Engine -->
+  <script>
+    // Vibrant Color Palette for Slices
+    const SLICE_COLORS = [
+      '#ef4444', '#f97316', '#f59e0b', '#10b981', '#06b6d4', 
+      '#3b82f6', '#8b5cf6', '#ec4899', '#14b8a6', '#84cc16'
+    ];
+
+    // Presets
+    const PRESETS = {
+      food: [
+        'Döner & Ayran 🌯', 'Pizza 🍕', 'Burger & Patates 🍔', 'Ev Yemeği / Kuru Fasulye 🍲',
+        'Pide / Lahmacun 🥖', 'Tavuklu Pilav 🍗', 'Sıcak Çorba 🥣', 'Çiğköfte Dürüm 🥗'
+      ],
+      movie: [
+        'Bilim Kurgu 🚀', 'Komedi & Kahkaha 😂', 'Korku / Gerilim 👻', 'Aksiyon & Macera 💥',
+        'Suç / Dedektif 🕵️', 'Animasyon / Anime 🍿', 'Dram & Biyografi 🎭', 'Romantik Komedi 🌹'
+      ],
+      yesno: [
+        'EVET! Kesinlikle Yap ✅', 'HAYIR! Sakın Yapma ❌', 'Biraz Ertele ⏳', 'Kaderine Bırak 🎲'
+      ],
+      truth: [
+        'Doğruluk: En büyük sırrın? 🤫', 'Cesaret: Rehberdeki 5. kişiyi ara! 📞',
+        'Doğruluk: En utanç verici anın? 🙈', 'Cesaret: Komik bir dans yap! 💃'
+      ],
+      activity: [
+        'Oyun Oyna (PC / Konsol) 🎮', 'Açık Havada Yürüyüşe Çık 🚶', 'Kitap / Çizgi Roman Oku 📚',
+        'Bir Arkadaşını Ara Sohbet Et 📱', 'Kahve Yap & Müzik Dinle ☕', 'Yeni Bir Tarif Pişir 🍳'
+      ]
+    };
+
+    let slices = [...PRESETS.food];
+    let currentRotation = 0; // in radians
+    let isSpinning = false;
+    let spinVelocity = 0;
+    let spinFriction = 0.985;
+    let soundEnabled = true;
+    let audioCtx = null;
+    let lastTickSlice = -1;
+    let recentWinners = [];
+
+    // Synthesized Procedural Sound Effects via Web Audio API (Zero external assets)
+    function playClickSound() {
+      if (!soundEnabled) return;
+      try {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(450, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(120, audioCtx.currentTime + 0.04);
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.04);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.04);
+      } catch (e) {}
+    }
+
+    function playWinSound() {
+      if (!soundEnabled) return;
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+
+        const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+        notes.forEach((freq, idx) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, audioCtx.currentTime + idx * 0.1);
+          gain.gain.setValueAtTime(0.25, audioCtx.currentTime + idx * 0.1);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + idx * 0.1 + 0.35);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(audioCtx.currentTime + idx * 0.1);
+          osc.stop(audioCtx.currentTime + idx * 0.1 + 0.35);
+        });
+      } catch (e) {}
+    }
+
+    function toggleMute() {
+      soundEnabled = !soundEnabled;
+      const icon = document.getElementById('iconSound');
+      if (soundEnabled) {
+        icon.className = 'fa-solid fa-volume-high text-xs';
+      } else {
+        icon.className = 'fa-solid fa-volume-xmark text-xs text-red-400';
+      }
+    }
+
+    // Canvas Wheel Drawing
+    function drawWheel() {
+      const canvas = document.getElementById('wheelCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width;
+      const h = canvas.height;
+      const cx = w / 2;
+      const cy = h / 2;
+      const radius = cx - 20;
+
+      ctx.clearRect(0, 0, w, h);
+
+      if (slices.length === 0) {
+        ctx.fillStyle = '#1e293b';
+        ctx.beginPath();
+        ctx.arc(cx, cy, radius, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.fillStyle = '#64748b';
+        ctx.font = 'bold 36px "Plus Jakarta Sans", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('Lütfen Seçenek Ekleyin', cx, cy);
+        return;
+      }
+
+      const arc = (2 * Math.PI) / slices.length;
+
+      // Draw slices
+      for (let i = 0; i < slices.length; i++) {
+        const angle = currentRotation + i * arc;
+        ctx.beginPath();
+        ctx.fillStyle = SLICE_COLORS[i % SLICE_COLORS.length];
+        ctx.moveTo(cx, cy);
+        ctx.arc(cx, cy, radius, angle, angle + arc);
+        ctx.lineTo(cx, cy);
+        ctx.fill();
+
+        // Slice borders
+        ctx.strokeStyle = '#0f172a';
+        ctx.lineWidth = 4;
+        ctx.stroke();
+
+        // Text inside slice
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(angle + arc / 2);
+        ctx.textAlign = 'right';
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 32px "Plus Jakarta Sans", sans-serif';
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.4)';
+        ctx.shadowBlur = 6;
+        
+        let label = slices[i];
+        if (label.length > 16) label = label.slice(0, 15) + '...';
+        ctx.fillText(label, radius - 45, 12);
+        ctx.restore();
+      }
+
+      // Outer rim gold / dark ring
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius, 0, 2 * Math.PI);
+      ctx.strokeStyle = '#f59e0b';
+      ctx.lineWidth = 14;
+      ctx.stroke();
+
+      // Outer decorative pegs
+      for (let i = 0; i < slices.length; i++) {
+        const pegAngle = currentRotation + i * arc;
+        const px = cx + (radius + 2) * Math.cos(pegAngle);
+        const py = cy + (radius + 2) * Math.sin(pegAngle);
+        ctx.beginPath();
+        ctx.arc(px, py, 7, 0, 2 * Math.PI);
+        ctx.fillStyle = '#ffffff';
+        ctx.fill();
+        ctx.strokeStyle = '#0f172a';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+    }
+
+    // Spin Animation Engine
+    function spinWheel() {
+      if (isSpinning || slices.length < 2) return;
+
+      isSpinning = true;
+      document.getElementById('btnBigSpin').disabled = true;
+      document.getElementById('btnCenterSpin').disabled = true;
+
+      // Random Initial velocity between 0.35 and 0.55 rad/frame
+      spinVelocity = 0.38 + Math.random() * 0.22;
+      // Random deceleration friction
+      spinFriction = 0.983 + Math.random() * 0.006;
+      lastTickSlice = -1;
+
+      animateSpin();
+    }
+
+    function animateSpin() {
+      currentRotation += spinVelocity;
+      spinVelocity *= spinFriction;
+
+      // Calculate current pointer slice
+      const arc = (2 * Math.PI) / slices.length;
+      // Pointer is at TOP: 3 * Math.PI / 2
+      const pointerAngle = (3 * Math.PI / 2);
+      let relAngle = (pointerAngle - currentRotation) % (2 * Math.PI);
+      if (relAngle < 0) relAngle += 2 * Math.PI;
+      const currentSliceIdx = Math.floor(relAngle / arc);
+
+      if (currentSliceIdx !== lastTickSlice) {
+        lastTickSlice = currentSliceIdx;
+        playClickSound();
+
+        // Pointer bounce animation
+        const ptr = document.getElementById('wheelPointer');
+        if (ptr) {
+          ptr.style.transform = 'rotate(-14deg)';
+          setTimeout(() => { ptr.style.transform = 'rotate(0deg)'; }, 45);
+        }
+
+        // Haptic feedback if supported
+        if (navigator.vibrate) {
+          navigator.vibrate(15);
+        }
+      }
+
+      drawWheel();
+
+      // Stop condition
+      if (spinVelocity < 0.002) {
+        isSpinning = false;
+        document.getElementById('btnBigSpin').disabled = false;
+        document.getElementById('btnCenterSpin').disabled = false;
+        onSpinComplete(currentSliceIdx);
+      } else {
+        requestAnimationFrame(animateSpin);
+      }
+    }
+
+    // Trigger Win & Celebration
+    function onSpinComplete(winnerIdx) {
+      const winner = slices[winnerIdx] || slices[0];
+      playWinSound();
+
+      // Confetti burst
+      if (typeof confetti === 'function') {
+        confetti({
+          particleCount: 80,
+          spread: 70,
+          origin: { y: 0.6 }
+        });
+      }
+
+      // Record in History
+      recentWinners.unshift(winner);
+      if (recentWinners.length > 5) recentWinners.pop();
+      renderHistory();
+
+      // Check elimination mode
+      const eliminate = document.getElementById('chkEliminate').checked;
+      if (eliminate && slices.length > 2) {
+        slices.splice(winnerIdx, 1);
+        renderOptionsList();
+        drawWheel();
+      }
+
+      // Show Winner Modal
+      const modal = document.getElementById('winnerModal');
+      document.getElementById('txtWinnerName').textContent = winner;
+      modal.classList.remove('hidden');
+    }
+
+    function closeWinnerModal() {
+      document.getElementById('winnerModal').classList.add('hidden');
+    }
+
+    function shareWinner() {
+      const winner = document.getElementById('txtWinnerName').textContent;
+      const shareText = `Karar Çarkı benim yerime karar verdi: ${winner}! Sen de kararsız kaldığında çarkı çevir: ${window.location.href}`;
+
+      if (navigator.share) {
+        navigator.share({
+          title: 'Karar Çarkı Sonucu',
+          text: shareText,
+          url: window.location.href
+        }).catch(() => {});
+      } else if (navigator.clipboard) {
+        navigator.clipboard.writeText(shareText);
+        alert('Sonuç panoya kopyalandı! Arkadaşlarına gönderebilirsin.');
+      }
+    }
+
+    // Slices List Management UI
+    function renderOptionsList() {
+      const list = document.getElementById('optionsList');
+      list.innerHTML = '';
+      document.getElementById('txtSliceCount').textContent = `${slices.length} Seçenek`;
+
+      slices.forEach((slice, idx) => {
+        const item = document.createElement('div');
+        item.className = 'flex items-center justify-between px-3 py-2 rounded-xl bg-stone-950/70 border border-stone-800 text-xs text-stone-200 group';
+        
+        const dotColor = SLICE_COLORS[idx % SLICE_COLORS.length];
+        item.innerHTML = `
+          <div class="flex items-center gap-2 truncate pr-2">
+            <span class="w-2.5 h-2.5 rounded-full shrink-0" style="background-color: ${dotColor}"></span>
+            <span class="truncate font-medium">${slice}</span>
+          </div>
+          <button onclick="removeOption(${idx})" class="text-stone-500 hover:text-red-400 opacity-60 group-hover:opacity-100 transition p-1">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    function addNewOption() {
+      const input = document.getElementById('inputNewOption');
+      const val = input.value.trim();
+      if (!val) return;
+      if (slices.length >= 24) {
+        alert('En fazla 24 seçenek ekleyebilirsiniz.');
+        return;
+      }
+      slices.push(val);
+      input.value = '';
+      renderOptionsList();
+      drawWheel();
+    }
+
+    function handleInputKey(e) {
+      if (e.key === 'Enter') addNewOption();
+    }
+
+    function removeOption(idx) {
+      if (slices.length <= 2) {
+        alert('Çarkta en az 2 seçenek bulunmalıdır.');
+        return;
+      }
+      slices.splice(idx, 1);
+      renderOptionsList();
+      drawWheel();
+    }
+
+    function clearAllOptions() {
+      if (confirm('Tüm seçenekleri silip sıfırlamak istiyor musunuz?')) {
+        slices = ['Seçenek 1', 'Seçenek 2'];
+        renderOptionsList();
+        drawWheel();
+      }
+    }
+
+    function shuffleOptions() {
+      for (let i = slices.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [slices[i], slices[j]] = [slices[j], slices[i]];
+      }
+      renderOptionsList();
+      drawWheel();
+    }
+
+    function applyPreset(key) {
+      if (PRESETS[key]) {
+        slices = [...PRESETS[key]];
+        renderOptionsList();
+        drawWheel();
+      }
+    }
+
+    function renderHistory() {
+      const container = document.getElementById('historyPills');
+      if (recentWinners.length === 0) {
+        container.innerHTML = '<span class="text-xs text-stone-600 italic">Henüz çark çevrilmedi.</span>';
+        return;
+      }
+      container.innerHTML = recentWinners.map(w => 
+        `<span class="px-2.5 py-1 rounded-md bg-stone-800 text-amber-400 text-[11px] font-semibold border border-stone-700">${w}</span>`
+      ).join('');
+    }
+
+    // Init on DOM ready
+    window.addEventListener('DOMContentLoaded', () => {
+      renderOptionsList();
+      drawWheel();
+    });
+  </script>
+</body>
+</html>
